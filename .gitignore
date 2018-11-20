@@ -1,0 +1,4 @@
+target
+.idea
+
+src/main/resources/com/irurueta/ar/build-info.properties
