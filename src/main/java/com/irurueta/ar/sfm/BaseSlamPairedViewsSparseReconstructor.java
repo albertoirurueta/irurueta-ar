@@ -22,6 +22,7 @@ import com.irurueta.geometry.*;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class BaseSlamPairedViewsSparseReconstructor<
         C extends BaseSlamPairedViewsSparseReconstructorConfiguration,
         R extends BaseSlamPairedViewsSparseReconstructor,

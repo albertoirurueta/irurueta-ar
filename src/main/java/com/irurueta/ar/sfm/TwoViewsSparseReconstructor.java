@@ -19,6 +19,7 @@ package com.irurueta.ar.sfm;
  * Class in charge of estimating cameras and 3D reconstructed points from sparse
  * image point correspondences in two views.
  */
+@SuppressWarnings("WeakerAccess")
 public class TwoViewsSparseReconstructor extends 
         BaseTwoViewsSparseReconstructor<
         TwoViewsSparseReconstructorConfiguration,

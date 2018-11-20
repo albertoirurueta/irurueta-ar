@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class ConstantVelocityModelSlamEstimatorTest implements 
         BaseSlamEstimatorListener {
     

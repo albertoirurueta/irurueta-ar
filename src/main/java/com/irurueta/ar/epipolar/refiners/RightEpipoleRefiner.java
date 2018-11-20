@@ -41,6 +41,7 @@ import java.util.List;
  * degenerate (e.g. planar scene) and provided point correspondences would
  * generate an inccurate fundamental matrix.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RightEpipoleRefiner extends
         PairMatchesAndInliersDataRefiner<Point2D, Point2D, Point2D> {
     

@@ -18,6 +18,7 @@ package com.irurueta.ar.calibration;
 /**
  * Raised when an error occurs while using a RadialDistortion.
  */
+@SuppressWarnings("WeakerAccess")
 public class RadialDistortionException extends DistortionException {
     /**
      * Constructor.

@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * This class defines the interface for an estimator of radial distortion
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RadialDistortionEstimator {
     
     /**

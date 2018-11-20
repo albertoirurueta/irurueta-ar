@@ -22,6 +22,7 @@ import com.irurueta.numerical.signal.processing.KalmanFilter;
 import com.irurueta.numerical.signal.processing.SignalProcessingException;
 import com.irurueta.statistics.InvalidCovarianceMatrixException;
 import com.irurueta.statistics.MultivariateNormalDist;
+
 import java.io.Serializable;
 
 /**
@@ -29,6 +30,7 @@ import java.io.Serializable;
  * using data from accelerometer and gyroscope.
  * @author Alberto Irurueta Carro (alberto@irurueta.com)
  */
+@SuppressWarnings("Duplicates")
 public class SlamEstimator extends BaseSlamEstimator<SlamCalibrationData> 
         implements Serializable {
     

@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  * Finds the best radial distortion for provided collections of 2D points using
  * MSAC algorithm.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class MSACRadialDistortionRobustEstimator extends 
         RadialDistortionRobustEstimator {
     

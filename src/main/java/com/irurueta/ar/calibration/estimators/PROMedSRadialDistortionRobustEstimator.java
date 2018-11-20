@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  * Finds the best radial distortion for provided collections of 2D points using
  * PROMedS algorithm.
  */
+@SuppressWarnings("Duplicates")
 public class PROMedSRadialDistortionRobustEstimator extends 
         RadialDistortionRobustEstimator {
     

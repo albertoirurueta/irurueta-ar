@@ -38,6 +38,7 @@ import java.util.List;
  * even if they are correctly weighted, since as the number of homographies
  * increase so do the rounding errors.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class WeightedImageOfAbsoluteConicEstimator extends 
         ImageOfAbsoluteConicEstimator {
     

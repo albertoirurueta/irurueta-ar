@@ -19,6 +19,7 @@ package com.irurueta.ar.epipolar;
  * Raised if given rotation or translation are not valid to define an essential
  * matrix.
  */
+@SuppressWarnings("WeakerAccess")
 public class InvalidRotationAndTranslationException extends EpipolarException {
     
     /**

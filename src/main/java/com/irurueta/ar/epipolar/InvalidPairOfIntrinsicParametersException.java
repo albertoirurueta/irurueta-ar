@@ -19,6 +19,7 @@ package com.irurueta.ar.epipolar;
  * Raised when providing an invalid pair of intrinsic parameters to define an
  * essential matrix.
  */
+@SuppressWarnings("WeakerAccess")
 public class InvalidPairOfIntrinsicParametersException extends 
         EpipolarException {
     

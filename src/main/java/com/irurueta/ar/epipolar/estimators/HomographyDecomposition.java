@@ -20,6 +20,7 @@ import com.irurueta.geometry.EuclideanTransformation3D;
 /**
  * Contains decomposition data of an homography.
  */
+@SuppressWarnings("WeakerAccess")
 public class HomographyDecomposition {
     
     /**

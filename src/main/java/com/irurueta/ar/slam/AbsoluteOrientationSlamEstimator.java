@@ -34,6 +34,7 @@ import java.io.Serializable;
  * Earth frame instead of just having a relative orientation respect to the 
  * start time of the estimator.
  */
+@SuppressWarnings("Duplicates")
 public class AbsoluteOrientationSlamEstimator extends 
         AbsoluteOrientationBaseSlamEstimator<AbsoluteOrientationSlamCalibrationData> 
         implements Serializable {

@@ -19,9 +19,9 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.ArrayUtils;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
-import com.irurueta.geometry.*;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.ar.epipolar.refiners.HomogeneousRightEpipoleRefiner;
+import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
@@ -33,6 +33,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class SingleHomographyPinholeCameraEstimatorTest implements
         SingleHomographyPinholeCameraEstimatorListener {
     

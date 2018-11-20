@@ -22,6 +22,7 @@ import com.irurueta.ar.slam.AbsoluteOrientationSlamEstimator;
  * correspondences in two views and using SLAM (with accelerometer and gyroscope
  * data) with absolute orientation for overall scale and orientation estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public class AbsoluteOrientationSlamTwoViewsSparseReconstructor extends 
         BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor<
         AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration,

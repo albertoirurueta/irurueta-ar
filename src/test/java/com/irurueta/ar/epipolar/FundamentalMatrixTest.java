@@ -31,6 +31,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class FundamentalMatrixTest {
     
     private static final int FUND_MATRIX_ROWS = 3;
@@ -80,8 +81,7 @@ public class FundamentalMatrixTest {
     public void tearDown() { }
 
     @Test
-    public void testConstructor() throws GeometryException, AlgebraException,
-            RobustEstimatorException {
+    public void testConstructor() throws GeometryException, AlgebraException {
         
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -1401,7 +1401,9 @@ public class FundamentalMatrixTest {
             } while(!front1 || !front2);
             
             //check that 3D point is in front of both cameras
+            //noinspection all
             assertTrue(front1);
+            //noinspection all
             assertTrue(front2);
             
             //project 3D point into both cameras

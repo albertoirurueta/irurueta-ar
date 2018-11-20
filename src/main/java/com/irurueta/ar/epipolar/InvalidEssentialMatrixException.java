@@ -18,6 +18,7 @@ package com.irurueta.ar.epipolar;
 /**
  * Raised when an essential matrix is not well defined.
  */
+@SuppressWarnings("WeakerAccess")
 public class InvalidEssentialMatrixException extends 
         InvalidFundamentalMatrixException {
     

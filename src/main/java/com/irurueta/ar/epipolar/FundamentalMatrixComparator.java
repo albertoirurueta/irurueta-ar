@@ -24,6 +24,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * methods to compare fundamental matrices.
  * This class will typically be used for testing or quality assessment purposes.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class FundamentalMatrixComparator {
     
     /**

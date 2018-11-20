@@ -26,12 +26,13 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar lines.
  * The consequence is that triangularization of these matches will fail or 
- * produce innaccurate results. 
+ * produce inaccurate results.
  * By fixing matched points using a corrector following a given epipolar 
  * geometry, this effect is alleviated.
  * This is an abstract class, subclasses will implement different methods to
  * fix matched points coordinates
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class SingleCorrector {
     
     /**

@@ -26,7 +26,7 @@ import com.irurueta.geometry.Quaternion;
  * and angular velocity) assuming a constant velocity model (acceleration is
  * assumed zero under no external force).
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class ConstantVelocityModelStatePredictor {
     
     /**

@@ -19,6 +19,7 @@ package com.irurueta.ar.epipolar;
  * Exception raised when point correction fails when trying to be fit into a 
  * given epipolar geometry.
  */
+@SuppressWarnings("WeakerAccess")
 public class CorrectionException extends EpipolarException {
     
     /**

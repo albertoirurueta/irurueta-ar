@@ -18,6 +18,7 @@ package com.irurueta.ar.sfm;
 /**
  * Exception raised if reconstruction process fails for some reason.
  */
+@SuppressWarnings("WeakerAccess")
 public class FailedReconstructionException extends ReconstructionException {
     
     /**

@@ -27,6 +27,7 @@ import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimato
  * Use AbsoluteOrientationSlamSparseReconstructor if absolute orientation is needed,
  * or SlamSparseReconstructor otherwise to get better accuracy.
  */
+@SuppressWarnings("WeakerAccess")
 public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor extends
         BaseAbsoluteOrientationSlamSparseReconstructor<
         AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration,

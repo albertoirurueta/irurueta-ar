@@ -22,6 +22,7 @@ import java.io.Serializable;
  * Contains configuration for a multiple view sparse reconstructor assuming that the
  * initial baseline (separation between initial cameras) is known.
  */
+@SuppressWarnings("WeakerAccess")
 public class KnownBaselineSparseReconstructorConfiguration extends
         BaseSparseReconstructorConfiguration<KnownBaselineSparseReconstructorConfiguration>
         implements Serializable {

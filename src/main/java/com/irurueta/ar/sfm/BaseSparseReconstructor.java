@@ -43,6 +43,7 @@ import java.util.List;
  * @param <R> type of reconstructor.
  * @param <L> type of listener.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorConfiguration,
         R extends BaseSparseReconstructor, L extends BaseSparseReconstructorListener<R>> {
 

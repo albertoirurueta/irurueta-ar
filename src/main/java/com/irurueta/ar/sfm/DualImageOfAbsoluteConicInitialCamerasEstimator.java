@@ -39,6 +39,7 @@ import java.util.List;
  * poses and translations by triangulating a set of matched points and checking
  * that their triangulation lies in front of cameras.
  */
+@SuppressWarnings("WeakerAccess")
 public class DualImageOfAbsoluteConicInitialCamerasEstimator 
         extends InitialCamerasEstimator {
     

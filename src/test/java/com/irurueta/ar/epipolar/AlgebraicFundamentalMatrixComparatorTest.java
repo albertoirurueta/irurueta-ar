@@ -28,6 +28,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class AlgebraicFundamentalMatrixComparatorTest implements
         FundamentalMatrixComparatorListener {
     
@@ -45,9 +46,6 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
     
     private static final double MIN_ANGLE_DEGREES = 10.0;
     private static final double MAX_ANGLE_DEGREES = 15.0;
-    
-    private static final double MIN_ERROR = 50.0;
-    private static final double MAX_ERROR = 100.0;
     
     private static final double ABSOLUTE_ERROR = 1e-6;
     

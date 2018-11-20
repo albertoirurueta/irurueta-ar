@@ -28,7 +28,7 @@ import java.util.List;
  * Finds the best fundamental matrix for provided collections of matched 2D
  * points using PROMedS algorithm.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PROMedSFundamentalMatrixRobustEstimator extends 
         FundamentalMatrixRobustEstimator {
     

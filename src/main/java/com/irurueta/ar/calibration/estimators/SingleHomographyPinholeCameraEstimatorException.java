@@ -20,6 +20,7 @@ import com.irurueta.geometry.estimators.GeometryEstimatorException;
 /**
  * Thrown when camera estimation fails.
  */
+@SuppressWarnings("WeakerAccess")
 public class SingleHomographyPinholeCameraEstimatorException extends 
         GeometryEstimatorException {
     

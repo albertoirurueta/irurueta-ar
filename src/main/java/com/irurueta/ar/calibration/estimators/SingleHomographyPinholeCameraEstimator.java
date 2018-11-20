@@ -31,6 +31,7 @@ import java.util.List;
  * This class can be used in planar scenes where projected points of two views
  * are related by an homography.
  */
+@SuppressWarnings("WeakerAccess")
 public class SingleHomographyPinholeCameraEstimator {
     
     /**

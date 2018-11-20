@@ -34,6 +34,7 @@ import java.util.List;
  * Non-robust fundamental matrix estimator that uses 8 matched 2D points on
  * left and right views.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class EightPointsFundamentalMatrixEstimator extends 
         FundamentalMatrixEstimator {
     

@@ -34,7 +34,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * the essential matrix and use 2D point matches to triangulate them and find
  * the initial cameras.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class InitialCamerasEstimator {
     
     /**

@@ -38,7 +38,7 @@ import java.util.List;
  * be considered more important than others if we are more confident on some
  * measures than others.
  */
-@SuppressWarnings("WeakerAcces")
+@SuppressWarnings("WeakerAccess")
 public class WeightedHomogeneousSinglePoint3DTriangulator extends 
         SinglePoint3DTriangulator {
 

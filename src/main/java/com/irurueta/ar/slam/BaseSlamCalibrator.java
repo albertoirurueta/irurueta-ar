@@ -32,7 +32,7 @@ import java.util.Arrays;
  * input).
  * @param <D> type of calibration data.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> 
         implements Serializable {
             

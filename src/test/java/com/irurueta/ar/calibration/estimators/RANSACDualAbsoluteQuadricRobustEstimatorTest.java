@@ -36,6 +36,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class RANSACDualAbsoluteQuadricRobustEstimatorTest implements
         DualAbsoluteQuadricRobustEstimatorListener {
     
@@ -603,7 +604,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimatorTest implements
     @Test
     public void testEstimate() throws AlgebraException, 
             InvalidTransformationException, LockedException, NotReadyException, 
-            RobustEstimatorException, CameraException, NotAvailableException {
+            CameraException, NotAvailableException {
         
         int numSucceeded = 0;
         for (int t = 0; t < TIMES; t++) {

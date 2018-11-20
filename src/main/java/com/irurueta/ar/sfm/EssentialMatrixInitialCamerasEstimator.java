@@ -38,6 +38,7 @@ import java.util.List;
  * points obtained from provided matched 2D points are located in front of
  * the estimated cameras.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class EssentialMatrixInitialCamerasEstimator 
         extends InitialCamerasEstimator {
     

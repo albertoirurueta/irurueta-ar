@@ -44,7 +44,7 @@ import java.util.logging.Logger;
  * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical
  * Report. MSR-TR-98-71. December 2, 1998.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     
     /**
@@ -919,9 +919,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * These parameters will be used as an initial solution and on each 
      * iteration of the Levenberg-Marquardt algorithm.
      * @param params arrays where parameters will be set using current data.
-     * @throws RotationException never happens.
      */
-    private void paramsFromData(double[] params) throws RotationException {
+    private void paramsFromData(double[] params) {
         int pos = 0;  
         
         //common parameters (intrinsic camera parameters and radial distortion

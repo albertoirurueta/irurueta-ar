@@ -35,6 +35,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class HomographyDecomposerTest implements HomographyDecomposerListener {
     
     private static final double MIN_FOCAL_LENGTH = 750.0;

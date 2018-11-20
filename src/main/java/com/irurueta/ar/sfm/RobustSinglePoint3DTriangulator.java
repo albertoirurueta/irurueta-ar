@@ -31,6 +31,7 @@ import java.util.List;
  * Robust estimators can be used to estimate a more precise triangulation when
  * there are more than 2 views where points have been matched.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class RobustSinglePoint3DTriangulator {
     
     /**

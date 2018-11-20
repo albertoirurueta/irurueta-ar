@@ -20,6 +20,7 @@ import com.irurueta.geometry.GeometryException;
 /**
  * Base exception for all exceptions related to SLAM.
  */
+@SuppressWarnings("WeakerAccess")
 public class SlamException extends GeometryException {
     
     /**

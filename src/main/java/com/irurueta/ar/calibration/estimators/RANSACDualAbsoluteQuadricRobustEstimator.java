@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * Finds the best dual absolute quadric (DAQ) using RANSAC algorithm.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class RANSACDualAbsoluteQuadricRobustEstimator extends 
         DualAbsoluteQuadricRobustEstimator {
     

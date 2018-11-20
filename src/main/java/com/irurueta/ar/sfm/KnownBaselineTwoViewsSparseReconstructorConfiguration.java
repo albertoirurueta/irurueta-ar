@@ -21,6 +21,7 @@ import java.io.Serializable;
  * Contains configuration for a two view sparse reconstructor assuming that the
  * baseline (separation between cameras) is known.
  */
+@SuppressWarnings("WeakerAccess")
 public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends 
         BaseTwoViewsSparseReconstructorConfiguration<
         KnownBaselineTwoViewsSparseReconstructorConfiguration> implements Serializable {

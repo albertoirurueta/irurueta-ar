@@ -44,6 +44,7 @@ import java.util.List;
  * @param <R> type of reconstructor.
  * @param <L> type of listener.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class BasePairedViewsSparseReconstructor<
         C extends BasePairedViewsSparseReconstructorConfiguration,
         R extends BasePairedViewsSparseReconstructor,

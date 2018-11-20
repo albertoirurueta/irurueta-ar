@@ -28,6 +28,7 @@ import java.util.List;
  * separation), so that both cameras and reconstructed points are obtained with
  * exact scale.
  */
+@SuppressWarnings("WeakerAccess")
 public class KnownBaselineTwoViewsSparseReconstructor extends 
         BaseTwoViewsSparseReconstructor<
         KnownBaselineTwoViewsSparseReconstructorConfiguration, 

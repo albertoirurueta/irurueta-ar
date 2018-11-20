@@ -28,6 +28,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class SampsonCorrectorTest implements CorrectorListener {
     
     private static final double ABSOLUTE_ERROR = 1e-6;
@@ -73,7 +74,7 @@ public class SampsonCorrectorTest implements CorrectorListener {
 
     @Test
     public void testConstructor() throws WrongSizeException, NotReadyException, 
-            LockedException, DecomposerException, NotAvailableException, 
+            DecomposerException, NotAvailableException,
             InvalidFundamentalMatrixException, 
             com.irurueta.algebra.LockedException {
         //test constructor without arguments

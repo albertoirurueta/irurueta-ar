@@ -21,6 +21,7 @@ import java.util.BitSet;
 /**
  * Contains data relating matched 2D points and their reconstructions.
  */
+@SuppressWarnings("WeakerAccess")
 public class MatchedSamples implements Serializable {
     
     /**

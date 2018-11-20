@@ -35,6 +35,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class KnownBaselineSparseReconstructorTest {
 
     private static final double MIN_RANDOM_VALUE = -100.0;

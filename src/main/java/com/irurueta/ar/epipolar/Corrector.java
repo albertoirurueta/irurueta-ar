@@ -35,6 +35,7 @@ import java.util.List;
  * This is an abstract class, subclasses will implement different methods to
  * fix matched points coordinates.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class Corrector {
     
     /**

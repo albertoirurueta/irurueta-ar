@@ -20,6 +20,7 @@ package com.irurueta.ar.sfm;
  * Class in charge of estimating cameras and 3D reconstruction points from
  * sparse image point correspondences.
  */
+@SuppressWarnings("WeakerAccess")
 public class SparseReconstructor extends
         BaseSparseReconstructor<SparseReconstructorConfiguration, SparseReconstructor,
         SparseReconstructorListener> {

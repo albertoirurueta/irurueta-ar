@@ -43,7 +43,7 @@ import java.util.List;
  * accuracy than the 8 points algorithm, because rank-2 is not approximated
  * using SVD, and rather it is accurately enforced.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class SevenPointsFundamentalMatrixEstimator extends 
         FundamentalMatrixEstimator {
     

@@ -22,6 +22,7 @@ import com.irurueta.ar.slam.SlamEstimator;
  * correspondences in two views and using SLAM (with accelerometer and gyroscope
  * data) for overall scale estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public class SlamTwoViewsSparseReconstructor extends 
         BaseSlamTwoViewsSparseReconstructor<
         SlamTwoViewsSparseReconstructorConfiguration, 

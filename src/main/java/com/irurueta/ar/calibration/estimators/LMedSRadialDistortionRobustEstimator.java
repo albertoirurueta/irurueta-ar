@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  * Finds the best radial distortion for provided collection of 2D points using
  * LMedS algorithm
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LMedSRadialDistortionRobustEstimator extends 
         RadialDistortionRobustEstimator {
     

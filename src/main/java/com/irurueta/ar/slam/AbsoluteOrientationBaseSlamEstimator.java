@@ -32,6 +32,7 @@ import java.io.Serializable;
  * @param <D> calibrator type associated to implementations of SLAM calibration 
  * data.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class AbsoluteOrientationBaseSlamEstimator<D extends BaseCalibrationData> 
         extends BaseSlamEstimator<D> implements Serializable {
     

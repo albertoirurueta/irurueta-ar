@@ -49,6 +49,7 @@ import java.util.List;
  * solution that produces the largest amount of points located in front of both
  * cameras.
  */
+@SuppressWarnings("WeakerAccess")
 public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     
     /**

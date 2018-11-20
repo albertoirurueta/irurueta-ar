@@ -23,6 +23,7 @@ import com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator;
  * in multiple views and using SLAM (with accelerometer and gyroscope data) with constant
  * velocity model for overall scale estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public class ConstantVelocityModelSlamSparseReconstructor extends
         BaseSlamSparseReconstructor<
         ConstantVelocityModelSlamSparseReconstructorConfiguration,

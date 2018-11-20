@@ -41,6 +41,7 @@ import java.util.List;
  * of the image plane (zero), and both horizontal and vertical focal planes are
  * equal.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class WeightedDualAbsoluteQuadricEstimator extends 
         DualAbsoluteQuadricEstimator {
     

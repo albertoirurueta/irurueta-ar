@@ -36,6 +36,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class FundamentalMatrixRefinerTest implements 
         RefinerListener<FundamentalMatrix> {
     
@@ -592,6 +593,7 @@ public class FundamentalMatrixRefinerTest implements
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {
+            //noinspection all
             refiner.setInliersData(null);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }

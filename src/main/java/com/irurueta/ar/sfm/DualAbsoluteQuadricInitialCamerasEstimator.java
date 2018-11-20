@@ -34,6 +34,7 @@ import java.util.List;
  * cameras.
  * Aspect ratio can be configured but by default it is assumed to be 1.0.
  */
+@SuppressWarnings("WeakerAccess")
 public class DualAbsoluteQuadricInitialCamerasEstimator extends 
         InitialCamerasEstimator {
     

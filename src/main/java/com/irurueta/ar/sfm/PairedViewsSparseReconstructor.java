@@ -28,6 +28,7 @@ import java.util.ArrayList;
  * Class in charge of estimating pairs of cameras and 3D reconstruction points from
  * sparse image point correspondences.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconstructor<
         PairedViewsSparseReconstructorConfiguration, PairedViewsSparseReconstructor,
         PairedViewsSparseReconstructorListener> {

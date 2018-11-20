@@ -35,6 +35,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class FundamentalMatrixRobustEstimator {
     
     /**

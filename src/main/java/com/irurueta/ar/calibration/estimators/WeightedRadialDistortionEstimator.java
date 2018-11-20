@@ -35,7 +35,8 @@ import java.util.List;
  * Weights can be used so that correspondences assumed to have a better quality
  * are considered to be more relevant.
  */
-public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator{
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
+public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator {
     /**
      * Default number of points (i.e. correspondences) to be weighted and taken
      * into account.

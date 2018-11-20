@@ -42,6 +42,7 @@ import java.util.List;
  * Typically a refiner is used by a robust estimator, however it can also be
  * useful in some other situations.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class FundamentalMatrixRefiner extends 
         PairMatchesAndInliersDataRefiner<FundamentalMatrix, Point2D, Point2D> {    
     

@@ -19,5 +19,6 @@ package com.irurueta.ar.sfm;
  * Listener to retrieve and store required data to compute a 3D reconstruction
  * from sparse image point correspondences in two views.
  */
+@SuppressWarnings("WeakerAccess")
 public interface TwoViewsSparseReconstructorListener extends 
         BaseTwoViewsSparseReconstructorListener<TwoViewsSparseReconstructor> { }

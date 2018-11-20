@@ -38,6 +38,7 @@ import java.util.List;
  * instead a robust estimation method should be chosen to discard outliers and 
  * obtain the most accurate and stable solution possible.
  */
+@SuppressWarnings("Duplicates")
 public class LMSEImageOfAbsoluteConicEstimator extends 
         ImageOfAbsoluteConicEstimator {
     

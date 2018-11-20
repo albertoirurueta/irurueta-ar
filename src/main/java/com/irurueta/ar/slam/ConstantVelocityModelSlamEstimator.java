@@ -29,6 +29,7 @@ import java.io.Serializable;
  * Estimates position, velocity, acceleration and angular speed using
  * data from accelerometer and gyroscope and assuming a constant velocity model.
  */
+@SuppressWarnings("Duplicates")
 public class ConstantVelocityModelSlamEstimator extends 
         BaseSlamEstimator<ConstantVelocityModelSlamCalibrationData> 
         implements Serializable {

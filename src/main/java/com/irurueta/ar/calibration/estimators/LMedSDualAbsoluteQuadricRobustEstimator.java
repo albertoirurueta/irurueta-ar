@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best Dual Absolute Quadric (DAQ) for provided collection of cameras
  * using LMedS algorithm.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LMedSDualAbsoluteQuadricRobustEstimator extends 
         DualAbsoluteQuadricRobustEstimator {
     

@@ -22,7 +22,7 @@ import com.irurueta.geometry.Point3D;
 /**
  * Utility class to predict position of device.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PositionPredictor {
     
     /**

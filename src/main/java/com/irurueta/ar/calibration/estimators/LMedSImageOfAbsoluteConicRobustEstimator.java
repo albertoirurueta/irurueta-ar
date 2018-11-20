@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best Image of AbsoluteConic (IAC) for provided collection of 
  * homographies (2D transformations) using LMedS algorithm.
  */
+@SuppressWarnings("Duplicates")
 public class LMedSImageOfAbsoluteConicRobustEstimator extends 
         ImageOfAbsoluteConicRobustEstimator {
     /**

@@ -31,7 +31,7 @@ import java.util.List;
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar liens.
  * The consequence is that triangularization of these matches will fail or
- * produce innaccurate results.
+ * produce inaccurate results.
  * By fixing matched points using a corrector following a given epipolar
  * geometry, this effect is alleviated.
  * This corrector uses the Gold Standard method, which is more expensive to 
@@ -40,6 +40,7 @@ import java.util.List;
  * Gold Standard method might fail in some situations, while in those cases
  * probably the Sampson corrector produces wrong results without failing.
  */
+@SuppressWarnings("WeakerAccess")
 public class GoldStandardCorrector extends Corrector {
     
     /**

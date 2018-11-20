@@ -20,6 +20,7 @@ import com.irurueta.geometry.estimators.GeometryEstimatorException;
 /**
  * Thrown when radial distortion estimation fails.
  */
+@SuppressWarnings("WeakerAccess")
 public class RadialDistortionEstimatorException extends GeometryEstimatorException {
     
     /**

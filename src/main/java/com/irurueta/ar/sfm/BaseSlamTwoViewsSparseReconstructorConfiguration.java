@@ -28,6 +28,7 @@ import java.io.Serializable;
  * @param <C> type defining calibration data.
  * @param <T> an actual implementation of a configuration class.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
         C extends BaseCalibrationData, 
         T extends BaseSlamTwoViewsSparseReconstructorConfiguration> extends 

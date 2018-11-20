@@ -30,6 +30,7 @@ import java.util.List;
  * Robustly triangulates 3D points from matched 2D points and their.
  * corresponding cameras on several views using RANSAC algorithm.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class RANSACRobustSinglePoint3DTriangulator extends 
         RobustSinglePoint3DTriangulator {
 

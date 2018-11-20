@@ -34,6 +34,7 @@ import java.util.List;
  * Non-robust fundamental matrix estimator for Affine camera projection model.
  * This implementation uses 4 matched 2D points on left and right views.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class AffineFundamentalMatrixEstimator extends 
         FundamentalMatrixEstimator {
 

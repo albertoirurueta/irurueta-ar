@@ -31,6 +31,7 @@ import java.util.logging.Logger;
  * Finds the best radial distortion for provided collections of 2D points using
  * PROSAC algorithm.
  */
+@SuppressWarnings("Duplicates")
 public class PROSACRadialDistortionRobustEstimator extends 
         RadialDistortionRobustEstimator {
     

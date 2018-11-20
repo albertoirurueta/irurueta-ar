@@ -23,6 +23,7 @@ import java.io.Serializable;
 /**
  * Contains data of a 2D point sample on a given view.
  */
+@SuppressWarnings("WeakerAccess")
 public class Sample2D implements Serializable {
     
     /**

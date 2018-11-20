@@ -37,6 +37,7 @@ import java.util.List;
  * into account in case that sampled data contains errors, so that an LMSE error
  * can be obtained.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     /**
      * Indicates if by default an LMSE (Least Mean Square Error) solution is

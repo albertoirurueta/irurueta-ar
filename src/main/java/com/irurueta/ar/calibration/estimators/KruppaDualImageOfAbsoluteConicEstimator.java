@@ -17,8 +17,8 @@ package com.irurueta.ar.calibration.estimators;
 
 import com.irurueta.algebra.*;
 import com.irurueta.ar.calibration.DualImageOfAbsoluteConic;
-import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.numerical.NumericalException;
@@ -38,7 +38,7 @@ import com.irurueta.numerical.polynomials.Polynomial;
  * intrinsic parameters of a camera. AI Vision Research Unit. University of 
  * Sheffield.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class KruppaDualImageOfAbsoluteConicEstimator {
     
     /**

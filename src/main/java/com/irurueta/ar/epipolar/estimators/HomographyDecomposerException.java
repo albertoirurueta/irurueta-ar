@@ -20,6 +20,7 @@ import com.irurueta.ar.epipolar.EpipolarException;
 /**
  * Exception raised if homography decomposition fails.
  */
+@SuppressWarnings("WeakerAccess")
 public class HomographyDecomposerException extends EpipolarException {
     
     /**

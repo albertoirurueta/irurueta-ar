@@ -29,6 +29,7 @@ import java.util.List;
  * (camera separation), so that cameras and reconstructed points are obtained with
  * exact scale.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class KnownBaselineSparseReconstructor extends
         BaseSparseReconstructor<KnownBaselineSparseReconstructorConfiguration,
                 KnownBaselineSparseReconstructor, KnownBaselineSparseReconstructorListener> {

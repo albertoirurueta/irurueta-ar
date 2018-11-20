@@ -34,7 +34,7 @@ import java.util.Random;
  * matrices. The smaller the value the more similar the fundamental matrices
  * will be from a pure algebraic point of view.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class EpipolarDistanceFundamentalMatrixComparator extends 
         FundamentalMatrixComparator {
      

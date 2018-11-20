@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best fundamental matrix for provided collections of matched 2D
  * points using PROSAC algorithm.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PROSACFundamentalMatrixRobustEstimator extends
         FundamentalMatrixRobustEstimator {
     

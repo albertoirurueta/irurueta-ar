@@ -21,6 +21,7 @@ import java.io.Serializable;
 /**
  * Contains configuration for a multiple view sparse reconstructor.
  */
+@SuppressWarnings("WeakerAccess")
 public class SparseReconstructorConfiguration extends
         BaseSparseReconstructorConfiguration<SparseReconstructorConfiguration> implements Serializable {
 

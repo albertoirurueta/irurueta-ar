@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical 
  * Report. MSR-TR-98-71. December 2, 1998
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class AlternatingCameraCalibrator extends CameraCalibrator {
 
     /**

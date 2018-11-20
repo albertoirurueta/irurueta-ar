@@ -36,6 +36,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * is faster than the Gold standard method, but can only correct small errors
  * (1 or 2 pixels).
  */
+@SuppressWarnings("WeakerAccess")
 public class SampsonSingleCorrector extends SingleCorrector {
     
     /**

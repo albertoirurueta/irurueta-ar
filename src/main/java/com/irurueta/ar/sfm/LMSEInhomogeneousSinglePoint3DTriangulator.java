@@ -32,6 +32,7 @@ import java.util.List;
  * each of those views by finding an LMSE solution to homogeneous systems of
  * equations.
  */
+@SuppressWarnings("WeakerAccess")
 public class LMSEInhomogeneousSinglePoint3DTriangulator extends
         SinglePoint3DTriangulator {
 

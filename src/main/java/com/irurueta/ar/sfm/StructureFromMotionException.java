@@ -20,6 +20,7 @@ import com.irurueta.geometry.GeometryException;
 /**
  * Base exception for all exceptions in the com.irurueta.ar.sfm package.
  */
+@SuppressWarnings("WeakerAccess")
 public class StructureFromMotionException extends GeometryException {
     
     /**

@@ -30,6 +30,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class LMedSRobustSinglePoint3DTriangulatorTest implements
         RobustSinglePoint3DTriangulatorListener {
     

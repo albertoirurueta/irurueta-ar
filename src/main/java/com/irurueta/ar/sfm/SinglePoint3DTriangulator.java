@@ -38,6 +38,7 @@ import java.util.List;
  * cameras are close and well defined, inhomogeneous methods might yield better
  * accuracy (although the difference is minimal).
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class SinglePoint3DTriangulator {
     
     /**

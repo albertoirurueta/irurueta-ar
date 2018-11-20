@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best dual absolute quadric (DAQ) for provided collection of
  * cameras using PROSAC algorithm.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PROSACDualAbsoluteQuadricRobustEstimator extends 
         DualAbsoluteQuadricRobustEstimator {
     

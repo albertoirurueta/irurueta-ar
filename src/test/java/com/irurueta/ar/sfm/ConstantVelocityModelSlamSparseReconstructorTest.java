@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class ConstantVelocityModelSlamSparseReconstructorTest {
 
     private static final double MIN_FOCAL_LENGTH_ESSENTIAL = 750.0;

@@ -25,6 +25,7 @@ import java.util.List;
 /**
  * Contains data of estimated fundamental matrix.
  */
+@SuppressWarnings("WeakerAccess")
 public class EstimatedFundamentalMatrix implements Serializable {
     
     /**

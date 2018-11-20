@@ -20,7 +20,7 @@ import com.irurueta.algebra.Matrix;
 /**
  * Utility class to predict velocity of device.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class VelocityPredictor {
     
     /**

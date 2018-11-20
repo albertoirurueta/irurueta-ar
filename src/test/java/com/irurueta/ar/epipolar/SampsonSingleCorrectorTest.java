@@ -25,6 +25,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class SampsonSingleCorrectorTest {
     
     private static final double ABSOLUTE_ERROR = 1e-6;

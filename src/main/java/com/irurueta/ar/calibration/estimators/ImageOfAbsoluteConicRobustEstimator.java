@@ -34,6 +34,7 @@ import java.util.List;
  * Implementions of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class ImageOfAbsoluteConicRobustEstimator {
     /**
      * Default robust estimator method when none is provided.

@@ -36,6 +36,7 @@ import java.util.List;
  * will fail since this kind of geometry is a degenerate configuration of 
  * points.
  */
+@SuppressWarnings("WeakerAccess")
 public class PlanarFundamentalMatrixEstimator {
     
     /**

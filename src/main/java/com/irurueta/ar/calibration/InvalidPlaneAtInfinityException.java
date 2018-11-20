@@ -18,6 +18,7 @@ package com.irurueta.ar.calibration;
 /**
  * Exception produced when plane at infinity cannot be determined.
  */
+@SuppressWarnings("WeakerAccess")
 public class InvalidPlaneAtInfinityException extends CalibrationException {
     
     /**

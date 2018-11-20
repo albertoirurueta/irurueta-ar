@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * Finds the best Image of Absolute Conic (IAC) using RANSAC algorithm.
  */
+@SuppressWarnings("Duplicates")
 public class RANSACImageOfAbsoluteConicRobustEstimator extends 
         ImageOfAbsoluteConicRobustEstimator {
 

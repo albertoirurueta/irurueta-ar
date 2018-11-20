@@ -32,6 +32,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * as the algebraic distance decreases, the value returned by this 
  * implementation has no geometric meaning at all.
  */
+@SuppressWarnings("WeakerAccess")
 public class AlgebraicFundamentalMatrixComparator extends 
         FundamentalMatrixComparator {
     

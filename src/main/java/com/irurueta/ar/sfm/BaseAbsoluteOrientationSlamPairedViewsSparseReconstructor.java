@@ -31,6 +31,7 @@ import com.irurueta.geometry.Rotation3D;
  * @param <L> type of listener.
  * @param <S> type of SLAM estimator.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
         C extends BaseSlamPairedViewsSparseReconstructorConfiguration,
         R extends BaseSlamPairedViewsSparseReconstructor,

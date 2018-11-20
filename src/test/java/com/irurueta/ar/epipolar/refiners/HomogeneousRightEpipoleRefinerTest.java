@@ -36,6 +36,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class HomogeneousRightEpipoleRefinerTest implements 
         RefinerListener<Point2D> {
     

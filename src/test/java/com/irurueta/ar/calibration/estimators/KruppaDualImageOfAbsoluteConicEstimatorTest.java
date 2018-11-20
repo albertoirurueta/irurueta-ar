@@ -16,9 +16,9 @@
 package com.irurueta.ar.calibration.estimators;
 
 import com.irurueta.ar.calibration.DualImageOfAbsoluteConic;
-import com.irurueta.geometry.*;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.ar.epipolar.InvalidPairOfCamerasException;
+import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;

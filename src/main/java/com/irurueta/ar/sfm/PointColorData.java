@@ -20,6 +20,7 @@ import java.io.Serializable;
 /**
  * Contains color information for a given point.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class PointColorData implements Serializable {
     /**
      * Default quality score value.

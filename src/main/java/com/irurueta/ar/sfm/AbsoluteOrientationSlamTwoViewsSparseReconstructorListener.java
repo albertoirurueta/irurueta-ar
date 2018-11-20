@@ -20,6 +20,7 @@ package com.irurueta.ar.sfm;
  * from sparse image point correspondences in two views and using SLAM with
  * absolute orientation for scale and orientation estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public interface AbsoluteOrientationSlamTwoViewsSparseReconstructorListener 
         extends BaseSlamTwoViewsSparseReconstructorListener<
         AbsoluteOrientationSlamTwoViewsSparseReconstructor> { }

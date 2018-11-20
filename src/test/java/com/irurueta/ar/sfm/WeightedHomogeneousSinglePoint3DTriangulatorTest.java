@@ -27,6 +27,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class WeightedHomogeneousSinglePoint3DTriangulatorTest implements
         SinglePoint3DTriangulatorListener {
     

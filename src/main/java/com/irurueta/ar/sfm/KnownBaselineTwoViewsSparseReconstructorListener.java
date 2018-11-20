@@ -19,6 +19,7 @@ package com.irurueta.ar.sfm;
  * Listener to retrieve and store required data to compute a 3D reconstruction
  * from sparse image point correspondences in two views when baseline is known.
  */
+@SuppressWarnings("WeakerAccess")
 public interface KnownBaselineTwoViewsSparseReconstructorListener extends 
         BaseTwoViewsSparseReconstructorListener<
         KnownBaselineTwoViewsSparseReconstructor> { }

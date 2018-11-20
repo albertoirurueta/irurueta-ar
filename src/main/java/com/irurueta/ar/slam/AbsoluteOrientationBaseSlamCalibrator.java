@@ -28,6 +28,7 @@ import java.io.Serializable;
  * account absolute orientation.
  * @param <D> type of calibration data.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibrationData> extends 
         BaseSlamCalibrator<D> implements Serializable {
     

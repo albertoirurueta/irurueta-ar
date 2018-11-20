@@ -18,10 +18,10 @@ package com.irurueta.ar.calibration;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
+import com.irurueta.ar.calibration.estimators.LMSERadialDistortionEstimator;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.ar.calibration.estimators.LMSERadialDistortionEstimator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ import java.util.List;
  * distortions, RadialDistortion should work with normalized point coordinates 
  * between -1.0 and 1.0.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class RadialDistortion extends Distortion implements Serializable {
         
     /**

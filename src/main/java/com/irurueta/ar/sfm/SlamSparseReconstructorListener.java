@@ -21,5 +21,6 @@ package com.irurueta.ar.sfm;
  * sparse image point correspondences in multiple views and using SLAM for scale
  * estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public interface SlamSparseReconstructorListener extends
         BaseSlamSparseReconstructorListener<SlamSparseReconstructor> { }

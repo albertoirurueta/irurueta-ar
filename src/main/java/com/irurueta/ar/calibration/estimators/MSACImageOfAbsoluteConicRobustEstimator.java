@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best image of absolute conic (IAC) for provided collection of
  * homographies (2D transformations) using MSAC algorithm.
  */
+@SuppressWarnings("Duplicates")
 public class MSACImageOfAbsoluteConicRobustEstimator extends 
         ImageOfAbsoluteConicRobustEstimator {
     

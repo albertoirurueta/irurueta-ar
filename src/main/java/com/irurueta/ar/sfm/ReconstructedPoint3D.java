@@ -24,6 +24,7 @@ import java.io.Serializable;
 /**
  * Contains data of a reconstructed 3D point.
  */
+@SuppressWarnings("WeakerAccess")
 public class ReconstructedPoint3D implements Serializable {
     
     /**

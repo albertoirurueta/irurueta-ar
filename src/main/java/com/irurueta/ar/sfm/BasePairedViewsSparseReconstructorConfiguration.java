@@ -28,6 +28,7 @@ import java.io.Serializable;
  * Base class containing configuration for a paired view based sparse reconstructor.
  * @param <T> an actual implementation of a configuration class.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class BasePairedViewsSparseReconstructorConfiguration<
         T extends BasePairedViewsSparseReconstructorConfiguration> implements Serializable {
 

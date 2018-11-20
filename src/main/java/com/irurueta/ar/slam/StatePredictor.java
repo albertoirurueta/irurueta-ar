@@ -25,7 +25,7 @@ import com.irurueta.geometry.Quaternion;
  * Utility class to predict device state (position, orientation, linear 
  * velocity, linear acceleration and angular velocity).
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class StatePredictor {
     
     /**

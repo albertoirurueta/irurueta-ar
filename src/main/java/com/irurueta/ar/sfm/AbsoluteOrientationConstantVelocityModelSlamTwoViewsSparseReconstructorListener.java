@@ -21,6 +21,7 @@ package com.irurueta.ar.sfm;
  * absolute orientation and constant velocity model for scale and orientation
  * estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public interface AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener 
         extends BaseSlamTwoViewsSparseReconstructorListener<
         AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor> { }

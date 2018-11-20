@@ -18,6 +18,7 @@ package com.irurueta.ar.sfm;
 /**
  * Exception raised if a reconstructor fails or is cancelled.
  */
+@SuppressWarnings("WeakerAccess")
 public class ReconstructionException extends StructureFromMotionException {
     
     /**

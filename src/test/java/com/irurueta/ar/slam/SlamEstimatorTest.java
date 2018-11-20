@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class SlamEstimatorTest implements BaseSlamEstimatorListener {
     
     private static final int TIMES = 50;

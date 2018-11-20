@@ -20,6 +20,7 @@ import com.irurueta.geometry.estimators.GeometryEstimatorException;
 /**
  * Thrown when IAC estimation fails.
  */
+@SuppressWarnings("WeakerAccess")
 public class ImageOfAbsoluteConicEstimatorException extends 
         GeometryEstimatorException {
     

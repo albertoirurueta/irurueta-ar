@@ -32,6 +32,7 @@ import java.util.List;
  * @param <L> type of listener.
  * @param <S> type of SLAM estimator.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class BaseSlamTwoViewsSparseReconstructor<
         C extends BaseSlamTwoViewsSparseReconstructorConfiguration,
         R extends BaseSlamTwoViewsSparseReconstructor,
