@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RANSACRobustSinglePoint3DTriangulator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">RANSACRobustSinglePoint3DTriangulator.java</span></div><h1>RANSACRobustSinglePoint3DTriangulator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Robustly triangulates 3D points from matched 2D points and their.
+ * corresponding cameras on several views using RANSAC algorithm.
+ */
+public class RANSACRobustSinglePoint3DTriangulator extends 
+        RobustSinglePoint3DTriangulator {
+
+    /**
+     * Constant defining default threshold to determine whether samples are 
+     * inliers or not.
+     * By default 1.0 is considered a good value for cases where 2D point 
+     * measures are done on pixels, since typically the minimum resolution is 1 
+     * pixel.
+     */
+    public static final double DEFAULT_THRESHOLD = 1.0;
+        
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+    
+    /**
+     * Threshold to determine whether samples are inliers or not when testing
+     * possible estimation solutions.
+     * The threshold refers to the amount of projection error (i.e. distance of
+     * projected solution using each camera).
+     */
+    private double mThreshold;    
+    
+    /**
+     * Constructor.
+     */
+    public RANSACRobustSinglePoint3DTriangulator() {
+<span class="fc" id="L63">        super();</span>
+<span class="fc" id="L64">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L65">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     */
+    public RANSACRobustSinglePoint3DTriangulator(
+            RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L74">        super(listener);</span>
+<span class="fc" id="L75">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L76">    }</span>
+    
+    /**
+     * Constructor.
+     * @param points Matched 2D points. Each point in the list is assumed to be 
+     * projected by the corresponding camera in the list.
+     * @param cameras List of cameras associated to the matched 2D point on the 
+     * same position as the camera on the list.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     * length or their length is less than 2 views, which is the minimum 
+     * required to compute triangulation.
+     */
+    public RANSACRobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points, 
+            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+<span class="fc" id="L90">        super(points, cameras);</span>
+<span class="fc" id="L91">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L92">    }</span>
+    
+    /**
+     * Constructor.
+     * @param points Matched 2D points. Each point in the list is assumed to be 
+     * projected by the corresponding camera in the list.
+     * @param cameras List of cameras associated to the matched 2D point on the 
+     * same position as the camera on the list.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     * length or their length is less than 2 views, which is the minimum 
+     * required to compute triangulation.
+     */
+    public RANSACRobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points,
+            List&lt;PinholeCamera&gt; cameras, 
+            RobustSinglePoint3DTriangulatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L110">        super(points, cameras, listener);</span>
+<span class="fc" id="L111">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L112">    }</span>
+    
+    /**
+     * Returns threshold to determine whether points are inliers or not when 
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. euclidean distance) a 
+     * possible solution has on projected 2D points.
+     * @return threshold to determine whether points are inliers or not when 
+     * testing possible estimation solutions.
+     */
+    public double getThreshold() {
+<span class="fc" id="L123">        return mThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to determine whether points are inliers or not when 
+     * testing possible estimation solutions.
+     * Thre threshold refers to the amount of error (i.e. euclidean distance) a
+     * possible solution has on projected 2D points.
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setThreshold(double threshold) throws IllegalArgumentException, 
+            LockedException {
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L140">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L143">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L145">        mThreshold = threshold;</span>
+<span class="fc" id="L146">    }    </span>
+    
+    /**
+     * Triangulates provided matched 2D points being projected by each 
+     * corresponding camera into a single 3D point.
+     * At least 2 matched 2D points and their corresponding 2 cameras are 
+     * required to compute triangulation. If more views are provided, an 
+     * averaged solution can be found.
+     * @return computed triangulated 3D point.
+     * @throws LockedException if this instance is locked.
+     * @throws NotReadyException if lists of points and cameras don't have the
+     * same length or less than 2 views are provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public Point3D triangulate() throws LockedException, NotReadyException, 
+            RobustEstimatorException {
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L165">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L168">            throw new NotReadyException();</span>
+        }
+        
+<span class="fc" id="L171">        RANSACRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
+                new RANSACRobustEstimator&lt;&gt;(
+<span class="fc" id="L173">                new RANSACRobustEstimatorListener&lt;Point3D&gt;() {</span>
+                    
+            //point to be reused when computing residuals
+<span class="fc" id="L176">            private Point2D mTestPoint = Point2D.create(</span>
+                    CoordinatesType.HOMOGENEOUS_COORDINATES);
+
+            //non-robust 3D point triangulator
+<span class="fc" id="L180">            private SinglePoint3DTriangulator mTriangulator = </span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">                    SinglePoint3DTriangulator.create(mUseHomogeneousSolution ?</span>
+<span class="fc" id="L182">                    Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR :</span>
+<span class="nc" id="L183">                    Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);</span>
+            
+            //subset of 2D points
+<span class="fc" id="L186">            private List&lt;Point2D&gt; mSubsetPoints = new ArrayList&lt;&gt;();</span>
+            
+            //subst of cameras
+<span class="fc" id="L189">            private List&lt;PinholeCamera&gt; mSubsetCameras = </span>
+                    new ArrayList&lt;&gt;();
+            
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L194">                return mThreshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L199">                return mPoints2D.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L204">                return MIN_REQUIRED_VIEWS;</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, 
+                    List&lt;Point3D&gt; solutions) {
+<span class="fc" id="L210">                mSubsetPoints.clear();</span>
+<span class="fc" id="L211">                mSubsetPoints.add(mPoints2D.get(samplesIndices[0]));</span>
+<span class="fc" id="L212">                mSubsetPoints.add(mPoints2D.get(samplesIndices[1]));</span>
+                
+<span class="fc" id="L214">                mSubsetCameras.clear();</span>
+<span class="fc" id="L215">                mSubsetCameras.add(mCameras.get(samplesIndices[0]));</span>
+<span class="fc" id="L216">                mSubsetCameras.add(mCameras.get(samplesIndices[1]));</span>
+                
+                try {
+<span class="fc" id="L219">                    mTriangulator.setPointsAndCameras(mSubsetPoints, </span>
+                            mSubsetCameras);
+<span class="fc" id="L221">                    Point3D triangulated = mTriangulator.triangulate();</span>
+<span class="fc" id="L222">                    solutions.add(triangulated);</span>
+<span class="nc" id="L223">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L225">                }</span>
+<span class="fc" id="L226">            }</span>
+
+            @Override
+            public double computeResidual(Point3D currentEstimation, int i) {
+<span class="fc" id="L230">                Point2D point2D = mPoints2D.get(i);</span>
+<span class="fc" id="L231">                PinholeCamera camera = mCameras.get(i);</span>
+                
+                //project estimated point with camera
+<span class="fc" id="L234">                camera.project(currentEstimation, mTestPoint);</span>
+                
+                //return distance of projected point respect to the original one
+                //as a residual
+<span class="fc" id="L238">                return mTestPoint.distanceTo(point2D);</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L243">                return RANSACRobustSinglePoint3DTriangulator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(RobustEstimator&lt;Point3D&gt; estimator) {
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L249">                    mListener.onTriangulateStart(</span>
+                            RANSACRobustSinglePoint3DTriangulator.this);
+                }
+<span class="fc" id="L252">            }</span>
+
+            @Override
+            public void onEstimateEnd(RobustEstimator&lt;Point3D&gt; estimator) {
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L257">                    mListener.onTriangulateEnd(</span>
+                            RANSACRobustSinglePoint3DTriangulator.this);
+                }
+<span class="fc" id="L260">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;Point3D&gt; estimator, int iteration) {
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L266">                    mListener.onTriangulateNextIteration(</span>
+                            RANSACRobustSinglePoint3DTriangulator.this, 
+                            iteration);
+                }
+<span class="fc" id="L270">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;Point3D&gt; estimator, float progress) {
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L276">                    mListener.onTriangulateProgressChange(</span>
+                            RANSACRobustSinglePoint3DTriangulator.this, 
+                            progress);
+                }
+<span class="fc" id="L280">            }</span>
+        });
+        
+        try {
+<span class="fc" id="L284">            mLocked = true;</span>
+<span class="fc" id="L285">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L286">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L287">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L288">            return innerEstimator.estimate();</span>
+<span class="nc" id="L289">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L290">            throw new LockedException(e);</span>
+<span class="nc" id="L291">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L292">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L294">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */    
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L304">        return RobustEstimatorMethod.RANSAC;</span>
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EstimatedCamera.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">EstimatedCamera.java</span></div><h1>EstimatedCamera.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.PinholeCamera;
+
+import java.io.Serializable;
+
+/**
+ * Contains data of estimated camera.
+ */
+public class EstimatedCamera implements Serializable {
+    
+    /**
+     * Default quality score value.
+     */
+    public static final double DEFAULT_QUALITY_SCORE = 1.0;
+    
+    /**
+     * Id to identify this instance. This is useful in case that this data is
+     * stored in some sort of database and must be set externally.
+     */
+    private String mId;
+
+    /**
+     * Id of view for which camera has been estimated.
+     */
+    private int mViewId;
+    
+    /**
+     * Estimated camera.
+     */
+    private PinholeCamera mCamera;
+    
+    /**
+     * Quality score of estimated camera. The larger the value, the better the
+     * quality. This is used for robust estimators such as PROSAC or PROMedS.
+     * This value is typically obtained during camera estimation.
+     */
+<span class="fc" id="L54">    private double mQualityScore = DEFAULT_QUALITY_SCORE;</span>
+    
+    /**
+     * Covariance of estimated camera. This can be computed during camera 
+     * estimation.
+     */
+    private Matrix mCovariance;
+    
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L65">    public EstimatedCamera() { }</span>
+    
+    /**
+     * Gets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     * @return id to identify this instance.
+     */
+    public String getId() {
+<span class="fc" id="L73">        return mId;</span>
+    }
+    
+    /**
+     * Sets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     * @param id id to identify this instance.
+     */
+    public void setId(String id) {
+<span class="fc" id="L82">        mId = id;</span>
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Gets id of view for which camera has been estimated.
+     * @return id of view for which camera has been estimated.
+     */
+    public int getViewId() {
+<span class="fc" id="L90">        return mViewId;</span>
+    }
+
+    /**
+     * Sets id of view for which camera has been estimated.
+     * @param viewId id of view for which camera has been estimated.
+     */
+    public void setViewId(int viewId) {
+<span class="fc" id="L98">        mViewId = viewId;</span>
+<span class="fc" id="L99">    }</span>
+    
+    /**
+     * Gets estimated camera.
+     * @return estimated camera.
+     */
+    public PinholeCamera getCamera() {
+<span class="fc" id="L106">        return mCamera;</span>
+    }
+    
+    /**
+     * Sets estimated camera.
+     * @param camera estimated camera.
+     */
+    public void setCamera(PinholeCamera camera) {
+<span class="fc" id="L114">        mCamera = camera;</span>
+<span class="fc" id="L115">    }</span>
+    
+    /**
+     * Gets quality score of estimated camera. The larger the value, the better 
+     * the quality. This is used for robust estimators such as PROSAC or 
+     * PROMedS.
+     * This value is typically obtained from algorithms determining point
+     * correspondences.
+     * @return quality score of estimated camera.
+     */
+    public double getQualityScore() {
+<span class="fc" id="L126">        return mQualityScore;</span>
+    }
+    
+    /**
+     * Sets quality score of estimated camera. The larger the vaule, the better
+     * the quality. This is used for robust estimators such as PROSAC or 
+     * PROMedS.
+     * This value is typically obtained from algorithms determining point 
+     * correspondences.
+     * @param qualityScore quality score of estimated camera.
+     */
+    public void setQualityScore(double qualityScore) {
+<span class="fc" id="L138">        mQualityScore = qualityScore;</span>
+<span class="fc" id="L139">    }</span>
+    
+    /**
+     * Gets covariance of estimated camera. This can be computed during camera
+     * estimation.
+     * @return covariance of estimated camera.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L147">        return mCovariance;</span>
+    }
+    
+    /**
+     * Sets covariance of estimated camera. This can be computed during camera
+     * estimation.
+     * @param covariance covariance of estimated camera.
+     */
+    public void setCovariance(Matrix covariance) {
+<span class="fc" id="L156">        mCovariance = covariance;</span>
+<span class="fc" id="L157">    }    </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

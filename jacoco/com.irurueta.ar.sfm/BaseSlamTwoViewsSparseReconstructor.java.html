@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseSlamTwoViewsSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">BaseSlamTwoViewsSparseReconstructor.java</span></div><h1>BaseSlamTwoViewsSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.ar.slam.BaseCalibrationData;
+import com.irurueta.ar.slam.BaseSlamEstimator;
+import com.irurueta.geometry.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Base class in charge of estimating cameras and 3D reconstructed points from
+ * sparse image point correspondences in two views and also in charge of 
+ * estimating overall scene scale by means of SLAM (Simultaneous Location And
+ * Mapping) using data obtained from sensors like accelerometers or gyroscopes.
+ * @param &lt;C&gt; type of configuration.
+ * @param &lt;R&gt; type of reconstructor.
+ * @param &lt;L&gt; type of listener.
+ * @param &lt;S&gt; type of SLAM estimator.
+ */
+public abstract class BaseSlamTwoViewsSparseReconstructor&lt;
+        C extends BaseSlamTwoViewsSparseReconstructorConfiguration,
+        R extends BaseSlamTwoViewsSparseReconstructor,
+        L extends BaseSlamTwoViewsSparseReconstructorListener&lt;R&gt;,
+        S extends BaseSlamEstimator&gt; extends 
+        BaseTwoViewsSparseReconstructor&lt;C, R, L&gt; {
+    
+    /**
+     * Slam estimator to estimate position, speed, orientation using 
+     * accelerometer and gyroscope data.
+     */
+    protected S mSlamEstimator;
+
+    /**
+     * Position estimated by means of SLAM. It is reused each time it is notified.
+     */
+<span class="fc" id="L51">    private InhomogeneousPoint3D mSlamPosition = new InhomogeneousPoint3D();</span>
+
+    /**
+     * Camera estimated by means of SLAM. It is reused each time it is notified.
+     */
+<span class="fc" id="L56">    private PinholeCamera mSlamCamera = new PinholeCamera();</span>
+
+    /**
+     * Camera rotation estimated by means of SLAM. It is reused each time it is notified.
+     */
+<span class="fc" id="L61">    private Quaternion mSlamRotation = new Quaternion();</span>
+
+    /**
+     * Constructor.
+     * @param configuration configuration for this reconstructor.
+     * @param listener listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not 
+     * provided.
+     */
+    public BaseSlamTwoViewsSparseReconstructor(C configuration, 
+            L listener) throws NullPointerException {
+<span class="fc" id="L72">        super(configuration, listener);</span>
+<span class="fc" id="L73">    }</span>
+    
+    /**
+     * Provides a new accelerometer sample to update SLAM estimation.
+     * This method must be called whenever the accelerometer sensor receives new 
+     * data.
+     * If reconstructor is not running, calling this method has no effect.
+     * @param timestamp timestamp of accelerometer sample since epoch time and 
+     * expressed in nanoseconds.
+     * @param accelerationX linear acceleration along x-axis expressed in meters
+     * per squared second (m/s^2).
+     * @param accelerationY linear acceleration along y-axis expressed in meters
+     * per squared second (m/s^2).
+     * @param accelerationZ linear acceleration along z-axis expressed in meters
+     * per squared second (m/s^2).
+     */
+    public void updateAccelerometerSample(long timestamp, float accelerationX,
+            float accelerationY, float accelerationZ) {
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L92">            mSlamEstimator.updateAccelerometerSample(timestamp, accelerationX, </span>
+                    accelerationY, accelerationZ);
+        }
+<span class="fc" id="L95">    }</span>
+    
+    /**
+     * Provides a new accelerometer sample to update SLAM estimation.
+     * This method must be called whenever the accelerometer sensor receives new
+     * data.
+     * If reconstructor is not running, calling this method has no effect.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * expressed in nanoseconds.
+     * @param data array containing x,y,z components of linear acceleration
+     * expressed in meters per squared second (m/s^2).
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void updateAccelerometerSample(long timestamp, float[] data)
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L112">            mSlamEstimator.updateAccelerometerSample(timestamp, data);</span>
+        }
+<span class="fc" id="L114">    }</span>
+    
+    /**
+     * Provides a new gyroscope sample to update SLAM estimation.
+     * If reconstructor is not running, calling this method has no effect.
+     * @param timestamp timestamp of gyroscope sample since epoch time and
+     * expressed in nanoseconds.
+     * @param angularSpeedX angular speed of rotation along x-axis expressed in
+     * radians per second (rad/s).
+     * @param angularSpeedY angular speed of rotation along y-axis expressed in
+     * radians per second (rad/s).
+     * @param angularSpeedZ angular speed of rotation along z-axis expressed in
+     * radians per second (rad/s).
+     */
+    public void updateGyroscopeSample(long timestamp, float angularSpeedX,
+            float angularSpeedY, float angularSpeedZ) {
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L131">            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX, </span>
+                    angularSpeedY, angularSpeedZ);
+        }
+<span class="fc" id="L134">    }</span>
+    
+    /**
+     * Provies a new gyroscope sample to update SLAM estimation.
+     * If reconstructor is not running, calling this method has no effect.
+     * @param timestamp timestamp of gyroscope sample since epoch time and 
+     * expressed in nanoseconds.
+     * @param data angular speed of rotation along x,y,z axes expressed in 
+     * radians per second (rad/s).
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void updateGyroscopeSample(long timestamp, float[] data)
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L149">            mSlamEstimator.updateGyroscopeSample(timestamp, data);</span>
+        }        
+<span class="fc" id="L151">    }</span>
+    
+    /**
+     * Set ups calibration data on SLAM estimator if available.
+     */
+    protected void setUpCalibrationData() {
+<span class="fc" id="L157">        BaseCalibrationData calibrationData = </span>
+<span class="fc" id="L158">                mConfiguration.getCalibrationData();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (calibrationData != null) {</span>
+            //noinspection unchecked
+<span class="fc" id="L161">            mSlamEstimator.setCalibrationData(calibrationData);</span>
+        }
+<span class="fc" id="L163">    }</span>
+
+    /**
+     * Configures listener of SLAM estimator
+     */
+    protected void setUpSlamEstimatorListener() {
+<span class="fc" id="L169">        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener() {</span>
+            @Override
+<span class="fc" id="L171">            public void onFullSampleReceived(BaseSlamEstimator estimator) { /* not used */ }</span>
+
+            @Override
+            public void onFullSampleProcessed(BaseSlamEstimator estimator) {
+<span class="fc" id="L175">                notifySlamStateIfNeeded();</span>
+<span class="fc" id="L176">                notifySlamCameraIfNeeded();</span>
+<span class="fc" id="L177">            }</span>
+
+            @Override
+<span class="nc" id="L180">            public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) { /* not used */ }</span>
+
+            @Override
+            public void onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
+<span class="nc" id="L184">                notifySlamStateIfNeeded();</span>
+<span class="nc" id="L185">                notifySlamCameraIfNeeded();</span>
+<span class="nc" id="L186">            }</span>
+        });
+<span class="fc" id="L188">    }</span>
+    
+    /**
+     * Update scene scale using SLAM data.
+     * @return true if scale was successfully updated, false otherwise.
+     */
+    protected boolean updateScale() {
+        //obtain baseline (camera separation from slam estimator data
+<span class="fc" id="L196">        double posX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L197">        double posY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L198">        double posZ = mSlamEstimator.getStatePositionZ();</span>
+            
+        //to estimate baseline, we assume that first camera is placed at
+        //world origin
+<span class="fc" id="L202">        double baseline = Math.sqrt(posX*posX + posY*posY + posZ*posZ);</span>
+            
+        try {
+<span class="fc" id="L205">            PinholeCamera camera1 = mEstimatedCamera1.getCamera();</span>
+<span class="fc" id="L206">            PinholeCamera camera2 = mEstimatedCamera2.getCamera();</span>
+            
+<span class="fc" id="L208">            camera1.decompose();</span>
+<span class="fc" id="L209">            camera2.decompose();</span>
+
+<span class="fc" id="L211">            Point3D center1 = camera1.getCameraCenter();</span>
+<span class="fc" id="L212">            Point3D center2 = camera2.getCameraCenter();</span>
+            
+<span class="fc" id="L214">            double estimatedBaseline = center1.distanceTo(center2);</span>
+            
+<span class="fc" id="L216">            double scale = baseline / estimatedBaseline;</span>
+            
+<span class="fc" id="L218">            MetricTransformation3D scaleTransformation =</span>
+                    new MetricTransformation3D(scale);
+            
+            //update scale of cameras
+<span class="fc" id="L222">            scaleTransformation.transform(camera1);</span>
+<span class="fc" id="L223">            scaleTransformation.transform(camera2);</span>
+            
+<span class="fc" id="L225">            mEstimatedCamera1.setCamera(camera1);</span>
+<span class="fc" id="L226">            mEstimatedCamera2.setCamera(camera2);</span>
+            
+            //update scale of reconstructed points
+<span class="fc" id="L229">            int numPoints = mReconstructedPoints.size();</span>
+<span class="fc" id="L230">            List&lt;Point3D&gt; reconstructedPoints3D = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L231" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {</span>
+<span class="fc" id="L232">                reconstructedPoints3D.add(reconstructedPoint.</span>
+<span class="fc" id="L233">                        getPoint());</span>
+<span class="fc" id="L234">            }</span>
+            
+<span class="fc" id="L236">            scaleTransformation.transformAndOverwritePoints(</span>
+                    reconstructedPoints3D);
+            
+            //set scaled points into result
+<span class="fc bfc" id="L240" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L241">                mReconstructedPoints.get(i).setPoint(</span>
+<span class="fc" id="L242">                        reconstructedPoints3D.get(i));</span>
+            }
+
+<span class="fc" id="L245">            return true;</span>
+<span class="nc" id="L246">        } catch (Exception e) {</span>
+<span class="nc" id="L247">            mFailed = true;</span>
+            //noinspection unchecked
+<span class="nc" id="L249">            mListener.onFail((R)this);</span>
+
+<span class="nc" id="L251">            return false;</span>
+        }
+    }
+
+    /**
+     * Notifies SLAM state if notification is enabled at configuration time.
+     */
+    private void notifySlamStateIfNeeded() {
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if (!mConfiguration.isNotifyAvailableSlamDataEnabled()) {</span>
+<span class="nc" id="L260">            return;</span>
+        }
+
+<span class="fc" id="L263">        double positionX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L264">        double positionY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L265">        double positionZ = mSlamEstimator.getStatePositionZ();</span>
+
+<span class="fc" id="L267">        double velocityX = mSlamEstimator.getStateVelocityX();</span>
+<span class="fc" id="L268">        double velocityY = mSlamEstimator.getStateVelocityY();</span>
+<span class="fc" id="L269">        double velocityZ = mSlamEstimator.getStateVelocityZ();</span>
+
+<span class="fc" id="L271">        double accelerationX = mSlamEstimator.getStateAccelerationX();</span>
+<span class="fc" id="L272">        double accelerationY = mSlamEstimator.getStateAccelerationY();</span>
+<span class="fc" id="L273">        double accelerationZ = mSlamEstimator.getStateAccelerationZ();</span>
+
+<span class="fc" id="L275">        double quaternionA = mSlamEstimator.getStateQuaternionA();</span>
+<span class="fc" id="L276">        double quaternionB = mSlamEstimator.getStateQuaternionB();</span>
+<span class="fc" id="L277">        double quaternionC = mSlamEstimator.getStateQuaternionC();</span>
+<span class="fc" id="L278">        double quaternionD = mSlamEstimator.getStateQuaternionD();</span>
+
+<span class="fc" id="L280">        double angularSpeedX = mSlamEstimator.getStateAngularSpeedX();</span>
+<span class="fc" id="L281">        double angularSpeedY = mSlamEstimator.getStateAngularSpeedY();</span>
+<span class="fc" id="L282">        double angularSpeedZ = mSlamEstimator.getStateAngularSpeedZ();</span>
+
+        //noinspection all
+<span class="fc" id="L285">        mListener.onSlamDataAvailable((R)this, positionX, positionY, positionZ,</span>
+                velocityX, velocityY, velocityZ,
+                accelerationX, accelerationY, accelerationZ,
+                quaternionA, quaternionB, quaternionC, quaternionD,
+<span class="fc" id="L289">                angularSpeedX, angularSpeedY, angularSpeedZ, mSlamEstimator.getStateCovariance());</span>
+<span class="fc" id="L290">    }</span>
+
+    /**
+     * Notifies estimated camera by means of SLAM if notification is enabled at
+     * configuration time and intrinsics are already available.
+     */
+    private void notifySlamCameraIfNeeded() {
+<span class="pc bpc" id="L297" title="1 of 2 branches missed.">        if (!mConfiguration.isNotifyEstimatedSlamCameraEnabled()) {</span>
+<span class="nc" id="L298">            return;</span>
+        }
+
+<span class="fc" id="L301">        PinholeCameraIntrinsicParameters intrinsicParameters = null;</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        if (mConfiguration.getInitialIntrinsic1() != null) {</span>
+<span class="fc" id="L303">            intrinsicParameters = mConfiguration.getInitialIntrinsic1();</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        } else if (mConfiguration.getInitialIntrinsic2() != null) {</span>
+<span class="nc" id="L305">            intrinsicParameters = mConfiguration.getInitialIntrinsic2();</span>
+        }
+
+<span class="pc bpc" id="L308" title="1 of 2 branches missed.">        if (intrinsicParameters == null) {</span>
+<span class="nc" id="L309">            return;</span>
+        }
+
+<span class="fc" id="L312">        double positionX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L313">        double positionY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L314">        double positionZ = mSlamEstimator.getStatePositionZ();</span>
+<span class="fc" id="L315">        mSlamPosition.setInhomogeneousCoordinates(positionX, positionY, positionZ);</span>
+
+<span class="fc" id="L317">        double quaternionA = mSlamEstimator.getStateQuaternionA();</span>
+<span class="fc" id="L318">        double quaternionB = mSlamEstimator.getStateQuaternionB();</span>
+<span class="fc" id="L319">        double quaternionC = mSlamEstimator.getStateQuaternionC();</span>
+<span class="fc" id="L320">        double quaternionD = mSlamEstimator.getStateQuaternionD();</span>
+<span class="fc" id="L321">        mSlamRotation.setA(quaternionA);</span>
+<span class="fc" id="L322">        mSlamRotation.setB(quaternionB);</span>
+<span class="fc" id="L323">        mSlamRotation.setC(quaternionC);</span>
+<span class="fc" id="L324">        mSlamRotation.setD(quaternionD);</span>
+
+<span class="fc" id="L326">        mSlamCamera.setIntrinsicAndExtrinsicParameters(intrinsicParameters, mSlamRotation,</span>
+                mSlamPosition);
+
+        //noinspection all
+<span class="fc" id="L330">        mListener.onSlamCameraEstimated((R)this, mSlamCamera);</span>
+<span class="fc" id="L331">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

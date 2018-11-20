@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROMedSImageOfAbsoluteConicRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">PROMedSImageOfAbsoluteConicRobustEstimator.java</span></div><h1>PROMedSImageOfAbsoluteConicRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best image of absolute conic (IAC) for provided collection of
+ * homographies (2D transformaitons) using PROMedS algorithm.
+ */
+public class PROMedSImageOfAbsoluteConicRobustEstimator extends
+        ImageOfAbsoluteConicRobustEstimator {
+    
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used 
+     * to keep the algorithm iterating in case that best estimated threshold 
+     * using median of residuals is not small enough. Once a solution is found 
+     * that generates a threshold below this value, the algorithm will stop.
+     * Threshold is defined by equations h1'*IAC*h2 = 0 and 
+     * h1'*IAC*h1 = h2'*IAC*h2 --&amp;lt; h1'*IAC*h1 - h2'*IAC*h2 = 0, where
+     * h1 and h2 are the 1st and 2nd columns of an homography (2D 
+     * transformation).
+     * These equations are derived from the fact that rotation matrices are
+     * orthonormal.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-6;
+        
+    /**
+     * Minimum value that can be set as stop threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+    
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best 
+     * estimated threshold using median of residuals is not small enough. Once 
+     * a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;    
+    
+    /**
+     * Quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] mQualityScores;
+    
+    /**
+     * Constructor.
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator() {
+<span class="fc" id="L82">        super();</span>
+<span class="fc" id="L83">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L84">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L93">        super(listener);</span>
+<span class="fc" id="L94">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L95">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homographies list of homographies (2D transformations) used to
+     * estimate the image of absolute conic (IAC), which can be used to obtain
+     * pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default settings. Hence, at least 1 homography must be provided.
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(
+            List&lt;Transformation2D&gt; homographies) 
+            throws IllegalArgumentException {
+<span class="fc" id="L108">        super(homographies);</span>
+<span class="fc" id="L109">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L110">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homographies list of homographies (2D transformations) used to
+     * estimate the image of absolute conic (IAC), which can be used to obtain
+     * pinhole camera intrinsic parameters.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default settings. Hence, at least 1 homography must be provided.
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(
+            List&lt;Transformation2D&gt; homographies, 
+            ImageOfAbsoluteConicRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L126">        super(homographies, listener);</span>
+<span class="fc" id="L127">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided 
+     * homography.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than required number of homographies for default settings (i.e.
+     * 1 homography).
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(double[] qualityScores)
+            throws IllegalArgumentException {
+<span class="fc" id="L140">        this();</span>
+<span class="fc" id="L141">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L142">    }</span>
+    
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided 
+     * homography.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than required number of homographies for default settings (i.e.
+     * 1 homography).
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(double[] qualityScores,
+            ImageOfAbsoluteConicRobustEstimatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L157">        this(listener);</span>
+<span class="fc" id="L158">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L159">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homographies list of homographies (2D transformations) used to
+     * estimate the image of absolute conic (IAC), which can be used to obtain
+     * pinhole camera intrinsic parameters.
+     * @param qualityScores quality scores corresponding to each provided 
+     * homography.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default settings (i.e. 1 homography) or quality scores and 
+     * homographies don't have the same size.
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(
+            List&lt;Transformation2D&gt; homographies, double[] qualityScores) 
+            throws IllegalArgumentException {
+<span class="fc" id="L175">        this(homographies);</span>
+<span class="fc" id="L176">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L177">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homographies list of homographies (2D transformations) used to
+     * estimate the image of absolute conic (IAC), which can be used to obtain
+     * pinhole camera intrinsic parameters.
+     * @param qualityScores quality scores corresponding to each provided 
+     * homography.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default settings (i.e. 1 homography) or quality scores and 
+     * homographies don't have the same size.
+     */
+    public PROMedSImageOfAbsoluteConicRobustEstimator(
+            List&lt;Transformation2D&gt; homographies, double[] qualityScores,
+            ImageOfAbsoluteConicRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L196">        this(homographies, listener);</span>
+<span class="fc" id="L197">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L198">    }</span>
+    
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that 
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L219">        return mStopThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely 
+     * when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setStopThreshold(double stopThreshold) 
+            throws IllegalArgumentException, LockedException {
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L246">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L249">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L251">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L252">    }</span>
+    
+    /**
+     * Returns quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sampled 
+     * homography
+     * @return quality scores corresponding to each homography.
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L262">        return mQualityScores;</span>
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sampled
+     * homography.
+     * @param qualityScores quality scores corresponding to each homography.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than minimum required number of homographies (i.e. 1 homography).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException,
+            IllegalArgumentException {
+<span class="fc bfc" id="L278" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L279">            throw new LockedException();</span>
+        }
+<span class="fc" id="L281">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L282">    }</span>
+    
+    /**
+     * Indicates if estimator is ready to start the IAC estimation.
+     * This is true when input data (i.e. homographies) is provided and list
+     * contains at least the minimum number of required homographies, and
+     * also quality scores are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc bfc" id="L293" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">                mQualityScores.length == mHomographies.size();</span>
+    }
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC)
+     * @return estimated IAC
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress
+     * @throws NotReadyException if provided input data is not enough to start
+     * the estimation
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numberical instability, no solution available, etc)
+     */    
+    @Override
+    public ImageOfAbsoluteConic estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L311">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L314">            throw new NotReadyException();</span>
+        }
+        
+<span class="fc" id="L317">        PROMedSRobustEstimator&lt;ImageOfAbsoluteConic&gt; innerEstimator =</span>
+                new PROMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L319">                new PROMedSRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;(){</span>
+
+            //subset of homographies picked on each iteration
+<span class="fc" id="L322">            private List&lt;Transformation2D&gt; mSubsetHomographies = </span>
+                    new ArrayList&lt;&gt;();
+                    
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L327">                return mStopThreshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L332">                return mHomographies.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L337">                return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, 
+                    List&lt;ImageOfAbsoluteConic&gt; solutions) {
+<span class="fc" id="L343">                mSubsetHomographies.clear();</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L345">                    mSubsetHomographies.add(mHomographies.get(</span>
+                            samplesIndex));
+                }
+                
+                try {
+<span class="fc" id="L350">                    mIACEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L351">                    mIACEstimator.setHomographies(mSubsetHomographies);</span>
+                    
+<span class="fc" id="L353">                    ImageOfAbsoluteConic iac = mIACEstimator.estimate();</span>
+<span class="fc" id="L354">                    solutions.add(iac);</span>
+<span class="nc" id="L355">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L357">                }</span>
+<span class="fc" id="L358">            }</span>
+
+            @Override
+            public double computeResidual(
+                    ImageOfAbsoluteConic currentEstimation, int i) {
+<span class="fc" id="L363">                return residual(currentEstimation, mHomographies.get(i));</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L368">                return PROMedSImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(
+                    RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L375">                    mListener.onEstimateStart(</span>
+                            PROMedSImageOfAbsoluteConicRobustEstimator.this);
+                }
+<span class="fc" id="L378">            }</span>
+
+            @Override
+            public void onEstimateEnd(
+                    RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L384">                    mListener.onEstimateEnd(</span>
+                            PROMedSImageOfAbsoluteConicRobustEstimator.this);
+                }
+<span class="fc" id="L387">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, 
+                    int iteration) {
+<span class="pc bpc" id="L393" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L394">                    mListener.onEstimateNextIteration(</span>
+                            PROMedSImageOfAbsoluteConicRobustEstimator.this, 
+                            iteration);
+                }
+<span class="fc" id="L398">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, 
+                    float progress) {
+<span class="pc bpc" id="L404" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L405">                    mListener.onEstimateProgressChange(</span>
+                            PROMedSImageOfAbsoluteConicRobustEstimator.this, 
+                            progress);
+                }
+<span class="fc" id="L409">            }</span>
+            
+            @Override
+            public double[] getQualityScores() {
+<span class="fc" id="L413">                return mQualityScores;</span>
+            }            
+        });
+        
+        try {
+<span class="fc" id="L418">            mLocked = true;</span>
+<span class="fc" id="L419">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L420">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L421">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L422">            return innerEstimator.estimate();</span>
+<span class="nc" id="L423">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L424">            throw new LockedException(e);</span>
+<span class="nc" id="L425">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L426">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L428">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation
+     * @return method being used for robust estimation
+     */    
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L438">        return RobustEstimatorMethod.PROMedS;</span>
+    }   
+    
+    /**
+     * Sets quality scores corresponding to each homography.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required homographies for current
+     * settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores)
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L452" title="All 2 branches covered.">        if (qualityScores.length &lt; mIACEstimator.getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L453">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L456">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L457">    }    </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

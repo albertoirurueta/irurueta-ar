@@ -1,0 +1,1087 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KruppaDualImageOfAbsoluteConicEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">KruppaDualImageOfAbsoluteConicEstimator.java</span></div><h1>KruppaDualImageOfAbsoluteConicEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.*;
+import com.irurueta.ar.calibration.DualImageOfAbsoluteConic;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.polynomials.Polynomial;
+
+/**
+ * Estimates the DIAC (Dual Image of Absolute Conic) by solving Kruppa's 
+ * equations and assuming known principal point and zero skewness.
+ * This estimator allows enforcing a known aspect ratio as well.
+ * The DIAC can be used to obtain the intrinsic parameters of a pair of
+ * cameras related by a fundamental matrix.
+ * Hence this class can be used for autocalibration purposes.
+ * Notice that the DualAbsoluteQuadricEstimator is a more robust method of
+ * autocalibration.
+ * This class is based on:
+ * S.D. Hippisley-Cox &amp;amp; J.Porrill. Auto-calibration - Kruppa's equations and the
+ * intrinsic parameters of a camera. AI Vision Research Unit. University of 
+ * Sheffield.
+ */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
+public class KruppaDualImageOfAbsoluteConicEstimator {
+    
+    /**
+     * Degree of polynomial to solve Kruppa's equation when aspect ratio is 
+     * known.
+     */
+    private static final int POLY_DEGREE_UNKNOWN_ASPECT_RATIO = 4;
+        
+    /**
+     * Default value for horizontal principal point coordinate.
+     */
+    public static final double DEFAULT_PRINCIPAL_POINT_X = 0.0;
+    
+    /**
+     * Default value for vertical principal point coordinate.
+     */
+    public static final double DEFAULT_PRINCIPAL_POINT_Y = 0.0;
+    
+    /**
+     * Constant defining whether aspect ratio of focal distance (i.e. vertical
+     * focal distance divided by horizontal focal distance) is known or not.
+     * Notice that focal distance aspect ratio is not related to image size 
+     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     */
+    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN = 
+            true;
+    
+    /**
+     * Constant defining default aspect ratio of focal distances. This constant
+     * takes into account that typically LCD sensor cells are square and hence
+     * aspect ratio of focal distances is known and equal to 1.
+     */
+    public static final double DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO = 1.0;
+    
+    /**
+     * Minimum absolute value allowed for aspect ratio of focal distances.
+     */
+    public static final double MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO = 1e-6;
+    
+    /**
+     * Known horizontal principal point coordinate.
+     */
+    private double mPrincipalPointX;
+    
+    /**
+     * Known vertical principal point coordinate.
+     */
+    private double mPrincipalPointY;
+    
+    /**
+     * Indicates whether aspect ratio of focal distances (i.e. vertical focal
+     * distance divided by horizontal focal distance) is known or not.
+     * Notic that focal distance aspect ratio is not related to image aspect 
+     * ratio. Typically LCD sensor cells are square and hence aspectratio of 
+     * focal distances is known and equal to 1.
+     */
+    private boolean mFocalDistanceAspectRatioKnown;
+    
+    /**
+     * Contains aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * By default this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distance is 
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     */
+    private double mFocalDistanceAspectRatio;
+    
+    /**
+     * True when estimator is estimating the DIAC.
+     */
+    private boolean mLocked;
+    
+    /**
+     * Listener to be notified of events such as when estimation starts, ends or
+     * estimation progress changes.
+     */
+    private KruppaDualImageOfAbsoluteConicEstimatorListener mListener;
+
+    /**
+     * Fundamental matrix to estimate DIAC from.
+     */
+    private FundamentalMatrix mFundamentalMatrix;
+    
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L131">    public KruppaDualImageOfAbsoluteConicEstimator() {</span>
+<span class="fc" id="L132">        mPrincipalPointX = DEFAULT_PRINCIPAL_POINT_X;</span>
+<span class="fc" id="L133">        mPrincipalPointY = DEFAULT_PRINCIPAL_POINT_Y;</span>
+<span class="fc" id="L134">        mFocalDistanceAspectRatioKnown = </span>
+                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
+<span class="fc" id="L136">        mFocalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;</span>
+        
+<span class="fc" id="L138">        mLocked = false;</span>
+<span class="fc" id="L139">        mListener = null;</span>
+<span class="fc" id="L140">        mFundamentalMatrix = null;</span>
+<span class="fc" id="L141">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     */
+    public KruppaDualImageOfAbsoluteConicEstimator(
+            KruppaDualImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L150">        this();</span>
+<span class="fc" id="L151">        mListener = listener;</span>
+<span class="fc" id="L152">    }</span>
+    
+    /**
+     * Constructor.
+     * @param fundamentalMatrix fundamental matrix to estimate DIAC from.
+     */
+    public KruppaDualImageOfAbsoluteConicEstimator(
+            FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L160">        this();</span>
+<span class="fc" id="L161">        mFundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L162">    }</span>
+    
+    /**
+     * Constructor.
+     * @param fundamentalMatrix fundamental matrix to estimate DIAC from.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     */
+    public KruppaDualImageOfAbsoluteConicEstimator(
+            FundamentalMatrix fundamentalMatrix, 
+            KruppaDualImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L173">        this(fundamentalMatrix);</span>
+<span class="fc" id="L174">        mListener = listener;</span>
+<span class="fc" id="L175">    }</span>
+    
+    /**
+     * Gets known horizontal principal point coordinate.
+     * @return known horizontal principal point coordinate.
+     */
+    public double getPrincipalPointX() {
+<span class="fc" id="L182">        return mPrincipalPointX;</span>
+    }
+    
+    /**
+     * Sets known horizontal principal point coordinate.
+     * @param principalPointX known horizontal principal point coordinate to be 
+     * set.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointX(double principalPointX) 
+            throws LockedException {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L194">            throw new LockedException();</span>
+        }
+<span class="fc" id="L196">        mPrincipalPointX = principalPointX;</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Gets known vertical principal point coordinate.
+     * @return known vertical principal point coordinate.
+     */
+    public double getPrincipalPointY() {
+<span class="fc" id="L204">        return mPrincipalPointY;</span>
+    }
+    
+    /**
+     * Sets known vertical principal point coordinate.
+     * @param principalPointY known vertical principal point coordinate to be
+     * set.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointY(double principalPointY) 
+            throws LockedException {
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L216">            throw new LockedException();</span>
+        }        
+<span class="fc" id="L218">        mPrincipalPointY = principalPointY;</span>
+<span class="fc" id="L219">    }</span>
+    
+    /**
+     * Returns boolean indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     * @return true if focal distance aspect ratio is known, false otherwise.
+     */
+    public boolean isFocalDistanceAspectRatioKnown() {
+<span class="fc" id="L233">        return mFocalDistanceAspectRatioKnown;</span>
+    }
+
+    /**
+     * Sets value indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be
+     * otherwise it is ignored.
+     * @param focalDistanceAspectRatioKnown true if focal distance aspect ratio
+     * is known, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFocalDistanceAspectRatioKnown(
+            boolean focalDistanceAspectRatioKnown) throws LockedException {
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L252">            throw new LockedException();</span>
+        }
+        
+<span class="fc" id="L255">        mFocalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;</span>
+<span class="fc" id="L256">    }</span>
+    
+    /**
+     * Returns aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * By default this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio
+     * Notice that a negative aspect ratio indicates that vertical axis is 
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     * @return aspect ratio of focal distances.
+     */
+    public double getFocalDistanceAspectRatio() {
+<span class="fc" id="L274">        return mFocalDistanceAspectRatio;</span>
+    }
+    
+    /**
+     * Sets aspect ratio of focal distances (i.e. vertical focal distance 
+     * divided by horizontal focal distance).
+     * This value is only taken into account if aspect ratio is marked as known,
+     * otherwise it is ignored.
+     * By default this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     * Notice that a negative aspect ratio indicates that vertical axis is 
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     * @param focalDistanceAspectRatio aspect raito of focal distances to be 
+     * set.
+     * @throws LockedException if estimator is locked.
+     * @throws IllegalArgumentException if focal distance aspect ratio is too 
+     * close to zero, as it might produce numerical instabilities.
+     */
+    public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
+            throws LockedException, IllegalArgumentException {
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L301">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">        if (Math.abs(focalDistanceAspectRatio) &lt; </span>
+                MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {
+<span class="nc" id="L305">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L308">        mFocalDistanceAspectRatio = focalDistanceAspectRatio;</span>
+<span class="fc" id="L309">    }</span>
+    
+    /**
+     * Indicates whether this instance is locked.
+     * @return true if this estimator is busy estimating a DIAC, false
+     * otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L317">        return mLocked;</span>
+    }
+    
+    /**
+     * Returns listener to be notified of events such as when estimation starts,
+     * ends or estimation progress changes.
+     * @return listener to be notified of events.
+     */
+    public KruppaDualImageOfAbsoluteConicEstimatorListener getListener() {
+<span class="fc" id="L326">        return mListener;</span>
+    }
+    
+    /**
+     * Sets listener to be notified of events such as when estimation starts,
+     * ends or estimation progress changes.
+     * @param listener listener to be notified of events.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setListener(
+            KruppaDualImageOfAbsoluteConicEstimatorListener listener) 
+            throws LockedException {
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L339">            throw new LockedException();</span>
+        }
+<span class="fc" id="L341">        mListener = listener;</span>
+<span class="fc" id="L342">    }</span>
+    
+    /**
+     * Gets fundamental matrix to estimate DIAC from.
+     * @return fundamental matrix to estimate DIAC from.
+     */
+    public FundamentalMatrix getFundamentalMatrix() {
+<span class="fc" id="L349">        return mFundamentalMatrix;</span>
+    }
+    
+    /**
+     * Sets fundamental matrix to estimate DIAC from.
+     * @param fundamentalMatrix fundamental matrix to estimate DIAC from.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFundamentalMatrix(FundamentalMatrix fundamentalMatrix) 
+            throws LockedException {
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L360">            throw new LockedException();</span>
+        }
+<span class="fc" id="L362">        mFundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L363">    }</span>
+
+    /**
+     * Returns value indicating whether required data has been provided so that
+     * DIAC estimation can start.
+     * If true, estimator is ready to compute the DIAC, otherwise more data
+     * needs to be provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        return mFundamentalMatrix != null;</span>
+    }
+        
+    /**
+     * Estimates Dual Image of Absolute Conic (DIAC).
+     * @return estimated DIAC.
+     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException if input has not yet been provided.
+     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error 
+     * occurs during estimation, usually because fundamental matrix corresponds
+     * to degenerate camera movements, or because of numerical unstabilities.
+     */
+    public DualImageOfAbsoluteConic estimate() throws LockedException,
+            NotReadyException, 
+            KruppaDualImageOfAbsoluteConicEstimatorException {
+<span class="fc" id="L388">        DualImageOfAbsoluteConic result = new DualImageOfAbsoluteConic(0.0, 0.0, </span>
+                0.0, 0.0, 0.0, 0.0);
+<span class="fc" id="L390">        estimate(result);</span>
+<span class="fc" id="L391">        return result;</span>
+    }
+    
+    /**
+     * Estimates Dual Image of Absolute Conic (DIAC).
+     * @param result instance where estimated DIAC will be stored.
+     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException if input has not yet been provided.
+     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
+     * occurs during estimation, usually because fundamental matrix corresponds
+     * to degenerate camera movements, or because of numerical unstabilities.
+     */
+    public void estimate(DualImageOfAbsoluteConic result) 
+            throws LockedException, NotReadyException, 
+            KruppaDualImageOfAbsoluteConicEstimatorException {
+<span class="fc bfc" id="L406" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L407">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L410">            throw new NotReadyException();</span>
+        }
+        
+        try {
+<span class="fc" id="L414">            mLocked = true;</span>
+        
+<span class="fc bfc" id="L416" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L417">                mListener.onEstimateStart(this);</span>
+            }
+        
+<span class="fc bfc" id="L420" title="All 2 branches covered.">            if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L421">                estimateKnownAspectRatio(result);</span>
+            } else {
+<span class="fc" id="L423">                estimateUnknownAspectRatio(result);</span>
+            }
+        
+<span class="fc bfc" id="L426" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L427">                mListener.onEstimateEnd(this);</span>
+            }
+        } finally {
+<span class="fc" id="L430">            mLocked = false;</span>
+        }
+<span class="fc" id="L432">    }    </span>
+    
+    /**
+     * Builds a DIAC from estimated focal length components and current 
+     * principal point assuming zero skewness.
+     * @param horizontalFocalLength estimated horizontal focal length component.
+     * @param verticalFocalLength estimated vertical focal length component.
+     * @param result instance where estimated DIAC will be stored.
+     * @return true if estimated DIAC is valid, false otherwise.
+     * @throws AlgebraException if it cannot be determined whether DIAC is valid
+     * or not due to numerical unstabilities.
+     */
+    private boolean buildDiac(double horizontalFocalLength, 
+            double verticalFocalLength, DualImageOfAbsoluteConic result) 
+            throws AlgebraException {
+        
+<span class="fc" id="L448">        PinholeCameraIntrinsicParameters intrinsic = new </span>
+        PinholeCameraIntrinsicParameters(horizontalFocalLength, 
+                verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
+<span class="fc" id="L451">        result.setFromPinholeCameraIntrinsicParameters(intrinsic);</span>
+        
+<span class="fc" id="L453">        Matrix m = result.asMatrix();</span>
+<span class="fc" id="L454">        CholeskyDecomposer decomposer = new CholeskyDecomposer(m);</span>
+<span class="fc" id="L455">        decomposer.decompose();</span>
+<span class="fc" id="L456">        return decomposer.isSPD();</span>
+    }    
+    
+    /**
+     * Estimates the DIAC assuming unknown aspect ratio.
+     * @param result instance where estimated DIAC will be stored.
+     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
+     * occurs during estimation, usually because fundamental matrix corresponds
+     * to degenerate camera movements, or because of numerical unstabilities.
+     */
+    private void estimateUnknownAspectRatio(DualImageOfAbsoluteConic result)
+            throws KruppaDualImageOfAbsoluteConicEstimatorException {
+        try {
+<span class="fc" id="L469">            double x0 = mPrincipalPointX;</span>
+<span class="fc" id="L470">            double y0 = mPrincipalPointY;      </span>
+        
+            //SVD decompose fundamental matrix
+<span class="fc" id="L473">            mFundamentalMatrix.normalize();</span>
+<span class="fc" id="L474">            SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
+<span class="fc" id="L475">                    mFundamentalMatrix.getInternalMatrix());</span>
+<span class="fc" id="L476">            decomposer.decompose();</span>
+            
+<span class="fc" id="L478">            double[] sigmas = decomposer.getSingularValues();</span>
+<span class="fc" id="L479">            Matrix u = decomposer.getU();</span>
+<span class="fc" id="L480">            Matrix v = decomposer.getV();</span>
+            
+<span class="fc" id="L482">            double sigma1 = sigmas[0];</span>
+<span class="fc" id="L483">            double sigma2 = sigmas[1];</span>
+            
+            //Column u1
+<span class="fc" id="L486">            double u11 = u.getElementAt(0, 0);</span>
+<span class="fc" id="L487">            double u21 = u.getElementAt(1, 0);</span>
+<span class="fc" id="L488">            double u31 = u.getElementAt(2, 0);</span>
+            
+            //Column u2
+<span class="fc" id="L491">            double u12 = u.getElementAt(0, 1);</span>
+<span class="fc" id="L492">            double u22 = u.getElementAt(1, 1);</span>
+<span class="fc" id="L493">            double u32 = u.getElementAt(2, 1);</span>
+            
+            //Column v1
+<span class="fc" id="L496">            double v11 = v.getElementAt(0, 0);</span>
+<span class="fc" id="L497">            double v21 = v.getElementAt(1, 0);</span>
+<span class="fc" id="L498">            double v31 = v.getElementAt(2, 0);</span>
+            
+            //Column v2
+<span class="fc" id="L501">            double v12 = v.getElementAt(0, 1);</span>
+<span class="fc" id="L502">            double v22 = v.getElementAt(1, 1);</span>
+<span class="fc" id="L503">            double v32 = v.getElementAt(2, 1);</span>
+            
+            //build Kruppa equations
+<span class="fc" id="L506">            double A = u12*u11;</span>
+<span class="fc" id="L507">            double B = u22*u21;</span>
+<span class="fc" id="L508">            double C = Math.pow(x0,2.0)*u12*u11 + x0*y0*u22*u11 + x0*u32*u11 + </span>
+<span class="fc" id="L509">                    x0*y0*u12*u21 + Math.pow(y0,2.0)*u22*u21 + y0*u32*u21 + </span>
+                    x0*u12*u31 + y0*u22*u31 + u32*u31;
+<span class="fc" id="L511">            double D = Math.pow(sigma2,2.0)*v12*v12;</span>
+<span class="fc" id="L512">            double E = Math.pow(sigma2,2.0)*v22*v22;</span>
+<span class="fc" id="L513">            double F = Math.pow(sigma2*x0,2.0)*v12*v12 + </span>
+<span class="fc" id="L514">                    Math.pow(sigma2,2.0)*x0*y0*v22*v12 + </span>
+<span class="fc" id="L515">                    Math.pow(sigma2,2.0)*x0*v32*v12 + </span>
+<span class="fc" id="L516">                    Math.pow(sigma2,2.0)*x0*y0*v12*v22 + </span>
+<span class="fc" id="L517">                    Math.pow(sigma2*y0,2)*v22*v22 + </span>
+<span class="fc" id="L518">                    Math.pow(sigma2,2.0)*y0*v32*v22 + </span>
+<span class="fc" id="L519">                    Math.pow(sigma2,2.0)*x0*v12*v32 + </span>
+<span class="fc" id="L520">                    Math.pow(sigma2,2.0)*y0*v22*v32 + </span>
+<span class="fc" id="L521">                    Math.pow(sigma2,2.0)*v32*v32;</span>
+<span class="fc" id="L522">            double G = u11*u11;</span>
+<span class="fc" id="L523">            double H = u21*u21;</span>
+<span class="fc" id="L524">            double I = Math.pow(x0,2.0)*u11*u11 + x0*y0*u21*u11 + x0*u31*u11 + </span>
+<span class="fc" id="L525">                    x0*y0*u11*u21 + Math.pow(y0,2.0)*u21*u21 + y0*u31*u21 + </span>
+                    x0*u11*u31 + y0*u21*u31 + u31*u31;
+<span class="fc" id="L527">            double J = sigma1*sigma2*v12*v11;</span>
+<span class="fc" id="L528">            double K = sigma1*sigma2*v22*v21;</span>
+<span class="fc" id="L529">            double L = sigma1*sigma2*Math.pow(x0,2.0)*v12*v11 + </span>
+                    sigma1*sigma2*x0*y0*v22*v11 + sigma1*sigma2*x0*v32*v11 + 
+                    sigma1*sigma2*x0*y0*v12*v21 + 
+<span class="fc" id="L532">                    sigma1*sigma2*Math.pow(y0,2.0)*v22*v21 + </span>
+                    sigma1*sigma2*y0*v32*v21 + sigma1*sigma2*x0*v12*v31 + 
+                    sigma1*sigma2*y0*v22*v31 + sigma1*sigma2*v32*v31;
+<span class="fc" id="L535">            double M = Math.pow(sigma1,2.0)*v11*v11;</span>
+<span class="fc" id="L536">            double N = Math.pow(sigma1,2.0)*v21*v21;</span>
+<span class="fc" id="L537">            double O = Math.pow(sigma1*x0,2.0)*v11*v11 + </span>
+<span class="fc" id="L538">                    Math.pow(sigma1,2.0)*x0*y0*v21*v11 + </span>
+<span class="fc" id="L539">                    Math.pow(sigma1,2.0)*x0*v31*v11 + </span>
+<span class="fc" id="L540">                    Math.pow(sigma1,2.0)*x0*y0*v11*v21 + </span>
+<span class="fc" id="L541">                    Math.pow(sigma1*y0,2.0)*v21*v21 + </span>
+<span class="fc" id="L542">                    Math.pow(sigma1,2.0)*y0*v31*v21 + </span>
+<span class="fc" id="L543">                    Math.pow(sigma1,2.0)*x0*v11*v31 + </span>
+<span class="fc" id="L544">                    Math.pow(sigma1,2.0)*y0*v21*v31 + </span>
+<span class="fc" id="L545">                    Math.pow(sigma1,2.0)*v31*v31;</span>
+<span class="fc" id="L546">            double P = u12*u12;</span>
+<span class="fc" id="L547">            double Q = u22*u22;</span>
+<span class="fc" id="L548">            double R = Math.pow(x0,2.0)*u12*u12 + x0*y0*u22*u12 + x0*u32*u12 + </span>
+<span class="fc" id="L549">                    x0*y0*u12*u22 + Math.pow(y0,2.0)*u22*u22 + y0*u32*u22 + </span>
+                    x0*u12*u32 + y0*u22*u32 + u32*u32;
+            
+            
+<span class="fc" id="L553">            double S = ((P*J + A*M)/(G*M - P*D)*(H*N - Q*E) - (Q*K + B*N));</span>
+<span class="fc" id="L554">            double T = ((P*J + A*M)/(G*M - P*D)*(G*N + H*M - P*E - Q*D) - </span>
+                    (P*K + Q*J + A*N + B*M));
+<span class="fc" id="L556">            double U = ((P*J + A*M)/(G*M - P*D)*(G*O + M*I - P*F - D*R) - </span>
+                    (P*L + J*R + A*O + M*C));
+<span class="fc" id="L558">            double V = ((P*J + A*M)/(G*M - P*D)*(H*O + N*I - Q*F - E*R) - </span>
+                    (Q*L + K*R + B*O + N*C));
+<span class="fc" id="L560">            double W = ((P*J + A*M)/(G*M - P*D)*(O*I - F*R) - (L*R + O*C));</span>
+            
+            //assuming that x = ax^2, y = ay^2 which are the horizontal and
+            //vertical focal lengths, we obtain the following equations
+            
+            //x = (-y^2*S - y*V - W) / (y*T + U)
+            //(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + 
+            //(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + 
+            //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + 
+            //y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + 
+            //(y*T + U)^2*(- F*C - L*I) = 0
+            //(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + 
+            //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + 
+            //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + 
+            //y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0
+            
+            //where we can solve y using any of the two latter equations, and
+            //then use obtained y to solve x
+            Complex[] roots;
+            try {
+<span class="fc" id="L580">                Polynomial poly1 = buildPolynomial1(A, B, C, D, E, F, G, H, I, </span>
+                        J, K, L, S, T, U, V, W);
+<span class="fc" id="L582">                roots = poly1.getRoots();</span>
+<span class="nc" id="L583">            } catch (NumericalException e1) {</span>
+                //if solution for poly1 fails, try with second polynomial
+<span class="nc" id="L585">                Polynomial poly2 = buildPolynomial2(D, E, F, G, H, I,</span>
+                        M, N, O, P, Q, R, S, T, U, V, W);
+<span class="nc" id="L587">                roots = poly2.getRoots();</span>
+<span class="fc" id="L588">            }</span>
+            
+            //roots contain possible y values. We use only their real part
+            //and find x = (-y^2*S - y*V - W) / (y*T + U)
+            
+            //pick the best x, y values that produce a positive definite DIAC
+            //matrix
+<span class="fc" id="L595">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+<span class="fc" id="L597">            boolean valid = false;</span>
+<span class="fc bfc" id="L598" title="All 2 branches covered.">            if (roots != null) {</span>
+<span class="fc bfc" id="L599" title="All 2 branches covered.">                for (Complex root : roots) {</span>
+<span class="fc" id="L600">                    double y = root.getReal();</span>
+<span class="fc" id="L601">                    double x = getXFromY(y, S, T, U, V, W);</span>
+                    
+                    //build DIAC matrix and check if it is positive definite
+<span class="fc bfc" id="L604" title="All 4 branches covered.">                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {</span>
+<span class="fc" id="L605">                        double horizontalFocalLength = Math.sqrt(x);</span>
+<span class="fc" id="L606">                        double verticalFocalLength = Math.sqrt(y);</span>
+                        try {
+<span class="fc" id="L608">                            valid = buildDiac(horizontalFocalLength, </span>
+                                verticalFocalLength, diac);
+<span class="nc" id="L610">                        } catch (AlgebraException e) {</span>
+<span class="nc" id="L611">                            valid = false;</span>
+<span class="fc" id="L612">                        }</span>
+                    }
+                    
+<span class="fc bfc" id="L615" title="All 2 branches covered.">                    if (valid) {</span>
+<span class="fc" id="L616">                        break;</span>
+                    }
+                }
+            } else {
+<span class="fc" id="L620">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc bfc" id="L623" title="All 2 branches covered.">            if (valid) {</span>
+                //copy to result
+<span class="fc" id="L625">                result.setParameters(diac.getA(), diac.getB(), diac.getC(), </span>
+<span class="fc" id="L626">                        diac.getD(), diac.getE(), diac.getF());</span>
+            } else {
+                //no valid DIAC could be found
+<span class="fc" id="L629">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L632">        } catch (KruppaDualImageOfAbsoluteConicEstimatorException e) {</span>
+<span class="fc" id="L633">            throw e;</span>
+<span class="nc" id="L634">        } catch (Exception e) {</span>
+<span class="nc" id="L635">            throw new KruppaDualImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L636">        }        </span>
+<span class="fc" id="L637">    }</span>
+        
+    /**
+     * Gets x value from current y value.
+     * X and y values are the squared values of estimated focal lngth 
+     * components.
+     * This method is used internally when aspect ratio is not known.
+     * @param y y value to obtian x value from.
+     * @param S internal value from Kruppa's equations.
+     * @param T internal value from Kruppa's equations.
+     * @param U internal value from Kruppa's equations.
+     * @param V internal value from Kruppa's equations.
+     * @param W internal value from Kruppa's equations.
+     * @return x value.
+     */
+    private double getXFromY(double y, double S, double T, double U, double V, 
+            double W) {
+<span class="fc" id="L654">        return (-Math.pow(y, 2.0)*S - y*V - W) / (y*T + U);</span>
+    }
+    
+    /**
+     * One of Kruppa's equations expressed as a polynomial of degree 4 to solve
+     * y value, which is the squared value of vertical focal length.
+     * This method is only used when aspect ratio is unknown.
+     * @param A internal value from Kruppa's equations.
+     * @param B internal value from Kruppa's equations.
+     * @param C internal value from Kruppa's equations.
+     * @param D internal value from Kruppa's equations.
+     * @param E internal value from Kruppa's equations.
+     * @param F internal value from Kruppa's equations.
+     * @param G internal value from Kruppa's equations.
+     * @param H internal value from Kruppa's equations.
+     * @param I internal value from Kruppa's equations.
+     * @param J internal value from Kruppa's equations.
+     * @param K internal value from Kruppa's equations.
+     * @param L internal value from Kruppa's equations.
+     * @param S internal value from Kruppa's equations.
+     * @param T internal value from Kruppa's equations.
+     * @param U internal value from Kruppa's equations.
+     * @param V internal value from Kruppa's equations.
+     * @param W internal value from Kruppa's equations.
+     * @return a polynomial.
+     */
+    private Polynomial buildPolynomial1(double A, double B, double C, double D,
+            double E, double F, double G, double H, double I, double J, 
+            double K, double L, double S, double T, double U, double V,
+            double W) {
+        //(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + 
+        //(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + 
+        //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + 
+        //y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + (y*T + U)^2*(- F*C - L*I) = 0
+        
+<span class="fc" id="L689">        Polynomial result = new Polynomial(</span>
+                POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
+        
+        //(-y^2*S - y*V - W)^2 *(-A*D - G*J)
+<span class="fc" id="L693">        Polynomial tmp = new Polynomial(-W, -V, -S);</span>
+<span class="fc" id="L694">        Polynomial tmp2 = new Polynomial(-W, -V, -S);</span>
+<span class="fc" id="L695">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L696">        tmp.multiplyByScalar(-A*D - G*J);</span>
+<span class="fc" id="L697">        result.add(tmp);</span>
+        
+        //y^2*(y*T + U)^2*(-B*E - H*K)
+<span class="fc" id="L700">        tmp.setPolyParams(0.0, 0.0, 1.0);</span>
+<span class="fc" id="L701">        tmp2.setPolyParams(U, T);</span>
+<span class="fc" id="L702">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L703">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L704">        tmp.multiplyByScalar(-B*E - H*K);</span>
+<span class="fc" id="L705">        result.add(tmp);</span>
+        
+        //(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J)
+<span class="fc" id="L708">        tmp.setPolyParams(-W, -V, -S);</span>
+<span class="fc" id="L709">        tmp2.setPolyParams(U, T);</span>
+<span class="fc" id="L710">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L711">        tmp2.setPolyParams(0.0, 1);</span>
+<span class="fc" id="L712">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L713">        tmp.multiplyByScalar(-A*E - B*D - G*K - H*J);</span>
+<span class="fc" id="L714">        result.add(tmp);</span>
+        
+        //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I)
+<span class="fc" id="L717">        tmp.setPolyParams(-W, -V, -S);</span>
+<span class="fc" id="L718">        tmp2.setPolyParams(U, T);</span>
+<span class="fc" id="L719">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L720">        tmp.multiplyByScalar(-A*F - D*C - G*L - J*I);</span>
+<span class="fc" id="L721">        result.add(tmp);</span>
+        
+        //y*(y*T + U)^2*(-B*F - E*C - H*L - K*I)
+<span class="fc" id="L724">        tmp.setPolyParams(0.0, 1.0);</span>
+<span class="fc" id="L725">        tmp2.setPolyParams(U, T);</span>
+<span class="fc" id="L726">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L727">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L728">        tmp.multiplyByScalar(-B*F - E*C - H*L - K*I);</span>
+<span class="fc" id="L729">        result.add(tmp);</span>
+        
+        //(y*T + U)^2*(- F*C - L*I)
+<span class="fc" id="L732">        tmp.setPolyParams(U, T);</span>
+<span class="fc" id="L733">        tmp2.setPolyParams(U, T);</span>
+<span class="fc" id="L734">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L735">        tmp.multiplyByScalar(-F*C - L*I);</span>
+<span class="fc" id="L736">        result.add(tmp);</span>
+        
+<span class="fc" id="L738">        return result;</span>
+    }
+    
+    /**
+     * Another of Kruppa's equations expressed as a polynomial of degree 4 to
+     * solve y value, which is the squared value of vertical focal length.
+     * This method is only used when aspect ratio is unknown.
+     * @param D internal value from Kruppa's equations.
+     * @param E internal value from Kruppa's equations.
+     * @param F internal value from Kruppa's equations.
+     * @param G internal value from Kruppa's equations.
+     * @param H internal value from Kruppa's equations.
+     * @param I internal value from Kruppa's equations.
+     * @param M internal value from Kruppa's equations.
+     * @param N internal value from Kruppa's equations.
+     * @param O internal value from Kruppa's equations.
+     * @param P internal value from Kruppa's equations.
+     * @param Q internal value from Kruppa's equations.
+     * @param R internal value from Kruppa's equations.
+     * @param S internal value from Kruppa's equations.
+     * @param T internal value from Kruppa's equations.
+     * @param U internal value from Kruppa's equations.
+     * @param V internal value from Kruppa's equations.
+     * @param W internal value from Kruppa's equations.
+     * @return a polynomial.
+     */
+    private Polynomial buildPolynomial2(double D,
+            double E, double F, double G, double H, double I,
+            double M, double N, double O, double P,
+            double Q, double R, double S, double T, double U, double V, 
+            double W) {
+        //(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + 
+        //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + 
+        //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + 
+        //y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0
+<span class="nc" id="L773">        Polynomial result = new Polynomial(</span>
+                POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
+        
+        //(-y^2*S - y*V - W)^2*(G*M - P*D)
+<span class="nc" id="L777">        Polynomial tmp = new Polynomial(-W, -V, -S);</span>
+<span class="nc" id="L778">        Polynomial tmp2 = new Polynomial(-W, -V, -S);</span>
+<span class="nc" id="L779">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L780">        tmp.multiplyByScalar(G*M - P*D);</span>
+<span class="nc" id="L781">        result.add(tmp);</span>
+        
+        //y^2*(y*T + U)^2*(H*N - Q*E)
+<span class="nc" id="L784">        tmp.setPolyParams(0.0, 0.0, 1.0);</span>
+<span class="nc" id="L785">        tmp2.setPolyParams(U, T);</span>
+<span class="nc" id="L786">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L787">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L788">        tmp.multiplyByScalar(H*N - Q*E);</span>
+<span class="nc" id="L789">        result.add(tmp);</span>
+        
+        //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D)
+<span class="nc" id="L792">        tmp.setPolyParams(-W, -V, -S);</span>
+<span class="nc" id="L793">        tmp2.setPolyParams(U, T);</span>
+<span class="nc" id="L794">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L795">        tmp2.setPolyParams(0.0, 1.0);</span>
+<span class="nc" id="L796">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L797">        tmp.multiplyByScalar(G*N + H*M - P*E - Q*D);</span>
+<span class="nc" id="L798">        result.add(tmp);</span>
+        
+        //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R)
+<span class="nc" id="L801">        tmp.setPolyParams(-W, -V, -S);</span>
+<span class="nc" id="L802">        tmp2.setPolyParams(U, T);</span>
+<span class="nc" id="L803">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L804">        tmp.multiplyByScalar(G*O + M*I - P*F - D*R);</span>
+<span class="nc" id="L805">        result.add(tmp);</span>
+        
+        //y*(y*T + U)^2*(H*O + N*I - Q*F - E*R)
+<span class="nc" id="L808">        tmp.setPolyParams(0.0, 1.0);</span>
+<span class="nc" id="L809">        tmp2.setPolyParams(U, T);</span>
+<span class="nc" id="L810">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L811">        tmp.multiplyByScalar(H*O + N*I - Q*F - E*R);</span>
+<span class="nc" id="L812">        result.add(tmp);</span>
+        
+        //(y*T + U)^2*(O*I - F*R)
+<span class="nc" id="L815">        tmp.setPolyParams(U, T);</span>
+<span class="nc" id="L816">        tmp2.setPolyParams(U, T);</span>
+<span class="nc" id="L817">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L818">        tmp.multiplyByScalar(O*I - F*R);</span>
+<span class="nc" id="L819">        result.add(tmp);</span>
+        
+<span class="nc" id="L821">        return result;</span>
+    }
+    
+    /**
+     * Estimates the DIAC assuming known aspect ratio.
+     * @param result instance where estimated DIAC will be stored.
+     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
+     * occurs during estimation, usually because fundamental matrix corresponds
+     * to degenerate camera movements, or because of numerical unstabilities.
+     */
+    private void estimateKnownAspectRatio(DualImageOfAbsoluteConic result)
+            throws KruppaDualImageOfAbsoluteConicEstimatorException {
+        try {
+<span class="fc" id="L834">            double x0 = mPrincipalPointX;</span>
+<span class="fc" id="L835">            double y0 = mPrincipalPointY;      </span>
+        
+            //SVD decompose fundamental matrix
+<span class="fc" id="L838">            mFundamentalMatrix.normalize();</span>
+<span class="fc" id="L839">            SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
+<span class="fc" id="L840">                    mFundamentalMatrix.getInternalMatrix());</span>
+<span class="fc" id="L841">            decomposer.decompose();</span>
+            
+<span class="fc" id="L843">            double[] sigmas = decomposer.getSingularValues();</span>
+<span class="fc" id="L844">            Matrix u = decomposer.getU();</span>
+<span class="fc" id="L845">            Matrix v = decomposer.getV();</span>
+            
+<span class="fc" id="L847">            double sigma1 = sigmas[0];</span>
+<span class="fc" id="L848">            double sigma2 = sigmas[1];</span>
+            
+            //Column u1
+<span class="fc" id="L851">            double u11 = u.getElementAt(0, 0);</span>
+<span class="fc" id="L852">            double u21 = u.getElementAt(1, 0);</span>
+<span class="fc" id="L853">            double u31 = u.getElementAt(2, 0);</span>
+            
+            //Column u2
+<span class="fc" id="L856">            double u12 = u.getElementAt(0, 1);</span>
+<span class="fc" id="L857">            double u22 = u.getElementAt(1, 1);</span>
+<span class="fc" id="L858">            double u32 = u.getElementAt(2, 1);</span>
+            
+            //Column v1
+<span class="fc" id="L861">            double v11 = v.getElementAt(0, 0);</span>
+<span class="fc" id="L862">            double v21 = v.getElementAt(1, 0);</span>
+<span class="fc" id="L863">            double v31 = v.getElementAt(2, 0);</span>
+            
+            //Column v2
+<span class="fc" id="L866">            double v12 = v.getElementAt(0, 1);</span>
+<span class="fc" id="L867">            double v22 = v.getElementAt(1, 1);</span>
+<span class="fc" id="L868">            double v32 = v.getElementAt(2, 1);</span>
+            
+            //build Kruppa equations
+<span class="fc" id="L871">            double A = u12*u11;</span>
+<span class="fc" id="L872">            double B = u22*u21;</span>
+<span class="fc" id="L873">            double C = Math.pow(x0,2.0)*u12*u11 + x0*y0*u22*u11 + x0*u32*u11 + </span>
+<span class="fc" id="L874">                    x0*y0*u12*u21 + Math.pow(y0,2.0)*u22*u21 + y0*u32*u21 + </span>
+                    x0*u12*u31 + y0*u22*u31 + u32*u31;
+<span class="fc" id="L876">            double D = Math.pow(sigma2,2.0)*v12*v12;</span>
+<span class="fc" id="L877">            double E = Math.pow(sigma2,2.0)*v22*v22;</span>
+<span class="fc" id="L878">            double F = Math.pow(sigma2*x0,2.0)*v12*v12 + </span>
+<span class="fc" id="L879">                    Math.pow(sigma2,2.0)*x0*y0*v22*v12 + </span>
+<span class="fc" id="L880">                    Math.pow(sigma2,2.0)*x0*v32*v12 + </span>
+<span class="fc" id="L881">                    Math.pow(sigma2,2.0)*x0*y0*v12*v22 + </span>
+<span class="fc" id="L882">                    Math.pow(sigma2*y0,2)*v22*v22 + </span>
+<span class="fc" id="L883">                    Math.pow(sigma2,2.0)*y0*v32*v22 + </span>
+<span class="fc" id="L884">                    Math.pow(sigma2,2.0)*x0*v12*v32 + </span>
+<span class="fc" id="L885">                    Math.pow(sigma2,2.0)*y0*v22*v32 + </span>
+<span class="fc" id="L886">                    Math.pow(sigma2,2.0)*v32*v32;</span>
+<span class="fc" id="L887">            double G = u11*u11;</span>
+<span class="fc" id="L888">            double H = u21*u21;</span>
+<span class="fc" id="L889">            double I = Math.pow(x0,2.0)*u11*u11 + x0*y0*u21*u11 + x0*u31*u11 + </span>
+<span class="fc" id="L890">                    x0*y0*u11*u21 + Math.pow(y0,2.0)*u21*u21 + y0*u31*u21 + </span>
+                    x0*u11*u31 + y0*u21*u31 + u31*u31;
+<span class="fc" id="L892">            double J = sigma1*sigma2*v12*v11;</span>
+<span class="fc" id="L893">            double K = sigma1*sigma2*v22*v21;</span>
+<span class="fc" id="L894">            double L = sigma1*sigma2*Math.pow(x0,2.0)*v12*v11 + </span>
+                    sigma1*sigma2*x0*y0*v22*v11 + sigma1*sigma2*x0*v32*v11 + 
+                    sigma1*sigma2*x0*y0*v12*v21 + 
+<span class="fc" id="L897">                    sigma1*sigma2*Math.pow(y0,2.0)*v22*v21 + </span>
+                    sigma1*sigma2*y0*v32*v21 + sigma1*sigma2*x0*v12*v31 + 
+                    sigma1*sigma2*y0*v22*v31 + sigma1*sigma2*v32*v31;
+<span class="fc" id="L900">            double M = Math.pow(sigma1,2.0)*v11*v11;</span>
+<span class="fc" id="L901">            double N = Math.pow(sigma1,2.0)*v21*v21;</span>
+<span class="fc" id="L902">            double O = Math.pow(sigma1*x0,2.0)*v11*v11 + </span>
+<span class="fc" id="L903">                    Math.pow(sigma1,2.0)*x0*y0*v21*v11 + </span>
+<span class="fc" id="L904">                    Math.pow(sigma1,2.0)*x0*v31*v11 + </span>
+<span class="fc" id="L905">                    Math.pow(sigma1,2.0)*x0*y0*v11*v21 + </span>
+<span class="fc" id="L906">                    Math.pow(sigma1*y0,2.0)*v21*v21 + </span>
+<span class="fc" id="L907">                    Math.pow(sigma1,2.0)*y0*v31*v21 + </span>
+<span class="fc" id="L908">                    Math.pow(sigma1,2.0)*x0*v11*v31 + </span>
+<span class="fc" id="L909">                    Math.pow(sigma1,2.0)*y0*v21*v31 + </span>
+<span class="fc" id="L910">                    Math.pow(sigma1,2.0)*v31*v31;</span>
+<span class="fc" id="L911">            double P = u12*u12;</span>
+<span class="fc" id="L912">            double Q = u22*u22;</span>
+<span class="fc" id="L913">            double R = Math.pow(x0,2.0)*u12*u12 + x0*y0*u22*u12 + x0*u32*u12 + </span>
+<span class="fc" id="L914">                    x0*y0*u12*u22 + Math.pow(y0,2.0)*u22*u22 + y0*u32*u22 + </span>
+                    x0*u12*u32 + y0*u22*u32 + u32*u32;
+
+            //try to solve any of Kruppa's equations
+            Complex[] roots;
+            try {
+<span class="fc" id="L920">                Polynomial poly3 = buildPolynomial3(A, B, C, D, E, F, G, H, I, </span>
+                        J, K, L);
+<span class="fc" id="L922">                roots = poly3.getRoots();</span>
+<span class="nc" id="L923">            } catch (NumericalException e3) {</span>
+                try {
+                    //if solution for poly3 fails, try with 4th polynomial
+<span class="nc" id="L926">                    Polynomial poly4 = buildPolynomial4(D, E, F, G, H,</span>
+                            I, M, N, O, P, Q, R);
+<span class="nc" id="L928">                    roots = poly4.getRoots();</span>
+<span class="nc" id="L929">                } catch (NumericalException e4) {</span>
+<span class="nc" id="L930">                    Polynomial poly5 = buildPolynomial5(A, B, C,</span>
+                            J, K, L, M, N, O, P, Q, R);
+<span class="nc" id="L932">                    roots = poly5.getRoots();</span>
+<span class="nc" id="L933">                }</span>
+<span class="fc" id="L934">            }</span>
+            
+            //roots contain possible x values. We use only their real part
+            
+            //pick the best x, y values that produce a positive definite DIAC
+            //matrix
+<span class="fc" id="L940">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
+                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+<span class="fc" id="L942">            boolean valid = false;</span>
+<span class="pc bpc" id="L943" title="1 of 2 branches missed.">            if (roots != null) {</span>
+<span class="fc" id="L944">                double r = mFocalDistanceAspectRatio;</span>
+<span class="fc" id="L945">                double r2 = r*r;</span>
+<span class="fc bfc" id="L946" title="All 2 branches covered.">                for (Complex root : roots) {</span>
+<span class="fc" id="L947">                    double x = root.getReal();</span>
+<span class="fc" id="L948">                    double y = r2*x;</span>
+                    
+                    //build DIAC matrix and check if it is positive definite
+<span class="pc bpc" id="L951" title="1 of 4 branches missed.">                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {</span>
+<span class="fc" id="L952">                        double horizontalFocalLength = Math.sqrt(x);</span>
+<span class="fc" id="L953">                        double verticalFocalLength = Math.sqrt(y);</span>
+                        try {
+<span class="fc" id="L955">                            valid = buildDiac(horizontalFocalLength, </span>
+                                verticalFocalLength, diac);
+<span class="nc" id="L957">                        } catch (AlgebraException e) {</span>
+<span class="nc" id="L958">                            valid = false;</span>
+<span class="fc" id="L959">                        }</span>
+                    }
+                    
+<span class="fc bfc" id="L962" title="All 2 branches covered.">                    if (valid) {</span>
+<span class="fc" id="L963">                        break;</span>
+                    }
+                }
+<span class="fc" id="L966">            } else {</span>
+<span class="nc" id="L967">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc bfc" id="L970" title="All 2 branches covered.">            if (valid) {</span>
+                //copy to result
+<span class="fc" id="L972">                result.setParameters(diac.getA(), diac.getB(), diac.getC(), </span>
+<span class="fc" id="L973">                        diac.getD(), diac.getE(), diac.getF());</span>
+            } else {
+                //no valid DIAC could be found
+<span class="fc" id="L976">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L979">        } catch (KruppaDualImageOfAbsoluteConicEstimatorException e) {</span>
+<span class="fc" id="L980">            throw e;</span>
+<span class="nc" id="L981">        } catch (Exception e) {</span>
+<span class="nc" id="L982">            throw new KruppaDualImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L983">        }                </span>
+<span class="fc" id="L984">    }</span>
+    
+    /**
+     * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
+     * solve x value, which is the squared value of horizontal focal length.
+     * This method is only used when aspect ratio is known.
+     * @param A internal value from Kruppa's equations.
+     * @param B internal value from Kruppa's equations.
+     * @param C internal value from Kruppa's equations.
+     * @param D internal value from Kruppa's equations.
+     * @param E internal value from Kruppa's equations.
+     * @param F internal value from Kruppa's equations.
+     * @param G internal value from Kruppa's equations.
+     * @param H internal value from Kruppa's equations.
+     * @param I internal value from Kruppa's equations.
+     * @param J internal value from Kruppa's equations.
+     * @param K internal value from Kruppa's equations.
+     * @param L internal value from Kruppa's equations.
+     * @return a polynomial.
+     */
+    private Polynomial buildPolynomial3(double A, double B, double C, double D,
+            double E, double F, double G, double H, double I, double J, 
+            double K, double L) {
+        
+        //x^2*((-A*D - G*J) + r^4*(-B*E - H*K) + r^2*(-A*E - B*D - G*K - H*J)) + 
+        //x*((-A*F - D*C - G*L - J*I) + r^2*(-B*F - E*C - H*L - K*I)) + 
+        //(- F*C - L*I) = 0
+<span class="fc" id="L1011">        double r = mFocalDistanceAspectRatio;</span>
+<span class="fc" id="L1012">        double r2 = r*r;</span>
+<span class="fc" id="L1013">        double r4 = r2*r2;</span>
+<span class="fc" id="L1014">        return new Polynomial(-F*C -L*I, </span>
+                (-A*F - D*C - G*L - J*I) + r2*(-B*F - E*C - H*L - K*I), 
+                ((-A*D - G*J) + r4*(-B*E - H*K) + r2*(-A*E - B*D - G*K - H*J)));
+    }
+
+    /**
+     * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
+     * solve x value, which is the squared value of horizontal focal length.
+     * This method is only used when aspect ratio is known.
+     * @param D internal value from Kruppa's equations.
+     * @param E internal value from Kruppa's equations.
+     * @param F internal value from Kruppa's equations.
+     * @param G internal value from Kruppa's equations.
+     * @param H internal value from Kruppa's equations.
+     * @param I internal value from Kruppa's equations.
+     * @param M internal value from Kruppa's equations.
+     * @param N internal value from Kruppa's equations.
+     * @param O internal value from Kruppa's equations.
+     * @param P internal value from Kruppa's equations.
+     * @param Q internal value from Kruppa's equations.
+     * @param R internal value from Kruppa's equations.
+     * @return a polynomial.
+     */
+    private Polynomial buildPolynomial4(double D,
+            double E, double F, double G, double H, double I,
+            double M, double N, double O, double P,
+            double Q, double R) {
+        
+        //x^2*((G*M - P*D) + r^4*(H*N - Q*E) + r^2*(G*N + H*M - P*E - Q*D)) + 
+        //x*((G*O + M*I - P*F - D*R) + r^2*(H*O + N*I - Q*F - E*R)) + 
+        //(O*I - F*R) = 0
+<span class="nc" id="L1045">        double r = mFocalDistanceAspectRatio;</span>
+<span class="nc" id="L1046">        double r2 = r*r;</span>
+<span class="nc" id="L1047">        double r4 = r2*r2;</span>
+<span class="nc" id="L1048">        return new Polynomial(O*I - F*R, </span>
+                (G*O + M*I - P*F - D*R) + r2*(H*O + N*I - Q*F - E*R),
+                (G*M - P*D) + r4*(H*N - Q*E) + r2*(G*N + H*M - P*E - Q*D));
+    }
+
+    /**
+     * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
+     * solve x value, which is the squared value of horizontal focal length.
+     * This method is only used when aspect ratio is known.
+     * @param A internal value from Kruppa's equations.
+     * @param B internal value from Kruppa's equations.
+     * @param C internal value from Kruppa's equations.
+     * @param J internal value from Kruppa's equations.
+     * @param K internal value from Kruppa's equations.
+     * @param L internal value from Kruppa's equations.
+     * @param M internal value from Kruppa's equations.
+     * @param N internal value from Kruppa's equations.
+     * @param O internal value from Kruppa's equations.
+     * @param P internal value from Kruppa's equations.
+     * @param Q internal value from Kruppa's equations.
+     * @param R internal value from Kruppa's equations.
+     * @return a polynomial.
+     */
+    private Polynomial buildPolynomial5(double A, double B, double C, double J,
+            double K, double L, double M, double N, double O, double P, 
+            double Q, double R) {
+        
+        //x^2*((P*J + A*M) + r^4*(Q*K + B*N) + r^2*(P*K + Q*J + A*N + B*M)) + 
+        //x*((P*L + J*R + A*O + M*C) + r^2*(Q*L + K*R + B*O + N*C)) + 
+        //(L*R + O*C) = 0
+<span class="nc" id="L1078">        double r = mFocalDistanceAspectRatio;</span>
+<span class="nc" id="L1079">        double r2 = r*r;</span>
+<span class="nc" id="L1080">        double r4 = r2*r2;</span>
+<span class="nc" id="L1081">        return new Polynomial(L*R + O*C, </span>
+                (P*L + J*R + A*O + M*C) + r2*(Q*L + K*R + B*O + N*C),
+                (P*J + A*M) + r4*(Q*K + B*N) + r2*(P*K + Q*J + A*N + B*M));
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

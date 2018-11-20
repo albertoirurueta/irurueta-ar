@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMedSRobustSinglePoint3DTriangulator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">LMedSRobustSinglePoint3DTriangulator.java</span></div><h1>LMedSRobustSinglePoint3DTriangulator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Robustly triangulates 3D points from matched 2D points and their 
+ * corresponding cameras on several views using LMedS algorithm.
+ */
+public class LMedSRobustSinglePoint3DTriangulator extends 
+        RobustSinglePoint3DTriangulator {
+    
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used 
+     * to keep the algorithm iterating in case that best estimated threshold 
+     * using median of residuals is not small enough. Once a solution is found 
+     * that generates a threshold below this value, the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-3;
+    
+    /**
+     * Minimum allowed stop threshold value.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+    
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best 
+     * estimated threshold using median of residuals is not small enough. Once 
+     * a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;    
+    
+    /**
+     * Constructor.
+     */
+    public LMedSRobustSinglePoint3DTriangulator() {
+<span class="fc" id="L81">        super();</span>
+<span class="fc" id="L82">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L83">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     */
+    public LMedSRobustSinglePoint3DTriangulator(
+            RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L92">        super(listener);</span>
+<span class="fc" id="L93">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L94">    }</span>
+    
+    /**
+     * Constructor.
+     * @param points Matched 2D points. Each point in the list is assumed to be 
+     * projected by the corresponding camera in the list.
+     * @param cameras List of cameras associated to the matched 2D point on the 
+     * same position as the camera on the list.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     * length or their length is less than 2 views, which is the minimum 
+     * required to compute triangulation.
+     */
+    public LMedSRobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points, 
+            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+<span class="fc" id="L108">        super(points, cameras);</span>
+<span class="fc" id="L109">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L110">    }</span>
+    
+    /**
+     * Constructor.
+     * @param points Matched 2D points. Each point in the list is assumed to be 
+     * projected by the corresponding camera in the list.
+     * @param cameras List of cameras associated to the matched 2D point on the 
+     * same position as the camera on the list.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     * length or their length is less than 2 views, which is the minimum 
+     * required to compute triangulation.
+     */
+    public LMedSRobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points,
+            List&lt;PinholeCamera&gt; cameras, 
+            RobustSinglePoint3DTriangulatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L128">        super(points, cameras, listener);</span>
+<span class="fc" id="L129">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L130">    }</span>
+    
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that 
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L151">        return mStopThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely 
+     * when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setStopThreshold(double stopThreshold) 
+            throws IllegalArgumentException, LockedException {
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L178">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L181">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L184">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L185">    }</span>
+    
+    /**
+     * Triangulates provided matched 2D points being projected by each 
+     * corresponding camera into a single 3D point.
+     * At least 2 matched 2D points and their corresponding 2 cameras are 
+     * required to compute triangulation. If more views are provided, an 
+     * averaged solution can be found.
+     * @return computed triangulated 3D point.
+     * @throws LockedException if this instance is locked.
+     * @throws NotReadyException if lists of points and cameras don't have the
+     * same length or less than 2 views are provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public Point3D triangulate() throws LockedException, NotReadyException, 
+            RobustEstimatorException {
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L204">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L207">            throw new NotReadyException();</span>
+        }
+        
+<span class="fc" id="L210">        LMedSRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
+                new LMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L212">                new LMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
+                    
+            //point to be reused when computing residuals
+<span class="fc" id="L215">            private Point2D mTestPoint = Point2D.create(</span>
+                    CoordinatesType.HOMOGENEOUS_COORDINATES);
+
+            //non-robust 3D point triangulator
+<span class="fc" id="L219">            private SinglePoint3DTriangulator mTriangulator = </span>
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">                    SinglePoint3DTriangulator.create(mUseHomogeneousSolution ?</span>
+<span class="fc" id="L221">                    Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR :</span>
+<span class="nc" id="L222">                    Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);</span>
+            
+            //subset of 2D points
+<span class="fc" id="L225">            private List&lt;Point2D&gt; mSubsetPoints = new ArrayList&lt;&gt;();</span>
+            
+            //subst of cameras
+<span class="fc" id="L228">            private List&lt;PinholeCamera&gt; mSubsetCameras = </span>
+                    new ArrayList&lt;&gt;();
+            
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L233">                return mPoints2D.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L238">                return MIN_REQUIRED_VIEWS;</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, 
+                    List&lt;Point3D&gt; solutions) {
+<span class="fc" id="L244">                mSubsetPoints.clear();</span>
+<span class="fc" id="L245">                mSubsetPoints.add(mPoints2D.get(samplesIndices[0]));</span>
+<span class="fc" id="L246">                mSubsetPoints.add(mPoints2D.get(samplesIndices[1]));</span>
+                
+<span class="fc" id="L248">                mSubsetCameras.clear();</span>
+<span class="fc" id="L249">                mSubsetCameras.add(mCameras.get(samplesIndices[0]));</span>
+<span class="fc" id="L250">                mSubsetCameras.add(mCameras.get(samplesIndices[1]));</span>
+                
+                try {
+<span class="fc" id="L253">                    mTriangulator.setPointsAndCameras(mSubsetPoints, </span>
+                            mSubsetCameras);
+<span class="fc" id="L255">                    Point3D triangulated = mTriangulator.triangulate();</span>
+<span class="fc" id="L256">                    solutions.add(triangulated);</span>
+<span class="nc" id="L257">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L259">                }</span>
+<span class="fc" id="L260">            }</span>
+
+            @Override
+            public double computeResidual(Point3D currentEstimation, int i) {
+<span class="fc" id="L264">                Point2D point2D = mPoints2D.get(i);</span>
+<span class="fc" id="L265">                PinholeCamera camera = mCameras.get(i);</span>
+                
+                //project estimated point with camera
+<span class="fc" id="L268">                camera.project(currentEstimation, mTestPoint);</span>
+                
+                //return distance of projected point respect to the original one
+                //as a residual
+<span class="fc" id="L272">                return mTestPoint.distanceTo(point2D);</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L277">                return LMedSRobustSinglePoint3DTriangulator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(RobustEstimator&lt;Point3D&gt; estimator) {
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L283">                    mListener.onTriangulateStart(</span>
+                            LMedSRobustSinglePoint3DTriangulator.this);
+                }
+<span class="fc" id="L286">            }</span>
+
+            @Override
+            public void onEstimateEnd(RobustEstimator&lt;Point3D&gt; estimator) {
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L291">                    mListener.onTriangulateEnd(</span>
+                            LMedSRobustSinglePoint3DTriangulator.this);
+                }
+<span class="fc" id="L294">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;Point3D&gt; estimator, int iteration) {
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L300">                    mListener.onTriangulateNextIteration(</span>
+                            LMedSRobustSinglePoint3DTriangulator.this, 
+                            iteration);
+                }
+<span class="fc" id="L304">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;Point3D&gt; estimator, float progress) {
+<span class="pc bpc" id="L309" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L310">                    mListener.onTriangulateProgressChange(</span>
+                            LMedSRobustSinglePoint3DTriangulator.this, 
+                            progress);
+                }
+<span class="fc" id="L314">            }</span>
+        });
+        
+        try {
+<span class="fc" id="L318">            mLocked = true;</span>
+<span class="fc" id="L319">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L320">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L321">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L322">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L323">            return innerEstimator.estimate();</span>
+<span class="nc" id="L324">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L325">            throw new LockedException(e);</span>
+<span class="nc" id="L326">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L327">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L329">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */    
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L339">        return RobustEstimatorMethod.LMedS;</span>
+    }        
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

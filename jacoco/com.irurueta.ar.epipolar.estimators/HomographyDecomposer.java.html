@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HomographyDecomposer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.estimators</a> &gt; <span class="el_source">HomographyDecomposer.java</span></div><h1>HomographyDecomposer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.geometry.*;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Decomposes a 2D homography to extract its internal geometry structure. There 
+ * are four possible solutions, with two that are physically possible. The 
+ * physically possible solution can be found by imposing a positive depth
+ * constraint (reconstructed points must lie in front of the cameras).
+ * An homography matrix is defined as H = (R + (1/d)*T*N&lt;sup&gt;T&lt;/sup&gt;), where R 
+ * is a 3x3 rotation matrix, d is the distance of the plane, N is the plane's 
+ * normal, T is the translation vector. The decomposition works by computing the
+ * SVD of H&lt;sup&gt;T&lt;/sup&gt;H and then following the procedure defined in 
+ * O. Faugeras, Motion and structure from motion in a piecewise planar 
+ * environment.
+ */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
+public class HomographyDecomposer {
+    
+    /**
+     * Number of inhomogeneous coordinates in 3D.
+     */
+    public static final int NUM_COORDS_3D = 3;
+    
+    /**
+     * Threshold to determine that two singular values are equal.
+     */
+    public static final double EQUAL_SINGULAR_VALUE_THRESHOLD = 1e-12;
+        
+    /**
+     * 2D transformation relating two views (left view to right view).
+     */
+    private Transformation2D mHomography;
+    
+    /**
+     * Intrinsic parameters to be used on left view.
+     */
+    private PinholeCameraIntrinsicParameters mLeftIntrinsics;
+    
+    /**
+     * Intrinsic parameters to be used on right view.
+     */
+    private PinholeCameraIntrinsicParameters mRightIntrinsics;
+    
+    /**
+     * Listener to handle events raised by this instance.
+     */
+    private HomographyDecomposerListener mListener;
+    
+    /**
+     * Indicates whether decomposer is locked while computing decomposition.
+     */
+    private boolean mLocked;
+    
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L81">    public HomographyDecomposer() { }</span>
+    
+    /**
+     * Constructor.
+     * @param homography 2D transformation relating two views (left view to 
+     * right view).
+     * @param leftIntrinsics intrinsic parameters to be used on left view.
+     * @param rightIntrinsics intrinsic parameters to be used on right view.
+     */
+    public HomographyDecomposer(Transformation2D homography,
+            PinholeCameraIntrinsicParameters leftIntrinsics,
+<span class="fc" id="L92">            PinholeCameraIntrinsicParameters rightIntrinsics) {</span>
+<span class="fc" id="L93">        mHomography = homography;</span>
+<span class="fc" id="L94">        mLeftIntrinsics = leftIntrinsics;</span>
+<span class="fc" id="L95">        mRightIntrinsics = rightIntrinsics;</span>
+<span class="fc" id="L96">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homography 2D transformation relating two views (left view to 
+     * right view).
+     * @param leftIntrinsics intrinsic parameters to be used on left view.
+     * @param rightIntrinsics intrinsic parameters to be used on right view.
+     * @param listener listener to attend events generated by this instance.
+     */
+    public HomographyDecomposer(Transformation2D homography,
+            PinholeCameraIntrinsicParameters leftIntrinsics,
+            PinholeCameraIntrinsicParameters rightIntrinsics,
+            HomographyDecomposerListener listener) {
+<span class="fc" id="L110">        this(homography, leftIntrinsics, rightIntrinsics);</span>
+<span class="fc" id="L111">        mListener = listener;</span>
+<span class="fc" id="L112">    }</span>
+    
+    /**
+     * Gets 2D transformation relating two views (left view to right view).
+     * @return 2D transformation relating two views.
+     */
+    public Transformation2D getHomography() {
+<span class="fc" id="L119">        return mHomography;</span>
+    }
+    
+    /**
+     * Sets 2D transformation relating two views (left view to right view).
+     * @param homography 2D transformation relating two views.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomography(Transformation2D homography) 
+            throws LockedException {
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L130">            throw new LockedException();</span>
+        }
+<span class="fc" id="L132">        mHomography = homography;</span>
+<span class="fc" id="L133">    }</span>
+    
+    /**
+     * Gets intrinsic parameters to be used on left view.
+     * @return intrinsic parameters to be used on left view.
+     */
+    public PinholeCameraIntrinsicParameters getLeftIntrinsics() {
+<span class="fc" id="L140">        return mLeftIntrinsics;</span>
+    }
+    
+    /**
+     * Sets intrinsic parameters to be used on left view.
+     * @param leftIntrinsics intrinsic parameters to be used on left view.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setLeftIntrinsics(
+            PinholeCameraIntrinsicParameters leftIntrinsics) 
+            throws LockedException {
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L152">            throw new LockedException();</span>
+        }
+<span class="fc" id="L154">        mLeftIntrinsics = leftIntrinsics;</span>
+<span class="fc" id="L155">    }</span>
+    
+    /**
+     * Gets intrinsic parameters to be used on right view.
+     * @return intrinsic parameters to be used on right view.
+     */
+    public PinholeCameraIntrinsicParameters getRightIntrinsics() {
+<span class="fc" id="L162">        return mRightIntrinsics;</span>
+    }
+    
+    /**
+     * Sets intrinsic parameters to be used on right view.
+     * @param rightIntrinsics intrinsic parameters to be used on right view.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setRightIntrinsics(
+            PinholeCameraIntrinsicParameters rightIntrinsics) 
+            throws LockedException {
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L174">            throw new LockedException();</span>
+        }
+<span class="fc" id="L176">        mRightIntrinsics = rightIntrinsics;</span>
+<span class="fc" id="L177">    }</span>
+    
+    /**
+     * Gets listener to handle events raised by this instance.
+     * @return listener to handle events raised by this instance.
+     */
+    public HomographyDecomposerListener getListener() {
+<span class="fc" id="L184">        return mListener;</span>
+    }
+    
+    /**
+     * Sets listener to handle events raised by this instance.
+     * @param listener listener to handle events raised by this instance.
+     */
+    public void setListener(HomographyDecomposerListener listener) {
+<span class="fc" id="L192">        mListener = listener;</span>
+<span class="fc" id="L193">    }</span>
+    
+    /**
+     * Indicates whether estimator is locked while computing decomposition.
+     * @return true if decomposer is locked, false otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L200">        return mLocked;</span>
+    }
+    
+    /**
+     * Indicates whether decomposer is ready to start the decomposition when all
+     * required data has been provided.
+     * @return true if decomposer is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="pc bpc" id="L209" title="2 of 6 branches missed.">        return mHomography != null &amp;&amp; mLeftIntrinsics != null &amp;&amp;</span>
+                mRightIntrinsics != null;
+    }
+    
+    /**
+     * Decomposes homography into possible solutions containing possible 3D
+     * rotation, 3D translation and normal and distance of the plane relating
+     * two views via provided homography.
+     * @return possible solutions.
+     * @throws LockedException if decomposer is locked.
+     * @throws NotReadyException if decomposer is not ready.
+     * @throws HomographyDecomposerException if decomposition fails for some 
+     * other reason (i.e. numerical instabilities).
+     */
+    public List&lt;HomographyDecomposition&gt; decompose() throws LockedException, 
+            NotReadyException, HomographyDecomposerException {
+<span class="fc" id="L225">        List&lt;HomographyDecomposition&gt; result = </span>
+                new ArrayList&lt;&gt;();
+<span class="fc" id="L227">        decompose(result);</span>
+<span class="fc" id="L228">        return result;</span>
+    }
+    
+    /**
+     * Decomposes homography into possible solutions containing possible 3D
+     * rotation, 3D translation and normal and distance of the plane relating
+     * two views via provided homography.
+     * @param result instance where possible solutions will be stored.
+     * @throws LockedException if decomposer is locked.
+     * @throws NotReadyException if decomposer is not ready.
+     * @throws HomographyDecomposerException if decomposition fails for some
+     * other reason (i.e. numerical instabilities).
+     */
+    public void decompose(List&lt;HomographyDecomposition&gt; result) 
+            throws LockedException, NotReadyException, 
+            HomographyDecomposerException {
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">        if(isLocked()) {</span>
+<span class="nc" id="L245">            throw new LockedException();</span>
+        }
+        
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">        if(!isReady()) {</span>
+<span class="nc" id="L249">            throw new NotReadyException();</span>
+        }
+        
+        try {
+<span class="fc" id="L253">            mLocked = true;</span>
+<span class="fc" id="L254">            result.clear();</span>
+            
+<span class="fc bfc" id="L256" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L257">                mListener.onDecomposeStart(this);</span>
+            }   
+            
+<span class="fc" id="L260">            Matrix H = computeNormalizedCoordinatesHomographyMatrix();</span>
+            
+            //Homography matrix H can be expressed as:
+            //H = d*R + t*n^T
+            //where d is the distance to the plane used to relate both views, R 
+            //is a rotation relating both views so that R*R^T = I and 
+            //det(R) = 1, t is the translation relating both views and n is the 
+            //normal of the plane relating both views.
+            
+            //By using SVD decomposition, we get:
+            //H = U*A'*V^T
+            
+            //where U and V are orthonormal matrices and A' is a diagonal matrix
+            //containing singular values in decreasing order d1 &gt;= d2 &gt;= d3
+            
+            //Hence A' can also be expressed similarly to H as:
+            //A' = d'*R' + t'*n'^T, and the relation to d, R, t and n is as 
+            //follows:
+            //H = U*(d'*R' + t'*n'^T)*V^T = d'*U*R'*V^T + U*t'*n'^T*V^T
+            //d = d'
+            //R = U*R'*V^T
+            //t = U*t'
+            //n^T = n'T*V^T --&gt; n = V*n'
+            
+<span class="fc" id="L284">            SingularValueDecomposer svdDecomposer = </span>
+                    new SingularValueDecomposer(H);
+<span class="fc" id="L286">            svdDecomposer.decompose();</span>
+<span class="fc" id="L287">            Matrix U = svdDecomposer.getU();</span>
+<span class="fc" id="L288">            double[] singularValues = svdDecomposer.getSingularValues();</span>
+<span class="fc" id="L289">            Matrix V = svdDecomposer.getV();</span>
+            
+<span class="fc" id="L291">            List&lt;double[]&gt; n = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L292">            List&lt;Matrix&gt; R = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L293">            List&lt;double[]&gt; t = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L294">            List&lt;Double&gt; d = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L295">            int numSolutions = decomposeAllFromSingularValues(singularValues, n,</span>
+                    R, t, d);
+            
+<span class="fc" id="L298">            Matrix transV = V.transposeAndReturnNew();</span>
+<span class="fc" id="L299">            Matrix translationMatrix = new Matrix(NUM_COORDS_3D, 1);</span>
+<span class="fc" id="L300">            Matrix planeNormalMatrix = new Matrix(NUM_COORDS_3D, 1);</span>
+            
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            for (int i = 0; i &lt; numSolutions; i++) {</span>
+                //undo U, V decomposition
+
+                //R = U*R'*V^T
+<span class="fc" id="L306">                Matrix denormalizedR = U.clone();</span>
+<span class="fc" id="L307">                denormalizedR.multiply(R.get(i));</span>
+<span class="fc" id="L308">                denormalizedR.multiply(transV);</span>
+                
+                //t = U*t'
+<span class="fc" id="L311">                translationMatrix.fromArray(t.get(i), true);</span>
+<span class="fc" id="L312">                Matrix denormalizedTranslationMatrix = U.multiplyAndReturnNew(</span>
+                        translationMatrix);
+                
+                //n = V*n'
+<span class="fc" id="L316">                planeNormalMatrix.fromArray(n.get(i));</span>
+<span class="fc" id="L317">                Matrix denormalizedPlaneNormalMatrix = V.multiplyAndReturnNew(</span>
+                        planeNormalMatrix);
+                
+<span class="fc" id="L320">                double denormalizedPlaneDistance = d.get(i);</span>
+
+                //rotation
+<span class="fc" id="L323">                MatrixRotation3D denormalizedRotation = new MatrixRotation3D(</span>
+                        denormalizedR);
+<span class="fc" id="L325">                double[] denormalizedTranslation = </span>
+<span class="fc" id="L326">                        denormalizedTranslationMatrix.getBuffer();</span>
+<span class="fc" id="L327">                double[] denormalizedPlaneNormal = </span>
+<span class="fc" id="L328">                        denormalizedPlaneNormalMatrix.getBuffer();</span>
+                
+                //set rotation and translation
+<span class="fc" id="L331">                EuclideanTransformation3D transformation = </span>
+                        new EuclideanTransformation3D(denormalizedRotation, 
+                                denormalizedTranslation);
+        
+<span class="fc" id="L335">                result.add(new HomographyDecomposition(transformation, </span>
+                        denormalizedPlaneNormal, denormalizedPlaneDistance));                
+            }
+<span class="nc" id="L338">        } catch (InvalidRotationMatrixException | AlgebraException e) {</span>
+<span class="nc" id="L339">            throw new HomographyDecomposerException(e);</span>
+        } finally {
+<span class="fc bfc" id="L341" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L342">                mListener.onDecomposeEnd(this, result);</span>
+            }
+<span class="fc" id="L344">            mLocked = false;</span>
+        }        
+<span class="fc" id="L346">    }</span>
+    
+    /**
+     * Decompose solutions from singular values.
+     * @param singularValues input singular values.
+     * @param n list containing possible plane normals.
+     * @param R list containing possible camera rotations.
+     * @param t list containing possible camera translations.
+     * @param d list of distances to plane.
+     * @return number of solutions.
+     * @throws HomographyDecomposerException if decomposition fails (i.e. numerical instabilities, etc).
+     */
+    private int decomposeAllFromSingularValues(double[] singularValues, 
+            List&lt;double[]&gt; n, List&lt;Matrix&gt; R, List&lt;double[]&gt; t, List&lt;Double&gt; d) 
+            throws HomographyDecomposerException {
+        
+<span class="fc" id="L362">        n.clear();</span>
+<span class="fc" id="L363">        R.clear();</span>
+<span class="fc" id="L364">        t.clear();</span>
+<span class="fc" id="L365">        d.clear();</span>
+        
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">        if (areThreeDifferentSingularValues(singularValues)) {</span>
+            //Three different singular values
+<span class="fc" id="L369">            double[] n1 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L370">            double[] n2 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L371">            double[] n3 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L372">            double[] n4 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L373">            Matrix R1 = null, R2 = null, R3 = null, R4 = null;</span>
+            try {
+<span class="fc" id="L375">                R1 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);</span>
+<span class="fc" id="L376">                R2 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);</span>
+<span class="fc" id="L377">                R3 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);</span>
+<span class="fc" id="L378">                R4 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);</span>
+<span class="pc" id="L379">            } catch (AlgebraException ignore) { /* never thrown */ }</span>
+<span class="fc" id="L380">            double[] t1 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L381">            double[] t2 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L382">            double[] t3 = new double[NUM_COORDS_3D];</span>
+<span class="fc" id="L383">            double[] t4 = new double[NUM_COORDS_3D];</span>
+                        
+<span class="fc" id="L385">            double planeDistance1 = decomposeFromSingularValues(singularValues, </span>
+                    n1, R1, t1, true, true);
+<span class="fc" id="L387">            double planeDistance2 = decomposeFromSingularValues(singularValues, </span>
+                    n2, R2, t2, false, true);
+<span class="fc" id="L389">            double planeDistance3 = decomposeFromSingularValues(singularValues, </span>
+                    n3, R3, t3, true, false);
+<span class="fc" id="L391">            double planeDistance4 = decomposeFromSingularValues(singularValues, </span>
+                    n4, R4, t4, false, false);
+            
+<span class="fc" id="L394">            n.add(n1);</span>
+<span class="fc" id="L395">            n.add(n2);</span>
+<span class="fc" id="L396">            n.add(n3);</span>
+<span class="fc" id="L397">            n.add(n4);</span>
+            
+<span class="fc" id="L399">            R.add(R1);</span>
+<span class="fc" id="L400">            R.add(R2);</span>
+<span class="fc" id="L401">            R.add(R3);</span>
+<span class="fc" id="L402">            R.add(R4);</span>
+            
+<span class="fc" id="L404">            t.add(t1);</span>
+<span class="fc" id="L405">            t.add(t2);</span>
+<span class="fc" id="L406">            t.add(t3);</span>
+<span class="fc" id="L407">            t.add(t4);</span>
+            
+<span class="fc" id="L409">            d.add(planeDistance1);</span>
+<span class="fc" id="L410">            d.add(planeDistance2);</span>
+<span class="fc" id="L411">            d.add(planeDistance3);</span>
+<span class="fc" id="L412">            d.add(planeDistance4);</span>
+            
+<span class="fc" id="L414">            return n.size();</span>
+            
+<span class="nc bnc" id="L416" title="All 2 branches missed.">        } else if (areTwoEqualSingularValues(singularValues)) {</span>
+            //Two different singular values
+<span class="nc" id="L418">            double[] n1 = new double[NUM_COORDS_3D];</span>
+<span class="nc" id="L419">            double[] n2 = new double[NUM_COORDS_3D];</span>
+<span class="nc" id="L420">            Matrix R1 = null, R2 = null;</span>
+            try {
+<span class="nc" id="L422">                R1 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);</span>
+<span class="nc" id="L423">                R2 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);</span>
+<span class="nc" id="L424">            } catch (AlgebraException ignore) { /* never thrown */ }</span>
+<span class="nc" id="L425">            double[] t1 = new double[NUM_COORDS_3D];</span>
+<span class="nc" id="L426">            double[] t2 = new double[NUM_COORDS_3D];</span>
+            
+<span class="nc" id="L428">            double planeDistance1 = decomposeFromSingularValues(singularValues, </span>
+                    n1, R1, t1, true, true);
+<span class="nc" id="L430">            double planeDistance2 = decomposeFromSingularValues(singularValues, </span>
+                    n2, R2, t2, true, false);            
+            
+<span class="nc" id="L433">            n.add(n1);</span>
+<span class="nc" id="L434">            n.add(n2);</span>
+            
+<span class="nc" id="L436">            R.add(R1);</span>
+<span class="nc" id="L437">            R.add(R2);</span>
+            
+<span class="nc" id="L439">            t.add(t1);</span>
+<span class="nc" id="L440">            t.add(t2);</span>
+            
+<span class="nc" id="L442">            d.add(planeDistance1);</span>
+<span class="nc" id="L443">            d.add(planeDistance2);</span>
+            
+<span class="nc" id="L445">            return n.size();</span>
+            
+        } else {
+            //Three equal singular values
+<span class="nc" id="L449">            throw new HomographyDecomposerException(&quot;undefined plane normal&quot;);            </span>
+        }
+    }
+    
+    /**
+     * Determines whether there are three different singular values or not.
+     * @param singularValues singular values to be checked.
+     * @return true if there are three different singular values, false 
+     * otherwise.
+     */
+    private static boolean areThreeDifferentSingularValues(
+            double[] singularValues) {
+<span class="fc" id="L461">        double d1 = singularValues[0];</span>
+<span class="fc" id="L462">        double d2 = singularValues[1];</span>
+<span class="fc" id="L463">        double d3 = singularValues[2];        </span>
+        
+<span class="pc bpc" id="L465" title="1 of 2 branches missed.">        return (Math.abs(d1 - d2) &gt; EQUAL_SINGULAR_VALUE_THRESHOLD) &amp;&amp;</span>
+<span class="pc bpc" id="L466" title="1 of 2 branches missed.">                (Math.abs(d2 - d3) &gt; EQUAL_SINGULAR_VALUE_THRESHOLD);</span>
+    }
+    
+    /**
+     * Determines whether there are two equal singular values or not.
+     * @param singularValues singular values to be checked.
+     * @return true if there are two equal singular values, false otherwise.
+     */
+    private static boolean areTwoEqualSingularValues(double[] singularValues) {
+<span class="nc" id="L475">        double d1 = singularValues[0];</span>
+<span class="nc" id="L476">        double d2 = singularValues[1];</span>
+<span class="nc" id="L477">        double d3 = singularValues[2];        </span>
+        
+<span class="nc bnc" id="L479" title="All 2 branches missed.">        return ((Math.abs(d1 - d2) &lt;= EQUAL_SINGULAR_VALUE_THRESHOLD) &amp;&amp; </span>
+<span class="nc bnc" id="L480" title="All 2 branches missed.">                (Math.abs(d2 - d3) &gt; EQUAL_SINGULAR_VALUE_THRESHOLD)) ||</span>
+<span class="nc bnc" id="L481" title="All 2 branches missed.">                ((Math.abs(d1 - d2) &gt; EQUAL_SINGULAR_VALUE_THRESHOLD) &amp;&amp;</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">                (Math.abs(d2 - d3) &lt;= EQUAL_SINGULAR_VALUE_THRESHOLD));</span>
+    }
+    
+    /**
+     * Decomposes one possible solution using provided singular values and signs
+     * @param singularValues singular values to use for 
+     * @param n array where plane normal will be store.
+     * @param R matrix where rotation will be stored.
+     * @param t array where translation will be stored.
+     * @param positive1 sign of 1st coordinate of plane normal.
+     * @param positive3 sign of 2nd coordinate of plane normal.
+     * @return plane distance.
+     * @throws HomographyDecomposerException if decomposition is undetermined
+     * when all three singular values are equal.
+     */
+    private double decomposeFromSingularValues(double[] singularValues, 
+            double[] n, Matrix R, double[] t, boolean positive1, 
+            boolean positive3) throws HomographyDecomposerException {
+<span class="fc" id="L500">        double d1 = singularValues[0];</span>
+<span class="fc" id="L501">        double d2 = singularValues[1];</span>
+<span class="fc" id="L502">        double d3 = singularValues[2];</span>
+        
+<span class="pc bpc" id="L504" title="1 of 2 branches missed.">        if (areThreeDifferentSingularValues(singularValues)) {</span>
+            //Three different singular values
+<span class="pc bpc" id="L506" title="1 of 2 branches missed.">            if (d2 &gt; 0.0) {</span>
+                //Three different singular values d1 != d2 != d3 and d'= d2 &gt; 0
+<span class="fc" id="L508">                return decomposeFromThreeDifferentSingularValuesPositive(d1, d2,</span>
+                        d3, n, R, t, positive1, positive3);
+            } else {
+                //Three different singular values and d' = d2 &lt; 0
+<span class="nc" id="L512">                return decomposeFromThreeDifferentSingularValuesNegative(d1, d2,</span>
+                        d3, n, R, t, positive1, positive3);                
+            }
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        } if (areTwoEqualSingularValues(singularValues)) {</span>
+            //Two different singular values
+<span class="nc bnc" id="L517" title="All 2 branches missed.">            if (d2 &gt; 0.0) {</span>
+                //Two different singular values d1 = d2 != d3 or d1 != d2 = d3 
+                //and d2 &gt; 0
+<span class="nc" id="L520">                return decomposeFromTwoDifferentSingularValuesPositive(d1, d2, </span>
+                        d3, n, R, t, positive3);
+            } else {
+                //Two different singular values d1 = d2 != d3 or d1 != d2 = d3 
+                //and d2 &lt; 0
+<span class="nc" id="L525">                return decomposeFromTwoDifferentSingularValuesNegative(d1, d2, </span>
+                        d3, n, R, t, positive3);
+            }
+        } else {
+            //Three equal singular values
+<span class="nc" id="L530">            throw new HomographyDecomposerException(&quot;undefined plane normal&quot;);</span>
+        }                
+    }
+    
+    /**
+     * Generates one homography decomposition using provided singular values and
+     * assuming that there are two equal singular values and that d2 is 
+     * negative.
+     * @param d1 1st singular value.
+     * @param d2 2nd singular value.
+     * @param d3 3rd singular value.
+     * @param n plane normal.
+     * @param R rotation.
+     * @param t translation.
+     * @param positive3 true to assume positive x3, false otherwise.
+     * @return distance to plane.
+     */
+    private double decomposeFromTwoDifferentSingularValuesNegative(double d1,
+            double d2, double d3, double[] n, Matrix R, double[] t, 
+            boolean positive3) {
+
+        //fill plane normal solution
+<span class="nc" id="L552">        n[0] = 0.0;</span>
+<span class="nc" id="L553">        n[1] = 0.0;</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">        n[2] = positive3 ? 1.0 : -1.0;     </span>
+        
+        
+        //compute rotation
+        
+        //fill rotation matrix
+<span class="nc" id="L560">        R.setElementAt(0, 0, -1.0);</span>
+<span class="nc" id="L561">        R.setElementAt(1, 0, 0.0);</span>
+<span class="nc" id="L562">        R.setElementAt(2, 0, 0.0);</span>
+        
+<span class="nc" id="L564">        R.setElementAt(0, 1, 0.0);</span>
+<span class="nc" id="L565">        R.setElementAt(1, 1, -1.0);</span>
+<span class="nc" id="L566">        R.setElementAt(2, 1, 0.0);</span>
+        
+<span class="nc" id="L568">        R.setElementAt(0, 2, 0.0);</span>
+<span class="nc" id="L569">        R.setElementAt(1, 2, 0.0);</span>
+<span class="nc" id="L570">        R.setElementAt(2, 2, 1.0);</span>
+
+        //compute translation
+<span class="nc" id="L573">        double sum = d3 + d1;</span>
+<span class="nc" id="L574">        t[0] = 0.0;</span>
+<span class="nc" id="L575">        t[1] = 0.0;</span>
+<span class="nc" id="L576">        t[2] = sum*n[2];</span>
+        
+        //plane distance
+<span class="nc" id="L579">        return d2;        </span>
+    }
+    
+    /**
+     * Generates one homography decomposition using provided singular values and
+     * assuming that there are two equal singular values and that d2 is 
+     * positive.
+     * @param d1 1st singular value.
+     * @param d2 2nd singular value.
+     * @param d3 3rd singular value.
+     * @param n plane normal.
+     * @param R rotation.
+     * @param t translation.
+     * @param positive3 true to assume positive x3, false otherwise.
+     * @return distance to plane.
+     */
+    private double decomposeFromTwoDifferentSingularValuesPositive(double d1,
+            double d2, double d3, double[] n, Matrix R, double[] t, 
+            boolean positive3) {
+
+        //fill plane normal solution
+<span class="nc" id="L600">        n[0] = 0.0;</span>
+<span class="nc" id="L601">        n[1] = 0.0;</span>
+<span class="nc bnc" id="L602" title="All 2 branches missed.">        n[2] = positive3 ? 1.0 : -1.0;     </span>
+        
+        
+        //compute rotation
+        
+        //fill rotation matrix
+<span class="nc" id="L608">        R.setElementAt(0, 0, 1.0);</span>
+<span class="nc" id="L609">        R.setElementAt(1, 0, 0.0);</span>
+<span class="nc" id="L610">        R.setElementAt(2, 0, 0.0);</span>
+        
+<span class="nc" id="L612">        R.setElementAt(0, 1, 0.0);</span>
+<span class="nc" id="L613">        R.setElementAt(1, 1, 1.0);</span>
+<span class="nc" id="L614">        R.setElementAt(2, 1, 0.0);</span>
+        
+<span class="nc" id="L616">        R.setElementAt(0, 2, 0.0);</span>
+<span class="nc" id="L617">        R.setElementAt(1, 2, 0.0);</span>
+<span class="nc" id="L618">        R.setElementAt(2, 2, 1.0);</span>
+
+        //compute translation
+<span class="nc" id="L621">        double diff = d1 - d3;</span>
+<span class="nc" id="L622">        t[0] = 0.0;</span>
+<span class="nc" id="L623">        t[1] = 0.0;</span>
+<span class="nc" id="L624">        t[2] = -diff*n[2];</span>
+        
+        //plane distance
+<span class="nc" id="L627">        return d2;        </span>
+    }
+    
+    /**
+     * Generates one homography decomposition using provided singular values and
+     * assuming that there are three different singular values and that d2 is 
+     * negative.
+     * @param d1 1st singular value.
+     * @param d2 2nd singular value.
+     * @param d3 3rd singular value.
+     * @param n plane normal.
+     * @param R rotation.
+     * @param t translation.
+     * @param positive1 true to assume positive x1, false otherwise.
+     * @param positive3 true to assume positive x3, false otherwise.
+     * @return distance to plane.
+     */    
+    private double decomposeFromThreeDifferentSingularValuesNegative(double d1, 
+            double d2, double d3, double[] n, Matrix R, double[] t,
+            boolean positive1, boolean positive3) {
+<span class="nc" id="L647">        double d1Sqr = d1*d1;</span>
+<span class="nc" id="L648">        double d2Sqr = d2*d2;</span>
+<span class="nc" id="L649">        double d3Sqr = d3*d3;</span>
+        
+        //compute plane normal
+<span class="nc" id="L652">        double denom = d1Sqr - d3Sqr;</span>
+        
+<span class="nc" id="L654">        double x1 = Math.sqrt((d1Sqr - d2Sqr) / denom);</span>
+<span class="nc bnc" id="L655" title="All 2 branches missed.">        if (!positive1) {</span>
+<span class="nc" id="L656">            x1 = -x1;</span>
+        }
+        
+<span class="nc" id="L659">        double x2 = 0.0;</span>
+        
+<span class="nc" id="L661">        double x3 = Math.sqrt((d2Sqr - d3Sqr) / denom);</span>
+<span class="nc bnc" id="L662" title="All 2 branches missed.">        if (!positive3) {</span>
+<span class="nc" id="L663">            x3 = -x3;</span>
+        }
+        
+        //fill plane normal solution
+<span class="nc" id="L667">        n[0] = x1;</span>
+<span class="nc" id="L668">        n[1] = x2;</span>
+<span class="nc" id="L669">        n[2] = x3;     </span>
+        
+        
+        //compute rotation
+<span class="nc" id="L673">        double x1Sqr = x1*x1;</span>
+<span class="nc" id="L674">        double x3Sqr = x3*x3;</span>
+        
+<span class="nc" id="L676">        double sinTheta = (d1 + d3)*x1*x3/d2;</span>
+<span class="nc" id="L677">        double cosTheta = (d3*x1Sqr - d1*x3Sqr)/d2;</span>
+        
+        //fill rotation matrix
+<span class="nc" id="L680">        R.setElementAt(0, 0, cosTheta);</span>
+<span class="nc" id="L681">        R.setElementAt(1, 0, 0.0);</span>
+<span class="nc" id="L682">        R.setElementAt(2, 0, sinTheta);</span>
+        
+<span class="nc" id="L684">        R.setElementAt(0, 1, 0.0);</span>
+<span class="nc" id="L685">        R.setElementAt(1, 1, 1.0);</span>
+<span class="nc" id="L686">        R.setElementAt(2, 1, 0.0);</span>
+        
+<span class="nc" id="L688">        R.setElementAt(0, 2, -sinTheta);</span>
+<span class="nc" id="L689">        R.setElementAt(1, 2, 0.0);</span>
+<span class="nc" id="L690">        R.setElementAt(2, 2, cosTheta);</span>
+        
+        
+        //compute translation
+<span class="nc" id="L694">        double sum = d1 + d3;</span>
+<span class="nc" id="L695">        t[0] = sum*x1;</span>
+<span class="nc" id="L696">        t[1] = 0.0;</span>
+<span class="nc" id="L697">        t[2] = sum*x3;</span>
+        
+        //plane distance
+<span class="nc" id="L700">        return d2;        </span>
+    }
+    
+    /**
+     * Generates one homography decomposition using provided singular values and
+     * assuming that there are three different singular values and that d2 is 
+     * positive.
+     * @param d1 1st singular value.
+     * @param d2 2nd singular value.
+     * @param d3 3rd singular value.
+     * @param n plane normal.
+     * @param R rotation.
+     * @param t translation.
+     * @param positive1 true to assume positive x1, false otherwise.
+     * @param positive3 true to assume positive x3, false otherwise.
+     * @return distance to plane.
+     */
+    private double decomposeFromThreeDifferentSingularValuesPositive(
+            double d1, double d2, double d3, double[] n, Matrix R, double[] t, 
+            boolean positive1, boolean positive3) {
+<span class="fc" id="L720">        double d1Sqr = d1*d1;</span>
+<span class="fc" id="L721">        double d2Sqr = d2*d2;</span>
+<span class="fc" id="L722">        double d3Sqr = d3*d3;</span>
+        
+        //compute plane normal
+<span class="fc" id="L725">        double denom = d1Sqr - d3Sqr;</span>
+        
+<span class="fc" id="L727">        double x1 = Math.sqrt((d1Sqr - d2Sqr) / denom);</span>
+<span class="fc bfc" id="L728" title="All 2 branches covered.">        if (!positive1) {</span>
+<span class="fc" id="L729">            x1 = -x1;</span>
+        }
+        
+<span class="fc" id="L732">        double x2 = 0.0;</span>
+        
+<span class="fc" id="L734">        double x3 = Math.sqrt((d2Sqr - d3Sqr) / denom);</span>
+<span class="fc bfc" id="L735" title="All 2 branches covered.">        if (!positive3) {</span>
+<span class="fc" id="L736">            x3 = -x3;</span>
+        }
+        
+        //fill plane normal solution
+<span class="fc" id="L740">        n[0] = x1;</span>
+<span class="fc" id="L741">        n[1] = x2;</span>
+<span class="fc" id="L742">        n[2] = x3;     </span>
+        
+        
+        //compute rotation
+<span class="fc" id="L746">        double x1Sqr = x1*x1;</span>
+<span class="fc" id="L747">        double x3Sqr = x3*x3;</span>
+        
+<span class="fc" id="L749">        double sinTheta = (d1 - d3)*x1*x3/d2;</span>
+<span class="fc" id="L750">        double cosTheta = (d1*x3Sqr + d3*x1Sqr)/d2;</span>
+        
+        //fill rotation matrix
+<span class="fc" id="L753">        R.setElementAt(0, 0, cosTheta);</span>
+<span class="fc" id="L754">        R.setElementAt(1, 0, 0.0);</span>
+<span class="fc" id="L755">        R.setElementAt(2, 0, sinTheta);</span>
+        
+<span class="fc" id="L757">        R.setElementAt(0, 1, 0.0);</span>
+<span class="fc" id="L758">        R.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L759">        R.setElementAt(2, 1, 0.0);</span>
+        
+<span class="fc" id="L761">        R.setElementAt(0, 2, -sinTheta);</span>
+<span class="fc" id="L762">        R.setElementAt(1, 2, 0.0);</span>
+<span class="fc" id="L763">        R.setElementAt(2, 2, cosTheta);</span>
+        
+        
+        //compute translation
+<span class="fc" id="L767">        double diff = d1 - d3;</span>
+<span class="fc" id="L768">        t[0] = diff*x1;</span>
+<span class="fc" id="L769">        t[1] = 0.0;</span>
+<span class="fc" id="L770">        t[2] = -diff*x3;</span>
+        
+        //plane distance
+<span class="fc" id="L773">        return d2;        </span>
+    }
+    
+    /**
+     * Computes homography matrix in terms of normalized point coordinates by 
+     * taking into account intrinsic camera parameters on left and right views.
+     * @return normalized homography matrix
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    private Matrix computeNormalizedCoordinatesHomographyMatrix() 
+            throws AlgebraException {
+            //we know that point p1 in the left view is related to point p2
+            //in the right view by homography G so that:
+            //p2 = G*p1
+            //where:
+            //p1 = K1*m1
+            //p2 = K2*m2
+            //where K1 and K2 are intrinsic parameters on left and right views
+            //and m1, m2 are normalized point coordinates on left and right 
+            //views.
+            //Hence:
+            //K2*m2 = G*K1*m1 --&gt; m2 = K2^-1*G*K1*m1
+            //and so we obtain:
+            //H = K2^-1*G*K1, which is an homography in normalized coordinates
+            
+<span class="fc" id="L798">            Matrix K1 = mLeftIntrinsics.getInternalMatrix();</span>
+<span class="fc" id="L799">            Matrix invK2 = mRightIntrinsics.getInverseInternalMatrix();</span>
+<span class="fc" id="L800">            Matrix G = mHomography.asMatrix();</span>
+            
+            //compute H = K2^-1*G*K1
+<span class="fc" id="L803">            G.multiply(K1);</span>
+<span class="fc" id="L804">            invK2.multiply(G);   </span>
+<span class="fc" id="L805">            return invK2;</span>
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

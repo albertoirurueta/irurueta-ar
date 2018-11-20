@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FundamentalMatrixRefiner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.refiners</a> &gt; <span class="el_source">FundamentalMatrixRefiner.java</span></div><h1>FundamentalMatrixRefiner.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.refiners;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.Line2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.refiners.PairMatchesAndInliersDataRefiner;
+import com.irurueta.geometry.refiners.RefinerException;
+import com.irurueta.numerical.GradientEstimator;
+import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
+import com.irurueta.numerical.robust.InliersData;
+
+import java.util.BitSet;
+import java.util.List;
+
+/**
+ * Refines a fundamental matrix by taking into account an initial estimation,
+ * inlier matches and their residuals.
+ * This class can be used to find a solution that minimizes error of inliers
+ * in LMSE terms.
+ * Typically a refiner is used by a robust estimator, however it can also be
+ * useful in some other situations.
+ */
+public class FundamentalMatrixRefiner extends 
+        PairMatchesAndInliersDataRefiner&lt;FundamentalMatrix, Point2D, Point2D&gt; {    
+    
+    /**
+     * Test line to compute epipolar residuals.
+     */
+<span class="fc" id="L51">    private Line2D mTestLine = new Line2D();   </span>
+    
+    /**
+     * Standard deviation used for Levenberg-Marquardt fitting during 
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically this value is related to the threshold used on each robust 
+     * estimation, since residuals of found inliers are within the range of 
+     * such threshold.
+     */
+    private double mRefinementStandardDeviation;
+    
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L67">    public FundamentalMatrixRefiner() { }</span>
+    
+    /**
+     * Constructor.
+     * @param initialEstimation initial estimation to be set.
+     * @param keepCovariance true if covariance of estimation must be kept after
+     * refinement, false otherwise.
+     * @param inliers set indicating which of the provided matches are inliers.
+     * @param residuals residuals for matched samples.
+     * @param numInliers number of inliers on initial estimation.
+     * @param samples1 1st set of paired samples.
+     * @param samples2 2nd set of paired samples.
+     * @param refinementStandardDeviation standard deviation used for 
+     * Levenberg-Marquardt fitting.
+     */
+    public FundamentalMatrixRefiner(FundamentalMatrix initialEstimation,
+            boolean keepCovariance, BitSet inliers, double[] residuals,
+            int numInliers, List&lt;Point2D&gt; samples1, List&lt;Point2D&gt; samples2,
+            double refinementStandardDeviation) {
+<span class="fc" id="L86">        super(initialEstimation, keepCovariance, inliers, residuals, numInliers,</span>
+                samples1, samples2);
+<span class="fc" id="L88">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L89">    }    </span>
+    
+    /**
+     * Constructor.
+     * @param initialEstimation initial estimation to be set.
+     * @param keepCovariance true if covariance of estimation must be kept after
+     * refinement, false otherwise.
+     * @param inliersData inlier data, typically obtained from a robust 
+     * estimator.
+     * @param samples1 1st set of paired samples.
+     * @param samples2 2nd set of paired samples.
+     * @param refinementStandardDeviation standard deviation used for 
+     * Levenberg-Marquardt fitting.
+     */
+    public FundamentalMatrixRefiner(FundamentalMatrix initialEstimation,
+            boolean keepCovariance, InliersData inliersData, 
+            List&lt;Point2D&gt; samples1, List&lt;Point2D&gt; samples2, 
+            double refinementStandardDeviation) {
+<span class="fc" id="L107">        super(initialEstimation, keepCovariance, inliersData, samples1, </span>
+                samples2);
+<span class="fc" id="L109">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L110">    }</span>
+    
+    /**
+     * Gets standard deviation used for Levenberg-Marquardt fitting during 
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of such
+     * threshold.
+     * @return standard deviation used for refinement.
+     */
+    public double getRefinementStandardDeviation() {
+<span class="fc" id="L123">        return mRefinementStandardDeviation;</span>
+    }
+    
+    /**
+     * Sets standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of such
+     * threshold.
+     * @param refinementStandardDeviation standard deviation used for 
+     * refinement.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setRefinementStandardDeviation(
+            double refinementStandardDeviation) throws LockedException {
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L141">            throw new LockedException();</span>
+        }
+<span class="fc" id="L143">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L144">    }</span>
+    
+    /**
+     * Refines provided initial estimation.
+     * @return refined estimation.
+     * @throws NotReadyException if not enough input data has been provided.
+     * @throws LockedException if estimator is locked because refinement is 
+     * already in progress.
+     * @throws RefinerException if refinement fails for some reason (e.g. unable 
+     * to converge to a result).
+     */    
+    @Override
+    public FundamentalMatrix refine() throws NotReadyException, 
+            LockedException, RefinerException {
+<span class="fc" id="L158">        FundamentalMatrix result = new FundamentalMatrix();</span>
+<span class="fc" id="L159">        refine(result);</span>
+<span class="fc" id="L160">        return result;</span>
+    }
+    
+    /**
+     * Refines provided initial estimation.
+     * This method always sets a value into provided result instance regardless
+     * of the fact that error has actually improved in LMSE terms or not.
+     * @param result instance where refined estimation will be stored.
+     * @return true if result improves (decreases) in LMSE terms respect to 
+     * initial estimation, false if no improvement has been achieved.
+     * @throws NotReadyException if not enough input data has been provided.
+     * @throws LockedException if estimator is locked because refinement is 
+     * already in progress.
+     * @throws RefinerException if refinement fails for some reason (e.g. unable 
+     * to converge to a result).
+     */    
+    @Override
+    public boolean refine(FundamentalMatrix result) throws NotReadyException,
+            LockedException, RefinerException {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L180">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L183">            throw new NotReadyException();</span>
+        }
+        
+<span class="fc" id="L186">        mLocked = true;</span>
+        
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        if (mListener != null) {</span>
+<span class="fc" id="L189">            mListener.onRefineStart(this, mInitialEstimation);</span>
+        }
+        
+<span class="fc" id="L192">        mInitialEstimation.normalize();</span>
+        
+<span class="fc" id="L194">        final double initialTotalResidual = totalResidual(mInitialEstimation);</span>
+        
+        try {
+<span class="fc" id="L197">            Matrix internalMatrix = mInitialEstimation.getInternalMatrix();                </span>
+<span class="fc" id="L198">            final double[] initParams = internalMatrix.getBuffer();</span>
+            
+            //output values to be fitted/optimized will contain residuals
+<span class="fc" id="L201">            double[] y = new double[mNumInliers];</span>
+            //input values will contain 2 points to compute residuals
+<span class="fc" id="L203">            final int nDims = 2*Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="fc" id="L204">            Matrix x = new Matrix(mNumInliers, nDims);</span>
+<span class="fc" id="L205">            int nSamples = mInliers.length();</span>
+<span class="fc" id="L206">            int pos = 0;</span>
+            Point2D leftPoint, rightPoint;
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            for (int i = 0; i &lt; nSamples; i++) {</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">                if (mInliers.get(i)) {</span>
+                    //sample is inlier
+<span class="fc" id="L211">                    leftPoint = mSamples1.get(i);</span>
+<span class="fc" id="L212">                    rightPoint = mSamples2.get(i);</span>
+<span class="fc" id="L213">                    leftPoint.normalize();</span>
+<span class="fc" id="L214">                    rightPoint.normalize();</span>
+<span class="fc" id="L215">                    x.setElementAt(pos, 0, leftPoint.getHomX());</span>
+<span class="fc" id="L216">                    x.setElementAt(pos, 1, leftPoint.getHomY());</span>
+<span class="fc" id="L217">                    x.setElementAt(pos, 2, leftPoint.getHomW());</span>
+<span class="fc" id="L218">                    x.setElementAt(pos, 3, rightPoint.getHomX());</span>
+<span class="fc" id="L219">                    x.setElementAt(pos, 4, rightPoint.getHomY());</span>
+<span class="fc" id="L220">                    x.setElementAt(pos, 5, rightPoint.getHomW());</span>
+                        
+<span class="fc" id="L222">                    y[pos] = mResiduals[i];</span>
+<span class="fc" id="L223">                    pos++;</span>
+                }
+            }
+            
+<span class="fc" id="L227">            LevenbergMarquardtMultiDimensionFunctionEvaluator evaluator = </span>
+<span class="fc" id="L228">                    new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+                            
+<span class="fc" id="L230">                private Point2D mLeftPoint = Point2D.create(</span>
+                        CoordinatesType.HOMOGENEOUS_COORDINATES);
+                    
+<span class="fc" id="L233">                private Point2D mRightPoint = Point2D.create(</span>
+                        CoordinatesType.HOMOGENEOUS_COORDINATES);
+                    
+<span class="fc" id="L236">                private FundamentalMatrix mFundMatrix = </span>
+                        new FundamentalMatrix();
+                    
+                private Matrix mInternalMatrix;
+                    
+<span class="fc" id="L241">                private GradientEstimator mGradientEstimator = </span>
+                        new GradientEstimator(
+<span class="fc" id="L243">                                new MultiDimensionFunctionEvaluatorListener() {</span>
+                                    
+                        @Override
+                        public double evaluate(double[] params) 
+                                throws Throwable {
+
+<span class="fc" id="L249">                            mInternalMatrix.fromArray(params);</span>
+                            try {
+<span class="fc" id="L251">                                mFundMatrix.setInternalMatrix(mInternalMatrix);</span>
+                            
+<span class="fc" id="L253">                                return residual(mFundMatrix, mLeftPoint, </span>
+<span class="fc" id="L254">                                        mRightPoint);</span>
+<span class="fc" id="L255">                            } catch (InvalidFundamentalMatrixException e) {</span>
+<span class="fc" id="L256">                                return initialTotalResidual;</span>
+                            }
+                        }
+                    });
+                    
+                    @Override
+                    public int getNumberOfDimensions() {
+<span class="fc" id="L263">                        return nDims;</span>
+                    }
+
+                    @Override
+                    public double[] createInitialParametersArray() {
+<span class="fc" id="L268">                        return initParams;</span>
+                    }
+
+                    @Override
+                    public double evaluate(int i, double[] point, 
+                            double[] params, double[] derivatives) 
+                            throws Throwable {
+<span class="fc" id="L275">                        mLeftPoint.setHomogeneousCoordinates(point[0], point[1],</span>
+                                point[2]);
+<span class="fc" id="L277">                        mRightPoint.setHomogeneousCoordinates(point[3], </span>
+                                point[4], point[5]);
+                        
+<span class="fc bfc" id="L280" title="All 2 branches covered.">                        if (mInternalMatrix == null) {</span>
+<span class="fc" id="L281">                            mInternalMatrix = new Matrix(</span>
+                                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS, 
+                                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
+                        }
+<span class="fc" id="L285">                        mInternalMatrix.fromArray(params);</span>
+                        double y;
+                        try {
+<span class="fc" id="L288">                            mFundMatrix.setInternalMatrix(mInternalMatrix);</span>
+                        
+<span class="fc" id="L290">                            y = residual(mFundMatrix, mLeftPoint, </span>
+                                    mRightPoint);
+<span class="fc" id="L292">                        } catch (InvalidFundamentalMatrixException e) {</span>
+<span class="fc" id="L293">                            y = initialTotalResidual;</span>
+<span class="fc" id="L294">                        }</span>
+<span class="fc" id="L295">                        mGradientEstimator.gradient(params, derivatives);</span>
+                        
+<span class="fc" id="L297">                        return y;</span>
+                    }
+                };
+                
+<span class="fc" id="L301">            LevenbergMarquardtMultiDimensionFitter fitter =</span>
+                    new LevenbergMarquardtMultiDimensionFitter(evaluator, x, y, 
+<span class="fc" id="L303">                            getRefinementStandardDeviation());</span>
+                
+<span class="fc" id="L305">            fitter.fit();</span>
+                
+            //obtain estimated params
+<span class="fc" id="L308">            double[] params = fitter.getA();</span>
+                
+            //update fundamental matrix
+<span class="fc" id="L311">            internalMatrix.fromArray(params);</span>
+<span class="fc" id="L312">            result.setInternalMatrix(internalMatrix);</span>
+                
+<span class="fc bfc" id="L314" title="All 2 branches covered.">            if (mKeepCovariance) {</span>
+                //keep covariance
+<span class="fc" id="L316">                mCovariance = fitter.getCovar();</span>
+            }                
+                
+<span class="fc" id="L319">            double finalTotalResidual = totalResidual(result);</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">            boolean errorDecreased = finalTotalResidual &lt; initialTotalResidual;</span>
+            
+<span class="fc bfc" id="L322" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L323">                mListener.onRefineEnd(this, mInitialEstimation, result, </span>
+                        errorDecreased);
+            }
+                
+<span class="fc" id="L327">            return errorDecreased;</span>
+            
+<span class="fc" id="L329">        } catch (Exception e) {</span>
+<span class="fc" id="L330">            throw new RefinerException(e);</span>
+        } finally {
+<span class="fc" id="L332">            mLocked = false;</span>
+        }      
+    }
+    
+    /**
+     * Computes the residual between a fundamental matrix and a pair of matched
+     * points.
+     * @param fundamentalMatrix a fundamental matrix.
+     * @param leftPoint left 2D point.
+     * @param rightPoint right 2D point.
+     * @return residual (distance of point to epipolar line).
+     */
+    private double residual(FundamentalMatrix fundamentalMatrix,
+            Point2D leftPoint, Point2D rightPoint) {
+        try {
+<span class="fc" id="L347">            leftPoint.normalize();</span>
+<span class="fc" id="L348">            rightPoint.normalize();</span>
+<span class="fc" id="L349">            fundamentalMatrix.normalize();</span>
+<span class="fc" id="L350">            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);</span>
+<span class="fc" id="L351">            double leftDistance = Math.abs(mTestLine.signedDistance(</span>
+                    leftPoint));
+<span class="fc" id="L353">            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);</span>
+<span class="fc" id="L354">            double rightDistance = Math.abs(mTestLine.signedDistance(</span>
+                    rightPoint));
+            //return average distance as an error residual
+<span class="fc" id="L357">            return 0.5 * (leftDistance + rightDistance);</span>
+<span class="nc" id="L358">        } catch (NotReadyException e) {</span>
+<span class="nc" id="L359">            return Double.MAX_VALUE;</span>
+        }
+    }    
+    
+    /**
+     * Computes total residual among all provided inlier samples.
+     * @param fundamentalMatrix a fundamental matrix.
+     * @return total residual.
+     */
+    private double totalResidual(FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L369">        double result = 0.0;</span>
+        
+<span class="fc" id="L371">        int nSamples = mInliers.length();</span>
+        Point2D leftPoint, rightPoint;
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        for (int i = 0; i &lt; nSamples; i++) {</span>
+<span class="fc bfc" id="L374" title="All 2 branches covered.">            if (mInliers.get(i)) {</span>
+                //sample is inlier
+<span class="fc" id="L376">                leftPoint = mSamples1.get(i);</span>
+<span class="fc" id="L377">                rightPoint = mSamples2.get(i);</span>
+<span class="fc" id="L378">                leftPoint.normalize();</span>
+<span class="fc" id="L379">                rightPoint.normalize();</span>
+<span class="fc" id="L380">                result += residual(fundamentalMatrix, leftPoint, rightPoint);</span>
+            }
+        }        
+        
+<span class="fc" id="L384">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

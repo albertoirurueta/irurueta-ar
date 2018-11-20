@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROSACDualAbsoluteQuadricRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">PROSACDualAbsoluteQuadricRobustEstimator.java</span></div><h1>PROSACDualAbsoluteQuadricRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best dual absolute quadric (DAQ) for provided collection of
+ * cameras using PROSAC algorithm.
+ */
+public class PROSACDualAbsoluteQuadricRobustEstimator extends 
+        DualAbsoluteQuadricRobustEstimator {
+    
+    /**
+     * Constant defining default threshold to determine whether cameras are
+     * inliers or not.
+     * Threshold is defined by the equations used to estimate the DAQ depending
+     * on the required settings (zero skewness, principal point at origin, and 
+     * known aspect ratio).
+     */
+    public static final double DEFAULT_THRESHOLD = 1e-3;
+    
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+    
+    /**
+     * Threshold to determine whether cameras are inliers or not when testing
+     * possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     */
+    private double mThreshold;
+    
+    /**
+     * Quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] mQualityScores;
+    
+    /**
+     * Constructor.
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator() {
+<span class="fc" id="L66">        super();</span>
+<span class="fc" id="L67">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L68">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L77">        super(listener);</span>
+<span class="fc" id="L78">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L79">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate de fual absolute quadric 
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough cameras are provided for 
+     * default settings. Hence, at least 2 cameras must be provided.
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras)
+            throws IllegalArgumentException {
+<span class="fc" id="L90">        super(cameras);</span>
+<span class="fc" id="L91">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L92">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate de fual absolute quadric 
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if not enough cameras are provided for 
+     * default settings. Hence, at least 2 cameras must be provided.
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras,
+            DualAbsoluteQuadricRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L106">        super(cameras, listener);</span>
+<span class="fc" id="L107">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L108">    }</span>
+    
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided 
+     * camera.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than required number of cameras for default settings (i.e. 2 
+     * cameras).
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores)
+            throws IllegalArgumentException {
+<span class="fc" id="L120">        this();</span>
+<span class="fc" id="L121">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L122">    }</span>
+    
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided 
+     * camera.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than required number of cameras for default settings (i.e. 2 
+     * cameras).
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores,
+            DualAbsoluteQuadricRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L137">        this(listener);</span>
+<span class="fc" id="L138">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L139">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param qualityScores quality scores corresponding to each provided 
+     * camera.
+     * @throws IllegalArgumentException if not enough cameras are provided  for
+     * default settings (i.e. 2 cameras) or quality scores and cameras don't 
+     * have the same size.
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras, 
+            double[] qualityScores) throws IllegalArgumentException {
+<span class="fc" id="L153">        this(cameras);</span>
+<span class="fc" id="L154">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L155">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param qualityScores quality scores corresponding to each provided 
+     * camera.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if not enough cameras are provided
+     * for default settings (i.e. 2 cameras) or quality scores and cameras
+     * don't have the same size.
+     */
+    public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras,
+            double[] qualityScores, 
+            DualAbsoluteQuadricRobustEstimatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L173">        this(cameras, listener);</span>
+<span class="fc" id="L174">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L175">    }</span>
+    
+    /**
+     * Returns threshold to determine whether cameras are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @return threshold to determine whether cameras are inliers or not when
+     * testing possible estimation solutions.
+     */
+    public double getThreshold() {
+<span class="fc" id="L185">        return mThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to determine whether cameras are inliers or not when 
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @param threshold threshold to determine whether cameras are inliers or
+     * not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progres.
+     */
+    public void setThreshold(double threshold) throws IllegalArgumentException,
+            LockedException {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L202">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="nc" id="L205">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L207">        mThreshold = threshold;        </span>
+<span class="fc" id="L208">    }</span>
+    
+    /**
+     * Returns quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled camera.
+     * @return quality scores corresponding to each camera.
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L217">        return mQualityScores;</span>
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the smapled camera.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is 
+     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException,
+            IllegalArgumentException {
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L233">            throw new LockedException();</span>
+        }
+<span class="fc" id="L235">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L236">    }</span>
+    
+    /**
+     * Indicates if estimator is ready to start the DAQ estimation.
+     * This is true when input data (i.e. cameras) is provided and contains
+     * at least the minimum number of required cameras, and also quality scores
+     * are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc bfc" id="L247" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                mQualityScores.length == mCameras.size();</span>
+    }
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException if robust estimator is locked.
+     * @throws NotReadyException if no valid input data has already been 
+     * provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */            
+    @Override
+    public DualAbsoluteQuadric estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L264">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L267">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L270">        PROSACRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
+                new PROSACRobustEstimator&lt;&gt;(
+<span class="fc" id="L272">                new PROSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;() {</span>
+                    
+            //subset of cameras picked on each iteration
+<span class="fc" id="L275">            private List&lt;PinholeCamera&gt; mSubsetCameras =</span>
+                    new ArrayList&lt;&gt;();
+                    
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L280">                return mThreshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L285">                return mCameras.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L290">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, 
+                    List&lt;DualAbsoluteQuadric&gt; solutions) {
+<span class="fc" id="L296">                mSubsetCameras.clear();</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L298">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
+                }
+                
+                try {
+<span class="fc" id="L302">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L303">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
+                    
+<span class="fc" id="L305">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
+<span class="fc" id="L306">                    solutions.add(daq);</span>
+<span class="nc" id="L307">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L309">                }</span>
+<span class="fc" id="L310">            }</span>
+
+            @Override
+            public double computeResidual(DualAbsoluteQuadric currentEstimation, 
+                    int i) {
+<span class="fc" id="L315">                return residual(currentEstimation, mCameras.get(i));</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L320">                return PROSACDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L326" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L327">                    mListener.onEstimateStart(</span>
+                            PROSACDualAbsoluteQuadricRobustEstimator.this);
+                }
+<span class="fc" id="L330">            }</span>
+
+            @Override
+            public void onEstimateEnd(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L336">                    mListener.onEstimateEnd(</span>
+                            PROSACDualAbsoluteQuadricRobustEstimator.this);
+                }
+<span class="fc" id="L339">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
+                    int iteration) {
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L346">                    mListener.onEstimateNextIteration(</span>
+                            PROSACDualAbsoluteQuadricRobustEstimator.this, 
+                            iteration);
+                }
+<span class="fc" id="L350">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
+                    float progress) {
+<span class="pc bpc" id="L356" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L357">                    mListener.onEstimateProgressChange(</span>
+                            PROSACDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+<span class="fc" id="L361">            }</span>
+            
+            @Override
+            public double[] getQualityScores() {
+<span class="fc" id="L365">                return mQualityScores;</span>
+            }            
+        });
+        
+        try {
+<span class="fc" id="L370">            mLocked = true;</span>
+<span class="fc" id="L371">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L372">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L373">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L374">            return innerEstimator.estimate();</span>
+<span class="nc" id="L375">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L376">            throw new LockedException(e);</span>
+<span class="nc" id="L377">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L378">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L380">            mLocked = false;</span>
+        }        
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L390">        return RobustEstimatorMethod.PROSAC;</span>
+    }   
+    
+    /**
+     * Sets quality scores corresponding to each camera.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required cameras for current settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores)
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L403" title="All 2 branches covered.">        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</span>
+<span class="fc" id="L404">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L406">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L407">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

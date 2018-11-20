@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseSlamCalibrator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">BaseSlamCalibrator.java</span></div><h1>BaseSlamCalibrator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.ArrayUtils;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.numerical.signal.processing.MeasurementNoiseCovarianceEstimator;
+import com.irurueta.numerical.signal.processing.SignalProcessingException;
+import com.irurueta.statistics.InvalidCovarianceMatrixException;
+import com.irurueta.statistics.MultivariateNormalDist;
+
+import java.io.Serializable;
+import java.util.Arrays;
+
+/**
+ * Base class for estimating mean and covariance of noise in control values
+ * when the system state is held constant (only noise is provided as control 
+ * input).
+ * @param &lt;D&gt; type of calibration data.
+ */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
+public abstract class BaseSlamCalibrator&lt;D extends BaseCalibrationData&gt; 
+        implements Serializable {
+            
+    /**
+     * Minimum allowed sample length.
+     */
+    public static final int MIN_SAMPLE_LENGTH = 1;
+
+    /**
+     * Default minimum number of samples to take into account.
+     */
+    public static final int DEFAULT_MIN_NUM_SAMPLES = 20;
+    
+    /**
+     * Default maximum number of samples to take into account.
+     */
+    public static final int DEFAULT_MAX_NUM_SAMPLES = 100;
+    
+    /**
+     * Value to consider that mean and covariance have converged.
+     */
+    public static final double DEFAULT_CONVERGENCE_THRESHOLD = 1e-5;   
+    
+    /**
+     * Indicates whether sample accumulation must be enabled or not.
+     */
+    protected static final boolean DEFAULT_ENABLE_SAMPLE_ACCUMULATION = true;
+    
+    /**
+     * Number of components in 3D.
+     */
+    protected static final int N_COMPONENTS_3D = 3;   
+    
+    /**
+     * Conversion of nanoseconds to milliseconds.
+     */
+    protected static final double NANOS_TO_SECONDS = 1e-9;    
+    
+    /**
+     * Sample length of control values used during prediction stage in SLAM 
+     * estimator.
+     */
+    private int mSampleLength;
+    
+    /**
+     * Array containing a control sample used during SLAM prediction stage.
+     */
+    protected double[] mSample;
+    
+    /**
+     * Mean and covariance estimator.
+     */
+    protected MeasurementNoiseCovarianceEstimator mEstimator;
+    
+    /**
+     * Contains previous mean value.
+     */
+    protected double[] mPreviousMean;
+    
+    /**
+     * Contains mean value of covariance.
+     */
+    protected Matrix mPreviousCovariance;
+    
+    /**
+     * Indicates whether this calibrator converged.
+     */
+    protected boolean mConverged;
+    
+    /**
+     * Indicates whether this calibrator failed.
+     */
+    protected boolean mFailed;
+    
+    /**
+     * Indicates whether calibrator has finished taking samples.
+     */
+    protected boolean mFinished;
+    
+    /**
+     * Number of obtained samples.
+     */
+    protected int mSampleCount;
+    
+    /**
+     * Array to store the difference between average values to determine whether
+     * the result has converged or not.
+     */
+    protected double[] mMeanDiff;
+    
+    /**
+     * Matrix to store the difference between covariance matrices to determine
+     * whether the result has converged or not.
+     */
+    protected Matrix mCovDiff;
+    
+    /**
+     * Minimum number of samples to take into account.
+     */
+<span class="fc" id="L135">    protected int mMinNumSamples = DEFAULT_MIN_NUM_SAMPLES;</span>
+    
+    /**
+     * Maximum number of samples to take into account.
+     */
+<span class="fc" id="L140">    protected int mMaxNumSamples = DEFAULT_MAX_NUM_SAMPLES;</span>
+    
+    /**
+     * Threshold to consider whether calibration has converged or not.
+     */
+<span class="fc" id="L145">    protected double mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;</span>
+    
+    /**
+     * Indicates whether accumulation of samples is enabled or not.
+     */
+<span class="fc" id="L150">    protected boolean mAccumulationEnabled = DEFAULT_ENABLE_SAMPLE_ACCUMULATION;</span>
+    
+    /**
+     * Timestamp expressed in nanoseconds since the epoch time of the last
+     * accelerometer sample.
+     */
+<span class="fc" id="L156">    protected long mAccelerometerTimestampNanos = -1;</span>
+    
+    /**
+     * Timestamp expressed in nanoseconds since the epoch time of the last
+     * gyroscope sample.
+     */
+<span class="fc" id="L162">    protected long mGyroscopeTimestampNanos = -1;</span>
+    
+    /**
+     * Number of accelerometer samples accumulated since last full sample.
+     */
+<span class="fc" id="L167">    protected int mAccumulatedAccelerometerSamples = 0;</span>
+    
+    /**
+     * Number of gyroscope samples accumulated since last full sample.
+     */
+<span class="fc" id="L172">    protected int mAccumulatedGyroscopeSamples = 0;</span>
+    
+    /**
+     * Average of acceleration along x-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double mAccumulatedAccelerationSampleX;
+    
+    /**
+     * Average of acceleration along y-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double mAccumulatedAccelerationSampleY;
+    
+    /**
+     * Average of acceleration along z-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double mAccumulatedAccelerationSampleZ;
+    
+    /**
+     * Average of angular speed along x-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double mAccumulatedAngularSpeedSampleX;
+    
+    /**
+     * Average of angular speed along y-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double mAccumulatedAngularSpeedSampleY;
+    
+    /**
+     * Average of angular speed along z-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double mAccumulatedAngularSpeedSampleZ;
+    
+    /**
+     * Listener in charge of handling events raised by instances of this class.
+     */
+    protected BaseSlamCalibratorListener mListener;
+    
+    /**
+     * Constructor.
+     * @param sampleLength sample length of control values used during 
+     * prediction stage in SLAM estimator.
+     * @throws IllegalArgumentException if sample length is less than 1.
+     */
+    public BaseSlamCalibrator(int sampleLength) 
+<span class="fc" id="L222">            throws IllegalArgumentException {</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">        if(sampleLength &lt; MIN_SAMPLE_LENGTH) {</span>
+<span class="nc" id="L224">            throw new IllegalArgumentException(&quot;length must be greater than 0&quot;);</span>
+        }
+        
+<span class="fc" id="L227">        mSampleLength = sampleLength;</span>
+<span class="fc" id="L228">        mSample = new double[sampleLength];</span>
+<span class="fc" id="L229">        mPreviousMean = new double[sampleLength];</span>
+<span class="fc" id="L230">        mMeanDiff = new double[sampleLength];</span>
+        try {
+<span class="fc" id="L232">            mPreviousCovariance = new Matrix(sampleLength, sampleLength);</span>
+<span class="fc" id="L233">            mCovDiff = new Matrix(sampleLength, sampleLength);</span>
+<span class="fc" id="L234">            mEstimator = new MeasurementNoiseCovarianceEstimator(</span>
+                    sampleLength);            
+<span class="nc" id="L236">        } catch (Exception ignore) {</span>
+            /* never thrown */
+<span class="fc" id="L238">        }</span>
+<span class="fc" id="L239">    }</span>
+    
+    /**
+     * Gets sample length of control values used during prediction stage in SLAM 
+     * estimator.
+     * @return sample length of control values used during prediction stage in
+     * SLAM estimator.
+     */
+    public int getSampleLength() {
+<span class="fc" id="L248">        return mSampleLength;</span>
+    }        
+    
+    /**
+     * Indicates whether calibrator converged or not.
+     * @return true if calibrator converged, false otherwise.
+     */
+    public boolean isConverged() {
+<span class="fc" id="L256">        return mConverged;</span>
+    }
+    
+    /**
+     * Indicates whether this calibrator failed or not.
+     * @return true if calibrator failed, false otherwise.
+     */
+    public boolean isFailed() {
+<span class="fc" id="L264">        return mFailed;</span>
+    }
+    
+    /**
+     * Indicates whether calibrator has finished taking samples or not.
+     * @return true if calibrator has finished taing samples, false otherwise.
+     */
+    public boolean isFinished() {
+<span class="fc" id="L272">        return mFinished;</span>
+    }
+    
+    /**
+     * Gets number of obtained samples.
+     * @return number of obtained samples.
+     */
+    public int getSampleCount() {
+<span class="fc" id="L280">        return mSampleCount;</span>
+    }
+    
+    /**
+     * Obtains the minimum number of samples to use before taking convergence 
+     * into account.
+     * @return minimum number of samples to use before taking convergence into 
+     * account.
+     */
+    public int getMinNumSamples() {
+<span class="fc" id="L290">        return mMinNumSamples;</span>
+    }
+    
+    /**
+     * Specifies the minimum number of samples to take before taking convergence
+     * into account.
+     * @param minNumSamples minimum number of samples to take before taking
+     * convergence into account.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setMinNumSamples(int minNumSamples) 
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        if (minNumSamples &lt; 0) {</span>
+<span class="nc" id="L303">            throw new IllegalArgumentException(</span>
+                    &quot;minNumSamples must be positive&quot;);
+        }
+<span class="fc" id="L306">        mMinNumSamples = minNumSamples;</span>
+<span class="fc" id="L307">    }</span>
+    
+    /**
+     * Gets maximum number of samples to take into account.
+     * @return maximum number of samples to take into account.
+     */
+    public int getMaxNumSamples() {
+<span class="fc" id="L314">        return mMaxNumSamples;</span>
+    }
+    
+    /**
+     * Specifies the maximum number of samples to take.
+     * @param maxNumSamples maximum number of samples to take.
+     * @throws IllegalArgumentException if provided value is negative or zero.
+     */
+    public void setMaxNumSamples(int maxNumSamples) 
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (maxNumSamples &lt;= 0) {</span>
+<span class="nc" id="L325">            throw new IllegalArgumentException(</span>
+                    &quot;maxNumSamples must be positive&quot;);
+        }
+<span class="fc" id="L328">        mMaxNumSamples = maxNumSamples;</span>
+<span class="fc" id="L329">    }</span>
+    
+    /**
+     * Gets threshold to consider that calibration has converged.
+     * @return threshold to consider that calibration has converged.
+     */
+    public double getConvergenceThreshold() {
+<span class="fc" id="L336">        return mConvergenceThreshold;</span>
+    }
+    
+    /**
+     * Specifies threshold to determine that calibration has converged.
+     * @param convergenceThreshold threshold to determine that calibration has 
+     * converged.
+     * @throws IllegalArgumentException if threshold is negative.
+     */
+    public void setConvergenceThreshold(double convergenceThreshold)
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        if (convergenceThreshold &lt; 0.0) {</span>
+<span class="fc" id="L348">            throw new IllegalArgumentException(</span>
+                    &quot;convergenceThreshold must be positive&quot;);
+        }
+<span class="fc" id="L351">        mConvergenceThreshold = convergenceThreshold;</span>
+<span class="fc" id="L352">    }</span>
+    
+    /**
+     * Resets calibrator.
+     */
+    public void reset() {
+<span class="fc" id="L358">        mConverged = mFailed = false;</span>
+<span class="fc" id="L359">        mSampleCount = 0;</span>
+<span class="fc" id="L360">        mFinished = false;</span>
+<span class="fc" id="L361">        Arrays.fill(mSample, 0.0);</span>
+<span class="fc" id="L362">        Arrays.fill(mPreviousMean, 0.0);</span>
+<span class="fc" id="L363">        mPreviousCovariance.initialize(0.0);</span>
+        try {
+<span class="fc" id="L365">            mEstimator = new MeasurementNoiseCovarianceEstimator(</span>
+                    mSample.length);
+<span class="pc" id="L367">        }catch(SignalProcessingException e) { /* never thrown */ }        </span>
+<span class="fc" id="L368">        mConverged = mFailed = mFinished = false;</span>
+<span class="fc" id="L369">        mSampleCount = 0;</span>
+<span class="fc" id="L370">        Arrays.fill(mMeanDiff, 0.0);</span>
+<span class="fc" id="L371">        mCovDiff.initialize(0.0);</span>
+<span class="fc" id="L372">        mAccelerometerTimestampNanos = mGyroscopeTimestampNanos = -1;</span>
+<span class="fc" id="L373">        mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;</span>
+<span class="fc" id="L374">        mAccumulatedAccelerationSampleX = mAccumulatedAccelerationSampleY =</span>
+                mAccumulatedAccelerationSampleZ = 0.0;
+<span class="fc" id="L376">        mAccumulatedAngularSpeedSampleX = mAccumulatedAngularSpeedSampleY =</span>
+                mAccumulatedAngularSpeedSampleZ = 0.0;
+<span class="fc" id="L378">    }</span>
+    
+    /**
+     * Indicates whether accumulation of samples is enabled or not.
+     * @return true if accumulation of samples is enabled, false otherwise.
+     */
+    public boolean isAccumulationEnabled() {
+<span class="fc" id="L385">        return mAccumulationEnabled;</span>
+    }
+    
+    /**
+     * Specifies whether accumulation of samples is enabled or not.
+     * @param accumulationEnabled true if accumulation of samples is enabled,
+     * false otherwise.
+     */
+    public void setAccumulationEnabled(boolean accumulationEnabled) {
+<span class="fc" id="L394">        mAccumulationEnabled = accumulationEnabled;</span>
+<span class="fc" id="L395">    }</span>
+    
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * accelerometer sample, or -1 if no sample has been set yet.
+     * @return timestamp expressed in nanoseconds since the epoch time of the
+     * last accelerometer sample, or -1.
+     */
+    public long getAccelerometerTimestampNanos() {
+<span class="fc" id="L404">        return mAccelerometerTimestampNanos;</span>
+    }
+    
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * gyroscope sample, or -1 if no sample has been set yet.
+     * @return timestamp expressed in nanoseconds since the epoch time of the 
+     * last gyroscope sample, or -1.
+     */
+    public long getGyroscopeTimestampNanos() {
+<span class="fc" id="L414">        return mGyroscopeTimestampNanos;</span>
+    }
+    
+    /**
+     * Gets number of accelerometer samples accumulated since last full sample.
+     * @return number of accelerometer samples accumulated since last full 
+     * sample.
+     */
+    public int getAccumulatedAccelerometerSamples() {
+<span class="fc" id="L423">        return mAccumulatedAccelerometerSamples;</span>
+    }
+    
+    /**
+     * Gets number of gyroscope samples accumulated since last full sample.
+     * @return number of gyroscope samples accumulated since last full sample.
+     */
+    public int getAccumulatedGyroscopeSamples() {
+<span class="fc" id="L431">        return mAccumulatedGyroscopeSamples;</span>
+    }
+    
+    /**
+     * Indicates whether the accelerometer sample has been received since the
+     * last full sample (accelerometer + gyroscope).
+     * @return true if accelerometer sample has been received, false otherwise.
+     */
+    public boolean isAccelerometerSampleReceived() {
+<span class="fc bfc" id="L440" title="All 2 branches covered.">        return mAccumulatedAccelerometerSamples &gt; 0;</span>
+    }
+    
+    /**
+     * Indicates whether the gyroscope sample has been received since the last
+     * full sample (accelerometer + gyroscope).
+     * @return true if gyroscope sample has been received, false otherwise.
+     */
+    public boolean isGyroscopeSampleReceived() {
+<span class="fc bfc" id="L449" title="All 2 branches covered.">        return mAccumulatedGyroscopeSamples &gt; 0;</span>
+    }
+    
+    /**
+     * Indicates whether a full sample (accelerometer + gyroscope) has been
+     * received or not.
+     * @return true if full sample has been received, false otherwise.
+     */
+    public boolean isFullSampleAvailable() {
+<span class="fc bfc" id="L458" title="All 4 branches covered.">        return isAccelerometerSampleReceived() &amp;&amp; isGyroscopeSampleReceived();</span>
+    }
+    
+    /**
+     * Gets average acceleration along x-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along x-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleX() {
+<span class="fc" id="L468">        return mAccumulatedAccelerationSampleX;</span>
+    }
+    
+    /**
+     * Gets average acceleration along y-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along y-axis accumulated since last full 
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleY() {
+<span class="fc" id="L478">        return mAccumulatedAccelerationSampleY;</span>
+    }
+    
+    /**
+     * Gets acerage acceleration along z-axis accumulated since last full 
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along z-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleZ() {
+<span class="fc" id="L488">        return mAccumulatedAccelerationSampleZ;</span>
+    }
+    
+    /**
+     * Gets average acceleration along x,y,z axes accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along x,y,z axes expressed in meters per
+     * squared second (m/s^2).
+     */
+    public double[] getAccumulatedAccelerationSample() {
+<span class="fc" id="L498">        return new double[]{</span>
+            mAccumulatedAccelerationSampleX,
+            mAccumulatedAccelerationSampleY,
+            mAccumulatedAccelerationSampleZ
+        };
+    }
+    
+    /**
+     * Gets average acceleration along x,yz axes accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @param result array where average acceleration along x,y,z axes will be
+     * stored.
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void getAccumulatedAccelerationSample(double[] result)
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L515" title="1 of 2 branches missed.">        if(result.length != N_COMPONENTS_3D) {</span>
+<span class="nc" id="L516">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+        }
+<span class="fc" id="L518">        result[0] = mAccumulatedAccelerationSampleX;</span>
+<span class="fc" id="L519">        result[1] = mAccumulatedAccelerationSampleY;</span>
+<span class="fc" id="L520">        result[2] = mAccumulatedAccelerationSampleZ;</span>
+<span class="fc" id="L521">    }</span>
+    
+    /**
+     * Gets average angular speed along x-axis accumulated since last full 
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along x-axis expressed in radians per 
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleX() {
+<span class="fc" id="L530">        return mAccumulatedAngularSpeedSampleX;</span>
+    }
+    
+    /**
+     * Gets average angular speed along y-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along y-axis expressed in radians per
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleY() {
+<span class="fc" id="L540">        return mAccumulatedAngularSpeedSampleY;</span>
+    }
+    
+    /**
+     * Gets average angular speed along z-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along z-axis expressed in radians per
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleZ() {
+<span class="fc" id="L550">        return mAccumulatedAngularSpeedSampleZ;</span>
+    }
+    
+    /**
+     * Gets average angular speed along x,y,z axes accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along x,y,z axes expressed in radians per
+     * second.
+     */
+    public double[] getAccumulatedAngularSpeedSample() {
+<span class="fc" id="L560">        return new double[]{</span>
+            mAccumulatedAngularSpeedSampleX,
+            mAccumulatedAngularSpeedSampleY,
+            mAccumulatedAngularSpeedSampleZ
+        };
+    }
+    
+    /**
+     * Gets average angular speed along x,y,z axes accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @param result array where average angular speed along x,y,z axes will be
+     * stored.
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void getAccumulatedAngularSpeedSample(double[] result)
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L577" title="1 of 2 branches missed.">        if (result.length != N_COMPONENTS_3D) {</span>
+<span class="nc" id="L578">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+        }
+<span class="fc" id="L580">        result[0] = mAccumulatedAngularSpeedSampleX;</span>
+<span class="fc" id="L581">        result[1] = mAccumulatedAngularSpeedSampleY;</span>
+<span class="fc" id="L582">        result[2] = mAccumulatedAngularSpeedSampleZ;</span>
+<span class="fc" id="L583">    }</span>
+    
+    /**
+     * Provides a new accelerometer sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * @param accelerationX linear acceleration along x-axis expressed in meters 
+     * per squared second (m/s^2).
+     * @param accelerationY linear acceleration along y-axis expressed in meters
+     * per squared second (m/s^2).
+     * @param accelerationZ linear acceleration along z-axis expressed in meters
+     * per squared second (m/s^2).
+     */
+    public void updateAccelerometerSample(long timestamp, float accelerationX,
+            float accelerationY, float accelerationZ) {
+<span class="pc bpc" id="L601" title="1 of 2 branches missed.">        if(!isFullSampleAvailable()) {</span>
+<span class="fc" id="L602">            mAccelerometerTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L603" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isAccelerometerSampleReceived()) {</span>
+                //accumulation enabled
+<span class="fc" id="L605">                int nextSamples = mAccumulatedAccelerometerSamples + 1;</span>
+<span class="fc" id="L606">                mAccumulatedAccelerationSampleX = </span>
+                        (mAccumulatedAccelerationSampleX * mAccumulatedAccelerometerSamples + 
+                        accelerationX) / nextSamples;
+<span class="fc" id="L609">                mAccumulatedAccelerationSampleY =</span>
+                        (mAccumulatedAccelerationSampleY * mAccumulatedAccelerometerSamples +
+                        accelerationY) / nextSamples;
+<span class="fc" id="L612">                mAccumulatedAccelerationSampleZ =</span>
+                        (mAccumulatedAccelerationSampleZ * mAccumulatedAccelerometerSamples +
+                        accelerationZ) / nextSamples;
+<span class="fc" id="L615">                mAccumulatedAccelerometerSamples = nextSamples;                </span>
+<span class="fc" id="L616">            } else {</span>
+                //accumulation disabled
+<span class="fc" id="L618">               mAccumulatedAccelerationSampleX = accelerationX;</span>
+<span class="fc" id="L619">               mAccumulatedAccelerationSampleY = accelerationY;</span>
+<span class="fc" id="L620">               mAccumulatedAccelerationSampleZ = accelerationZ;</span>
+<span class="fc" id="L621">               mAccumulatedAccelerometerSamples++;  </span>
+            }                      
+<span class="fc" id="L623">            notifyFullSampleAndResetSampleReceive();</span>
+        }
+<span class="fc" id="L625">    }</span>
+    
+    /**
+     * Provides a new accelerometer sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal 
+     * state gets also updated.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * expressed in nanoseconds.
+     * @param data array containing x,y,z components of linear acceleration 
+     * expressed in meters per squared second (m/s^2).
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void updateAccelerometerSample(long timestamp, float[] data) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L642" title="All 2 branches covered.">        if(data.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L643">            throw new IllegalArgumentException(</span>
+                    &quot;acceleration must have length 3&quot;);
+        }
+<span class="fc" id="L646">        updateAccelerometerSample(timestamp, data[0], data[1],</span>
+                data[2]);
+<span class="fc" id="L648">    }</span>
+    
+    /**
+     * Provides a new gyroscope sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal 
+     * state gets also updated.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * expressed in nanoseconds.
+     * @param angularSpeedX angular speed of rotation along x-axis expressed in
+     * radians per second (rad/s).
+     * @param angularSpeedY angular speed of rotation along y-axis expressed in
+     * radians per second (rad/s).
+     * @param angularSpeedZ angular speed of rotation along z-axis expressed in
+     * radians per second (rad/s).
+     */
+    public void updateGyroscopeSample(long timestamp, float angularSpeedX,
+            float angularSpeedY, float angularSpeedZ) {
+<span class="pc bpc" id="L667" title="1 of 2 branches missed.">        if(!isFullSampleAvailable()) {</span>
+<span class="fc" id="L668">            mGyroscopeTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L669" title="All 4 branches covered.">            if(isAccumulationEnabled() &amp;&amp; isGyroscopeSampleReceived()) {</span>
+                //accumulation enabled
+<span class="fc" id="L671">                int nextSamples = mAccumulatedGyroscopeSamples + 1;</span>
+<span class="fc" id="L672">                mAccumulatedAngularSpeedSampleX = </span>
+                        (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
+                        angularSpeedX) / nextSamples;
+<span class="fc" id="L675">                mAccumulatedAngularSpeedSampleY = </span>
+                        (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
+                        angularSpeedY) / nextSamples;
+<span class="fc" id="L678">                mAccumulatedAngularSpeedSampleZ = </span>
+                        (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
+                        angularSpeedZ) / nextSamples;
+<span class="fc" id="L681">                mAccumulatedGyroscopeSamples = nextSamples;</span>
+<span class="fc" id="L682">            } else {</span>
+                //accumulation disabled
+<span class="fc" id="L684">                mAccumulatedAngularSpeedSampleX = angularSpeedX;</span>
+<span class="fc" id="L685">                mAccumulatedAngularSpeedSampleY = angularSpeedY;</span>
+<span class="fc" id="L686">                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;</span>
+<span class="fc" id="L687">                mAccumulatedGyroscopeSamples++;</span>
+            }
+<span class="fc" id="L689">            notifyFullSampleAndResetSampleReceive();</span>
+        }
+<span class="fc" id="L691">    }</span>
+    
+    /**
+     * Provides a new gyroscope sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     * @param timestamp timestamp of gyroscope sample since epoch time and
+     * expressed in nanoseconds.
+     * @param data angular speed of rotation along x,y,z axes expressed in 
+     * radians per second (rad/s).
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void updateGyroscopeSample(long timestamp, float[] data) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L708" title="All 2 branches covered.">        if(data.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L709">            throw new IllegalArgumentException(</span>
+                    &quot;angular speed must have length 3&quot;);
+        }
+<span class="fc" id="L712">        updateGyroscopeSample(timestamp, data[0], data[1], data[2]);</span>
+<span class="fc" id="L713">    }</span>
+    
+    /**
+     * Gets most recent timestamp of received partial samples (accelerometer or
+     * gyroscope).
+     * @return most recent timestamp of received partial sample.
+     */
+    public long getMostRecentTimestampNanos() {
+<span class="fc bfc" id="L721" title="All 2 branches covered.">        return mAccelerometerTimestampNanos &gt; mGyroscopeTimestampNanos ?</span>
+<span class="fc" id="L722">                    mAccelerometerTimestampNanos : mGyroscopeTimestampNanos;</span>
+    }
+    
+    /**
+     * Gets listener in charge of handling events raised by instances of this 
+     * class.
+     * @return listener in charge of handling events raised by instances of this 
+     * class.
+     */
+    public BaseSlamCalibratorListener getListener() {
+<span class="fc" id="L732">        return mListener;</span>
+    }
+    
+    /**
+     * Sets listener in charge of handling events raised by instances of this
+     * class.
+     * @param listener listener in charge of handling events raised by instances
+     * of this class.
+     */
+    public void setListener(BaseSlamCalibratorListener listener) {
+<span class="fc" id="L742">        mListener = listener;</span>
+<span class="fc" id="L743">    }</span>
+    
+    /**
+     * Obtains mean values of control signal used for SLAM estimation during
+     * prediction stage of Kalman filter in order to corect possible biases
+     * and offsets.
+     * @return mean values of control signal.
+     */
+    public double[] getControlMean() {
+<span class="fc" id="L752">        return mEstimator.getSampleAverage();</span>
+    }
+    
+    /**
+     * Obtains mean values of control signal used for SLAM estimation during
+     * prediction stage of Kalman filter in order to correct possible biases
+     * and offsets.
+     * @param result array where mean values of control signal will be stored.
+     * Array must have the same length as the control signal.
+     * @throws IllegalArgumentException if provided length is invalid.
+     */
+    public void getControlMean(double[] result) throws IllegalArgumentException{
+<span class="fc" id="L764">        double[] src = getControlMean();</span>
+<span class="fc bfc" id="L765" title="All 2 branches covered.">        if(result.length != src.length) {</span>
+<span class="fc" id="L766">            throw new IllegalArgumentException(&quot;wrong legnth&quot;);</span>
+        }
+        
+<span class="fc" id="L769">        System.arraycopy(src, 0, result, 0, src.length);</span>
+<span class="fc" id="L770">    }</span>
+    
+    /**
+     * Gets covariance of control signal used for SLAM estimation during
+     * prediction stage of Kalman filter in order to correct possible biases
+     * and offsets.
+     * @return covariance matrix of control signal.
+     */
+    public Matrix getControlCovariance() {
+<span class="fc" id="L779">        return mEstimator.getMeasurementNoiseCov();</span>
+    }
+    
+    /**
+     * Gets covariance of control signal used for SLAM estimation during
+     * prediction stage of Kalman filter in order to correct possible biases
+     * and offsets.
+     * @param result matrix where covariance will be stored.
+     */
+    public void getControlCovariance(Matrix result) {
+<span class="fc" id="L789">        Matrix src = getControlCovariance();</span>
+<span class="fc" id="L790">        src.copyTo(result);</span>
+<span class="fc" id="L791">    }</span>
+    
+    /**
+     * Gets a multivariate normal distribution containing control signal mean
+     * and covariance used for SLAM estimation during prediction stage of Kalman
+     * filter in order to correct possible biases and offsets.
+     * @return a multivariate normal distribution.
+     * @throws InvalidCovarianceMatrixException if estimated covariance is not
+     * valid.
+     */
+    public MultivariateNormalDist getControlDistribution() 
+            throws InvalidCovarianceMatrixException {
+<span class="fc" id="L803">        Matrix cov = getControlCovariance();</span>
+        try {
+<span class="fc" id="L805">            cov.symmetrize();</span>
+<span class="pc" id="L806">        } catch (WrongSizeException ignore) { /* never thrown */ }</span>
+<span class="fc" id="L807">        return new MultivariateNormalDist(getControlMean(), cov, false);</span>
+    }
+    
+    /**
+     * Gets a multivariate normal distribution containing control signal mean
+     * and covariance used for SLAM estimation during prediction stage of Kalman
+     * filter in order to correct possible biases and offsets.
+     * @param dist a multivariate normal distribution.
+     * @throws InvalidCovarianceMatrixException if estimated covariance is not
+     * valid.
+     */
+    public void getControlDistribution(MultivariateNormalDist dist) 
+            throws InvalidCovarianceMatrixException {
+<span class="fc" id="L820">        Matrix cov = getControlCovariance();</span>
+        try {
+<span class="fc" id="L822">            cov.symmetrize();</span>
+<span class="pc" id="L823">        } catch (WrongSizeException ignore) { /* never thrown */ }        </span>
+<span class="fc" id="L824">        dist.setMeanAndCovariance(getControlMean(), cov, false);</span>
+<span class="fc" id="L825">    }</span>
+    
+    /**
+     * Gets a new instance containing calibration data estimated by this
+     * calibrator.
+     * @return a new calibration data instance.
+     */
+    public abstract D getCalibrationData();
+    
+    /**
+     * Gets calibration data estimated by this calibrator.
+     * @param result instance where calibration data will be stored.
+     */
+    public void getCalibrationData(D result) {
+<span class="fc" id="L839">        result.setControlMeanAndCovariance(getControlMean(), </span>
+<span class="fc" id="L840">                getControlCovariance());</span>
+<span class="fc" id="L841">    }</span>
+    
+    /**
+     * Propagates calibrated control signal covariance using current control
+     * jacobian matrix. 
+     * The propagated distribution can be used during prediction stage in Kalman
+     * filtering.
+     * @param controlJacobian current control jacobian matrix.
+     * @return propagated distribution.
+     * @throws InvalidCovarianceMatrixException if estimated covariance is not
+     * valid.
+     */
+    public MultivariateNormalDist propagateWithControlJacobian(
+            Matrix controlJacobian) throws InvalidCovarianceMatrixException, 
+            IllegalArgumentException {
+<span class="fc" id="L856">        return getCalibrationData().propagateWithControlJacobian(</span>
+                controlJacobian);
+    }
+    
+    /**
+     * Propagates calibrated control signal covariance using current control
+     * jacobian matrix.
+     * The propagated distribution can be used during prediction stage in Kalman
+     * filtering.
+     * @param controlJacobian current control jacobian matrix.
+     * @param result instance where propagated distribution is stored.
+     * @throws InvalidCovarianceMatrixException if estimated covariance is not
+     * valid.
+     */
+    public void propagateWithControlJacobian(final Matrix controlJacobian, 
+            MultivariateNormalDist result) 
+            throws InvalidCovarianceMatrixException, IllegalArgumentException {
+<span class="fc" id="L873">        getCalibrationData().propagateWithControlJacobian(controlJacobian, </span>
+                result);
+<span class="fc" id="L875">    }    </span>
+    
+    /**
+     * Notifies that a full sample has been received and resets flags indicating
+     * whether partial samples have been received.
+     */
+    protected void notifyFullSampleAndResetSampleReceive() {
+<span class="fc bfc" id="L882" title="All 2 branches covered.">        if(isFullSampleAvailable()) {</span>
+<span class="fc" id="L883">            processFullSample();     </span>
+<span class="fc" id="L884">            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;</span>
+        }
+<span class="fc" id="L886">    }</span>
+    
+    /**
+     * Obtains the number of state parameters in associated SLAM estimator.
+     * @return number of state parameters.
+     */
+    protected abstract int getEstimatorStateLength();
+    
+    /**
+     * Method to be implemented in subclasses to process a full sample.
+     */
+    protected abstract void processFullSample();
+    
+    /**
+     * Updates internal mean and covariance values and checkes whether 
+     * convergence has been reached and calibrator has finished or failed.
+     */
+    protected void updateSample() {
+<span class="pc bpc" id="L904" title="1 of 2 branches missed.">        if(mFinished) return;</span>
+        
+        try {
+<span class="fc" id="L907">            mEstimator.update(mSample);</span>
+<span class="nc" id="L908">        } catch (SignalProcessingException e) {</span>
+<span class="nc" id="L909">            mFailed = mFinished = true;</span>
+            
+<span class="nc bnc" id="L911" title="All 2 branches missed.">            if(mListener != null) {</span>
+<span class="nc" id="L912">                mListener.onCalibratorFinished(this, mConverged, true);</span>
+            }
+<span class="nc" id="L914">            return;</span>
+<span class="fc" id="L915">        }</span>
+        
+<span class="fc" id="L917">        mSampleCount++;</span>
+        
+<span class="fc" id="L919">        double[] mean = mEstimator.getSampleAverage();</span>
+<span class="fc" id="L920">        Matrix cov = mEstimator.getMeasurementNoiseCov();</span>
+        
+        //check if minimum number of samples has been reached
+<span class="fc bfc" id="L923" title="All 2 branches covered.">        if(mSampleCount &gt;= mMaxNumSamples) {</span>
+<span class="fc" id="L924">            mFinished = true;</span>
+            
+<span class="pc bpc" id="L926" title="1 of 2 branches missed.">            if(mListener != null) {</span>
+<span class="fc" id="L927">                mListener.onCalibratorFinished(this, mConverged, mFailed);</span>
+            }            
+<span class="fc" id="L929">            return;</span>
+        }
+        
+        //check if estimator has converged
+<span class="fc bfc" id="L933" title="All 2 branches covered.">        if(mSampleCount &gt;= mMinNumSamples) {</span>
+<span class="fc" id="L934">            ArrayUtils.subtract(mean, mPreviousMean, mMeanDiff);</span>
+            try {
+<span class="fc" id="L936">                cov.subtract(mPreviousCovariance, mCovDiff);</span>
+<span class="pc" id="L937">            } catch (WrongSizeException ignore) { /* never thrown */ }</span>
+<span class="fc" id="L938">            double meanDiffNorm = com.irurueta.algebra.Utils.normF(mMeanDiff);</span>
+<span class="fc" id="L939">            double covDiffNorm = com.irurueta.algebra.Utils.normF(mCovDiff);</span>
+<span class="pc bpc" id="L940" title="1 of 4 branches missed.">            if(meanDiffNorm &lt;= mConvergenceThreshold &amp;&amp; </span>
+                    covDiffNorm &lt;= mConvergenceThreshold) {
+<span class="fc" id="L942">                mConverged = mFinished = true;</span>
+                
+<span class="fc bfc" id="L944" title="All 2 branches covered.">                if(mListener != null) {</span>
+<span class="fc" id="L945">                    mListener.onCalibratorFinished(this, true, mFailed);</span>
+                }
+<span class="fc" id="L947">                return;</span>
+            }
+        }
+        
+        //copy current value for next iteration
+<span class="fc" id="L952">        System.arraycopy(mean, 0, mPreviousMean, 0, mean.length);</span>
+<span class="fc" id="L953">        cov.copyTo(mPreviousCovariance);</span>
+               
+<span class="fc" id="L955">        mFinished = false;</span>
+<span class="fc" id="L956">    }</span>
+    
+    /**
+     * Listener for implementations of this class.
+     */
+    public interface BaseSlamCalibratorListener {
+        /**
+         * Called when a full sample (accelerometer + gyroscope, etc) has been
+         * received.
+         * @param calibrator SLAM calibrator.
+         */
+        void onFullSampleReceived(BaseSlamCalibrator calibrator);
+        
+        /**
+         * Called when a full sample (accelerometer + gyroscope, etc) has been
+         * received and has already been processed.
+         * @param calibrator SLAM calibrator.
+         */
+        void onFullSampleProcessed(BaseSlamCalibrator calibrator);
+        
+        /**
+         * Called when calibration finishes.
+         * @param calibrator SLAM calibrator.
+         * @param converged true if calibration converged, false otherwise.
+         * @param failed true if calibration failed, false otherwise.
+         */
+        void onCalibratorFinished(BaseSlamCalibrator calibrator, 
+                boolean converged, boolean failed);
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

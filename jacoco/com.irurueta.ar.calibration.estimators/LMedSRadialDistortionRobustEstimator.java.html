@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMedSRadialDistortionRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">LMedSRadialDistortionRobustEstimator.java</span></div><h1>LMedSRadialDistortionRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.RadialDistortion;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Finds the best radial distortion for provided collection of 2D points using
+ * LMedS algorithm
+ */
+public class LMedSRadialDistortionRobustEstimator extends 
+        RadialDistortionRobustEstimator {
+    
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used 
+     * to keep the algorithm iterating in case that best estimated threshold 
+     * using median of residuals is not small enough. Once a solution is found 
+     * that generates a threshold below this value, the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-3;
+    
+    /**
+     * Minimum allowed stop threshold value.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best 
+     * estimated threshold using median of residuals is not small enough. Once 
+     * a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;    
+    
+    /**
+     * Constructor.
+     */
+    public LMedSRadialDistortionRobustEstimator() {
+<span class="fc" id="L82">        super();</span>
+<span class="fc" id="L83">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L84">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     */
+    public LMedSRadialDistortionRobustEstimator(
+            RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L93">        super(listener);</span>
+<span class="fc" id="L94">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L95">    }</span>
+    
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distorsion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
+            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
+<span class="fc" id="L107">        super(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L108">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L109">    }</span>
+    
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distorsion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
+            List&lt;Point2D&gt; undistortedPoints, 
+            RadialDistortionRobustEstimatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L125">        super(distortedPoints, undistortedPoints, listener);</span>
+<span class="fc" id="L126">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L127">    }</span>
+
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distorsion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter radial distortion center. If null it is assumed 
+     * to be the origin of coordinates, otherwise this is typically equal to
+     * the camera principal point.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) 
+            throws IllegalArgumentException {
+<span class="fc" id="L143">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
+<span class="fc" id="L144">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L145">    }</span>
+    
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distorsion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter radial distortion center. If null it is assumed 
+     * to be the origin of coordinates, otherwise this is typically equal to
+     * the camera principal point.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter,
+            RadialDistortionRobustEstimatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L164">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
+<span class="fc" id="L165">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L166">    }    </span>
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that 
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L187">        return mStopThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely 
+     * when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setStopThreshold(double stopThreshold) 
+            throws IllegalArgumentException, LockedException {
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L214">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L217">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L220">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L221">    }</span>
+    
+    /**
+     * Estimates a radial distortion using a robust estimator and
+     * the best set of matched 2D points found using the robust estimator.
+     * @return a radial distortion.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws NotReadyException if provided input data is not enough to start
+     * the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public RadialDistortion estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L238">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L241">            throw new NotReadyException();</span>
+        }
+        
+<span class="fc" id="L244">        LMedSRobustEstimator&lt;RadialDistortion&gt; innerEstimator = </span>
+                new LMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L246">                new LMedSRobustEstimatorListener&lt;RadialDistortion&gt;() {</span>
+                    
+                    //point to be reused when computing residuals
+<span class="fc" id="L249">            private Point2D mTestPoint = Point2D.create(</span>
+                    CoordinatesType.INHOMOGENEOUS_COORDINATES);
+                    
+            //non-robust radial distortion estimator
+<span class="fc" id="L253">            private LMSERadialDistortionEstimator mRadialDistortionEstimator = </span>
+                    new LMSERadialDistortionEstimator();
+            
+            //subset of distorted (i.e. measured) points
+<span class="fc" id="L257">            private List&lt;Point2D&gt; mSubsetDistorted = new ArrayList&lt;&gt;();</span>
+            
+            //subset of undistorted (i.e. ideal) points
+<span class="fc" id="L260">            private List&lt;Point2D&gt; mSubsetUndistorted = new ArrayList&lt;&gt;();</span>
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L264">                return mDistortedPoints.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L269">                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, List&lt;RadialDistortion&gt; solutions) {
+<span class="fc" id="L274">                mSubsetDistorted.clear();</span>
+<span class="fc" id="L275">                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[0]));</span>
+<span class="fc" id="L276">                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[1]));</span>
+                
+<span class="fc" id="L278">                mSubsetUndistorted.clear();</span>
+<span class="fc" id="L279">                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[0]));</span>
+<span class="fc" id="L280">                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[1]));</span>
+                
+                try {
+<span class="fc" id="L283">                    mRadialDistortionEstimator.setPoints(mDistortedPoints, </span>
+                            mUndistortedPoints);
+<span class="fc" id="L285">                    mRadialDistortionEstimator.setPoints(mSubsetDistorted, </span>
+                            mSubsetUndistorted);
+                    
+<span class="fc" id="L288">                    RadialDistortion distortion = mRadialDistortionEstimator.</span>
+<span class="fc" id="L289">                            estimate();</span>
+<span class="fc" id="L290">                    solutions.add(distortion);</span>
+<span class="nc" id="L291">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L293">                }</span>
+<span class="fc" id="L294">            }</span>
+
+            @Override
+            public double computeResidual(RadialDistortion currentEstimation, int i) {
+<span class="fc" id="L298">                Point2D distortedPoint = mDistortedPoints.get(i);</span>
+<span class="fc" id="L299">                Point2D undistortedPoint = mUndistortedPoints.get(i);</span>
+                
+<span class="fc" id="L301">                currentEstimation.distort(undistortedPoint, mTestPoint);</span>
+                
+<span class="fc" id="L303">                return mTestPoint.distanceTo(distortedPoint);</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L308">                return LMedSRadialDistortionRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(
+                    RobustEstimator&lt;RadialDistortion&gt; estimator) {
+                try {
+<span class="fc" id="L315">                    mRadialDistortionEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L316">                    mRadialDistortionEstimator.setIntrinsic(getIntrinsic());</span>
+<span class="nc" id="L317">                } catch(Exception e) {</span>
+<span class="nc" id="L318">                    Logger.getLogger(</span>
+<span class="nc" id="L319">                            LMedSRadialDistortionRobustEstimator.class.getName()).</span>
+<span class="nc" id="L320">                            log(Level.WARNING, </span>
+                            &quot;Could not set intrinsic parameters on radial distortion estimator&quot;, e);
+<span class="fc" id="L322">                }</span>
+                
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L325">                    mListener.onEstimateStart(LMedSRadialDistortionRobustEstimator.this);</span>
+                }
+<span class="fc" id="L327">            }</span>
+
+            @Override
+            public void onEstimateEnd(
+                    RobustEstimator&lt;RadialDistortion&gt; estimator) {
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L333">                    mListener.onEstimateEnd(LMedSRadialDistortionRobustEstimator.this);</span>
+                }
+<span class="fc" id="L335">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;RadialDistortion&gt; estimator, 
+                    int iteration) {
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L342">                    mListener.onEstimateNextIteration(</span>
+                            LMedSRadialDistortionRobustEstimator.this, 
+                            iteration);
+                }
+<span class="fc" id="L346">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;RadialDistortion&gt; estimator, 
+                    float progress) {
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L353">                    mListener.onEstimateProgressChange(</span>
+                            LMedSRadialDistortionRobustEstimator.this, 
+                            progress);
+                }
+<span class="fc" id="L357">            }</span>
+        });
+        
+        try {
+<span class="fc" id="L361">            mLocked = true;</span>
+<span class="fc" id="L362">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L363">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L364">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L365">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L366">            return innerEstimator.estimate();            </span>
+<span class="nc" id="L367">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L368">            throw new LockedException(e);</span>
+<span class="nc" id="L369">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L370">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L372">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation
+     * @return method being used for robust estimation
+     */    
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L382">        return RobustEstimatorMethod.LMedS;</span>
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

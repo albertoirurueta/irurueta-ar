@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROMedSDualAbsoluteQuadricRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">PROMedSDualAbsoluteQuadricRobustEstimator.java</span></div><h1>PROMedSDualAbsoluteQuadricRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best dual absolute quadric (DAQ) for provided collection of
+ * cameras using PROMedS algorithm.
+ */
+public class PROMedSDualAbsoluteQuadricRobustEstimator extends 
+        DualAbsoluteQuadricRobustEstimator {
+    
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used
+     * to keep the algorithm iterating in case that best estimated threshold 
+     * using median of residuals is not small enough. Once a solution is found
+     * that generates a threshold below this value, the algorithm will stop.
+     * Threshold is defined by the equations used to estimate the DAQ depending
+     * on the required settings (zero skewness, principal point at origin, and 
+     * known aspect ratio).
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-6;
+    
+    /**
+     * Minimum value that can be set as stop threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+    
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of inliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;
+    
+    /**
+     * Quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] mQualityScores;
+    
+    /**
+     * Constructor.
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator() {
+<span class="fc" id="L79">        super();</span>
+<span class="fc" id="L80">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L81">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L90">        super(listener);</span>
+<span class="fc" id="L91">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L92">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAC), which can be used to obtain pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough cameras are provided for
+     * default settings. Hence, at least 2 cameras must be provided.
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(
+            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+<span class="fc" id="L103">        super(cameras);</span>
+<span class="fc" id="L104">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L105">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough cameras are provided for
+     * default settings. Hence, at least 2 cameras must be provided.
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(
+            List&lt;PinholeCamera&gt; cameras, 
+            DualAbsoluteQuadricRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L120">        super(cameras, listener);</span>
+<span class="fc" id="L121">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L122">    }</span>
+    
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     * camera.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than required number of homographies for default settings (i.e.
+     * 2 cameras).
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(double[] qualityScores)
+            throws IllegalArgumentException {
+<span class="fc" id="L134">        this();</span>
+<span class="fc" id="L135">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L136">    }</span>
+    
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     * camera.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than required number of cameras for default settings (i.e. 2 
+     * cameras).
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(double[] qualityScores,
+            DualAbsoluteQuadricRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L151">        this(listener);</span>
+<span class="fc" id="L152">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L153">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param qualityScores quality scores corresponding to each provided 
+     * camera.
+     * @throws IllegalArgumentException if not enough cameras are provided for
+     * default settings (i.e. 2 cameras) or quality scores and cameras don't
+     * have the same size.
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(
+            List&lt;PinholeCamera&gt; cameras, double[] qualityScores) 
+            throws IllegalArgumentException {
+<span class="fc" id="L168">        this(cameras);</span>
+<span class="fc" id="L169">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L170">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param qualityScores quality scores corresponding to each provided 
+     * camera.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough cameras are provided for
+     * default settings (i.e. 2 cameras) or quality scores and cameras don't
+     * have the same size.
+     */
+    public PROMedSDualAbsoluteQuadricRobustEstimator(
+            List&lt;PinholeCamera&gt; cameras, double[] qualityScores,
+            DualAbsoluteQuadricRobustEstimatorListener listener)
+            throws IllegalArgumentException {
+<span class="fc" id="L188">        this(cameras, listener);</span>
+<span class="fc" id="L189">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L190">    }</span>
+    
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L211">        return mStopThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been 
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     * when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setStopThreshold(double stopThreshold) 
+            throws IllegalArgumentException, LockedException {
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L238">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="nc" id="L241">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L243">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L244">    }</span>
+    
+    /**
+     * Returns quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled
+     * camera.
+     * @return quality scores corresponding to each camera. 
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L254">        return mQualityScores;</span>
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled
+     * camera.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @throws LockedException if robust estimator is locked because an
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException,
+            IllegalArgumentException {
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L271">            throw new LockedException();</span>
+        }
+<span class="fc" id="L273">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L274">    }</span>
+    
+    /**
+     * Indicates if estimator is ready to start the DAQ estimation.
+     * This is true when input data (i.e. cameras) is provided and list contains
+     * at least the minimum number of required cameras, and also quality scores
+     * are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc bfc" id="L285" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">                mQualityScores.length == mCameras.size();</span>
+    }
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException if robust estimator is locked.
+     * @throws NotReadyException if no valid input data has already been 
+     * provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public DualAbsoluteQuadric estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L302">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L305">            throw new NotReadyException();</span>
+        }
+        
+<span class="fc" id="L308">        PROMedSRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
+                new PROMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L310">                new PROMedSRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;() {</span>
+                    
+            //subset of cameras picked on each iteration
+<span class="fc" id="L313">            private List&lt;PinholeCamera&gt; mSubsetCameras =</span>
+                    new ArrayList&lt;&gt;();
+            
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L318">                return mStopThreshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L323">                return mCameras.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L328">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, 
+                    List&lt;DualAbsoluteQuadric&gt; solutions) {
+<span class="fc" id="L334">                mSubsetCameras.clear();</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L336">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
+                }
+                
+                try {
+<span class="fc" id="L340">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L341">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
+                    
+<span class="fc" id="L343">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
+<span class="fc" id="L344">                    solutions.add(daq);</span>
+<span class="nc" id="L345">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L347">                }</span>
+<span class="fc" id="L348">            }</span>
+
+            @Override
+            public double computeResidual(DualAbsoluteQuadric currentEstimation,
+                    int i) {
+<span class="fc" id="L353">                return residual(currentEstimation, mCameras.get(i));</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L358">                return PROMedSDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L364" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L365">                    mListener.onEstimateStart(</span>
+                            PROMedSDualAbsoluteQuadricRobustEstimator.this);
+                }
+<span class="fc" id="L368">            }</span>
+
+            @Override
+            public void onEstimateEnd(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L374">                    mListener.onEstimateEnd(</span>
+                            PROMedSDualAbsoluteQuadricRobustEstimator.this);
+                }
+<span class="fc" id="L377">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
+                    int iteration) {
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L384">                    mListener.onEstimateNextIteration(</span>
+                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
+                            iteration);
+                }
+<span class="fc" id="L388">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
+                    float progress) {
+<span class="pc bpc" id="L394" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L395">                    mListener.onEstimateProgressChange(</span>
+                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+<span class="fc" id="L399">            }</span>
+            
+            @Override
+            public double[] getQualityScores() {
+<span class="fc" id="L403">                return mQualityScores;</span>
+            }            
+        });
+        
+        try {
+<span class="fc" id="L408">            mLocked = true;</span>
+<span class="fc" id="L409">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L410">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L411">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L412">            return innerEstimator.estimate();</span>
+<span class="nc" id="L413">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L414">            throw new LockedException(e);</span>
+<span class="nc" id="L415">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L416">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L418">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L428">        return RobustEstimatorMethod.PROMedS;</span>
+    }     
+    
+    /**
+     * Sets quality scores corresponding to each camera.
+     * This method is used internally and does not check whether instance is 
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required homographies for current
+     * settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores)
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L442" title="All 2 branches covered.">        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</span>
+<span class="fc" id="L443">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L446">        mQualityScores = qualityScores;        </span>
+<span class="fc" id="L447">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

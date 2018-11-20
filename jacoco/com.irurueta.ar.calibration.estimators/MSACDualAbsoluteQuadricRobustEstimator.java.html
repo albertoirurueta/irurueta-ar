@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MSACDualAbsoluteQuadricRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">MSACDualAbsoluteQuadricRobustEstimator.java</span></div><h1>MSACDualAbsoluteQuadricRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best dual absolute quadric (DAQ) for provided collection of
+ * cameras using MSAC algorithm.
+ */
+public class MSACDualAbsoluteQuadricRobustEstimator extends 
+        DualAbsoluteQuadricRobustEstimator {
+    
+    /**
+     * Constant defining default threshold to determine whether cameras are 
+     * inliers or not.
+     * Threshold is defined by the equations used to estimate the DAQ depending
+     * on the required settings (zero skewness, principal point at origin, and 
+     * known aspect ratio).
+     */
+    public static final double DEFAULT_THRESHOLD = 1e-6;
+    
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+    
+    /**
+     * Threshold to determine whether cameras are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     */
+    private double mThreshold;
+    
+    /**
+     * Constructor.
+     */
+    public MSACDualAbsoluteQuadricRobustEstimator() {
+<span class="fc" id="L60">        super();</span>
+<span class="fc" id="L61">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L62">    }</span>
+    
+    /**
+     * Constructor.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     */
+    public MSACDualAbsoluteQuadricRobustEstimator(
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L71">        super(listener);</span>
+<span class="fc" id="L72">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L73">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough cameras are provided for
+     * dfault settings. Hence, at least 2 cameras must be provided.
+     */
+    public MSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras)
+            throws IllegalArgumentException {
+<span class="fc" id="L84">        super(cameras);</span>
+<span class="fc" id="L85">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L86">    }</span>
+    
+    /**
+     * Constructor.
+     * @param cameras list of cameras used to estimate the dual absolute quadric
+     * (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param listener listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if not enough cameras are provided for
+     * dfault settings. Hence, at least 2 cameras must be provided.
+     */
+    public MSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras,
+            DualAbsoluteQuadricRobustEstimatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L100">        super(cameras, listener);</span>
+<span class="fc" id="L101">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L102">    }</span>
+    
+    /**
+     * Returns threshold to determine whether cameras are inliers or not
+     * when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @return threshold to determine whether cameras are inliers when testing
+     * possible estimation solutions.
+     */
+    public double getThreshold() {
+<span class="fc" id="L112">        return mThreshold;</span>
+    }
+    
+    /**
+     * Sets threshold to determine whether cameras are inliers or not when 
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @param threshold threshold to determine whether cameras are inliers or 
+     * not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setThreshold(double threshold) throws IllegalArgumentException,
+            LockedException {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L129">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L132">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L134">        mThreshold = threshold;</span>
+<span class="fc" id="L135">    }</span>
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException if robust estimator is locked.
+     * @throws NotReadyException if no valid input data has already been 
+     * provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */        
+    @Override
+    public DualAbsoluteQuadric estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L150">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L153">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L156">        MSACRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
+                new MSACRobustEstimator&lt;&gt;(
+<span class="fc" id="L158">                new MSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;() {</span>
+                    
+            //subset of cameras picked on each iteration
+<span class="fc" id="L161">            private List&lt;PinholeCamera&gt; mSubsetCameras = </span>
+                    new ArrayList&lt;&gt;();
+            
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L166">                return mThreshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L171">                return mCameras.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L176">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(int[] samplesIndices, 
+                    List&lt;DualAbsoluteQuadric&gt; solutions) {
+<span class="fc" id="L182">                mSubsetCameras.clear();</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L184">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
+                }
+                
+                try {
+<span class="fc" id="L188">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L189">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
+                    
+<span class="fc" id="L191">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
+<span class="fc" id="L192">                    solutions.add(daq);</span>
+<span class="nc" id="L193">                } catch (Exception e) {</span>
+                    //if anything fails, no solution is added
+<span class="fc" id="L195">                }</span>
+<span class="fc" id="L196">            }</span>
+
+            @Override
+            public double computeResidual(DualAbsoluteQuadric currentEstimation,
+                    int i) {
+<span class="fc" id="L201">                return residual(currentEstimation, mCameras.get(i));</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L206">                return MSACDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L212" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L213">                    mListener.onEstimateStart(</span>
+                            MSACDualAbsoluteQuadricRobustEstimator.this);
+                }
+<span class="fc" id="L216">            }</span>
+
+            @Override
+            public void onEstimateEnd(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L222">                    mListener.onEstimateEnd(</span>
+                            MSACDualAbsoluteQuadricRobustEstimator.this);
+                }
+<span class="fc" id="L225">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
+                    int iteration) {
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L232">                    mListener.onEstimateNextIteration(</span>
+                            MSACDualAbsoluteQuadricRobustEstimator.this, 
+                            iteration);
+                }
+<span class="fc" id="L236">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
+                    float progress) {
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                if (mListener != null) {</span>
+<span class="nc" id="L243">                    mListener.onEstimateProgressChange(</span>
+                            MSACDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+<span class="nc" id="L247">            }</span>
+        });
+        
+        try {
+<span class="fc" id="L251">            mLocked = true;</span>
+<span class="fc" id="L252">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L253">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L254">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L255">            return innerEstimator.estimate();</span>
+<span class="nc" id="L256">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L257">            throw new LockedException(e);</span>
+<span class="nc" id="L258">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L259">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L261">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L271">        return RobustEstimatorMethod.MSAC;</span>
+    }    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PositionPredictor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">PositionPredictor.java</span></div><h1>PositionPredictor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
+
+/**
+ * Utility class to predict position of device.
+ */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
+public class PositionPredictor {
+    
+    /**
+     * Number of components of speed.
+     */
+    public static final int SPEED_COMPONENTS = 3;
+    
+    /**
+     * Number of components of acceleration.
+     */
+    public static final int ACCELERATION_COMPONENTS = 3;
+    
+    /**
+     * Constructor.
+     */
+    private PositionPredictor() { }
+    
+    /**
+     * Predicts the updated position. 
+     * @param r current position. Expressed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double ax, double ay, double az,
+            double dt, InhomogeneousPoint3D result, Matrix jacobianR, 
+            Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        if(jacobianR != null &amp;&amp; (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
+<span class="fc" id="L68">            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L70" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L72">            throw new IllegalArgumentException(</span>
+                    &quot;jacobian wrt speed must be 3x3&quot;);
+        }
+<span class="fc bfc" id="L75" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L77">            throw new IllegalArgumentException(</span>
+                    &quot;jacobian wrt acceleration must be 3x3&quot;);
+        }
+        
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (jacobianR != null) {</span>
+            //set to the identity
+<span class="fc" id="L83">            jacobianR.initialize(0.0);</span>
+<span class="fc" id="L84">            jacobianR.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L85">            jacobianR.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L86">            jacobianR.setElementAt(2, 2, 1.0);</span>
+        }
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (jacobianV != null) {</span>
+            //identity multiplied by dt
+<span class="fc" id="L90">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L91">            jacobianV.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L92">            jacobianV.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L93">            jacobianV.setElementAt(2, 2, dt);</span>
+        }
+        
+        
+<span class="pc bpc" id="L97" title="1 of 6 branches missed.">        if(ax == 0.0 &amp;&amp; ay == 0.0 &amp;&amp; az == 0.0) {</span>
+<span class="fc" id="L98">            result.setCoordinates(</span>
+<span class="fc" id="L99">                    r.getInhomX() + vx * dt, </span>
+<span class="fc" id="L100">                    r.getInhomY() + vy * dt, </span>
+<span class="fc" id="L101">                    r.getInhomZ() + vz * dt);</span>
+            
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            if(jacobianA != null) {</span>
+<span class="fc" id="L104">                jacobianA.initialize(0.0);</span>
+            }
+        } else {
+<span class="fc" id="L107">            result.setCoordinates(</span>
+<span class="fc" id="L108">                    r.getInhomX() + vx * dt + 0.5 * ax * dt * dt, </span>
+<span class="fc" id="L109">                    r.getInhomY() + vy * dt + 0.5 * ay * dt * dt, </span>
+<span class="fc" id="L110">                    r.getInhomZ() + vz * dt + 0.5 * az * dt * dt);</span>
+            
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if(jacobianA != null) {</span>
+                //identity multiplied by 0.5*dt^2
+<span class="fc" id="L114">                double value = 0.5 * dt * dt;</span>
+<span class="fc" id="L115">                jacobianA.initialize(0.0);</span>
+<span class="fc" id="L116">                jacobianA.setElementAt(0, 0, value);</span>
+<span class="fc" id="L117">                jacobianA.setElementAt(1, 1, value);</span>
+<span class="fc" id="L118">                jacobianA.setElementAt(2, 2, value);</span>
+            }
+        }
+<span class="fc" id="L121">    }</span>
+    
+    /**
+     * Predicts the updated position.
+     * @param r current position. Expresed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double ax, double ay, double az,
+            double dt, InhomogeneousPoint3D result) {
+<span class="fc" id="L139">        predict(r, vx, vy, vz, ax, ay, az, dt, result, null, null, null);</span>
+<span class="fc" id="L140">    }</span>
+    
+    /**
+     * Predicts the updated position.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size of velocity or acceleration do not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r, double[] v, 
+            double[] a, double dt, InhomogeneousPoint3D result, 
+            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L163">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L166">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+        }
+<span class="fc" id="L168">        predict(r, v[0], v[1], v[2], a[0], a[1], a[2], dt, result,</span>
+                jacobianR, jacobianV, jacobianA);
+<span class="fc" id="L170">    }</span>
+    
+    /**
+     * Predicts the updated position.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r, double[] v, 
+            double[] a, double dt, InhomogeneousPoint3D result) {
+<span class="fc" id="L185">        predict(r, v, a, dt, result, null, null, null);</span>
+<span class="fc" id="L186">    }</span>
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r current position. Expresed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r,
+            double vx, double vy, double vz, double dt, 
+            InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianV, 
+            Matrix jacobianA) throws IllegalArgumentException {
+<span class="fc" id="L207">        predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt, result, jacobianR, jacobianV, </span>
+                jacobianA);
+<span class="fc" id="L209">    }</span>
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r current position. Expresed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double dt, 
+            InhomogeneousPoint3D result) {
+<span class="fc" id="L224">        predict(r, vx, vy, vz, dt, result, null, null, null);</span>
+<span class="fc" id="L225">    }</span>
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size of velocity does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r,
+            double[] v, double dt, InhomogeneousPoint3D result, 
+            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L246">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+        }
+<span class="fc" id="L248">        predict(r, v[0], v[1], v[2], dt, result, jacobianR, jacobianV, </span>
+                jacobianA);
+<span class="fc" id="L250">    }</span>
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @throws IllegalArgumentException if velocity array does not have length 
+     * 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(InhomogeneousPoint3D r,
+            double[] v, double dt, InhomogeneousPoint3D result) 
+            throws IllegalArgumentException {
+<span class="fc" id="L266">        predict(r, v, dt, result, null, null, null);</span>
+<span class="fc" id="L267">    }</span>
+    
+    /**
+     * Predicts the updated position 
+     * @param r current position. Expressed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new instance containing the updated position.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double ax, double ay, double az, 
+            double dt, Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc" id="L291">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L292">        predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV, </span>
+                jacobianA);
+<span class="fc" id="L294">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position.
+     * @param r current position. Expresed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing the updated position.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double ax, double ay, double az, 
+            double dt) {
+<span class="fc" id="L313">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L314">        predict(r, vx, vy, vz, ax, ay, az, dt, result);</span>
+<span class="fc" id="L315">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new instance containing the updated position.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double[] v, double[] a, double dt, Matrix jacobianR, 
+            Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc" id="L338">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L339">        predict(r, v, a, dt, result, jacobianR, jacobianV, jacobianA);</span>
+<span class="fc" id="L340">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing the updated position.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double[] v, double[] a, double dt) {
+<span class="fc" id="L356">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L357">        predict(r, v, a, dt, result);</span>
+<span class="fc" id="L358">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r current position. Expresed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new instance containing the updated position.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double dt, Matrix jacobianR, 
+            Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc" id="L380">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L381">        predict(r, vx, vy, vz, dt, result, jacobianR, jacobianV, jacobianA);</span>
+<span class="fc" id="L382">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r current position. Expresed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing the updated position.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double vx, double vy, double vz, double dt) {
+<span class="fc" id="L397">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L398">        predict(r, vx, vy, vz, dt, result);</span>
+<span class="fc" id="L399">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r current position. Expresed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new instance containing the updated position.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size of velocity does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
+            double[] v, double dt, Matrix jacobianR, Matrix jacobianV, 
+            Matrix jacobianA) throws IllegalArgumentException {
+<span class="fc" id="L419">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L420">        predict(r, v, dt, result, jacobianR, jacobianV, jacobianA);</span>
+<span class="fc" id="L421">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position assuming no acceleration.
+     * @param r current position. Expresed in meters.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing the updated position.
+     * @throws IllegalArgumentException if size of v array is not 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r,
+            double[] v, double dt) throws IllegalArgumentException {
+<span class="fc" id="L436">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L437">        predict(r, v, dt, result);</span>
+<span class="fc" id="L438">        return result;</span>
+    }
+       
+    /**
+     * Predicts the updated position by using provided position variation, 
+     * current speed and current acceleration.
+     * @param r current position. Expressed in meters.
+     * @param drx adjustment of position in x-axis. Expressed in meters.
+     * @param dry adjustment of position in y-axis. Expressed in meters.
+     * @param drz adjustment of position in z-axis. Expressed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianDR jacobian wrt position adjustment. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3c3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     */
+    public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
+            double drx, double dry, double drz, double vx, double vy, double vz,
+            double ax, double ay, double az, double dt, 
+            InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianDR, 
+            Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L469" title="All 4 branches covered.">        if(jacobianR != null &amp;&amp; (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
+<span class="fc" id="L471">            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L473" title="All 4 branches covered.">        if(jacobianDR != null &amp;&amp; (jacobianDR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L474" title="1 of 2 branches missed.">                jacobianDR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
+<span class="fc" id="L475">            throw new IllegalArgumentException(&quot;jacobian wrt dr must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L477" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L478" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L479">            throw new IllegalArgumentException(&quot;jacobian wrt speed must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L481" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L482" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L483">            throw new IllegalArgumentException(</span>
+                    &quot;jacobian wrt acceleration must be 3x3&quot;);
+        }
+        
+<span class="fc bfc" id="L487" title="All 2 branches covered.">        if(jacobianR != null) {</span>
+            //set to identity
+<span class="fc" id="L489">            jacobianR.initialize(0.0);</span>
+<span class="fc" id="L490">            jacobianR.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L491">            jacobianR.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L492">            jacobianR.setElementAt(2, 2, 1.0);</span>
+        }
+<span class="fc bfc" id="L494" title="All 2 branches covered.">        if(jacobianDR != null) {</span>
+            //set to identity
+<span class="fc" id="L496">            jacobianDR.initialize(0.0);</span>
+<span class="fc" id="L497">            jacobianDR.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L498">            jacobianDR.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L499">            jacobianDR.setElementAt(2, 2, 1.0);</span>
+        }
+<span class="fc bfc" id="L501" title="All 2 branches covered.">        if(jacobianV != null) {</span>
+            //identity multiplied by dt
+<span class="fc" id="L503">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L504">            jacobianV.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L505">            jacobianV.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L506">            jacobianV.setElementAt(2, 2, dt);</span>
+        }
+        
+        
+<span class="pc bpc" id="L510" title="2 of 6 branches missed.">        if(ax == 0.0 &amp;&amp; ay == 0.0 &amp;&amp; az == 0.0) {</span>
+<span class="fc" id="L511">            result.setCoordinates(</span>
+<span class="fc" id="L512">                    r.getInhomX() + drx + vx * dt, </span>
+<span class="fc" id="L513">                    r.getInhomY() + dry + vy * dt, </span>
+<span class="fc" id="L514">                    r.getInhomZ() + drz + vz * dt);</span>
+            
+<span class="pc bpc" id="L516" title="1 of 2 branches missed.">            if(jacobianA != null) {</span>
+<span class="nc" id="L517">                jacobianA.initialize(0.0);</span>
+            }
+        } else {
+<span class="fc" id="L520">            result.setCoordinates(</span>
+<span class="fc" id="L521">                    r.getInhomX() + drx + vx * dt + 0.5 * ax * dt * dt, </span>
+<span class="fc" id="L522">                    r.getInhomY() + dry + vy * dt + 0.5 * ay * dt * dt, </span>
+<span class="fc" id="L523">                    r.getInhomZ() + drz + vz * dt + 0.5 * az * dt * dt);</span>
+            
+<span class="fc bfc" id="L525" title="All 2 branches covered.">            if(jacobianA != null) {</span>
+                //identity multiplied by 0.5*dt^2
+<span class="fc" id="L527">                double value = 0.5 * dt * dt;</span>
+<span class="fc" id="L528">                jacobianA.initialize(0.0);</span>
+<span class="fc" id="L529">                jacobianA.setElementAt(0, 0, value);</span>
+<span class="fc" id="L530">                jacobianA.setElementAt(1, 1, value);</span>
+<span class="fc" id="L531">                jacobianA.setElementAt(2, 2, value);</span>
+            }
+        }        
+<span class="fc" id="L534">    }</span>
+    
+    /**
+     * Predicts the updated position by using provided position variation,
+     * current speed and current acceleration.
+     * @param r current position. Expressed in meters.
+     * @param drx adjustment of position in x-axis. Expressed in meters.
+     * @param dry adjustment of position in y-axis. Expressed in meters.
+     * @param drz adjustment of position in z-axis. Expressed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     */
+    public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
+            double drx, double dry, double drz, double vx, double vy, double vz, 
+            double ax, double ay, double az, double dt, 
+            InhomogeneousPoint3D result) {
+<span class="fc" id="L556">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, </span>
+                dt, result, null, null, null, null);
+<span class="fc" id="L558">    }</span>
+    
+    /**
+     * Predicts the updated position by using provided position variation, 
+     * current speed and current acceleration.
+     * @param r current position. Expressed in meters.
+     * @param dr adjustment of position (x, y, z). Must have length 3.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianDR jacobian wrt position adjustment. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size or dr, v or a do not have length 3.
+     */
+    public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
+            double[] dr, double[] v, double[] a, double dt, 
+            InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianDR, 
+            Matrix jacobianV, Matrix jacobianA) 
+            throws IllegalArgumentException {
+<span class="fc bfc" id="L583" title="All 2 branches covered.">        if(dr.length != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {</span>
+<span class="fc" id="L584">            throw new IllegalArgumentException(&quot;dr must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L586" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L587">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L589" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L590">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+        }
+<span class="fc" id="L592">        predictWithPositionAdjustment(r, dr[0], dr[1], dr[2], </span>
+                v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianR, 
+                jacobianDR, jacobianV, jacobianA);
+<span class="fc" id="L595">    }</span>
+    
+    /**
+     * Predicts the updated position.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param dr adjustment of position (x, y, z). Must have length 3.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated position is stored.
+     * @throws IllegalArgumentException if dr, v or a do not have length 3.
+     */
+    public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
+            double[] dr, double[] v, double[] a, double dt, 
+            InhomogeneousPoint3D result) throws IllegalArgumentException {
+<span class="fc" id="L612">        predictWithPositionAdjustment(r, dr, v, a, dt, result, null, null, null,</span>
+                null);
+<span class="fc" id="L614">    }</span>
+    
+    /**
+     * Predicts the updated position by using provided position variation, 
+     * current speed and current acceleration.
+     * @param r current position. Expressed in meters.
+     * @param drx adjustment of position in x-axis. Expressed in meters.
+     * @param dry adjustment of position in y-axis. Expressed in meters.
+     * @param drz adjustment of position in z-axis. Expressed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianDR jacobian wrt position adjustment. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3c3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new updated position.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size.
+     */
+    public static InhomogeneousPoint3D predictWithPositionAdjustment(
+            InhomogeneousPoint3D r, double drx, double dry, double drz,
+            double vx, double vy, double vz, double ax, double ay, double az,
+            double dt, Matrix jacobianR, Matrix jacobianDR, Matrix jacobianV,
+            Matrix jacobianA) throws IllegalArgumentException {
+<span class="fc" id="L643">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L644">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, </span>
+                ay, az, dt, result, jacobianR, jacobianDR, jacobianV, 
+                jacobianA);
+<span class="fc" id="L647">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position by using provided position variation,
+     * current speed and current acceleration.
+     * @param r current position. Expressed in meters.
+     * @param drx adjustment of position in x-axis. Expressed in meters.
+     * @param dry adjustment of position in y-axis. Expressed in meters.
+     * @param drz adjustment of position in z-axis. Expressed in meters.
+     * @param vx velocity in x-axis. Expressed in m/s.
+     * @param vy velocity in y-axis. Expressed in m/s.
+     * @param vz velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new updated position.
+     */
+    public static InhomogeneousPoint3D predictWithPositionAdjustment(
+            InhomogeneousPoint3D r, double drx, double dry, double drz,
+            double vx, double vy, double vz, double ax, double ay, double az,
+            double dt) {
+<span class="fc" id="L670">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L671">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, </span>
+                ax, ay, az, dt, result);
+<span class="fc" id="L673">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position by using provided position variation, 
+     * current speed and current acceleration.
+     * @param r current position. Expressed in meters.
+     * @param dr adjustment of position (x, y, z). Must have length 3.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianR jacobian wrt position. Must be 3x3.
+     * @param jacobianDR jacobian wrt position adjustment. Must be 3x3.
+     * @param jacobianV jacobian wrt speed. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new updated position.
+     * @throws IllegalArgumentException if any of provided jacobians does not 
+     * have proper size or dr, v or a do not have length 3.
+     */
+    public static InhomogeneousPoint3D predictWithPositionAdjustment(
+            InhomogeneousPoint3D r, double[] dr, double[] v, double[] a,
+            double dt, Matrix jacobianR, Matrix jacobianDR, Matrix jacobianV,
+            Matrix jacobianA) throws IllegalArgumentException {
+<span class="fc" id="L698">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L699">        predictWithPositionAdjustment(r, dr, v, a, dt, result, </span>
+                jacobianR, jacobianDR, jacobianV, jacobianA);
+<span class="fc" id="L701">        return result;</span>
+    }
+    
+    /**
+     * Predicts the updated position.
+     * @param r point containing current position in 3D. Expressed in meters.
+     * @param dr adjustment of position (x, y, z). Must have length 3.
+     * @param v array containing 3 components of velocity. Expressed in m/s. 
+     * Must have length 3.
+     * @param a array containing 3 components of acceleration. Expressed in 
+     * m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new updated position.
+     */
+    public static InhomogeneousPoint3D predictWithPositionAdjustment(
+            InhomogeneousPoint3D r, double[] dr, double[] v, double[] a, 
+            double dt) {
+<span class="fc" id="L718">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L719">        predictWithPositionAdjustment(r, dr, v, a, dt, result);</span>
+<span class="fc" id="L720">        return result;</span>
+    }        
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

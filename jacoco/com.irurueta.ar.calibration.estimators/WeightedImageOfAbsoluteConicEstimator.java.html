@@ -1,0 +1,1200 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeightedImageOfAbsoluteConicEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">WeightedImageOfAbsoluteConicEstimator.java</span></div><h1>WeightedImageOfAbsoluteConicEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.WeightSelection;
+import com.irurueta.sorting.SortingException;
+
+import java.util.List;
+
+/**
+ * This class implements an Image of Absolute Conic (IAC) estimator using a
+ * weighted algorithm and correspondences.
+ * Weights can be used so that homographies assumed to have a better quality
+ * (i.e. more precisely estimated) are considered to be more relevant.
+ * Aside from enabling constraints whenever possible to obtain more stable and
+ * accurate results, its is discouraged to use a large number of homographies, 
+ * even if they are correctly weighted, since as the number of homographies
+ * increase so do the rounding errors.
+ */
+public class WeightedImageOfAbsoluteConicEstimator extends 
+        ImageOfAbsoluteConicEstimator {
+    
+    /**
+     * Default number of homographies to be weighted and taken into account.
+     */
+    public static final int DEFAULT_MAX_HOMOGRAPHIES = 50;
+    
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * correspondences are used first.
+     */
+    public static final boolean DEFAULT_SORT_WEIGHTS = true;
+    
+    /**
+     * Maximum number of homographies (i.e. correspondences) to be weighted and
+     * taken into account.
+     */
+    private int mMaxHomographies;
+    
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * correspondences are used first.
+     */
+    private boolean mSortWeights;
+    
+    /**
+     * Array containing weights for all homographies.
+     */
+    private double[] mWeights;
+
+    /**
+     * Constructor.
+     */
+    public WeightedImageOfAbsoluteConicEstimator() {
+<span class="fc" id="L76">        super();</span>
+<span class="fc" id="L77">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
+<span class="fc" id="L78">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L79">    }</span>
+    
+    /**
+     * Constructor with listener.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     */
+    public WeightedImageOfAbsoluteConicEstimator(
+            ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L88">        super(listener);</span>
+<span class="fc" id="L89">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
+<span class="fc" id="L90">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L91">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homographies list of homographies (2D transformations) used to
+     * estimate the image of absolute conic (IAC), which can be used to obtain
+     * pinhole camera intrinsic parameters.
+     * @param weights array containing a weight amount for each homography.
+     * The larger the value of a weight, the most significant the correspondence
+     * will be.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default constraints during IAC estimation.
+     */
+    public WeightedImageOfAbsoluteConicEstimator(
+            List&lt;Transformation2D&gt; homographies, double[] weights)
+            throws IllegalArgumentException {
+<span class="fc" id="L107">        super();</span>
+<span class="fc" id="L108">        internalSetHomographiesAndWeights(homographies, weights);</span>
+<span class="fc" id="L109">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
+<span class="fc" id="L110">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L111">    }</span>
+    
+    /**
+     * Constructor.
+     * @param homographies list of homographies (2D transformations) used to
+     * estimate the image of absolute conic (IAC), which can be used to obtain
+     * pinhole camera intrinsic parameters.
+     * @param weights array containing a weight amount for each homography.
+     * The larger the value of a weight, the most significant the correspondence
+     * will be.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default constraints during IAC estimation.
+     */
+    public WeightedImageOfAbsoluteConicEstimator(
+            List&lt;Transformation2D&gt; homographies, double[] weights,
+            ImageOfAbsoluteConicEstimatorListener listener) 
+            throws IllegalArgumentException {
+<span class="fc" id="L130">        super(listener);</span>
+<span class="fc" id="L131">        internalSetHomographiesAndWeights(homographies, weights);</span>
+<span class="fc" id="L132">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
+<span class="fc" id="L133">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L134">    }</span>
+    
+    /**
+     * Sets list of homographies to estimate IAC.
+     * This method override always throws an IllegalArgumentException because
+     * it is expected to provide both homographies and their weights.
+     * @param homographies list of homographies to estimate IAC.
+     * @throws IllegalArgumentException always thrown in this implementation.
+     */
+    @Override
+    public void setHomographies(List&lt;Transformation2D&gt; homographies)
+            throws IllegalArgumentException {
+<span class="fc" id="L146">        throw new IllegalArgumentException();        </span>
+    }
+    
+    /**
+     * Sets list of homographies to estimate IAC along with their corresponding
+     * weights.
+     * @param homographies list of homographies to estimate IAC.
+     * @param weights array containing a weight amount for each homography.
+     * The larger the value of a weight, the most significant the correspondence
+     * will be.
+     * @throws LockedException if estimator is locked.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     * for default constraints during IAC estimation.
+     */
+    public void setHomographiesAndWeights(List&lt;Transformation2D&gt; homographies,
+            double[] weights) throws LockedException, IllegalArgumentException {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L163">            throw new LockedException();</span>
+        }
+<span class="fc" id="L165">        internalSetHomographiesAndWeights(homographies, weights);</span>
+<span class="fc" id="L166">    }</span>
+    
+    /**
+     * Returns array containing a weight amount for each homography.
+     * The larger the value of a weight, the most significant the correspondence
+     * will be.
+     * @return array containing weights for each correspondence.
+     */
+    public double[] getWeights() {
+<span class="fc" id="L175">        return mWeights;</span>
+    }
+    
+    /**
+     * Returns boolean indicating whether weights have been provided and are
+     * available for retrieval.
+     * @return true if weights are available, false otherwise.
+     */
+    public boolean areWeightsAvailable() {
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        return mWeights != null;</span>
+    }
+    
+    /**
+     * Returns maximum number of homographies to be weighted and taken into 
+     * account.
+     * @return maximum number of homographies to be weighted.
+     */
+    public int getMaxHomographies() {
+<span class="fc" id="L193">        return mMaxHomographies;</span>
+    }
+    
+    /**
+     * Sets maximum number of homographies to be weighted and taken into 
+     * account.
+     * This method must be called after enforcing constraints, because the 
+     * minimum number of required homographies will be checked based on current
+     * settings.
+     * @param maxHomographies maximum number of homographies to be weighted.
+     * @throws IllegalArgumentException if provided value is less than the
+     * minimum allowed number of homographies.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setMaxHomographies(int maxHomographies) 
+            throws IllegalArgumentException, LockedException {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L210">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (maxHomographies &lt; getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L213">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L216">        mMaxHomographies = maxHomographies;</span>
+<span class="fc" id="L217">    }</span>
+    
+    /**
+     * Indicates if weights are sorted by so that largest weighted homographies
+     * are used first.
+     * @return true if weights are sorted, false otherwise.
+     */
+    public boolean isSortWeightsEnabled() {
+<span class="fc" id="L225">        return mSortWeights;</span>
+    }
+    
+    /**
+     * Specifies whether weights are sorted by so that largest weighted
+     * homographies are used first.
+     * @param sortWeights true if weights are sorted, false otherwise.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setSortWeightsEnabled(boolean sortWeights)
+            throws LockedException {
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L237">            throw new LockedException();</span>
+        }
+        
+<span class="fc" id="L240">        mSortWeights = sortWeights;</span>
+<span class="fc" id="L241">    }</span>
+    
+    /**
+     * Indicates if this estimator is ready to start the estimation.
+     * Estimator will be ready once both list of homographies and weights are
+     * available and enough homobraphies have been provided
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L251" title="1 of 4 branches missed.">        return super.isReady() &amp;&amp; areWeightsAvailable() &amp;&amp;</span>
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">                mHomographies.size() == mWeights.length;</span>
+    }
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC).
+     * @return estimated IAC.
+     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException if input has not yet been provided.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or 
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided. 
+     * Indeed, if provided homographies belong to the group of affine 
+     * transformations (or other groups contained within such as metric or 
+     * euclidean ones), this exception will raise because camera movements will
+     * be degenerate. To avoid this exception, homographies must be purely
+     * projective.
+     */
+    @Override
+    public ImageOfAbsoluteConic estimate() throws LockedException, 
+            NotReadyException, ImageOfAbsoluteConicEstimatorException {
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L274">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L277">            throw new NotReadyException();</span>
+        }
+        
+        try {
+<span class="fc" id="L281">            mLocked = true;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L283">                mListener.onEstimateStart(this);</span>
+            }
+            
+            ImageOfAbsoluteConic iac;
+<span class="fc bfc" id="L287" title="All 4 branches covered.">            if (mZeroSkewness &amp;&amp; mPrincipalPointAtOrigin) {</span>
+<span class="fc bfc" id="L288" title="All 2 branches covered.">                if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L289">                    iac = estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio();</span>
+                } else {
+<span class="fc" id="L291">                    iac = estimateZeroSkewnessAndPrincipalPointAtOrigin();</span>
+                }
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            } else if (mZeroSkewness) { //&amp;&amp; !mPrincipalPointAtOrigin</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">                if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L295">                    iac = estimateZeroSkewnessAndKnownFocalDistanceAspectRatio();</span>
+                } else {
+<span class="fc" id="L297">                    iac = estimateZeroSkewness();</span>
+                }
+<span class="fc bfc" id="L299" title="All 2 branches covered.">            } else if (mPrincipalPointAtOrigin){ //&amp;&amp; !mZeroSkewness</span>
+<span class="fc" id="L300">                iac = estimatePrincipalPointAtOrigin();</span>
+            } else {
+<span class="fc" id="L302">                iac = estimateNoConstraints();</span>
+            }
+            
+<span class="fc bfc" id="L305" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L306">                mListener.onEstimateEnd(this);</span>
+            }
+            
+<span class="fc" id="L309">            return iac;</span>
+        } finally {
+<span class="fc" id="L311">            mLocked = false;</span>
+        }
+    }        
+
+    /**
+     * Returns type of IAC estimator.
+     * @return type of IAC estimator.
+     */
+    @Override
+    public ImageOfAbsoluteConicEstimatorType getType() {
+<span class="fc" id="L321">        return ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR;</span>
+    }
+    
+    /**
+     * Sets list of homographies to estimate IAC.
+     * This method does not check whether estimator is locked.
+     * @param homographies list of homographies to estimate IAC.
+     * @param weights array containing a weight amount for each homography.
+     * The larger the value of a weight, the more significant the correspondence
+     * will be.
+     * @throws IllegalArgumentException if provided list of homographies does not
+     * contain enough elements to estimate the IAC using current settings.
+     */
+    private void internalSetHomographiesAndWeights(
+            List&lt;Transformation2D&gt; homographies, double[] weights) 
+            throws IllegalArgumentException {
+<span class="pc bpc" id="L337" title="1 of 4 branches missed.">        if (weights == null || homographies == null || </span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">                weights.length != homographies.size()) {</span>
+<span class="fc" id="L339">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L341">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L342">        mWeights = weights;</span>
+<span class="fc" id="L343">    }</span>
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC) without contraints.
+     * @return estimated IAC.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or 
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided.
+     */
+    private ImageOfAbsoluteConic estimateNoConstraints() 
+            throws ImageOfAbsoluteConicEstimatorException {
+        
+        try {
+<span class="fc" id="L357">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+                    mSortWeights, mMaxHomographies);
+<span class="fc" id="L359">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L360">            int nHomographies = selection.getNumSelected();</span>
+
+<span class="fc" id="L362">            Matrix a = new Matrix(2 * nHomographies, 6);</span>
+            
+<span class="fc" id="L364">            int index = 0, counter = 0;</span>
+<span class="fc" id="L365">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L366">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+                    ProjectiveTransformation2D.HOM_COORDS);
+            //elements ij of homography (last column is not required)
+            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+<span class="fc bfc" id="L370" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+                
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L373">                    weight = mWeights[index];</span>
+                    
+                    //convert homography into projective so it can be normalized
+<span class="fc" id="L376">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L377" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L378">                        t = new ProjectiveTransformation2D(h);</span>
+                    } else {
+<span class="fc" id="L380">                        t.setT(h);</span>
+                    }
+
+                    //normalize
+<span class="fc" id="L384">                    t.normalize();</span>
+
+                    //obtain elements of projective transformation matrix
+                    //there is no need to retrieve internal matrix h, as we already
+                    //hold a reference
+<span class="fc" id="L389">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L390">                    h12 = h.getElementAt(0, 1);</span>
+
+<span class="fc" id="L392">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L393">                    h22 = h.getElementAt(1, 1);</span>
+
+<span class="fc" id="L395">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L396">                    h32 = h.getElementAt(2, 1);</span>
+
+                    //fill first equation
+<span class="fc" id="L399">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L400">                    a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</span>
+<span class="fc" id="L401">                    a.setElementAt(counter, 2, h21 * h22);</span>
+<span class="fc" id="L402">                    a.setElementAt(counter, 3, h11 * h32 + h31 * h12);</span>
+<span class="fc" id="L403">                    a.setElementAt(counter, 4, h21 * h32 + h31 * h22);</span>
+<span class="fc" id="L404">                    a.setElementAt(counter, 5, h31 * h32);</span>
+
+                    //normalize row 
+<span class="fc" id="L407">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L408">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L409">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L410">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L411">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L412">                            Math.pow(a.getElementAt(counter, 4), 2.0) +</span>
+<span class="fc" id="L413">                            Math.pow(a.getElementAt(counter, 5), 2.0));</span>
+<span class="fc" id="L414">                    factor = weight / rowNorm ;</span>
+
+<span class="fc" id="L416">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * </span>
+                            factor);
+<span class="fc" id="L418">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L420">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L422">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+<span class="fc" id="L424">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+                            factor);
+<span class="fc" id="L426">                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *</span>
+                            factor);
+
+<span class="fc" id="L429">                    counter++;</span>
+
+                    //fill second equation
+<span class="fc" id="L432">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L433">                    a.setElementAt(counter, 1, 2.0 * (h11 * h21 - h12 * h22));</span>
+<span class="fc" id="L434">                    a.setElementAt(counter, 2, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L435">                    a.setElementAt(counter, 3, 2.0 * (h11 * h31 - h12 * h32));</span>
+<span class="fc" id="L436">                    a.setElementAt(counter, 4, 2.0 * (h21 * h31 - h22 * h32));</span>
+<span class="fc" id="L437">                    a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+
+                    //normalize row
+<span class="fc" id="L440">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L441">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L442">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L443">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L444">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L445">                            Math.pow(a.getElementAt(counter, 4), 2.0) +</span>
+<span class="fc" id="L446">                            Math.pow(a.getElementAt(counter, 5), 2.0));</span>
+<span class="fc" id="L447">                    factor = weight / rowNorm;</span>
+
+<span class="fc" id="L449">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L451">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L453">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L455">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+<span class="fc" id="L457">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+                            factor);
+<span class="fc" id="L459">                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *</span>
+                            factor);
+
+<span class="fc" id="L462">                    counter++;</span>
+                }
+                
+<span class="fc" id="L465">                index++;</span>
+<span class="fc" id="L466">            }</span>
+            
+<span class="fc" id="L468">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L469">            decomposer.decompose();</span>
+            
+<span class="pc bpc" id="L471" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+                //homographies constitute a degenerate camera movement.
+                //A linear combination of possible IAC's exist (i.e. solution is
+                //not unique up to scale)
+<span class="nc" id="L475">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L478">            Matrix v = decomposer.getV();</span>
+            
+            //use last column of V as IAC vector
+            
+            //the last column of V contains IAC matrix (B), which is symmetric
+            //and positive definite, ordered as follows: B11, B12, B22, B13, 
+            //B23, B33
+<span class="fc" id="L485">            double b11 = v.getElementAt(0, 5);</span>
+<span class="fc" id="L486">            double b12 = v.getElementAt(1, 5);</span>
+<span class="fc" id="L487">            double b22 = v.getElementAt(2, 5);</span>
+<span class="fc" id="L488">            double b13 = v.getElementAt(3, 5);</span>
+<span class="fc" id="L489">            double b23 = v.getElementAt(4, 5);</span>
+<span class="fc" id="L490">            double b33 = v.getElementAt(5, 5);</span>
+            
+            //A conic is defined as [A  B   D]
+            //                      [B  C   E]
+            //                      [D  E   F]
+<span class="fc" id="L495">            return new ImageOfAbsoluteConic(b11, b12, b22, b13, b23, b33);            </span>
+<span class="nc" id="L496">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L497">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+        }
+    }
+        
+    /**
+     * Estimates Image of Absolute Conic (IAC) assuming that skewness is zero.
+     * @return estimated IAC.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or 
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided.
+     */    
+    private ImageOfAbsoluteConic estimateZeroSkewness() 
+            throws ImageOfAbsoluteConicEstimatorException {
+        try {
+<span class="fc" id="L512">            int nHomographies = mHomographies.size();</span>
+            
+<span class="fc" id="L514">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+                    mSortWeights, mMaxHomographies);
+<span class="fc" id="L516">            boolean[] selected = selection.getSelected();</span>
+
+<span class="fc" id="L518">            Matrix a = new Matrix(2 * nHomographies, 5);</span>
+            
+<span class="fc" id="L520">            int index = 0, counter = 0;</span>
+<span class="fc" id="L521">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L522">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+                    ProjectiveTransformation2D.HOM_COORDS);
+            //elements ij of homography (last column is not required)
+            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+<span class="fc bfc" id="L526" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies){</span>
+                
+<span class="pc bpc" id="L528" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L529">                    weight = mWeights[index];</span>
+                    
+                    //convert homography into projective so it can be normalized
+<span class="fc" id="L532">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L533" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L534">                        t = new ProjectiveTransformation2D(h);</span>
+                    } else {
+<span class="fc" id="L536">                        t.setT(h);</span>
+                    }
+                
+                    //normalize
+<span class="fc" id="L540">                    t.normalize();</span>
+                
+                    //obtain elements of projective transformation matrix
+                    //there is no need to retrieve internal matrix h, as we already
+                    //hold a reference
+<span class="fc" id="L545">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L546">                    h12 = h.getElementAt(0, 1);</span>
+                
+<span class="fc" id="L548">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L549">                    h22 = h.getElementAt(1, 1);</span>
+                
+<span class="fc" id="L551">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L552">                    h32 = h.getElementAt(2, 1);</span>
+                
+                    //fill first equation
+<span class="fc" id="L555">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L556">                    a.setElementAt(counter, 1, h21 * h22);</span>
+<span class="fc" id="L557">                    a.setElementAt(counter, 2, h11 * h32 + h31 * h12);</span>
+<span class="fc" id="L558">                    a.setElementAt(counter, 3, h21 * h32 + h31 * h22);</span>
+<span class="fc" id="L559">                    a.setElementAt(counter, 4, h31 * h32);</span>
+                
+                    //normalize row 
+<span class="fc" id="L562">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L563">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L564">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L565">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L566">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L567">                            Math.pow(a.getElementAt(counter, 4), 2.0));</span>
+<span class="fc" id="L568">                    factor = weight / rowNorm;</span>
+                
+<span class="fc" id="L570">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L572">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L574">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L576">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+<span class="fc" id="L578">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+                            factor);
+
+<span class="fc" id="L581">                    counter++;</span>
+                                
+                    //fill second equation
+<span class="fc" id="L584">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L585">                    a.setElementAt(counter, 1, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L586">                    a.setElementAt(counter, 2, 2.0 * (h11 * h31 - h12 * h32));</span>
+<span class="fc" id="L587">                    a.setElementAt(counter, 3, 2.0 * (h21 * h31 - h22 * h32));</span>
+<span class="fc" id="L588">                    a.setElementAt(counter, 4, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+                
+                    //normalize row
+<span class="fc" id="L591">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L592">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L593">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L594">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L595">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L596">                            Math.pow(a.getElementAt(counter, 4), 2.0));</span>
+<span class="fc" id="L597">                    factor = weight / rowNorm;</span>
+
+<span class="fc" id="L599">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L601">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L603">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L605">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+<span class="fc" id="L607">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+                            factor);
+                
+<span class="fc" id="L610">                    counter++;</span>
+                }
+                
+<span class="fc" id="L613">                index++;</span>
+<span class="fc" id="L614">            }                                </span>
+            
+<span class="fc" id="L616">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L617">            decomposer.decompose();</span>
+            
+<span class="pc bpc" id="L619" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+                //homographies constitute a degenerate camera movement.
+                //A linear combination of possible IAC's exist (i.e. solution is
+                //not unique up to scale)
+<span class="nc" id="L623">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L626">            Matrix v = decomposer.getV();</span>
+            
+            //use last column of V as IAC vector
+            
+            //the last column of V contains IAC matrix (B), which is symmetric
+            //and positive definite, ordered as follows: B11, B12, B22, B13, 
+            //B23, B33
+<span class="fc" id="L633">            double b11 = v.getElementAt(0, 4);</span>
+<span class="fc" id="L634">            double b22 = v.getElementAt(1, 4);</span>
+<span class="fc" id="L635">            double b13 = v.getElementAt(2, 4);</span>
+<span class="fc" id="L636">            double b23 = v.getElementAt(3, 4);</span>
+<span class="fc" id="L637">            double b33 = v.getElementAt(4, 4);</span>
+            
+            //A conic is defined as [A  B   D]
+            //                      [B  C   E]
+            //                      [D  E   F]
+            //Since skewness is zero b12 = B = 0.0
+<span class="fc" id="L643">            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            </span>
+<span class="nc" id="L644">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L645">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+        }
+    }
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC) assuming that principal point is
+     * located at origin of coordinates.
+     * @return estimated IAC.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or 
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided.
+     */    
+    private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin() 
+            throws ImageOfAbsoluteConicEstimatorException {
+        
+        try {
+<span class="fc" id="L662">            int nHomographies = mHomographies.size();</span>
+            
+<span class="fc" id="L664">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+                    mSortWeights, mMaxHomographies);
+<span class="fc" id="L666">            boolean[] selected = selection.getSelected();</span>
+
+<span class="fc" id="L668">            Matrix a = new Matrix(2 * nHomographies, 4);</span>
+            
+<span class="fc" id="L670">            int index = 0, counter = 0;</span>
+<span class="fc" id="L671">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L672">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+                    ProjectiveTransformation2D.HOM_COORDS);
+            //elements ij of homography (last column is not required)
+            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+<span class="fc bfc" id="L676" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+                
+<span class="pc bpc" id="L678" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L679">                    weight = mWeights[index];</span>
+                    
+                    //convert homography into projective so it can be normalized
+<span class="fc" id="L682">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L683" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L684">                        t = new ProjectiveTransformation2D(h);</span>
+                    } else {
+<span class="fc" id="L686">                        t.setT(h);</span>
+                    }
+                
+                    //normalize
+<span class="fc" id="L690">                    t.normalize();</span>
+                
+                    //obtain elements of projective transformation matrix
+                    //there is no need to retrieve internal matrix h, as we already
+                    //hold a reference
+<span class="fc" id="L695">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L696">                    h12 = h.getElementAt(0, 1);</span>
+                
+<span class="fc" id="L698">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L699">                    h22 = h.getElementAt(1, 1);</span>
+                
+<span class="fc" id="L701">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L702">                    h32 = h.getElementAt(2, 1);</span>
+                                
+                    //fill first equation
+<span class="fc" id="L705">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L706">                    a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</span>
+<span class="fc" id="L707">                    a.setElementAt(counter, 2, h21 * h22);</span>
+<span class="fc" id="L708">                    a.setElementAt(counter, 3, h31 * h32);</span>
+                
+                    //normalize row 
+<span class="fc" id="L711">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L712">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L713">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L714">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L715">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L716">                    factor = weight / rowNorm;</span>
+                
+<span class="fc" id="L718">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L720">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L722">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L724">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+
+<span class="fc" id="L727">                    counter++;</span>
+                                                
+                    //fill second equation
+<span class="fc" id="L730">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L731">                    a.setElementAt(counter, 1, 2.0 * (h11 * h21 - h12 * h22));</span>
+<span class="fc" id="L732">                    a.setElementAt(counter, 2, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L733">                    a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+                
+                    //normalize row
+<span class="fc" id="L736">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L737">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L738">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L739">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L740">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L741">                    factor = weight / rowNorm;</span>
+
+<span class="fc" id="L743">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L745">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L747">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L749">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+                
+<span class="fc" id="L752">                    counter++;   </span>
+                }
+                
+<span class="fc" id="L755">                index++;</span>
+<span class="fc" id="L756">            }</span>
+            
+<span class="fc" id="L758">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L759">            decomposer.decompose();</span>
+            
+<span class="pc bpc" id="L761" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+                //homographies constitute a degenerate camera movement.
+                //A linear combination of possible IAC's exist (i.e. solution is
+                //not unique up to scale)
+<span class="nc" id="L765">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L768">            Matrix v = decomposer.getV();</span>
+            
+            //use last column of V as IAC vector
+            
+            //the last column of V contains IAC matrix (B), which is symmetric
+            //and positive definite, ordered as follows: B11, B12, B22, B13, 
+            //B23, B33
+<span class="fc" id="L775">            double b11 = v.getElementAt(0, 3);</span>
+<span class="fc" id="L776">            double b12 = v.getElementAt(1, 3);</span>
+<span class="fc" id="L777">            double b22 = v.getElementAt(2, 3);</span>
+<span class="fc" id="L778">            double b33 = v.getElementAt(3, 3);</span>
+            
+            //A conic is defined as [A  B   D]
+            //                      [B  C   E]
+            //                      [D  E   F]
+            //Since principal point is at origin of coordinates 
+            //b13 = D = 0.0, b23 = E = 0.0
+<span class="fc" id="L785">            return new ImageOfAbsoluteConic(b11, b12, b22, 0.0, 0.0, b33);</span>
+<span class="nc" id="L786">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L787">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+        }
+    }
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC) assuming that skewness is zero 
+     * and that principal point is located at origin of coordinates.
+     * @return estimated IAC.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided.
+     */    
+    private ImageOfAbsoluteConic estimateZeroSkewnessAndPrincipalPointAtOrigin() 
+            throws ImageOfAbsoluteConicEstimatorException {
+
+        try {
+<span class="fc" id="L804">            int nHomographies = mHomographies.size();</span>
+
+<span class="fc" id="L806">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+                    mSortWeights, mMaxHomographies);
+<span class="fc" id="L808">            boolean[] selected = selection.getSelected();</span>
+            
+<span class="fc" id="L810">            Matrix a = new Matrix(2 * nHomographies, 3);</span>
+            
+<span class="fc" id="L812">            int index = 0, counter = 0;</span>
+<span class="fc" id="L813">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L814">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+                    ProjectiveTransformation2D.HOM_COORDS);
+            //elements ij of homography (last column is not required)
+            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+<span class="fc bfc" id="L818" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+                
+<span class="pc bpc" id="L820" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L821">                    weight = mWeights[index];</span>
+                    
+                    //convert homography into projective so it can be normalized
+<span class="fc" id="L824">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L825" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L826">                        t = new ProjectiveTransformation2D(h);</span>
+                    } else {
+<span class="fc" id="L828">                        t.setT(h);</span>
+                    }
+                
+                    //normalize
+<span class="fc" id="L832">                    t.normalize();</span>
+                
+                    //obtain elements of projective transformation matrix
+                    //there is no need to retrieve internal matrix h, as we already
+                    //hold a reference
+<span class="fc" id="L837">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L838">                    h12 = h.getElementAt(0, 1);</span>
+                
+<span class="fc" id="L840">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L841">                    h22 = h.getElementAt(1, 1);</span>
+                
+<span class="fc" id="L843">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L844">                    h32 = h.getElementAt(2, 1);</span>
+                                
+                    //fill first equation
+<span class="fc" id="L847">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L848">                    a.setElementAt(counter, 1, h21 * h22);</span>
+<span class="fc" id="L849">                    a.setElementAt(counter, 2, h31 * h32);</span>
+                
+                    //normalize row 
+<span class="fc" id="L852">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L853">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L854">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L855">                            Math.pow(a.getElementAt(counter, 2), 2.0));</span>
+<span class="fc" id="L856">                    factor = weight / rowNorm;</span>
+                
+<span class="fc" id="L858">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L860">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L862">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+
+<span class="fc" id="L865">                    counter++;</span>
+                                                
+                    //fill second equation
+<span class="fc" id="L868">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L869">                    a.setElementAt(counter, 1, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L870">                    a.setElementAt(counter, 2, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+                
+                    //normalize row
+<span class="fc" id="L873">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L874">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L875">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L876">                            Math.pow(a.getElementAt(counter, 2), 2.0));</span>
+<span class="fc" id="L877">                    factor = weight / rowNorm;</span>
+
+<span class="fc" id="L879">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L881">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L883">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+                
+<span class="fc" id="L886">                    counter++;                   </span>
+                }
+                
+<span class="fc" id="L889">                index++;</span>
+<span class="fc" id="L890">            }</span>
+            
+<span class="fc" id="L892">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L893">            decomposer.decompose();</span>
+            
+<span class="pc bpc" id="L895" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+                //homographies constitute a degenerate camera movement.
+                //A linear combination of possible IAC's exist (i.e. solution is
+                //not unique up to scale)
+<span class="nc" id="L899">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L902">            Matrix v = decomposer.getV();</span>
+            
+            //use last column of V as IAC vector
+            
+            //the last column of V contains IAC matrix (B), which is symmetric
+            //and positive definite, ordered as follows: B11, B12, B22, B13, 
+            //B23, B33
+<span class="fc" id="L909">            double b11 = v.getElementAt(0, 2);</span>
+<span class="fc" id="L910">            double b22 = v.getElementAt(1, 2);</span>
+<span class="fc" id="L911">            double b33 = v.getElementAt(2, 2);</span>
+            
+            //A conic is defined as [A  B   D]
+            //                      [B  C   E]
+            //                      [D  E   F]
+            //Since principal point is at origin of coordinates 
+            //b12 = B = 0, b13 = D = 0.0, b23 = E = 0.0
+<span class="fc" id="L918">            return new ImageOfAbsoluteConic(b11, 0.0, b22, 0.0, 0.0, b33);</span>
+<span class="nc" id="L919">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L920">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+        }
+    }        
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC) assuming that skewness is zero 
+     * and that aspect ratio of focal distances is known.
+     * @return estimated IAC.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or 
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided.
+     */    
+    private ImageOfAbsoluteConic estimateZeroSkewnessAndKnownFocalDistanceAspectRatio() 
+            throws ImageOfAbsoluteConicEstimatorException {
+        try {
+<span class="fc" id="L936">            int nHomographies = mHomographies.size();</span>
+            
+<span class="fc" id="L938">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+                    mSortWeights, mMaxHomographies);
+<span class="fc" id="L940">            boolean[] selected = selection.getSelected();</span>
+
+<span class="fc" id="L942">            Matrix a = new Matrix(2 * nHomographies, 4);</span>
+<span class="fc" id="L943">            double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);</span>
+            
+<span class="fc" id="L945">            int index = 0, counter = 0;</span>
+<span class="fc" id="L946">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L947">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+                    ProjectiveTransformation2D.HOM_COORDS);
+            //elements ij of homography (last column is not required)
+            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+<span class="fc bfc" id="L951" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+                
+<span class="pc bpc" id="L953" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L954">                    weight = mWeights[index];</span>
+                    
+                    //convert homography into projective so it can be normalized
+<span class="fc" id="L957">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L958" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L959">                        t = new ProjectiveTransformation2D(h);</span>
+                    } else {
+<span class="fc" id="L961">                        t.setT(h);</span>
+                    }
+                
+                    //normalize
+<span class="fc" id="L965">                    t.normalize();</span>
+                
+                    //obtain elements of projective transformation matrix
+                    //there is no need to retrieve internal matrix h, as we already
+                    //hold a reference
+<span class="fc" id="L970">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L971">                    h12 = h.getElementAt(0, 1);</span>
+                
+<span class="fc" id="L973">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L974">                    h22 = h.getElementAt(1, 1);</span>
+                
+<span class="fc" id="L976">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L977">                    h32 = h.getElementAt(2, 1);</span>
+                
+                    //fill first equation
+<span class="fc" id="L980">                    a.setElementAt(counter, 0, h11 * h12 + </span>
+                            h21 * h22 / sqrAspectRatio);
+<span class="fc" id="L982">                    a.setElementAt(counter, 1, h11 * h32 + h31 * h12);</span>
+<span class="fc" id="L983">                    a.setElementAt(counter, 2, h21 * h32 + h31 * h22);</span>
+<span class="fc" id="L984">                    a.setElementAt(counter, 3, h31 * h32);</span>
+                
+                    //normalize row 
+<span class="fc" id="L987">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L988">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L989">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L990">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L991">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L992">                    factor = weight / rowNorm;</span>
+                
+<span class="fc" id="L994">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L996">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L998">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L1000">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+
+<span class="fc" id="L1003">                    counter++;</span>
+                                
+                    //fill second equation
+<span class="fc" id="L1006">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +</span>
+<span class="fc" id="L1007">                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0))/ sqrAspectRatio);</span>
+<span class="fc" id="L1008">                    a.setElementAt(counter, 1, 2.0 * (h11 * h31 - h12 * h32));</span>
+<span class="fc" id="L1009">                    a.setElementAt(counter, 2, 2.0 * (h21 * h31 - h22 * h32));</span>
+<span class="fc" id="L1010">                    a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+                
+                    //normalize row
+<span class="fc" id="L1013">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1014">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1015">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L1016">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L1017">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L1018">                    factor = weight / rowNorm;</span>
+
+<span class="fc" id="L1020">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L1022">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+<span class="fc" id="L1024">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+                            factor);
+<span class="fc" id="L1026">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+                            factor);
+                
+<span class="fc" id="L1029">                    counter++;</span>
+                }
+                
+<span class="fc" id="L1032">                index++;</span>
+<span class="fc" id="L1033">            }                                </span>
+            
+<span class="fc" id="L1035">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L1036">            decomposer.decompose();</span>
+            
+<span class="pc bpc" id="L1038" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+                //homographies constitute a degenerate camera movement.
+                //A linear combination of possible IAC's exist (i.e. solution is
+                //not unique up to scale)
+<span class="nc" id="L1042">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L1045">            Matrix v = decomposer.getV();</span>
+            
+            //use last column of V as IAC vector
+            
+            //the last column of V contains IAC matrix (B), which is symmetric
+            //and positive definite, ordered as follows: B11, B12, B22, B13, 
+            //B23, B33
+<span class="fc" id="L1052">            double b11 = v.getElementAt(0, 3);</span>
+<span class="fc" id="L1053">            double b13 = v.getElementAt(1, 3);</span>
+<span class="fc" id="L1054">            double b23 = v.getElementAt(2, 3);</span>
+<span class="fc" id="L1055">            double b33 = v.getElementAt(3, 3);</span>
+            
+<span class="fc" id="L1057">            double b22 = b11 / sqrAspectRatio;            </span>
+            
+            //A conic is defined as [A  B   D]
+            //                      [B  C   E]
+            //                      [D  E   F]
+            //Since skewness is zero b12 = B = 0.0
+<span class="fc" id="L1063">            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            </span>
+<span class="nc" id="L1064">        }catch(AlgebraException | SortingException e) {</span>
+<span class="nc" id="L1065">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+        }
+    }
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC) assuming that skewness is zero, 
+     * principal point is located at origin of coordinates and that aspect ratio
+     * of focal distances is known.
+     * @return estimated IAC.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     * estimation, usually because repeated homographies are provided, or 
+     * homographies corresponding to degenerate camera movements such as pure
+     * parallel translations where no additional data is really provided.
+     */    
+    private ImageOfAbsoluteConic estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio() 
+            throws ImageOfAbsoluteConicEstimatorException {
+
+        try {
+<span class="fc" id="L1083">            int nHomographies = mHomographies.size();</span>
+
+<span class="fc" id="L1085">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+                    mSortWeights, mMaxHomographies);
+<span class="fc" id="L1087">            boolean[] selected = selection.getSelected();</span>
+            
+<span class="fc" id="L1089">            Matrix a = new Matrix(2 * nHomographies, 2);</span>
+            
+<span class="fc" id="L1091">            double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);</span>
+            
+<span class="fc" id="L1093">            int index = 0, counter = 0;</span>
+<span class="fc" id="L1094">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L1095">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+                    ProjectiveTransformation2D.HOM_COORDS);
+            //elements ij of homography (last column is not required)
+            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+<span class="fc bfc" id="L1099" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+                
+<span class="pc bpc" id="L1101" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L1102">                    weight = mWeights[index];</span>
+                    
+                    //convert homography into projective so it can be normalized
+<span class="fc" id="L1105">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L1106" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L1107">                        t = new ProjectiveTransformation2D(h);</span>
+                    } else {
+<span class="fc" id="L1109">                        t.setT(h);</span>
+                    }
+                
+                    //normalize
+<span class="fc" id="L1113">                    t.normalize();</span>
+                
+                    //obtain elements of projective transformation matrix
+                    //there is no need to retrieve internal matrix h, as we already
+                    //hold a reference
+<span class="fc" id="L1118">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L1119">                    h12 = h.getElementAt(0, 1);</span>
+                
+<span class="fc" id="L1121">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L1122">                    h22 = h.getElementAt(1, 1);</span>
+                
+<span class="fc" id="L1124">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L1125">                    h32 = h.getElementAt(2, 1);</span>
+                                
+                    //fill first equation
+<span class="fc" id="L1128">                    a.setElementAt(counter, 0, h11 * h12 + </span>
+                            h21 * h22 / sqrAspectRatio);
+<span class="fc" id="L1130">                    a.setElementAt(counter, 1, h31 * h32);</span>
+                
+                    //normalize row 
+<span class="fc" id="L1133">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1134">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1135">                            Math.pow(a.getElementAt(counter, 1), 2.0));</span>
+<span class="fc" id="L1136">                    factor = weight / rowNorm;</span>
+                
+<span class="fc" id="L1138">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L1140">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+
+<span class="fc" id="L1143">                    counter++;</span>
+                                                
+                    //fill second equation
+<span class="fc" id="L1146">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +</span>
+<span class="fc" id="L1147">                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);</span>
+<span class="fc" id="L1148">                    a.setElementAt(counter, 1, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+                
+                    //normalize row
+<span class="fc" id="L1151">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1152">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1153">                            Math.pow(a.getElementAt(counter, 1), 2.0));</span>
+<span class="fc" id="L1154">                    factor = weight / rowNorm;</span>
+
+<span class="fc" id="L1156">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+                            factor);
+<span class="fc" id="L1158">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+                            factor);
+                
+<span class="fc" id="L1161">                    counter++;                   </span>
+                }
+                
+<span class="fc" id="L1164">                index++;</span>
+<span class="fc" id="L1165">            }</span>
+            
+<span class="fc" id="L1167">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L1168">            decomposer.decompose();</span>
+            
+<span class="pc bpc" id="L1170" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+                //homographies constitute a degenerate camera movement.
+                //A linear combination of possible IAC's exist (i.e. solution is
+                //not unique up to scale)
+<span class="nc" id="L1174">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+            }
+            
+<span class="fc" id="L1177">            Matrix v = decomposer.getV();</span>
+            
+            //use last column of V as IAC vector
+            
+            //the last column of V contains IAC matrix (B), which is symmetric
+            //and positive definite, ordered as follows: B11, B12, B22, B13, 
+            //B23, B33
+<span class="fc" id="L1184">            double b11 = v.getElementAt(0, 1);</span>
+<span class="fc" id="L1185">            double b33 = v.getElementAt(1, 1);</span>
+            
+<span class="fc" id="L1187">            double b22 = b11 / sqrAspectRatio;</span>
+            
+            //A conic is defined as [A  B   D]
+            //                      [B  C   E]
+            //                      [D  E   F]
+            //Since principal point is at origin of coordinates 
+            //b12 = B = 0, b13 = D = 0.0, b23 = E = 0.0
+<span class="fc" id="L1194">            return new ImageOfAbsoluteConic(b11, 0.0, b22, 0.0, 0.0, b33);</span>
+<span class="nc" id="L1195">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L1196">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
