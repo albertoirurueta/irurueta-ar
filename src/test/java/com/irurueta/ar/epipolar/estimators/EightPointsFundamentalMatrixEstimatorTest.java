@@ -471,7 +471,7 @@ public class EightPointsFundamentalMatrixEstimatorTest implements
         
         double leftEpipoleError, rightEpipoleError;
         double avgLeftEpipoleError = 0.0, avgRightEpipoleError = 0.0;        
-        for (int j = 0; j < TIMES; j++) {
+        for (int j = 0; j < 2 * TIMES; j++) {
             //randomly create two pinhole cameras
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             double alphaEuler1 = 0.0;
