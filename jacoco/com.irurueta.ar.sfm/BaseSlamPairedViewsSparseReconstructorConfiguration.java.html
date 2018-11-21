@@ -31,6 +31,7 @@ import java.io.Serializable;
  * @param &lt;C&gt; type defining calibration data.
  * @param &lt;T&gt; an actual implementation of a configuration class.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends BaseCalibrationData,
         T extends BaseSlamPairedViewsSparseReconstructorConfiguration&gt; extends
         BasePairedViewsSparseReconstructorConfiguration&lt;T&gt; implements Serializable {
@@ -77,25 +78,25 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * Indicates whether new available SLAM state is notified each time that a whole set of IMU
      * (Inertial Measurement Unit) data is received.
      */
-<span class="fc" id="L80">    private boolean mNotifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;</span>
+<span class="fc" id="L81">    private boolean mNotifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;</span>
 
     /**
      * Indicates whether any new camera that can be estimated by means of SLAM using IMU data, will be
      * notified each time that accelerometer, gyroscope and orientation data is received.
      */
-<span class="fc" id="L86">    private boolean mNotifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;</span>
+<span class="fc" id="L87">    private boolean mNotifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;</span>
 
     /**
      * Constructor.
      */
-<span class="fc" id="L91">    public BaseSlamPairedViewsSparseReconstructorConfiguration() {</span>
+<span class="fc" id="L92">    public BaseSlamPairedViewsSparseReconstructorConfiguration() {</span>
         //initialize default covariance
         try {
-<span class="fc" id="L94">            mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,</span>
+<span class="fc" id="L95">            mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,</span>
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L96">            mCameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);</span>
-<span class="pc" id="L97">        } catch (AlgebraException ignore) { }</span>
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L97">            mCameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);</span>
+<span class="pc" id="L98">        } catch (AlgebraException ignore) { }</span>
+<span class="fc" id="L99">    }</span>
 
     /**
      * Gets calibration data for accelerometer and gyroscope.
@@ -107,7 +108,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * @return calibration data or null.
      */
     public C getCalibrationData() {
-<span class="fc" id="L110">        return mCalibrationData;</span>
+<span class="fc" id="L111">        return mCalibrationData;</span>
     }
 
     /**
@@ -121,10 +122,10 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * @return this instance so that method can be easily chained.
      */
     public T setCalibrationData(C calibrationData) {
-<span class="fc" id="L124">        mCalibrationData = calibrationData;</span>
+<span class="fc" id="L125">        mCalibrationData = calibrationData;</span>
 
         //noinspection all
-<span class="fc" id="L127">        return (T)this;</span>
+<span class="fc" id="L128">        return (T)this;</span>
     }
 
     /**
@@ -137,7 +138,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * @return covariance of measured camera positions.
      */
     public Matrix getCameraPositionCovariance() {
-<span class="fc" id="L140">        return mCameraPositionCovariance;</span>
+<span class="fc" id="L141">        return mCameraPositionCovariance;</span>
     }
 
     /**
@@ -153,15 +154,15 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      */
     public T setCameraPositionCovariance(Matrix cameraPositionCovariance)
             throws IllegalArgumentException {
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (cameraPositionCovariance.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                cameraPositionCovariance.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {</span>
-<span class="nc" id="L158">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if (cameraPositionCovariance.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                cameraPositionCovariance.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {</span>
+<span class="nc" id="L159">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L161">        mCameraPositionCovariance = cameraPositionCovariance;</span>
+<span class="fc" id="L162">        mCameraPositionCovariance = cameraPositionCovariance;</span>
 
         //noinspection all
-<span class="fc" id="L164">        return (T)this;</span>
+<span class="fc" id="L165">        return (T)this;</span>
     }
 
     /**
@@ -173,13 +174,13 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      */
     public T setCameraPositionVariance(double variance) {
         try {
-<span class="fc" id="L176">            mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,</span>
+<span class="fc" id="L177">            mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,</span>
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L178">            mCameraPositionCovariance.multiplyByScalar(variance);</span>
-<span class="pc" id="L179">        } catch (AlgebraException ignore) { }</span>
+<span class="fc" id="L179">            mCameraPositionCovariance.multiplyByScalar(variance);</span>
+<span class="pc" id="L180">        } catch (AlgebraException ignore) { }</span>
 
         //noinspection all
-<span class="fc" id="L182">        return (T)this;</span>
+<span class="fc" id="L183">        return (T)this;</span>
     }
 
     /**
@@ -190,7 +191,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * of IMU data is received.
      */
     public boolean isNotifyAvailableSlamDataEnabled() {
-<span class="fc" id="L193">        return mNotifyAvailableSlamData;</span>
+<span class="fc" id="L194">        return mNotifyAvailableSlamData;</span>
     }
 
     /**
@@ -203,10 +204,10 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * @return this instance so that method can be easily chained.
      */
     public T setNotifyAvailableSlamDataEnabled(boolean notifyAvailableSlamData) {
-<span class="fc" id="L206">        mNotifyAvailableSlamData = notifyAvailableSlamData;</span>
+<span class="fc" id="L207">        mNotifyAvailableSlamData = notifyAvailableSlamData;</span>
 
         //noinspection all
-<span class="fc" id="L209">        return (T)this;</span>
+<span class="fc" id="L210">        return (T)this;</span>
     }
 
     /**
@@ -216,7 +217,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * @return true if any newly estimated camera is notified, false otherwise.
      */
     public boolean isNotifyEstimatedSlamCameraEnabled() {
-<span class="fc" id="L219">        return mNotifyEstimatedSlamCamera;</span>
+<span class="fc" id="L220">        return mNotifyEstimatedSlamCamera;</span>
     }
 
     /**
@@ -228,10 +229,10 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends Ba
      * @return this instance so that method can be easily chained.
      */
     public T setNotifyEstimatedSlamCameraEnabled(boolean notifyEstimatedSlamCamera) {
-<span class="fc" id="L231">        mNotifyEstimatedSlamCamera = notifyEstimatedSlamCamera;</span>
+<span class="fc" id="L232">        mNotifyEstimatedSlamCamera = notifyEstimatedSlamCamera;</span>
 
         //noinspection all
-<span class="fc" id="L234">        return (T)this;</span>
+<span class="fc" id="L235">        return (T)this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -36,14 +36,15 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * is faster than the Gold standard method, but can only correct small errors
  * (1 or 2 pixels).
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class SampsonSingleCorrector extends SingleCorrector {
     
     /**
      * Constructor.
      */
     public SampsonSingleCorrector() {
-<span class="fc" id="L45">        super();</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L46">        super();</span>
+<span class="fc" id="L47">    }</span>
     
     /**
      * Constructor.
@@ -51,8 +52,8 @@ public class SampsonSingleCorrector extends SingleCorrector {
      * geometry.
      */
     public SampsonSingleCorrector(FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L54">        super(fundamentalMatrix);</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L55">        super(fundamentalMatrix);</span>
+<span class="fc" id="L56">    }</span>
     
     /**
      * Constructor.
@@ -60,8 +61,8 @@ public class SampsonSingleCorrector extends SingleCorrector {
      * @param rightPoint matched point on right view to be corrected.
      */
     public SampsonSingleCorrector(Point2D leftPoint, Point2D rightPoint) {
-<span class="fc" id="L63">        super(leftPoint, rightPoint);</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L64">        super(leftPoint, rightPoint);</span>
+<span class="fc" id="L65">    }</span>
     
     /**
      * Constructor.
@@ -71,8 +72,8 @@ public class SampsonSingleCorrector extends SingleCorrector {
      */
     public SampsonSingleCorrector(Point2D leftPoint, Point2D rightPoint,
             FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L74">        super(leftPoint, rightPoint, fundamentalMatrix);</span>
-<span class="fc" id="L75">    }</span>
+<span class="fc" id="L75">        super(leftPoint, rightPoint, fundamentalMatrix);</span>
+<span class="fc" id="L76">    }</span>
     
     /**
      * Corrects the pair of provided matched points to be corrected.
@@ -81,17 +82,17 @@ public class SampsonSingleCorrector extends SingleCorrector {
      */
     @Override
     public void correct() throws NotReadyException {
-<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L85">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L86">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L88">        mLeftCorrectedPoint = Point2D.create(</span>
+<span class="fc" id="L89">        mLeftCorrectedPoint = Point2D.create(</span>
                 CoordinatesType.HOMOGENEOUS_COORDINATES);
-<span class="fc" id="L90">        mRightCorrectedPoint = Point2D.create(</span>
+<span class="fc" id="L91">        mRightCorrectedPoint = Point2D.create(</span>
                 CoordinatesType.HOMOGENEOUS_COORDINATES);        
-<span class="fc" id="L92">        correct(mLeftPoint, mRightPoint, mFundamentalMatrix, </span>
+<span class="fc" id="L93">        correct(mLeftPoint, mRightPoint, mFundamentalMatrix, </span>
                 mLeftCorrectedPoint, mRightCorrectedPoint);
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L95">    }</span>
     
     /**
      * Gets type of correction being used.
@@ -99,7 +100,7 @@ public class SampsonSingleCorrector extends SingleCorrector {
      */
     @Override
     public CorrectorType getType() {
-<span class="fc" id="L102">        return CorrectorType.SAMPSON_CORRECTOR;</span>
+<span class="fc" id="L103">        return CorrectorType.SAMPSON_CORRECTOR;</span>
     }
     
     /**
@@ -119,11 +120,11 @@ public class SampsonSingleCorrector extends SingleCorrector {
             Point2D correctedRightPoint) throws NotReadyException {
 
         
-<span class="fc" id="L122">        Line2D leftEpipolarLine = new Line2D();</span>
-<span class="fc" id="L123">        Line2D rightEpipolarLine = new Line2D();</span>
-<span class="fc" id="L124">        correct(leftPoint, rightPoint, fundamentalMatrix, correctedLeftPoint,</span>
+<span class="fc" id="L123">        Line2D leftEpipolarLine = new Line2D();</span>
+<span class="fc" id="L124">        Line2D rightEpipolarLine = new Line2D();</span>
+<span class="fc" id="L125">        correct(leftPoint, rightPoint, fundamentalMatrix, correctedLeftPoint,</span>
                 correctedRightPoint, leftEpipolarLine, rightEpipolarLine);
-<span class="fc" id="L126">    }</span>
+<span class="fc" id="L127">    }</span>
     
     /**
      * Corrects the pair of provided matched points to be corrected using 
@@ -148,41 +149,41 @@ public class SampsonSingleCorrector extends SingleCorrector {
             Line2D rightEpipolarLine) throws NotReadyException {
         
         //normalize to increase accuracy
-<span class="fc" id="L151">        leftPoint.normalize();</span>
-<span class="fc" id="L152">        rightPoint.normalize();</span>
-<span class="fc" id="L153">        fundamentalMatrix.normalize();</span>
+<span class="fc" id="L152">        leftPoint.normalize();</span>
+<span class="fc" id="L153">        rightPoint.normalize();</span>
+<span class="fc" id="L154">        fundamentalMatrix.normalize();</span>
         
-<span class="fc" id="L155">        fundamentalMatrix.leftEpipolarLine(rightPoint, leftEpipolarLine);</span>
-<span class="fc" id="L156">        fundamentalMatrix.rightEpipolarLine(leftPoint, rightEpipolarLine);</span>
+<span class="fc" id="L156">        fundamentalMatrix.leftEpipolarLine(rightPoint, leftEpipolarLine);</span>
+<span class="fc" id="L157">        fundamentalMatrix.rightEpipolarLine(leftPoint, rightEpipolarLine);</span>
         
-<span class="fc" id="L158">        leftEpipolarLine.normalize();</span>
-<span class="fc" id="L159">        rightEpipolarLine.normalize();</span>
+<span class="fc" id="L159">        leftEpipolarLine.normalize();</span>
+<span class="fc" id="L160">        rightEpipolarLine.normalize();</span>
         
-<span class="fc" id="L161">        double numerator = rightPoint.getHomX() * rightEpipolarLine.getA() +</span>
-<span class="fc" id="L162">                rightPoint.getHomY() * rightEpipolarLine.getB() +</span>
-<span class="fc" id="L163">                rightPoint.getHomW() * rightEpipolarLine.getC();</span>
+<span class="fc" id="L162">        double numerator = rightPoint.getHomX() * rightEpipolarLine.getA() +</span>
+<span class="fc" id="L163">                rightPoint.getHomY() * rightEpipolarLine.getB() +</span>
+<span class="fc" id="L164">                rightPoint.getHomW() * rightEpipolarLine.getC();</span>
         
-<span class="fc" id="L165">        double denominator = Math.pow(rightEpipolarLine.getA(), 2.0) +</span>
-<span class="fc" id="L166">                Math.pow(rightEpipolarLine.getB(), 2.0) +</span>
-<span class="fc" id="L167">                Math.pow(leftEpipolarLine.getA(), 2.0) +</span>
-<span class="fc" id="L168">                Math.pow(leftEpipolarLine.getB(), 2.0);</span>
+<span class="fc" id="L166">        double denominator = Math.pow(rightEpipolarLine.getA(), 2.0) +</span>
+<span class="fc" id="L167">                Math.pow(rightEpipolarLine.getB(), 2.0) +</span>
+<span class="fc" id="L168">                Math.pow(leftEpipolarLine.getA(), 2.0) +</span>
+<span class="fc" id="L169">                Math.pow(leftEpipolarLine.getB(), 2.0);</span>
         
-<span class="fc" id="L170">        double factor = numerator / denominator;</span>
+<span class="fc" id="L171">        double factor = numerator / denominator;</span>
         
-<span class="fc" id="L172">        double leftCorrectionX = factor * leftEpipolarLine.getA();</span>
-<span class="fc" id="L173">        double leftCorrectionY = factor * leftEpipolarLine.getB();</span>
-<span class="fc" id="L174">        double rightCorrectionX = factor * rightEpipolarLine.getA();</span>
-<span class="fc" id="L175">        double rightCorrectionY = factor * rightEpipolarLine.getB();</span>
+<span class="fc" id="L173">        double leftCorrectionX = factor * leftEpipolarLine.getA();</span>
+<span class="fc" id="L174">        double leftCorrectionY = factor * leftEpipolarLine.getB();</span>
+<span class="fc" id="L175">        double rightCorrectionX = factor * rightEpipolarLine.getA();</span>
+<span class="fc" id="L176">        double rightCorrectionY = factor * rightEpipolarLine.getB();</span>
         
-<span class="fc" id="L177">        double correctedLeftX = leftPoint.getInhomX() - leftCorrectionX;</span>
-<span class="fc" id="L178">        double correctedLeftY = leftPoint.getInhomY() - leftCorrectionY;</span>
-<span class="fc" id="L179">        double correctedRightX = rightPoint.getInhomX() - rightCorrectionX;</span>
-<span class="fc" id="L180">        double correctedRightY = rightPoint.getInhomY() - rightCorrectionY;</span>
+<span class="fc" id="L178">        double correctedLeftX = leftPoint.getInhomX() - leftCorrectionX;</span>
+<span class="fc" id="L179">        double correctedLeftY = leftPoint.getInhomY() - leftCorrectionY;</span>
+<span class="fc" id="L180">        double correctedRightX = rightPoint.getInhomX() - rightCorrectionX;</span>
+<span class="fc" id="L181">        double correctedRightY = rightPoint.getInhomY() - rightCorrectionY;</span>
         
-<span class="fc" id="L182">        correctedLeftPoint.setInhomogeneousCoordinates(correctedLeftX, </span>
+<span class="fc" id="L183">        correctedLeftPoint.setInhomogeneousCoordinates(correctedLeftX, </span>
                 correctedLeftY);
-<span class="fc" id="L184">        correctedRightPoint.setInhomogeneousCoordinates(correctedRightX, </span>
+<span class="fc" id="L185">        correctedRightPoint.setInhomogeneousCoordinates(correctedRightX, </span>
                 correctedRightY);
-<span class="fc" id="L186">    }</span>
+<span class="fc" id="L187">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

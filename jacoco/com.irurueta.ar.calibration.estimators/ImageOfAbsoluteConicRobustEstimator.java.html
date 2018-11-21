@@ -34,13 +34,14 @@ import java.util.List;
  * Implementions of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public abstract class ImageOfAbsoluteConicRobustEstimator {
     /**
      * Default robust estimator method when none is provided.
      * In general for IAC estimation is best to use PROSAC or RANSAC than
      * any other method, as it provides more robust results.
      */
-<span class="fc" id="L43">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =</span>
+<span class="fc" id="L44">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =</span>
             RobustEstimatorMethod.PROSAC;
     
     /**
@@ -171,12 +172,12 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     /**
      * Constructor.
      */
-<span class="fc" id="L174">    public ImageOfAbsoluteConicRobustEstimator(){</span>
-<span class="fc" id="L175">        mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
-<span class="fc" id="L176">        mConfidence = DEFAULT_CONFIDENCE;</span>
-<span class="fc" id="L177">        mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
-<span class="fc" id="L178">        mIACEstimator = new LMSEImageOfAbsoluteConicEstimator();</span>
-<span class="fc" id="L179">    }</span>
+<span class="fc" id="L175">    public ImageOfAbsoluteConicRobustEstimator(){</span>
+<span class="fc" id="L176">        mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L177">        mConfidence = DEFAULT_CONFIDENCE;</span>
+<span class="fc" id="L178">        mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L179">        mIACEstimator = new LMSEImageOfAbsoluteConicEstimator();</span>
+<span class="fc" id="L180">    }</span>
     
     /**
      * Constructor.
@@ -185,9 +186,9 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public ImageOfAbsoluteConicRobustEstimator(
             ImageOfAbsoluteConicRobustEstimatorListener listener){
-<span class="fc" id="L188">        this();</span>
-<span class="fc" id="L189">        mListener = listener;</span>
-<span class="fc" id="L190">    }</span>
+<span class="fc" id="L189">        this();</span>
+<span class="fc" id="L190">        mListener = listener;</span>
+<span class="fc" id="L191">    }</span>
     
     /**
      * Constructor.
@@ -200,9 +201,9 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public ImageOfAbsoluteConicRobustEstimator(
             List&lt;Transformation2D&gt; homographies) 
             throws IllegalArgumentException{
-<span class="fc" id="L203">        this();</span>
-<span class="fc" id="L204">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L205">    }</span>
+<span class="fc" id="L204">        this();</span>
+<span class="fc" id="L205">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L206">    }</span>
     
     /**
      * Constructor.
@@ -218,9 +219,9 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
             List&lt;Transformation2D&gt; homographies, 
             ImageOfAbsoluteConicRobustEstimatorListener listener)
             throws IllegalArgumentException{
-<span class="fc" id="L221">        this(listener);</span>
-<span class="fc" id="L222">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L223">    }</span>
+<span class="fc" id="L222">        this(listener);</span>
+<span class="fc" id="L223">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L224">    }</span>
     
     /**
      * Returns boolean indicating whether camera skewness is assumed to be zero
@@ -232,7 +233,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * skewness is estimated.
      */
     public boolean isZeroSkewness(){
-<span class="fc" id="L235">        return mIACEstimator.isZeroSkewness();</span>
+<span class="fc" id="L236">        return mIACEstimator.isZeroSkewness();</span>
     }
     
     /**
@@ -246,10 +247,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setZeroSkewness(boolean zeroSkewness) throws LockedException{
-<span class="fc bfc" id="L249" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
         
-<span class="fc" id="L251">        mIACEstimator.setZeroSkewness(zeroSkewness);</span>
-<span class="fc" id="L252">    }</span>
+<span class="fc" id="L252">        mIACEstimator.setZeroSkewness(zeroSkewness);</span>
+<span class="fc" id="L253">    }</span>
     
     /**
      * Returns boolean indicating whether principal point is assumed to be at
@@ -261,7 +262,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * coordinates, false if principal point must be estimated.
      */
     public boolean isPrincipalPointAtOrigin(){
-<span class="fc" id="L264">        return mIACEstimator.isPrincipalPointAtOrigin();</span>
+<span class="fc" id="L265">        return mIACEstimator.isPrincipalPointAtOrigin();</span>
     }
     
     /**
@@ -276,10 +277,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setPrincipalPointAtOrigin(boolean principalPointAtOrigin)
             throws LockedException{
-<span class="fc bfc" id="L279" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
         
-<span class="fc" id="L281">        mIACEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
-<span class="fc" id="L282">    }</span>
+<span class="fc" id="L282">        mIACEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
+<span class="fc" id="L283">    }</span>
     
     /**
      * Returns boolean indicating whether aspect ratio of focal distances (i.e.
@@ -293,7 +294,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
     public boolean isFocalDistanceAspectRatioKnown(){
-<span class="fc" id="L296">        return mIACEstimator.isFocalDistanceAspectRatioKnown();</span>
+<span class="fc" id="L297">        return mIACEstimator.isFocalDistanceAspectRatioKnown();</span>
     }
     
     /**
@@ -311,11 +312,11 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setFocalDistanceAspectRatioKnown(
             boolean focalDistanceAspectRatioKnown) throws LockedException{
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">        if(isLocked()) throw new LockedException();</span>
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">        if(isLocked()) throw new LockedException();</span>
         
-<span class="fc" id="L316">        mIACEstimator.setFocalDistanceAspectRatioKnown(</span>
+<span class="fc" id="L317">        mIACEstimator.setFocalDistanceAspectRatioKnown(</span>
                 focalDistanceAspectRatioKnown);
-<span class="fc" id="L318">    }</span>
+<span class="fc" id="L319">    }</span>
     
     /**
      * Returns aspect ratio of focal distances (i.e. vertical focal distance
@@ -336,7 +337,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return aspect ratio of focal distances.
      */    
     public double getFocalDistanceAspectRatio(){
-<span class="fc" id="L339">        return mIACEstimator.getFocalDistanceAspectRatio();</span>
+<span class="fc" id="L340">        return mIACEstimator.getFocalDistanceAspectRatio();</span>
     }
     
     /**
@@ -362,10 +363,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */    
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
             throws LockedException, IllegalArgumentException{
-<span class="pc bpc" id="L365" title="1 of 2 branches missed.">        if(isLocked()) throw new LockedException();</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">        if(isLocked()) throw new LockedException();</span>
         
-<span class="fc" id="L367">        mIACEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
-<span class="fc" id="L368">    }</span>
+<span class="fc" id="L368">        mIACEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
+<span class="fc" id="L369">    }</span>
     
     /**
      * Returns reference to listener to be notified of events such as when
@@ -373,7 +374,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return listener to be notified of events.
      */
     public ImageOfAbsoluteConicRobustEstimatorListener getListener(){
-<span class="fc" id="L376">        return mListener;</span>
+<span class="fc" id="L377">        return mListener;</span>
     }
     
     /**
@@ -385,9 +386,9 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public void setListener(
             ImageOfAbsoluteConicRobustEstimatorListener listener) 
             throws LockedException{
-<span class="fc bfc" id="L388" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
-<span class="fc" id="L389">        mListener = listener;</span>
-<span class="fc" id="L390">    }</span>
+<span class="fc bfc" id="L389" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc" id="L390">        mListener = listener;</span>
+<span class="fc" id="L391">    }</span>
     
     /**
      * Indicates whether listener has been provided and is available for
@@ -395,7 +396,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable(){
-<span class="fc bfc" id="L398" title="All 2 branches covered.">        return mListener != null;</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">        return mListener != null;</span>
     }
     
     /**
@@ -404,7 +405,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return true if locked, false otherwise.
      */
     public boolean isLocked(){
-<span class="fc" id="L407">        return mLocked;</span>
+<span class="fc" id="L408">        return mLocked;</span>
     }
     
     /**
@@ -414,7 +415,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * during estimation.
      */
     public float getProgressDelta(){
-<span class="fc" id="L417">        return mProgressDelta;</span>
+<span class="fc" id="L418">        return mProgressDelta;</span>
     }
     
     /**
@@ -429,12 +430,12 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setProgressDelta(float progressDelta)
             throws IllegalArgumentException, LockedException{
-<span class="fc bfc" id="L432" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
-<span class="fc bfc" id="L433" title="All 4 branches covered.">        if(progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
+<span class="fc bfc" id="L433" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc bfc" id="L434" title="All 4 branches covered.">        if(progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
                 progressDelta &gt; MAX_PROGRESS_DELTA)
-<span class="fc" id="L435">            throw new IllegalArgumentException();</span>
-<span class="fc" id="L436">        mProgressDelta = progressDelta;</span>
-<span class="fc" id="L437">    }</span>
+<span class="fc" id="L436">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L437">        mProgressDelta = progressDelta;</span>
+<span class="fc" id="L438">    }</span>
     
     /**
      * Returns amount of confidence expressed as a value between 0.0 and 1.0
@@ -444,7 +445,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence(){
-<span class="fc" id="L447">        return mConfidence;</span>
+<span class="fc" id="L448">        return mConfidence;</span>
     }
     
     /**
@@ -460,11 +461,11 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setConfidence(double confidence)
             throws IllegalArgumentException, LockedException{
-<span class="fc bfc" id="L463" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
-<span class="fc bfc" id="L464" title="All 4 branches covered.">        if(confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE)</span>
-<span class="fc" id="L465">            throw new IllegalArgumentException();</span>
-<span class="fc" id="L466">        mConfidence = confidence;</span>
-<span class="fc" id="L467">    }</span>
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc bfc" id="L465" title="All 4 branches covered.">        if(confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE)</span>
+<span class="fc" id="L466">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L467">        mConfidence = confidence;</span>
+<span class="fc" id="L468">    }</span>
     
     /**
      * Returns maximum allowed number of iterations. If maximum allowed number
@@ -473,7 +474,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations(){
-<span class="fc" id="L476">        return mMaxIterations;</span>
+<span class="fc" id="L477">        return mMaxIterations;</span>
     }
     
     /**
@@ -487,17 +488,17 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setMaxIterations(int maxIterations)
             throws IllegalArgumentException, LockedException{
-<span class="fc bfc" id="L490" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
-<span class="fc bfc" id="L491" title="All 2 branches covered.">        if(maxIterations &lt; MIN_ITERATIONS) throw new IllegalArgumentException();</span>
-<span class="fc" id="L492">        mMaxIterations = maxIterations;</span>
-<span class="fc" id="L493">    }</span>
+<span class="fc bfc" id="L491" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc bfc" id="L492" title="All 2 branches covered.">        if(maxIterations &lt; MIN_ITERATIONS) throw new IllegalArgumentException();</span>
+<span class="fc" id="L493">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L494">    }</span>
     
     /**
      * Gets list of homographies to estimate IAC.
      * @return list of homographies to estimate IAC.
      */
     public List&lt;Transformation2D&gt; getHomographies(){
-<span class="fc" id="L500">        return mHomographies;</span>
+<span class="fc" id="L501">        return mHomographies;</span>
     }
     
     /**
@@ -509,9 +510,9 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setHomographies(List&lt;Transformation2D&gt; homographies)
             throws LockedException, IllegalArgumentException{
-<span class="fc bfc" id="L512" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
-<span class="fc" id="L513">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L514">    }</span>
+<span class="fc bfc" id="L513" title="All 2 branches covered.">        if(isLocked()) throw new LockedException();</span>
+<span class="fc" id="L514">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L515">    }</span>
     
     /**
      * Returns minimum number of required homographies needed to estimate the
@@ -528,7 +529,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * IAC.
      */
     public int getMinNumberOfRequiredHomographies(){
-<span class="fc" id="L531">        return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
+<span class="fc" id="L532">        return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
     }
     
     /**
@@ -539,8 +540,8 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady(){
-<span class="fc bfc" id="L542" title="All 2 branches covered.">        return mHomographies != null &amp;&amp; </span>
-<span class="pc bpc" id="L543" title="1 of 2 branches missed.">                mHomographies.size() &gt;= getMinNumberOfRequiredHomographies();</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">        return mHomographies != null &amp;&amp; </span>
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">                mHomographies.size() &gt;= getMinNumberOfRequiredHomographies();</span>
     }
     
     /**
@@ -551,7 +552,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return quality scores corresponding to each homography.
      */
     public double[] getQualityScores(){
-<span class="fc" id="L554">        return null;</span>
+<span class="fc" id="L555">        return null;</span>
     }
     
     /**
@@ -566,7 +567,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * smaller than minimum required number of homographies.
      */
     public void setQualityScores(double[] qualityScores) throws LockedException,
-<span class="fc" id="L569">            IllegalArgumentException{}</span>
+<span class="fc" id="L570">            IllegalArgumentException{}</span>
     
     /**
      * Estimates Image of Absolute Conic (IAC).
@@ -596,18 +597,18 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public static ImageOfAbsoluteConicRobustEstimator create(
             RobustEstimatorMethod method){
-<span class="fc bfc" id="L599" title="All 5 branches covered.">        switch(method){</span>
+<span class="fc bfc" id="L600" title="All 5 branches covered.">        switch(method){</span>
             case LMedS:
-<span class="fc" id="L601">                return new LMedSImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L602">                return new LMedSImageOfAbsoluteConicRobustEstimator();</span>
             case MSAC:
-<span class="fc" id="L603">                return new MSACImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L604">                return new MSACImageOfAbsoluteConicRobustEstimator();</span>
             case PROSAC:
-<span class="fc" id="L605">                return new PROSACImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L606">                return new PROSACImageOfAbsoluteConicRobustEstimator();</span>
             case PROMedS:
-<span class="fc" id="L607">                return new PROMedSImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L608">                return new PROMedSImageOfAbsoluteConicRobustEstimator();</span>
             case RANSAC:
             default:
-<span class="fc" id="L610">                return new RANSACImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L611">                return new RANSACImageOfAbsoluteConicRobustEstimator();</span>
         }
     }
     
@@ -625,22 +626,22 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public static ImageOfAbsoluteConicRobustEstimator create(
             List&lt;Transformation2D&gt; homographies, double[] qualityScores, 
             RobustEstimatorMethod method) throws IllegalArgumentException{
-<span class="fc bfc" id="L628" title="All 5 branches covered.">        switch(method){</span>
+<span class="fc bfc" id="L629" title="All 5 branches covered.">        switch(method){</span>
             case LMedS:
-<span class="fc" id="L630">                return new LMedSImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L631">                return new LMedSImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
             case MSAC:
-<span class="fc" id="L633">                return new MSACImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L634">                return new MSACImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
             case PROSAC:
-<span class="fc" id="L636">                return new PROSACImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L637">                return new PROSACImageOfAbsoluteConicRobustEstimator(</span>
                         homographies, qualityScores);
             case PROMedS:
-<span class="fc" id="L639">                return new PROMedSImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L640">                return new PROMedSImageOfAbsoluteConicRobustEstimator(</span>
                         homographies, qualityScores);
             case RANSAC:
             default:
-<span class="fc" id="L643">                return new RANSACImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L644">                return new RANSACImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
         }
     }
@@ -658,22 +659,22 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public static ImageOfAbsoluteConicRobustEstimator create(
             List&lt;Transformation2D&gt; homographies, RobustEstimatorMethod method)
             throws IllegalArgumentException{
-<span class="fc bfc" id="L661" title="All 5 branches covered.">        switch(method){</span>
+<span class="fc bfc" id="L662" title="All 5 branches covered.">        switch(method){</span>
             case LMedS:
-<span class="fc" id="L663">                return new LMedSImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L664">                return new LMedSImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
             case MSAC:
-<span class="fc" id="L666">                return new MSACImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L667">                return new MSACImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
             case PROSAC:
-<span class="fc" id="L669">                return new PROSACImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L670">                return new PROSACImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
             case PROMedS:
-<span class="fc" id="L672">                return new PROMedSImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L673">                return new PROMedSImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
             case RANSAC:
             default:
-<span class="fc" id="L676">                return new RANSACImageOfAbsoluteConicRobustEstimator(</span>
+<span class="fc" id="L677">                return new RANSACImageOfAbsoluteConicRobustEstimator(</span>
                         homographies);
         }
     }
@@ -684,7 +685,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return an instance of an image of absolute conic robust estimator.
      */
     public static ImageOfAbsoluteConicRobustEstimator create(){
-<span class="fc" id="L687">        return create(DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L688">        return create(DEFAULT_ROBUST_METHOD);</span>
     }
     
     /**
@@ -699,7 +700,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public static ImageOfAbsoluteConicRobustEstimator create(
             List&lt;Transformation2D&gt; homographies, double[] qualityScores)
             throws IllegalArgumentException{
-<span class="fc" id="L702">        return create(homographies, qualityScores, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L703">        return create(homographies, qualityScores, DEFAULT_ROBUST_METHOD);</span>
     }
     
     /**
@@ -713,7 +714,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public static ImageOfAbsoluteConicRobustEstimator create(
             List&lt;Transformation2D&gt; homographies) 
             throws IllegalArgumentException{
-<span class="fc" id="L716">        return create(homographies, DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L717">        return create(homographies, DEFAULT_ROBUST_METHOD);</span>
     }
         
     /**
@@ -730,85 +731,85 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     protected double residual(ImageOfAbsoluteConic iac, 
             Transformation2D homography){
         
-<span class="fc" id="L733">        iac.normalize();</span>
-<span class="pc bpc" id="L734" title="1 of 2 branches missed.">        if(homography instanceof ProjectiveTransformation2D){</span>
-<span class="fc" id="L735">            ((ProjectiveTransformation2D)homography).normalize();</span>
+<span class="fc" id="L734">        iac.normalize();</span>
+<span class="pc bpc" id="L735" title="1 of 2 branches missed.">        if(homography instanceof ProjectiveTransformation2D){</span>
+<span class="fc" id="L736">            ((ProjectiveTransformation2D)homography).normalize();</span>
         }
         
         try{
-<span class="fc bfc" id="L739" title="All 2 branches covered.">            if(mIACMatrix == null) mIACMatrix = iac.asMatrix();</span>
-<span class="fc" id="L740">            else iac.asMatrix(mIACMatrix);</span>
+<span class="fc bfc" id="L740" title="All 2 branches covered.">            if(mIACMatrix == null) mIACMatrix = iac.asMatrix();</span>
+<span class="fc" id="L741">            else iac.asMatrix(mIACMatrix);</span>
             
-<span class="fc bfc" id="L742" title="All 2 branches covered.">            if(mHomMatrix == null) mHomMatrix = homography.asMatrix();</span>
-<span class="fc" id="L743">            else homography.asMatrix(mHomMatrix);</span>
+<span class="fc bfc" id="L743" title="All 2 branches covered.">            if(mHomMatrix == null) mHomMatrix = homography.asMatrix();</span>
+<span class="fc" id="L744">            else homography.asMatrix(mHomMatrix);</span>
             
-<span class="fc bfc" id="L745" title="All 2 branches covered.">            if(mSubMatrixLeft == null){</span>
-<span class="fc" id="L746">                mSubMatrixLeft = new double[</span>
+<span class="fc bfc" id="L746" title="All 2 branches covered.">            if(mSubMatrixLeft == null){</span>
+<span class="fc" id="L747">                mSubMatrixLeft = new double[</span>
                         ProjectiveTransformation2D.HOM_COORDS];
             }
-<span class="fc bfc" id="L749" title="All 2 branches covered.">            if(mSubMatrixRight == null){</span>
-<span class="fc" id="L750">                mSubMatrixRight = new Matrix(</span>
+<span class="fc bfc" id="L750" title="All 2 branches covered.">            if(mSubMatrixRight == null){</span>
+<span class="fc" id="L751">                mSubMatrixRight = new Matrix(</span>
                         ProjectiveTransformation2D.HOM_COORDS, 1);
             }
-<span class="fc bfc" id="L753" title="All 2 branches covered.">            if(mMult1 == null){</span>
-<span class="fc" id="L754">                mMult1 = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 1);</span>
+<span class="fc bfc" id="L754" title="All 2 branches covered.">            if(mMult1 == null){</span>
+<span class="fc" id="L755">                mMult1 = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 1);</span>
             }
             
             //1st equation h1'*IAC*h2 = 0
             
             //1st column of homography
-<span class="fc" id="L760">            mHomMatrix.getSubmatrixAsArray(0, 0, </span>
+<span class="fc" id="L761">            mHomMatrix.getSubmatrixAsArray(0, 0, </span>
                     ProjectiveTransformation2D.HOM_COORDS - 1, 0, 
                     mSubMatrixLeft);
             //2nd column of homography
-<span class="fc" id="L764">            mHomMatrix.getSubmatrix(0, 1, </span>
+<span class="fc" id="L765">            mHomMatrix.getSubmatrix(0, 1, </span>
                     ProjectiveTransformation2D.HOM_COORDS - 1, 1, 
                     mSubMatrixRight);
             
             //IAC * h2
-<span class="fc" id="L769">            mIACMatrix.multiply(mSubMatrixRight, mMult1);</span>
+<span class="fc" id="L770">            mIACMatrix.multiply(mSubMatrixRight, mMult1);</span>
             
             //h1' * (IAC * h2)
-<span class="fc" id="L772">            double error1 = Math.abs(ArrayUtils.dotProduct(mSubMatrixLeft, </span>
-<span class="fc" id="L773">                    mMult1.getBuffer()));</span>
+<span class="fc" id="L773">            double error1 = Math.abs(ArrayUtils.dotProduct(mSubMatrixLeft, </span>
+<span class="fc" id="L774">                    mMult1.getBuffer()));</span>
             
             //2nd equation h1'*IAC*h1 - h2'*IAC*h2 = 0
             
             //1st column of homography
-<span class="fc" id="L778">            mHomMatrix.getSubmatrixAsArray(0, 0, </span>
+<span class="fc" id="L779">            mHomMatrix.getSubmatrixAsArray(0, 0, </span>
                     ProjectiveTransformation2D.HOM_COORDS - 1, 0, 
                     mSubMatrixLeft);            
-<span class="fc" id="L781">            mHomMatrix.getSubmatrix(0, 0, </span>
+<span class="fc" id="L782">            mHomMatrix.getSubmatrix(0, 0, </span>
                     ProjectiveTransformation2D.HOM_COORDS - 1, 0, 
                     mSubMatrixRight);
             
             //IAC * h1
-<span class="fc" id="L786">            mIACMatrix.multiply(mSubMatrixRight, mMult1);</span>
+<span class="fc" id="L787">            mIACMatrix.multiply(mSubMatrixRight, mMult1);</span>
             
             //h1' * (IAC * h1)
-<span class="fc" id="L789">            double error2a = ArrayUtils.dotProduct(mSubMatrixLeft, </span>
-<span class="fc" id="L790">                    mMult1.getBuffer());</span>
+<span class="fc" id="L790">            double error2a = ArrayUtils.dotProduct(mSubMatrixLeft, </span>
+<span class="fc" id="L791">                    mMult1.getBuffer());</span>
             
             //2nd column of homography
-<span class="fc" id="L793">            mHomMatrix.getSubmatrixAsArray(0, 1, </span>
+<span class="fc" id="L794">            mHomMatrix.getSubmatrixAsArray(0, 1, </span>
                     ProjectiveTransformation2D.HOM_COORDS - 1, 1, 
                     mSubMatrixLeft);            
-<span class="fc" id="L796">            mHomMatrix.getSubmatrix(0, 1, </span>
+<span class="fc" id="L797">            mHomMatrix.getSubmatrix(0, 1, </span>
                     ProjectiveTransformation2D.HOM_COORDS - 1, 1, 
                     mSubMatrixRight);
             
             //IAC * h2
-<span class="fc" id="L801">            mIACMatrix.multiply(mSubMatrixRight, mMult1);</span>
+<span class="fc" id="L802">            mIACMatrix.multiply(mSubMatrixRight, mMult1);</span>
             
             //h2' * (IAC * h1)
-<span class="fc" id="L804">            double error2b = ArrayUtils.dotProduct(mSubMatrixLeft, </span>
-<span class="fc" id="L805">                    mMult1.getBuffer());</span>
+<span class="fc" id="L805">            double error2b = ArrayUtils.dotProduct(mSubMatrixLeft, </span>
+<span class="fc" id="L806">                    mMult1.getBuffer());</span>
             
-<span class="fc" id="L807">            double error2 = Math.abs(error2a - error2b);</span>
+<span class="fc" id="L808">            double error2 = Math.abs(error2a - error2b);</span>
             
-<span class="fc" id="L809">            return 0.5 * (error1 + error2);</span>
-<span class="nc" id="L810">        }catch(AlgebraException e){</span>
-<span class="nc" id="L811">            return Double.MAX_VALUE;</span>
+<span class="fc" id="L810">            return 0.5 * (error1 + error2);</span>
+<span class="nc" id="L811">        }catch(AlgebraException e){</span>
+<span class="nc" id="L812">            return Double.MAX_VALUE;</span>
         }
     }
     
@@ -821,11 +822,11 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     private void internalSetHomographies(List&lt;Transformation2D&gt; homographies)
             throws IllegalArgumentException{
-<span class="fc bfc" id="L824" title="All 2 branches covered.">        if(homographies == null || </span>
-<span class="fc bfc" id="L825" title="All 2 branches covered.">                homographies.size() &lt; getMinNumberOfRequiredHomographies())</span>
-<span class="fc" id="L826">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L825" title="All 2 branches covered.">        if(homographies == null || </span>
+<span class="fc bfc" id="L826" title="All 2 branches covered.">                homographies.size() &lt; getMinNumberOfRequiredHomographies())</span>
+<span class="fc" id="L827">            throw new IllegalArgumentException();</span>
         
-<span class="fc" id="L828">        mHomographies = homographies;</span>
-<span class="fc" id="L829">    }    </span>
+<span class="fc" id="L829">        mHomographies = homographies;</span>
+<span class="fc" id="L830">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

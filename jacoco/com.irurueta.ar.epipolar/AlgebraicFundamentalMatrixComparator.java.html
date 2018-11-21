@@ -32,6 +32,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * as the algebraic distance decreases, the value returned by this 
  * implementation has no geometric meaning at all.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class AlgebraicFundamentalMatrixComparator extends 
         FundamentalMatrixComparator {
     
@@ -39,8 +40,8 @@ public class AlgebraicFundamentalMatrixComparator extends
      * Constructor.
      */
     public AlgebraicFundamentalMatrixComparator() {
-<span class="fc" id="L42">        super();</span>
-<span class="fc" id="L43">    }</span>
+<span class="fc" id="L43">        super();</span>
+<span class="fc" id="L44">    }</span>
     
     /**
      * Constructor.
@@ -51,8 +52,8 @@ public class AlgebraicFundamentalMatrixComparator extends
     public AlgebraicFundamentalMatrixComparator(
             FundamentalMatrix groundTruthFundamentalMatrix,
             FundamentalMatrix otherFundamentalMatrix) {
-<span class="fc" id="L54">        super(groundTruthFundamentalMatrix, otherFundamentalMatrix);</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L55">        super(groundTruthFundamentalMatrix, otherFundamentalMatrix);</span>
+<span class="fc" id="L56">    }</span>
     
     /**
      * Constructor.
@@ -60,8 +61,8 @@ public class AlgebraicFundamentalMatrixComparator extends
      */
     public AlgebraicFundamentalMatrixComparator(
             FundamentalMatrixComparatorListener listener) {
-<span class="fc" id="L63">        super(listener);</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L64">        super(listener);</span>
+<span class="fc" id="L65">    }</span>
     
     /**
      * Constructor.
@@ -74,8 +75,8 @@ public class AlgebraicFundamentalMatrixComparator extends
             FundamentalMatrix groundTruthFundamentalMatrix,
             FundamentalMatrix otherFundamentalMatrix,
             FundamentalMatrixComparatorListener listener) {
-<span class="fc" id="L77">        super(groundTruthFundamentalMatrix, otherFundamentalMatrix, listener);</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L78">        super(groundTruthFundamentalMatrix, otherFundamentalMatrix, listener);</span>
+<span class="fc" id="L79">    }</span>
     
 
     /**
@@ -93,45 +94,45 @@ public class AlgebraicFundamentalMatrixComparator extends
     @Override
     public double compare() throws NotReadyException, LockedException, 
             FundamentalMatrixComparatorException {
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L97">            throw new LockedException();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L98">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L100">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L101">            throw new NotReadyException();</span>
         }
                 
         try {
-<span class="fc" id="L104">            mLocked = true;</span>
+<span class="fc" id="L105">            mLocked = true;</span>
             
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L107">                mListener.onCompareStart(this);            </span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L108">                mListener.onCompareStart(this);            </span>
             }            
             
-<span class="fc" id="L110">            mGroundTruthFundamentalMatrix.normalize();</span>
-<span class="fc" id="L111">            mOtherFundamentalMatrix.normalize();</span>
+<span class="fc" id="L111">            mGroundTruthFundamentalMatrix.normalize();</span>
+<span class="fc" id="L112">            mOtherFundamentalMatrix.normalize();</span>
             
-<span class="fc" id="L113">            Matrix F1 = mGroundTruthFundamentalMatrix.getInternalMatrix();</span>
-<span class="fc" id="L114">            Matrix F2 = mOtherFundamentalMatrix.getInternalMatrix();</span>
+<span class="fc" id="L114">            Matrix F1 = mGroundTruthFundamentalMatrix.getInternalMatrix();</span>
+<span class="fc" id="L115">            Matrix F2 = mOtherFundamentalMatrix.getInternalMatrix();</span>
                             
-<span class="fc" id="L116">            Matrix diff = F1.subtractAndReturnNew(F2);</span>
-<span class="fc" id="L117">            Matrix sum = F1.addAndReturnNew(F2);</span>
+<span class="fc" id="L117">            Matrix diff = F1.subtractAndReturnNew(F2);</span>
+<span class="fc" id="L118">            Matrix sum = F1.addAndReturnNew(F2);</span>
             
-<span class="fc" id="L119">            double normDiff = Utils.normF(diff);</span>
-<span class="fc" id="L120">            double normSum = Utils.normF(sum);</span>
+<span class="fc" id="L120">            double normDiff = Utils.normF(diff);</span>
+<span class="fc" id="L121">            double normSum = Utils.normF(sum);</span>
             
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            if(normDiff &gt; 1.0) normDiff = 2.0 - normDiff;</span>
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">            if(normSum &gt; 1.0) normSum = 2.0 - normSum;</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">            if(normDiff &gt; 1.0) normDiff = 2.0 - normDiff;</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">            if(normSum &gt; 1.0) normSum = 2.0 - normSum;</span>
             
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L126">                mListener.onCompareEnd(this);</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L127">                mListener.onCompareEnd(this);</span>
             }
         
-<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            return normDiff &lt; normSum ? normDiff : normSum;</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">            return normDiff &lt; normSum ? normDiff : normSum;</span>
             
-<span class="nc" id="L131">        } catch (AlgebraException | GeometryException e) {</span>
-<span class="nc" id="L132">            throw new FundamentalMatrixComparatorException(e);</span>
+<span class="nc" id="L132">        } catch (AlgebraException | GeometryException e) {</span>
+<span class="nc" id="L133">            throw new FundamentalMatrixComparatorException(e);</span>
         }finally{
-<span class="fc" id="L134">            mLocked = false;</span>
+<span class="fc" id="L135">            mLocked = false;</span>
         }        
     }
 
@@ -141,7 +142,7 @@ public class AlgebraicFundamentalMatrixComparator extends
      */    
     @Override
     public FundamentalMatrixComparatorType getType() {
-<span class="fc" id="L144">        return FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR;</span>
+<span class="fc" id="L145">        return FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

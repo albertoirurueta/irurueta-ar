@@ -41,7 +41,7 @@ import java.util.List;
  * of the image plane (zero), and both horizontal and vertical focal planes are
  * equal.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public abstract class DualAbsoluteQuadricEstimator {
     
     /**
@@ -1004,7 +1004,7 @@ public abstract class DualAbsoluteQuadricEstimator {
             
 <span class="fc" id="L1005">            Complex[] roots = poly.getRoots();</span>
 
-<span class="pc bpc" id="L1007" title="1 of 2 branches missed.">            if (roots != null) {</span>
+<span class="fc bfc" id="L1007" title="All 2 branches covered.">            if (roots != null) {</span>
                 //pick best solution (closest real root) = evaluation closest to 
                 //zero
 <span class="fc" id="L1010">                double polyEval, bestPolyEval = Double.MAX_VALUE;</span>
@@ -1030,36 +1030,36 @@ public abstract class DualAbsoluteQuadricEstimator {
                 //if no roots could be found, it might be due to numerical
                 //inaccuracies, so we find minimum or maximum of polynomial
                 //which evaluates closest to zero
-<span class="nc" id="L1033">                double[] extrema = poly.getExtrema();</span>
-<span class="nc bnc" id="L1034" title="All 2 branches missed.">                if (extrema == null) {</span>
+<span class="fc" id="L1033">                double[] extrema = poly.getExtrema();</span>
+<span class="pc bpc" id="L1034" title="1 of 2 branches missed.">                if (extrema == null) {</span>
                     //polynomial has no extrema, which means it is degenerate
 <span class="nc" id="L1036">                    throw new DualAbsoluteQuadricEstimatorException();</span>
                 }
                 
-<span class="nc" id="L1039">                double polyEval, bestPolyEval = Double.MAX_VALUE;</span>
-<span class="nc bnc" id="L1040" title="All 2 branches missed.">                for (double extremum : extrema) {</span>
-<span class="nc" id="L1041">                    polyEval = Math.abs(poly.evaluate(extremum));</span>
-<span class="nc bnc" id="L1042" title="All 2 branches missed.">                    if (polyEval &lt; bestPolyEval) {</span>
-<span class="nc" id="L1043">                        bestPolyEval = polyEval;</span>
-<span class="nc" id="L1044">                        double a = a1 + extremum * a2;</span>
-<span class="nc" id="L1045">                        double b = b1 + extremum * b2;</span>
-<span class="nc" id="L1046">                        double c = c1 + extremum * c2;</span>
-<span class="nc" id="L1047">                        double d = d1 + extremum * d2;</span>
-<span class="nc" id="L1048">                        double e = e1 + extremum * e2;</span>
-<span class="nc" id="L1049">                        double f = f1 + extremum * f2;</span>
-<span class="nc" id="L1050">                        double g = g1 + extremum * g2;</span>
-<span class="nc" id="L1051">                        double h = h1 + extremum * h2;</span>
-<span class="nc" id="L1052">                        double i = i1 + extremum * i2;</span>
-<span class="nc" id="L1053">                        double j = j1 + extremum * j2;</span>
-<span class="nc" id="L1054">                        result.setParameters(a, b, c, d, e, f, g, h, i, j);                        </span>
+<span class="fc" id="L1039">                double polyEval, bestPolyEval = Double.MAX_VALUE;</span>
+<span class="fc bfc" id="L1040" title="All 2 branches covered.">                for (double extremum : extrema) {</span>
+<span class="fc" id="L1041">                    polyEval = Math.abs(poly.evaluate(extremum));</span>
+<span class="pc bpc" id="L1042" title="1 of 2 branches missed.">                    if (polyEval &lt; bestPolyEval) {</span>
+<span class="fc" id="L1043">                        bestPolyEval = polyEval;</span>
+<span class="fc" id="L1044">                        double a = a1 + extremum * a2;</span>
+<span class="fc" id="L1045">                        double b = b1 + extremum * b2;</span>
+<span class="fc" id="L1046">                        double c = c1 + extremum * c2;</span>
+<span class="fc" id="L1047">                        double d = d1 + extremum * d2;</span>
+<span class="fc" id="L1048">                        double e = e1 + extremum * e2;</span>
+<span class="fc" id="L1049">                        double f = f1 + extremum * f2;</span>
+<span class="fc" id="L1050">                        double g = g1 + extremum * g2;</span>
+<span class="fc" id="L1051">                        double h = h1 + extremum * h2;</span>
+<span class="fc" id="L1052">                        double i = i1 + extremum * i2;</span>
+<span class="fc" id="L1053">                        double j = j1 + extremum * j2;</span>
+<span class="fc" id="L1054">                        result.setParameters(a, b, c, d, e, f, g, h, i, j);                        </span>
                     }
                 }
                 
-<span class="nc bnc" id="L1058" title="All 2 branches missed.">                if (mValidateEnforcedSingularity) {</span>
+<span class="pc bpc" id="L1058" title="1 of 2 branches missed.">                if (mValidateEnforcedSingularity) {</span>
                     //check that determinant of estimated DAQ is below allowed 
                     //threshold
-<span class="nc" id="L1061">                    double absDet = Math.abs(Utils.det(result.asMatrix()));</span>
-<span class="nc bnc" id="L1062" title="All 2 branches missed.">                    if (absDet &gt; mDeterminantThreshold) {</span>
+<span class="fc" id="L1061">                    double absDet = Math.abs(Utils.det(result.asMatrix()));</span>
+<span class="pc bpc" id="L1062" title="1 of 2 branches missed.">                    if (absDet &gt; mDeterminantThreshold) {</span>
                         //DAQ does not have rank 3
 <span class="nc" id="L1064">                        throw new DualAbsoluteQuadricEstimatorException();</span>
                     }

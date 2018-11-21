@@ -28,6 +28,7 @@ import java.io.Serializable;
  * account absolute orientation.
  * @param &lt;D&gt; type of calibration data.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCalibrationData&gt; extends 
         BaseSlamCalibrator&lt;D&gt; implements Serializable {
     
@@ -35,12 +36,12 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      * Timestamp expressed in nanoseconds since the epoch time of the last
      * sample containing absolute orientation.
      */
-<span class="fc" id="L38">    protected long mOrientationTimestampNanos = -1;</span>
+<span class="fc" id="L39">    protected long mOrientationTimestampNanos = -1;</span>
     
     /**
      * Number of orientation samples accumulated since last full sample.
      */
-<span class="fc" id="L43">    protected int mAccumulatedOrientationSamples = 0;</span>
+<span class="fc" id="L44">    protected int mAccumulatedOrientationSamples = 0;</span>
 
     /**
      * Average orientation accumulated since last full sample.
@@ -60,9 +61,9 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      */
     public AbsoluteOrientationBaseSlamCalibrator(int sampleLength) 
             throws IllegalArgumentException {
-<span class="fc" id="L63">        super(sampleLength);</span>
-<span class="fc" id="L64">        mAccumulatedOrientation = new Quaternion();</span>
-<span class="fc" id="L65">    }</span>
+<span class="fc" id="L64">        super(sampleLength);</span>
+<span class="fc" id="L65">        mAccumulatedOrientation = new Quaternion();</span>
+<span class="fc" id="L66">    }</span>
     
     /**
      * Gets timestamp expressed in nanoseconds since the epoch time of the last
@@ -71,7 +72,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      * last orientation sample, or -1.
      */
     public long getOrientationTimestampNanos() {
-<span class="fc" id="L74">        return mOrientationTimestampNanos;</span>
+<span class="fc" id="L75">        return mOrientationTimestampNanos;</span>
     }
     
     /**
@@ -79,7 +80,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      * @return orientation accumulated since last full sample.
      */
     public Rotation3D getAccumulatedOrientation() {
-<span class="fc" id="L82">        return mAccumulatedOrientation.toQuaternion();</span>
+<span class="fc" id="L83">        return mAccumulatedOrientation.toQuaternion();</span>
     }
     
     /**
@@ -88,15 +89,15 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      * sample will be stored.
      */
     public void getAccumulatedOrientation(Rotation3D result) {
-<span class="nc" id="L91">        result.fromRotation(mAccumulatedOrientation);</span>
-<span class="nc" id="L92">    }</span>
+<span class="nc" id="L92">        result.fromRotation(mAccumulatedOrientation);</span>
+<span class="nc" id="L93">    }</span>
         
     /**
      * Gets number of orientation samples accumulated since last full sample.
      * @return number of orientation samples accumulated since last full sample.
      */
     public int getAccumulatedOrientationSamples() {
-<span class="fc" id="L99">        return mAccumulatedOrientationSamples;</span>
+<span class="fc" id="L100">        return mAccumulatedOrientationSamples;</span>
     }
     
     /**
@@ -105,7 +106,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      * @return true if orientation sample has been received, false otherwise.
      */
     public boolean isOrientationSampleReceived() {
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        return mAccumulatedOrientationSamples &gt; 0;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        return mAccumulatedOrientationSamples &gt; 0;</span>
     }
         
     /**
@@ -115,7 +116,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      */
     @Override
     public boolean isFullSampleAvailable() {
-<span class="fc bfc" id="L118" title="All 4 branches covered.">        return super.isFullSampleAvailable() &amp;&amp; isOrientationSampleReceived();</span>
+<span class="fc bfc" id="L119" title="All 4 branches covered.">        return super.isFullSampleAvailable() &amp;&amp; isOrientationSampleReceived();</span>
     }
  
     /**
@@ -130,49 +131,49 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      */
     public void updateOrientationSample(long timestamp, 
             Rotation3D orientation) {
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
-<span class="fc" id="L134">            mOrientationTimestampNanos = timestamp;</span>
-<span class="fc bfc" id="L135" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isOrientationSampleReceived()) {</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
+<span class="fc" id="L135">            mOrientationTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L136" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isOrientationSampleReceived()) {</span>
                 //accumulation enabled
-<span class="fc" id="L137">                int nextSamples = mAccumulatedOrientationSamples + 1;</span>
+<span class="fc" id="L138">                int nextSamples = mAccumulatedOrientationSamples + 1;</span>
                 
-<span class="fc" id="L139">                double accumA = mAccumulatedOrientation.getA();</span>
-<span class="fc" id="L140">                double accumB = mAccumulatedOrientation.getB();</span>
-<span class="fc" id="L141">                double accumC = mAccumulatedOrientation.getC();</span>
-<span class="fc" id="L142">                double accumD = mAccumulatedOrientation.getD();</span>
+<span class="fc" id="L140">                double accumA = mAccumulatedOrientation.getA();</span>
+<span class="fc" id="L141">                double accumB = mAccumulatedOrientation.getB();</span>
+<span class="fc" id="L142">                double accumC = mAccumulatedOrientation.getC();</span>
+<span class="fc" id="L143">                double accumD = mAccumulatedOrientation.getD();</span>
                 
-<span class="fc bfc" id="L144" title="All 2 branches covered.">                if(mTempQ == null) {</span>
-<span class="fc" id="L145">                    mTempQ = new Quaternion();</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">                if(mTempQ == null) {</span>
+<span class="fc" id="L146">                    mTempQ = new Quaternion();</span>
                 }                
-<span class="fc" id="L147">                mTempQ.fromRotation(orientation);</span>
-<span class="fc" id="L148">                mTempQ.normalize();</span>
-<span class="fc" id="L149">                double a = mTempQ.getA();</span>
-<span class="fc" id="L150">                double b = mTempQ.getB();</span>
-<span class="fc" id="L151">                double c = mTempQ.getC();</span>
-<span class="fc" id="L152">                double d = mTempQ.getD();</span>
+<span class="fc" id="L148">                mTempQ.fromRotation(orientation);</span>
+<span class="fc" id="L149">                mTempQ.normalize();</span>
+<span class="fc" id="L150">                double a = mTempQ.getA();</span>
+<span class="fc" id="L151">                double b = mTempQ.getB();</span>
+<span class="fc" id="L152">                double c = mTempQ.getC();</span>
+<span class="fc" id="L153">                double d = mTempQ.getD();</span>
                 
-<span class="fc" id="L154">                accumA = (accumA * mAccumulatedOrientationSamples + a) / </span>
+<span class="fc" id="L155">                accumA = (accumA * mAccumulatedOrientationSamples + a) / </span>
                         nextSamples;
-<span class="fc" id="L156">                accumB = (accumB * mAccumulatedOrientationSamples + b) / </span>
+<span class="fc" id="L157">                accumB = (accumB * mAccumulatedOrientationSamples + b) / </span>
                         nextSamples;
-<span class="fc" id="L158">                accumC = (accumC * mAccumulatedOrientationSamples + c) / </span>
+<span class="fc" id="L159">                accumC = (accumC * mAccumulatedOrientationSamples + c) / </span>
                         nextSamples;
-<span class="fc" id="L160">                accumD = (accumD * mAccumulatedOrientationSamples + d) /</span>
+<span class="fc" id="L161">                accumD = (accumD * mAccumulatedOrientationSamples + d) /</span>
                         nextSamples;
                 
-<span class="fc" id="L163">                mAccumulatedOrientation.setA(accumA);</span>
-<span class="fc" id="L164">                mAccumulatedOrientation.setB(accumB);</span>
-<span class="fc" id="L165">                mAccumulatedOrientation.setC(accumC);</span>
-<span class="fc" id="L166">                mAccumulatedOrientation.setD(accumD);</span>
-<span class="fc" id="L167">                mAccumulatedOrientationSamples = nextSamples;                </span>
-<span class="fc" id="L168">            } else {</span>
+<span class="fc" id="L164">                mAccumulatedOrientation.setA(accumA);</span>
+<span class="fc" id="L165">                mAccumulatedOrientation.setB(accumB);</span>
+<span class="fc" id="L166">                mAccumulatedOrientation.setC(accumC);</span>
+<span class="fc" id="L167">                mAccumulatedOrientation.setD(accumD);</span>
+<span class="fc" id="L168">                mAccumulatedOrientationSamples = nextSamples;                </span>
+<span class="fc" id="L169">            } else {</span>
                 //accumulation disabled
-<span class="fc" id="L170">                mAccumulatedOrientation.fromRotation(orientation);</span>
-<span class="fc" id="L171">                mAccumulatedOrientationSamples++;</span>
+<span class="fc" id="L171">                mAccumulatedOrientation.fromRotation(orientation);</span>
+<span class="fc" id="L172">                mAccumulatedOrientationSamples++;</span>
             }            
-<span class="fc" id="L173">            notifyFullSampleAndResetSampleReceive();</span>
+<span class="fc" id="L174">            notifyFullSampleAndResetSampleReceive();</span>
         }
-<span class="fc" id="L175">    }</span>
+<span class="fc" id="L176">    }</span>
     
     /**
      * Gets most recent timestamp of received partial samples (accelerometer,
@@ -181,9 +182,9 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      */
     @Override
     public long getMostRecentTimestampNanos() {
-<span class="fc" id="L184">        long mostRecent = super.getMostRecentTimestampNanos();</span>
-<span class="fc bfc" id="L185" title="All 2 branches covered.">        return mostRecent &gt; mOrientationTimestampNanos ? mostRecent :</span>
-<span class="fc" id="L186">                mOrientationTimestampNanos;</span>
+<span class="fc" id="L185">        long mostRecent = super.getMostRecentTimestampNanos();</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        return mostRecent &gt; mOrientationTimestampNanos ? mostRecent :</span>
+<span class="fc" id="L187">                mOrientationTimestampNanos;</span>
     }
     
     /**
@@ -192,11 +193,11 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCal
      */
     @Override
     protected void notifyFullSampleAndResetSampleReceive() {
-<span class="fc bfc" id="L195" title="All 2 branches covered.">        if(isFullSampleAvailable()) {</span>
-<span class="fc" id="L196">            processFullSample();</span>
-<span class="fc" id="L197">            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples =</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if(isFullSampleAvailable()) {</span>
+<span class="fc" id="L197">            processFullSample();</span>
+<span class="fc" id="L198">            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples =</span>
                     mAccumulatedOrientationSamples = 0;
         }
-<span class="fc" id="L200">    }    </span>
+<span class="fc" id="L201">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

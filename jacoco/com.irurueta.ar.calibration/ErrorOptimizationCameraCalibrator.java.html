@@ -44,7 +44,7 @@ import java.util.logging.Logger;
  * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical
  * Report. MSR-TR-98-71. December 2, 1998.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     
     /**
@@ -919,87 +919,86 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * These parameters will be used as an initial solution and on each 
      * iteration of the Levenberg-Marquardt algorithm.
      * @param params arrays where parameters will be set using current data.
-     * @throws RotationException never happens.
      */
-    private void paramsFromData(double[] params) throws RotationException {
-<span class="fc" id="L925">        int pos = 0;  </span>
+    private void paramsFromData(double[] params) {
+<span class="fc" id="L924">        int pos = 0;  </span>
         
         //common parameters (intrinsic camera parameters and radial distortion
         //parameters)
         
         //intrinsic parameters
-<span class="pc bpc" id="L931" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
+<span class="pc bpc" id="L930" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
             //aspect ratio is not known (2 different focal distances) and
             //skewness is not zero
-<span class="nc" id="L934">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
-<span class="nc" id="L935">            pos++;</span>
-<span class="nc" id="L936">            params[pos] = mIntrinsic.getVerticalFocalLength();</span>
-<span class="nc" id="L937">            pos++;</span>
-<span class="nc" id="L938">            params[pos] = mIntrinsic.getSkewness();</span>
-<span class="nc" id="L939">            pos++;</span>
+<span class="nc" id="L933">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
+<span class="nc" id="L934">            pos++;</span>
+<span class="nc" id="L935">            params[pos] = mIntrinsic.getVerticalFocalLength();</span>
+<span class="nc" id="L936">            pos++;</span>
+<span class="nc" id="L937">            params[pos] = mIntrinsic.getSkewness();</span>
+<span class="nc" id="L938">            pos++;</span>
         } else {
             //skewness is always zero (so it is not stored in vector)
-<span class="fc" id="L942">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
-<span class="fc" id="L943">            pos++;</span>
+<span class="fc" id="L941">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
+<span class="fc" id="L942">            pos++;</span>
 
-<span class="pc bpc" id="L945" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
+<span class="pc bpc" id="L944" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
                 //focal distances are different, so we also store vertical
                 //one
-<span class="nc" id="L948">                params[pos] = mIntrinsic.getVerticalFocalLength();</span>
-<span class="nc" id="L949">                pos++;</span>
+<span class="nc" id="L947">                params[pos] = mIntrinsic.getVerticalFocalLength();</span>
+<span class="nc" id="L948">                pos++;</span>
             }
         }
 
-<span class="pc bpc" id="L953" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
+<span class="pc bpc" id="L952" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
             //principal point is not zero
-<span class="nc" id="L955">            params[pos] = mIntrinsic.getHorizontalPrincipalPoint();</span>
-<span class="nc" id="L956">            pos++;</span>
-<span class="nc" id="L957">            params[pos] = mIntrinsic.getVerticalPrincipalPoint();</span>
-<span class="nc" id="L958">            pos++;</span>
+<span class="nc" id="L954">            params[pos] = mIntrinsic.getHorizontalPrincipalPoint();</span>
+<span class="nc" id="L955">            pos++;</span>
+<span class="nc" id="L956">            params[pos] = mIntrinsic.getVerticalPrincipalPoint();</span>
+<span class="nc" id="L957">            pos++;</span>
         }
         
         //radial distortion parameters
-<span class="fc" id="L962">        double[] kParams = mDistortion.getKParams();</span>
-<span class="fc bfc" id="L963" title="All 2 branches covered.">        for (double kParam : kParams) {</span>
-<span class="fc" id="L964">            params[pos] = kParam;</span>
-<span class="fc" id="L965">            pos++;</span>
+<span class="fc" id="L961">        double[] kParams = mDistortion.getKParams();</span>
+<span class="fc bfc" id="L962" title="All 2 branches covered.">        for (double kParam : kParams) {</span>
+<span class="fc" id="L963">            params[pos] = kParam;</span>
+<span class="fc" id="L964">            pos++;</span>
         }
 
 
         //parameters for each sample (camera rotation and translation)
-<span class="fc bfc" id="L970" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L971" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
-<span class="fc" id="L972">                continue;</span>
+<span class="fc bfc" id="L969" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L970" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="fc" id="L971">                continue;</span>
             }
             
             //4 rotation parameters
             AxisRotation3D rot;
-<span class="pc bpc" id="L977" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
+<span class="pc bpc" id="L976" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
                     Rotation3DType.AXIS_ROTATION3D) {
-<span class="nc" id="L979">                rot = (AxisRotation3D)sample.getRotation();</span>
+<span class="nc" id="L978">                rot = (AxisRotation3D)sample.getRotation();</span>
             } else {
-<span class="fc" id="L981">                rot = new AxisRotation3D(sample.getRotation());</span>
+<span class="fc" id="L980">                rot = new AxisRotation3D(sample.getRotation());</span>
             }
             
-<span class="fc" id="L984">            params[pos] = rot.getRotationAngle();</span>
-<span class="fc" id="L985">            pos++;</span>
-<span class="fc" id="L986">            params[pos] = rot.getAxisX();</span>
-<span class="fc" id="L987">            pos++;</span>
-<span class="fc" id="L988">            params[pos] = rot.getAxisY();</span>
-<span class="fc" id="L989">            pos++;</span>
-<span class="fc" id="L990">            params[pos] = rot.getAxisZ();</span>
-<span class="fc" id="L991">            pos++;</span>
+<span class="fc" id="L983">            params[pos] = rot.getRotationAngle();</span>
+<span class="fc" id="L984">            pos++;</span>
+<span class="fc" id="L985">            params[pos] = rot.getAxisX();</span>
+<span class="fc" id="L986">            pos++;</span>
+<span class="fc" id="L987">            params[pos] = rot.getAxisY();</span>
+<span class="fc" id="L988">            pos++;</span>
+<span class="fc" id="L989">            params[pos] = rot.getAxisZ();</span>
+<span class="fc" id="L990">            pos++;</span>
                         
             //3 translation parameters (camera center)
-<span class="fc" id="L994">            Point3D center = sample.getCameraCenter();</span>
-<span class="fc" id="L995">            params[pos] = center.getInhomX();</span>
-<span class="fc" id="L996">            pos++;</span>
-<span class="fc" id="L997">            params[pos] = center.getInhomY();</span>
-<span class="fc" id="L998">            pos++;</span>
-<span class="fc" id="L999">            params[pos] = center.getInhomZ();</span>
-<span class="fc" id="L1000">            pos++;            </span>
-<span class="fc" id="L1001">        }         </span>
-<span class="fc" id="L1002">    }</span>
+<span class="fc" id="L993">            Point3D center = sample.getCameraCenter();</span>
+<span class="fc" id="L994">            params[pos] = center.getInhomX();</span>
+<span class="fc" id="L995">            pos++;</span>
+<span class="fc" id="L996">            params[pos] = center.getInhomY();</span>
+<span class="fc" id="L997">            pos++;</span>
+<span class="fc" id="L998">            params[pos] = center.getInhomZ();</span>
+<span class="fc" id="L999">            pos++;            </span>
+<span class="fc" id="L1000">        }         </span>
+<span class="fc" id="L1001">    }</span>
     
     /**
      * Sets data in samples from parameters values fitted by the 
@@ -1007,107 +1006,107 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param params  vector containing estimated parameters .
      */
     private void dataFromParams(double[] params) {
-<span class="fc" id="L1010">        int pos = 0;</span>
+<span class="fc" id="L1009">        int pos = 0;</span>
         
         //intrinsic parameters
         double horizontalFocalLength, verticalFocalLength, skewness,
                 horizontalPrincipalPoint, verticalPrincipalPoint;
-<span class="pc bpc" id="L1015" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
+<span class="pc bpc" id="L1014" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
             //aspect ratio is not known (2 different focal distances) and
             //skewness is not zero
-<span class="nc" id="L1018">            horizontalFocalLength = params[pos];</span>
-<span class="nc" id="L1019">            pos++;</span>
-<span class="nc" id="L1020">            verticalFocalLength = params[pos];</span>
-<span class="nc" id="L1021">            pos++;</span>
-<span class="nc" id="L1022">            skewness = params[pos];</span>
-<span class="nc" id="L1023">            pos++;</span>
+<span class="nc" id="L1017">            horizontalFocalLength = params[pos];</span>
+<span class="nc" id="L1018">            pos++;</span>
+<span class="nc" id="L1019">            verticalFocalLength = params[pos];</span>
+<span class="nc" id="L1020">            pos++;</span>
+<span class="nc" id="L1021">            skewness = params[pos];</span>
+<span class="nc" id="L1022">            pos++;</span>
         } else {
             //skewness is always zero (so it is not stored in vector)
-<span class="fc" id="L1026">            skewness = 0.0;</span>
-<span class="fc" id="L1027">            horizontalFocalLength = params[pos];</span>
-<span class="fc" id="L1028">            pos++;</span>
+<span class="fc" id="L1025">            skewness = 0.0;</span>
+<span class="fc" id="L1026">            horizontalFocalLength = params[pos];</span>
+<span class="fc" id="L1027">            pos++;</span>
 
-<span class="pc bpc" id="L1030" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
+<span class="pc bpc" id="L1029" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
                 //focal distances are different
-<span class="nc" id="L1032">                verticalFocalLength = params[pos];</span>
-<span class="nc" id="L1033">                pos++;</span>
+<span class="nc" id="L1031">                verticalFocalLength = params[pos];</span>
+<span class="nc" id="L1032">                pos++;</span>
             } else {
                 //vertical focal distance is related to horizontal one
                 //through aspect ratio
-<span class="fc" id="L1037">                verticalFocalLength = horizontalFocalLength * </span>
-<span class="fc" id="L1038">                        getFocalDistanceAspectRatio();</span>
+<span class="fc" id="L1036">                verticalFocalLength = horizontalFocalLength * </span>
+<span class="fc" id="L1037">                        getFocalDistanceAspectRatio();</span>
             }
         }
 
-<span class="pc bpc" id="L1042" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
+<span class="pc bpc" id="L1041" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
             //principal point is not zero
-<span class="nc" id="L1044">            horizontalPrincipalPoint = params[pos];</span>
-<span class="nc" id="L1045">            pos++;</span>
-<span class="nc" id="L1046">            verticalPrincipalPoint = params[pos];</span>
-<span class="nc" id="L1047">            pos++;</span>
+<span class="nc" id="L1043">            horizontalPrincipalPoint = params[pos];</span>
+<span class="nc" id="L1044">            pos++;</span>
+<span class="nc" id="L1045">            verticalPrincipalPoint = params[pos];</span>
+<span class="nc" id="L1046">            pos++;</span>
         } else {
             //principal point is zero
-<span class="fc" id="L1050">            horizontalPrincipalPoint = verticalPrincipalPoint = 0.0;</span>
+<span class="fc" id="L1049">            horizontalPrincipalPoint = verticalPrincipalPoint = 0.0;</span>
         }
         
         //update intrinsic parameters
-<span class="fc" id="L1054">        mIntrinsic.setHorizontalFocalLength(horizontalFocalLength);</span>
-<span class="fc" id="L1055">        mIntrinsic.setVerticalFocalLength(verticalFocalLength);</span>
-<span class="fc" id="L1056">        mIntrinsic.setSkewness(skewness);</span>
-<span class="fc" id="L1057">        mIntrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);</span>
-<span class="fc" id="L1058">        mIntrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);</span>
+<span class="fc" id="L1053">        mIntrinsic.setHorizontalFocalLength(horizontalFocalLength);</span>
+<span class="fc" id="L1054">        mIntrinsic.setVerticalFocalLength(verticalFocalLength);</span>
+<span class="fc" id="L1055">        mIntrinsic.setSkewness(skewness);</span>
+<span class="fc" id="L1056">        mIntrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);</span>
+<span class="fc" id="L1057">        mIntrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);</span>
         
         //radial distortion parameters
-<span class="fc" id="L1061">        double[] kParams = mDistortion.getKParams();</span>
-<span class="fc bfc" id="L1062" title="All 2 branches covered.">        for (int i = 0; i &lt; kParams.length; i++) {</span>
-<span class="fc" id="L1063">            kParams[i] = params[pos];</span>
-<span class="fc" id="L1064">            pos++;</span>
+<span class="fc" id="L1060">        double[] kParams = mDistortion.getKParams();</span>
+<span class="fc bfc" id="L1061" title="All 2 branches covered.">        for (int i = 0; i &lt; kParams.length; i++) {</span>
+<span class="fc" id="L1062">            kParams[i] = params[pos];</span>
+<span class="fc" id="L1063">            pos++;</span>
         }
         
         //sample parameters
-<span class="fc bfc" id="L1068" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L1069" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
-<span class="fc" id="L1070">                continue;</span>
+<span class="fc bfc" id="L1067" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L1068" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="fc" id="L1069">                continue;</span>
             }
             
             //4 rotation parameters
             AxisRotation3D rot;
-<span class="pc bpc" id="L1075" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
+<span class="pc bpc" id="L1074" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
                     Rotation3DType.AXIS_ROTATION3D) {
-<span class="nc" id="L1077">                rot = (AxisRotation3D)sample.getRotation();</span>
+<span class="nc" id="L1076">                rot = (AxisRotation3D)sample.getRotation();</span>
             } else {
-<span class="fc" id="L1079">                rot = new AxisRotation3D();</span>
+<span class="fc" id="L1078">                rot = new AxisRotation3D();</span>
                 //update sample
-<span class="fc" id="L1081">                sample.setRotation(rot);</span>
+<span class="fc" id="L1080">                sample.setRotation(rot);</span>
             }
             
-<span class="fc" id="L1084">            double rotAngle = params[pos];</span>
-<span class="fc" id="L1085">            pos++;</span>
-<span class="fc" id="L1086">            double axisX = params[pos];</span>
-<span class="fc" id="L1087">            pos++;</span>
-<span class="fc" id="L1088">            double axisY = params[pos];</span>
-<span class="fc" id="L1089">            pos++;</span>
-<span class="fc" id="L1090">            double axisZ = params[pos];</span>
-<span class="fc" id="L1091">            pos++;</span>
+<span class="fc" id="L1083">            double rotAngle = params[pos];</span>
+<span class="fc" id="L1084">            pos++;</span>
+<span class="fc" id="L1085">            double axisX = params[pos];</span>
+<span class="fc" id="L1086">            pos++;</span>
+<span class="fc" id="L1087">            double axisY = params[pos];</span>
+<span class="fc" id="L1088">            pos++;</span>
+<span class="fc" id="L1089">            double axisZ = params[pos];</span>
+<span class="fc" id="L1090">            pos++;</span>
             
-<span class="fc" id="L1093">            rot.setAxisAndRotation(axisX, axisY, axisZ, rotAngle);</span>
+<span class="fc" id="L1092">            rot.setAxisAndRotation(axisX, axisY, axisZ, rotAngle);</span>
             
                         
             //3 translation parameters (camera center)
-<span class="fc" id="L1097">            double inhomX = params[pos];</span>
-<span class="fc" id="L1098">            pos++;</span>
-<span class="fc" id="L1099">            double inhomY = params[pos];</span>
-<span class="fc" id="L1100">            pos++;</span>
-<span class="fc" id="L1101">            double inhomZ = params[pos];</span>
-<span class="fc" id="L1102">            pos++;</span>
-<span class="fc" id="L1103">            Point3D center = sample.getCameraCenter();</span>
-<span class="fc" id="L1104">            center.setInhomogeneousCoordinates(inhomX, inhomY, inhomZ);            </span>
+<span class="fc" id="L1096">            double inhomX = params[pos];</span>
+<span class="fc" id="L1097">            pos++;</span>
+<span class="fc" id="L1098">            double inhomY = params[pos];</span>
+<span class="fc" id="L1099">            pos++;</span>
+<span class="fc" id="L1100">            double inhomZ = params[pos];</span>
+<span class="fc" id="L1101">            pos++;</span>
+<span class="fc" id="L1102">            Point3D center = sample.getCameraCenter();</span>
+<span class="fc" id="L1103">            center.setInhomogeneousCoordinates(inhomX, inhomY, inhomZ);            </span>
             
             //update camera
-<span class="fc" id="L1107">            PinholeCamera camera = sample.getCamera();</span>
-<span class="fc" id="L1108">            camera.setIntrinsicAndExtrinsicParameters(mIntrinsic, rot, center);</span>
-<span class="fc" id="L1109">        }          </span>
-<span class="fc" id="L1110">    }</span>
+<span class="fc" id="L1106">            PinholeCamera camera = sample.getCamera();</span>
+<span class="fc" id="L1107">            camera.setIntrinsicAndExtrinsicParameters(mIntrinsic, rot, center);</span>
+<span class="fc" id="L1108">        }          </span>
+<span class="fc" id="L1109">    }</span>
             
     /**
      * Computes reprojection error taking into account ideal pattern marker
@@ -1125,52 +1124,52 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //using current camera pose
         PinholeCamera camera;
         Point2D marker2D;
-<span class="fc" id="L1128">        Point3D marker3D = Point3D.create();</span>
-<span class="fc" id="L1129">        Point2D undistortedPoint = Point2D.create();</span>
-<span class="fc" id="L1130">        int totalPoints = 0;</span>
-<span class="fc" id="L1131">        Point2D distortedPoint = Point2D.create();</span>
+<span class="fc" id="L1127">        Point3D marker3D = Point3D.create();</span>
+<span class="fc" id="L1128">        Point2D undistortedPoint = Point2D.create();</span>
+<span class="fc" id="L1129">        int totalPoints = 0;</span>
+<span class="fc" id="L1130">        Point2D distortedPoint = Point2D.create();</span>
         Point2D sampledPoint;
-<span class="fc" id="L1133">        double avgError = 0.0;</span>
-<span class="fc bfc" id="L1134" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc" id="L1135">            camera = sample.getCamera();</span>
-<span class="fc bfc" id="L1136" title="All 2 branches covered.">            if (camera == null) {</span>
-<span class="fc" id="L1137">                continue;</span>
+<span class="fc" id="L1132">        double avgError = 0.0;</span>
+<span class="fc bfc" id="L1133" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc" id="L1134">            camera = sample.getCamera();</span>
+<span class="fc bfc" id="L1135" title="All 2 branches covered.">            if (camera == null) {</span>
+<span class="fc" id="L1136">                continue;</span>
             }
             
             List&lt;Point2D&gt; idealPatternMarkers;
-<span class="fc bfc" id="L1141" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
-<span class="fc" id="L1142">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+<span class="fc bfc" id="L1140" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+<span class="fc" id="L1141">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
             } else {
-<span class="fc" id="L1144">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+<span class="fc" id="L1143">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
             }
             
-<span class="fc" id="L1147">            int pointsPerSample = idealPatternMarkers.size();</span>
-<span class="fc bfc" id="L1148" title="All 2 branches covered.">            for (int i = 0; i &lt; pointsPerSample; i++) {</span>
-<span class="fc" id="L1149">                marker2D = idealPatternMarkers.get(i);</span>
-<span class="fc" id="L1150">                sampledPoint = sample.getSampledMarkers().get(i);</span>
+<span class="fc" id="L1146">            int pointsPerSample = idealPatternMarkers.size();</span>
+<span class="fc bfc" id="L1147" title="All 2 branches covered.">            for (int i = 0; i &lt; pointsPerSample; i++) {</span>
+<span class="fc" id="L1148">                marker2D = idealPatternMarkers.get(i);</span>
+<span class="fc" id="L1149">                sampledPoint = sample.getSampledMarkers().get(i);</span>
                 
                 //conver ideal marker point into a 3D point placed in plane
                 //z = 0
-<span class="fc" id="L1154">                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(), </span>
-<span class="fc" id="L1155">                        marker2D.getInhomY(), 0.0);</span>
+<span class="fc" id="L1153">                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(), </span>
+<span class="fc" id="L1154">                        marker2D.getInhomY(), 0.0);</span>
                 
                 //project 3D marker point using estimated camera on current 
                 //sample (i.e. view)
-<span class="fc" id="L1159">                camera.project(marker3D, undistortedPoint);</span>
+<span class="fc" id="L1158">                camera.project(marker3D, undistortedPoint);</span>
                 
                 //add distortion to ideal projected point
-<span class="fc" id="L1162">                mDistortion.distort(undistortedPoint, distortedPoint);</span>
+<span class="fc" id="L1161">                mDistortion.distort(undistortedPoint, distortedPoint);</span>
                 
                 //obtain distance between sampled point and ideal projected
                 //point with added distortion
-<span class="fc" id="L1166">                avgError += sampledPoint.distanceTo(distortedPoint);</span>
-<span class="fc" id="L1167">                totalPoints++;</span>
+<span class="fc" id="L1165">                avgError += sampledPoint.distanceTo(distortedPoint);</span>
+<span class="fc" id="L1166">                totalPoints++;</span>
             }
-<span class="fc" id="L1169">        }</span>
+<span class="fc" id="L1168">        }</span>
         
-<span class="fc" id="L1171">        avgError /= (double)totalPoints;</span>
+<span class="fc" id="L1170">        avgError /= (double)totalPoints;</span>
         
-<span class="fc" id="L1173">        return avgError;</span>
+<span class="fc" id="L1172">        return avgError;</span>
     }
     
     /**
@@ -1183,37 +1182,37 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     private void internalSetDistortionMethod(
             RobustEstimatorMethod distortionMethod) {
         //im method changes, recreat estimator
-<span class="fc bfc" id="L1186" title="All 2 branches covered.">        if (distortionMethod != mDistortionMethod) {</span>
-<span class="fc bfc" id="L1187" title="All 2 branches covered.">            boolean previousAvailable = mDistortionMethod != null;</span>
-<span class="fc" id="L1188">            double threshold = 0.0, confidence = 0.0;</span>
-<span class="fc" id="L1189">            int maxIterations = 0;</span>
-<span class="fc bfc" id="L1190" title="All 2 branches covered.">            if (previousAvailable) {</span>
-<span class="fc" id="L1191">                threshold = getDistortionEstimatorThreshold();</span>
-<span class="fc" id="L1192">                confidence = getDistortionEstimatorConfidence();</span>
-<span class="fc" id="L1193">                maxIterations = getDistortionEstimatorMaxIterations();</span>
+<span class="fc bfc" id="L1185" title="All 2 branches covered.">        if (distortionMethod != mDistortionMethod) {</span>
+<span class="fc bfc" id="L1186" title="All 2 branches covered.">            boolean previousAvailable = mDistortionMethod != null;</span>
+<span class="fc" id="L1187">            double threshold = 0.0, confidence = 0.0;</span>
+<span class="fc" id="L1188">            int maxIterations = 0;</span>
+<span class="fc bfc" id="L1189" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1190">                threshold = getDistortionEstimatorThreshold();</span>
+<span class="fc" id="L1191">                confidence = getDistortionEstimatorConfidence();</span>
+<span class="fc" id="L1192">                maxIterations = getDistortionEstimatorMaxIterations();</span>
             }
             
-<span class="fc" id="L1196">            mDistortionEstimator = RadialDistortionRobustEstimator.create(</span>
+<span class="fc" id="L1195">            mDistortionEstimator = RadialDistortionRobustEstimator.create(</span>
                     distortionMethod);
             
             //configure new estimator
-<span class="fc" id="L1200">            refreshDistortionEstimatorListener();</span>
-<span class="fc bfc" id="L1201" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1199">            refreshDistortionEstimatorListener();</span>
+<span class="fc bfc" id="L1200" title="All 2 branches covered.">            if (previousAvailable) {</span>
                 try {
-<span class="fc" id="L1203">                    setDistortionEstimatorThreshold(threshold);</span>
-<span class="fc" id="L1204">                    setDistortionEstimatorConfidence(confidence);</span>
-<span class="fc" id="L1205">                    setDistortionEstimatorMaxIterations(maxIterations);</span>
-<span class="nc" id="L1206">                } catch (LockedException e) {</span>
-<span class="nc" id="L1207">                    Logger.getLogger(</span>
-<span class="nc" id="L1208">                            AlternatingCameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L1202">                    setDistortionEstimatorThreshold(threshold);</span>
+<span class="fc" id="L1203">                    setDistortionEstimatorConfidence(confidence);</span>
+<span class="fc" id="L1204">                    setDistortionEstimatorMaxIterations(maxIterations);</span>
+<span class="nc" id="L1205">                } catch (LockedException e) {</span>
+<span class="nc" id="L1206">                    Logger.getLogger(</span>
+<span class="nc" id="L1207">                            AlternatingCameraCalibrator.class.getName()).log(</span>
                             Level.WARNING, &quot;Could not reconfigure distortion estimator&quot;, 
                             e);
-<span class="fc" id="L1211">                }</span>
+<span class="fc" id="L1210">                }</span>
             }                        
         }
         
-<span class="fc" id="L1215">        mDistortionMethod = distortionMethod;</span>
-<span class="fc" id="L1216">    } </span>
+<span class="fc" id="L1214">        mDistortionMethod = distortionMethod;</span>
+<span class="fc" id="L1215">    } </span>
     
     /**
      * Returns number of parameters of cost function.
@@ -1227,8 +1226,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //- x intrinsic parameters (depending on settings)
         //- x radial distortion parameters (K params length)
         
-<span class="fc" id="L1230">        return 7 * numHomographies + numIntrinsicParameters() +</span>
-<span class="fc" id="L1231">                mDistortion.getKParams().length;</span>
+<span class="fc" id="L1229">        return 7 * numHomographies + numIntrinsicParameters() +</span>
+<span class="fc" id="L1230">                mDistortion.getKParams().length;</span>
     }
     
     /**
@@ -1241,18 +1240,18 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //if no constraints, there are 5 intrinsic parameters (horizontal
         //focal length, verticla focal length, skewness, horizontal principal
         //point and vertical principal point
-<span class="fc" id="L1244">        int num = 5; </span>
-<span class="pc bpc" id="L1245" title="1 of 2 branches missed.">        if (isZeroSkewness()) {</span>
-<span class="pc bpc" id="L1246" title="1 of 2 branches missed.">            if (isFocalDistanceAspectRatioKnown()) {</span>
-<span class="fc" id="L1247">                num--;</span>
+<span class="fc" id="L1243">        int num = 5; </span>
+<span class="pc bpc" id="L1244" title="1 of 2 branches missed.">        if (isZeroSkewness()) {</span>
+<span class="pc bpc" id="L1245" title="1 of 2 branches missed.">            if (isFocalDistanceAspectRatioKnown()) {</span>
+<span class="fc" id="L1246">                num--;</span>
             }
-<span class="fc" id="L1249">            num--;</span>
+<span class="fc" id="L1248">            num--;</span>
         }
-<span class="pc bpc" id="L1251" title="1 of 2 branches missed.">        if (isPrincipalPointAtOrigin()) {</span>
-<span class="fc" id="L1252">            num -= 2;</span>
+<span class="pc bpc" id="L1250" title="1 of 2 branches missed.">        if (isPrincipalPointAtOrigin()) {</span>
+<span class="fc" id="L1251">            num -= 2;</span>
         }
         
-<span class="fc" id="L1255">        return num;</span>
+<span class="fc" id="L1254">        return num;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

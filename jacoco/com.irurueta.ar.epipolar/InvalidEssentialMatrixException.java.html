@@ -18,6 +18,7 @@ package com.irurueta.ar.epipolar;
 /**
  * Raised when an essential matrix is not well defined.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class InvalidEssentialMatrixException extends 
         InvalidFundamentalMatrixException {
     
@@ -25,16 +26,16 @@ public class InvalidEssentialMatrixException extends
      * Constructor
      */
     public InvalidEssentialMatrixException() {
-<span class="fc" id="L28">        super();</span>
-<span class="fc" id="L29">    }</span>
+<span class="fc" id="L29">        super();</span>
+<span class="fc" id="L30">    }</span>
     
     /**
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
     public InvalidEssentialMatrixException(String message) {
-<span class="fc" id="L36">        super(message);</span>
-<span class="fc" id="L37">    }</span>
+<span class="fc" id="L37">        super(message);</span>
+<span class="fc" id="L38">    }</span>
     
     /**
      * Constructor with message and cause.
@@ -43,15 +44,15 @@ public class InvalidEssentialMatrixException extends
      */
     public InvalidEssentialMatrixException(String message, 
             Throwable cause) {
-<span class="fc" id="L46">        super(message, cause);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L47">        super(message, cause);</span>
+<span class="fc" id="L48">    }</span>
     
     /**
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
     public InvalidEssentialMatrixException(Throwable cause) {
-<span class="fc" id="L54">        super(cause);</span>
-<span class="fc" id="L55">    }    </span>
+<span class="fc" id="L55">        super(cause);</span>
+<span class="fc" id="L56">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

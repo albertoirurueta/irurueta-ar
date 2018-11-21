@@ -30,6 +30,7 @@ import java.util.List;
  * Robustly triangulates 3D points from matched 2D points and their 
  * corresponding cameras on several views using LMedS algorithm.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class LMedSRobustSinglePoint3DTriangulator extends 
         RobustSinglePoint3DTriangulator {
     
@@ -78,9 +79,9 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      * Constructor.
      */
     public LMedSRobustSinglePoint3DTriangulator() {
-<span class="fc" id="L81">        super();</span>
-<span class="fc" id="L82">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L82">        super();</span>
+<span class="fc" id="L83">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L84">    }</span>
     
     /**
      * Constructor.
@@ -89,9 +90,9 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      */
     public LMedSRobustSinglePoint3DTriangulator(
             RobustSinglePoint3DTriangulatorListener listener) {
-<span class="fc" id="L92">        super(listener);</span>
-<span class="fc" id="L93">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L93">        super(listener);</span>
+<span class="fc" id="L94">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L95">    }</span>
     
     /**
      * Constructor.
@@ -105,9 +106,9 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      */
     public LMedSRobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points, 
             List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
-<span class="fc" id="L108">        super(points, cameras);</span>
-<span class="fc" id="L109">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L109">        super(points, cameras);</span>
+<span class="fc" id="L110">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L111">    }</span>
     
     /**
      * Constructor.
@@ -125,9 +126,9 @@ public class LMedSRobustSinglePoint3DTriangulator extends
             List&lt;PinholeCamera&gt; cameras, 
             RobustSinglePoint3DTriangulatorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L128">        super(points, cameras, listener);</span>
-<span class="fc" id="L129">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L130">    }</span>
+<span class="fc" id="L129">        super(points, cameras, listener);</span>
+<span class="fc" id="L130">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L131">    }</span>
     
     /**
      * Returns threshold to be used to keep the algorithm iterating in case that 
@@ -148,7 +149,7 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-<span class="fc" id="L151">        return mStopThreshold;</span>
+<span class="fc" id="L152">        return mStopThreshold;</span>
     }
     
     /**
@@ -174,15 +175,15 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      */
     public void setStopThreshold(double stopThreshold) 
             throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L178">            throw new LockedException();</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L179">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
-<span class="fc" id="L181">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L182">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L184">        mStopThreshold = stopThreshold;</span>
-<span class="fc" id="L185">    }</span>
+<span class="fc" id="L185">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L186">    }</span>
     
     /**
      * Triangulates provided matched 2D points being projected by each 
@@ -200,133 +201,133 @@ public class LMedSRobustSinglePoint3DTriangulator extends
     @Override
     public Point3D triangulate() throws LockedException, NotReadyException, 
             RobustEstimatorException {
-<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L204">            throw new LockedException();</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L205">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L206" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L207">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L208">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L210">        LMedSRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
+<span class="fc" id="L211">        LMedSRobustEstimator&lt;Point3D&gt; innerEstimator =</span>
                 new LMedSRobustEstimator&lt;&gt;(
-<span class="fc" id="L212">                new LMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
+<span class="fc" id="L213">                new LMedSRobustEstimatorListener&lt;Point3D&gt;() {</span>
                     
             //point to be reused when computing residuals
-<span class="fc" id="L215">            private Point2D mTestPoint = Point2D.create(</span>
+<span class="fc" id="L216">            private Point2D mTestPoint = Point2D.create(</span>
                     CoordinatesType.HOMOGENEOUS_COORDINATES);
 
             //non-robust 3D point triangulator
-<span class="fc" id="L219">            private SinglePoint3DTriangulator mTriangulator = </span>
-<span class="pc bpc" id="L220" title="1 of 2 branches missed.">                    SinglePoint3DTriangulator.create(mUseHomogeneousSolution ?</span>
-<span class="fc" id="L221">                    Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR :</span>
-<span class="nc" id="L222">                    Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);</span>
+<span class="fc" id="L220">            private SinglePoint3DTriangulator mTriangulator = </span>
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">                    SinglePoint3DTriangulator.create(mUseHomogeneousSolution ?</span>
+<span class="fc" id="L222">                    Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR :</span>
+<span class="nc" id="L223">                    Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);</span>
             
             //subset of 2D points
-<span class="fc" id="L225">            private List&lt;Point2D&gt; mSubsetPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L226">            private List&lt;Point2D&gt; mSubsetPoints = new ArrayList&lt;&gt;();</span>
             
             //subst of cameras
-<span class="fc" id="L228">            private List&lt;PinholeCamera&gt; mSubsetCameras = </span>
+<span class="fc" id="L229">            private List&lt;PinholeCamera&gt; mSubsetCameras = </span>
                     new ArrayList&lt;&gt;();
             
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L233">                return mPoints2D.size();</span>
+<span class="fc" id="L234">                return mPoints2D.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L238">                return MIN_REQUIRED_VIEWS;</span>
+<span class="fc" id="L239">                return MIN_REQUIRED_VIEWS;</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;Point3D&gt; solutions) {
-<span class="fc" id="L244">                mSubsetPoints.clear();</span>
-<span class="fc" id="L245">                mSubsetPoints.add(mPoints2D.get(samplesIndices[0]));</span>
-<span class="fc" id="L246">                mSubsetPoints.add(mPoints2D.get(samplesIndices[1]));</span>
+<span class="fc" id="L245">                mSubsetPoints.clear();</span>
+<span class="fc" id="L246">                mSubsetPoints.add(mPoints2D.get(samplesIndices[0]));</span>
+<span class="fc" id="L247">                mSubsetPoints.add(mPoints2D.get(samplesIndices[1]));</span>
                 
-<span class="fc" id="L248">                mSubsetCameras.clear();</span>
-<span class="fc" id="L249">                mSubsetCameras.add(mCameras.get(samplesIndices[0]));</span>
-<span class="fc" id="L250">                mSubsetCameras.add(mCameras.get(samplesIndices[1]));</span>
+<span class="fc" id="L249">                mSubsetCameras.clear();</span>
+<span class="fc" id="L250">                mSubsetCameras.add(mCameras.get(samplesIndices[0]));</span>
+<span class="fc" id="L251">                mSubsetCameras.add(mCameras.get(samplesIndices[1]));</span>
                 
                 try {
-<span class="fc" id="L253">                    mTriangulator.setPointsAndCameras(mSubsetPoints, </span>
+<span class="fc" id="L254">                    mTriangulator.setPointsAndCameras(mSubsetPoints, </span>
                             mSubsetCameras);
-<span class="fc" id="L255">                    Point3D triangulated = mTriangulator.triangulate();</span>
-<span class="fc" id="L256">                    solutions.add(triangulated);</span>
-<span class="nc" id="L257">                } catch (Exception e) {</span>
+<span class="fc" id="L256">                    Point3D triangulated = mTriangulator.triangulate();</span>
+<span class="fc" id="L257">                    solutions.add(triangulated);</span>
+<span class="nc" id="L258">                } catch (Exception e) {</span>
                     //if anything fails, no solution is added
-<span class="fc" id="L259">                }</span>
-<span class="fc" id="L260">            }</span>
+<span class="fc" id="L260">                }</span>
+<span class="fc" id="L261">            }</span>
 
             @Override
             public double computeResidual(Point3D currentEstimation, int i) {
-<span class="fc" id="L264">                Point2D point2D = mPoints2D.get(i);</span>
-<span class="fc" id="L265">                PinholeCamera camera = mCameras.get(i);</span>
+<span class="fc" id="L265">                Point2D point2D = mPoints2D.get(i);</span>
+<span class="fc" id="L266">                PinholeCamera camera = mCameras.get(i);</span>
                 
                 //project estimated point with camera
-<span class="fc" id="L268">                camera.project(currentEstimation, mTestPoint);</span>
+<span class="fc" id="L269">                camera.project(currentEstimation, mTestPoint);</span>
                 
                 //return distance of projected point respect to the original one
                 //as a residual
-<span class="fc" id="L272">                return mTestPoint.distanceTo(point2D);</span>
+<span class="fc" id="L273">                return mTestPoint.distanceTo(point2D);</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L277">                return LMedSRobustSinglePoint3DTriangulator.this.isReady();</span>
+<span class="fc" id="L278">                return LMedSRobustSinglePoint3DTriangulator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L283">                    mListener.onTriangulateStart(</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L284">                    mListener.onTriangulateStart(</span>
                             LMedSRobustSinglePoint3DTriangulator.this);
                 }
-<span class="fc" id="L286">            }</span>
+<span class="fc" id="L287">            }</span>
 
             @Override
             public void onEstimateEnd(RobustEstimator&lt;Point3D&gt; estimator) {
-<span class="pc bpc" id="L290" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L291">                    mListener.onTriangulateEnd(</span>
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L292">                    mListener.onTriangulateEnd(</span>
                             LMedSRobustSinglePoint3DTriangulator.this);
                 }
-<span class="fc" id="L294">            }</span>
+<span class="fc" id="L295">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;Point3D&gt; estimator, int iteration) {
-<span class="pc bpc" id="L299" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L300">                    mListener.onTriangulateNextIteration(</span>
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L301">                    mListener.onTriangulateNextIteration(</span>
                             LMedSRobustSinglePoint3DTriangulator.this, 
                             iteration);
                 }
-<span class="fc" id="L304">            }</span>
+<span class="fc" id="L305">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;Point3D&gt; estimator, float progress) {
-<span class="pc bpc" id="L309" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L310">                    mListener.onTriangulateProgressChange(</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L311">                    mListener.onTriangulateProgressChange(</span>
                             LMedSRobustSinglePoint3DTriangulator.this, 
                             progress);
                 }
-<span class="fc" id="L314">            }</span>
+<span class="fc" id="L315">            }</span>
         });
         
         try {
-<span class="fc" id="L318">            mLocked = true;</span>
-<span class="fc" id="L319">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L320">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L321">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L322">            innerEstimator.setStopThreshold(mStopThreshold);</span>
-<span class="fc" id="L323">            return innerEstimator.estimate();</span>
-<span class="nc" id="L324">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L325">            throw new LockedException(e);</span>
-<span class="nc" id="L326">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L327">            throw new NotReadyException(e);</span>
+<span class="fc" id="L319">            mLocked = true;</span>
+<span class="fc" id="L320">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L321">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L322">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L323">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L324">            return innerEstimator.estimate();</span>
+<span class="nc" id="L325">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L326">            throw new LockedException(e);</span>
+<span class="nc" id="L327">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L328">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L329">            mLocked = false;</span>
+<span class="fc" id="L330">            mLocked = false;</span>
         }
     }
 
@@ -336,7 +337,7 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      */    
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L339">        return RobustEstimatorMethod.LMedS;</span>
+<span class="fc" id="L340">        return RobustEstimatorMethod.LMedS;</span>
     }        
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

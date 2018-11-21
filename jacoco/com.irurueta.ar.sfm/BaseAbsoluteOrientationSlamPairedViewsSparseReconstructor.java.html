@@ -31,6 +31,7 @@ import com.irurueta.geometry.Rotation3D;
  * @param &lt;L&gt; type of listener.
  * @param &lt;S&gt; type of SLAM estimator.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor&lt;
         C extends BaseSlamPairedViewsSparseReconstructorConfiguration,
         R extends BaseSlamPairedViewsSparseReconstructor,
@@ -52,8 +53,8 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor&
      */
     public BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor(
             C configuration, L listener) throws NullPointerException {
-<span class="fc" id="L55">        super(configuration, listener);</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L56">        super(configuration, listener);</span>
+<span class="fc" id="L57">    }</span>
 
     /**
      * Provides a new orientation sample to update SLAM estimator.
@@ -64,14 +65,14 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor&
      */
     public void updateOrientationSample(long timestamp,
                                         Rotation3D orientation) {
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L68">            mSlamEstimator.updateOrientationSample(timestamp, orientation);</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L69">            mSlamEstimator.updateOrientationSample(timestamp, orientation);</span>
         }
-<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (mFirstOrientation == null) {</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (mFirstOrientation == null) {</span>
             //make a copy of orientation
-<span class="fc" id="L72">            mFirstOrientation = orientation.toQuaternion();</span>
+<span class="fc" id="L73">            mFirstOrientation = orientation.toQuaternion();</span>
         }
-<span class="fc" id="L74">    }</span>
+<span class="fc" id="L75">    }</span>
 
     /**
      * Indicates whether implementations of a reconstructor uses absolute orientation or
@@ -80,7 +81,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor&
      */
     @Override
     protected boolean hasAbsoluteOrientation() {
-<span class="fc" id="L83">        return true;</span>
+<span class="fc" id="L84">        return true;</span>
     }
 
     /**
@@ -124,12 +125,12 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor&
         //T = [s*R1'^T 0]
         //    [0       1]
 
-<span class="pc bpc" id="L127" title="1 of 4 branches missed.">        if (isInitialPairOfViews &amp;&amp; hasAbsoluteOrientation) {</span>
+<span class="pc bpc" id="L128" title="1 of 4 branches missed.">        if (isInitialPairOfViews &amp;&amp; hasAbsoluteOrientation) {</span>
             /// /first pair of views does not require setting translation and rotation
-<span class="fc" id="L129">            mLastEuclideanCameraRotation = mFirstOrientation;</span>
+<span class="fc" id="L130">            mLastEuclideanCameraRotation = mFirstOrientation;</span>
         }
 
-<span class="fc" id="L132">        return super.transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation);</span>
+<span class="fc" id="L133">        return super.transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -34,6 +34,7 @@ import java.util.List;
  * cameras.
  * Aspect ratio can be configured but by default it is assumed to be 1.0.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class DualAbsoluteQuadricInitialCamerasEstimator extends 
         InitialCamerasEstimator {
     
@@ -42,15 +43,15 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      * Typically this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      */
-<span class="fc" id="L45">    private double mAspectRatio = DualAbsoluteQuadricEstimator.</span>
+<span class="fc" id="L46">    private double mAspectRatio = DualAbsoluteQuadricEstimator.</span>
                 DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
     
     /**
      * Constructor.
      */
     public DualAbsoluteQuadricInitialCamerasEstimator() {
-<span class="fc" id="L52">        super();</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L53">        super();</span>
+<span class="fc" id="L54">    }</span>
     
     /**
      * Constructor.
@@ -58,8 +59,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      */
     public DualAbsoluteQuadricInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L61">        super(fundamentalMatrix);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L62">        super(fundamentalMatrix);</span>
+<span class="fc" id="L63">    }</span>
 
     /**
      * Constructor.
@@ -67,8 +68,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      */
     public DualAbsoluteQuadricInitialCamerasEstimator(
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L70">        super(listener);</span>
-<span class="fc" id="L71">    }</span>
+<span class="fc" id="L71">        super(listener);</span>
+<span class="fc" id="L72">    }</span>
     
     /**
      * Constructor.
@@ -78,8 +79,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
     public DualAbsoluteQuadricInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, 
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L81">        super(fundamentalMatrix, listener);</span>
-<span class="fc" id="L82">    }</span>
+<span class="fc" id="L82">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L83">    }</span>
     
     /**
      * Returns method used by this estimator.
@@ -87,7 +88,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      */
     @Override
     public InitialCamerasEstimatorMethod getMethod() {
-<span class="fc" id="L90">        return InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC;</span>
+<span class="fc" id="L91">        return InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC;</span>
     }    
     
     /**
@@ -96,7 +97,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      */
     @Override
     public boolean isReady() {
-<span class="fc bfc" id="L99" title="All 2 branches covered.">        return mFundamentalMatrix != null;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        return mFundamentalMatrix != null;</span>
     }   
     
     /**
@@ -109,44 +110,44 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
     @Override
     public void estimate() throws LockedException, NotReadyException, 
             InitialCamerasEstimationFailedException {
-<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L113">            throw new LockedException();</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L114">            throw new LockedException();</span>
         }
         
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L117">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L118">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L121">            mLocked = true;</span>
+<span class="fc" id="L122">            mLocked = true;</span>
             
-<span class="fc bfc" id="L123" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L124">                mListener.onStart(this);</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L125">                mListener.onStart(this);</span>
             }
             
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            if (mEstimatedLeftCamera == null) {</span>
-<span class="fc" id="L128">                mEstimatedLeftCamera = new PinholeCamera();</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            if (mEstimatedLeftCamera == null) {</span>
+<span class="fc" id="L129">                mEstimatedLeftCamera = new PinholeCamera();</span>
             }
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">            if (mEstimatedRightCamera == null) {</span>
-<span class="fc" id="L131">                mEstimatedRightCamera = new PinholeCamera();</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">            if (mEstimatedRightCamera == null) {</span>
+<span class="fc" id="L132">                mEstimatedRightCamera = new PinholeCamera();</span>
             }            
             
-<span class="fc" id="L134">            generateInitialMetricCamerasUsingDAQ(mFundamentalMatrix, </span>
+<span class="fc" id="L135">            generateInitialMetricCamerasUsingDAQ(mFundamentalMatrix, </span>
                     mAspectRatio, mEstimatedLeftCamera, mEstimatedRightCamera);
             
-<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L138">                mListener.onFinish(this, mEstimatedLeftCamera, </span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L139">                mListener.onFinish(this, mEstimatedLeftCamera, </span>
                         mEstimatedRightCamera);
             }
-<span class="nc" id="L141">        } catch (InitialCamerasEstimationFailedException e) {</span>
-<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (mListener != null) {</span>
-<span class="nc" id="L143">                mListener.onFail(this, e);</span>
+<span class="nc" id="L142">        } catch (InitialCamerasEstimationFailedException e) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            if (mListener != null) {</span>
+<span class="nc" id="L144">                mListener.onFail(this, e);</span>
             }
-<span class="nc" id="L145">            throw e;            </span>
+<span class="nc" id="L146">            throw e;            </span>
         } finally {
-<span class="fc" id="L147">            mLocked = false;</span>
+<span class="fc" id="L148">            mLocked = false;</span>
         }
-<span class="fc" id="L149">    }    </span>
+<span class="fc" id="L150">    }    </span>
     
     /**
      * Gets aspect ratio of intrinsic parameters of cameras.
@@ -155,7 +156,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      * @return aspect ratio of intrinsic parameters of cameras.
      */
     public double getAspectRatio() {
-<span class="fc" id="L158">        return mAspectRatio;</span>
+<span class="fc" id="L159">        return mAspectRatio;</span>
     }
     
     /**
@@ -166,11 +167,11 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      * @throws LockedException if estimator is locked.
      */
     public void setAspectRatio(double aspectRatio) throws LockedException {
-<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L170">            throw new LockedException();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L171">            throw new LockedException();</span>
         }
-<span class="fc" id="L172">        mAspectRatio = aspectRatio;</span>
-<span class="fc" id="L173">    }</span>
+<span class="fc" id="L173">        mAspectRatio = aspectRatio;</span>
+<span class="fc" id="L174">    }</span>
     
     /**
      * Generates initial cameras in metric stratum (with arbitrary scale) using
@@ -185,10 +186,10 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
             FundamentalMatrix fundamentalMatrix, PinholeCamera leftCamera,
             PinholeCamera rightCamera) 
             throws InitialCamerasEstimationFailedException {
-<span class="fc" id="L188">        generateInitialMetricCamerasUsingDAQ(fundamentalMatrix, </span>
+<span class="fc" id="L189">        generateInitialMetricCamerasUsingDAQ(fundamentalMatrix, </span>
                 DualAbsoluteQuadricEstimator.
                 DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftCamera, rightCamera);
-<span class="fc" id="L191">    }</span>
+<span class="fc" id="L192">    }</span>
     
     /**
      * Generates initial cameras in metric stratum (with arbitrary scale) using
@@ -209,36 +210,36 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
         
         try {
             //generate arbitrary projective cameras
-<span class="fc" id="L212">            fundamentalMatrix.generateCamerasInArbitraryProjectiveSpace(</span>
+<span class="fc" id="L213">            fundamentalMatrix.generateCamerasInArbitraryProjectiveSpace(</span>
                     leftCamera, rightCamera);
                         
-<span class="fc" id="L215">            List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L216">            cameras.add(leftCamera);</span>
-<span class="fc" id="L217">            cameras.add(rightCamera);</span>
+<span class="fc" id="L216">            List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L217">            cameras.add(leftCamera);</span>
+<span class="fc" id="L218">            cameras.add(rightCamera);</span>
             
             //estimate dual absolute quadric
-<span class="fc" id="L220">            LMSEDualAbsoluteQuadricEstimator daqEstimator =</span>
+<span class="fc" id="L221">            LMSEDualAbsoluteQuadricEstimator daqEstimator =</span>
                     new LMSEDualAbsoluteQuadricEstimator(cameras);
-<span class="fc" id="L222">            daqEstimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L223">            daqEstimator.setZeroSkewness(true);</span>
-<span class="fc" id="L224">            daqEstimator.setPrincipalPointAtOrigin(true);</span>
-<span class="fc" id="L225">            daqEstimator.setFocalDistanceAspectRatioKnown(true);</span>
-<span class="fc" id="L226">            daqEstimator.setFocalDistanceAspectRatio(aspectRatio);</span>
-<span class="fc" id="L227">            daqEstimator.setSingularityEnforced(true);</span>
+<span class="fc" id="L223">            daqEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L224">            daqEstimator.setZeroSkewness(true);</span>
+<span class="fc" id="L225">            daqEstimator.setPrincipalPointAtOrigin(true);</span>
+<span class="fc" id="L226">            daqEstimator.setFocalDistanceAspectRatioKnown(true);</span>
+<span class="fc" id="L227">            daqEstimator.setFocalDistanceAspectRatio(aspectRatio);</span>
+<span class="fc" id="L228">            daqEstimator.setSingularityEnforced(true);</span>
             
-<span class="fc" id="L229">            DualAbsoluteQuadric daq = daqEstimator.estimate();</span>
-<span class="fc" id="L230">            ProjectiveTransformation3D transformation = </span>
-<span class="fc" id="L231">                    daq.getMetricToProjectiveTransformation();</span>
+<span class="fc" id="L230">            DualAbsoluteQuadric daq = daqEstimator.estimate();</span>
+<span class="fc" id="L231">            ProjectiveTransformation3D transformation = </span>
+<span class="fc" id="L232">                    daq.getMetricToProjectiveTransformation();</span>
             //inverse transformation to upgrade cameras from projective to
             //metric stratum
-<span class="fc" id="L234">            transformation.inverse();</span>
+<span class="fc" id="L235">            transformation.inverse();</span>
             
             //transform cameras
-<span class="fc" id="L237">            transformation.transform(leftCamera);</span>
-<span class="fc" id="L238">            transformation.transform(rightCamera);</span>
-<span class="nc" id="L239">        } catch (Exception e) {</span>
-<span class="nc" id="L240">            throw new InitialCamerasEstimationFailedException(e);</span>
-<span class="fc" id="L241">        }</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L238">            transformation.transform(leftCamera);</span>
+<span class="fc" id="L239">            transformation.transform(rightCamera);</span>
+<span class="nc" id="L240">        } catch (Exception e) {</span>
+<span class="nc" id="L241">            throw new InitialCamerasEstimationFailedException(e);</span>
+<span class="fc" id="L242">        }</span>
+<span class="fc" id="L243">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

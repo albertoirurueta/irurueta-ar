@@ -49,6 +49,7 @@ import java.util.List;
  * solution that produces the largest amount of points located in front of both
  * cameras.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     
     /**
@@ -97,7 +98,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * Type of corrector to use to triangulate matched points using the 
      * corresponding essential matrix or null if no corrector needs to be used.
      */
-<span class="fc" id="L100">    private CorrectorType mEssentialCameraEstimatorCorrectorType = </span>
+<span class="fc" id="L101">    private CorrectorType mEssentialCameraEstimatorCorrectorType = </span>
             Corrector.DEFAULT_TYPE;
     
     /**
@@ -134,11 +135,11 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     /**
      * Constructor.
      */
-<span class="fc" id="L137">    public PlanarBestFundamentalMatrixEstimatorAndReconstructor() {</span>
-<span class="fc" id="L138">        mHomographyEstimator = </span>
+<span class="fc" id="L138">    public PlanarBestFundamentalMatrixEstimatorAndReconstructor() {</span>
+<span class="fc" id="L139">        mHomographyEstimator = </span>
                 PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-<span class="fc" id="L140">                        create();</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L141">                        create();</span>
+<span class="fc" id="L142">    }</span>
     
     /**
      * Constructor.
@@ -156,11 +157,11 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
             PinholeCameraIntrinsicParameters leftIntrinsics,
             PinholeCameraIntrinsicParameters rightIntrinsics) 
             throws IllegalArgumentException {
-<span class="fc" id="L159">        this();</span>
-<span class="fc" id="L160">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L161">        mLeftIntrinsics = leftIntrinsics;</span>
-<span class="fc" id="L162">        mRightIntrinsics = rightIntrinsics;</span>
-<span class="fc" id="L163">    }</span>
+<span class="fc" id="L160">        this();</span>
+<span class="fc" id="L161">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L162">        mLeftIntrinsics = leftIntrinsics;</span>
+<span class="fc" id="L163">        mRightIntrinsics = rightIntrinsics;</span>
+<span class="fc" id="L164">    }</span>
     
     /**
      * Constructor.
@@ -181,16 +182,16 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
             PinholeCameraIntrinsicParameters rightIntrinsics,
             PlanarBestFundamentalMatrixEstimatorAndReconstructorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L184">        this(leftPoints, rightPoints, leftIntrinsics, rightIntrinsics);</span>
-<span class="fc" id="L185">        mListener = listener;</span>
-<span class="fc" id="L186">    }</span>
+<span class="fc" id="L185">        this(leftPoints, rightPoints, leftIntrinsics, rightIntrinsics);</span>
+<span class="fc" id="L186">        mListener = listener;</span>
+<span class="fc" id="L187">    }</span>
     
     /**
      * Gets list of matched 2D points in the left view.
      * @return list of matched 2D points in the left view.
      */
     public List&lt;Point2D&gt; getLeftPoints() {
-<span class="fc" id="L193">        return mLeftPoints;</span>
+<span class="fc" id="L194">        return mLeftPoints;</span>
     }
     
     /**
@@ -202,22 +203,22 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setLeftPoints(List&lt;Point2D&gt; leftPoints) throws LockedException, 
             IllegalArgumentException {
-<span class="fc bfc" id="L205" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L206">            throw new LockedException();</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L207">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (leftPoints.size() &lt; MINIMUM_SIZE) {</span>
-<span class="fc" id="L209">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (leftPoints.size() &lt; MINIMUM_SIZE) {</span>
+<span class="fc" id="L210">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L212">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L213">    }</span>
+<span class="fc" id="L213">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L214">    }</span>
     
     /**
      * Gets list of matched 2D points in the right view.
      * @return list of matched 2D points in the right view.
      */
     public List&lt;Point2D&gt; getRightPoints() {
-<span class="fc" id="L220">        return mRightPoints;</span>
+<span class="fc" id="L221">        return mRightPoints;</span>
     }
     
     /**
@@ -229,15 +230,15 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setRightPoints(List&lt;Point2D&gt; rightPoints) 
             throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L233">            throw new LockedException();</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L234">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (rightPoints.size() &lt; MINIMUM_SIZE) {</span>
-<span class="fc" id="L236">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (rightPoints.size() &lt; MINIMUM_SIZE) {</span>
+<span class="fc" id="L237">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L239">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L240">    }</span>
+<span class="fc" id="L240">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L241">    }</span>
     
     /**
      * Sets lists of matched 2D points in the left and right views.
@@ -250,19 +251,19 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     public void setLeftAndRightPoints(List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints) throws LockedException, 
             IllegalArgumentException {
-<span class="fc bfc" id="L253" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L254">            throw new LockedException();</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L255">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L257">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L258">    }</span>
+<span class="fc" id="L258">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L259">    }</span>
     
     /**
      * Gets intrinsic parameters for the camera on the left view.
      * @return intrinsic parameters for the camera on the left view.
      */
     public PinholeCameraIntrinsicParameters getLeftIntrinsics() {
-<span class="fc" id="L265">        return mLeftIntrinsics;</span>
+<span class="fc" id="L266">        return mLeftIntrinsics;</span>
     }
     
     /**
@@ -274,19 +275,19 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     public void setLeftIntrinsics(
             PinholeCameraIntrinsicParameters leftIntrinsics) 
             throws LockedException {
-<span class="fc bfc" id="L277" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L278">            throw new LockedException();</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L279">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L281">        mLeftIntrinsics = leftIntrinsics;</span>
-<span class="fc" id="L282">    }</span>
+<span class="fc" id="L282">        mLeftIntrinsics = leftIntrinsics;</span>
+<span class="fc" id="L283">    }</span>
     
     /**
      * Gets intrinsic parameters for the camera on the right view.
      * @return intrinsic parameters for the camera on the right view.
      */
     public PinholeCameraIntrinsicParameters getRightIntrinsics() {
-<span class="fc" id="L289">        return mRightIntrinsics;</span>
+<span class="fc" id="L290">        return mRightIntrinsics;</span>
     }
     
     /**
@@ -298,12 +299,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     public void setRightIntrinsics(
             PinholeCameraIntrinsicParameters rightIntrinsics) 
             throws LockedException {
-<span class="fc bfc" id="L301" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L302">            throw new LockedException();</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L303">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L305">        mRightIntrinsics = rightIntrinsics;</span>
-<span class="fc" id="L306">    }</span>
+<span class="fc" id="L306">        mRightIntrinsics = rightIntrinsics;</span>
+<span class="fc" id="L307">    }</span>
     
     /**
      * Gets internal homography estimator.
@@ -311,7 +312,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public PointCorrespondenceProjectiveTransformation2DRobustEstimator 
             getHomographyEstimator() {
-<span class="fc" id="L314">        return mHomographyEstimator;</span>
+<span class="fc" id="L315">        return mHomographyEstimator;</span>
     }
             
     /**
@@ -323,15 +324,15 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     public void setHomographyEstimator(
             PointCorrespondenceProjectiveTransformation2DRobustEstimator homographyEstimator) 
             throws LockedException, NullPointerException {
-<span class="fc bfc" id="L326" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L327">            throw new LockedException();</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L328">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (homographyEstimator == null) {</span>
-<span class="fc" id="L330">            throw new NullPointerException();</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">        if (homographyEstimator == null) {</span>
+<span class="fc" id="L331">            throw new NullPointerException();</span>
         }
         
-<span class="fc" id="L333">        mHomographyEstimator = homographyEstimator;</span>
-<span class="fc" id="L334">    }</span>
+<span class="fc" id="L334">        mHomographyEstimator = homographyEstimator;</span>
+<span class="fc" id="L335">    }</span>
     
     /**
      * Gets type of corrector to use to triangulate matched points using the 
@@ -339,7 +340,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return corrector to use for triangulation or null.
      */
     public CorrectorType getEssentialCameraEstimatorCorrectorType() {
-<span class="fc" id="L342">        return mEssentialCameraEstimatorCorrectorType;</span>
+<span class="fc" id="L343">        return mEssentialCameraEstimatorCorrectorType;</span>
     }
     
     /**
@@ -350,12 +351,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setEssentialCameraEstimatorCorrectorType(
             CorrectorType correctorType) throws LockedException {
-<span class="fc bfc" id="L353" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L354">            throw new LockedException();</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L355">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L357">        mEssentialCameraEstimatorCorrectorType = correctorType;</span>
-<span class="fc" id="L358">    }    </span>
+<span class="fc" id="L358">        mEssentialCameraEstimatorCorrectorType = correctorType;</span>
+<span class="fc" id="L359">    }    </span>
     
     /**
      * Gets amount of confidence on homography estimation expressed as a value 
@@ -365,7 +366,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getHomographyConfidence() {
-<span class="fc" id="L368">        return mHomographyEstimator.getConfidence();</span>
+<span class="fc" id="L369">        return mHomographyEstimator.getConfidence();</span>
     }
     
     /**
@@ -380,19 +381,19 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setHomographyConfidence(double confidence)
             throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L383" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L384">            throw new LockedException();</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L385">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L387">        mHomographyEstimator.setConfidence(confidence);</span>
-<span class="fc" id="L388">    }</span>
+<span class="fc" id="L388">        mHomographyEstimator.setConfidence(confidence);</span>
+<span class="fc" id="L389">    }</span>
     
     /**
      * Returns maximum allowed number of iterations for homography estimation. 
      * @return maximum allowed number of iterations.
      */
     public int getHomographyMaxIterations() {
-<span class="fc" id="L395">        return mHomographyEstimator.getMaxIterations();</span>
+<span class="fc" id="L396">        return mHomographyEstimator.getMaxIterations();</span>
     }
     
     /**
@@ -403,12 +404,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setHomographyMaxIterations(int maxIterations) 
             throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L406" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L407">            throw new LockedException();</span>
+<span class="fc bfc" id="L407" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L408">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L410">        mHomographyEstimator.setMaxIterations(maxIterations);</span>
-<span class="fc" id="L411">    }</span>
+<span class="fc" id="L411">        mHomographyEstimator.setMaxIterations(maxIterations);</span>
+<span class="fc" id="L412">    }</span>
     
     /**
      * Indicates whether result of homography estimation is refined.
@@ -416,7 +417,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * found by robust estimation without further refining.
      */
     public boolean isHomographyRefined() {
-<span class="fc" id="L419">        return mHomographyEstimator.isResultRefined();</span>
+<span class="fc" id="L420">        return mHomographyEstimator.isResultRefined();</span>
     }
     
     /**
@@ -427,12 +428,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setHomographyRefined(boolean refineResult) 
             throws LockedException {
-<span class="fc bfc" id="L430" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L431">            throw new LockedException();</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L432">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L434">        mHomographyEstimator.setResultRefined(refineResult);</span>
-<span class="fc" id="L435">    }</span>
+<span class="fc" id="L435">        mHomographyEstimator.setResultRefined(refineResult);</span>
+<span class="fc" id="L436">    }</span>
     
     /**
      * Indicates whether homography covariance must be kept after estimation.
@@ -441,7 +442,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * false otherwise.
      */
     public boolean isHomographyCovarianceKept() {
-<span class="fc" id="L444">        return mHomographyEstimator.isCovarianceKept();</span>
+<span class="fc" id="L445">        return mHomographyEstimator.isCovarianceKept();</span>
     }
     
     /**
@@ -453,12 +454,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setHomographyCovarianceKept(boolean keepCovariance)
             throws LockedException {
-<span class="fc bfc" id="L456" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L457">            throw new LockedException();</span>
+<span class="fc bfc" id="L457" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L458">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L460">        mHomographyEstimator.setCovarianceKept(keepCovariance);</span>
-<span class="fc" id="L461">    }</span>
+<span class="fc" id="L461">        mHomographyEstimator.setCovarianceKept(keepCovariance);</span>
+<span class="fc" id="L462">    }</span>
     
     /**
      * Gets covariance for estimated homography if available.
@@ -467,7 +468,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return estimated homography covariance or null.
      */
     public Matrix getHomographyCovariance() {
-<span class="fc" id="L470">        return mHomographyEstimator.getCovariance();</span>
+<span class="fc" id="L471">        return mHomographyEstimator.getCovariance();</span>
     }
     
     /**
@@ -475,7 +476,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return method being used for homography robust estimation.
      */
     public RobustEstimatorMethod getHomographyMethod() {
-<span class="fc" id="L478">        return mHomographyEstimator.getMethod();</span>
+<span class="fc" id="L479">        return mHomographyEstimator.getMethod();</span>
     }
     
     /**
@@ -485,7 +486,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return quality scores for each pair of matched points.
      */
     public double[] getQualityScores() {
-<span class="fc" id="L488">        return mHomographyEstimator.getQualityScores();</span>
+<span class="fc" id="L489">        return mHomographyEstimator.getQualityScores();</span>
     }
     
     /**
@@ -500,12 +501,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setQualityScores(double[] qualityScore) throws LockedException,
             IllegalArgumentException {
-<span class="fc bfc" id="L503" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L504">            throw new LockedException();</span>
+<span class="fc bfc" id="L504" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L505">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L507">        mHomographyEstimator.setQualityScores(qualityScore);</span>
-<span class="fc" id="L508">    }</span>
+<span class="fc" id="L508">        mHomographyEstimator.setQualityScores(qualityScore);</span>
+<span class="fc" id="L509">    }</span>
     
     /**
      * Gets listener to attend events generated by this instance.
@@ -513,7 +514,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public PlanarBestFundamentalMatrixEstimatorAndReconstructorListener 
             getListener() {
-<span class="fc" id="L516">        return mListener;</span>
+<span class="fc" id="L517">        return mListener;</span>
     }
         
     /**
@@ -523,15 +524,15 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     public void setListener(
             PlanarBestFundamentalMatrixEstimatorAndReconstructorListener 
                     listener) {
-<span class="fc" id="L526">        mListener = listener;</span>
-<span class="fc" id="L527">    }</span>
+<span class="fc" id="L527">        mListener = listener;</span>
+<span class="fc" id="L528">    }</span>
 
     /**
      * Indicates whether this instance is locked while computing a solution.
      * @return true if this instance is locked, false otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L534">        return mLocked;</span>
+<span class="fc" id="L535">        return mLocked;</span>
     }
     
     /**
@@ -540,11 +541,11 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return true if this instance is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="pc bpc" id="L543" title="2 of 6 branches missed.">        return mLeftPoints != null &amp;&amp; mLeftPoints.size() &gt;= MINIMUM_SIZE &amp;&amp;</span>
-<span class="pc bpc" id="L544" title="1 of 2 branches missed.">                mRightPoints != null &amp;&amp; mRightPoints.size() &gt;= MINIMUM_SIZE &amp;&amp;</span>
-<span class="pc bpc" id="L545" title="3 of 6 branches missed.">                mLeftPoints.size() == mRightPoints.size() &amp;&amp;</span>
+<span class="pc bpc" id="L544" title="2 of 6 branches missed.">        return mLeftPoints != null &amp;&amp; mLeftPoints.size() &gt;= MINIMUM_SIZE &amp;&amp;</span>
+<span class="pc bpc" id="L545" title="1 of 2 branches missed.">                mRightPoints != null &amp;&amp; mRightPoints.size() &gt;= MINIMUM_SIZE &amp;&amp;</span>
+<span class="pc bpc" id="L546" title="3 of 6 branches missed.">                mLeftPoints.size() == mRightPoints.size() &amp;&amp;</span>
                 mLeftIntrinsics != null &amp;&amp; mRightIntrinsics != null &amp;&amp;
-<span class="pc bpc" id="L547" title="1 of 2 branches missed.">                mHomographyEstimator.isReady();</span>
+<span class="pc bpc" id="L548" title="1 of 2 branches missed.">                mHomographyEstimator.isReady();</span>
     }
 
     /**
@@ -552,7 +553,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return estimated homography.
      */
     public ProjectiveTransformation2D getHomography() {
-<span class="fc" id="L555">        return mHomography;</span>
+<span class="fc" id="L556">        return mHomography;</span>
     }
     
     /**
@@ -560,7 +561,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return best estimated fundamental matrix.
      */
     public FundamentalMatrix getFundamentalMatrix() {
-<span class="fc" id="L563">        return mFundamentalMatrix;</span>
+<span class="fc" id="L564">        return mFundamentalMatrix;</span>
     }
     
     /**
@@ -568,7 +569,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return best estimated triangulated points.
      */
     public List&lt;Point3D&gt; getTriangulatedPoints() {
-<span class="fc" id="L571">        return mTriangulatedPoints;</span>
+<span class="fc" id="L572">        return mTriangulatedPoints;</span>
     }
     
     /**
@@ -577,7 +578,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return set indicating which of the best triangulated points are valid.
      */
     public BitSet getValidTriangulatedPoints() {
-<span class="fc" id="L580">        return mValidTriangulatedPoints;</span>
+<span class="fc" id="L581">        return mValidTriangulatedPoints;</span>
     }
     
     /**
@@ -585,7 +586,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return best estimated camera for left view.
      */
     public PinholeCamera getEstimatedLeftCamera() {
-<span class="fc" id="L588">        return mEstimatedLeftCamera;</span>
+<span class="fc" id="L589">        return mEstimatedLeftCamera;</span>
     }
     
     /**
@@ -593,7 +594,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @return best estimated camera for right view.
      */
     public PinholeCamera getEstimatedRightCamera() {
-<span class="fc" id="L596">        return mEstimatedRightCamera;</span>
+<span class="fc" id="L597">        return mEstimatedRightCamera;</span>
     }
     
     /**
@@ -607,96 +608,96 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void estimateAndReconstruct() throws LockedException, 
             NotReadyException, FundamentalMatrixEstimatorException {
-<span class="pc bpc" id="L610" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L611">            throw new LockedException();</span>
+<span class="pc bpc" id="L611" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L612">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L613" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L614">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L614" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L615">            throw new NotReadyException();</span>
         }
                        
         //always enable inlier estimation for homography
-<span class="fc" id="L618">        enableHomographyInliersEstimation();</span>
+<span class="fc" id="L619">        enableHomographyInliersEstimation();</span>
         
         try {
-<span class="fc" id="L621">            mLocked = true;</span>
+<span class="fc" id="L622">            mLocked = true;</span>
             
-<span class="fc bfc" id="L623" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L624">                mListener.onEstimateStart(this);</span>
+<span class="fc bfc" id="L624" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L625">                mListener.onEstimateStart(this);</span>
             }
             
             //estimate homography
-<span class="fc" id="L628">            mHomography = mHomographyEstimator.estimate();</span>
+<span class="fc" id="L629">            mHomography = mHomographyEstimator.estimate();</span>
             
-<span class="fc" id="L630">            InliersData homographyInliers = </span>
-<span class="fc" id="L631">                    mHomographyEstimator.getInliersData();            </span>
+<span class="fc" id="L631">            InliersData homographyInliers = </span>
+<span class="fc" id="L632">                    mHomographyEstimator.getInliersData();            </span>
             
             //estimate all fundamental matrices for homography
-<span class="fc" id="L634">            PlanarFundamentalMatrixEstimator fundamentalMatrixEstimator =</span>
+<span class="fc" id="L635">            PlanarFundamentalMatrixEstimator fundamentalMatrixEstimator =</span>
                     new PlanarFundamentalMatrixEstimator(mHomography, 
                             mLeftIntrinsics, mRightIntrinsics);
             
-<span class="fc" id="L638">            List&lt;FundamentalMatrix&gt; fundamentalMatrices = </span>
-<span class="fc" id="L639">                    fundamentalMatrixEstimator.estimate();</span>
+<span class="fc" id="L639">            List&lt;FundamentalMatrix&gt; fundamentalMatrices = </span>
+<span class="fc" id="L640">                    fundamentalMatrixEstimator.estimate();</span>
             
-<span class="pc bpc" id="L641" title="1 of 2 branches missed.">            if(fundamentalMatrices == null) {</span>
-<span class="nc" id="L642">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="pc bpc" id="L642" title="1 of 2 branches missed.">            if(fundamentalMatrices == null) {</span>
+<span class="nc" id="L643">                throw new FundamentalMatrixEstimatorException();</span>
             }   
             
             //select homography inlier points
-<span class="fc" id="L646">            List&lt;Point2D&gt; leftPoints = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L647">            List&lt;Point2D&gt; rightPoints = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L648">            BitSet bitset = homographyInliers.getInliers();</span>
-<span class="fc" id="L649">            int bitsetLength = bitset.length();</span>
-<span class="fc bfc" id="L650" title="All 2 branches covered.">            for (int i = 0; i &lt; bitsetLength; i++) {</span>
-<span class="fc bfc" id="L651" title="All 2 branches covered.">                if (bitset.get(i)) {</span>
+<span class="fc" id="L647">            List&lt;Point2D&gt; leftPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L648">            List&lt;Point2D&gt; rightPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L649">            BitSet bitset = homographyInliers.getInliers();</span>
+<span class="fc" id="L650">            int bitsetLength = bitset.length();</span>
+<span class="fc bfc" id="L651" title="All 2 branches covered.">            for (int i = 0; i &lt; bitsetLength; i++) {</span>
+<span class="fc bfc" id="L652" title="All 2 branches covered.">                if (bitset.get(i)) {</span>
                     //is inlier
-<span class="fc" id="L653">                    leftPoints.add(mLeftPoints.get(i));</span>
-<span class="fc" id="L654">                    rightPoints.add(mRightPoints.get(i));</span>
+<span class="fc" id="L654">                    leftPoints.add(mLeftPoints.get(i));</span>
+<span class="fc" id="L655">                    rightPoints.add(mRightPoints.get(i));</span>
                 }
             }
             
             //pick best fundamental matrix
-<span class="fc" id="L659">            EssentialMatrixInitialCamerasEstimator essentialCamerasEstimator = </span>
+<span class="fc" id="L660">            EssentialMatrixInitialCamerasEstimator essentialCamerasEstimator = </span>
                     new EssentialMatrixInitialCamerasEstimator(mLeftIntrinsics, 
                             mRightIntrinsics, leftPoints, rightPoints);
-<span class="fc" id="L662">            essentialCamerasEstimator.setCorrectorType(</span>
+<span class="fc" id="L663">            essentialCamerasEstimator.setCorrectorType(</span>
                     mEssentialCameraEstimatorCorrectorType);
-<span class="fc" id="L664">            essentialCamerasEstimator.setPointsTriangulated(true);</span>
-<span class="fc" id="L665">            essentialCamerasEstimator.setValidTriangulatedPointsMarked(true);</span>
+<span class="fc" id="L665">            essentialCamerasEstimator.setPointsTriangulated(true);</span>
+<span class="fc" id="L666">            essentialCamerasEstimator.setValidTriangulatedPointsMarked(true);</span>
                 
-<span class="fc" id="L667">            int numBest = 0;</span>
-<span class="fc bfc" id="L668" title="All 2 branches covered.">            for (FundamentalMatrix fundamentalMatrix : fundamentalMatrices) {</span>
-<span class="fc" id="L669">                essentialCamerasEstimator.setFundamentalMatrix(</span>
+<span class="fc" id="L668">            int numBest = 0;</span>
+<span class="fc bfc" id="L669" title="All 2 branches covered.">            for (FundamentalMatrix fundamentalMatrix : fundamentalMatrices) {</span>
+<span class="fc" id="L670">                essentialCamerasEstimator.setFundamentalMatrix(</span>
                         fundamentalMatrix);
 
-<span class="fc" id="L672">                essentialCamerasEstimator.estimate();</span>
+<span class="fc" id="L673">                essentialCamerasEstimator.estimate();</span>
                 
-<span class="fc" id="L674">                BitSet validPoints = essentialCamerasEstimator.</span>
-<span class="fc" id="L675">                        getValidTriangulatedPoints();</span>
-<span class="fc" id="L676">                int num = validPoints.cardinality();</span>
-<span class="fc bfc" id="L677" title="All 2 branches covered.">                if (num &gt; numBest) {</span>
-<span class="fc" id="L678">                    numBest = num;</span>
-<span class="fc" id="L679">                    mFundamentalMatrix = fundamentalMatrix;</span>
-<span class="fc" id="L680">                    mTriangulatedPoints = </span>
-<span class="fc" id="L681">                            essentialCamerasEstimator.getTriangulatedPoints();</span>
-<span class="fc" id="L682">                    mValidTriangulatedPoints = validPoints;</span>
-<span class="fc" id="L683">                    mEstimatedLeftCamera = </span>
-<span class="fc" id="L684">                            essentialCamerasEstimator.getEstimatedLeftCamera();</span>
-<span class="fc" id="L685">                    mEstimatedRightCamera = </span>
-<span class="fc" id="L686">                            essentialCamerasEstimator.getEstimatedRightCamera();</span>
+<span class="fc" id="L675">                BitSet validPoints = essentialCamerasEstimator.</span>
+<span class="fc" id="L676">                        getValidTriangulatedPoints();</span>
+<span class="fc" id="L677">                int num = validPoints.cardinality();</span>
+<span class="fc bfc" id="L678" title="All 2 branches covered.">                if (num &gt; numBest) {</span>
+<span class="fc" id="L679">                    numBest = num;</span>
+<span class="fc" id="L680">                    mFundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L681">                    mTriangulatedPoints = </span>
+<span class="fc" id="L682">                            essentialCamerasEstimator.getTriangulatedPoints();</span>
+<span class="fc" id="L683">                    mValidTriangulatedPoints = validPoints;</span>
+<span class="fc" id="L684">                    mEstimatedLeftCamera = </span>
+<span class="fc" id="L685">                            essentialCamerasEstimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L686">                    mEstimatedRightCamera = </span>
+<span class="fc" id="L687">                            essentialCamerasEstimator.getEstimatedRightCamera();</span>
                 }
-<span class="fc" id="L688">            }</span>
+<span class="fc" id="L689">            }</span>
             
-<span class="fc bfc" id="L690" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L691">                mListener.onEstimateEnd(this);</span>
+<span class="fc bfc" id="L691" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L692">                mListener.onEstimateEnd(this);</span>
             }
             
-<span class="fc" id="L694">        } catch (RobustEstimatorException | InitialCamerasEstimationFailedException e) {</span>
-<span class="fc" id="L695">            throw new FundamentalMatrixEstimatorException(e);</span>
+<span class="fc" id="L695">        } catch (RobustEstimatorException | InitialCamerasEstimationFailedException e) {</span>
+<span class="fc" id="L696">            throw new FundamentalMatrixEstimatorException(e);</span>
         } finally {
-<span class="fc" id="L697">            mLocked = false;</span>
+<span class="fc" id="L698">            mLocked = false;</span>
         }
-<span class="fc" id="L699">    }</span>
+<span class="fc" id="L700">    }</span>
     
     /**
      * Internal method that sets list of matched 2D points in the left and right 
@@ -708,58 +709,58 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     private void internalSetLeftAndRightPoints(List&lt;Point2D&gt; leftPoints,
             List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc bfc" id="L711" title="All 2 branches covered.">        if (leftPoints.size() &lt; MINIMUM_SIZE || </span>
-<span class="fc bfc" id="L712" title="All 2 branches covered.">                rightPoints.size() &lt; MINIMUM_SIZE ||</span>
-<span class="fc bfc" id="L713" title="All 2 branches covered.">                leftPoints.size() != rightPoints.size()) {</span>
-<span class="fc" id="L714">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L712" title="All 2 branches covered.">        if (leftPoints.size() &lt; MINIMUM_SIZE || </span>
+<span class="fc bfc" id="L713" title="All 2 branches covered.">                rightPoints.size() &lt; MINIMUM_SIZE ||</span>
+<span class="fc bfc" id="L714" title="All 2 branches covered.">                leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L715">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L717">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L718">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L718">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L719">        mRightPoints = rightPoints;</span>
         try {
-<span class="fc" id="L720">            mHomographyEstimator.setPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L721">            mHomographyEstimator.setPoints(leftPoints, rightPoints);</span>
             
-<span class="pc bpc" id="L722" title="2 of 3 branches missed.">            switch (mHomographyEstimator.getMethod()) {</span>
+<span class="pc bpc" id="L723" title="2 of 3 branches missed.">            switch (mHomographyEstimator.getMethod()) {</span>
                 case PROMedS:
-<span class="fc" id="L724">                    PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator promedsEstimator =</span>
+<span class="fc" id="L725">                    PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator promedsEstimator =</span>
                             (PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-<span class="pc bpc" id="L726" title="1 of 2 branches missed.">                    if (promedsEstimator.getQualityScores() == null) {</span>
-<span class="fc" id="L727">                        double[] qualityScores = new double[leftPoints.size()];</span>
-<span class="fc" id="L728">                        Arrays.fill(qualityScores, 1.0);</span>
-<span class="fc" id="L729">                        promedsEstimator.setQualityScores(qualityScores);</span>
-<span class="fc" id="L730">                    }</span>
+<span class="pc bpc" id="L727" title="1 of 2 branches missed.">                    if (promedsEstimator.getQualityScores() == null) {</span>
+<span class="fc" id="L728">                        double[] qualityScores = new double[leftPoints.size()];</span>
+<span class="fc" id="L729">                        Arrays.fill(qualityScores, 1.0);</span>
+<span class="fc" id="L730">                        promedsEstimator.setQualityScores(qualityScores);</span>
+<span class="fc" id="L731">                    }</span>
                     break;
                 case PROSAC:
-<span class="nc" id="L733">                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacEstimator =</span>
+<span class="nc" id="L734">                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacEstimator =</span>
                             (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-<span class="nc bnc" id="L735" title="All 2 branches missed.">                    if (prosacEstimator.getQualityScores() == null) {</span>
-<span class="nc" id="L736">                        double[] qualityScores = new double[leftPoints.size()];</span>
-<span class="nc" id="L737">                        Arrays.fill(qualityScores, 1.0);</span>
-<span class="nc" id="L738">                        prosacEstimator.setQualityScores(qualityScores);</span>
+<span class="nc bnc" id="L736" title="All 2 branches missed.">                    if (prosacEstimator.getQualityScores() == null) {</span>
+<span class="nc" id="L737">                        double[] qualityScores = new double[leftPoints.size()];</span>
+<span class="nc" id="L738">                        Arrays.fill(qualityScores, 1.0);</span>
+<span class="nc" id="L739">                        prosacEstimator.setQualityScores(qualityScores);</span>
                     }
             }
             
-<span class="pc" id="L742">        } catch (LockedException ignore) { /* never happens */ }        </span>
-<span class="fc" id="L743">    }  </span>
+<span class="pc" id="L743">        } catch (LockedException ignore) { /* never happens */ }        </span>
+<span class="fc" id="L744">    }  </span>
     
     /**
      * Ensures that inlier estimation is enabled on homography estimator.
      */
     private void enableHomographyInliersEstimation() {
         try {
-<span class="pc bpc" id="L750" title="2 of 3 branches missed.">            switch (mHomographyEstimator.getMethod()) {</span>
+<span class="pc bpc" id="L751" title="2 of 3 branches missed.">            switch (mHomographyEstimator.getMethod()) {</span>
                 case RANSAC:
-<span class="nc" id="L752">                    RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =</span>
+<span class="nc" id="L753">                    RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =</span>
                             (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-<span class="nc" id="L754">                    ransacHomographyEstimator.setComputeAndKeepInliersEnabled(true);</span>
-<span class="nc" id="L755">                    ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);</span>
+<span class="nc" id="L755">                    ransacHomographyEstimator.setComputeAndKeepInliersEnabled(true);</span>
+<span class="nc" id="L756">                    ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);</span>
                 case PROSAC:
-<span class="nc" id="L757">                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =</span>
+<span class="nc" id="L758">                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =</span>
                             (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-<span class="nc" id="L759">                    prosacHomographyEstimator.setComputeAndKeepInliersEnabled(true);</span>
-<span class="nc" id="L760">                    prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);</span>
+<span class="nc" id="L760">                    prosacHomographyEstimator.setComputeAndKeepInliersEnabled(true);</span>
+<span class="nc" id="L761">                    prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);</span>
             }
-<span class="pc" id="L762">        } catch (LockedException ignore) { /* never happens */ }</span>
-<span class="fc" id="L763">    }</span>
+<span class="pc" id="L763">        } catch (LockedException ignore) { /* never happens */ }</span>
+<span class="fc" id="L764">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

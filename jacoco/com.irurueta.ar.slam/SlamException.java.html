@@ -20,22 +20,23 @@ import com.irurueta.geometry.GeometryException;
 /**
  * Base exception for all exceptions related to SLAM.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class SlamException extends GeometryException {
     
     /**
      * Constructor.
      */
     public SlamException() {
-<span class="fc" id="L29">        super();</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L30">        super();</span>
+<span class="fc" id="L31">    }</span>
     
     /**
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
     public SlamException(String message) {
-<span class="fc" id="L37">        super(message);</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L38">        super(message);</span>
+<span class="fc" id="L39">    }</span>
     
     /**
      * Constructor with message and cause.
@@ -43,15 +44,15 @@ public class SlamException extends GeometryException {
      * @param cause instance containing the cause
      */
     public SlamException(String message, Throwable cause) {
-<span class="fc" id="L46">        super(message, cause);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L47">        super(message, cause);</span>
+<span class="fc" id="L48">    }</span>
     
     /**
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
     public SlamException(Throwable cause) {
-<span class="fc" id="L54">        super(cause);</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L55">        super(cause);</span>
+<span class="fc" id="L56">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -47,7 +47,7 @@ import java.util.List;
  * This implementation uses Levenberg-Marquardt algorithm for a fast cost 
  * optimization and uses homogeneous points for epipole refinement.
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
     
     /**
@@ -272,11 +272,11 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
 <span class="pc bpc" id="L272" title="1 of 4 branches missed.">            } while(iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);                </span>
             
 <span class="fc bfc" id="L274" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L275">                mListener.onRefineEnd(this, mInitialEstimation, result, </span>
-                        errorDecreased);
+<span class="fc" id="L275">                mListener.onRefineEnd(this, mInitialEstimation, result,</span>
+                        true);
             }
                 
-<span class="fc" id="L279">            return errorDecreased;</span>
+<span class="fc" id="L279">            return true;</span>
 
 <span class="nc" id="L281">        } catch (Exception e) {</span>
 <span class="nc" id="L282">            throw new RefinerException(e);</span>

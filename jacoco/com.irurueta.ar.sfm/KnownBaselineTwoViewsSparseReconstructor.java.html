@@ -28,6 +28,7 @@ import java.util.List;
  * separation), so that both cameras and reconstructed points are obtained with
  * exact scale.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class KnownBaselineTwoViewsSparseReconstructor extends 
         BaseTwoViewsSparseReconstructor&lt;
         KnownBaselineTwoViewsSparseReconstructorConfiguration, 
@@ -45,8 +46,8 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
             KnownBaselineTwoViewsSparseReconstructorConfiguration configuration,
             KnownBaselineTwoViewsSparseReconstructorListener listener) 
             throws NullPointerException {
-<span class="fc" id="L48">        super(configuration, listener);</span>
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L49">        super(configuration, listener);</span>
+<span class="fc" id="L50">    }</span>
     
     /**
      * Constructor with default configuration.
@@ -56,9 +57,9 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
     public KnownBaselineTwoViewsSparseReconstructor(
             KnownBaselineTwoViewsSparseReconstructorListener listener) 
             throws NullPointerException {
-<span class="fc" id="L59">        this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(), </span>
+<span class="fc" id="L60">        this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(), </span>
                 listener);
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L62">    }</span>
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
@@ -70,54 +71,54 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
         try {
             //reconstruction succeeded, so we update scale of cameras and
             //reconstructed points
-<span class="fc" id="L73">            double baseline = mConfiguration.getBaseline();</span>
+<span class="fc" id="L74">            double baseline = mConfiguration.getBaseline();</span>
 
-<span class="fc" id="L75">            PinholeCamera camera1 = mEstimatedCamera1.getCamera();</span>
-<span class="fc" id="L76">            PinholeCamera camera2 = mEstimatedCamera2.getCamera();</span>
+<span class="fc" id="L76">            PinholeCamera camera1 = mEstimatedCamera1.getCamera();</span>
+<span class="fc" id="L77">            PinholeCamera camera2 = mEstimatedCamera2.getCamera();</span>
 
-<span class="fc" id="L78">            camera1.decompose();</span>
-<span class="fc" id="L79">            camera2.decompose();</span>
+<span class="fc" id="L79">            camera1.decompose();</span>
+<span class="fc" id="L80">            camera2.decompose();</span>
 
-<span class="fc" id="L81">            Point3D center1 = camera1.getCameraCenter();</span>
-<span class="fc" id="L82">            Point3D center2 = camera2.getCameraCenter();</span>
+<span class="fc" id="L82">            Point3D center1 = camera1.getCameraCenter();</span>
+<span class="fc" id="L83">            Point3D center2 = camera2.getCameraCenter();</span>
 
-<span class="fc" id="L84">            double estimatedBaseline = center1.distanceTo(center2);</span>
+<span class="fc" id="L85">            double estimatedBaseline = center1.distanceTo(center2);</span>
 
-<span class="fc" id="L86">            double scale = baseline / estimatedBaseline;</span>
+<span class="fc" id="L87">            double scale = baseline / estimatedBaseline;</span>
 
-<span class="fc" id="L88">            MetricTransformation3D scaleTransformation =</span>
+<span class="fc" id="L89">            MetricTransformation3D scaleTransformation =</span>
                     new MetricTransformation3D(scale);
 
             //update scale of cameras
-<span class="fc" id="L92">            scaleTransformation.transform(camera1);</span>
-<span class="fc" id="L93">            scaleTransformation.transform(camera2);</span>
+<span class="fc" id="L93">            scaleTransformation.transform(camera1);</span>
+<span class="fc" id="L94">            scaleTransformation.transform(camera2);</span>
 
-<span class="fc" id="L95">            mEstimatedCamera1.setCamera(camera1);</span>
-<span class="fc" id="L96">            mEstimatedCamera2.setCamera(camera2);</span>
+<span class="fc" id="L96">            mEstimatedCamera1.setCamera(camera1);</span>
+<span class="fc" id="L97">            mEstimatedCamera2.setCamera(camera2);</span>
 
             //update scale of reconstructed points
-<span class="fc" id="L99">            int numPoints = mReconstructedPoints.size();</span>
-<span class="fc" id="L100">            List&lt;Point3D&gt; reconstructedPoints3D = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {</span>
-<span class="fc" id="L102">                reconstructedPoints3D.add(reconstructedPoint.</span>
-<span class="fc" id="L103">                        getPoint());</span>
-<span class="fc" id="L104">            }</span>
+<span class="fc" id="L100">            int numPoints = mReconstructedPoints.size();</span>
+<span class="fc" id="L101">            List&lt;Point3D&gt; reconstructedPoints3D = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {</span>
+<span class="fc" id="L103">                reconstructedPoints3D.add(reconstructedPoint.</span>
+<span class="fc" id="L104">                        getPoint());</span>
+<span class="fc" id="L105">            }</span>
 
-<span class="fc" id="L106">            scaleTransformation.transformAndOverwritePoints(</span>
+<span class="fc" id="L107">            scaleTransformation.transformAndOverwritePoints(</span>
                     reconstructedPoints3D);
 
             //set scaled points into result
-<span class="fc bfc" id="L110" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
-<span class="fc" id="L111">                mReconstructedPoints.get(i).setPoint(</span>
-<span class="fc" id="L112">                        reconstructedPoints3D.get(i));</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L112">                mReconstructedPoints.get(i).setPoint(</span>
+<span class="fc" id="L113">                        reconstructedPoints3D.get(i));</span>
             }
 
-<span class="fc" id="L115">            return true;</span>
-<span class="nc" id="L116">        } catch (Exception e) {</span>
-<span class="nc" id="L117">            mFailed = true;</span>
-<span class="nc" id="L118">            mListener.onFail(this);</span>
+<span class="fc" id="L116">            return true;</span>
+<span class="nc" id="L117">        } catch (Exception e) {</span>
+<span class="nc" id="L118">            mFailed = true;</span>
+<span class="nc" id="L119">            mListener.onFail(this);</span>
 
-<span class="nc" id="L120">            return false;</span>
+<span class="nc" id="L121">            return false;</span>
         }
     }
 }

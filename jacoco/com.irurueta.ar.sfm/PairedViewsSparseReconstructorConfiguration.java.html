@@ -21,6 +21,7 @@ import java.io.Serializable;
 /**
  * Contains configuration for a paired view sparse reconstructor.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class PairedViewsSparseReconstructorConfiguration extends
         BasePairedViewsSparseReconstructorConfiguration&lt;PairedViewsSparseReconstructorConfiguration&gt;
         implements Serializable {
@@ -28,14 +29,14 @@ public class PairedViewsSparseReconstructorConfiguration extends
     /**
      * Constructor.
      */
-<span class="fc" id="L31">    public PairedViewsSparseReconstructorConfiguration() { }</span>
+<span class="fc" id="L32">    public PairedViewsSparseReconstructorConfiguration() { }</span>
 
     /**
      * Creates an instance of a sparse reconstructor configuration.
      * @return configuration instance.
      */
     public static PairedViewsSparseReconstructorConfiguration make() {
-<span class="fc" id="L38">        return new PairedViewsSparseReconstructorConfiguration();</span>
+<span class="fc" id="L39">        return new PairedViewsSparseReconstructorConfiguration();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

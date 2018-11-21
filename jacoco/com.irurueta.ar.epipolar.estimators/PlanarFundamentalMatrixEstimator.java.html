@@ -36,6 +36,7 @@ import java.util.List;
  * will fail since this kind of geometry is a degenerate configuration of 
  * points.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class PlanarFundamentalMatrixEstimator {
     
     /**
@@ -67,7 +68,7 @@ public class PlanarFundamentalMatrixEstimator {
     /**
      * Constructor.
      */
-<span class="fc" id="L70">    public PlanarFundamentalMatrixEstimator() { }</span>
+<span class="fc" id="L71">    public PlanarFundamentalMatrixEstimator() { }</span>
     
     /**
      * Constructor.
@@ -78,11 +79,11 @@ public class PlanarFundamentalMatrixEstimator {
      */
     public PlanarFundamentalMatrixEstimator(Transformation2D homography,
             PinholeCameraIntrinsicParameters leftIntrinsics,
-<span class="fc" id="L81">            PinholeCameraIntrinsicParameters rightIntrinsics) {</span>
-<span class="fc" id="L82">        mHomography = homography;</span>
-<span class="fc" id="L83">        mLeftIntrinsics = leftIntrinsics;</span>
-<span class="fc" id="L84">        mRightIntrinsics = rightIntrinsics;</span>
-<span class="fc" id="L85">    }</span>
+<span class="fc" id="L82">            PinholeCameraIntrinsicParameters rightIntrinsics) {</span>
+<span class="fc" id="L83">        mHomography = homography;</span>
+<span class="fc" id="L84">        mLeftIntrinsics = leftIntrinsics;</span>
+<span class="fc" id="L85">        mRightIntrinsics = rightIntrinsics;</span>
+<span class="fc" id="L86">    }</span>
     
     /**
      * Constructor.
@@ -96,16 +97,16 @@ public class PlanarFundamentalMatrixEstimator {
             PinholeCameraIntrinsicParameters leftIntrinsics,
             PinholeCameraIntrinsicParameters rightIntrinsics,
             PlanarFundamentalMatrixEstimatorListener listener) {
-<span class="fc" id="L99">        this(homography, leftIntrinsics, rightIntrinsics);</span>
-<span class="fc" id="L100">        mListener = listener;</span>
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L100">        this(homography, leftIntrinsics, rightIntrinsics);</span>
+<span class="fc" id="L101">        mListener = listener;</span>
+<span class="fc" id="L102">    }</span>
     
     /**
      * Gets 2D transformation relating two views (left view to right view).
      * @return 2D transformation relating two views.
      */
     public Transformation2D getHomography() {
-<span class="fc" id="L108">        return mHomography;</span>
+<span class="fc" id="L109">        return mHomography;</span>
     }
     
     /**
@@ -115,18 +116,18 @@ public class PlanarFundamentalMatrixEstimator {
      */
     public void setHomography(Transformation2D homography) 
             throws LockedException {
-<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L119">            throw new LockedException();</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L120">            throw new LockedException();</span>
         }
-<span class="fc" id="L121">        mHomography = homography;</span>
-<span class="fc" id="L122">    }</span>
+<span class="fc" id="L122">        mHomography = homography;</span>
+<span class="fc" id="L123">    }</span>
     
     /**
      * Gets intrinsic parameters to be used on left view.
      * @return intrinsic parameters to be used on left view.
      */
     public PinholeCameraIntrinsicParameters getLeftIntrinsics() {
-<span class="fc" id="L129">        return mLeftIntrinsics;</span>
+<span class="fc" id="L130">        return mLeftIntrinsics;</span>
     }
     
     /**
@@ -137,18 +138,18 @@ public class PlanarFundamentalMatrixEstimator {
     public void setLeftIntrinsics(
             PinholeCameraIntrinsicParameters leftIntrinsics) 
             throws LockedException {
-<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L141">            throw new LockedException();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L142">            throw new LockedException();</span>
         }
-<span class="fc" id="L143">        mLeftIntrinsics = leftIntrinsics;</span>
-<span class="fc" id="L144">    }</span>
+<span class="fc" id="L144">        mLeftIntrinsics = leftIntrinsics;</span>
+<span class="fc" id="L145">    }</span>
 
     /**
      * Gets intrinsic parameters to be used on right view.
      * @return intrinsic parameters to be used on right view.
      */
     public PinholeCameraIntrinsicParameters getRightIntrinsics() {
-<span class="fc" id="L151">        return mRightIntrinsics;</span>
+<span class="fc" id="L152">        return mRightIntrinsics;</span>
     }
     
     /**
@@ -159,18 +160,18 @@ public class PlanarFundamentalMatrixEstimator {
     public void setRightIntrinsics(
             PinholeCameraIntrinsicParameters rightIntrinsics) 
             throws LockedException {
-<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L163">            throw new LockedException();</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L164">            throw new LockedException();</span>
         }
-<span class="fc" id="L165">        mRightIntrinsics = rightIntrinsics;</span>
-<span class="fc" id="L166">    }        </span>
+<span class="fc" id="L166">        mRightIntrinsics = rightIntrinsics;</span>
+<span class="fc" id="L167">    }        </span>
     
     /**
      * Gets listener to attend events generated by this instance.
      * @return listener to attend events generated by this instance.
      */
     public PlanarFundamentalMatrixEstimatorListener getListener() {
-<span class="fc" id="L173">        return mListener;</span>
+<span class="fc" id="L174">        return mListener;</span>
     }
     
     /**
@@ -178,8 +179,8 @@ public class PlanarFundamentalMatrixEstimator {
      * @param listener listener to attend events generated by this instance.
      */
     public void setListener(PlanarFundamentalMatrixEstimatorListener listener) {
-<span class="fc" id="L181">        mListener = listener;</span>
-<span class="fc" id="L182">    }    </span>
+<span class="fc" id="L182">        mListener = listener;</span>
+<span class="fc" id="L183">    }    </span>
     
     /**
      * Indicates whether estimator is locked while estimating fundamental
@@ -187,7 +188,7 @@ public class PlanarFundamentalMatrixEstimator {
      * @return true if estimator is locked, false otherwise. 
      */
     public boolean isLocked() {
-<span class="fc" id="L190">        return mLocked;</span>
+<span class="fc" id="L191">        return mLocked;</span>
     }
     
     /**
@@ -196,7 +197,7 @@ public class PlanarFundamentalMatrixEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="pc bpc" id="L199" title="2 of 6 branches missed.">        return mHomography != null &amp;&amp; mLeftIntrinsics != null &amp;&amp; </span>
+<span class="pc bpc" id="L200" title="2 of 6 branches missed.">        return mHomography != null &amp;&amp; mLeftIntrinsics != null &amp;&amp; </span>
                 mRightIntrinsics != null;
     }
     
@@ -210,9 +211,9 @@ public class PlanarFundamentalMatrixEstimator {
      */
     public List&lt;FundamentalMatrix&gt; estimate() throws LockedException, 
             NotReadyException, FundamentalMatrixEstimatorException {
-<span class="fc" id="L213">        List&lt;FundamentalMatrix&gt; result = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L214">        estimate(result);</span>
-<span class="fc" id="L215">        return result;</span>
+<span class="fc" id="L214">        List&lt;FundamentalMatrix&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L215">        estimate(result);</span>
+<span class="fc" id="L216">        return result;</span>
     }
     
     /**
@@ -225,47 +226,47 @@ public class PlanarFundamentalMatrixEstimator {
      */
     public void estimate(List&lt;FundamentalMatrix&gt; result) throws LockedException, 
             NotReadyException, FundamentalMatrixEstimatorException {
-<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L229">            throw new LockedException();</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L230">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L232">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L233">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L236">            mLocked = true;</span>
+<span class="fc" id="L237">            mLocked = true;</span>
             
-<span class="fc bfc" id="L238" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L239">                mListener.onEstimateStart(this);</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L240">                mListener.onEstimateStart(this);</span>
             }         
             
-<span class="fc" id="L242">            HomographyDecomposer decomposer = new HomographyDecomposer(</span>
+<span class="fc" id="L243">            HomographyDecomposer decomposer = new HomographyDecomposer(</span>
                     mHomography, mLeftIntrinsics, mRightIntrinsics);
             
-<span class="fc" id="L245">            List&lt;HomographyDecomposition&gt; decompositions = </span>
-<span class="fc" id="L246">                    decomposer.decompose();</span>
-<span class="fc" id="L247">            result.clear();</span>
-<span class="fc bfc" id="L248" title="All 2 branches covered.">            for(HomographyDecomposition decomposition : decompositions) {</span>
-<span class="fc" id="L249">                Rotation3D rotation = decomposition.getTransformation().</span>
-<span class="fc" id="L250">                        getRotation();</span>
-<span class="fc" id="L251">                Point2D translation = new HomogeneousPoint2D(</span>
-<span class="fc" id="L252">                        decomposition.getTransformation().getTranslation());</span>
-<span class="fc" id="L253">                EssentialMatrix essential = new EssentialMatrix(rotation, </span>
+<span class="fc" id="L246">            List&lt;HomographyDecomposition&gt; decompositions = </span>
+<span class="fc" id="L247">                    decomposer.decompose();</span>
+<span class="fc" id="L248">            result.clear();</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            for(HomographyDecomposition decomposition : decompositions) {</span>
+<span class="fc" id="L250">                Rotation3D rotation = decomposition.getTransformation().</span>
+<span class="fc" id="L251">                        getRotation();</span>
+<span class="fc" id="L252">                Point2D translation = new HomogeneousPoint2D(</span>
+<span class="fc" id="L253">                        decomposition.getTransformation().getTranslation());</span>
+<span class="fc" id="L254">                EssentialMatrix essential = new EssentialMatrix(rotation, </span>
                         translation);
-<span class="fc" id="L255">                FundamentalMatrix fundamentalMatrix = essential.</span>
-<span class="fc" id="L256">                        toFundamentalMatrix(mLeftIntrinsics, mRightIntrinsics);</span>
-<span class="fc" id="L257">                result.add(fundamentalMatrix);</span>
-<span class="fc" id="L258">            }            </span>
+<span class="fc" id="L256">                FundamentalMatrix fundamentalMatrix = essential.</span>
+<span class="fc" id="L257">                        toFundamentalMatrix(mLeftIntrinsics, mRightIntrinsics);</span>
+<span class="fc" id="L258">                result.add(fundamentalMatrix);</span>
+<span class="fc" id="L259">            }            </span>
                                     
-<span class="fc bfc" id="L260" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L261">                mListener.onEstimateEnd(this, result);</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L262">                mListener.onEstimateEnd(this, result);</span>
             }
                         
-<span class="nc" id="L264">        } catch (GeometryException e) {</span>
-<span class="nc" id="L265">            throw new FundamentalMatrixEstimatorException(e);</span>
+<span class="nc" id="L265">        } catch (GeometryException e) {</span>
+<span class="nc" id="L266">            throw new FundamentalMatrixEstimatorException(e);</span>
         } finally {
-<span class="fc" id="L267">            mLocked = false;</span>
+<span class="fc" id="L268">            mLocked = false;</span>
         }
-<span class="fc" id="L269">    }</span>
+<span class="fc" id="L270">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -23,6 +23,7 @@ import com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator;
  * correspondences in multiple view pairs and using SLAM (with accelerometer and gyroscope
  * data) with constant velocity model for overall scale estimation.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class ConstantVelocityModelSlamPairedViewsSparseReconstructor extends
         BaseSlamPairedViewsSparseReconstructor&lt;
         ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration,
@@ -41,8 +42,8 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructor extends
             ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration configuration,
             ConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener)
             throws NullPointerException {
-<span class="fc" id="L44">        super(configuration, listener);</span>
-<span class="fc" id="L45">    }</span>
+<span class="fc" id="L45">        super(configuration, listener);</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * Constructor.
@@ -53,9 +54,9 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructor extends
     public ConstantVelocityModelSlamPairedViewsSparseReconstructor(
             ConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener)
             throws NullPointerException {
-<span class="fc" id="L56">        this(new ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration(),</span>
+<span class="fc" id="L57">        this(new ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration(),</span>
                 listener);
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L59">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -65,13 +66,13 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructor extends
      */
     @Override
     public boolean processOneViewPair() {
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L69">            mSlamEstimator = new ConstantVelocityModelSlamEstimator();</span>
-<span class="fc" id="L70">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L71">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L70">            mSlamEstimator = new ConstantVelocityModelSlamEstimator();</span>
+<span class="fc" id="L71">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L72">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L74">        return super.processOneViewPair();</span>
+<span class="fc" id="L75">        return super.processOneViewPair();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

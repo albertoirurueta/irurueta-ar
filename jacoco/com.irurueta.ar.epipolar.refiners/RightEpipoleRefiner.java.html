@@ -41,13 +41,14 @@ import java.util.List;
  * degenerate (e.g. planar scene) and provided point correspondences would
  * generate an inccurate fundamental matrix.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public abstract class RightEpipoleRefiner extends
         PairMatchesAndInliersDataRefiner&lt;Point2D, Point2D, Point2D&gt; {
     
     /**
      * Test line to compute epipolar residuals.
      */
-<span class="fc" id="L50">    protected Line2D mTestLine = new Line2D();       </span>
+<span class="fc" id="L51">    protected Line2D mTestLine = new Line2D();       </span>
     
     /**
      * Homography relating two views through a given planar scene.
@@ -68,7 +69,7 @@ public abstract class RightEpipoleRefiner extends
     /**
      * Constructor.
      */
-<span class="fc" id="L71">    public RightEpipoleRefiner() { }</span>
+<span class="fc" id="L72">    public RightEpipoleRefiner() { }</span>
     
     /**
      * Constructor.
@@ -90,11 +91,11 @@ public abstract class RightEpipoleRefiner extends
             boolean keepCovariance, BitSet inliers, double[] residuals,
             int numInliers, List&lt;Point2D&gt; samples1, List&lt;Point2D&gt; samples2, 
             double refinementStandardDeviation, Transformation2D homography) {
-<span class="fc" id="L93">        super(initialEpipoleEstimation, keepCovariance, inliers, residuals,</span>
+<span class="fc" id="L94">        super(initialEpipoleEstimation, keepCovariance, inliers, residuals,</span>
                 numInliers, samples1, samples2);
-<span class="fc" id="L95">        mHomography = homography;</span>
-<span class="fc" id="L96">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
-<span class="fc" id="L97">    }</span>
+<span class="fc" id="L96">        mHomography = homography;</span>
+<span class="fc" id="L97">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L98">    }</span>
     
     /**
      * Constructor.
@@ -115,11 +116,11 @@ public abstract class RightEpipoleRefiner extends
             boolean keepCovariance, InliersData inliersData,
             List&lt;Point2D&gt; samples1, List&lt;Point2D&gt; samples2,
             double refinementStandardDeviation, Transformation2D homography) {
-<span class="fc" id="L118">        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, </span>
+<span class="fc" id="L119">        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, </span>
                 samples2);
-<span class="fc" id="L120">        mHomography = homography;</span>
-<span class="fc" id="L121">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
-<span class="fc" id="L122">    }</span>
+<span class="fc" id="L121">        mHomography = homography;</span>
+<span class="fc" id="L122">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L123">    }</span>
     
     /**
      * Gets standard deviation used for Levenberg-Marquardt fitting during 
@@ -132,7 +133,7 @@ public abstract class RightEpipoleRefiner extends
      * @return standard deviation used for refinement.
      */
     public double getRefinementStandardDeviation() {
-<span class="fc" id="L135">        return mRefinementStandardDeviation;</span>
+<span class="fc" id="L136">        return mRefinementStandardDeviation;</span>
     }
     
     /**
@@ -149,11 +150,11 @@ public abstract class RightEpipoleRefiner extends
      */    
     public void setRefinementStandardDeviation(
             double refinementStandardDeviation) throws LockedException {
-<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L153">            throw new LockedException();</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L154">            throw new LockedException();</span>
         }
-<span class="fc" id="L155">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
-<span class="fc" id="L156">    }</span>
+<span class="fc" id="L156">        mRefinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L157">    }</span>
     
     /**
      * Gets homography relating samples in two views, which is used to generate 
@@ -161,7 +162,7 @@ public abstract class RightEpipoleRefiner extends
      * @return homography relating samples in two views.
      */
     public Transformation2D getHomography() {
-<span class="fc" id="L164">        return mHomography;</span>
+<span class="fc" id="L165">        return mHomography;</span>
     }
     
     /**
@@ -172,11 +173,11 @@ public abstract class RightEpipoleRefiner extends
      */
     public void setHomography(Transformation2D homography) 
             throws LockedException {
-<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L176">            throw new LockedException();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L177">            throw new LockedException();</span>
         }
-<span class="fc" id="L178">        mHomography = homography;</span>
-<span class="fc" id="L179">    }</span>
+<span class="fc" id="L179">        mHomography = homography;</span>
+<span class="fc" id="L180">    }</span>
     
     /**
      * Indicates whether this refiner is ready to start refinement computation.
@@ -184,7 +185,7 @@ public abstract class RightEpipoleRefiner extends
      */
     @Override
     public boolean isReady() {
-<span class="pc bpc" id="L187" title="1 of 4 branches missed.">        return mHomography != null &amp;&amp; super.isReady();</span>
+<span class="pc bpc" id="L188" title="1 of 4 branches missed.">        return mHomography != null &amp;&amp; super.isReady();</span>
     }
     
     /**
@@ -199,9 +200,9 @@ public abstract class RightEpipoleRefiner extends
     @Override
     public Point2D refine() throws NotReadyException, LockedException, 
             RefinerException {
-<span class="fc" id="L202">        HomogeneousPoint2D result = new HomogeneousPoint2D();</span>
-<span class="fc" id="L203">        refine(result);</span>
-<span class="fc" id="L204">        return result;</span>
+<span class="fc" id="L203">        HomogeneousPoint2D result = new HomogeneousPoint2D();</span>
+<span class="fc" id="L204">        refine(result);</span>
+<span class="fc" id="L205">        return result;</span>
     }
     
     /**
@@ -217,8 +218,8 @@ public abstract class RightEpipoleRefiner extends
             Point2D rightEpipole, FundamentalMatrix result) 
             throws InvalidFundamentalMatrixException {
         
-<span class="fc" id="L220">        result.setFromHomography(homography, rightEpipole);</span>
-<span class="fc" id="L221">    }</span>
+<span class="fc" id="L221">        result.setFromHomography(homography, rightEpipole);</span>
+<span class="fc" id="L222">    }</span>
     
     /**
      * Computes the residual between a fundamental matrix and a pair of matched
@@ -231,19 +232,19 @@ public abstract class RightEpipoleRefiner extends
     protected double residual(FundamentalMatrix fundamentalMatrix,
             Point2D leftPoint, Point2D rightPoint) {
         try {
-<span class="fc" id="L234">            leftPoint.normalize();</span>
-<span class="fc" id="L235">            rightPoint.normalize();</span>
-<span class="fc" id="L236">            fundamentalMatrix.normalize();</span>
-<span class="fc" id="L237">            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);</span>
-<span class="fc" id="L238">            double leftDistance = Math.abs(mTestLine.signedDistance(</span>
+<span class="fc" id="L235">            leftPoint.normalize();</span>
+<span class="fc" id="L236">            rightPoint.normalize();</span>
+<span class="fc" id="L237">            fundamentalMatrix.normalize();</span>
+<span class="fc" id="L238">            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);</span>
+<span class="fc" id="L239">            double leftDistance = Math.abs(mTestLine.signedDistance(</span>
                     leftPoint));
-<span class="fc" id="L240">            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);</span>
-<span class="fc" id="L241">            double rightDistance = Math.abs(mTestLine.signedDistance(</span>
+<span class="fc" id="L241">            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);</span>
+<span class="fc" id="L242">            double rightDistance = Math.abs(mTestLine.signedDistance(</span>
                     rightPoint));
             //return average distance as an error residual
-<span class="fc" id="L244">            return 0.5 * (leftDistance + rightDistance);</span>
-<span class="nc" id="L245">        } catch (NotReadyException e) {</span>
-<span class="nc" id="L246">            return Double.MAX_VALUE;</span>
+<span class="fc" id="L245">            return 0.5 * (leftDistance + rightDistance);</span>
+<span class="nc" id="L246">        } catch (NotReadyException e) {</span>
+<span class="nc" id="L247">            return Double.MAX_VALUE;</span>
         }
     }        
 
@@ -253,22 +254,22 @@ public abstract class RightEpipoleRefiner extends
      * @return total residual.
      */
     protected double totalResidual(FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L256">        double result = 0.0;</span>
+<span class="fc" id="L257">        double result = 0.0;</span>
         
-<span class="fc" id="L258">        int nSamples = mInliers.length();</span>
+<span class="fc" id="L259">        int nSamples = mInliers.length();</span>
         Point2D leftPoint, rightPoint;
-<span class="fc bfc" id="L260" title="All 2 branches covered.">        for (int i = 0; i &lt; nSamples; i++) {</span>
-<span class="pc bpc" id="L261" title="1 of 2 branches missed.">            if (mInliers.get(i)) {</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        for (int i = 0; i &lt; nSamples; i++) {</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (mInliers.get(i)) {</span>
                 //sample is inlier
-<span class="fc" id="L263">                leftPoint = mSamples1.get(i);</span>
-<span class="fc" id="L264">                rightPoint = mSamples2.get(i);</span>
-<span class="fc" id="L265">                leftPoint.normalize();</span>
-<span class="fc" id="L266">                rightPoint.normalize();</span>
-<span class="fc" id="L267">                result += residual(fundamentalMatrix, leftPoint, rightPoint);</span>
+<span class="fc" id="L264">                leftPoint = mSamples1.get(i);</span>
+<span class="fc" id="L265">                rightPoint = mSamples2.get(i);</span>
+<span class="fc" id="L266">                leftPoint.normalize();</span>
+<span class="fc" id="L267">                rightPoint.normalize();</span>
+<span class="fc" id="L268">                result += residual(fundamentalMatrix, leftPoint, rightPoint);</span>
             }
         }        
         
-<span class="fc" id="L271">        return result;</span>
+<span class="fc" id="L272">        return result;</span>
     }        
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

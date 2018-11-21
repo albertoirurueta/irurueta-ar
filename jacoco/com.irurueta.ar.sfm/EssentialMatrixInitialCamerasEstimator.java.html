@@ -38,6 +38,7 @@ import java.util.List;
  * points obtained from provided matched 2D points are located in front of
  * the estimated cameras.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class EssentialMatrixInitialCamerasEstimator 
         extends InitialCamerasEstimator {
     
@@ -76,18 +77,18 @@ public class EssentialMatrixInitialCamerasEstimator
      * Type of corrector to use to triangulate matched points or null if no
      * corrector needs to be used.
      */    
-<span class="fc" id="L79">    private CorrectorType mCorrectorType = Corrector.DEFAULT_TYPE;</span>
+<span class="fc" id="L80">    private CorrectorType mCorrectorType = Corrector.DEFAULT_TYPE;</span>
     
     /**
      * Indicates whether matched 2D points need to be triangulated.
      */
-<span class="fc" id="L84">    private boolean mTriangulatePoints = DEFAULT_TRIANGULATE_POINTS;</span>
+<span class="fc" id="L85">    private boolean mTriangulatePoints = DEFAULT_TRIANGULATE_POINTS;</span>
     
     /**
      * Marks which of the triangulated points are marked as valid (lie in front
      * of both of the estimated cameras) and which ones aren't.
      */
-<span class="fc" id="L90">    private boolean mMarkValidTriangulatedPoints = </span>
+<span class="fc" id="L91">    private boolean mMarkValidTriangulatedPoints = </span>
             DEFAULT_MARK_VALID_TRIANGULATED_POINTS;
     
     /**
@@ -105,8 +106,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * Constructor.
      */
     public EssentialMatrixInitialCamerasEstimator() {
-<span class="fc" id="L108">        super();</span>
-<span class="fc" id="L109">    }</span>
+<span class="fc" id="L109">        super();</span>
+<span class="fc" id="L110">    }</span>
     
     /**
      * Constructor.
@@ -114,8 +115,8 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public EssentialMatrixInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L117">        super(fundamentalMatrix);</span>
-<span class="fc" id="L118">    }</span>
+<span class="fc" id="L118">        super(fundamentalMatrix);</span>
+<span class="fc" id="L119">    }</span>
 
     /**
      * Constructor.
@@ -127,10 +128,10 @@ public class EssentialMatrixInitialCamerasEstimator
     public EssentialMatrixInitialCamerasEstimator(
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic) {
-<span class="fc" id="L130">        super();</span>
-<span class="fc" id="L131">        mLeftIntrinsic = leftIntrinsic;</span>
-<span class="fc" id="L132">        mRightIntrinsic = rightIntrinsic;        </span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L131">        super();</span>
+<span class="fc" id="L132">        mLeftIntrinsic = leftIntrinsic;</span>
+<span class="fc" id="L133">        mRightIntrinsic = rightIntrinsic;        </span>
+<span class="fc" id="L134">    }</span>
     
     /**
      * Constructor.
@@ -144,10 +145,10 @@ public class EssentialMatrixInitialCamerasEstimator
             FundamentalMatrix fundamentalMatrix,
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic) {
-<span class="fc" id="L147">        super(fundamentalMatrix);</span>
-<span class="fc" id="L148">        mLeftIntrinsic = leftIntrinsic;</span>
-<span class="fc" id="L149">        mRightIntrinsic = rightIntrinsic;        </span>
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L148">        super(fundamentalMatrix);</span>
+<span class="fc" id="L149">        mLeftIntrinsic = leftIntrinsic;</span>
+<span class="fc" id="L150">        mRightIntrinsic = rightIntrinsic;        </span>
+<span class="fc" id="L151">    }</span>
     
     /**
      * Constructor.
@@ -158,9 +159,9 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public EssentialMatrixInitialCamerasEstimator(List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L161">        super();</span>
-<span class="fc" id="L162">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L163">    }</span>
+<span class="fc" id="L162">        super();</span>
+<span class="fc" id="L163">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L164">    }</span>
     
     /**
      * Constructor.
@@ -173,9 +174,9 @@ public class EssentialMatrixInitialCamerasEstimator
     public EssentialMatrixInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L176">        super(fundamentalMatrix);</span>
-<span class="fc" id="L177">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L178">    }    </span>
+<span class="fc" id="L177">        super(fundamentalMatrix);</span>
+<span class="fc" id="L178">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L179">    }    </span>
     
     /**
      * Constructor.
@@ -193,9 +194,9 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters rightIntrinsic, 
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
             throws IllegalArgumentException {
-<span class="fc" id="L196">        this(leftIntrinsic, rightIntrinsic);</span>
-<span class="fc" id="L197">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L197">        this(leftIntrinsic, rightIntrinsic);</span>
+<span class="fc" id="L198">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L199">    }</span>
     
     /**
      * Constructor.
@@ -215,9 +216,9 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters rightIntrinsic, 
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
             throws IllegalArgumentException {
-<span class="fc" id="L218">        this(fundamentalMatrix, leftIntrinsic, rightIntrinsic);</span>
-<span class="fc" id="L219">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L220">    }</span>
+<span class="fc" id="L219">        this(fundamentalMatrix, leftIntrinsic, rightIntrinsic);</span>
+<span class="fc" id="L220">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L221">    }</span>
     
     /**
      * Constructor.
@@ -225,8 +226,8 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public EssentialMatrixInitialCamerasEstimator(
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L228">        super(listener);</span>
-<span class="fc" id="L229">    }</span>
+<span class="fc" id="L229">        super(listener);</span>
+<span class="fc" id="L230">    }</span>
     
     /**
      * Constructor.
@@ -236,8 +237,8 @@ public class EssentialMatrixInitialCamerasEstimator
     public EssentialMatrixInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, 
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L239">        super(fundamentalMatrix, listener);</span>
-<span class="fc" id="L240">    }</span>
+<span class="fc" id="L240">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L241">    }</span>
 
     /**
      * Constructor.
@@ -251,10 +252,10 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic,
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L254">        super(listener);</span>
-<span class="fc" id="L255">        mLeftIntrinsic = leftIntrinsic;</span>
-<span class="fc" id="L256">        mRightIntrinsic = rightIntrinsic;        </span>
-<span class="fc" id="L257">    }</span>
+<span class="fc" id="L255">        super(listener);</span>
+<span class="fc" id="L256">        mLeftIntrinsic = leftIntrinsic;</span>
+<span class="fc" id="L257">        mRightIntrinsic = rightIntrinsic;        </span>
+<span class="fc" id="L258">    }</span>
     
     /**
      * Constructor.
@@ -270,10 +271,10 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic,
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L273">        super(fundamentalMatrix, listener);</span>
-<span class="fc" id="L274">        mLeftIntrinsic = leftIntrinsic;</span>
-<span class="fc" id="L275">        mRightIntrinsic = rightIntrinsic;        </span>
-<span class="fc" id="L276">    }</span>
+<span class="fc" id="L274">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L275">        mLeftIntrinsic = leftIntrinsic;</span>
+<span class="fc" id="L276">        mRightIntrinsic = rightIntrinsic;        </span>
+<span class="fc" id="L277">    }</span>
     
     /**
      * Constructor.
@@ -286,9 +287,9 @@ public class EssentialMatrixInitialCamerasEstimator
     public EssentialMatrixInitialCamerasEstimator(List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints, InitialCamerasEstimatorListener listener)
             throws IllegalArgumentException {
-<span class="fc" id="L289">        super(listener);</span>
-<span class="fc" id="L290">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L291">    }</span>
+<span class="fc" id="L290">        super(listener);</span>
+<span class="fc" id="L291">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L292">    }</span>
     
     /**
      * Constructor.
@@ -303,9 +304,9 @@ public class EssentialMatrixInitialCamerasEstimator
             FundamentalMatrix fundamentalMatrix, List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints, InitialCamerasEstimatorListener listener)
             throws IllegalArgumentException {
-<span class="fc" id="L306">        super(fundamentalMatrix, listener);</span>
-<span class="fc" id="L307">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L308">    }    </span>
+<span class="fc" id="L307">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L308">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L309">    }    </span>
     
     /**
      * Constructor.
@@ -325,9 +326,9 @@ public class EssentialMatrixInitialCamerasEstimator
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints,
             InitialCamerasEstimatorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L328">        this(leftIntrinsic, rightIntrinsic, listener);</span>
-<span class="fc" id="L329">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L330">    }</span>
+<span class="fc" id="L329">        this(leftIntrinsic, rightIntrinsic, listener);</span>
+<span class="fc" id="L330">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L331">    }</span>
     
     /**
      * Constructor.
@@ -349,9 +350,9 @@ public class EssentialMatrixInitialCamerasEstimator
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints,
             InitialCamerasEstimatorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L352">        this(fundamentalMatrix, leftIntrinsic, rightIntrinsic, listener);</span>
-<span class="fc" id="L353">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L354">    }    </span>
+<span class="fc" id="L353">        this(fundamentalMatrix, leftIntrinsic, rightIntrinsic, listener);</span>
+<span class="fc" id="L354">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L355">    }    </span>
     
     /**
      * Returns method used by this estimator.
@@ -359,7 +360,7 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     @Override
     public InitialCamerasEstimatorMethod getMethod() {
-<span class="fc" id="L362">        return InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX;</span>
+<span class="fc" id="L363">        return InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX;</span>
     }   
     
     /**
@@ -368,10 +369,10 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     @Override
     public boolean isReady() {
-<span class="pc bpc" id="L371" title="2 of 10 branches missed.">        return mFundamentalMatrix != null &amp;&amp; mLeftIntrinsic != null &amp;&amp;</span>
+<span class="pc bpc" id="L372" title="2 of 10 branches missed.">        return mFundamentalMatrix != null &amp;&amp; mLeftIntrinsic != null &amp;&amp;</span>
                 mRightIntrinsic != null &amp;&amp; mLeftPoints != null &amp;&amp; 
                 mRightPoints != null &amp;&amp; 
-<span class="pc bpc" id="L374" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size();</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size();</span>
     }  
     
     /**
@@ -384,66 +385,66 @@ public class EssentialMatrixInitialCamerasEstimator
     @Override
     public void estimate() throws LockedException, NotReadyException, 
             InitialCamerasEstimationFailedException {
-<span class="fc bfc" id="L387" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L388">            throw new LockedException();</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L389">            throw new LockedException();</span>
         }
         
-<span class="fc bfc" id="L391" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L392">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L392" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L393">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L396">            mLocked = true;</span>
+<span class="fc" id="L397">            mLocked = true;</span>
             
-<span class="fc bfc" id="L398" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L399">                mListener.onStart(this);</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L400">                mListener.onStart(this);</span>
             }
             
-<span class="pc bpc" id="L402" title="1 of 2 branches missed.">            if (mTriangulatePoints) {</span>
-<span class="fc" id="L403">                mTriangulatedPoints = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L403" title="1 of 2 branches missed.">            if (mTriangulatePoints) {</span>
+<span class="fc" id="L404">                mTriangulatedPoints = new ArrayList&lt;&gt;();</span>
             } else {
-<span class="nc" id="L405">                mTriangulatedPoints = null;</span>
+<span class="nc" id="L406">                mTriangulatedPoints = null;</span>
             }
         
-<span class="fc" id="L408">            int nPoints = mLeftPoints.size();</span>
-<span class="pc bpc" id="L409" title="1 of 2 branches missed.">            if (mMarkValidTriangulatedPoints) {</span>
-<span class="fc" id="L410">                mValidTriangulatedPoints = new BitSet(nPoints);</span>
+<span class="fc" id="L409">            int nPoints = mLeftPoints.size();</span>
+<span class="pc bpc" id="L410" title="1 of 2 branches missed.">            if (mMarkValidTriangulatedPoints) {</span>
+<span class="fc" id="L411">                mValidTriangulatedPoints = new BitSet(nPoints);</span>
             } else {
-<span class="nc" id="L412">                mValidTriangulatedPoints = null;</span>
+<span class="nc" id="L413">                mValidTriangulatedPoints = null;</span>
             }
             
-<span class="fc bfc" id="L415" title="All 2 branches covered.">            if (mEstimatedLeftCamera == null) {</span>
-<span class="fc" id="L416">                mEstimatedLeftCamera = new PinholeCamera();</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">            if (mEstimatedLeftCamera == null) {</span>
+<span class="fc" id="L417">                mEstimatedLeftCamera = new PinholeCamera();</span>
             }
-<span class="fc bfc" id="L418" title="All 2 branches covered.">            if (mEstimatedRightCamera == null) {</span>
-<span class="fc" id="L419">                mEstimatedRightCamera = new PinholeCamera();</span>
+<span class="fc bfc" id="L419" title="All 2 branches covered.">            if (mEstimatedRightCamera == null) {</span>
+<span class="fc" id="L420">                mEstimatedRightCamera = new PinholeCamera();</span>
             }
             
-<span class="fc" id="L422">            generateInitialMetricCamerasFromEssentialMatrix(mFundamentalMatrix, </span>
+<span class="fc" id="L423">            generateInitialMetricCamerasFromEssentialMatrix(mFundamentalMatrix, </span>
                     mLeftIntrinsic, mRightIntrinsic, mLeftPoints, mRightPoints,
                     mCorrectorType, mEstimatedLeftCamera, mEstimatedRightCamera, 
                     mTriangulatedPoints, mValidTriangulatedPoints);
             
-<span class="fc bfc" id="L427" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L428">                mListener.onFinish(this, mEstimatedLeftCamera, </span>
+<span class="fc bfc" id="L428" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L429">                mListener.onFinish(this, mEstimatedLeftCamera, </span>
                         mEstimatedRightCamera);
             }
-<span class="fc" id="L431">        } catch (InitialCamerasEstimationFailedException e) {</span>
-<span class="pc bpc" id="L432" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="nc" id="L433">                mListener.onFail(this, e);</span>
+<span class="fc" id="L432">        } catch (InitialCamerasEstimationFailedException e) {</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="nc" id="L434">                mListener.onFail(this, e);</span>
             }
-<span class="fc" id="L435">            throw e;            </span>
+<span class="fc" id="L436">            throw e;            </span>
         } finally {
-<span class="fc" id="L437">            mLocked = false;</span>
+<span class="fc" id="L438">            mLocked = false;</span>
         }
-<span class="fc" id="L439">    }</span>
+<span class="fc" id="L440">    }</span>
     
     /**
      * Gets intrinsic parameters to be used for estimated left camera.
      * @return intrinsic parameters to be used for estimated left camera.
      */
     public PinholeCameraIntrinsicParameters getLeftIntrinsic() {
-<span class="fc" id="L446">        return mLeftIntrinsic;</span>
+<span class="fc" id="L447">        return mLeftIntrinsic;</span>
     }
     
     /**
@@ -455,18 +456,18 @@ public class EssentialMatrixInitialCamerasEstimator
     public void setLeftIntrinsic(
             PinholeCameraIntrinsicParameters leftIntrinsic) 
             throws LockedException {
-<span class="fc bfc" id="L458" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L459">            throw new LockedException();</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L460">            throw new LockedException();</span>
         }
-<span class="fc" id="L461">        mLeftIntrinsic = leftIntrinsic;</span>
-<span class="fc" id="L462">    }</span>
+<span class="fc" id="L462">        mLeftIntrinsic = leftIntrinsic;</span>
+<span class="fc" id="L463">    }</span>
     
     /**
      * Gets intrinsic parameters to be used for estimated right camera.
      * @return intrinsic parameters to be used for estimated right camera.
      */
     public PinholeCameraIntrinsicParameters getRightIntrinsic() {
-<span class="fc" id="L469">        return mRightIntrinsic;</span>
+<span class="fc" id="L470">        return mRightIntrinsic;</span>
     }
     
     /**
@@ -478,11 +479,11 @@ public class EssentialMatrixInitialCamerasEstimator
     public void setRightIntrinsic(
             PinholeCameraIntrinsicParameters rightIntrinsic) 
             throws LockedException {
-<span class="fc bfc" id="L481" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L482">            throw new LockedException();</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L483">            throw new LockedException();</span>
         }
-<span class="fc" id="L484">        mRightIntrinsic = rightIntrinsic;</span>
-<span class="fc" id="L485">    }</span>
+<span class="fc" id="L485">        mRightIntrinsic = rightIntrinsic;</span>
+<span class="fc" id="L486">    }</span>
     
     /**
      * Sets intrinsic parameters to be used for estimated left and right 
@@ -497,12 +498,12 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic) 
             throws LockedException {
-<span class="fc bfc" id="L500" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L501">            throw new LockedException();</span>
+<span class="fc bfc" id="L501" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L502">            throw new LockedException();</span>
         }
-<span class="fc" id="L503">        mLeftIntrinsic = leftIntrinsic;</span>
-<span class="fc" id="L504">        mRightIntrinsic = rightIntrinsic;</span>
-<span class="fc" id="L505">    }</span>
+<span class="fc" id="L504">        mLeftIntrinsic = leftIntrinsic;</span>
+<span class="fc" id="L505">        mRightIntrinsic = rightIntrinsic;</span>
+<span class="fc" id="L506">    }</span>
     
     /**
      * Sets the same intrinsic parameters to be used for both estimated left
@@ -512,18 +513,18 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public void setIntrinsicsForBoth(PinholeCameraIntrinsicParameters intrinsic)
             throws LockedException {
-<span class="fc bfc" id="L515" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L516">            throw new LockedException();</span>
+<span class="fc bfc" id="L516" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L517">            throw new LockedException();</span>
         }
-<span class="fc" id="L518">        mLeftIntrinsic = mRightIntrinsic = intrinsic;</span>
-<span class="fc" id="L519">    }</span>
+<span class="fc" id="L519">        mLeftIntrinsic = mRightIntrinsic = intrinsic;</span>
+<span class="fc" id="L520">    }</span>
     
     /**
      * Gets matched 2D points on left view.
      * @return matched 2D points on left view.
      */
     public List&lt;Point2D&gt; getLeftPoints() {
-<span class="fc" id="L526">        return mLeftPoints;</span>
+<span class="fc" id="L527">        return mLeftPoints;</span>
     }
     
     /**
@@ -532,18 +533,18 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws LockedException if estimator is locked.
      */
     public void setLeftPoints(List&lt;Point2D&gt; leftPoints) throws LockedException {
-<span class="fc bfc" id="L535" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L536">            throw new LockedException();</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L537">            throw new LockedException();</span>
         }
-<span class="fc" id="L538">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L539">    }</span>
+<span class="fc" id="L539">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L540">    }</span>
     
     /**
      * Gets matched 2D points on right view.
      * @return matched 2D points on right view.
      */
     public List&lt;Point2D&gt; getRightPoints() {
-<span class="fc" id="L546">        return mRightPoints;</span>
+<span class="fc" id="L547">        return mRightPoints;</span>
     }
     
     /**
@@ -553,11 +554,11 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public void setRightPoints(List&lt;Point2D&gt; rightPoints) 
             throws LockedException {
-<span class="fc bfc" id="L556" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L557">            throw new LockedException();</span>
+<span class="fc bfc" id="L557" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L558">            throw new LockedException();</span>
         }
-<span class="fc" id="L559">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L560">    }</span>
+<span class="fc" id="L560">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L561">    }</span>
     
     /**
      * Sets matched 2D points on left and right views.
@@ -570,11 +571,11 @@ public class EssentialMatrixInitialCamerasEstimator
     public void setLeftAndRightPoints(List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints) throws LockedException, 
             IllegalArgumentException {
-<span class="fc bfc" id="L573" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L574">            throw new LockedException();</span>
+<span class="fc bfc" id="L574" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L575">            throw new LockedException();</span>
         }
-<span class="fc" id="L576">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L577">    }</span>
+<span class="fc" id="L577">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L578">    }</span>
     
     /**
      * Gets type of corrector to use to triangulate matched points or null if
@@ -582,7 +583,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return type of corrector to use.
      */
     public CorrectorType getCorrectorType() {
-<span class="fc" id="L585">        return mCorrectorType;</span>
+<span class="fc" id="L586">        return mCorrectorType;</span>
     }
     
     /**
@@ -593,18 +594,18 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public void setCorrectorType(CorrectorType correctorType) 
             throws LockedException {
-<span class="fc bfc" id="L596" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L597">            throw new LockedException();</span>
+<span class="fc bfc" id="L597" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L598">            throw new LockedException();</span>
         }
-<span class="fc" id="L599">        mCorrectorType = correctorType;</span>
-<span class="fc" id="L600">    }        </span>
+<span class="fc" id="L600">        mCorrectorType = correctorType;</span>
+<span class="fc" id="L601">    }        </span>
     
     /**
      * Indicates whether matched 2D points need to be triangulated or not.
      * @return true if 2D points need to be triangulated, false otherwise.
      */
     public boolean arePointsTriangulated() {
-<span class="fc" id="L607">        return mTriangulatePoints;</span>
+<span class="fc" id="L608">        return mTriangulatePoints;</span>
     }
     
     /**
@@ -615,11 +616,11 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public void setPointsTriangulated(boolean triangulatePoints) 
             throws LockedException {
-<span class="fc bfc" id="L618" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L619">            throw new LockedException();</span>
+<span class="fc bfc" id="L619" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L620">            throw new LockedException();</span>
         }
-<span class="fc" id="L621">        mTriangulatePoints = triangulatePoints;</span>
-<span class="fc" id="L622">    }</span>
+<span class="fc" id="L622">        mTriangulatePoints = triangulatePoints;</span>
+<span class="fc" id="L623">    }</span>
     
     /**
      * Indicates which triangulated points are marked as valid (lie in front
@@ -628,7 +629,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * otherwise.
      */
     public boolean areValidTriangulatedPointsMarked() {
-<span class="fc" id="L631">        return mMarkValidTriangulatedPoints;</span>
+<span class="fc" id="L632">        return mMarkValidTriangulatedPoints;</span>
     }
     
     /**
@@ -640,18 +641,18 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public void setValidTriangulatedPointsMarked(
             boolean markValidTriangulatedPoints) throws LockedException {
-<span class="fc bfc" id="L643" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L644">            throw new LockedException();</span>
+<span class="fc bfc" id="L644" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L645">            throw new LockedException();</span>
         }
-<span class="fc" id="L646">        mMarkValidTriangulatedPoints = markValidTriangulatedPoints;</span>
-<span class="fc" id="L647">    }</span>
+<span class="fc" id="L647">        mMarkValidTriangulatedPoints = markValidTriangulatedPoints;</span>
+<span class="fc" id="L648">    }</span>
     
     /**
      * Gets triangulated points, if available.
      * @return triangulated points or null.
      */
     public List&lt;Point3D&gt; getTriangulatedPoints() {
-<span class="fc" id="L654">        return mTriangulatedPoints;</span>
+<span class="fc" id="L655">        return mTriangulatedPoints;</span>
     }
 
     /**
@@ -661,7 +662,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * available.
      */
     public BitSet getValidTriangulatedPoints() {
-<span class="fc" id="L664">        return mValidTriangulatedPoints;</span>
+<span class="fc" id="L665">        return mValidTriangulatedPoints;</span>
     }    
     
     /**
@@ -701,7 +702,7 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCamera leftCamera, PinholeCamera rightCamera) 
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
-<span class="fc" id="L704">        return generateInitialMetricCamerasFromEssentialMatrix(</span>
+<span class="fc" id="L705">        return generateInitialMetricCamerasFromEssentialMatrix(</span>
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints,
                 rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
     }    
@@ -748,7 +749,7 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCamera rightCamera) 
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
-<span class="fc" id="L751">        return generateInitialMetricCamerasFromEssentialMatrix(</span>
+<span class="fc" id="L752">        return generateInitialMetricCamerasFromEssentialMatrix(</span>
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, 
                 rightPoints, correctorType, leftCamera, rightCamera, null, 
                 null);
@@ -797,7 +798,7 @@ public class EssentialMatrixInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L800">        return generateInitialMetricCamerasFromEssentialMatrix(</span>
+<span class="fc" id="L801">        return generateInitialMetricCamerasFromEssentialMatrix(</span>
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints,
                 rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera,
                 triangulatedPoints, validTriangulatedPoints);
@@ -850,8 +851,8 @@ public class EssentialMatrixInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="pc bpc" id="L853" title="1 of 2 branches missed.">        if (leftPoints.size() != rightPoints.size()) {</span>
-<span class="nc" id="L854">            throw new IllegalArgumentException(</span>
+<span class="pc bpc" id="L854" title="1 of 2 branches missed.">        if (leftPoints.size() != rightPoints.size()) {</span>
+<span class="nc" id="L855">            throw new IllegalArgumentException(</span>
                     &quot;left and right points must have the same size&quot;);
         }
         
@@ -859,175 +860,175 @@ public class EssentialMatrixInitialCamerasEstimator
         Rotation3D rotation1, rotation2;
         Point2D translation1, translation2;
         try {
-<span class="fc" id="L862">            EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix, </span>
+<span class="fc" id="L863">            EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix, </span>
                 leftIntrinsic, rightIntrinsic);
             
-<span class="fc" id="L865">            essential.computePossibleRotationAndTranslations();</span>
+<span class="fc" id="L866">            essential.computePossibleRotationAndTranslations();</span>
             
-<span class="fc" id="L867">            rotation1 = essential.getFirstPossibleRotation();</span>
-<span class="fc" id="L868">            translation1 = essential.getFirstPossibleTranslation();</span>
+<span class="fc" id="L868">            rotation1 = essential.getFirstPossibleRotation();</span>
+<span class="fc" id="L869">            translation1 = essential.getFirstPossibleTranslation();</span>
             
-<span class="fc" id="L870">            rotation2 = essential.getSecondPossibleRotation();</span>
-<span class="fc" id="L871">            translation2 = essential.getSecondPossibleTranslation();</span>
+<span class="fc" id="L871">            rotation2 = essential.getSecondPossibleRotation();</span>
+<span class="fc" id="L872">            translation2 = essential.getSecondPossibleTranslation();</span>
                         
-<span class="fc bfc" id="L873" title="All 2 branches covered.">            if (correctorType != null) {</span>
+<span class="fc bfc" id="L874" title="All 2 branches covered.">            if (correctorType != null) {</span>
                 //use corrector
-<span class="fc" id="L875">                Corrector corrector = Corrector.create(leftPoints, rightPoints, </span>
+<span class="fc" id="L876">                Corrector corrector = Corrector.create(leftPoints, rightPoints, </span>
                         fundamentalMatrix, correctorType);
-<span class="fc" id="L877">                corrector.correct();</span>
+<span class="fc" id="L878">                corrector.correct();</span>
                 
-<span class="fc" id="L879">                correctedLeftPoints = corrector.getLeftCorrectedPoints();</span>
-<span class="fc" id="L880">                correctedRightPoints = corrector.getRightCorrectedPoints();</span>
-<span class="fc" id="L881">            } else {</span>
+<span class="fc" id="L880">                correctedLeftPoints = corrector.getLeftCorrectedPoints();</span>
+<span class="fc" id="L881">                correctedRightPoints = corrector.getRightCorrectedPoints();</span>
+<span class="fc" id="L882">            } else {</span>
                 //don't use corrector
-<span class="fc" id="L883">                correctedLeftPoints = leftPoints;</span>
-<span class="fc" id="L884">                correctedRightPoints = rightPoints;</span>
+<span class="fc" id="L884">                correctedLeftPoints = leftPoints;</span>
+<span class="fc" id="L885">                correctedRightPoints = rightPoints;</span>
             }
-<span class="nc" id="L886">        } catch (Exception e) {</span>
-<span class="nc" id="L887">            throw new InitialCamerasEstimationFailedException(e);</span>
-<span class="fc" id="L888">        }</span>
+<span class="nc" id="L887">        } catch (Exception e) {</span>
+<span class="nc" id="L888">            throw new InitialCamerasEstimationFailedException(e);</span>
+<span class="fc" id="L889">        }</span>
             
             
-<span class="fc bfc" id="L891" title="All 2 branches covered.">        if (triangulatedPoints != null) {</span>
-<span class="fc" id="L892">            triangulatedPoints.clear();</span>
+<span class="fc bfc" id="L892" title="All 2 branches covered.">        if (triangulatedPoints != null) {</span>
+<span class="fc" id="L893">            triangulatedPoints.clear();</span>
         }
-<span class="fc bfc" id="L894" title="All 2 branches covered.">        if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L895">            validTriangulatedPoints.clear();</span>
+<span class="fc bfc" id="L895" title="All 2 branches covered.">        if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L896">            validTriangulatedPoints.clear();</span>
         }
         int numValidTriangulatedPoints;
             
-<span class="fc" id="L899">        int numPoints = correctedLeftPoints.size();</span>
-<span class="fc" id="L900">        boolean skip = false;</span>
+<span class="fc" id="L900">        int numPoints = correctedLeftPoints.size();</span>
+<span class="fc" id="L901">        boolean skip = false;</span>
             
         //obtain 1st pair of possible cameras and their corresponding
         //triangulated points
         try {
-<span class="fc" id="L905">            numValidTriangulatedPoints = </span>
-<span class="fc" id="L906">                    computeCamerasAndTriangulation(rotation1, translation1, </span>
+<span class="fc" id="L906">            numValidTriangulatedPoints = </span>
+<span class="fc" id="L907">                    computeCamerasAndTriangulation(rotation1, translation1, </span>
                     leftIntrinsic, rightIntrinsic, correctedLeftPoints, 
                     correctedRightPoints, leftCamera, rightCamera, 
                     triangulatedPoints, validTriangulatedPoints);
-<span class="nc" id="L910">        } catch (Exception e) {</span>
-<span class="nc" id="L911">            numValidTriangulatedPoints = 0;</span>
-<span class="fc" id="L912">        }</span>
+<span class="nc" id="L911">        } catch (Exception e) {</span>
+<span class="nc" id="L912">            numValidTriangulatedPoints = 0;</span>
+<span class="fc" id="L913">        }</span>
             
-<span class="fc bfc" id="L914" title="All 2 branches covered.">        if(numValidTriangulatedPoints &gt;= numPoints) {</span>
+<span class="fc bfc" id="L915" title="All 2 branches covered.">        if(numValidTriangulatedPoints &gt;= numPoints) {</span>
             //all points are valid, hence, we can set current pair of
             //cameras as the best result
-<span class="fc" id="L917">            skip = true;</span>
+<span class="fc" id="L918">            skip = true;</span>
         }
 
-<span class="fc" id="L920">        PinholeCamera attemptLeftCamera = new PinholeCamera();</span>
-<span class="fc" id="L921">        PinholeCamera attemptRightCamera = new PinholeCamera();</span>
-<span class="fc" id="L922">        List&lt;Point3D&gt; attemptTriangulatedPoints = null;</span>
-<span class="fc bfc" id="L923" title="All 2 branches covered.">        if (triangulatedPoints != null) {</span>
-<span class="fc" id="L924">            attemptTriangulatedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L921">        PinholeCamera attemptLeftCamera = new PinholeCamera();</span>
+<span class="fc" id="L922">        PinholeCamera attemptRightCamera = new PinholeCamera();</span>
+<span class="fc" id="L923">        List&lt;Point3D&gt; attemptTriangulatedPoints = null;</span>
+<span class="fc bfc" id="L924" title="All 2 branches covered.">        if (triangulatedPoints != null) {</span>
+<span class="fc" id="L925">            attemptTriangulatedPoints = new ArrayList&lt;&gt;();</span>
         }
-<span class="fc" id="L926">        BitSet attemptValidTriangulatedPoints = null;</span>
-<span class="fc bfc" id="L927" title="All 2 branches covered.">        if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L928">            attemptValidTriangulatedPoints = new BitSet(numPoints);</span>
+<span class="fc" id="L927">        BitSet attemptValidTriangulatedPoints = null;</span>
+<span class="fc bfc" id="L928" title="All 2 branches covered.">        if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L929">            attemptValidTriangulatedPoints = new BitSet(numPoints);</span>
         }
         int attemptNumValidTriangulatedPoints;
         
-<span class="fc bfc" id="L932" title="All 2 branches covered.">        if (!skip) {</span>
+<span class="fc bfc" id="L933" title="All 2 branches covered.">        if (!skip) {</span>
             //obtain 2nd pair of possible cameras and their corresponding
             //triangulated points            
             try {
-<span class="fc" id="L936">                attemptNumValidTriangulatedPoints = </span>
-<span class="fc" id="L937">                        computeCamerasAndTriangulation(rotation1, translation2,</span>
+<span class="fc" id="L937">                attemptNumValidTriangulatedPoints = </span>
+<span class="fc" id="L938">                        computeCamerasAndTriangulation(rotation1, translation2,</span>
                         leftIntrinsic, rightIntrinsic, correctedLeftPoints,
                         correctedRightPoints, attemptLeftCamera, 
                         attemptRightCamera, attemptTriangulatedPoints,
                         attemptValidTriangulatedPoints);
-<span class="nc" id="L942">            } catch (Exception e) {</span>
-<span class="nc" id="L943">                attemptNumValidTriangulatedPoints = 0;</span>
-<span class="fc" id="L944">            }</span>
+<span class="nc" id="L943">            } catch (Exception e) {</span>
+<span class="nc" id="L944">                attemptNumValidTriangulatedPoints = 0;</span>
+<span class="fc" id="L945">            }</span>
             
-<span class="fc bfc" id="L946" title="All 2 branches covered.">            if (attemptNumValidTriangulatedPoints &gt;= numPoints) {</span>
+<span class="fc bfc" id="L947" title="All 2 branches covered.">            if (attemptNumValidTriangulatedPoints &gt;= numPoints) {</span>
                 //all points are valid, hence, we can set current pair of
                 //cameras as the best result
-<span class="fc" id="L949">                skip = true;</span>
+<span class="fc" id="L950">                skip = true;</span>
             }
             
-<span class="fc bfc" id="L952" title="All 2 branches covered.">            if (attemptNumValidTriangulatedPoints &gt; numValidTriangulatedPoints) {</span>
+<span class="fc bfc" id="L953" title="All 2 branches covered.">            if (attemptNumValidTriangulatedPoints &gt; numValidTriangulatedPoints) {</span>
                 //a better solution containing more valid points has been foound
                 
                 //keep better solution
-<span class="fc" id="L956">                updateBestSolutionData(leftCamera, rightCamera, </span>
+<span class="fc" id="L957">                updateBestSolutionData(leftCamera, rightCamera, </span>
                         triangulatedPoints, validTriangulatedPoints, 
                         attemptLeftCamera, attemptRightCamera, 
                         attemptTriangulatedPoints, 
                         attemptValidTriangulatedPoints);
-<span class="fc" id="L961">                numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;</span>
+<span class="fc" id="L962">                numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;</span>
             }
         }
             
-<span class="fc bfc" id="L965" title="All 2 branches covered.">        if (!skip) {</span>
+<span class="fc bfc" id="L966" title="All 2 branches covered.">        if (!skip) {</span>
             //obtain 3rd pair of possible cameras and their corresponding
             //triangulated points            
             try {
-<span class="fc" id="L969">                attemptNumValidTriangulatedPoints = </span>
-<span class="fc" id="L970">                        computeCamerasAndTriangulation(rotation2, translation1,</span>
+<span class="fc" id="L970">                attemptNumValidTriangulatedPoints = </span>
+<span class="fc" id="L971">                        computeCamerasAndTriangulation(rotation2, translation1,</span>
                         leftIntrinsic, rightIntrinsic, correctedLeftPoints,
                         correctedRightPoints, attemptLeftCamera, 
                         attemptRightCamera, attemptTriangulatedPoints,
                         attemptValidTriangulatedPoints);
-<span class="nc" id="L975">            } catch (Exception e) {</span>
-<span class="nc" id="L976">                attemptNumValidTriangulatedPoints = 0;</span>
-<span class="fc" id="L977">            }</span>
+<span class="nc" id="L976">            } catch (Exception e) {</span>
+<span class="nc" id="L977">                attemptNumValidTriangulatedPoints = 0;</span>
+<span class="fc" id="L978">            }</span>
             
-<span class="fc bfc" id="L979" title="All 2 branches covered.">            if(attemptNumValidTriangulatedPoints &gt;= numPoints) {</span>
+<span class="fc bfc" id="L980" title="All 2 branches covered.">            if(attemptNumValidTriangulatedPoints &gt;= numPoints) {</span>
                 //all points are valid, hence, we can set current pair of
                 //cameras as the best result
-<span class="fc" id="L982">                skip = true;</span>
+<span class="fc" id="L983">                skip = true;</span>
             }
             
-<span class="fc bfc" id="L985" title="All 2 branches covered.">            if(attemptNumValidTriangulatedPoints &gt; numValidTriangulatedPoints) {</span>
+<span class="fc bfc" id="L986" title="All 2 branches covered.">            if(attemptNumValidTriangulatedPoints &gt; numValidTriangulatedPoints) {</span>
                 //a better solution containing more valid points has been foound
                 
                 //keep better solution
-<span class="fc" id="L989">                updateBestSolutionData(leftCamera, rightCamera, </span>
+<span class="fc" id="L990">                updateBestSolutionData(leftCamera, rightCamera, </span>
                         triangulatedPoints, validTriangulatedPoints, 
                         attemptLeftCamera, attemptRightCamera, 
                         attemptTriangulatedPoints, 
                         attemptValidTriangulatedPoints);
-<span class="fc" id="L994">                numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;</span>
+<span class="fc" id="L995">                numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;</span>
             }
         }
 
-<span class="fc bfc" id="L998" title="All 2 branches covered.">        if (!skip) {</span>
+<span class="fc bfc" id="L999" title="All 2 branches covered.">        if (!skip) {</span>
             //obtain 4th pair of possible cameras and their corresponding
             //triangulated points
             try {
-<span class="fc" id="L1002">                attemptNumValidTriangulatedPoints = </span>
-<span class="fc" id="L1003">                        computeCamerasAndTriangulation(rotation2, translation2,</span>
+<span class="fc" id="L1003">                attemptNumValidTriangulatedPoints = </span>
+<span class="fc" id="L1004">                        computeCamerasAndTriangulation(rotation2, translation2,</span>
                         leftIntrinsic, rightIntrinsic, correctedLeftPoints,
                         correctedRightPoints, attemptLeftCamera, 
                         attemptRightCamera, attemptTriangulatedPoints,
                         attemptValidTriangulatedPoints);
-<span class="nc" id="L1008">            } catch (Exception e) {</span>
-<span class="nc" id="L1009">                attemptNumValidTriangulatedPoints = 0;</span>
-<span class="fc" id="L1010">            }</span>
+<span class="nc" id="L1009">            } catch (Exception e) {</span>
+<span class="nc" id="L1010">                attemptNumValidTriangulatedPoints = 0;</span>
+<span class="fc" id="L1011">            }</span>
             
-<span class="fc bfc" id="L1012" title="All 2 branches covered.">            if(attemptNumValidTriangulatedPoints &gt; numValidTriangulatedPoints) {</span>
+<span class="fc bfc" id="L1013" title="All 2 branches covered.">            if(attemptNumValidTriangulatedPoints &gt; numValidTriangulatedPoints) {</span>
                 //a better solution containing more valid points has been foound
                 
                 //keep better solution
-<span class="fc" id="L1016">                updateBestSolutionData(leftCamera, rightCamera, </span>
+<span class="fc" id="L1017">                updateBestSolutionData(leftCamera, rightCamera, </span>
                         triangulatedPoints, validTriangulatedPoints, 
                         attemptLeftCamera, attemptRightCamera, 
                         attemptTriangulatedPoints, 
                         attemptValidTriangulatedPoints);
-<span class="fc" id="L1021">                numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;</span>
+<span class="fc" id="L1022">                numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;</span>
             }            
         }
         
-<span class="fc bfc" id="L1025" title="All 2 branches covered.">        if (numValidTriangulatedPoints == 0) {</span>
-<span class="fc" id="L1026">            throw new InitialCamerasEstimationFailedException(</span>
+<span class="fc bfc" id="L1026" title="All 2 branches covered.">        if (numValidTriangulatedPoints == 0) {</span>
+<span class="fc" id="L1027">            throw new InitialCamerasEstimationFailedException(</span>
                     &quot;no valid points found&quot;);
         }
             
-<span class="fc" id="L1030">        return numValidTriangulatedPoints;</span>
+<span class="fc" id="L1031">        return numValidTriangulatedPoints;</span>
     }
     
     /**
@@ -1041,13 +1042,13 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     private void internalSetLeftAndRightPoints(List&lt;Point2D&gt; leftPoints,
             List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc bfc" id="L1044" title="All 4 branches covered.">        if (leftPoints == null || rightPoints == null || </span>
-<span class="fc bfc" id="L1045" title="All 2 branches covered.">                leftPoints.size() != rightPoints.size()) {</span>
-<span class="fc" id="L1046">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1045" title="All 4 branches covered.">        if (leftPoints == null || rightPoints == null || </span>
+<span class="fc bfc" id="L1046" title="All 2 branches covered.">                leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L1047">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1048">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L1049">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L1050">    }</span>
+<span class="fc" id="L1049">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L1050">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L1051">    }</span>
     
     /**
      * Updates data for best solution found so far.
@@ -1077,23 +1078,23 @@ public class EssentialMatrixInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException {
         
         try {
-<span class="fc" id="L1080">            leftCamera.setInternalMatrix(attemptLeftCamera.getInternalMatrix());</span>
-<span class="fc" id="L1081">            rightCamera.setInternalMatrix(</span>
-<span class="fc" id="L1082">                    attemptRightCamera.getInternalMatrix());</span>
-<span class="pc bpc" id="L1083" title="1 of 4 branches missed.">            if (triangulatedPoints != null &amp;&amp; </span>
+<span class="fc" id="L1081">            leftCamera.setInternalMatrix(attemptLeftCamera.getInternalMatrix());</span>
+<span class="fc" id="L1082">            rightCamera.setInternalMatrix(</span>
+<span class="fc" id="L1083">                    attemptRightCamera.getInternalMatrix());</span>
+<span class="pc bpc" id="L1084" title="1 of 4 branches missed.">            if (triangulatedPoints != null &amp;&amp; </span>
                     attemptTriangulatedPoints != null) {
-<span class="fc" id="L1085">                triangulatedPoints.clear();</span>
-<span class="fc" id="L1086">                triangulatedPoints.addAll(attemptTriangulatedPoints);</span>
+<span class="fc" id="L1086">                triangulatedPoints.clear();</span>
+<span class="fc" id="L1087">                triangulatedPoints.addAll(attemptTriangulatedPoints);</span>
             }
-<span class="pc bpc" id="L1088" title="1 of 4 branches missed.">            if (validTriangulatedPoints != null &amp;&amp; </span>
+<span class="pc bpc" id="L1089" title="1 of 4 branches missed.">            if (validTriangulatedPoints != null &amp;&amp; </span>
                     attemptValidTriangulatedPoints != null) {
-<span class="fc" id="L1090">                validTriangulatedPoints.clear();</span>
-<span class="fc" id="L1091">                validTriangulatedPoints.or(attemptValidTriangulatedPoints);</span>
+<span class="fc" id="L1091">                validTriangulatedPoints.clear();</span>
+<span class="fc" id="L1092">                validTriangulatedPoints.or(attemptValidTriangulatedPoints);</span>
             }
-<span class="nc" id="L1093">        } catch (WrongSizeException e) {</span>
-<span class="nc" id="L1094">            throw new InitialCamerasEstimationFailedException(e);</span>
-<span class="fc" id="L1095">        }</span>
-<span class="fc" id="L1096">    }</span>
+<span class="nc" id="L1094">        } catch (WrongSizeException e) {</span>
+<span class="nc" id="L1095">            throw new InitialCamerasEstimationFailedException(e);</span>
+<span class="fc" id="L1096">        }</span>
+<span class="fc" id="L1097">    }</span>
     
     /**
      * Computes a pair of cameras for provided rotation and translation
@@ -1142,102 +1143,102 @@ public class EssentialMatrixInitialCamerasEstimator
             CameraException, LockedException, NotReadyException,
             Point3DTriangulationException {
         
-<span class="fc bfc" id="L1145" title="All 2 branches covered.">        if (triangulatedPoints != null) {</span>
-<span class="fc" id="L1146">            triangulatedPoints.clear();</span>
+<span class="fc bfc" id="L1146" title="All 2 branches covered.">        if (triangulatedPoints != null) {</span>
+<span class="fc" id="L1147">            triangulatedPoints.clear();</span>
         }
-<span class="fc bfc" id="L1148" title="All 2 branches covered.">        if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L1149">            validTriangulatedPoints.clear();</span>
+<span class="fc bfc" id="L1149" title="All 2 branches covered.">        if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L1150">            validTriangulatedPoints.clear();</span>
         }
-<span class="fc" id="L1151">        int numValidTriangulatedPoints = 0;</span>
+<span class="fc" id="L1152">        int numValidTriangulatedPoints = 0;</span>
         
-<span class="fc" id="L1153">        Matrix leftIntrinsicMatrix = leftIntrinsic.getInternalMatrix();</span>
-<span class="fc" id="L1154">        Matrix rightIntrinsicMatrix = rightIntrinsic.getInternalMatrix();</span>
+<span class="fc" id="L1154">        Matrix leftIntrinsicMatrix = leftIntrinsic.getInternalMatrix();</span>
+<span class="fc" id="L1155">        Matrix rightIntrinsicMatrix = rightIntrinsic.getInternalMatrix();</span>
         
-<span class="fc" id="L1156">        Matrix rotationMatrix = rotation.asInhomogeneousMatrix();</span>
+<span class="fc" id="L1157">        Matrix rotationMatrix = rotation.asInhomogeneousMatrix();</span>
         
         //1st camera
         
         //set camera as a canonical matrix
-<span class="fc" id="L1161">        Matrix tmp = Matrix.identity(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS, </span>
+<span class="fc" id="L1162">        Matrix tmp = Matrix.identity(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS, </span>
                 PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
         
         //add intrinsic parameters
-<span class="fc" id="L1165">        leftIntrinsicMatrix.multiply(tmp);</span>
+<span class="fc" id="L1166">        leftIntrinsicMatrix.multiply(tmp);</span>
 
         //set internal matrix, normalize and fix camera sign
-<span class="fc" id="L1168">        estimatedLeftCamera.setInternalMatrix(leftIntrinsicMatrix);</span>
-<span class="fc" id="L1169">        estimatedLeftCamera.normalize();</span>
-<span class="fc" id="L1170">        estimatedLeftCamera.fixCameraSign();</span>
+<span class="fc" id="L1169">        estimatedLeftCamera.setInternalMatrix(leftIntrinsicMatrix);</span>
+<span class="fc" id="L1170">        estimatedLeftCamera.normalize();</span>
+<span class="fc" id="L1171">        estimatedLeftCamera.fixCameraSign();</span>
         
         
         //2nd camera
 
         //set left 3x3 minor containing rotation
-<span class="fc" id="L1176">        tmp.setSubmatrix(0, 0, 2, 2, rotationMatrix);</span>
+<span class="fc" id="L1177">        tmp.setSubmatrix(0, 0, 2, 2, rotationMatrix);</span>
         
         //set last column containing translation
-<span class="fc" id="L1179">        translation.normalize();</span>
-<span class="fc" id="L1180">        tmp.setElementAt(0, 3, translation.getHomX());</span>
-<span class="fc" id="L1181">        tmp.setElementAt(1, 3, translation.getHomY());</span>
-<span class="fc" id="L1182">        tmp.setElementAt(2, 3, translation.getHomW());</span>
+<span class="fc" id="L1180">        translation.normalize();</span>
+<span class="fc" id="L1181">        tmp.setElementAt(0, 3, translation.getHomX());</span>
+<span class="fc" id="L1182">        tmp.setElementAt(1, 3, translation.getHomY());</span>
+<span class="fc" id="L1183">        tmp.setElementAt(2, 3, translation.getHomW());</span>
         
         //add intrinsic parameters
-<span class="fc" id="L1185">        rightIntrinsicMatrix.multiply(tmp);</span>
+<span class="fc" id="L1186">        rightIntrinsicMatrix.multiply(tmp);</span>
 
         //set internal matrix, normalize and fix camera sign
-<span class="fc" id="L1188">        estimatedRightCamera.setInternalMatrix(rightIntrinsicMatrix);</span>
-<span class="fc" id="L1189">        estimatedRightCamera.normalize();</span>
-<span class="fc" id="L1190">        estimatedRightCamera.fixCameraSign();</span>
+<span class="fc" id="L1189">        estimatedRightCamera.setInternalMatrix(rightIntrinsicMatrix);</span>
+<span class="fc" id="L1190">        estimatedRightCamera.normalize();</span>
+<span class="fc" id="L1191">        estimatedRightCamera.fixCameraSign();</span>
         
         //set cameras on triangulator
         SinglePoint3DTriangulator triangulator = SinglePoint3DTriangulator.
-<span class="fc" id="L1194">                create();</span>
+<span class="fc" id="L1195">                create();</span>
         
-<span class="fc" id="L1196">        int numPoints = leftPoints.size();</span>
+<span class="fc" id="L1197">        int numPoints = leftPoints.size();</span>
         Point2D leftPoint, rightPoint;
-<span class="fc" id="L1198">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L1199">        List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1199">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1200">        List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
         Point3D triangulatedPoint;
         boolean frontLeft, frontRight;
-<span class="fc bfc" id="L1202" title="All 2 branches covered.">        for (int i = 0; i &lt; numPoints; i++) {</span>
-<span class="fc" id="L1203">            leftPoint = leftPoints.get(i);</span>
-<span class="fc" id="L1204">            rightPoint = rightPoints.get(i);</span>
+<span class="fc bfc" id="L1203" title="All 2 branches covered.">        for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L1204">            leftPoint = leftPoints.get(i);</span>
+<span class="fc" id="L1205">            rightPoint = rightPoints.get(i);</span>
             
-<span class="fc" id="L1206">            points.clear();</span>
-<span class="fc" id="L1207">            points.add(leftPoint);</span>
-<span class="fc" id="L1208">            points.add(rightPoint);</span>
+<span class="fc" id="L1207">            points.clear();</span>
+<span class="fc" id="L1208">            points.add(leftPoint);</span>
+<span class="fc" id="L1209">            points.add(rightPoint);</span>
             
-<span class="fc" id="L1210">            cameras.clear();</span>
-<span class="fc" id="L1211">            cameras.add(estimatedLeftCamera);</span>
-<span class="fc" id="L1212">            cameras.add(estimatedRightCamera);</span>
+<span class="fc" id="L1211">            cameras.clear();</span>
+<span class="fc" id="L1212">            cameras.add(estimatedLeftCamera);</span>
+<span class="fc" id="L1213">            cameras.add(estimatedRightCamera);</span>
             
-<span class="fc" id="L1214">            triangulator.setPointsAndCameras(points, cameras);</span>
-<span class="fc" id="L1215">            triangulatedPoint = triangulator.triangulate();</span>
-<span class="fc bfc" id="L1216" title="All 2 branches covered.">            if (triangulatedPoints != null) {</span>
-<span class="fc" id="L1217">                triangulatedPoints.add(triangulatedPoint);</span>
+<span class="fc" id="L1215">            triangulator.setPointsAndCameras(points, cameras);</span>
+<span class="fc" id="L1216">            triangulatedPoint = triangulator.triangulate();</span>
+<span class="fc bfc" id="L1217" title="All 2 branches covered.">            if (triangulatedPoints != null) {</span>
+<span class="fc" id="L1218">                triangulatedPoints.add(triangulatedPoint);</span>
             }
             
             //check that triangulated point is in front of both cameras
-<span class="fc" id="L1221">            frontLeft = estimatedLeftCamera.isPointInFrontOfCamera(</span>
+<span class="fc" id="L1222">            frontLeft = estimatedLeftCamera.isPointInFrontOfCamera(</span>
                     triangulatedPoint);
-<span class="fc" id="L1223">            frontRight = estimatedRightCamera.isPointInFrontOfCamera(</span>
+<span class="fc" id="L1224">            frontRight = estimatedRightCamera.isPointInFrontOfCamera(</span>
                     triangulatedPoint);
             
-<span class="fc bfc" id="L1226" title="All 4 branches covered.">            if (frontLeft &amp;&amp; frontRight) {</span>
+<span class="fc bfc" id="L1227" title="All 4 branches covered.">            if (frontLeft &amp;&amp; frontRight) {</span>
                 //point is valid because it is in front of both cameras
-<span class="fc bfc" id="L1228" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L1229">                    validTriangulatedPoints.set(i);</span>
+<span class="fc bfc" id="L1229" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L1230">                    validTriangulatedPoints.set(i);</span>
                 }
-<span class="fc" id="L1231">                numValidTriangulatedPoints++;</span>
+<span class="fc" id="L1232">                numValidTriangulatedPoints++;</span>
             } else {
                 //point is not valid
-<span class="fc bfc" id="L1234" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L1235">                    validTriangulatedPoints.clear(i);</span>
+<span class="fc bfc" id="L1235" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L1236">                    validTriangulatedPoints.clear(i);</span>
                 }
             }
         }
         
-<span class="fc" id="L1240">        return numValidTriangulatedPoints;</span>
+<span class="fc" id="L1241">        return numValidTriangulatedPoints;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

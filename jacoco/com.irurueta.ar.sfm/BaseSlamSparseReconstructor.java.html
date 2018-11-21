@@ -32,6 +32,7 @@ import java.util.List;
  * @param &lt;L&gt; type of listener.
  * @param &lt;S&gt; type of SLAM estimator.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public abstract class BaseSlamSparseReconstructor&lt;
         C extends BaseSlamSparseReconstructorConfiguration,
         R extends BaseSlamSparseReconstructor,
@@ -47,17 +48,17 @@ public abstract class BaseSlamSparseReconstructor&lt;
     /**
      * Position estimated by means of SLAM. It is reused each time it is notified.
      */
-<span class="fc" id="L50">    protected InhomogeneousPoint3D mSlamPosition = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L51">    protected InhomogeneousPoint3D mSlamPosition = new InhomogeneousPoint3D();</span>
 
     /**
      * Camera estimated by means of SLAM. It is reused each time it is notified.
      */
-<span class="fc" id="L55">    private PinholeCamera mSlamCamera = new PinholeCamera();</span>
+<span class="fc" id="L56">    private PinholeCamera mSlamCamera = new PinholeCamera();</span>
 
     /**
      * Camera rotation estimated by means of SLAM. It is reused each time it is notified.
      */
-<span class="fc" id="L60">    private Quaternion mSlamRotation = new Quaternion();</span>
+<span class="fc" id="L61">    private Quaternion mSlamRotation = new Quaternion();</span>
 
     /**
      * Constructor.
@@ -68,8 +69,8 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     public BaseSlamSparseReconstructor(C configuration,
             L listener) throws NullPointerException {
-<span class="fc" id="L71">        super(configuration, listener);</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L72">        super(configuration, listener);</span>
+<span class="fc" id="L73">    }</span>
 
     /**
      * Provides a new accelerometer sample to update SLAM estimation.
@@ -87,11 +88,11 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     public void updateAccelerometerSample(long timestamp, float accelerationX,
                                           float accelerationY, float accelerationZ) {
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L91">            mSlamEstimator.updateAccelerometerSample(timestamp, accelerationX,</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L92">            mSlamEstimator.updateAccelerometerSample(timestamp, accelerationX,</span>
                     accelerationY, accelerationZ);
         }
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L95">    }</span>
 
     /**
      * Provides a new accelerometer sample to update SLAM estimation.
@@ -107,10 +108,10 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     public void updateAccelerometerSample(long timestamp, float[] data)
             throws IllegalArgumentException {
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L111">            mSlamEstimator.updateAccelerometerSample(timestamp, data);</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L112">            mSlamEstimator.updateAccelerometerSample(timestamp, data);</span>
         }
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L114">    }</span>
 
     /**
      * Provides a new gyroscope sample to update SLAM estimation.
@@ -126,11 +127,11 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     public void updateGyroscopeSample(long timestamp, float angularSpeedX,
                                       float angularSpeedY, float angularSpeedZ) {
-<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L130">            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX,</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L131">            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX,</span>
                     angularSpeedY, angularSpeedZ);
         }
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L134">    }</span>
 
     /**
      * Provies a new gyroscope sample to update SLAM estimation.
@@ -144,47 +145,47 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     public void updateGyroscopeSample(long timestamp, float[] data)
             throws IllegalArgumentException {
-<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L148">            mSlamEstimator.updateGyroscopeSample(timestamp, data);</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L149">            mSlamEstimator.updateGyroscopeSample(timestamp, data);</span>
         }
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L151">    }</span>
 
     /**
      * Configures calibration data on SLAM estimator if available.
      */
     protected void setUpCalibrationData() {
-<span class="fc" id="L156">        BaseCalibrationData calibrationData =</span>
-<span class="fc" id="L157">                mConfiguration.getCalibrationData();</span>
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if (calibrationData != null) {</span>
+<span class="fc" id="L157">        BaseCalibrationData calibrationData =</span>
+<span class="fc" id="L158">                mConfiguration.getCalibrationData();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (calibrationData != null) {</span>
             //noinspection all
-<span class="fc" id="L160">            mSlamEstimator.setCalibrationData(calibrationData);</span>
+<span class="fc" id="L161">            mSlamEstimator.setCalibrationData(calibrationData);</span>
         }
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L163">    }</span>
 
     /**
      * Configures listener of SLAM estimator
      */
     protected void setUpSlamEstimatorListener() {
-<span class="fc" id="L168">        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener() {</span>
+<span class="fc" id="L169">        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener() {</span>
             @Override
-<span class="fc" id="L170">            public void onFullSampleReceived(BaseSlamEstimator estimator) { /* not used */ }</span>
+<span class="fc" id="L171">            public void onFullSampleReceived(BaseSlamEstimator estimator) { /* not used */ }</span>
 
             @Override
             public void onFullSampleProcessed(BaseSlamEstimator estimator) {
-<span class="fc" id="L174">                notifySlamStateIfNeeded();</span>
-<span class="fc" id="L175">                notifySlamCameraIfNeeded();</span>
-<span class="fc" id="L176">            }</span>
+<span class="fc" id="L175">                notifySlamStateIfNeeded();</span>
+<span class="fc" id="L176">                notifySlamCameraIfNeeded();</span>
+<span class="fc" id="L177">            }</span>
 
             @Override
-<span class="fc" id="L179">            public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) { /* not used */ }</span>
+<span class="fc" id="L180">            public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) { /* not used */ }</span>
 
             @Override
             public void onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
-<span class="fc" id="L183">                notifySlamStateIfNeeded();</span>
-<span class="fc" id="L184">                notifySlamCameraIfNeeded();</span>
-<span class="fc" id="L185">            }</span>
+<span class="fc" id="L184">                notifySlamStateIfNeeded();</span>
+<span class="fc" id="L185">                notifySlamCameraIfNeeded();</span>
+<span class="fc" id="L186">            }</span>
         });
-<span class="fc" id="L187">    }</span>
+<span class="fc" id="L188">    }</span>
 
     /**
      * Update scene scale using SLAM data.
@@ -193,134 +194,134 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     protected boolean updateScale(boolean isInitialPairOfViews) {
         try {
-<span class="fc" id="L196">            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();</span>
-<span class="fc" id="L197">            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L197">            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L198">            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();</span>
 
             double slamPosX, slamPosY, slamPosZ;
             double scale;
-<span class="fc bfc" id="L201" title="All 2 branches covered.">            if (isInitialPairOfViews) {</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            if (isInitialPairOfViews) {</span>
                 //obtain baseline (camera separation from slam estimator data
-<span class="fc" id="L203">                slamPosX = mSlamEstimator.getStatePositionX();</span>
-<span class="fc" id="L204">                slamPosY = mSlamEstimator.getStatePositionY();</span>
-<span class="fc" id="L205">                slamPosZ = mSlamEstimator.getStatePositionZ();</span>
+<span class="fc" id="L204">                slamPosX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L205">                slamPosY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L206">                slamPosZ = mSlamEstimator.getStatePositionZ();</span>
 
-<span class="fc" id="L207">                mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);</span>
+<span class="fc" id="L208">                mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);</span>
 
-<span class="pc bpc" id="L209" title="1 of 2 branches missed.">                if (!metricCamera1.isCameraCenterAvailable()) {</span>
-<span class="fc" id="L210">                    metricCamera1.decompose(false, true);</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">                if (!metricCamera1.isCameraCenterAvailable()) {</span>
+<span class="fc" id="L211">                    metricCamera1.decompose(false, true);</span>
                 }
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">                if (!metricCamera2.isCameraCenterAvailable()) {</span>
-<span class="fc" id="L213">                    metricCamera2.decompose(false, true);</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">                if (!metricCamera2.isCameraCenterAvailable()) {</span>
+<span class="fc" id="L214">                    metricCamera2.decompose(false, true);</span>
                 }
 
-<span class="fc" id="L216">                Point3D center1 = metricCamera1.getCameraCenter();</span>
-<span class="fc" id="L217">                Point3D center2 = metricCamera2.getCameraCenter();</span>
+<span class="fc" id="L217">                Point3D center1 = metricCamera1.getCameraCenter();</span>
+<span class="fc" id="L218">                Point3D center2 = metricCamera2.getCameraCenter();</span>
 
-<span class="fc" id="L219">                double baseline = center1.distanceTo(mSlamPosition);</span>
-<span class="fc" id="L220">                double estimatedBaseline = center1.distanceTo(center2);</span>
+<span class="fc" id="L220">                double baseline = center1.distanceTo(mSlamPosition);</span>
+<span class="fc" id="L221">                double estimatedBaseline = center1.distanceTo(center2);</span>
 
-<span class="fc" id="L222">                scale = mCurrentScale = baseline / estimatedBaseline;</span>
-<span class="fc" id="L223">            } else {</span>
-<span class="fc" id="L224">                scale = mCurrentScale;</span>
+<span class="fc" id="L223">                scale = mCurrentScale = baseline / estimatedBaseline;</span>
+<span class="fc" id="L224">            } else {</span>
+<span class="fc" id="L225">                scale = mCurrentScale;</span>
             }
 
-<span class="fc" id="L227">            MetricTransformation3D scaleTransformation =</span>
+<span class="fc" id="L228">            MetricTransformation3D scaleTransformation =</span>
                     new MetricTransformation3D(scale);
 
             //update scale of cameras
-<span class="fc" id="L231">            PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);</span>
-<span class="fc" id="L232">            PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);</span>
+<span class="fc" id="L232">            PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);</span>
+<span class="fc" id="L233">            PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);</span>
 
-<span class="pc bpc" id="L234" title="1 of 2 branches missed.">            if (!euclideanCamera2.isCameraCenterAvailable()) {</span>
-<span class="fc" id="L235">                euclideanCamera2.decompose(false, true);</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">            if (!euclideanCamera2.isCameraCenterAvailable()) {</span>
+<span class="fc" id="L236">                euclideanCamera2.decompose(false, true);</span>
             }
-<span class="fc" id="L237">            mSlamEstimator.correctWithPositionMeasure(euclideanCamera2.getCameraCenter(),</span>
-<span class="fc" id="L238">                    mConfiguration.getCameraPositionCovariance());</span>
+<span class="fc" id="L238">            mSlamEstimator.correctWithPositionMeasure(euclideanCamera2.getCameraCenter(),</span>
+<span class="fc" id="L239">                    mConfiguration.getCameraPositionCovariance());</span>
 
-<span class="fc bfc" id="L240" title="All 2 branches covered.">            if (!isInitialPairOfViews) {</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">            if (!isInitialPairOfViews) {</span>
 
-<span class="fc" id="L242">                slamPosX = mSlamEstimator.getStatePositionX();</span>
-<span class="fc" id="L243">                slamPosY = mSlamEstimator.getStatePositionY();</span>
-<span class="fc" id="L244">                slamPosZ = mSlamEstimator.getStatePositionZ();</span>
-<span class="fc" id="L245">                mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);</span>
+<span class="fc" id="L243">                slamPosX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L244">                slamPosY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L245">                slamPosZ = mSlamEstimator.getStatePositionZ();</span>
+<span class="fc" id="L246">                mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);</span>
 
                 //adjust scale of current camera
-<span class="fc" id="L248">                Point3D euclideanCenter2 = euclideanCamera2.getCameraCenter();</span>
+<span class="fc" id="L249">                Point3D euclideanCenter2 = euclideanCamera2.getCameraCenter();</span>
 
-<span class="fc" id="L250">                double euclideanPosX = euclideanCenter2.getInhomX();</span>
-<span class="fc" id="L251">                double euclideanPosY = euclideanCenter2.getInhomY();</span>
-<span class="fc" id="L252">                double euclideanPosZ = euclideanCenter2.getInhomZ();</span>
+<span class="fc" id="L251">                double euclideanPosX = euclideanCenter2.getInhomX();</span>
+<span class="fc" id="L252">                double euclideanPosY = euclideanCenter2.getInhomY();</span>
+<span class="fc" id="L253">                double euclideanPosZ = euclideanCenter2.getInhomZ();</span>
 
-<span class="fc" id="L254">                double scaleVariationX = euclideanPosX / slamPosX;</span>
-<span class="fc" id="L255">                double scaleVariationY = euclideanPosY / slamPosY;</span>
-<span class="fc" id="L256">                double scaleVariationZ = euclideanPosZ / slamPosZ;</span>
+<span class="fc" id="L255">                double scaleVariationX = euclideanPosX / slamPosX;</span>
+<span class="fc" id="L256">                double scaleVariationY = euclideanPosY / slamPosY;</span>
+<span class="fc" id="L257">                double scaleVariationZ = euclideanPosZ / slamPosZ;</span>
 
-<span class="fc" id="L258">                double scaleVariation = (scaleVariationX + scaleVariationY + scaleVariationZ) / 3.0;</span>
-<span class="fc" id="L259">                scale *= scaleVariation;</span>
-<span class="fc" id="L260">                mCurrentScale = scale;</span>
-<span class="fc" id="L261">                scaleTransformation.setScale(mCurrentScale);</span>
+<span class="fc" id="L259">                double scaleVariation = (scaleVariationX + scaleVariationY + scaleVariationZ) / 3.0;</span>
+<span class="fc" id="L260">                scale *= scaleVariation;</span>
+<span class="fc" id="L261">                mCurrentScale = scale;</span>
+<span class="fc" id="L262">                scaleTransformation.setScale(mCurrentScale);</span>
 
                 //update camera
-<span class="fc" id="L264">                scaleTransformation.transform(metricCamera2, euclideanCamera2);</span>
+<span class="fc" id="L265">                scaleTransformation.transform(metricCamera2, euclideanCamera2);</span>
             }
-<span class="fc" id="L266">            double sqrScale = scale * scale;</span>
+<span class="fc" id="L267">            double sqrScale = scale * scale;</span>
 
-<span class="fc" id="L268">            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();</span>
-<span class="fc" id="L269">            mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);</span>
-<span class="fc" id="L270">            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());</span>
-<span class="fc" id="L271">            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());</span>
-<span class="pc bpc" id="L272" title="1 of 2 branches missed.">            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {</span>
-<span class="nc" id="L273">                mPreviousEuclideanEstimatedCamera.setCovariance(</span>
-<span class="nc" id="L274">                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="fc" id="L269">            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L270">            mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);</span>
+<span class="fc" id="L271">            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L272">            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L274">                mPreviousEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L275">                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
             }
 
-<span class="fc" id="L277">            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();</span>
-<span class="fc" id="L278">            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);</span>
-<span class="fc" id="L279">            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());</span>
-<span class="fc" id="L280">            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());</span>
-<span class="pc bpc" id="L281" title="1 of 2 branches missed.">            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {</span>
-<span class="nc" id="L282">                mCurrentEuclideanEstimatedCamera.setCovariance(</span>
-<span class="nc" id="L283">                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="fc" id="L278">            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L279">            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);</span>
+<span class="fc" id="L280">            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L281">            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L283">                mCurrentEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L284">                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
             }
 
             //update scale of reconstructed points
-<span class="fc" id="L287">            int numPoints = mActiveMetricReconstructedPoints.size();</span>
-<span class="fc" id="L288">            List&lt;Point3D&gt; metricReconstructedPoints3D = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L289" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mActiveMetricReconstructedPoints) {</span>
-<span class="fc" id="L290">                metricReconstructedPoints3D.add(reconstructedPoint.getPoint());</span>
-<span class="fc" id="L291">            }</span>
+<span class="fc" id="L288">            int numPoints = mActiveMetricReconstructedPoints.size();</span>
+<span class="fc" id="L289">            List&lt;Point3D&gt; metricReconstructedPoints3D = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mActiveMetricReconstructedPoints) {</span>
+<span class="fc" id="L291">                metricReconstructedPoints3D.add(reconstructedPoint.getPoint());</span>
+<span class="fc" id="L292">            }</span>
 
-<span class="fc" id="L293">            List&lt;Point3D&gt; euclideanReconstructedPoints3D =</span>
-<span class="fc" id="L294">                    scaleTransformation.transformPointsAndReturnNew(</span>
+<span class="fc" id="L294">            List&lt;Point3D&gt; euclideanReconstructedPoints3D =</span>
+<span class="fc" id="L295">                    scaleTransformation.transformPointsAndReturnNew(</span>
                             metricReconstructedPoints3D);
 
             //set scaled points into result
-<span class="fc" id="L298">            mActiveEuclideanReconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L299">            mActiveEuclideanReconstructedPoints = new ArrayList&lt;&gt;();</span>
             ReconstructedPoint3D euclideanPoint;
             ReconstructedPoint3D metricPoint;
-<span class="fc bfc" id="L301" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
-<span class="fc" id="L302">                metricPoint = mActiveMetricReconstructedPoints.get(i);</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L303">                metricPoint = mActiveMetricReconstructedPoints.get(i);</span>
 
-<span class="fc" id="L304">                euclideanPoint = new ReconstructedPoint3D();</span>
-<span class="fc" id="L305">                euclideanPoint.setId(metricPoint.getId());</span>
-<span class="fc" id="L306">                euclideanPoint.setPoint(euclideanReconstructedPoints3D.get(i));</span>
-<span class="fc" id="L307">                euclideanPoint.setInlier(metricPoint.isInlier());</span>
-<span class="fc" id="L308">                euclideanPoint.setQualityScore(metricPoint.getQualityScore());</span>
-<span class="pc bpc" id="L309" title="1 of 2 branches missed.">                if (metricPoint.getCovariance() != null) {</span>
-<span class="nc" id="L310">                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="fc" id="L305">                euclideanPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L306">                euclideanPoint.setId(metricPoint.getId());</span>
+<span class="fc" id="L307">                euclideanPoint.setPoint(euclideanReconstructedPoints3D.get(i));</span>
+<span class="fc" id="L308">                euclideanPoint.setInlier(metricPoint.isInlier());</span>
+<span class="fc" id="L309">                euclideanPoint.setQualityScore(metricPoint.getQualityScore());</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">                if (metricPoint.getCovariance() != null) {</span>
+<span class="nc" id="L311">                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
                 }
-<span class="fc" id="L312">                euclideanPoint.setColorData(metricPoint.getColorData());</span>
+<span class="fc" id="L313">                euclideanPoint.setColorData(metricPoint.getColorData());</span>
 
-<span class="fc" id="L314">                mActiveEuclideanReconstructedPoints.add(euclideanPoint);</span>
+<span class="fc" id="L315">                mActiveEuclideanReconstructedPoints.add(euclideanPoint);</span>
             }
 
-<span class="fc" id="L317">            return true;</span>
-<span class="nc" id="L318">        } catch (Exception e) {</span>
-<span class="nc" id="L319">            mFailed = true;</span>
+<span class="fc" id="L318">            return true;</span>
+<span class="nc" id="L319">        } catch (Exception e) {</span>
+<span class="nc" id="L320">            mFailed = true;</span>
             //noinspection all
-<span class="nc" id="L321">            mListener.onFail((R)this);</span>
+<span class="nc" id="L322">            mListener.onFail((R)this);</span>
 
-<span class="nc" id="L323">            return false;</span>
+<span class="nc" id="L324">            return false;</span>
         }
     }
 
@@ -328,99 +329,99 @@ public abstract class BaseSlamSparseReconstructor&lt;
      * Notifies SLAM state if notification is enabled at configuration time.
      */
     private void notifySlamStateIfNeeded() {
-<span class="pc bpc" id="L331" title="1 of 2 branches missed.">        if (!mConfiguration.isNotifyAvailableSlamDataEnabled()) {</span>
-<span class="nc" id="L332">            return;</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">        if (!mConfiguration.isNotifyAvailableSlamDataEnabled()) {</span>
+<span class="nc" id="L333">            return;</span>
         }
 
-<span class="fc" id="L335">        double positionX = mSlamEstimator.getStatePositionX();</span>
-<span class="fc" id="L336">        double positionY = mSlamEstimator.getStatePositionY();</span>
-<span class="fc" id="L337">        double positionZ = mSlamEstimator.getStatePositionZ();</span>
+<span class="fc" id="L336">        double positionX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L337">        double positionY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L338">        double positionZ = mSlamEstimator.getStatePositionZ();</span>
 
-<span class="fc" id="L339">        double velocityX = mSlamEstimator.getStateVelocityX();</span>
-<span class="fc" id="L340">        double velocityY = mSlamEstimator.getStateVelocityY();</span>
-<span class="fc" id="L341">        double velocityZ = mSlamEstimator.getStateVelocityZ();</span>
+<span class="fc" id="L340">        double velocityX = mSlamEstimator.getStateVelocityX();</span>
+<span class="fc" id="L341">        double velocityY = mSlamEstimator.getStateVelocityY();</span>
+<span class="fc" id="L342">        double velocityZ = mSlamEstimator.getStateVelocityZ();</span>
 
-<span class="fc" id="L343">        double accelerationX = mSlamEstimator.getStateAccelerationX();</span>
-<span class="fc" id="L344">        double accelerationY = mSlamEstimator.getStateAccelerationY();</span>
-<span class="fc" id="L345">        double accelerationZ = mSlamEstimator.getStateAccelerationZ();</span>
+<span class="fc" id="L344">        double accelerationX = mSlamEstimator.getStateAccelerationX();</span>
+<span class="fc" id="L345">        double accelerationY = mSlamEstimator.getStateAccelerationY();</span>
+<span class="fc" id="L346">        double accelerationZ = mSlamEstimator.getStateAccelerationZ();</span>
 
-<span class="fc" id="L347">        double quaternionA = mSlamEstimator.getStateQuaternionA();</span>
-<span class="fc" id="L348">        double quaternionB = mSlamEstimator.getStateQuaternionB();</span>
-<span class="fc" id="L349">        double quaternionC = mSlamEstimator.getStateQuaternionC();</span>
-<span class="fc" id="L350">        double quaternionD = mSlamEstimator.getStateQuaternionD();</span>
+<span class="fc" id="L348">        double quaternionA = mSlamEstimator.getStateQuaternionA();</span>
+<span class="fc" id="L349">        double quaternionB = mSlamEstimator.getStateQuaternionB();</span>
+<span class="fc" id="L350">        double quaternionC = mSlamEstimator.getStateQuaternionC();</span>
+<span class="fc" id="L351">        double quaternionD = mSlamEstimator.getStateQuaternionD();</span>
 
-<span class="fc" id="L352">        double angularSpeedX = mSlamEstimator.getStateAngularSpeedX();</span>
-<span class="fc" id="L353">        double angularSpeedY = mSlamEstimator.getStateAngularSpeedY();</span>
-<span class="fc" id="L354">        double angularSpeedZ = mSlamEstimator.getStateAngularSpeedZ();</span>
+<span class="fc" id="L353">        double angularSpeedX = mSlamEstimator.getStateAngularSpeedX();</span>
+<span class="fc" id="L354">        double angularSpeedY = mSlamEstimator.getStateAngularSpeedY();</span>
+<span class="fc" id="L355">        double angularSpeedZ = mSlamEstimator.getStateAngularSpeedZ();</span>
 
         //noinspection all
-<span class="fc" id="L357">        mListener.onSlamDataAvailable((R)this, positionX, positionY, positionZ,</span>
+<span class="fc" id="L358">        mListener.onSlamDataAvailable((R)this, positionX, positionY, positionZ,</span>
                 velocityX, velocityY, velocityZ,
                 accelerationX, accelerationY, accelerationZ,
                 quaternionA, quaternionB, quaternionC, quaternionD,
-<span class="fc" id="L361">                angularSpeedX, angularSpeedY, angularSpeedZ, mSlamEstimator.getStateCovariance());</span>
-<span class="fc" id="L362">    }</span>
+<span class="fc" id="L362">                angularSpeedX, angularSpeedY, angularSpeedZ, mSlamEstimator.getStateCovariance());</span>
+<span class="fc" id="L363">    }</span>
 
     /**
      * Notifies estimated camera by means of SLAM if notification is enabled at
      * configuration time and intrinsics are already available.
      */
     private void notifySlamCameraIfNeeded() {
-<span class="pc bpc" id="L369" title="1 of 2 branches missed.">        if (!mConfiguration.isNotifyEstimatedSlamCameraEnabled()) {</span>
-<span class="nc" id="L370">            return;</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (!mConfiguration.isNotifyEstimatedSlamCameraEnabled()) {</span>
+<span class="nc" id="L371">            return;</span>
         }
 
         //try with current camera
-<span class="fc bfc" id="L374" title="All 2 branches covered.">        PinholeCamera camera = mCurrentEuclideanEstimatedCamera != null ?</span>
-<span class="fc" id="L375">                mCurrentEuclideanEstimatedCamera.getCamera() : null;</span>
-<span class="fc bfc" id="L376" title="All 2 branches covered.">        if (camera == null) {</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">        PinholeCamera camera = mCurrentEuclideanEstimatedCamera != null ?</span>
+<span class="fc" id="L376">                mCurrentEuclideanEstimatedCamera.getCamera() : null;</span>
+<span class="fc bfc" id="L377" title="All 2 branches covered.">        if (camera == null) {</span>
             //if not available try with previous camera
-<span class="pc bpc" id="L378" title="1 of 2 branches missed.">            camera = mPreviousEuclideanEstimatedCamera != null ?</span>
-<span class="pc" id="L379">                    mPreviousEuclideanEstimatedCamera.getCamera() : null;</span>
+<span class="pc bpc" id="L379" title="1 of 2 branches missed.">            camera = mPreviousEuclideanEstimatedCamera != null ?</span>
+<span class="pc" id="L380">                    mPreviousEuclideanEstimatedCamera.getCamera() : null;</span>
         }
 
         try {
-<span class="fc" id="L383">            PinholeCameraIntrinsicParameters intrinsicParameters = null;</span>
-<span class="fc bfc" id="L384" title="All 2 branches covered.">            if (camera != null) {</span>
-<span class="fc bfc" id="L385" title="All 2 branches covered.">                if (!camera.areIntrinsicParametersAvailable()) {</span>
+<span class="fc" id="L384">            PinholeCameraIntrinsicParameters intrinsicParameters = null;</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">            if (camera != null) {</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">                if (!camera.areIntrinsicParametersAvailable()) {</span>
                     //decompose camera to obtain intrinsic parameters
-<span class="fc" id="L387">                    camera.decompose();</span>
+<span class="fc" id="L388">                    camera.decompose();</span>
                 }
 
-<span class="fc" id="L390">                intrinsicParameters = camera.getIntrinsicParameters();</span>
-<span class="pc bpc" id="L391" title="1 of 2 branches missed.">            } else if (mConfiguration.getInitialIntrinsic1() != null) {</span>
-<span class="fc" id="L392">                intrinsicParameters = mConfiguration.getInitialIntrinsic1();</span>
-<span class="nc bnc" id="L393" title="All 2 branches missed.">            } else if (mConfiguration.getInitialIntrinsic2() != null) {</span>
-<span class="nc" id="L394">                intrinsicParameters = mConfiguration.getInitialIntrinsic2();</span>
-<span class="nc bnc" id="L395" title="All 2 branches missed.">            } else if (mConfiguration.getAdditionalCamerasIntrinsics() != null) {</span>
-<span class="nc" id="L396">                intrinsicParameters = mConfiguration.getAdditionalCamerasIntrinsics();</span>
+<span class="fc" id="L391">                intrinsicParameters = camera.getIntrinsicParameters();</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">            } else if (mConfiguration.getInitialIntrinsic1() != null) {</span>
+<span class="fc" id="L393">                intrinsicParameters = mConfiguration.getInitialIntrinsic1();</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">            } else if (mConfiguration.getInitialIntrinsic2() != null) {</span>
+<span class="nc" id="L395">                intrinsicParameters = mConfiguration.getInitialIntrinsic2();</span>
+<span class="nc bnc" id="L396" title="All 2 branches missed.">            } else if (mConfiguration.getAdditionalCamerasIntrinsics() != null) {</span>
+<span class="nc" id="L397">                intrinsicParameters = mConfiguration.getAdditionalCamerasIntrinsics();</span>
             }
 
-<span class="pc bpc" id="L399" title="1 of 2 branches missed.">            if (intrinsicParameters == null) {</span>
-<span class="nc" id="L400">                return;</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">            if (intrinsicParameters == null) {</span>
+<span class="nc" id="L401">                return;</span>
             }
 
-<span class="fc" id="L403">            double positionX = mSlamEstimator.getStatePositionX();</span>
-<span class="fc" id="L404">            double positionY = mSlamEstimator.getStatePositionY();</span>
-<span class="fc" id="L405">            double positionZ = mSlamEstimator.getStatePositionZ();</span>
-<span class="fc" id="L406">            mSlamPosition.setInhomogeneousCoordinates(positionX, positionY, positionZ);</span>
+<span class="fc" id="L404">            double positionX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L405">            double positionY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L406">            double positionZ = mSlamEstimator.getStatePositionZ();</span>
+<span class="fc" id="L407">            mSlamPosition.setInhomogeneousCoordinates(positionX, positionY, positionZ);</span>
 
-<span class="fc" id="L408">            double quaternionA = mSlamEstimator.getStateQuaternionA();</span>
-<span class="fc" id="L409">            double quaternionB = mSlamEstimator.getStateQuaternionB();</span>
-<span class="fc" id="L410">            double quaternionC = mSlamEstimator.getStateQuaternionC();</span>
-<span class="fc" id="L411">            double quaternionD = mSlamEstimator.getStateQuaternionD();</span>
-<span class="fc" id="L412">            mSlamRotation.setA(quaternionA);</span>
-<span class="fc" id="L413">            mSlamRotation.setB(quaternionB);</span>
-<span class="fc" id="L414">            mSlamRotation.setC(quaternionC);</span>
-<span class="fc" id="L415">            mSlamRotation.setD(quaternionD);</span>
+<span class="fc" id="L409">            double quaternionA = mSlamEstimator.getStateQuaternionA();</span>
+<span class="fc" id="L410">            double quaternionB = mSlamEstimator.getStateQuaternionB();</span>
+<span class="fc" id="L411">            double quaternionC = mSlamEstimator.getStateQuaternionC();</span>
+<span class="fc" id="L412">            double quaternionD = mSlamEstimator.getStateQuaternionD();</span>
+<span class="fc" id="L413">            mSlamRotation.setA(quaternionA);</span>
+<span class="fc" id="L414">            mSlamRotation.setB(quaternionB);</span>
+<span class="fc" id="L415">            mSlamRotation.setC(quaternionC);</span>
+<span class="fc" id="L416">            mSlamRotation.setD(quaternionD);</span>
 
-<span class="fc" id="L417">            mSlamCamera.setIntrinsicAndExtrinsicParameters(intrinsicParameters, mSlamRotation,</span>
+<span class="fc" id="L418">            mSlamCamera.setIntrinsicAndExtrinsicParameters(intrinsicParameters, mSlamRotation,</span>
                     mSlamPosition);
 
             //noinspection all
-<span class="fc" id="L421">            mListener.onSlamCameraEstimated((R)this, mSlamCamera);</span>
+<span class="fc" id="L422">            mListener.onSlamCameraEstimated((R)this, mSlamCamera);</span>
 
-<span class="pc" id="L423">        } catch (GeometryException ignore) { /* do nothing */ }</span>
-<span class="fc" id="L424">    }</span>
+<span class="pc" id="L424">        } catch (GeometryException ignore) { /* do nothing */ }</span>
+<span class="fc" id="L425">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

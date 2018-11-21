@@ -21,6 +21,7 @@ import java.io.Serializable;
  * Contains configuration for a two view sparse reconstructor assuming that the
  * baseline (separation between cameras) is known.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends 
         BaseTwoViewsSparseReconstructorConfiguration&lt;
         KnownBaselineTwoViewsSparseReconstructorConfiguration&gt; implements Serializable {
@@ -38,12 +39,12 @@ public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends
      * Contains the real separation between camera centers so that the real
      * scale of cameras and reconstructed points can be retrieved.
      */
-<span class="fc" id="L41">    private double mBaseline = DEFAULT_BASELINE;</span>
+<span class="fc" id="L42">    private double mBaseline = DEFAULT_BASELINE;</span>
     
     /**
      * Constructor.
      */
-<span class="fc" id="L46">    public KnownBaselineTwoViewsSparseReconstructorConfiguration() { }</span>
+<span class="fc" id="L47">    public KnownBaselineTwoViewsSparseReconstructorConfiguration() { }</span>
     
     /**
      * Creates an instance of a two views sparse reconstructor configuration 
@@ -51,7 +52,7 @@ public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends
      * @return configuration instance.
      */
     public static KnownBaselineTwoViewsSparseReconstructorConfiguration make() {
-<span class="fc" id="L54">        return new KnownBaselineTwoViewsSparseReconstructorConfiguration();</span>
+<span class="fc" id="L55">        return new KnownBaselineTwoViewsSparseReconstructorConfiguration();</span>
     }
     
     /**
@@ -61,7 +62,7 @@ public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends
      * @return camera baseline.
      */
     public double getBaseline() {
-<span class="fc" id="L64">        return mBaseline;</span>
+<span class="fc" id="L65">        return mBaseline;</span>
     }
     
     /**
@@ -73,8 +74,8 @@ public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends
      */
     public KnownBaselineTwoViewsSparseReconstructorConfiguration setBaseline(
             double baseline) {
-<span class="fc" id="L76">        mBaseline = baseline;</span>
-<span class="fc" id="L77">        return this;</span>
+<span class="fc" id="L77">        mBaseline = baseline;</span>
+<span class="fc" id="L78">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

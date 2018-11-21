@@ -23,6 +23,7 @@ import java.io.Serializable;
 /**
  * Contains data of a 2D point sample on a given view.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class Sample2D implements Serializable {
     
     /**
@@ -58,7 +59,7 @@ public class Sample2D implements Serializable {
      * This value is typically obtained from algorithms determining quality of
      * points of interest.
      */
-<span class="fc" id="L61">    private double mQualityScore = DEFAULT_QUALITY_SCORE;</span>
+<span class="fc" id="L62">    private double mQualityScore = DEFAULT_QUALITY_SCORE;</span>
         
     /**
      * Covariance of sampled points. This is obtained from the algorithms
@@ -77,7 +78,7 @@ public class Sample2D implements Serializable {
     /**
      * Constructor.
      */
-<span class="fc" id="L80">    public Sample2D() { }</span>
+<span class="fc" id="L81">    public Sample2D() { }</span>
     
     /**
      * Gets id to identify this instance. This is useful in case that this data
@@ -85,7 +86,7 @@ public class Sample2D implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-<span class="fc" id="L88">        return mId;</span>
+<span class="fc" id="L89">        return mId;</span>
     }
     
     /**
@@ -94,15 +95,15 @@ public class Sample2D implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(String id) {
-<span class="fc" id="L97">        mId = id;</span>
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L98">        mId = id;</span>
+<span class="fc" id="L99">    }</span>
     
     /**
      * Gets id of view where 2D point has been sampled.
      * @return id of view where 2D point has been sampled.
      */
     public int getViewId() {
-<span class="fc" id="L105">        return mViewId;</span>
+<span class="fc" id="L106">        return mViewId;</span>
     }
     
     /**
@@ -110,15 +111,15 @@ public class Sample2D implements Serializable {
      * @param viewId id of view where 2D point has been sampled.
      */
     public void setViewId(int viewId) {
-<span class="fc" id="L113">        mViewId = viewId;</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L114">        mViewId = viewId;</span>
+<span class="fc" id="L115">    }</span>
     
     /**
      * Gets 2D sampled point coordinates.
      * @return 2D sampled point coordinates.
      */
     public Point2D getPoint() {
-<span class="fc" id="L121">        return mPoint;</span>
+<span class="fc" id="L122">        return mPoint;</span>
     }
     
     /**
@@ -126,15 +127,15 @@ public class Sample2D implements Serializable {
      * @param point 2D sampled point coordinates.
      */
     public void setPoint(Point2D point) {
-<span class="fc" id="L129">        mPoint = point;</span>
-<span class="fc" id="L130">    }</span>
+<span class="fc" id="L130">        mPoint = point;</span>
+<span class="fc" id="L131">    }</span>
 
     /**
      * Gets 3D reconstructed point.
      * @return 3D reconstructed point.
      */
     public ReconstructedPoint3D getReconstructedPoint() {
-<span class="fc" id="L137">        return mReconstructedPoint;</span>
+<span class="fc" id="L138">        return mReconstructedPoint;</span>
     }
 
     /**
@@ -142,8 +143,8 @@ public class Sample2D implements Serializable {
      * @param reconstructedPoint 3D reconstructed point.
      */
     public void setReconstructedPoint(ReconstructedPoint3D reconstructedPoint) {
-<span class="fc" id="L145">        mReconstructedPoint = reconstructedPoint;</span>
-<span class="fc" id="L146">    }</span>
+<span class="fc" id="L146">        mReconstructedPoint = reconstructedPoint;</span>
+<span class="fc" id="L147">    }</span>
 
     /**
      * Gets quality score of sampled point. The larger the value, the
@@ -154,7 +155,7 @@ public class Sample2D implements Serializable {
      * @return quality score of sampled point.
      */
     public double getQualityScore() {
-<span class="fc" id="L157">        return mQualityScore;</span>
+<span class="fc" id="L158">        return mQualityScore;</span>
     }
     
     /**
@@ -166,8 +167,8 @@ public class Sample2D implements Serializable {
      * @param qualityScore quality score of sampled point.
      */
     public void setQualityScore(double qualityScore) {
-<span class="fc" id="L169">        mQualityScore = qualityScore;</span>
-<span class="fc" id="L170">    }</span>
+<span class="fc" id="L170">        mQualityScore = qualityScore;</span>
+<span class="fc" id="L171">    }</span>
 
     /**
      * Gets covariance of sampled points. This is obtained from the algorithms
@@ -178,7 +179,7 @@ public class Sample2D implements Serializable {
      * @return covariance of sampled points or null.
      */
     public Matrix getCovariance() {
-<span class="fc" id="L181">        return mCovariance;</span>
+<span class="fc" id="L182">        return mCovariance;</span>
     }
     
     /**
@@ -190,15 +191,15 @@ public class Sample2D implements Serializable {
      * @param covariance covariance of sampled points.
      */
     public void setCovariance(Matrix covariance) {
-<span class="fc" id="L193">        mCovariance = covariance;</span>
-<span class="fc" id="L194">    }</span>
+<span class="fc" id="L194">        mCovariance = covariance;</span>
+<span class="fc" id="L195">    }</span>
 
     /**
      * Gets color data of sampled point (i.e. RGB or YUV values), if available.
      * @return color data of sampled point or null.
      */
     public PointColorData getColorData() {
-<span class="fc" id="L201">        return mColorData;</span>
+<span class="fc" id="L202">        return mColorData;</span>
     }    
     
     /**
@@ -206,7 +207,7 @@ public class Sample2D implements Serializable {
      * @param colorData color data of sampled point or null.
      */
     public void setColorData(PointColorData colorData) {
-<span class="fc" id="L209">        mColorData = colorData;</span>
-<span class="fc" id="L210">    }</span>
+<span class="fc" id="L210">        mColorData = colorData;</span>
+<span class="fc" id="L211">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

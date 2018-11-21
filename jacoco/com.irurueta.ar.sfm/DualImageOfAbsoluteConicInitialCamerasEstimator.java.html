@@ -39,6 +39,7 @@ import java.util.List;
  * poses and translations by triangulating a set of matched points and checking
  * that their triangulation lies in front of cameras.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class DualImageOfAbsoluteConicInitialCamerasEstimator 
         extends InitialCamerasEstimator {
     
@@ -58,7 +59,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * Typically this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      */
-<span class="fc" id="L61">    private double mAspectRatio = KruppaDualImageOfAbsoluteConicEstimator.</span>
+<span class="fc" id="L62">    private double mAspectRatio = KruppaDualImageOfAbsoluteConicEstimator.</span>
                 DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
     
     /**
@@ -91,18 +92,18 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * Type of corrector to use to triangulate matched points or null if no
      * corrector needs to be used.
      */    
-<span class="fc" id="L94">    private CorrectorType mCorrectorType = Corrector.DEFAULT_TYPE;    </span>
+<span class="fc" id="L95">    private CorrectorType mCorrectorType = Corrector.DEFAULT_TYPE;    </span>
     
     /**
      * Indicates whether matched 2D points need to be triangulated.
      */
-<span class="fc" id="L99">    private boolean mTriangulatePoints = DEFAULT_TRIANGULATE_POINTS;</span>
+<span class="fc" id="L100">    private boolean mTriangulatePoints = DEFAULT_TRIANGULATE_POINTS;</span>
     
     /**
      * Marks which of the triangulated points are marked as valid (lie in front
      * of both of the estimated cameras) and which ones aren't.
      */
-<span class="fc" id="L105">    private boolean mMarkValidTriangulatedPoints = </span>
+<span class="fc" id="L106">    private boolean mMarkValidTriangulatedPoints = </span>
             DEFAULT_MARK_VALID_TRIANGULATED_POINTS;
     
     /**
@@ -120,8 +121,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * Constructor.
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator() {
-<span class="fc" id="L123">        super();</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L124">        super();</span>
+<span class="fc" id="L125">    }</span>
     
     /**
      * Constructor.
@@ -129,8 +130,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L132">        super(fundamentalMatrix);</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L133">        super(fundamentalMatrix);</span>
+<span class="fc" id="L134">    }</span>
     
     /**
      * Constructor.
@@ -142,9 +143,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
             throws IllegalArgumentException {
-<span class="fc" id="L145">        super();</span>
-<span class="fc" id="L146">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L147">    }</span>
+<span class="fc" id="L146">        super();</span>
+<span class="fc" id="L147">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L148">    }</span>
     
     /**
      * Constructor.
@@ -157,9 +158,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L160">        super(fundamentalMatrix);</span>
-<span class="fc" id="L161">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L162">    }    </span>
+<span class="fc" id="L161">        super(fundamentalMatrix);</span>
+<span class="fc" id="L162">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L163">    }    </span>
 
     /**
      * Constructor.
@@ -167,8 +168,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L170">        super(listener);</span>
-<span class="fc" id="L171">    }</span>
+<span class="fc" id="L171">        super(listener);</span>
+<span class="fc" id="L172">    }</span>
     
     /**
      * Constructor.
@@ -178,8 +179,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, 
             InitialCamerasEstimatorListener listener) {
-<span class="fc" id="L181">        super(fundamentalMatrix, listener);</span>
-<span class="fc" id="L182">    }</span>
+<span class="fc" id="L182">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L183">    }</span>
     
     /**
      * Constructor.
@@ -193,9 +194,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints,
             InitialCamerasEstimatorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L196">        super(listener);</span>
-<span class="fc" id="L197">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L197">        super(listener);</span>
+<span class="fc" id="L198">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L199">    }</span>
     
     /**
      * Constructor.
@@ -210,9 +211,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             FundamentalMatrix fundamentalMatrix, List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints, InitialCamerasEstimatorListener listener)
             throws IllegalArgumentException {
-<span class="fc" id="L213">        super(fundamentalMatrix, listener);</span>
-<span class="fc" id="L214">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L215">    }    </span>
+<span class="fc" id="L214">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L215">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L216">    }    </span>
     
     /**
      * Returns method used by this estimator.
@@ -220,7 +221,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     @Override
     public InitialCamerasEstimatorMethod getMethod() {
-<span class="fc" id="L223">        return InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC;</span>
+<span class="fc" id="L224">        return InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC;</span>
     }    
     
     /**
@@ -229,9 +230,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     @Override
     public boolean isReady() {
-<span class="pc bpc" id="L232" title="1 of 6 branches missed.">        return mFundamentalMatrix != null &amp;&amp; mLeftPoints != null &amp;&amp; </span>
+<span class="pc bpc" id="L233" title="1 of 6 branches missed.">        return mFundamentalMatrix != null &amp;&amp; mLeftPoints != null &amp;&amp; </span>
                 mRightPoints != null &amp;&amp; 
-<span class="pc bpc" id="L234" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size();</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size();</span>
     }    
     
     /**
@@ -244,60 +245,60 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
     @Override
     public void estimate() throws LockedException, NotReadyException, 
             InitialCamerasEstimationFailedException {
-<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L248">            throw new LockedException();</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L249">            throw new LockedException();</span>
         }
         
-<span class="pc bpc" id="L251" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L252">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L253">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L256">            mLocked = true;  </span>
+<span class="fc" id="L257">            mLocked = true;  </span>
             
-<span class="fc bfc" id="L258" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L259">                mListener.onStart(this);</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L260">                mListener.onStart(this);</span>
             }
             
-<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (mTriangulatePoints) {</span>
-<span class="fc" id="L263">                mTriangulatedPoints = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">            if (mTriangulatePoints) {</span>
+<span class="fc" id="L264">                mTriangulatedPoints = new ArrayList&lt;&gt;();</span>
             } else {
-<span class="nc" id="L265">                mTriangulatedPoints = null;</span>
+<span class="nc" id="L266">                mTriangulatedPoints = null;</span>
             }
         
-<span class="fc" id="L268">            int nPoints = mLeftPoints.size();</span>
-<span class="pc bpc" id="L269" title="1 of 2 branches missed.">            if (mMarkValidTriangulatedPoints) {</span>
-<span class="fc" id="L270">                mValidTriangulatedPoints = new BitSet(nPoints);</span>
+<span class="fc" id="L269">            int nPoints = mLeftPoints.size();</span>
+<span class="pc bpc" id="L270" title="1 of 2 branches missed.">            if (mMarkValidTriangulatedPoints) {</span>
+<span class="fc" id="L271">                mValidTriangulatedPoints = new BitSet(nPoints);</span>
             } else {
-<span class="nc" id="L272">                mValidTriangulatedPoints = null;</span>
+<span class="nc" id="L273">                mValidTriangulatedPoints = null;</span>
             }
             
-<span class="pc bpc" id="L275" title="1 of 2 branches missed.">            if (mEstimatedLeftCamera == null) {</span>
-<span class="fc" id="L276">                mEstimatedLeftCamera = new PinholeCamera();</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">            if (mEstimatedLeftCamera == null) {</span>
+<span class="fc" id="L277">                mEstimatedLeftCamera = new PinholeCamera();</span>
             }
-<span class="pc bpc" id="L278" title="1 of 2 branches missed.">            if (mEstimatedRightCamera == null) {</span>
-<span class="fc" id="L279">                mEstimatedRightCamera = new PinholeCamera();</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">            if (mEstimatedRightCamera == null) {</span>
+<span class="fc" id="L280">                mEstimatedRightCamera = new PinholeCamera();</span>
             }            
                         
-<span class="fc" id="L282">            generateInitialMetricCamerasUsingDIAC(mFundamentalMatrix, </span>
+<span class="fc" id="L283">            generateInitialMetricCamerasUsingDIAC(mFundamentalMatrix, </span>
                     mPrincipalPointX, mPrincipalPointY, mAspectRatio, 
                     mLeftPoints, mRightPoints, mCorrectorType, 
                     mEstimatedLeftCamera, mEstimatedRightCamera, 
                     mTriangulatedPoints, mValidTriangulatedPoints);
             
-<span class="fc bfc" id="L288" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L289">                mListener.onFinish(this, mEstimatedLeftCamera, </span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L290">                mListener.onFinish(this, mEstimatedLeftCamera, </span>
                         mEstimatedRightCamera);
             }
-<span class="fc" id="L292">        } catch (InitialCamerasEstimationFailedException e) {</span>
-<span class="pc bpc" id="L293" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="nc" id="L294">                mListener.onFail(this, e);</span>
+<span class="fc" id="L293">        } catch (InitialCamerasEstimationFailedException e) {</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="nc" id="L295">                mListener.onFail(this, e);</span>
             }
-<span class="fc" id="L296">            throw e;            </span>
+<span class="fc" id="L297">            throw e;            </span>
         } finally {
-<span class="fc" id="L298">            mLocked = false;</span>
+<span class="fc" id="L299">            mLocked = false;</span>
         }
-<span class="fc" id="L300">    }    </span>
+<span class="fc" id="L301">    }    </span>
     
     /**
      * Gets aspect ratio of intrinsic parameters of cameras.
@@ -306,7 +307,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return aspect ratio of intrinsic parameters of cameras.
      */
     public double getAspectRatio() {
-<span class="fc" id="L309">        return mAspectRatio;</span>
+<span class="fc" id="L310">        return mAspectRatio;</span>
     }
     
     /**
@@ -317,11 +318,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @throws LockedException if estimator is locked.
      */
     public void setAspectRatio(double aspectRatio) throws LockedException {
-<span class="fc bfc" id="L320" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L321">            throw new LockedException();</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L322">            throw new LockedException();</span>
         }
-<span class="fc" id="L323">        mAspectRatio = aspectRatio;</span>
-<span class="fc" id="L324">    }</span>
+<span class="fc" id="L324">        mAspectRatio = aspectRatio;</span>
+<span class="fc" id="L325">    }</span>
     
     /**
      * Gets horizontal coordinate of principal point. This value should be the 
@@ -331,7 +332,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return horizontal coordinate of principal point.
      */
     public double getPrincipalPointX() {
-<span class="fc" id="L334">        return mPrincipalPointX;</span>
+<span class="fc" id="L335">        return mPrincipalPointX;</span>
     }
     
     /**
@@ -344,11 +345,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setPrincipalPointX(double principalPointX) 
             throws LockedException {
-<span class="fc bfc" id="L347" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L348">            throw new LockedException();</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L349">            throw new LockedException();</span>
         }
-<span class="fc" id="L350">        mPrincipalPointX = principalPointX;</span>
-<span class="fc" id="L351">    }</span>
+<span class="fc" id="L351">        mPrincipalPointX = principalPointX;</span>
+<span class="fc" id="L352">    }</span>
     
     /**
      * Gets vertical coordinate of principal point. This value should be the 
@@ -358,7 +359,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return vertical coordinate of principal point.
      */
     public double getPrincipalPointY() {
-<span class="fc" id="L361">        return mPrincipalPointY;</span>
+<span class="fc" id="L362">        return mPrincipalPointY;</span>
     }
     
     /**
@@ -371,11 +372,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setPrincipalPointY(double principalPointY)
             throws LockedException {
-<span class="fc bfc" id="L374" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L375">            throw new LockedException();</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L376">            throw new LockedException();</span>
         }
-<span class="fc" id="L377">        mPrincipalPointY = principalPointY;</span>
-<span class="fc" id="L378">    }</span>
+<span class="fc" id="L378">        mPrincipalPointY = principalPointY;</span>
+<span class="fc" id="L379">    }</span>
     
     /**
      * Sets horizontal and vertical coordinates of principal point. This value 
@@ -388,19 +389,19 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setPrincipalPoint(double principalPointX, 
             double principalPointY) throws LockedException {
-<span class="fc bfc" id="L391" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L392">            throw new LockedException();</span>
+<span class="fc bfc" id="L392" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L393">            throw new LockedException();</span>
         }
-<span class="fc" id="L394">        mPrincipalPointX = principalPointX;</span>
-<span class="fc" id="L395">        mPrincipalPointY = principalPointY;</span>
-<span class="fc" id="L396">    }</span>
+<span class="fc" id="L395">        mPrincipalPointX = principalPointX;</span>
+<span class="fc" id="L396">        mPrincipalPointY = principalPointY;</span>
+<span class="fc" id="L397">    }</span>
         
     /**
      * Gets matched 2D points on left view.
      * @return matched 2D points on left view.
      */
     public List&lt;Point2D&gt; getLeftPoints() {
-<span class="fc" id="L403">        return mLeftPoints;</span>
+<span class="fc" id="L404">        return mLeftPoints;</span>
     }
     
     /**
@@ -409,18 +410,18 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @throws LockedException if estimator is locked.
      */
     public void setLeftPoints(List&lt;Point2D&gt; leftPoints) throws LockedException {
-<span class="fc bfc" id="L412" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L413">            throw new LockedException();</span>
+<span class="fc bfc" id="L413" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L414">            throw new LockedException();</span>
         }
-<span class="fc" id="L415">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L416">    }</span>
+<span class="fc" id="L416">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L417">    }</span>
     
     /**
      * Gets matched 2D points on right view.
      * @return matched 2D points on right view.
      */
     public List&lt;Point2D&gt; getRightPoints() {
-<span class="fc" id="L423">        return mRightPoints;</span>
+<span class="fc" id="L424">        return mRightPoints;</span>
     }
     
     /**
@@ -430,11 +431,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setRightPoints(List&lt;Point2D&gt; rightPoints) 
             throws LockedException {
-<span class="fc bfc" id="L433" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L434">            throw new LockedException();</span>
+<span class="fc bfc" id="L434" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L435">            throw new LockedException();</span>
         }
-<span class="fc" id="L436">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L437">    }</span>
+<span class="fc" id="L437">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L438">    }</span>
     
     /**
      * Sets matched 2D points on left and right views.
@@ -447,11 +448,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
     public void setLeftAndRightPoints(List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints) throws LockedException, 
             IllegalArgumentException {
-<span class="fc bfc" id="L450" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L451">            throw new LockedException();</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L452">            throw new LockedException();</span>
         }
-<span class="fc" id="L453">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L454">    }</span>
+<span class="fc" id="L454">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L455">    }</span>
     
     /**
      * Gets type of corrector to use to triangulate matched points or null if
@@ -459,7 +460,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return type of corrector to use.
      */
     public CorrectorType getCorrectorType() {
-<span class="fc" id="L462">        return mCorrectorType;</span>
+<span class="fc" id="L463">        return mCorrectorType;</span>
     }
     
     /**
@@ -470,18 +471,18 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setCorrectorType(CorrectorType correctorType) 
             throws LockedException {
-<span class="fc bfc" id="L473" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L474">            throw new LockedException();</span>
+<span class="fc bfc" id="L474" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L475">            throw new LockedException();</span>
         }
-<span class="fc" id="L476">        mCorrectorType = correctorType;</span>
-<span class="fc" id="L477">    }        </span>
+<span class="fc" id="L477">        mCorrectorType = correctorType;</span>
+<span class="fc" id="L478">    }        </span>
     
     /**
      * Indicates whether matched 2D points need to be triangulated or not.
      * @return true if 2D points need to be triangulated, false otherwise.
      */
     public boolean arePointsTriangulated() {
-<span class="fc" id="L484">        return mTriangulatePoints;</span>
+<span class="fc" id="L485">        return mTriangulatePoints;</span>
     }
     
     /**
@@ -492,11 +493,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setPointsTriangulated(boolean triangulatePoints) 
             throws LockedException {
-<span class="fc bfc" id="L495" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L496">            throw new LockedException();</span>
+<span class="fc bfc" id="L496" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L497">            throw new LockedException();</span>
         }
-<span class="fc" id="L498">        mTriangulatePoints = triangulatePoints;</span>
-<span class="fc" id="L499">    }</span>
+<span class="fc" id="L499">        mTriangulatePoints = triangulatePoints;</span>
+<span class="fc" id="L500">    }</span>
     
     /**
      * Indicates which triangulated points are marked as valid (lie in front
@@ -505,7 +506,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * otherwise.
      */
     public boolean areValidTriangulatedPointsMarked() {
-<span class="fc" id="L508">        return mMarkValidTriangulatedPoints;</span>
+<span class="fc" id="L509">        return mMarkValidTriangulatedPoints;</span>
     }
     
     /**
@@ -517,18 +518,18 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public void setValidTriangulatedPointsMarked(
             boolean markValidTriangulatedPoints) throws LockedException {
-<span class="fc bfc" id="L520" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L521">            throw new LockedException();</span>
+<span class="fc bfc" id="L521" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L522">            throw new LockedException();</span>
         }
-<span class="fc" id="L523">        mMarkValidTriangulatedPoints = markValidTriangulatedPoints;</span>
-<span class="fc" id="L524">    }</span>
+<span class="fc" id="L524">        mMarkValidTriangulatedPoints = markValidTriangulatedPoints;</span>
+<span class="fc" id="L525">    }</span>
     
     /**
      * Gets triangulated points, if available.
      * @return triangulated points or null.
      */
     public List&lt;Point3D&gt; getTriangulatedPoints() {
-<span class="fc" id="L531">        return mTriangulatedPoints;</span>
+<span class="fc" id="L532">        return mTriangulatedPoints;</span>
     }
 
     /**
@@ -538,7 +539,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * available.
      */
     public BitSet getValidTriangulatedPoints() {
-<span class="fc" id="L541">        return mValidTriangulatedPoints;</span>
+<span class="fc" id="L542">        return mValidTriangulatedPoints;</span>
     }        
     
     /**
@@ -586,7 +587,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L589">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
+<span class="fc" id="L590">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
                 principalPointX, principalPointY, leftPoints, rightPoints, 
                 Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
     }
@@ -640,7 +641,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L643">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
+<span class="fc" id="L644">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
                 principalPointX, principalPointY, leftPoints, rightPoints, 
                 correctorType, leftCamera, rightCamera, null, null);
     }  
@@ -695,7 +696,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L698">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,</span>
+<span class="fc" id="L699">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,</span>
                 principalPointX, principalPointY, leftPoints, rightPoints, 
                 Corrector.DEFAULT_TYPE, leftCamera, rightCamera, 
                 triangulatedPoints, validTriangulatedPoints);
@@ -755,7 +756,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L758">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
+<span class="fc" id="L759">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
                 principalPointX, principalPointY,
                 KruppaDualImageOfAbsoluteConicEstimator.
                 DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftPoints, rightPoints,
@@ -811,7 +812,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L814">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
+<span class="fc" id="L815">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
                 principalPointX, principalPointY, aspectRatio, leftPoints, 
                 rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
     }
@@ -869,7 +870,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L872">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
+<span class="fc" id="L873">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, </span>
                 principalPointX, principalPointY, aspectRatio, leftPoints, 
                 rightPoints, correctorType, leftCamera, rightCamera, null, 
                 null);
@@ -928,7 +929,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             throws InitialCamerasEstimationFailedException, 
             IllegalArgumentException {
         
-<span class="fc" id="L931">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,</span>
+<span class="fc" id="L932">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,</span>
                 principalPointX, principalPointY, aspectRatio, leftPoints, 
                 rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera, 
                 triangulatedPoints, validTriangulatedPoints);
@@ -992,29 +993,29 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             IllegalArgumentException {
         
         try {
-<span class="fc" id="L995">            KruppaDualImageOfAbsoluteConicEstimator diacEstimator =</span>
+<span class="fc" id="L996">            KruppaDualImageOfAbsoluteConicEstimator diacEstimator =</span>
                     new KruppaDualImageOfAbsoluteConicEstimator(
                             fundamentalMatrix);
-<span class="fc" id="L998">            diacEstimator.setPrincipalPointX(principalPointX);</span>
-<span class="fc" id="L999">            diacEstimator.setPrincipalPointY(principalPointY);            </span>
-<span class="fc" id="L1000">            diacEstimator.setFocalDistanceAspectRatioKnown(true);</span>
-<span class="fc" id="L1001">            diacEstimator.setFocalDistanceAspectRatio(aspectRatio);</span>
+<span class="fc" id="L999">            diacEstimator.setPrincipalPointX(principalPointX);</span>
+<span class="fc" id="L1000">            diacEstimator.setPrincipalPointY(principalPointY);            </span>
+<span class="fc" id="L1001">            diacEstimator.setFocalDistanceAspectRatioKnown(true);</span>
+<span class="fc" id="L1002">            diacEstimator.setFocalDistanceAspectRatio(aspectRatio);</span>
             
-<span class="fc" id="L1003">            DualImageOfAbsoluteConic diac = diacEstimator.estimate();</span>
+<span class="fc" id="L1004">            DualImageOfAbsoluteConic diac = diacEstimator.estimate();</span>
             
-<span class="fc" id="L1005">            PinholeCameraIntrinsicParameters intrinsic = </span>
-<span class="fc" id="L1006">                    diac.getIntrinsicParameters();</span>
+<span class="fc" id="L1006">            PinholeCameraIntrinsicParameters intrinsic = </span>
+<span class="fc" id="L1007">                    diac.getIntrinsicParameters();</span>
             
-<span class="fc" id="L1008">            return EssentialMatrixInitialCamerasEstimator.</span>
-<span class="fc" id="L1009">                    generateInitialMetricCamerasFromEssentialMatrix(</span>
+<span class="fc" id="L1009">            return EssentialMatrixInitialCamerasEstimator.</span>
+<span class="fc" id="L1010">                    generateInitialMetricCamerasFromEssentialMatrix(</span>
                     fundamentalMatrix, intrinsic, intrinsic, leftPoints, 
                     rightPoints, correctorType, leftCamera, rightCamera, 
                     triangulatedPoints, validTriangulatedPoints);
             
-<span class="nc" id="L1014">        } catch (InitialCamerasEstimationFailedException e) {</span>
-<span class="nc" id="L1015">            throw e;</span>
-<span class="fc" id="L1016">        } catch (Exception e) {</span>
-<span class="fc" id="L1017">            throw new InitialCamerasEstimationFailedException(e);</span>
+<span class="nc" id="L1015">        } catch (InitialCamerasEstimationFailedException e) {</span>
+<span class="nc" id="L1016">            throw e;</span>
+<span class="fc" id="L1017">        } catch (Exception e) {</span>
+<span class="fc" id="L1018">            throw new InitialCamerasEstimationFailedException(e);</span>
         }
     }    
     
@@ -1029,12 +1030,12 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     private void internalSetLeftAndRightPoints(List&lt;Point2D&gt; leftPoints,
             List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc bfc" id="L1032" title="All 4 branches covered.">        if (leftPoints == null || rightPoints == null || </span>
-<span class="fc bfc" id="L1033" title="All 2 branches covered.">                leftPoints.size() != rightPoints.size()) {</span>
-<span class="fc" id="L1034">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L1033" title="All 4 branches covered.">        if (leftPoints == null || rightPoints == null || </span>
+<span class="fc bfc" id="L1034" title="All 2 branches covered.">                leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L1035">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L1036">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L1037">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L1038">    }    </span>
+<span class="fc" id="L1037">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L1038">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L1039">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

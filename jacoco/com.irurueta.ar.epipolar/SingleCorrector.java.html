@@ -26,18 +26,19 @@ import com.irurueta.geometry.estimators.NotReadyException;
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar lines.
  * The consequence is that triangularization of these matches will fail or 
- * produce innaccurate results. 
+ * produce inaccurate results.
  * By fixing matched points using a corrector following a given epipolar 
  * geometry, this effect is alleviated.
  * This is an abstract class, subclasses will implement different methods to
  * fix matched points coordinates
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public abstract class SingleCorrector {
     
     /**
      * Default corrector type.
      */
-<span class="fc" id="L40">    public static final CorrectorType DEFAULT_TYPE = </span>
+<span class="fc" id="L41">    public static final CorrectorType DEFAULT_TYPE = </span>
             CorrectorType.GOLD_STANDARD;
     
     /**
@@ -68,25 +69,25 @@ public abstract class SingleCorrector {
     /**
      * Constructor.
      */
-<span class="fc" id="L71">    public SingleCorrector(){ }</span>
+<span class="fc" id="L72">    public SingleCorrector(){ }</span>
     
     /**
      * Constructor.
      * @param fundamentalMatrix fundamental matrix defining the epipolar 
      * geometry.
      */
-<span class="fc" id="L78">    public SingleCorrector(FundamentalMatrix fundamentalMatrix) {</span>
-<span class="fc" id="L79">        setFundamentalMatrix(fundamentalMatrix);</span>
-<span class="fc" id="L80">    }</span>
+<span class="fc" id="L79">    public SingleCorrector(FundamentalMatrix fundamentalMatrix) {</span>
+<span class="fc" id="L80">        setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L81">    }</span>
     
     /**
      * Constructor.
      * @param leftPoint matched point on left view to be corrected.
      * @param rightPoint matched point on right view to be corrected.
      */
-<span class="fc" id="L87">    public SingleCorrector(Point2D leftPoint, Point2D rightPoint) {</span>
-<span class="fc" id="L88">        setPoints(leftPoint, rightPoint);</span>
-<span class="fc" id="L89">    }</span>
+<span class="fc" id="L88">    public SingleCorrector(Point2D leftPoint, Point2D rightPoint) {</span>
+<span class="fc" id="L89">        setPoints(leftPoint, rightPoint);</span>
+<span class="fc" id="L90">    }</span>
     
     /**
      * Constructor.
@@ -95,9 +96,9 @@ public abstract class SingleCorrector {
      * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
      */
     public SingleCorrector(Point2D leftPoint, Point2D rightPoint, 
-<span class="fc" id="L98">            FundamentalMatrix fundamentalMatrix) {</span>
-<span class="fc" id="L99">        setPointsAndFundamentalMatrix(leftPoint, rightPoint, fundamentalMatrix);</span>
-<span class="fc" id="L100">    }</span>
+<span class="fc" id="L99">            FundamentalMatrix fundamentalMatrix) {</span>
+<span class="fc" id="L100">        setPointsAndFundamentalMatrix(leftPoint, rightPoint, fundamentalMatrix);</span>
+<span class="fc" id="L101">    }</span>
     
     /**
      * Sets a matched pair of points to be corrected and a fundamental matrix
@@ -108,9 +109,9 @@ public abstract class SingleCorrector {
      */
     public final void setPointsAndFundamentalMatrix(Point2D leftPoint, 
             Point2D rightPoint, FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L111">        setPoints(leftPoint, rightPoint);</span>
-<span class="fc" id="L112">        setFundamentalMatrix(fundamentalMatrix);</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L112">        setPoints(leftPoint, rightPoint);</span>
+<span class="fc" id="L113">        setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L114">    }</span>
     
     /**
      * Sets a matched pair of points to be corrected.
@@ -118,24 +119,24 @@ public abstract class SingleCorrector {
      * @param rightPoint matched point on right view to be corrected.
      */
     public final void setPoints(Point2D leftPoint, Point2D rightPoint) {
-<span class="fc" id="L121">        mLeftPoint = leftPoint;</span>
-<span class="fc" id="L122">        mRightPoint = rightPoint;        </span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L122">        mLeftPoint = leftPoint;</span>
+<span class="fc" id="L123">        mRightPoint = rightPoint;        </span>
+<span class="fc" id="L124">    }</span>
     
     /**
      * Sets the fundamental matrix defining the epipolar geometry.
      * @param fundamentalMatrix fundamental matrix to be set.
      */
     public final void setFundamentalMatrix(FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L130">        mFundamentalMatrix = fundamentalMatrix;</span>
-<span class="fc" id="L131">    }</span>
+<span class="fc" id="L131">        mFundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L132">    }</span>
     
     /**
      * Returns matched point on left view.
      * @return matched point on left view.
      */
     public Point2D getLeftPoint() {
-<span class="fc" id="L138">        return mLeftPoint;</span>
+<span class="fc" id="L139">        return mLeftPoint;</span>
     }
     
     /**
@@ -143,7 +144,7 @@ public abstract class SingleCorrector {
      * @return matched point on right view.
      */
     public Point2D getRightPoint() {
-<span class="fc" id="L146">        return mRightPoint;</span>
+<span class="fc" id="L147">        return mRightPoint;</span>
     }
     
     /**
@@ -151,7 +152,7 @@ public abstract class SingleCorrector {
      * @return fundamental matrix defining epipolar geometry.
      */
     public FundamentalMatrix getFundamentalMatrix() {
-<span class="fc" id="L154">        return mFundamentalMatrix;</span>
+<span class="fc" id="L155">        return mFundamentalMatrix;</span>
     }
     
     /**
@@ -160,9 +161,9 @@ public abstract class SingleCorrector {
      * @return true if ready, false otherwise.
      */
     public boolean isReady() {
-<span class="pc bpc" id="L163" title="1 of 6 branches missed.">        return mLeftPoint != null &amp;&amp; mRightPoint != null &amp;&amp;</span>
+<span class="pc bpc" id="L164" title="1 of 6 branches missed.">        return mLeftPoint != null &amp;&amp; mRightPoint != null &amp;&amp;</span>
                 mFundamentalMatrix != null &amp;&amp; 
-<span class="fc bfc" id="L165" title="All 2 branches covered.">                mFundamentalMatrix.isInternalMatrixAvailable();</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">                mFundamentalMatrix.isInternalMatrixAvailable();</span>
     }
     
     /**
@@ -170,7 +171,7 @@ public abstract class SingleCorrector {
      * @return matched point on left view after correction.
      */
     public Point2D getLeftCorrectedPoint() {
-<span class="fc" id="L173">        return mLeftCorrectedPoint;</span>
+<span class="fc" id="L174">        return mLeftCorrectedPoint;</span>
     }
     
     /**
@@ -178,7 +179,7 @@ public abstract class SingleCorrector {
      * @return matched point on right view after correction.
      */
     public Point2D getRightCorrectedPoint() {
-<span class="fc" id="L181">        return mRightCorrectedPoint;</span>
+<span class="fc" id="L182">        return mRightCorrectedPoint;</span>
     }
 
     /**
@@ -202,12 +203,12 @@ public abstract class SingleCorrector {
      * @return an instance of a single corrector.
      */
     public static SingleCorrector create(CorrectorType type) {
-<span class="fc bfc" id="L205" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        switch (type) {</span>
             case SAMPSON_CORRECTOR:
-<span class="fc" id="L207">                return new SampsonSingleCorrector();</span>
+<span class="fc" id="L208">                return new SampsonSingleCorrector();</span>
             case GOLD_STANDARD:
             default:
-<span class="fc" id="L210">                return new GoldStandardSingleCorrector();</span>
+<span class="fc" id="L211">                return new GoldStandardSingleCorrector();</span>
         }
     }
     
@@ -221,12 +222,12 @@ public abstract class SingleCorrector {
      */
     public static SingleCorrector create(FundamentalMatrix fundamentalMatrix,
             CorrectorType type) {
-<span class="fc bfc" id="L224" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        switch (type) {</span>
             case SAMPSON_CORRECTOR:
-<span class="fc" id="L226">                return new SampsonSingleCorrector(fundamentalMatrix);</span>
+<span class="fc" id="L227">                return new SampsonSingleCorrector(fundamentalMatrix);</span>
             case GOLD_STANDARD:
             default:
-<span class="fc" id="L229">                return new GoldStandardSingleCorrector(fundamentalMatrix);</span>
+<span class="fc" id="L230">                return new GoldStandardSingleCorrector(fundamentalMatrix);</span>
         }
     }
     
@@ -240,12 +241,12 @@ public abstract class SingleCorrector {
      */
     public static SingleCorrector create(Point2D leftPoint, Point2D rightPoint,
             CorrectorType type) {
-<span class="fc bfc" id="L243" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        switch (type) {</span>
             case SAMPSON_CORRECTOR:
-<span class="fc" id="L245">                return new SampsonSingleCorrector(leftPoint, rightPoint);</span>
+<span class="fc" id="L246">                return new SampsonSingleCorrector(leftPoint, rightPoint);</span>
             case GOLD_STANDARD:
             default:
-<span class="fc" id="L248">                return new GoldStandardSingleCorrector(leftPoint, rightPoint);</span>
+<span class="fc" id="L249">                return new GoldStandardSingleCorrector(leftPoint, rightPoint);</span>
         }
     }
     
@@ -261,13 +262,13 @@ public abstract class SingleCorrector {
      */
     public static SingleCorrector create(Point2D leftPoint, Point2D rightPoint,
             FundamentalMatrix fundamentalMatrix, CorrectorType type) {
-<span class="fc bfc" id="L264" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        switch (type) {</span>
             case SAMPSON_CORRECTOR:
-<span class="fc" id="L266">                return new SampsonSingleCorrector(leftPoint, rightPoint, </span>
+<span class="fc" id="L267">                return new SampsonSingleCorrector(leftPoint, rightPoint, </span>
                         fundamentalMatrix);
             case GOLD_STANDARD:
             default:
-<span class="fc" id="L270">                return new GoldStandardSingleCorrector(leftPoint, rightPoint,</span>
+<span class="fc" id="L271">                return new GoldStandardSingleCorrector(leftPoint, rightPoint,</span>
                         fundamentalMatrix);
         }
     }
@@ -277,7 +278,7 @@ public abstract class SingleCorrector {
      * @return an instance of a single corrector.
      */
     public static SingleCorrector create() {
-<span class="fc" id="L280">        return create(DEFAULT_TYPE);</span>
+<span class="fc" id="L281">        return create(DEFAULT_TYPE);</span>
     }
     
     /**
@@ -288,7 +289,7 @@ public abstract class SingleCorrector {
      * @return an instance of a single corrector.
      */
     public static SingleCorrector create(FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L291">        return create(fundamentalMatrix, DEFAULT_TYPE);        </span>
+<span class="fc" id="L292">        return create(fundamentalMatrix, DEFAULT_TYPE);        </span>
     }
     
     /**
@@ -299,7 +300,7 @@ public abstract class SingleCorrector {
      * @return an instance of a single corrector.
      */
     public static SingleCorrector create(Point2D leftPoint, Point2D rightPoint) {
-<span class="fc" id="L302">        return create(leftPoint, rightPoint, DEFAULT_TYPE);</span>
+<span class="fc" id="L303">        return create(leftPoint, rightPoint, DEFAULT_TYPE);</span>
     }
     
     /**
@@ -313,7 +314,7 @@ public abstract class SingleCorrector {
      */
     public static SingleCorrector create(Point2D leftPoint, Point2D rightPoint,
             FundamentalMatrix fundamentalMatrix) {
-<span class="fc" id="L316">        return create(leftPoint, rightPoint, fundamentalMatrix, DEFAULT_TYPE);</span>
+<span class="fc" id="L317">        return create(leftPoint, rightPoint, fundamentalMatrix, DEFAULT_TYPE);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

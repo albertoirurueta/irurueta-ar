@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best Image of AbsoluteConic (IAC) for provided collection of 
  * homographies (2D transformations) using LMedS algorithm.
  */
+@SuppressWarnings(&quot;Duplicates&quot;)
 public class LMedSImageOfAbsoluteConicRobustEstimator extends 
         ImageOfAbsoluteConicRobustEstimator {
     /**
@@ -72,9 +73,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * Constructor.
      */
     public LMedSImageOfAbsoluteConicRobustEstimator() {
-<span class="fc" id="L75">        super();</span>
-<span class="fc" id="L76">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L76">        super();</span>
+<span class="fc" id="L77">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L78">    }</span>
     
     /**
      * Constructor.
@@ -83,9 +84,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      */
     public LMedSImageOfAbsoluteConicRobustEstimator(
             ImageOfAbsoluteConicRobustEstimatorListener listener) {
-<span class="fc" id="L86">        super(listener);</span>
-<span class="fc" id="L87">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L88">    }</span>
+<span class="fc" id="L87">        super(listener);</span>
+<span class="fc" id="L88">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L89">    }</span>
     
     /**
      * Constructor.
@@ -98,9 +99,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
     public LMedSImageOfAbsoluteConicRobustEstimator(
             List&lt;Transformation2D&gt; homographies) 
             throws IllegalArgumentException {
-<span class="fc" id="L101">        super(homographies);</span>
-<span class="fc" id="L102">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L103">    }</span>
+<span class="fc" id="L102">        super(homographies);</span>
+<span class="fc" id="L103">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L104">    }</span>
     
     /**
      * Constructor.
@@ -116,9 +117,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
             List&lt;Transformation2D&gt; homographies, 
             ImageOfAbsoluteConicRobustEstimatorListener listener)
             throws IllegalArgumentException {
-<span class="fc" id="L119">        super(homographies, listener);</span>
-<span class="fc" id="L120">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L121">    }</span>
+<span class="fc" id="L120">        super(homographies, listener);</span>
+<span class="fc" id="L121">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L122">    }</span>
     
     /**
      * Returns threshold to be used to keep the algorithm iterating in case that 
@@ -139,7 +140,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-<span class="fc" id="L142">        return mStopThreshold;</span>
+<span class="fc" id="L143">        return mStopThreshold;</span>
     }
     
     /**
@@ -165,14 +166,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      */
     public void setStopThreshold(double stopThreshold) 
             throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L169">            throw new LockedException();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L170">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
-<span class="fc" id="L172">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L173">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L174">        mStopThreshold = stopThreshold;</span>
-<span class="fc" id="L175">    }</span>
+<span class="fc" id="L175">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L176">    }</span>
     
     /**
      * Estimates Image of Absolute Conic (IAC).
@@ -187,116 +188,116 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
     @Override
     public ImageOfAbsoluteConic estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L191">            throw new LockedException();</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L192">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L194">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L195">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L197">        LMedSRobustEstimator&lt;ImageOfAbsoluteConic&gt; innerEstimator =</span>
+<span class="fc" id="L198">        LMedSRobustEstimator&lt;ImageOfAbsoluteConic&gt; innerEstimator =</span>
                 new LMedSRobustEstimator&lt;&gt;(
-<span class="fc" id="L199">                new LMedSRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;() {</span>
+<span class="fc" id="L200">                new LMedSRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;() {</span>
 
             //subset of homographies picked on each iteration
-<span class="fc" id="L202">            private List&lt;Transformation2D&gt; mSubsetHomographies = </span>
+<span class="fc" id="L203">            private List&lt;Transformation2D&gt; mSubsetHomographies = </span>
                     new ArrayList&lt;&gt;();
                     
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L207">                return mHomographies.size();</span>
+<span class="fc" id="L208">                return mHomographies.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L212">                return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
+<span class="fc" id="L213">                return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;ImageOfAbsoluteConic&gt; solutions) {
-<span class="fc" id="L218">                mSubsetHomographies.clear();</span>
-<span class="fc bfc" id="L219" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L220">                    mSubsetHomographies.add(mHomographies.get(</span>
+<span class="fc" id="L219">                mSubsetHomographies.clear();</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L221">                    mSubsetHomographies.add(mHomographies.get(</span>
                             samplesIndex));
                 }
                 
                 try {
-<span class="fc" id="L225">                    mIACEstimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L226">                    mIACEstimator.setHomographies(mSubsetHomographies);</span>
+<span class="fc" id="L226">                    mIACEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L227">                    mIACEstimator.setHomographies(mSubsetHomographies);</span>
                     
-<span class="fc" id="L228">                    ImageOfAbsoluteConic iac = mIACEstimator.estimate();</span>
-<span class="fc" id="L229">                    solutions.add(iac);</span>
-<span class="nc" id="L230">                } catch (Exception e) {</span>
+<span class="fc" id="L229">                    ImageOfAbsoluteConic iac = mIACEstimator.estimate();</span>
+<span class="fc" id="L230">                    solutions.add(iac);</span>
+<span class="nc" id="L231">                } catch (Exception e) {</span>
                     //if anything fails, no solution is added
-<span class="fc" id="L232">                }</span>
-<span class="fc" id="L233">            }</span>
+<span class="fc" id="L233">                }</span>
+<span class="fc" id="L234">            }</span>
 
             @Override
             public double computeResidual(
                     ImageOfAbsoluteConic currentEstimation, int i) {
-<span class="fc" id="L238">                return residual(currentEstimation, mHomographies.get(i));</span>
+<span class="fc" id="L239">                return residual(currentEstimation, mHomographies.get(i));</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L243">                return LMedSImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
+<span class="fc" id="L244">                return LMedSImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L250">                    mListener.onEstimateStart(</span>
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L251">                    mListener.onEstimateStart(</span>
                             LMedSImageOfAbsoluteConicRobustEstimator.this);
                 }
-<span class="fc" id="L253">            }</span>
+<span class="fc" id="L254">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
-<span class="pc bpc" id="L258" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L259">                    mListener.onEstimateEnd(</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L260">                    mListener.onEstimateEnd(</span>
                             LMedSImageOfAbsoluteConicRobustEstimator.this);
                 }
-<span class="fc" id="L262">            }</span>
+<span class="fc" id="L263">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, 
                     int iteration) {
-<span class="pc bpc" id="L268" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L269">                    mListener.onEstimateNextIteration(</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L270">                    mListener.onEstimateNextIteration(</span>
                             LMedSImageOfAbsoluteConicRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L273">            }</span>
+<span class="fc" id="L274">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, 
                     float progress) {
-<span class="pc bpc" id="L279" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L280">                    mListener.onEstimateProgressChange(</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L281">                    mListener.onEstimateProgressChange(</span>
                             LMedSImageOfAbsoluteConicRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L284">            }</span>
+<span class="fc" id="L285">            }</span>
         });
         
         try {
-<span class="fc" id="L288">            mLocked = true;</span>
-<span class="fc" id="L289">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L290">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L291">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L292">            innerEstimator.setStopThreshold(mStopThreshold);</span>
-<span class="fc" id="L293">            return innerEstimator.estimate();</span>
-<span class="nc" id="L294">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L295">            throw new LockedException(e);</span>
-<span class="nc" id="L296">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L297">            throw new NotReadyException(e);</span>
+<span class="fc" id="L289">            mLocked = true;</span>
+<span class="fc" id="L290">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L291">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L292">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L293">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L294">            return innerEstimator.estimate();</span>
+<span class="nc" id="L295">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L296">            throw new LockedException(e);</span>
+<span class="nc" id="L297">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L298">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L299">            mLocked = false;</span>
+<span class="fc" id="L300">            mLocked = false;</span>
         }
     }
 
@@ -306,7 +307,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      */    
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L309">        return RobustEstimatorMethod.LMedS;</span>
+<span class="fc" id="L310">        return RobustEstimatorMethod.LMedS;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

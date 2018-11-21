@@ -27,6 +27,7 @@ import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimato
  * Use AbsoluteOrientationSlamSparseReconstructor if absolute orientation is needed,
  * or SlamSparseReconstructor otherwise to get better accuracy.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor extends
         BaseAbsoluteOrientationSlamSparseReconstructor&lt;
         AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration,
@@ -45,8 +46,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
             AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration,
             AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener)
             throws NullPointerException {
-<span class="fc" id="L48">        super(configuration, listener);</span>
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L49">        super(configuration, listener);</span>
+<span class="fc" id="L50">    }</span>
 
     /**
      * Constructor.
@@ -56,9 +57,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
     public AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
             AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener)
             throws NullPointerException {
-<span class="fc" id="L59">        this(new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration(),</span>
+<span class="fc" id="L60">        this(new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration(),</span>
                 listener);
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L62">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -68,13 +69,13 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
      */
     @Override
     public boolean processOneView() {
-<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L72">            mSlamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();</span>
-<span class="fc" id="L73">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L74">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L73">            mSlamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();</span>
+<span class="fc" id="L74">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L75">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L77">        return super.processOneView();</span>
+<span class="fc" id="L78">        return super.processOneView();</span>
     }
 
     /**
@@ -85,7 +86,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
      */
     @Override
     protected boolean postProcessOne(boolean isInitialPairOfViews) {
-<span class="fc" id="L88">        return updateScaleAndOrientation(isInitialPairOfViews);</span>
+<span class="fc" id="L89">        return updateScaleAndOrientation(isInitialPairOfViews);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

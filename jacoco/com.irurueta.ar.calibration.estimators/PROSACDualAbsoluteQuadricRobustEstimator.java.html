@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best dual absolute quadric (DAQ) for provided collection of
  * cameras using PROSAC algorithm.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class PROSACDualAbsoluteQuadricRobustEstimator extends 
         DualAbsoluteQuadricRobustEstimator {
     
@@ -63,9 +64,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * Constructor.
      */
     public PROSACDualAbsoluteQuadricRobustEstimator() {
-<span class="fc" id="L66">        super();</span>
-<span class="fc" id="L67">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L67">        super();</span>
+<span class="fc" id="L68">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L69">    }</span>
     
     /**
      * Constructor.
@@ -74,9 +75,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(
             DualAbsoluteQuadricRobustEstimatorListener listener) {
-<span class="fc" id="L77">        super(listener);</span>
-<span class="fc" id="L78">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L79">    }</span>
+<span class="fc" id="L78">        super(listener);</span>
+<span class="fc" id="L79">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L80">    }</span>
     
     /**
      * Constructor.
@@ -87,9 +88,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras)
             throws IllegalArgumentException {
-<span class="fc" id="L90">        super(cameras);</span>
-<span class="fc" id="L91">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L91">        super(cameras);</span>
+<span class="fc" id="L92">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L93">    }</span>
     
     /**
      * Constructor.
@@ -103,9 +104,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras,
             DualAbsoluteQuadricRobustEstimatorListener listener)
             throws IllegalArgumentException {
-<span class="fc" id="L106">        super(cameras, listener);</span>
-<span class="fc" id="L107">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L108">    }</span>
+<span class="fc" id="L107">        super(cameras, listener);</span>
+<span class="fc" id="L108">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L109">    }</span>
     
     /**
      * Constructor.
@@ -117,9 +118,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores)
             throws IllegalArgumentException {
-<span class="fc" id="L120">        this();</span>
-<span class="fc" id="L121">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L122">    }</span>
+<span class="fc" id="L121">        this();</span>
+<span class="fc" id="L122">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L123">    }</span>
     
     /**
      * Constructor.
@@ -134,9 +135,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores,
             DualAbsoluteQuadricRobustEstimatorListener listener)
             throws IllegalArgumentException {
-<span class="fc" id="L137">        this(listener);</span>
-<span class="fc" id="L138">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L139">    }</span>
+<span class="fc" id="L138">        this(listener);</span>
+<span class="fc" id="L139">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L140">    }</span>
     
     /**
      * Constructor.
@@ -150,9 +151,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras, 
             double[] qualityScores) throws IllegalArgumentException {
-<span class="fc" id="L153">        this(cameras);</span>
-<span class="fc" id="L154">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L155">    }</span>
+<span class="fc" id="L154">        this(cameras);</span>
+<span class="fc" id="L155">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L156">    }</span>
     
     /**
      * Constructor.
@@ -170,9 +171,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
             double[] qualityScores, 
             DualAbsoluteQuadricRobustEstimatorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L173">        this(cameras, listener);</span>
-<span class="fc" id="L174">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L175">    }</span>
+<span class="fc" id="L174">        this(cameras, listener);</span>
+<span class="fc" id="L175">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L176">    }</span>
     
     /**
      * Returns threshold to determine whether cameras are inliers or not when
@@ -182,7 +183,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * testing possible estimation solutions.
      */
     public double getThreshold() {
-<span class="fc" id="L185">        return mThreshold;</span>
+<span class="fc" id="L186">        return mThreshold;</span>
     }
     
     /**
@@ -198,14 +199,14 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public void setThreshold(double threshold) throws IllegalArgumentException,
             LockedException {
-<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L202">            throw new LockedException();</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L203">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="nc" id="L205">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="nc" id="L206">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L207">        mThreshold = threshold;        </span>
-<span class="fc" id="L208">    }</span>
+<span class="fc" id="L208">        mThreshold = threshold;        </span>
+<span class="fc" id="L209">    }</span>
     
     /**
      * Returns quality scores corresponding to each provided camera.
@@ -214,7 +215,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-<span class="fc" id="L217">        return mQualityScores;</span>
+<span class="fc" id="L218">        return mQualityScores;</span>
     }
     
     /**
@@ -229,11 +230,11 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     @Override
     public void setQualityScores(double[] qualityScores) throws LockedException,
             IllegalArgumentException {
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L233">            throw new LockedException();</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L234">            throw new LockedException();</span>
         }
-<span class="fc" id="L235">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L236">    }</span>
+<span class="fc" id="L236">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L237">    }</span>
     
     /**
      * Indicates if estimator is ready to start the DAQ estimation.
@@ -244,8 +245,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public boolean isReady() {
-<span class="fc bfc" id="L247" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
-<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                mQualityScores.length == mCameras.size();</span>
+<span class="fc bfc" id="L248" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                mQualityScores.length == mCameras.size();</span>
     }
 
     /**
@@ -260,124 +261,124 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     @Override
     public DualAbsoluteQuadric estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L264">            throw new LockedException();</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L265">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L266" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L267">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L268">            throw new NotReadyException();</span>
         }
 
-<span class="fc" id="L270">        PROSACRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
+<span class="fc" id="L271">        PROSACRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
                 new PROSACRobustEstimator&lt;&gt;(
-<span class="fc" id="L272">                new PROSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;() {</span>
+<span class="fc" id="L273">                new PROSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;() {</span>
                     
             //subset of cameras picked on each iteration
-<span class="fc" id="L275">            private List&lt;PinholeCamera&gt; mSubsetCameras =</span>
+<span class="fc" id="L276">            private List&lt;PinholeCamera&gt; mSubsetCameras =</span>
                     new ArrayList&lt;&gt;();
                     
             @Override
             public double getThreshold() {
-<span class="fc" id="L280">                return mThreshold;</span>
+<span class="fc" id="L281">                return mThreshold;</span>
             }
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L285">                return mCameras.size();</span>
+<span class="fc" id="L286">                return mCameras.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L290">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
+<span class="fc" id="L291">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;DualAbsoluteQuadric&gt; solutions) {
-<span class="fc" id="L296">                mSubsetCameras.clear();</span>
-<span class="fc bfc" id="L297" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L298">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
+<span class="fc" id="L297">                mSubsetCameras.clear();</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L299">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
                 }
                 
                 try {
-<span class="fc" id="L302">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L303">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
+<span class="fc" id="L303">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L304">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
                     
-<span class="fc" id="L305">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
-<span class="fc" id="L306">                    solutions.add(daq);</span>
-<span class="nc" id="L307">                } catch (Exception e) {</span>
+<span class="fc" id="L306">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
+<span class="fc" id="L307">                    solutions.add(daq);</span>
+<span class="nc" id="L308">                } catch (Exception e) {</span>
                     //if anything fails, no solution is added
-<span class="fc" id="L309">                }</span>
-<span class="fc" id="L310">            }</span>
+<span class="fc" id="L310">                }</span>
+<span class="fc" id="L311">            }</span>
 
             @Override
             public double computeResidual(DualAbsoluteQuadric currentEstimation, 
                     int i) {
-<span class="fc" id="L315">                return residual(currentEstimation, mCameras.get(i));</span>
+<span class="fc" id="L316">                return residual(currentEstimation, mCameras.get(i));</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L320">                return PROSACDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
+<span class="fc" id="L321">                return PROSACDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
-<span class="pc bpc" id="L326" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L327">                    mListener.onEstimateStart(</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L328">                    mListener.onEstimateStart(</span>
                             PROSACDualAbsoluteQuadricRobustEstimator.this);
                 }
-<span class="fc" id="L330">            }</span>
+<span class="fc" id="L331">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
-<span class="pc bpc" id="L335" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L336">                    mListener.onEstimateEnd(</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L337">                    mListener.onEstimateEnd(</span>
                             PROSACDualAbsoluteQuadricRobustEstimator.this);
                 }
-<span class="fc" id="L339">            }</span>
+<span class="fc" id="L340">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
                     int iteration) {
-<span class="pc bpc" id="L345" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L346">                    mListener.onEstimateNextIteration(</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L347">                    mListener.onEstimateNextIteration(</span>
                             PROSACDualAbsoluteQuadricRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L350">            }</span>
+<span class="fc" id="L351">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
                     float progress) {
-<span class="pc bpc" id="L356" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L357">                    mListener.onEstimateProgressChange(</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L358">                    mListener.onEstimateProgressChange(</span>
                             PROSACDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L361">            }</span>
+<span class="fc" id="L362">            }</span>
             
             @Override
             public double[] getQualityScores() {
-<span class="fc" id="L365">                return mQualityScores;</span>
+<span class="fc" id="L366">                return mQualityScores;</span>
             }            
         });
         
         try {
-<span class="fc" id="L370">            mLocked = true;</span>
-<span class="fc" id="L371">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L372">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L373">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L374">            return innerEstimator.estimate();</span>
-<span class="nc" id="L375">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L376">            throw new LockedException(e);</span>
-<span class="nc" id="L377">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L378">            throw new NotReadyException(e);</span>
+<span class="fc" id="L371">            mLocked = true;</span>
+<span class="fc" id="L372">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L373">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L374">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L375">            return innerEstimator.estimate();</span>
+<span class="nc" id="L376">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L377">            throw new LockedException(e);</span>
+<span class="nc" id="L378">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L379">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L380">            mLocked = false;</span>
+<span class="fc" id="L381">            mLocked = false;</span>
         }        
     }
 
@@ -387,7 +388,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L390">        return RobustEstimatorMethod.PROSAC;</span>
+<span class="fc" id="L391">        return RobustEstimatorMethod.PROSAC;</span>
     }   
     
     /**
@@ -400,10 +401,10 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     private void internalSetQualityScores(double[] qualityScores)
             throws IllegalArgumentException {
-<span class="fc bfc" id="L403" title="All 2 branches covered.">        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</span>
-<span class="fc" id="L404">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L404" title="All 2 branches covered.">        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</span>
+<span class="fc" id="L405">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L406">        mQualityScores = qualityScores;</span>
-<span class="fc" id="L407">    }</span>
+<span class="fc" id="L407">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L408">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -28,6 +28,7 @@ import java.util.List;
  * Finds the best image of absolute conic (IAC) for provided collection of
  * homographies (2D transformations) using MSAC algorithm.
  */
+@SuppressWarnings(&quot;Duplicates&quot;)
 public class MSACImageOfAbsoluteConicRobustEstimator extends 
         ImageOfAbsoluteConicRobustEstimator {
     
@@ -61,9 +62,9 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      * Constructor.
      */
     public MSACImageOfAbsoluteConicRobustEstimator() {
-<span class="fc" id="L64">        super();</span>
-<span class="fc" id="L65">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L65">        super();</span>
+<span class="fc" id="L66">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L67">    }</span>
     
     /**
      * Constructor.
@@ -72,9 +73,9 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      */
     public MSACImageOfAbsoluteConicRobustEstimator(
             ImageOfAbsoluteConicRobustEstimatorListener listener) {
-<span class="fc" id="L75">        super(listener);</span>
-<span class="fc" id="L76">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L76">        super(listener);</span>
+<span class="fc" id="L77">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L78">    }</span>
     
     /**
      * Constructor.
@@ -87,9 +88,9 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
     public MSACImageOfAbsoluteConicRobustEstimator(
             List&lt;Transformation2D&gt; homographies) 
             throws IllegalArgumentException {
-<span class="fc" id="L90">        super(homographies);</span>
-<span class="fc" id="L91">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L92">    }</span>
+<span class="fc" id="L91">        super(homographies);</span>
+<span class="fc" id="L92">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L93">    }</span>
     
     /**
      * Constructor.
@@ -105,9 +106,9 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
             List&lt;Transformation2D&gt; homographies, 
             ImageOfAbsoluteConicRobustEstimatorListener listener)
             throws IllegalArgumentException { 
-<span class="fc" id="L108">        super(homographies, listener);</span>
-<span class="fc" id="L109">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L109">        super(homographies, listener);</span>
+<span class="fc" id="L110">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L111">    }</span>
     
     /**
      * Returns threshold to determine whether homographies are inliers or not
@@ -118,7 +119,7 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      * when testing possible estimation solutions.
      */
     public double getThreshold() {
-<span class="fc" id="L121">        return mThreshold;</span>
+<span class="fc" id="L122">        return mThreshold;</span>
     }
     
     /**
@@ -135,14 +136,14 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      */
     public void setThreshold(double threshold) throws IllegalArgumentException,
             LockedException {
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L139">            throw new LockedException();</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L140">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="fc" id="L142">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L143">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L144">        mThreshold = threshold;</span>
-<span class="fc" id="L145">    }</span>
+<span class="fc" id="L145">        mThreshold = threshold;</span>
+<span class="fc" id="L146">    }</span>
     
     /**
      * Estimates Image of Absolute Conic (IAC).
@@ -157,120 +158,120 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
     @Override
     public ImageOfAbsoluteConic estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L161">            throw new LockedException();</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L162">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L164">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L165">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L167">        MSACRobustEstimator&lt;ImageOfAbsoluteConic&gt; innerEstimator =</span>
+<span class="fc" id="L168">        MSACRobustEstimator&lt;ImageOfAbsoluteConic&gt; innerEstimator =</span>
                 new MSACRobustEstimator&lt;&gt;(
-<span class="fc" id="L169">                new MSACRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;() {</span>
+<span class="fc" id="L170">                new MSACRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;() {</span>
 
             //subset of homographies picked on each iteration
-<span class="fc" id="L172">            private List&lt;Transformation2D&gt; mSubsetHomographies = </span>
+<span class="fc" id="L173">            private List&lt;Transformation2D&gt; mSubsetHomographies = </span>
                     new ArrayList&lt;&gt;();
                     
             @Override
             public double getThreshold() {
-<span class="fc" id="L177">                return mThreshold;</span>
+<span class="fc" id="L178">                return mThreshold;</span>
             }
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L182">                return mHomographies.size();</span>
+<span class="fc" id="L183">                return mHomographies.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L187">                return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
+<span class="fc" id="L188">                return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;ImageOfAbsoluteConic&gt; solutions) {
-<span class="fc" id="L193">                mSubsetHomographies.clear();</span>
-<span class="fc bfc" id="L194" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L195">                    mSubsetHomographies.add(mHomographies.get(</span>
+<span class="fc" id="L194">                mSubsetHomographies.clear();</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L196">                    mSubsetHomographies.add(mHomographies.get(</span>
                             samplesIndex));
                 }
                 
                 try {
-<span class="fc" id="L200">                    mIACEstimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L201">                    mIACEstimator.setHomographies(mSubsetHomographies);</span>
+<span class="fc" id="L201">                    mIACEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L202">                    mIACEstimator.setHomographies(mSubsetHomographies);</span>
                     
-<span class="fc" id="L203">                    ImageOfAbsoluteConic iac = mIACEstimator.estimate();</span>
-<span class="fc" id="L204">                    solutions.add(iac);</span>
-<span class="nc" id="L205">                } catch (Exception e) {</span>
+<span class="fc" id="L204">                    ImageOfAbsoluteConic iac = mIACEstimator.estimate();</span>
+<span class="fc" id="L205">                    solutions.add(iac);</span>
+<span class="nc" id="L206">                } catch (Exception e) {</span>
                     //if anything fails, no solution is added
-<span class="fc" id="L207">                }</span>
-<span class="fc" id="L208">            }</span>
+<span class="fc" id="L208">                }</span>
+<span class="fc" id="L209">            }</span>
 
             @Override
             public double computeResidual(
                     ImageOfAbsoluteConic currentEstimation, int i) {
-<span class="fc" id="L213">                return residual(currentEstimation, mHomographies.get(i));</span>
+<span class="fc" id="L214">                return residual(currentEstimation, mHomographies.get(i));</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L218">                return MSACImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
+<span class="fc" id="L219">                return MSACImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
-<span class="pc bpc" id="L224" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L225">                    mListener.onEstimateStart(</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L226">                    mListener.onEstimateStart(</span>
                             MSACImageOfAbsoluteConicRobustEstimator.this);
                 }
-<span class="fc" id="L228">            }</span>
+<span class="fc" id="L229">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
-<span class="pc bpc" id="L233" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L234">                    mListener.onEstimateEnd(</span>
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L235">                    mListener.onEstimateEnd(</span>
                             MSACImageOfAbsoluteConicRobustEstimator.this);
                 }
-<span class="fc" id="L237">            }</span>
+<span class="fc" id="L238">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, 
                     int iteration) {
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L244">                    mListener.onEstimateNextIteration(</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L245">                    mListener.onEstimateNextIteration(</span>
                             MSACImageOfAbsoluteConicRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L248">            }</span>
+<span class="fc" id="L249">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, 
                     float progress) {
-<span class="pc bpc" id="L254" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L255">                    mListener.onEstimateProgressChange(</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L256">                    mListener.onEstimateProgressChange(</span>
                             MSACImageOfAbsoluteConicRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L259">            }</span>
+<span class="fc" id="L260">            }</span>
         });
         
         try {
-<span class="fc" id="L263">            mLocked = true;</span>
-<span class="fc" id="L264">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L265">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L266">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L267">            return innerEstimator.estimate();</span>
-<span class="nc" id="L268">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L269">            throw new LockedException(e);</span>
-<span class="nc" id="L270">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L271">            throw new NotReadyException(e);</span>
+<span class="fc" id="L264">            mLocked = true;</span>
+<span class="fc" id="L265">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L266">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L267">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L268">            return innerEstimator.estimate();</span>
+<span class="nc" id="L269">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L270">            throw new LockedException(e);</span>
+<span class="nc" id="L271">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L272">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L273">            mLocked = false;</span>
+<span class="fc" id="L274">            mLocked = false;</span>
         }
     }
 
@@ -280,7 +281,7 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      */    
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L283">        return RobustEstimatorMethod.MSAC;</span>
+<span class="fc" id="L284">        return RobustEstimatorMethod.MSAC;</span>
     }        
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

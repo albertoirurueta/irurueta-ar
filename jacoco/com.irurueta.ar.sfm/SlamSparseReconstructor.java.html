@@ -22,6 +22,7 @@ import com.irurueta.ar.slam.SlamEstimator;
  * in multiple views and using SLAM (with accelerometer and gyroscope data) for overall
  * scale estimation.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class SlamSparseReconstructor extends BaseSlamSparseReconstructor&lt;SlamSparseReconstructorConfiguration,
         SlamSparseReconstructor, SlamSparseReconstructorListener, SlamEstimator&gt; {
 
@@ -36,8 +37,8 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor&lt;Slam
             SlamSparseReconstructorConfiguration configuration,
             SlamSparseReconstructorListener listener)
             throws NullPointerException {
-<span class="fc" id="L39">        super(configuration, listener);</span>
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L40">        super(configuration, listener);</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * Constructor.
@@ -47,8 +48,8 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor&lt;Slam
     public SlamSparseReconstructor(
             SlamSparseReconstructorListener listener)
             throws NullPointerException {
-<span class="fc" id="L50">        this(new SlamSparseReconstructorConfiguration(), listener);</span>
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L51">        this(new SlamSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L52">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -58,13 +59,13 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor&lt;Slam
      */
     @Override
     public boolean processOneView() {
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L62">            mSlamEstimator = new SlamEstimator();</span>
-<span class="fc" id="L63">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L64">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L63">            mSlamEstimator = new SlamEstimator();</span>
+<span class="fc" id="L64">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L65">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L67">        return super.processOneView();</span>
+<span class="fc" id="L68">        return super.processOneView();</span>
     }
 
     /**
@@ -75,7 +76,7 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor&lt;Slam
      */
     @Override
     protected boolean postProcessOne(boolean isInitialPairOfViews) {
-<span class="fc" id="L78">        return updateScale(isInitialPairOfViews);</span>
+<span class="fc" id="L79">        return updateScale(isInitialPairOfViews);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -20,6 +20,7 @@ import java.io.Serializable;
 /**
  * Contains color information for a given point.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public abstract class PointColorData implements Serializable {
     /**
      * Default quality score value.
@@ -36,12 +37,12 @@ public abstract class PointColorData implements Serializable {
      * Quality score of color data. The larger the value the higher the
      * quality of color data.
      */
-<span class="fc" id="L39">    private double mQualityScore = DEFAULT_QUALITY_SCORE;</span>
+<span class="fc" id="L40">    private double mQualityScore = DEFAULT_QUALITY_SCORE;</span>
     
     /**
      * Constructor.
      */
-<span class="fc" id="L44">    public PointColorData() { }</span>
+<span class="fc" id="L45">    public PointColorData() { }</span>
     
     /**
      * Gets id to identify this instance. This is useful in case that this data
@@ -49,7 +50,7 @@ public abstract class PointColorData implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-<span class="fc" id="L52">        return mId;</span>
+<span class="fc" id="L53">        return mId;</span>
     }
     
     /**
@@ -58,8 +59,8 @@ public abstract class PointColorData implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(String id) {
-<span class="fc" id="L61">        mId = id;</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L62">        mId = id;</span>
+<span class="fc" id="L63">    }</span>
     
     /**
      * Quality score of color data. The larger the value the higher the quality 
@@ -67,7 +68,7 @@ public abstract class PointColorData implements Serializable {
      * @return quality score.
      */
     public double getQualityScore() {
-<span class="fc" id="L70">        return mQualityScore;</span>
+<span class="fc" id="L71">        return mQualityScore;</span>
     }
     
     /**
@@ -76,8 +77,8 @@ public abstract class PointColorData implements Serializable {
      * @param qualityScore quality score to be set.
      */
     public void setQualityScore(double qualityScore) {
-<span class="fc" id="L79">        mQualityScore = qualityScore;</span>
-<span class="fc" id="L80">    }</span>
+<span class="fc" id="L80">        mQualityScore = qualityScore;</span>
+<span class="fc" id="L81">    }</span>
     
     /**
      * Averages this color data with provided one and stores the result into 

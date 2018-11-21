@@ -20,6 +20,7 @@ import java.io.Serializable;
 /**
  * Contains configuration for a two view sparse reconstructor.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class TwoViewsSparseReconstructorConfiguration extends 
         BaseTwoViewsSparseReconstructorConfiguration&lt;
         TwoViewsSparseReconstructorConfiguration&gt; implements Serializable {
@@ -28,14 +29,14 @@ public class TwoViewsSparseReconstructorConfiguration extends
     /**
      * Constructor.
      */
-<span class="fc" id="L31">    public TwoViewsSparseReconstructorConfiguration() { }</span>
+<span class="fc" id="L32">    public TwoViewsSparseReconstructorConfiguration() { }</span>
     
     /**
      * Creates an instance of a two views sparse reconstructor configuration.
      * @return configuration instance.
      */
     public static TwoViewsSparseReconstructorConfiguration make() {
-<span class="fc" id="L38">        return new TwoViewsSparseReconstructorConfiguration();</span>
+<span class="fc" id="L39">        return new TwoViewsSparseReconstructorConfiguration();</span>
     }   
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

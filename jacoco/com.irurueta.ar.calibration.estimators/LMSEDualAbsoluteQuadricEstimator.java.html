@@ -37,6 +37,7 @@ import java.util.List;
  * of the image plane (zero), and both horizontal and vertical focal planes are
  * equal.
  */
+@SuppressWarnings({&quot;WeakerAccess&quot;, &quot;Duplicates&quot;})
 public class LMSEDualAbsoluteQuadricEstimator extends 
         DualAbsoluteQuadricEstimator {
         
@@ -56,9 +57,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * Constructor.
      */
     public LMSEDualAbsoluteQuadricEstimator() {
-<span class="fc" id="L59">        super();</span>
-<span class="fc" id="L60">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L60">        super();</span>
+<span class="fc" id="L61">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L62">    }</span>
     
     /**
      * Constructor with listener.
@@ -67,9 +68,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */
     public LMSEDualAbsoluteQuadricEstimator(
             DualAbsoluteQuadricEstimatorListener listener) {
-<span class="fc" id="L70">        super(listener);</span>
-<span class="fc" id="L71">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L71">        super(listener);</span>
+<span class="fc" id="L72">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L73">    }</span>
     
     /**
      * Constructor.
@@ -80,9 +81,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */
     public LMSEDualAbsoluteQuadricEstimator(List&lt;PinholeCamera&gt; cameras) 
             throws IllegalArgumentException {
-<span class="fc" id="L83">        super(cameras);</span>
-<span class="fc" id="L84">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
-<span class="fc" id="L85">    }</span>
+<span class="fc" id="L84">        super(cameras);</span>
+<span class="fc" id="L85">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L86">    }</span>
     
     /**
      * Constructor.
@@ -96,9 +97,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
     public LMSEDualAbsoluteQuadricEstimator(List&lt;PinholeCamera&gt; cameras,
             DualAbsoluteQuadricEstimatorListener listener) 
             throws IllegalArgumentException {
-<span class="fc" id="L99">        super(cameras, listener);</span>
-<span class="fc" id="L100">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L100">        super(cameras, listener);</span>
+<span class="fc" id="L101">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L102">    }</span>
     
     /**
      * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
@@ -108,7 +109,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-<span class="fc" id="L111">        return mAllowLMSESolution;</span>
+<span class="fc" id="L112">        return mAllowLMSESolution;</span>
     }
     
     /**
@@ -120,11 +121,11 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @throws LockedException if estimator is locked.
      */
     public void setLMSESolutionAllowed(boolean allowed) throws LockedException {
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L124">            throw new LockedException();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L125">            throw new LockedException();</span>
         }
-<span class="fc" id="L126">        mAllowLMSESolution = allowed;</span>
-<span class="fc" id="L127">    }</span>
+<span class="fc" id="L127">        mAllowLMSESolution = allowed;</span>
+<span class="fc" id="L128">    }</span>
     
     /**
      * Indicates whether current constraints are enough to start the estimation.
@@ -134,15 +135,15 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */
     @Override
     public boolean areValidConstraints() {
-<span class="fc" id="L137">        boolean valid = super.areValidConstraints();</span>
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (!valid) {</span>
-<span class="fc" id="L139">            return false;</span>
+<span class="fc" id="L138">        boolean valid = super.areValidConstraints();</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (!valid) {</span>
+<span class="fc" id="L140">            return false;</span>
         }
         
-<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (mAllowLMSESolution) {</span>
-<span class="fc bfc" id="L143" title="All 4 branches covered.">            return !(mFocalDistanceAspectRatioKnown &amp;&amp; mSingularityEnforced);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (mAllowLMSESolution) {</span>
+<span class="fc bfc" id="L144" title="All 4 branches covered.">            return !(mFocalDistanceAspectRatioKnown &amp;&amp; mSingularityEnforced);</span>
         } else {
-<span class="fc" id="L145">            return true;</span>
+<span class="fc" id="L146">            return true;</span>
         }
     }
     
@@ -163,39 +164,39 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             throws LockedException, NotReadyException, 
             DualAbsoluteQuadricEstimatorException {
             
-<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L167">            throw new LockedException();</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L168">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L170">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L171">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L174">            mLocked = true;</span>
-<span class="fc bfc" id="L175" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L176">                mListener.onEstimateStart(this);</span>
+<span class="fc" id="L175">            mLocked = true;</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L177">                mListener.onEstimateStart(this);</span>
             }
             
-<span class="pc bpc" id="L179" title="1 of 2 branches missed.">            if (mPrincipalPointAtOrigin) {</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">                if (mZeroSkewness) {</span>
-<span class="fc bfc" id="L181" title="All 2 branches covered.">                    if (mFocalDistanceAspectRatioKnown) {</span>
-<span class="fc" id="L182">                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            if (mPrincipalPointAtOrigin) {</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">                if (mZeroSkewness) {</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">                    if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L183">                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(</span>
                                 result);
                     } else {
-<span class="fc" id="L185">                        estimateZeroSkewnessAndPrincipalPointAtOrigin(result);</span>
+<span class="fc" id="L186">                        estimateZeroSkewnessAndPrincipalPointAtOrigin(result);</span>
                     }
                 } else {
-<span class="fc" id="L188">                    estimatePrincipalPointAtOrigin(result);</span>
+<span class="fc" id="L189">                    estimatePrincipalPointAtOrigin(result);</span>
                 }
             }
             
-<span class="fc bfc" id="L192" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L193">                mListener.onEstimateEnd(this);</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L194">                mListener.onEstimateEnd(this);</span>
             }            
         } finally {
-<span class="fc" id="L196">            mLocked = false;</span>
+<span class="fc" id="L197">            mLocked = false;</span>
         }        
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L199">    }</span>
 
     /**
      * Returns type of Dual Absolute Quadric estimator.
@@ -203,7 +204,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */    
     @Override
     public DualAbsoluteQuadricEstimatorType getType() {
-<span class="fc" id="L206">        return DualAbsoluteQuadricEstimatorType.</span>
+<span class="fc" id="L207">        return DualAbsoluteQuadricEstimatorType.</span>
                 LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR;
     }      
 
@@ -212,8 +213,8 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @return minimum number of equations required to find a solution.
      */
     private int getMinRequiredEquations() {
-<span class="fc bfc" id="L215" title="All 2 branches covered.">        return mSingularityEnforced ? MIN_REQUIRED_EQUATIONS - 1 : </span>
-<span class="fc" id="L216">                MIN_REQUIRED_EQUATIONS;</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        return mSingularityEnforced ? MIN_REQUIRED_EQUATIONS - 1 : </span>
+<span class="fc" id="L217">                MIN_REQUIRED_EQUATIONS;</span>
     }
     
     /**
@@ -231,13 +232,13 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             DualAbsoluteQuadric result) 
             throws DualAbsoluteQuadricEstimatorException {
         try {            
-<span class="fc" id="L234">            int nCams = mCameras.size();</span>
+<span class="fc" id="L235">            int nCams = mCameras.size();</span>
             
             Matrix a;
-<span class="fc bfc" id="L237" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
-<span class="fc" id="L238">                a = new Matrix(4 * nCams, DualAbsoluteQuadric.N_PARAMS);</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+<span class="fc" id="L239">                a = new Matrix(4 * nCams, DualAbsoluteQuadric.N_PARAMS);</span>
             } else {
-<span class="fc bfc" id="L240" title="All 2 branches covered.">                a = new Matrix(mSingularityEnforced ? 8 : 12, </span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">                a = new Matrix(mSingularityEnforced ? 8 : 12, </span>
                         DualAbsoluteQuadric.N_PARAMS);
             }
             
@@ -245,71 +246,71 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             double p11, p12, p13, p14;
             double p21, p22, p23, p24;
             double p31, p32, p33, p34;
-<span class="fc" id="L248">            int eqCounter = 0;</span>
-<span class="fc" id="L249">            int minReqEqs = getMinRequiredEquations();</span>
-<span class="fc bfc" id="L250" title="All 2 branches covered.">            for (PinholeCamera camera : mCameras) {</span>
+<span class="fc" id="L249">            int eqCounter = 0;</span>
+<span class="fc" id="L250">            int minReqEqs = getMinRequiredEquations();</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">            for (PinholeCamera camera : mCameras) {</span>
                 
                 //normalize cameras to increase accuracy
-<span class="fc" id="L253">                camera.normalize();</span>
+<span class="fc" id="L254">                camera.normalize();</span>
                 
-<span class="fc" id="L255">                cameraMatrix = camera.getInternalMatrix();</span>
+<span class="fc" id="L256">                cameraMatrix = camera.getInternalMatrix();</span>
                                 
-<span class="fc" id="L257">                p11 = cameraMatrix.getElementAt(0, 0);</span>
-<span class="fc" id="L258">                p21 = cameraMatrix.getElementAt(1, 0);</span>
-<span class="fc" id="L259">                p31 = cameraMatrix.getElementAt(2, 0);</span>
+<span class="fc" id="L258">                p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="fc" id="L259">                p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="fc" id="L260">                p31 = cameraMatrix.getElementAt(2, 0);</span>
                 
-<span class="fc" id="L261">                p12 = cameraMatrix.getElementAt(0, 1);</span>
-<span class="fc" id="L262">                p22 = cameraMatrix.getElementAt(1, 1);</span>
-<span class="fc" id="L263">                p32 = cameraMatrix.getElementAt(2, 1);</span>
+<span class="fc" id="L262">                p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="fc" id="L263">                p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="fc" id="L264">                p32 = cameraMatrix.getElementAt(2, 1);</span>
                 
-<span class="fc" id="L265">                p13 = cameraMatrix.getElementAt(0, 2);</span>
-<span class="fc" id="L266">                p23 = cameraMatrix.getElementAt(1, 2);</span>
-<span class="fc" id="L267">                p33 = cameraMatrix.getElementAt(2, 2);</span>
+<span class="fc" id="L266">                p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="fc" id="L267">                p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="fc" id="L268">                p33 = cameraMatrix.getElementAt(2, 2);</span>
                 
-<span class="fc" id="L269">                p14 = cameraMatrix.getElementAt(0, 3);</span>
-<span class="fc" id="L270">                p24 = cameraMatrix.getElementAt(1, 3);</span>
-<span class="fc" id="L271">                p34 = cameraMatrix.getElementAt(2, 3);</span>
+<span class="fc" id="L270">                p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="fc" id="L271">                p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="fc" id="L272">                p34 = cameraMatrix.getElementAt(2, 3);</span>
                 
                 //1st row
-<span class="fc" id="L274">                fill2ndRowAnd1stRowEquation(p11, p21,</span>
+<span class="fc" id="L275">                fill2ndRowAnd1stRowEquation(p11, p21,</span>
                         p12, p22,
                         p13, p23,
                         p14, p24, a, eqCounter);
-<span class="fc" id="L278">                eqCounter++;</span>
+<span class="fc" id="L279">                eqCounter++;</span>
                 
                 //2nd row
-<span class="fc" id="L281">                fill3rdRowAnd1stRowEquation(p11, p31,</span>
+<span class="fc" id="L282">                fill3rdRowAnd1stRowEquation(p11, p31,</span>
                         p12, p32,
                         p13, p33,
                         p14, p34, a, eqCounter);
-<span class="fc" id="L285">                eqCounter++;</span>
+<span class="fc" id="L286">                eqCounter++;</span>
                 
                 //3rd row
-<span class="fc" id="L288">                fill3rdRowAnd2ndRowEquation(p21, p31,</span>
+<span class="fc" id="L289">                fill3rdRowAnd2ndRowEquation(p21, p31,</span>
                         p22, p32,
                         p23, p33,
                         p24, p34, a, eqCounter);
-<span class="fc" id="L292">                eqCounter++;</span>
+<span class="fc" id="L293">                eqCounter++;</span>
                 
                 //4th row
-<span class="fc" id="L295">                fill1stRowEqualTo2ndRowEquation(p11, p21,</span>
+<span class="fc" id="L296">                fill1stRowEqualTo2ndRowEquation(p11, p21,</span>
                         p12, p22,
                         p13, p23,
                         p14, p24, a, eqCounter);
-<span class="fc" id="L299">                eqCounter++;</span>
+<span class="fc" id="L300">                eqCounter++;</span>
                 
-<span class="fc bfc" id="L301" title="All 4 branches covered.">                if(!isLMSESolutionAllowed() &amp;&amp; eqCounter &gt;= minReqEqs) {</span>
-<span class="fc" id="L302">                    break;</span>
+<span class="fc bfc" id="L302" title="All 4 branches covered.">                if(!isLMSESolutionAllowed() &amp;&amp; eqCounter &gt;= minReqEqs) {</span>
+<span class="fc" id="L303">                    break;</span>
                 }
-<span class="fc" id="L304">            }</span>
+<span class="fc" id="L305">            }</span>
             
-<span class="fc" id="L306">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L307">            enforceRank3IfNeeded(decomposer, result);</span>
+<span class="fc" id="L307">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L308">            enforceRank3IfNeeded(decomposer, result);</span>
             
-<span class="nc" id="L309">        } catch (AlgebraException | NumericalException e) {</span>
-<span class="nc" id="L310">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
-<span class="fc" id="L311">        }</span>
-<span class="fc" id="L312">    }</span>
+<span class="nc" id="L310">        } catch (AlgebraException | NumericalException e) {</span>
+<span class="nc" id="L311">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="fc" id="L312">        }</span>
+<span class="fc" id="L313">    }</span>
     
     /**
      * Estimates Dual Absolute Quadric (DAQ) assuming that skewness is zero,
@@ -325,77 +326,77 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             DualAbsoluteQuadric result) 
             throws DualAbsoluteQuadricEstimatorException {
         try {            
-<span class="fc" id="L328">            int nCams = mCameras.size();</span>
+<span class="fc" id="L329">            int nCams = mCameras.size();</span>
             
             Matrix a;
-<span class="fc bfc" id="L331" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
-<span class="fc" id="L332">                a = new Matrix(3 * nCams, DualAbsoluteQuadric.N_PARAMS);</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+<span class="fc" id="L333">                a = new Matrix(3 * nCams, DualAbsoluteQuadric.N_PARAMS);</span>
             } else {
-<span class="fc" id="L334">                a = new Matrix(9, DualAbsoluteQuadric.N_PARAMS);</span>
+<span class="fc" id="L335">                a = new Matrix(9, DualAbsoluteQuadric.N_PARAMS);</span>
             }
             
             Matrix cameraMatrix;
             double p11, p12, p13, p14;
             double p21, p22, p23, p24;
             double p31, p32, p33, p34;
-<span class="fc" id="L341">            int eqCounter = 0;</span>
-<span class="fc" id="L342">            int minReqEqs = getMinRequiredEquations();</span>
-<span class="fc bfc" id="L343" title="All 2 branches covered.">            for (PinholeCamera camera : mCameras) {</span>
+<span class="fc" id="L342">            int eqCounter = 0;</span>
+<span class="fc" id="L343">            int minReqEqs = getMinRequiredEquations();</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">            for (PinholeCamera camera : mCameras) {</span>
                 
                 //normalize cameras to increase accuracy
-<span class="fc" id="L346">                camera.normalize();</span>
+<span class="fc" id="L347">                camera.normalize();</span>
                 
-<span class="fc" id="L348">                cameraMatrix = camera.getInternalMatrix();</span>
+<span class="fc" id="L349">                cameraMatrix = camera.getInternalMatrix();</span>
                                 
-<span class="fc" id="L350">                p11 = cameraMatrix.getElementAt(0, 0);</span>
-<span class="fc" id="L351">                p21 = cameraMatrix.getElementAt(1, 0);</span>
-<span class="fc" id="L352">                p31 = cameraMatrix.getElementAt(2, 0);</span>
+<span class="fc" id="L351">                p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="fc" id="L352">                p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="fc" id="L353">                p31 = cameraMatrix.getElementAt(2, 0);</span>
                 
-<span class="fc" id="L354">                p12 = cameraMatrix.getElementAt(0, 1);</span>
-<span class="fc" id="L355">                p22 = cameraMatrix.getElementAt(1, 1);</span>
-<span class="fc" id="L356">                p32 = cameraMatrix.getElementAt(2, 1);</span>
+<span class="fc" id="L355">                p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="fc" id="L356">                p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="fc" id="L357">                p32 = cameraMatrix.getElementAt(2, 1);</span>
                 
-<span class="fc" id="L358">                p13 = cameraMatrix.getElementAt(0, 2);</span>
-<span class="fc" id="L359">                p23 = cameraMatrix.getElementAt(1, 2);</span>
-<span class="fc" id="L360">                p33 = cameraMatrix.getElementAt(2, 2);</span>
+<span class="fc" id="L359">                p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="fc" id="L360">                p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="fc" id="L361">                p33 = cameraMatrix.getElementAt(2, 2);</span>
                 
-<span class="fc" id="L362">                p14 = cameraMatrix.getElementAt(0, 3);</span>
-<span class="fc" id="L363">                p24 = cameraMatrix.getElementAt(1, 3);</span>
-<span class="fc" id="L364">                p34 = cameraMatrix.getElementAt(2, 3);</span>
+<span class="fc" id="L363">                p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="fc" id="L364">                p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="fc" id="L365">                p34 = cameraMatrix.getElementAt(2, 3);</span>
                 
                 //1st row
-<span class="fc" id="L367">                fill2ndRowAnd1stRowEquation(p11, p21,</span>
+<span class="fc" id="L368">                fill2ndRowAnd1stRowEquation(p11, p21,</span>
                         p12, p22,
                         p13, p23,
                         p14, p24, a, eqCounter);
-<span class="fc" id="L371">                eqCounter++;</span>
+<span class="fc" id="L372">                eqCounter++;</span>
                 
                 //2nd row
-<span class="fc" id="L374">                fill3rdRowAnd1stRowEquation(p11, p31,</span>
+<span class="fc" id="L375">                fill3rdRowAnd1stRowEquation(p11, p31,</span>
                         p12, p32,
                         p13, p33,
                         p14, p34, a, eqCounter);
-<span class="fc" id="L378">                eqCounter++;</span>
+<span class="fc" id="L379">                eqCounter++;</span>
                 
                 //3rd row
-<span class="fc" id="L381">                fill3rdRowAnd2ndRowEquation(p21, p31,</span>
+<span class="fc" id="L382">                fill3rdRowAnd2ndRowEquation(p21, p31,</span>
                         p22, p32,
                         p23, p33,
                         p24, p34, a, eqCounter);
-<span class="fc" id="L385">                eqCounter++;</span>
+<span class="fc" id="L386">                eqCounter++;</span>
                                 
-<span class="fc bfc" id="L387" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; eqCounter &gt;= minReqEqs) {</span>
-<span class="fc" id="L388">                    break;</span>
+<span class="fc bfc" id="L388" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; eqCounter &gt;= minReqEqs) {</span>
+<span class="fc" id="L389">                    break;</span>
                 }
-<span class="fc" id="L390">            }</span>
+<span class="fc" id="L391">            }</span>
             
-<span class="fc" id="L392">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L393">            enforceRank3IfNeeded(decomposer, result);</span>
+<span class="fc" id="L393">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L394">            enforceRank3IfNeeded(decomposer, result);</span>
             
-<span class="nc" id="L395">        } catch (AlgebraException | NumericalException e) {</span>
-<span class="nc" id="L396">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
-<span class="fc" id="L397">        }</span>
-<span class="fc" id="L398">    }</span>
+<span class="nc" id="L396">        } catch (AlgebraException | NumericalException e) {</span>
+<span class="nc" id="L397">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="fc" id="L398">        }</span>
+<span class="fc" id="L399">    }</span>
     
     /**
      * Estimates Dual Absolute Quadric (DAQ) assumint that principal point is
@@ -411,13 +412,13 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             DualAbsoluteQuadric result) 
             throws DualAbsoluteQuadricEstimatorException {
         try {            
-<span class="fc" id="L414">            int nCams = mCameras.size();</span>
+<span class="fc" id="L415">            int nCams = mCameras.size();</span>
             
             Matrix a;
-<span class="fc bfc" id="L417" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
-<span class="fc" id="L418">                a = new Matrix(2 * nCams, DualAbsoluteQuadric.N_PARAMS);</span>
+<span class="fc bfc" id="L418" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+<span class="fc" id="L419">                a = new Matrix(2 * nCams, DualAbsoluteQuadric.N_PARAMS);</span>
             } else {
-<span class="fc bfc" id="L420" title="All 2 branches covered.">                a = new Matrix(mSingularityEnforced ? 8 : 10, </span>
+<span class="fc bfc" id="L421" title="All 2 branches covered.">                a = new Matrix(mSingularityEnforced ? 8 : 10, </span>
                         DualAbsoluteQuadric.N_PARAMS);
             }
             
@@ -425,56 +426,56 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             double p11, p12, p13, p14;
             double p21, p22, p23, p24;
             double p31, p32, p33, p34;
-<span class="fc" id="L428">            int eqCounter = 0;</span>
-<span class="fc" id="L429">            int minReqEqs = getMinRequiredEquations();</span>
-<span class="fc bfc" id="L430" title="All 2 branches covered.">            for (PinholeCamera camera : mCameras) {</span>
+<span class="fc" id="L429">            int eqCounter = 0;</span>
+<span class="fc" id="L430">            int minReqEqs = getMinRequiredEquations();</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">            for (PinholeCamera camera : mCameras) {</span>
                 
                 //normalize cameras to increase accuracy
-<span class="fc" id="L433">                camera.normalize();</span>
+<span class="fc" id="L434">                camera.normalize();</span>
                 
-<span class="fc" id="L435">                cameraMatrix = camera.getInternalMatrix();</span>
+<span class="fc" id="L436">                cameraMatrix = camera.getInternalMatrix();</span>
                                 
-<span class="fc" id="L437">                p11 = cameraMatrix.getElementAt(0, 0);</span>
-<span class="fc" id="L438">                p21 = cameraMatrix.getElementAt(1, 0);</span>
-<span class="fc" id="L439">                p31 = cameraMatrix.getElementAt(2, 0);</span>
+<span class="fc" id="L438">                p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="fc" id="L439">                p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="fc" id="L440">                p31 = cameraMatrix.getElementAt(2, 0);</span>
                 
-<span class="fc" id="L441">                p12 = cameraMatrix.getElementAt(0, 1);</span>
-<span class="fc" id="L442">                p22 = cameraMatrix.getElementAt(1, 1);</span>
-<span class="fc" id="L443">                p32 = cameraMatrix.getElementAt(2, 1);</span>
+<span class="fc" id="L442">                p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="fc" id="L443">                p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="fc" id="L444">                p32 = cameraMatrix.getElementAt(2, 1);</span>
                 
-<span class="fc" id="L445">                p13 = cameraMatrix.getElementAt(0, 2);</span>
-<span class="fc" id="L446">                p23 = cameraMatrix.getElementAt(1, 2);</span>
-<span class="fc" id="L447">                p33 = cameraMatrix.getElementAt(2, 2);</span>
+<span class="fc" id="L446">                p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="fc" id="L447">                p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="fc" id="L448">                p33 = cameraMatrix.getElementAt(2, 2);</span>
                 
-<span class="fc" id="L449">                p14 = cameraMatrix.getElementAt(0, 3);</span>
-<span class="fc" id="L450">                p24 = cameraMatrix.getElementAt(1, 3);</span>
-<span class="fc" id="L451">                p34 = cameraMatrix.getElementAt(2, 3);</span>
+<span class="fc" id="L450">                p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="fc" id="L451">                p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="fc" id="L452">                p34 = cameraMatrix.getElementAt(2, 3);</span>
                 
                 //1st row
-<span class="fc" id="L454">                fill3rdRowAnd1stRowEquation(p11, p31,</span>
+<span class="fc" id="L455">                fill3rdRowAnd1stRowEquation(p11, p31,</span>
                         p12, p32,
                         p13, p33,
                         p14, p34, a, eqCounter);
-<span class="fc" id="L458">                eqCounter++;</span>
+<span class="fc" id="L459">                eqCounter++;</span>
                 
                 //2nd row
-<span class="fc" id="L461">                fill3rdRowAnd2ndRowEquation(p21, p31,</span>
+<span class="fc" id="L462">                fill3rdRowAnd2ndRowEquation(p21, p31,</span>
                         p22, p32,
                         p23, p33,
                         p24, p34, a, eqCounter);
-<span class="fc" id="L465">                eqCounter++;</span>
+<span class="fc" id="L466">                eqCounter++;</span>
                 
-<span class="fc bfc" id="L467" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; eqCounter &gt;= minReqEqs) {</span>
-<span class="fc" id="L468">                    break;</span>
+<span class="fc bfc" id="L468" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; eqCounter &gt;= minReqEqs) {</span>
+<span class="fc" id="L469">                    break;</span>
                 }
-<span class="fc" id="L470">            }</span>
+<span class="fc" id="L471">            }</span>
             
-<span class="fc" id="L472">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L473">            enforceRank3IfNeeded(decomposer, result);</span>
+<span class="fc" id="L473">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L474">            enforceRank3IfNeeded(decomposer, result);</span>
             
-<span class="nc" id="L475">        } catch (AlgebraException | NumericalException e) {</span>
-<span class="nc" id="L476">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
-<span class="fc" id="L477">        }</span>
-<span class="fc" id="L478">    }</span>
+<span class="nc" id="L476">        } catch (AlgebraException | NumericalException e) {</span>
+<span class="nc" id="L477">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="fc" id="L478">        }</span>
+<span class="fc" id="L479">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

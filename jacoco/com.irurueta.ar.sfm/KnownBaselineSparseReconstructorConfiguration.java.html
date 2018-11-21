@@ -22,6 +22,7 @@ import java.io.Serializable;
  * Contains configuration for a multiple view sparse reconstructor assuming that the
  * initial baseline (separation between initial cameras) is known.
  */
+@SuppressWarnings(&quot;WeakerAccess&quot;)
 public class KnownBaselineSparseReconstructorConfiguration extends
         BaseSparseReconstructorConfiguration&lt;KnownBaselineSparseReconstructorConfiguration&gt;
         implements Serializable {
@@ -38,12 +39,12 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * Contains the real separation between camera centers so that the real scale of
      * cameras and reconstructed points can be retrieved.
      */
-<span class="fc" id="L41">    private double mBaseline = DEFAULT_BASELINE;</span>
+<span class="fc" id="L42">    private double mBaseline = DEFAULT_BASELINE;</span>
 
     /**
      * Constructor.
      */
-<span class="fc" id="L46">    public KnownBaselineSparseReconstructorConfiguration() { }</span>
+<span class="fc" id="L47">    public KnownBaselineSparseReconstructorConfiguration() { }</span>
 
     /**
      * Creates an instance of a multiple view sparse reconstructor configuration with
@@ -51,7 +52,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return configuration instance.
      */
     public static KnownBaselineSparseReconstructorConfiguration make() {
-<span class="fc" id="L54">        return new KnownBaselineSparseReconstructorConfiguration();</span>
+<span class="fc" id="L55">        return new KnownBaselineSparseReconstructorConfiguration();</span>
     }
 
     /**
@@ -61,7 +62,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return camera baseline.
      */
     public double getBaseline() {
-<span class="fc" id="L64">        return mBaseline;</span>
+<span class="fc" id="L65">        return mBaseline;</span>
     }
 
     /**
@@ -72,8 +73,8 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return this instance so that methods can be easily chained.
      */
     public KnownBaselineSparseReconstructorConfiguration setBaseline(double baseline) {
-<span class="fc" id="L75">        mBaseline = baseline;</span>
-<span class="fc" id="L76">        return this;</span>
+<span class="fc" id="L76">        mBaseline = baseline;</span>
+<span class="fc" id="L77">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
