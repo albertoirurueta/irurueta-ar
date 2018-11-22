@@ -411,10 +411,19 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
 
                         //check that 2D point on left view belongs to left 
                         //epipolar line
+                        if (!line1.isLocus(leftPoint, ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                            validPoints = false;
+                            break;
+                        }
                         assertTrue(line1.isLocus(leftPoint, 
                                 ULTRA_LARGE_ABSOLUTE_ERROR));
+
                         //check that 2D point on right view belongs to right 
                         //epipolar line
+                        if (!line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                            validPoints = false;
+                            break;
+                        }
                         assertTrue(line2.isLocus(rightPoint, 
                                 ULTRA_LARGE_ABSOLUTE_ERROR));
 
