@@ -593,7 +593,7 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
 <span class="pc bpc" id="L593" title="1 of 2 branches missed.">                if ((mConfiguration.isGeneralSceneAllowed() &amp;&amp;</span>
 <span class="fc bfc" id="L594" title="All 2 branches covered.">                        estimateFundamentalMatrix(mMatches, viewId1, viewId2)) ||</span>
 <span class="pc bpc" id="L595" title="1 of 2 branches missed.">                        (mConfiguration.isPlanarSceneAllowed() &amp;&amp;</span>
-<span class="fc bfc" id="L596" title="All 2 branches covered.">                        estimatePlanarFundamentalMatrix(mMatches, viewId1, viewId2))) {</span>
+<span class="pc bpc" id="L596" title="1 of 2 branches missed.">                        estimatePlanarFundamentalMatrix(mMatches, viewId1, viewId2))) {</span>
                     //fundamental matrix could be estimated
                     //noinspection unchecked
 <span class="fc" id="L599">                    mListener.onSamplesAccepted((R)this, viewId1, viewId2,</span>
@@ -626,10 +626,10 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
                 } else {
                     //estimation of fundamental matrix failed
                     //noinspection unchecked
-<span class="fc" id="L629">                    mListener.onSamplesRejected((R)this,</span>
+<span class="nc" id="L629">                    mListener.onSamplesRejected((R)this,</span>
                             mPreviousViewId, mCurrentViewId,
                             mPreviousViewSamples, mCurrentViewSamples);
-<span class="fc" id="L632">                    return false;</span>
+<span class="nc" id="L632">                    return false;</span>
                 }
             }
         }
@@ -1033,8 +1033,8 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
 <span class="fc" id="L1033">            mCurrentEstimatedFundamentalMatrix.setRightSamples(rightSamples);</span>
 
 <span class="fc" id="L1035">            return true;</span>
-<span class="fc" id="L1036">        } catch (Exception e) {</span>
-<span class="fc" id="L1037">            return false;</span>
+<span class="nc" id="L1036">        } catch (Exception e) {</span>
+<span class="nc" id="L1037">            return false;</span>
         }
     }
 
@@ -1277,7 +1277,7 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
                         triangulatedPoint);
 <span class="fc" id="L1278">                boolean front2 = camera2.isPointInFrontOfCamera(</span>
                         triangulatedPoint);
-<span class="fc bfc" id="L1280" title="All 4 branches covered.">                reconstructedPoint.setInlier(front1 &amp;&amp; front2);</span>
+<span class="pc bpc" id="L1280" title="1 of 4 branches missed.">                reconstructedPoint.setInlier(front1 &amp;&amp; front2);</span>
 
 <span class="fc" id="L1282">                mMetricReconstructedPoints.add(reconstructedPoint);</span>
             }

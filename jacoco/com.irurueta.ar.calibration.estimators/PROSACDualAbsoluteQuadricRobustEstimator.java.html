@@ -354,12 +354,12 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
             public void onEstimateProgressChange(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
                     float progress) {
-<span class="pc bpc" id="L357" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L358">                    mListener.onEstimateProgressChange(</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">                if (mListener != null) {</span>
+<span class="nc" id="L358">                    mListener.onEstimateProgressChange(</span>
                             PROSACDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L362">            }</span>
+<span class="nc" id="L362">            }</span>
             
             @Override
             public double[] getQualityScores() {

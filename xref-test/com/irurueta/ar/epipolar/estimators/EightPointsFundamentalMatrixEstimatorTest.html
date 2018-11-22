@@ -479,7 +479,7 @@
 <a class="jxr_linenumber" name="L471" href="#L471">471</a>         
 <a class="jxr_linenumber" name="L472" href="#L472">472</a>         <strong class="jxr_keyword">double</strong> leftEpipoleError, rightEpipoleError;
 <a class="jxr_linenumber" name="L473" href="#L473">473</a>         <strong class="jxr_keyword">double</strong> avgLeftEpipoleError = 0.0, avgRightEpipoleError = 0.0;        
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; TIMES; j++) {
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; 2 * TIMES; j++) {
 <a class="jxr_linenumber" name="L475" href="#L475">475</a>             <em class="jxr_comment">//randomly create two pinhole cameras</em>
 <a class="jxr_linenumber" name="L476" href="#L476">476</a>             UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
 <a class="jxr_linenumber" name="L477" href="#L477">477</a>             <strong class="jxr_keyword">double</strong> alphaEuler1 = 0.0;
