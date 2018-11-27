@@ -256,8 +256,8 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                         fundamentalMatrix);
             
 <span class="fc" id="L258">                double finalTotalResidual = totalResidual(fundamentalMatrix);</span>
-<span class="fc bfc" id="L259" title="All 2 branches covered.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;                </span>
-<span class="fc bfc" id="L260" title="All 4 branches covered.">                if (iterErrorDecreased || !errorDecreased) {</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;                </span>
+<span class="pc bpc" id="L260" title="2 of 4 branches missed.">                if (iterErrorDecreased || !errorDecreased) {</span>
 <span class="fc" id="L261">                    errorDecreased = true;</span>
                     //update final result
 <span class="fc" id="L263">                    result.setHomogeneousCoordinates(params[0], params[1], </span>
@@ -269,7 +269,7 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                     }                    
                 }
 <span class="fc" id="L271">                numIter++;</span>
-<span class="fc bfc" id="L272" title="All 4 branches covered.">            } while(iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);                </span>
+<span class="pc bpc" id="L272" title="3 of 4 branches missed.">            } while(iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);                </span>
             
 <span class="fc bfc" id="L274" title="All 2 branches covered.">            if (mListener != null) {</span>
 <span class="fc" id="L275">                mListener.onRefineEnd(this, mInitialEstimation, result,</span>
