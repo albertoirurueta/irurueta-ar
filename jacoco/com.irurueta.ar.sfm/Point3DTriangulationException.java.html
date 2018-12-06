@@ -19,7 +19,7 @@ package com.irurueta.ar.sfm;
  * Raised if triangulation of 3D points fails for some reason (i.e. degenerate
  * geometry, numerical instabilities, etc).
  */
-public class Point3DTriangulationException extends StructureFromMotionException{
+public class Point3DTriangulationException extends StructureFromMotionException {
     
     /**
      * Constructor.

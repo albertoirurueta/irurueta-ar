@@ -97,21 +97,20 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @param pointSeparation point separation in the circles pattern.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setPointSeparation(double pointSeparation)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (pointSeparation &lt;= 0.0) {</span>
-<span class="fc" id="L103">            throw new IllegalArgumentException();</span>
+    public void setPointSeparation(double pointSeparation) {
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (pointSeparation &lt;= 0.0) {</span>
+<span class="fc" id="L102">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L106">        mPointSeparation = pointSeparation;</span>
-<span class="fc" id="L107">    }</span>
+<span class="fc" id="L105">        mPointSeparation = pointSeparation;</span>
+<span class="fc" id="L106">    }</span>
     
     /**
      * Returns number of columns in the circles pattern.
      * @return number of columns in the circles pattern.
      */
     public int getCols() {
-<span class="fc" id="L114">        return mCols;</span>
+<span class="fc" id="L113">        return mCols;</span>
     }
     
     /**
@@ -119,20 +118,20 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @param cols number of columns in the circles pattern.
      * @throws IllegalArgumentException if provided value is less than 2.
      */
-    public void setCols(int cols) throws IllegalArgumentException {
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (cols &lt; MIN_COLS) {</span>
-<span class="fc" id="L124">            throw new IllegalArgumentException();</span>
+    public void setCols(int cols) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (cols &lt; MIN_COLS) {</span>
+<span class="fc" id="L123">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L127">        mCols = cols;</span>
-<span class="fc" id="L128">    }</span>
+<span class="fc" id="L126">        mCols = cols;</span>
+<span class="fc" id="L127">    }</span>
     
     /**
      * Returns number of rows in the circles pattern.
      * @return number of rows in the circles pattern.
      */
     public int getRows() {
-<span class="fc" id="L135">        return mRows;</span>
+<span class="fc" id="L134">        return mRows;</span>
     }
     
     /**
@@ -140,13 +139,13 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @param rows number of rows in the circles pattern.
      * @throws IllegalArgumentException if provided value is less than 2.
      */
-    public void setRows(int rows) throws IllegalArgumentException {
-<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (rows &lt; MIN_ROWS) {</span>
-<span class="fc" id="L145">            throw new IllegalArgumentException();</span>
+    public void setRows(int rows) {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (rows &lt; MIN_ROWS) {</span>
+<span class="fc" id="L144">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L148">        mRows = rows;</span>
-<span class="fc" id="L149">    }</span>
+<span class="fc" id="L147">        mRows = rows;</span>
+<span class="fc" id="L148">    }</span>
     
     /**
      * Returns ideal points coordinates contained in a circles 2D pattern and 
@@ -155,9 +154,10 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      */
     @Override
     public List&lt;Point2D&gt; getIdealPoints() {
-<span class="fc" id="L158">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L157">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
         
-        double x, y;
+        double x;
+        double y;
 <span class="fc bfc" id="L161" title="All 2 branches covered.">        for (int i = 0; i &lt; mRows; i++) {</span>
 <span class="fc bfc" id="L162" title="All 2 branches covered.">            for (int j = 0; j &lt; mCols; j++) {</span>
 <span class="fc" id="L163">                x = (double)(2 * j + i % 2) * mPointSeparation;</span>

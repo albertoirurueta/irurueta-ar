@@ -151,15 +151,14 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public ErrorOptimizationCameraCalibrator(Pattern2D pattern,
-            List&lt;CameraCalibratorSample&gt; samples)
-            throws IllegalArgumentException {
-<span class="fc" id="L156">        super(pattern, samples);</span>
-<span class="fc" id="L157">        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
-<span class="fc" id="L158">        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;        </span>
-<span class="fc" id="L159">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
-<span class="fc" id="L160">        mEstimateInitialRadialDistortion = </span>
+            List&lt;CameraCalibratorSample&gt; samples) {
+<span class="fc" id="L155">        super(pattern, samples);</span>
+<span class="fc" id="L156">        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
+<span class="fc" id="L157">        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;        </span>
+<span class="fc" id="L158">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L159">        mEstimateInitialRadialDistortion = </span>
                 DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;        
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L161">    }</span>
     
     /**
      * Constructor.
@@ -171,14 +170,14 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */
     public ErrorOptimizationCameraCalibrator(Pattern2D pattern,
             List&lt;CameraCalibratorSample&gt; samples,
-            double[] samplesQualityScores) throws IllegalArgumentException {
-<span class="fc" id="L175">        super(pattern, samples, samplesQualityScores);</span>
-<span class="fc" id="L176">        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
-<span class="fc" id="L177">        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;        </span>
-<span class="fc" id="L178">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
-<span class="fc" id="L179">        mEstimateInitialRadialDistortion = </span>
+            double[] samplesQualityScores) {
+<span class="fc" id="L174">        super(pattern, samples, samplesQualityScores);</span>
+<span class="fc" id="L175">        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
+<span class="fc" id="L176">        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;        </span>
+<span class="fc" id="L177">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L178">        mEstimateInitialRadialDistortion = </span>
                 DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;        
-<span class="fc" id="L181">    }</span>
+<span class="fc" id="L180">    }</span>
     
     /**
      * Returns maximum number of iterations to be used when adjusting parameters
@@ -187,7 +186,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * using Levenberg-Marquardt algorithm.
      */
     public int getLevenbergMarquardtMaxIters() {
-<span class="fc" id="L190">        return mLevenbergMarquardtMaxIters;</span>
+<span class="fc" id="L189">        return mLevenbergMarquardtMaxIters;</span>
     }
     
     /**
@@ -199,15 +198,15 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws LockedException if this instance is locked.
      */
     public void setLevenbergMarquardtMaxIters(int levenbergMarquardtMaxIters)
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L204">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L203">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L206" title="All 2 branches covered.">        if (levenbergMarquardtMaxIters &lt;= 0) {</span>
-<span class="fc" id="L207">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        if (levenbergMarquardtMaxIters &lt;= 0) {</span>
+<span class="fc" id="L206">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L209">        mLevenbergMarquardtMaxIters = levenbergMarquardtMaxIters;</span>
-<span class="fc" id="L210">    }</span>
+<span class="fc" id="L208">        mLevenbergMarquardtMaxIters = levenbergMarquardtMaxIters;</span>
+<span class="fc" id="L209">    }</span>
     
     /**
      * Returns tolerance to assume that Levenberg-Marquardt algorithm has
@@ -216,7 +215,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * reached convergence when adjusting parameters.
      */
     public double getLevenbergMarquardtTolerance() {
-<span class="fc" id="L219">        return mLevenbergMarquardtTolerance;</span>
+<span class="fc" id="L218">        return mLevenbergMarquardtTolerance;</span>
     }
     
     /**
@@ -229,16 +228,15 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws LockedException if this instance is locked.
      */
     public void setLevenbergMarquardtTolerance(
-            double levenbergMarquardtTolerance) throws IllegalArgumentException,
-            LockedException {
-<span class="fc bfc" id="L234" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L235">            throw new LockedException();</span>
+            double levenbergMarquardtTolerance) throws LockedException {
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L233">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (levenbergMarquardtTolerance &lt;= 0.0) {</span>
-<span class="fc" id="L238">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (levenbergMarquardtTolerance &lt;= 0.0) {</span>
+<span class="fc" id="L236">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L240">        mLevenbergMarquardtTolerance = levenbergMarquardtTolerance;</span>
-<span class="fc" id="L241">    }    </span>
+<span class="fc" id="L238">        mLevenbergMarquardtTolerance = levenbergMarquardtTolerance;</span>
+<span class="fc" id="L239">    }    </span>
     
     /**
      * Returns robust estimator method to be used for radial distortion 
@@ -247,7 +245,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * estimation.
      */
     public RobustEstimatorMethod getDistortionMethod() {
-<span class="fc" id="L250">        return mDistortionMethod;</span>
+<span class="fc" id="L248">        return mDistortionMethod;</span>
     }
     
     /**
@@ -260,11 +258,11 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     public void setDistortionMethod(
             RobustEstimatorMethod distortionMethod) 
             throws LockedException {
-<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L264">            throw new LockedException();</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L262">            throw new LockedException();</span>
         }
-<span class="fc" id="L266">        internalSetDistortionMethod(distortionMethod);</span>
-<span class="fc" id="L267">    }</span>
+<span class="fc" id="L264">        internalSetDistortionMethod(distortionMethod);</span>
+<span class="fc" id="L265">    }</span>
     
     /**
      * Returns radial distortion estimator, which can be retrieved in case 
@@ -274,7 +272,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return radial distortion estimator.
      */
     public RadialDistortionRobustEstimator getDistortionEstimator() {
-<span class="fc" id="L277">        return mDistortionEstimator;</span>
+<span class="fc" id="L275">        return mDistortionEstimator;</span>
     }
     
     /**
@@ -284,23 +282,23 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return threshold to robustly estimate radial distortion.
      */
     public double getDistortionEstimatorThreshold() {
-<span class="fc bfc" id="L287" title="All 5 branches covered.">        switch (mDistortionEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L285" title="All 5 branches covered.">        switch (mDistortionEstimator.getMethod()) {</span>
             case LMedS:
-<span class="fc" id="L289">                return ((LMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L290">                        getStopThreshold();</span>
+<span class="fc" id="L287">                return ((LMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L288">                        getStopThreshold();</span>
             case MSAC:
-<span class="fc" id="L292">                return ((MSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L293">                        getThreshold();                </span>
+<span class="fc" id="L290">                return ((MSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L291">                        getThreshold();                </span>
             case PROSAC:
-<span class="fc" id="L295">                return ((PROSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L296">                        getThreshold();                </span>
+<span class="fc" id="L293">                return ((PROSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L294">                        getThreshold();                </span>
             case PROMedS:
-<span class="fc" id="L298">                return ((PROMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L299">                        getStopThreshold();                </span>
+<span class="fc" id="L296">                return ((PROMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L297">                        getStopThreshold();                </span>
             case RANSAC:
             default:
-<span class="fc" id="L302">                return ((RANSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L303">                        getThreshold();</span>
+<span class="fc" id="L300">                return ((RANSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L301">                        getThreshold();</span>
         }
     }
     
@@ -314,36 +312,35 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setDistortionEstimatorThreshold(
-            double distortionEstimatorThreshold) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L319" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L320">            throw new LockedException();</span>
+            double distortionEstimatorThreshold) throws LockedException {
+<span class="fc bfc" id="L316" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L317">            throw new LockedException();</span>
         }
         
-<span class="fc bfc" id="L323" title="All 5 branches covered.">        switch (mDistortionEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L320" title="All 5 branches covered.">        switch (mDistortionEstimator.getMethod()) {</span>
             case LMedS:
-<span class="fc" id="L325">                ((LMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L326">                        setStopThreshold(distortionEstimatorThreshold);</span>
-<span class="fc" id="L327">                break;</span>
+<span class="fc" id="L322">                ((LMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L323">                        setStopThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L324">                break;</span>
             case MSAC:
-<span class="fc" id="L329">                ((MSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L330">                        setThreshold(distortionEstimatorThreshold);</span>
-<span class="fc" id="L331">                break;                </span>
+<span class="fc" id="L326">                ((MSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L327">                        setThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L328">                break;                </span>
             case PROSAC:
-<span class="fc" id="L333">                ((PROSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L334">                        setThreshold(distortionEstimatorThreshold);</span>
-<span class="fc" id="L335">                break;                </span>
+<span class="fc" id="L330">                ((PROSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L331">                        setThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L332">                break;                </span>
             case PROMedS:
-<span class="fc" id="L337">                ((PROMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L338">                        setStopThreshold(distortionEstimatorThreshold);</span>
-<span class="fc" id="L339">                break;                </span>
+<span class="fc" id="L334">                ((PROMedSRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L335">                        setStopThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L336">                break;                </span>
             case RANSAC:
             default:
-<span class="fc" id="L342">                ((RANSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
-<span class="fc" id="L343">                        setThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L339">                ((RANSACRadialDistortionRobustEstimator)mDistortionEstimator).</span>
+<span class="fc" id="L340">                        setThreshold(distortionEstimatorThreshold);</span>
                 break;                
         }
-<span class="fc" id="L346">    }</span>
+<span class="fc" id="L343">    }</span>
     
     /**
      * Returns confidence to robustly estimate radial distortion.
@@ -360,7 +357,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return confidence to robustly estimate homographies.
      */
     public double getDistortionEstimatorConfidence() {
-<span class="fc" id="L363">        return mDistortionEstimator.getConfidence();</span>
+<span class="fc" id="L360">        return mDistortionEstimator.getConfidence();</span>
     }
     
     /**
@@ -382,14 +379,13 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * 1.0.
      */
     public void setDistortionEstimatorConfidence(
-            double distortionEstimatorConfidence) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L387" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L388">            throw new LockedException();</span>
+            double distortionEstimatorConfidence) throws LockedException {
+<span class="fc bfc" id="L383" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L384">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L391">        mDistortionEstimator.setConfidence(distortionEstimatorConfidence);</span>
-<span class="fc" id="L392">    }</span>
+<span class="fc" id="L387">        mDistortionEstimator.setConfidence(distortionEstimatorConfidence);</span>
+<span class="fc" id="L388">    }</span>
     
     /**
      * Returns the maximum number of iterations to be done when estimating
@@ -402,7 +398,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * homographies.
      */
     public int getDistortionEstimatorMaxIterations() {
-<span class="fc" id="L405">        return mDistortionEstimator.getMaxIterations();</span>
+<span class="fc" id="L401">        return mDistortionEstimator.getMaxIterations();</span>
     }
     
     /**
@@ -418,14 +414,13 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setDistortionEstimatorMaxIterations(
-            int distortionEstimatorMaxIterations) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L423" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L424">            throw new LockedException();</span>
+            int distortionEstimatorMaxIterations) throws LockedException {
+<span class="fc bfc" id="L418" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L419">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L427">        mDistortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);</span>
-<span class="fc" id="L428">    }</span>
+<span class="fc" id="L422">        mDistortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);</span>
+<span class="fc" id="L423">    }</span>
     
     /**
      * Starts the calibration process.
@@ -444,45 +439,45 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     public void calibrate() throws CalibrationException, LockedException, 
             NotReadyException {
         
-<span class="fc bfc" id="L447" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L448">            throw new LockedException();</span>
+<span class="fc bfc" id="L442" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L443">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L450" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L451">            throw new NotReadyException();</span>
-        }
-        
-<span class="fc" id="L454">        mLocked = true;</span>
-        
-<span class="fc" id="L456">        mHomographyQualityScoresRequired =</span>
-<span class="pc bpc" id="L457" title="1 of 2 branches missed.">                (mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
-<span class="pc bnc" id="L458" title="All 2 branches missed.">                mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMedS);</span>
-        
-<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L461">            mListener.onCalibrateStart(this);</span>
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L446">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L464">        reset();</span>
-<span class="fc" id="L465">        mRadialDistortionProgress = mFittingProgress = </span>
+<span class="fc" id="L449">        mLocked = true;</span>
+        
+<span class="fc" id="L451">        mHomographyQualityScoresRequired =</span>
+<span class="pc bpc" id="L452" title="1 of 2 branches missed.">                (mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
+<span class="pc bnc" id="L453" title="All 2 branches missed.">                mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMedS);</span>
+        
+<span class="pc bpc" id="L455" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L456">            mListener.onCalibrateStart(this);</span>
+        }
+        
+<span class="fc" id="L459">        reset();</span>
+<span class="fc" id="L460">        mRadialDistortionProgress = mFittingProgress = </span>
                 mPreviousNotifiedProgress = 0.0f;
         
-<span class="fc" id="L468">        List&lt;Point2D&gt; idealFallbackPatternMarkers = mPattern.getIdealPoints();</span>
+<span class="fc" id="L463">        List&lt;Point2D&gt; idealFallbackPatternMarkers = mPattern.getIdealPoints();</span>
         
         try {
             //estimate intrinsic parameters
-<span class="fc" id="L472">            estimateIntrinsicParameters(idealFallbackPatternMarkers);</span>
+<span class="fc" id="L467">            estimateIntrinsicParameters(idealFallbackPatternMarkers);</span>
 
-<span class="fc bfc" id="L474" title="All 2 branches covered.">            if (mEstimateRadialDistortion) {</span>
+<span class="fc bfc" id="L469" title="All 2 branches covered.">            if (mEstimateRadialDistortion) {</span>
                 //estimate radial distortion
-<span class="fc" id="L476">                estimateRadialDistortion(idealFallbackPatternMarkers);</span>
+<span class="fc" id="L471">                estimateRadialDistortion(idealFallbackPatternMarkers);</span>
             }
 
-<span class="pc bpc" id="L479" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L480">                mListener.onCalibrateEnd(this);</span>
+<span class="pc bpc" id="L474" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L475">                mListener.onCalibrateEnd(this);</span>
             }
         } finally {
-<span class="fc" id="L483">            mLocked = false;</span>
+<span class="fc" id="L478">            mLocked = false;</span>
         }
-<span class="fc" id="L485">    }</span>
+<span class="fc" id="L480">    }</span>
 
     /**
      * Returns the camera calibrator method used by this instance.
@@ -490,7 +485,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */        
     @Override
     public CameraCalibratorMethod getMethod() {
-<span class="fc" id="L493">        return CameraCalibratorMethod.ERROR_OPTIMIZATION;</span>
+<span class="fc" id="L488">        return CameraCalibratorMethod.ERROR_OPTIMIZATION;</span>
     }    
 
     /**
@@ -499,20 +494,19 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     @Override
     protected void notifyProgress() {
         float progress;
-<span class="pc bpc" id="L502" title="1 of 2 branches missed.">        if (mEstimateInitialRadialDistortion) {</span>
-<span class="fc" id="L503">            progress = (mRadialDistortionProgress + mIntrinsicProgress + </span>
+<span class="pc bpc" id="L497" title="1 of 2 branches missed.">        if (mEstimateInitialRadialDistortion) {</span>
+<span class="fc" id="L498">            progress = (mRadialDistortionProgress + mIntrinsicProgress + </span>
                     mFittingProgress) / 3.0f;
         } else {
-<span class="nc" id="L506">            progress = 0.5f * mIntrinsicProgress + 0.5f * mFittingProgress;</span>
+<span class="nc" id="L501">            progress = 0.5f * mIntrinsicProgress + 0.5f * mFittingProgress;</span>
         }
         
-<span class="pc bpc" id="L509" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc bfc" id="L510" title="All 2 branches covered.">            if ((progress - mPreviousNotifiedProgress) &gt; mProgressDelta) {</span>
-<span class="fc" id="L511">                mListener.onCalibrateProgressChange(this, progress);</span>
-<span class="fc" id="L512">                mPreviousNotifiedProgress = progress;</span>
-            }
+<span class="pc bpc" id="L504" title="1 of 4 branches missed.">        if (mListener != null &amp;&amp;</span>
+                (progress - mPreviousNotifiedProgress) &gt; mProgressDelta) {
+<span class="fc" id="L506">            mListener.onCalibrateProgressChange(this, progress);</span>
+<span class="fc" id="L507">            mPreviousNotifiedProgress = progress;</span>
         }
-<span class="fc" id="L515">    }</span>
+<span class="fc" id="L509">    }</span>
         
     /**
      * Estimates radial distortion by minimizing the reprojection error by
@@ -534,113 +528,114 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             List&lt;Point2D&gt; idealFallbackPatternMarkers)
             throws CalibrationException {
         
-<span class="fc" id="L537">        mRadialDistortionProgress = 0.0f;</span>
+<span class="fc" id="L531">        mRadialDistortionProgress = 0.0f;</span>
         
-<span class="pc bpc" id="L539" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L540">            mListener.onRadialDistortionEstimationStarts(this);</span>
+<span class="pc bpc" id="L533" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L534">            mListener.onRadialDistortionEstimationStarts(this);</span>
         }
 
         //compute total points for samples where homography could be estimated
-<span class="fc" id="L544">        int totalPoints = 0;</span>
-<span class="fc" id="L545">        int totalHomographies = 0;</span>
-<span class="fc bfc" id="L546" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L547" title="All 2 branches covered.">            if (sample.getHomography() != null) {</span>
-<span class="fc" id="L548">                totalPoints += sample.getSampledMarkers().size();</span>
-<span class="fc" id="L549">                totalHomographies++;</span>
+<span class="fc" id="L538">        int totalPoints = 0;</span>
+<span class="fc" id="L539">        int totalHomographies = 0;</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">            if (sample.getHomography() != null) {</span>
+<span class="fc" id="L542">                totalPoints += sample.getSampledMarkers().size();</span>
+<span class="fc" id="L543">                totalHomographies++;</span>
             }
-<span class="fc" id="L551">        }</span>
+<span class="fc" id="L545">        }</span>
         
-<span class="fc" id="L553">        mIndexToView = new int[totalPoints];</span>
+<span class="fc" id="L547">        mIndexToView = new int[totalPoints];</span>
         
-<span class="pc bpc" id="L555" title="1 of 2 branches missed.">        if (mEstimateInitialRadialDistortion) {</span>
-<span class="fc" id="L556">            List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L557">            List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L549" title="1 of 2 branches missed.">        if (mEstimateInitialRadialDistortion) {</span>
+<span class="fc" id="L550">            List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L551">            List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;();</span>
             
-<span class="fc" id="L559">            double[] qualityScores = null;</span>
-<span class="pc bpc" id="L560" title="3 of 4 branches missed.">            if (mDistortionMethod == RobustEstimatorMethod.PROSAC ||</span>
+<span class="fc" id="L553">            double[] qualityScores = null;</span>
+<span class="pc bpc" id="L554" title="3 of 4 branches missed.">            if (mDistortionMethod == RobustEstimatorMethod.PROSAC ||</span>
                     mDistortionMethod == RobustEstimatorMethod.PROMedS) {
-<span class="fc" id="L562">                qualityScores = new double[totalPoints];</span>
+<span class="fc" id="L556">                qualityScores = new double[totalPoints];</span>
             }
         
             //estimate camera pose for each sample        
-<span class="fc" id="L566">            int pointCounter = 0, sampleCounter = 0;</span>
-<span class="fc bfc" id="L567" title="All 2 branches covered.">            for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L568" title="All 2 branches covered.">                if (sample.getHomography() == null) {</span>
+<span class="fc" id="L560">            int pointCounter = 0;</span>
+<span class="fc" id="L561">            int sampleCounter = 0;</span>
+<span class="fc bfc" id="L562" title="All 2 branches covered.">            for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L563" title="All 2 branches covered.">                if (sample.getHomography() == null) {</span>
                     //homography computation failed, so we cannot compute camera
                     //pose for this sample
-<span class="fc" id="L571">                    continue;</span>
+<span class="fc" id="L566">                    continue;</span>
                 }
-<span class="fc" id="L573">                sample.computeCameraPose(mIntrinsic);</span>
+<span class="fc" id="L568">                sample.computeCameraPose(mIntrinsic);</span>
             
                 //transform ideal pattern markers using estimated homography
                 List&lt;Point2D&gt; idealPatternMarkers;
-<span class="fc bfc" id="L577" title="All 2 branches covered.">                if (sample.getPattern() != null) {</span>
+<span class="fc bfc" id="L572" title="All 2 branches covered.">                if (sample.getPattern() != null) {</span>
                     //use points generated by pattern in sample
-<span class="fc" id="L579">                    idealPatternMarkers = sample.getPattern().</span>
-<span class="fc" id="L580">                            getIdealPoints();                </span>
+<span class="fc" id="L574">                    idealPatternMarkers = sample.getPattern().</span>
+<span class="fc" id="L575">                            getIdealPoints();                </span>
                 } else {
                     //use fallback pattern points
-<span class="fc" id="L583">                    idealPatternMarkers = idealFallbackPatternMarkers;</span>
+<span class="fc" id="L578">                    idealPatternMarkers = idealFallbackPatternMarkers;</span>
                 }
             
-<span class="fc" id="L586">                List&lt;Point2D&gt; transformedIdealPatternMarkers = </span>
-<span class="fc" id="L587">                        sample.getHomography().transformPointsAndReturnNew(</span>
+<span class="fc" id="L581">                List&lt;Point2D&gt; transformedIdealPatternMarkers = </span>
+<span class="fc" id="L582">                        sample.getHomography().transformPointsAndReturnNew(</span>
                         idealPatternMarkers);
                 
-<span class="fc" id="L590">                distortedPoints.addAll(sample.getSampledMarkers());</span>
-<span class="fc" id="L591">                undistortedPoints.addAll(transformedIdealPatternMarkers);</span>
+<span class="fc" id="L585">                distortedPoints.addAll(sample.getSampledMarkers());</span>
+<span class="fc" id="L586">                undistortedPoints.addAll(transformedIdealPatternMarkers);</span>
             
-<span class="fc" id="L593">                int markersSize = transformedIdealPatternMarkers.size();</span>
+<span class="fc" id="L588">                int markersSize = transformedIdealPatternMarkers.size();</span>
                 
                 //fills array indicanding to which sample (i.e. view) each point
                 //belongs to
-<span class="fc" id="L597">                Arrays.fill(mIndexToView, pointCounter, </span>
+<span class="fc" id="L592">                Arrays.fill(mIndexToView, pointCounter, </span>
                         pointCounter + markersSize, sampleCounter);
 
                 //if distortion estimator requires quality scores, set them
-<span class="pc bpc" id="L601" title="4 of 6 branches missed.">                if (qualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L596" title="4 of 6 branches missed.">                if (qualityScores != null &amp;&amp;</span>
                         (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
                         mDistortionMethod == RobustEstimatorMethod.PROMedS)) {
 
-<span class="fc" id="L605">                    double sampleQuality = mHomographyQualityScores[sampleCounter];</span>
+<span class="fc" id="L600">                    double sampleQuality = mHomographyQualityScores[sampleCounter];</span>
 
                     //assign to all points (markers) in the sample the same sample
                     //quality
-<span class="fc bfc" id="L609" title="All 2 branches covered.">                    for (int i = pointCounter; i &lt; pointCounter + markersSize; </span>
-<span class="fc" id="L610">                            i++) {</span>
-<span class="fc" id="L611">                        qualityScores[i] = sampleQuality;</span>
+<span class="fc bfc" id="L604" title="All 2 branches covered.">                    for (int i = pointCounter; i &lt; pointCounter + markersSize; </span>
+<span class="fc" id="L605">                            i++) {</span>
+<span class="fc" id="L606">                        qualityScores[i] = sampleQuality;</span>
                     }
 
-<span class="fc" id="L614">                    pointCounter += markersSize;                        </span>
-<span class="fc" id="L615">                    sampleCounter++;</span>
+<span class="fc" id="L609">                    pointCounter += markersSize;                        </span>
+<span class="fc" id="L610">                    sampleCounter++;</span>
                 }                         
-<span class="fc" id="L617">            }                </span>
+<span class="fc" id="L612">            }                </span>
             
             //estimate radial distortion
             try {
-<span class="fc" id="L621">                mDistortionEstimator.setIntrinsic(mIntrinsic);</span>
-<span class="fc" id="L622">                mDistortionEstimator.setPoints(distortedPoints, </span>
+<span class="fc" id="L616">                mDistortionEstimator.setIntrinsic(mIntrinsic);</span>
+<span class="fc" id="L617">                mDistortionEstimator.setPoints(distortedPoints, </span>
                         undistortedPoints);
-<span class="fc" id="L624">                mDistortionEstimator.setQualityScores(qualityScores);</span>
+<span class="fc" id="L619">                mDistortionEstimator.setQualityScores(qualityScores);</span>
         
-<span class="fc" id="L626">                mDistortion = mDistortionEstimator.estimate();                </span>
-<span class="nc" id="L627">            } catch (Exception e) {</span>
-<span class="nc" id="L628">                throw new CalibrationException(e);</span>
-<span class="fc" id="L629">            }</span>
-<span class="fc" id="L630">        } else {</span>
+<span class="fc" id="L621">                mDistortion = mDistortionEstimator.estimate();                </span>
+<span class="nc" id="L622">            } catch (Exception e) {</span>
+<span class="nc" id="L623">                throw new CalibrationException(e);</span>
+<span class="fc" id="L624">            }</span>
+<span class="fc" id="L625">        } else {</span>
             
             //estimate camera pose for each sample
-<span class="nc bnc" id="L633" title="All 2 branches missed.">            for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="nc bnc" id="L634" title="All 2 branches missed.">                if (sample.getHomography() == null) {</span>
+<span class="nc bnc" id="L628" title="All 2 branches missed.">            for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="nc bnc" id="L629" title="All 2 branches missed.">                if (sample.getHomography() == null) {</span>
                     //homography computation failed, so we cannot compute camera
                     //pose for this sample
-<span class="nc" id="L637">                    continue;</span>
+<span class="nc" id="L632">                    continue;</span>
                 }
-<span class="nc" id="L639">                sample.computeCameraPose(mIntrinsic);</span>
-<span class="nc" id="L640">            }</span>
+<span class="nc" id="L634">                sample.computeCameraPose(mIntrinsic);</span>
+<span class="nc" id="L635">            }</span>
             
             //set initial radial distortion as if there was no distortion
-<span class="nc" id="L643">            mDistortion = new RadialDistortion(0.0, 0.0);</span>
+<span class="nc" id="L638">            mDistortion = new RadialDistortion(0.0, 0.0);</span>
         }
         
         //optimize cost function to refine camera poses and radial distortion  
@@ -648,20 +643,20 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         try {
             //compute initial parameters to fit a function using 
             //Levenberg-Marquardt
-<span class="fc" id="L651">            final double[] initParams = </span>
-<span class="fc" id="L652">                    new double[numParameters(totalHomographies)];</span>
-<span class="fc" id="L653">            paramsFromData(initParams);</span>
+<span class="fc" id="L646">            final double[] initParams = </span>
+<span class="fc" id="L647">                    new double[numParameters(totalHomographies)];</span>
+<span class="fc" id="L648">            paramsFromData(initParams);</span>
             //compute x data (input points)
-<span class="fc" id="L655">            Matrix x = dataXToMatrix(idealFallbackPatternMarkers);</span>
+<span class="fc" id="L650">            Matrix x = dataXToMatrix(idealFallbackPatternMarkers);</span>
             //compute y data (output points)
-<span class="fc" id="L657">            Matrix y = dataYToMatrix();</span>
+<span class="fc" id="L652">            Matrix y = dataYToMatrix();</span>
             
             //Evaluator for Levenberg-Marquardt fitter. This is in charge of
             //evaluating function to be fitted using current parameters and
             //also in charge of estimating function Jacobian for each point
             //where the function is evaluated
-<span class="fc" id="L663">            LevenbergMarquardtMultiVariateFunctionEvaluator evaluator =</span>
-<span class="fc" id="L664">                    new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+<span class="fc" id="L658">            LevenbergMarquardtMultiVariateFunctionEvaluator evaluator =</span>
+<span class="fc" id="L659">                    new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
                 
                 //position of current point being evaluated
                 private int mI;
@@ -673,22 +668,22 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 //fitted at current point and for provided parameters. Jacobian
                 //is computed by keeping point constant and computing the 
                 //partial derivatives for each parameter
-<span class="fc" id="L676">                private JacobianEstimator mJacobianEstimator =</span>
+<span class="fc" id="L671">                private JacobianEstimator mJacobianEstimator =</span>
                         new JacobianEstimator(
-<span class="fc" id="L678">                                new MultiVariateFunctionEvaluatorListener() {</span>
+<span class="fc" id="L673">                                new MultiVariateFunctionEvaluatorListener() {</span>
 
                     //We provide params so that jacobian is computed as the 
                     //partial derivatives respect parameters
                     @Override
                     public void evaluate(double[] params, double[] result) {
-<span class="nc" id="L684">                        evaluateFunction(mI, mPoint, params, result);</span>
-<span class="nc" id="L685">                    }</span>
+<span class="nc" id="L679">                        evaluateFunction(mI, mPoint, params, result);</span>
+<span class="nc" id="L680">                    }</span>
 
                     //Function being fitted is multi variate returning 2D points
                     //(having horizontal and vertical inhomogeneous coordinates)
                     @Override
                     public int getNumberOfVariables() {
-<span class="nc" id="L691">                        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="nc" id="L686">                        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
                     }
                 });
                    
@@ -696,14 +691,14 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 //horizontal and vertical inhomogeneous coordinates)
                 @Override
                 public int getNumberOfDimensions() {
-<span class="nc" id="L699">                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="nc" id="L694">                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
                 }
 
                 //Function being fitted is multi variate returning 2D points
                 //(having horizontal and vertical inhomogeneous coordinates)                
                 @Override
                 public int getNumberOfVariables() {
-<span class="nc" id="L706">                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="nc" id="L701">                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
                 }
 
                 //Creates array where parameters are stored. This array is 
@@ -711,45 +706,45 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 //Levenberg-Marquardt algorithm
                 @Override
                 public double[] createInitialParametersArray() {
-<span class="fc" id="L714">                    return initParams;</span>
+<span class="fc" id="L709">                    return initParams;</span>
                 }
 
                 //Evaluates function to be fitted and computes Jacobian
                 @Override
                 public void evaluate(int i, double[] point, double[] result, 
                         double[] params, Matrix jacobian) throws EvaluationException {
-<span class="nc" id="L721">                    mI = i;</span>
-<span class="nc" id="L722">                    mPoint = point;</span>
-<span class="nc" id="L723">                    evaluateFunction(mI, mPoint, params, result);</span>
-<span class="nc" id="L724">                    mJacobianEstimator.jacobian(params, jacobian);</span>
-<span class="nc" id="L725">                }</span>
+<span class="nc" id="L716">                    mI = i;</span>
+<span class="nc" id="L717">                    mPoint = point;</span>
+<span class="nc" id="L718">                    evaluateFunction(mI, mPoint, params, result);</span>
+<span class="nc" id="L719">                    mJacobianEstimator.jacobian(params, jacobian);</span>
+<span class="nc" id="L720">                }</span>
             };
             
             //fits function
-<span class="fc" id="L729">            double sigma = 1.0;</span>
-<span class="fc" id="L730">            LevenbergMarquardtMultiVariateFitter fitter =</span>
+<span class="fc" id="L724">            double sigma = 1.0;</span>
+<span class="fc" id="L725">            LevenbergMarquardtMultiVariateFitter fitter =</span>
                     new LevenbergMarquardtMultiVariateFitter(evaluator, x, y, 
                     sigma);
-<span class="fc" id="L733">            fitter.setItmax(mLevenbergMarquardtMaxIters);</span>
-<span class="fc" id="L734">            fitter.setTol(mLevenbergMarquardtTolerance);</span>
+<span class="fc" id="L728">            fitter.setItmax(mLevenbergMarquardtMaxIters);</span>
+<span class="fc" id="L729">            fitter.setTol(mLevenbergMarquardtTolerance);</span>
             
-<span class="fc" id="L736">            double[] estimatedParams = fitter.getA();</span>
+<span class="fc" id="L731">            double[] estimatedParams = fitter.getA();</span>
             //updates camera poses from estimated parameters
-<span class="fc" id="L738">            dataFromParams(estimatedParams);</span>
+<span class="fc" id="L733">            dataFromParams(estimatedParams);</span>
             
             //computes reprojection errors between sampled and ideal data using
             //fitted parameters
-<span class="fc" id="L742">            double error = computeReprojectionError(</span>
+<span class="fc" id="L737">            double error = computeReprojectionError(</span>
                     idealFallbackPatternMarkers);
             
-<span class="pc bpc" id="L745" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L746">                mListener.onRadialDistortionEstimationEnds(this, mDistortion);</span>
+<span class="pc bpc" id="L740" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L741">                mListener.onRadialDistortionEstimationEnds(this, mDistortion);</span>
             }
             
-<span class="fc" id="L749">            return error;</span>
+<span class="fc" id="L744">            return error;</span>
             
-<span class="nc" id="L751">        } catch (Exception e) {</span>
-<span class="nc" id="L752">            throw new CalibrationException(e);</span>
+<span class="nc" id="L746">        } catch (Exception e) {</span>
+<span class="nc" id="L747">            throw new CalibrationException(e);</span>
         }
     }
     
@@ -758,47 +753,47 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * is changed for the distortion estimator.
      */
     protected void refreshDistortionEstimatorListener() {
-<span class="fc bfc" id="L761" title="All 2 branches covered.">        if (mDistortionEstimatorListener == null) {</span>
-<span class="fc" id="L762">            mDistortionEstimatorListener = </span>
-<span class="fc" id="L763">                    new RadialDistortionRobustEstimatorListener() {</span>
+<span class="fc bfc" id="L756" title="All 2 branches covered.">        if (mDistortionEstimatorListener == null) {</span>
+<span class="fc" id="L757">            mDistortionEstimatorListener = </span>
+<span class="fc" id="L758">                    new RadialDistortionRobustEstimatorListener() {</span>
 
                 @Override
                 public void onEstimateStart(
                         RadialDistortionRobustEstimator estimator) {
-<span class="fc" id="L768">                    mRadialDistortionProgress = 0.0f;</span>
-<span class="fc" id="L769">                    notifyProgress();</span>
-<span class="fc" id="L770">                }</span>
+<span class="fc" id="L763">                    mRadialDistortionProgress = 0.0f;</span>
+<span class="fc" id="L764">                    notifyProgress();</span>
+<span class="fc" id="L765">                }</span>
 
                 @Override
                 public void onEstimateEnd(
                         RadialDistortionRobustEstimator estimator) {
-<span class="fc" id="L775">                    mRadialDistortionProgress = 1.0f;</span>
-<span class="fc" id="L776">                    notifyProgress();</span>
-<span class="fc" id="L777">                }</span>
+<span class="fc" id="L770">                    mRadialDistortionProgress = 1.0f;</span>
+<span class="fc" id="L771">                    notifyProgress();</span>
+<span class="fc" id="L772">                }</span>
 
                 @Override
                 public void onEstimateNextIteration(
                         RadialDistortionRobustEstimator estimator, 
-<span class="fc" id="L782">                        int iteration) { }</span>
+<span class="fc" id="L777">                        int iteration) { /* not used */ }</span>
 
                 @Override
                 public void onEstimateProgressChange(
                         RadialDistortionRobustEstimator estimator, 
                         float progress) {
-<span class="fc" id="L788">                    mRadialDistortionProgress = progress;</span>
-<span class="fc" id="L789">                    notifyProgress();</span>
-<span class="fc" id="L790">                }</span>
+<span class="fc" id="L783">                    mRadialDistortionProgress = progress;</span>
+<span class="fc" id="L784">                    notifyProgress();</span>
+<span class="fc" id="L785">                }</span>
             };
         }
         
         try {
-<span class="fc" id="L795">            mDistortionEstimator.setListener(mDistortionEstimatorListener);</span>
-<span class="nc" id="L796">        } catch (LockedException e) {</span>
-<span class="nc" id="L797">            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L790">            mDistortionEstimator.setListener(mDistortionEstimatorListener);</span>
+<span class="nc" id="L791">        } catch (LockedException e) {</span>
+<span class="nc" id="L792">            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(</span>
                     Level.WARNING, &quot;Could not set radial distortion estimator listener&quot;,
                     e);
-<span class="fc" id="L800">        }</span>
-<span class="fc" id="L801">    }    </span>
+<span class="fc" id="L795">        }</span>
+<span class="fc" id="L796">    }    </span>
         
     /**
      * Evaluates provided point and parameters to obtain the distorted points
@@ -813,28 +808,28 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             double[] result) {
         //set data from current params (updates camera poses for each sample - 
         //i.e. view)
-<span class="nc" id="L816">        dataFromParams(params);</span>
+<span class="nc" id="L811">        dataFromParams(params);</span>
         
-<span class="nc" id="L818">        int numView = mIndexToView[i];</span>
+<span class="nc" id="L813">        int numView = mIndexToView[i];</span>
         
         //obtain camera pose for numView
-<span class="nc" id="L821">        CameraCalibratorSample sample = mSamples.get(numView);</span>
-<span class="nc" id="L822">        PinholeCamera camera = sample.getCamera();</span>
+<span class="nc" id="L816">        CameraCalibratorSample sample = mSamples.get(numView);</span>
+<span class="nc" id="L817">        PinholeCamera camera = sample.getCamera();</span>
         
-<span class="nc" id="L824">        Point3D idealPoint3D = new HomogeneousPoint3D();</span>
+<span class="nc" id="L819">        Point3D idealPoint3D = new HomogeneousPoint3D();</span>
         //ideal 3D point is the marker point assumed to be at plane z = 0
-<span class="nc" id="L826">        idealPoint3D.setInhomogeneousCoordinates(point[0], point[1], 0.0);</span>
+<span class="nc" id="L821">        idealPoint3D.setInhomogeneousCoordinates(point[0], point[1], 0.0);</span>
         
         //project ideal point using estimated camera
-<span class="nc" id="L829">        Point2D undistortedPoint = camera.project(idealPoint3D);</span>
+<span class="nc" id="L824">        Point2D undistortedPoint = camera.project(idealPoint3D);</span>
         
         //add distortion
-<span class="nc" id="L832">        Point2D distortedPoint = new HomogeneousPoint2D();</span>
-<span class="nc" id="L833">        mDistortion.distort(undistortedPoint, distortedPoint);</span>
+<span class="nc" id="L827">        Point2D distortedPoint = new HomogeneousPoint2D();</span>
+<span class="nc" id="L828">        mDistortion.distort(undistortedPoint, distortedPoint);</span>
         
-<span class="nc" id="L835">        result[0] = distortedPoint.getInhomX();</span>
-<span class="nc" id="L836">        result[1] = distortedPoint.getInhomY();</span>
-<span class="nc" id="L837">    }</span>
+<span class="nc" id="L830">        result[0] = distortedPoint.getInhomX();</span>
+<span class="nc" id="L831">        result[1] = distortedPoint.getInhomY();</span>
+<span class="nc" id="L832">    }</span>
     
     /**
      * Converts undistorted points corresponding to ideal pattern markers into
@@ -848,43 +843,43 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */
     private Matrix dataXToMatrix(List&lt;Point2D&gt; idealFallbackPatternMarkers) 
             throws WrongSizeException {
-<span class="fc" id="L851">        List&lt;Point2D&gt; idealPoints = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L852" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc" id="L846">        List&lt;Point2D&gt; idealPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L847" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
             List&lt;Point2D&gt; idealPatternMarkers;
-<span class="fc bfc" id="L854" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+<span class="fc bfc" id="L849" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
                 //use points generated by pattern in sample
-<span class="fc" id="L856">                idealPatternMarkers = sample.getPattern().getIdealPoints();                </span>
+<span class="fc" id="L851">                idealPatternMarkers = sample.getPattern().getIdealPoints();                </span>
             } else {
                 //use fallback pattern points
-<span class="fc" id="L859">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+<span class="fc" id="L854">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
             }            
             
-<span class="fc" id="L862">            idealPoints.addAll(idealPatternMarkers);</span>
-<span class="fc" id="L863">        }</span>
+<span class="fc" id="L857">            idealPoints.addAll(idealPatternMarkers);</span>
+<span class="fc" id="L858">        }</span>
         
-<span class="fc" id="L865">        int nPoints = idealPoints.size();</span>
+<span class="fc" id="L860">        int nPoints = idealPoints.size();</span>
         
-<span class="fc" id="L867">        Matrix m = new Matrix(nPoints, </span>
+<span class="fc" id="L862">        Matrix m = new Matrix(nPoints, </span>
                 Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L869">        int i = 0;</span>
-<span class="fc bfc" id="L870" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc" id="L864">        int i = 0;</span>
+<span class="fc bfc" id="L865" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
             List&lt;Point2D&gt; idealPatternMarkers;
-<span class="fc bfc" id="L872" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+<span class="fc bfc" id="L867" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
                 //use points generated by pattern in sample
-<span class="fc" id="L874">                idealPatternMarkers = sample.getPattern().getIdealPoints();                </span>
+<span class="fc" id="L869">                idealPatternMarkers = sample.getPattern().getIdealPoints();                </span>
             } else {
                 //use fallback pattern points
-<span class="fc" id="L877">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+<span class="fc" id="L872">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
             }            
 
-<span class="fc bfc" id="L880" title="All 2 branches covered.">            for (Point2D point : idealPatternMarkers) {</span>
-<span class="fc" id="L881">                m.setElementAt(i, 0, point.getInhomX());</span>
-<span class="fc" id="L882">                m.setElementAt(i, 1, point.getInhomY());</span>
-<span class="fc" id="L883">                i++;</span>
-<span class="fc" id="L884">            }</span>
-<span class="fc" id="L885">        }</span>
+<span class="fc bfc" id="L875" title="All 2 branches covered.">            for (Point2D point : idealPatternMarkers) {</span>
+<span class="fc" id="L876">                m.setElementAt(i, 0, point.getInhomX());</span>
+<span class="fc" id="L877">                m.setElementAt(i, 1, point.getInhomY());</span>
+<span class="fc" id="L878">                i++;</span>
+<span class="fc" id="L879">            }</span>
+<span class="fc" id="L880">        }</span>
         
-<span class="fc" id="L887">        return m;</span>
+<span class="fc" id="L882">        return m;</span>
     }
     
     /**
@@ -895,23 +890,23 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */
     private Matrix dataYToMatrix() 
             throws WrongSizeException {
-<span class="fc" id="L898">        int nPoints = 0;</span>
-<span class="fc bfc" id="L899" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc" id="L900">            nPoints += sample.getSampledMarkers().size();</span>
-<span class="fc" id="L901">        }</span>
+<span class="fc" id="L893">        int nPoints = 0;</span>
+<span class="fc bfc" id="L894" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc" id="L895">            nPoints += sample.getSampledMarkers().size();</span>
+<span class="fc" id="L896">        }</span>
         
-<span class="fc" id="L903">        Matrix m = new Matrix(nPoints, </span>
+<span class="fc" id="L898">        Matrix m = new Matrix(nPoints, </span>
                 Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L905">        int i = 0;</span>
-<span class="fc bfc" id="L906" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L907" title="All 2 branches covered.">            for (Point2D point : sample.getSampledMarkers()) {</span>
-<span class="fc" id="L908">                m.setElementAt(i, 0, point.getInhomX());</span>
-<span class="fc" id="L909">                m.setElementAt(i, 1, point.getInhomY());                </span>
-<span class="fc" id="L910">                i++;</span>
-<span class="fc" id="L911">            }</span>
-<span class="fc" id="L912">        }</span>
+<span class="fc" id="L900">        int i = 0;</span>
+<span class="fc bfc" id="L901" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L902" title="All 2 branches covered.">            for (Point2D point : sample.getSampledMarkers()) {</span>
+<span class="fc" id="L903">                m.setElementAt(i, 0, point.getInhomX());</span>
+<span class="fc" id="L904">                m.setElementAt(i, 1, point.getInhomY());                </span>
+<span class="fc" id="L905">                i++;</span>
+<span class="fc" id="L906">            }</span>
+<span class="fc" id="L907">        }</span>
 
-<span class="fc" id="L914">        return m;</span>
+<span class="fc" id="L909">        return m;</span>
     }
     
     /**
@@ -922,84 +917,84 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param params arrays where parameters will be set using current data.
      */
     private void paramsFromData(double[] params) {
-<span class="fc" id="L925">        int pos = 0;  </span>
+<span class="fc" id="L920">        int pos = 0;  </span>
         
         //common parameters (intrinsic camera parameters and radial distortion
         //parameters)
         
         //intrinsic parameters
-<span class="pc bpc" id="L931" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
+<span class="pc bpc" id="L926" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
             //aspect ratio is not known (2 different focal distances) and
             //skewness is not zero
-<span class="nc" id="L934">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
-<span class="nc" id="L935">            pos++;</span>
-<span class="nc" id="L936">            params[pos] = mIntrinsic.getVerticalFocalLength();</span>
-<span class="nc" id="L937">            pos++;</span>
-<span class="nc" id="L938">            params[pos] = mIntrinsic.getSkewness();</span>
-<span class="nc" id="L939">            pos++;</span>
+<span class="nc" id="L929">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
+<span class="nc" id="L930">            pos++;</span>
+<span class="nc" id="L931">            params[pos] = mIntrinsic.getVerticalFocalLength();</span>
+<span class="nc" id="L932">            pos++;</span>
+<span class="nc" id="L933">            params[pos] = mIntrinsic.getSkewness();</span>
+<span class="nc" id="L934">            pos++;</span>
         } else {
             //skewness is always zero (so it is not stored in vector)
-<span class="fc" id="L942">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
-<span class="fc" id="L943">            pos++;</span>
+<span class="fc" id="L937">            params[pos] = mIntrinsic.getHorizontalFocalLength();</span>
+<span class="fc" id="L938">            pos++;</span>
 
-<span class="pc bpc" id="L945" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
+<span class="pc bpc" id="L940" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
                 //focal distances are different, so we also store vertical
                 //one
-<span class="nc" id="L948">                params[pos] = mIntrinsic.getVerticalFocalLength();</span>
-<span class="nc" id="L949">                pos++;</span>
+<span class="nc" id="L943">                params[pos] = mIntrinsic.getVerticalFocalLength();</span>
+<span class="nc" id="L944">                pos++;</span>
             }
         }
 
-<span class="pc bpc" id="L953" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
+<span class="pc bpc" id="L948" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
             //principal point is not zero
-<span class="nc" id="L955">            params[pos] = mIntrinsic.getHorizontalPrincipalPoint();</span>
-<span class="nc" id="L956">            pos++;</span>
-<span class="nc" id="L957">            params[pos] = mIntrinsic.getVerticalPrincipalPoint();</span>
-<span class="nc" id="L958">            pos++;</span>
+<span class="nc" id="L950">            params[pos] = mIntrinsic.getHorizontalPrincipalPoint();</span>
+<span class="nc" id="L951">            pos++;</span>
+<span class="nc" id="L952">            params[pos] = mIntrinsic.getVerticalPrincipalPoint();</span>
+<span class="nc" id="L953">            pos++;</span>
         }
         
         //radial distortion parameters
-<span class="fc" id="L962">        double[] kParams = mDistortion.getKParams();</span>
-<span class="fc bfc" id="L963" title="All 2 branches covered.">        for (double kParam : kParams) {</span>
-<span class="fc" id="L964">            params[pos] = kParam;</span>
-<span class="fc" id="L965">            pos++;</span>
+<span class="fc" id="L957">        double[] kParams = mDistortion.getKParams();</span>
+<span class="fc bfc" id="L958" title="All 2 branches covered.">        for (double kParam : kParams) {</span>
+<span class="fc" id="L959">            params[pos] = kParam;</span>
+<span class="fc" id="L960">            pos++;</span>
         }
 
 
         //parameters for each sample (camera rotation and translation)
-<span class="fc bfc" id="L970" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L971" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
-<span class="fc" id="L972">                continue;</span>
+<span class="fc bfc" id="L965" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L966" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="fc" id="L967">                continue;</span>
             }
             
             //4 rotation parameters
             AxisRotation3D rot;
-<span class="pc bpc" id="L977" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
+<span class="pc bpc" id="L972" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
                     Rotation3DType.AXIS_ROTATION3D) {
-<span class="nc" id="L979">                rot = (AxisRotation3D)sample.getRotation();</span>
+<span class="nc" id="L974">                rot = (AxisRotation3D)sample.getRotation();</span>
             } else {
-<span class="fc" id="L981">                rot = new AxisRotation3D(sample.getRotation());</span>
+<span class="fc" id="L976">                rot = new AxisRotation3D(sample.getRotation());</span>
             }
             
-<span class="fc" id="L984">            params[pos] = rot.getRotationAngle();</span>
-<span class="fc" id="L985">            pos++;</span>
-<span class="fc" id="L986">            params[pos] = rot.getAxisX();</span>
-<span class="fc" id="L987">            pos++;</span>
-<span class="fc" id="L988">            params[pos] = rot.getAxisY();</span>
-<span class="fc" id="L989">            pos++;</span>
-<span class="fc" id="L990">            params[pos] = rot.getAxisZ();</span>
-<span class="fc" id="L991">            pos++;</span>
+<span class="fc" id="L979">            params[pos] = rot.getRotationAngle();</span>
+<span class="fc" id="L980">            pos++;</span>
+<span class="fc" id="L981">            params[pos] = rot.getAxisX();</span>
+<span class="fc" id="L982">            pos++;</span>
+<span class="fc" id="L983">            params[pos] = rot.getAxisY();</span>
+<span class="fc" id="L984">            pos++;</span>
+<span class="fc" id="L985">            params[pos] = rot.getAxisZ();</span>
+<span class="fc" id="L986">            pos++;</span>
                         
             //3 translation parameters (camera center)
-<span class="fc" id="L994">            Point3D center = sample.getCameraCenter();</span>
-<span class="fc" id="L995">            params[pos] = center.getInhomX();</span>
-<span class="fc" id="L996">            pos++;</span>
-<span class="fc" id="L997">            params[pos] = center.getInhomY();</span>
-<span class="fc" id="L998">            pos++;</span>
-<span class="fc" id="L999">            params[pos] = center.getInhomZ();</span>
-<span class="fc" id="L1000">            pos++;            </span>
-<span class="fc" id="L1001">        }         </span>
-<span class="fc" id="L1002">    }</span>
+<span class="fc" id="L989">            Point3D center = sample.getCameraCenter();</span>
+<span class="fc" id="L990">            params[pos] = center.getInhomX();</span>
+<span class="fc" id="L991">            pos++;</span>
+<span class="fc" id="L992">            params[pos] = center.getInhomY();</span>
+<span class="fc" id="L993">            pos++;</span>
+<span class="fc" id="L994">            params[pos] = center.getInhomZ();</span>
+<span class="fc" id="L995">            pos++;            </span>
+<span class="fc" id="L996">        }         </span>
+<span class="fc" id="L997">    }</span>
     
     /**
      * Sets data in samples from parameters values fitted by the 
@@ -1007,107 +1002,110 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param params  vector containing estimated parameters .
      */
     private void dataFromParams(double[] params) {
-<span class="fc" id="L1010">        int pos = 0;</span>
+<span class="fc" id="L1005">        int pos = 0;</span>
         
         //intrinsic parameters
-        double horizontalFocalLength, verticalFocalLength, skewness,
-                horizontalPrincipalPoint, verticalPrincipalPoint;
-<span class="pc bpc" id="L1015" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
+        double horizontalFocalLength;
+        double verticalFocalLength;
+        double skewness;
+        double horizontalPrincipalPoint;
+        double verticalPrincipalPoint;
+<span class="pc bpc" id="L1013" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
             //aspect ratio is not known (2 different focal distances) and
             //skewness is not zero
-<span class="nc" id="L1018">            horizontalFocalLength = params[pos];</span>
+<span class="nc" id="L1016">            horizontalFocalLength = params[pos];</span>
+<span class="nc" id="L1017">            pos++;</span>
+<span class="nc" id="L1018">            verticalFocalLength = params[pos];</span>
 <span class="nc" id="L1019">            pos++;</span>
-<span class="nc" id="L1020">            verticalFocalLength = params[pos];</span>
+<span class="nc" id="L1020">            skewness = params[pos];</span>
 <span class="nc" id="L1021">            pos++;</span>
-<span class="nc" id="L1022">            skewness = params[pos];</span>
-<span class="nc" id="L1023">            pos++;</span>
         } else {
             //skewness is always zero (so it is not stored in vector)
-<span class="fc" id="L1026">            skewness = 0.0;</span>
-<span class="fc" id="L1027">            horizontalFocalLength = params[pos];</span>
-<span class="fc" id="L1028">            pos++;</span>
+<span class="fc" id="L1024">            skewness = 0.0;</span>
+<span class="fc" id="L1025">            horizontalFocalLength = params[pos];</span>
+<span class="fc" id="L1026">            pos++;</span>
 
-<span class="pc bpc" id="L1030" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
+<span class="pc bpc" id="L1028" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
                 //focal distances are different
-<span class="nc" id="L1032">                verticalFocalLength = params[pos];</span>
-<span class="nc" id="L1033">                pos++;</span>
+<span class="nc" id="L1030">                verticalFocalLength = params[pos];</span>
+<span class="nc" id="L1031">                pos++;</span>
             } else {
                 //vertical focal distance is related to horizontal one
                 //through aspect ratio
-<span class="fc" id="L1037">                verticalFocalLength = horizontalFocalLength * </span>
-<span class="fc" id="L1038">                        getFocalDistanceAspectRatio();</span>
+<span class="fc" id="L1035">                verticalFocalLength = horizontalFocalLength * </span>
+<span class="fc" id="L1036">                        getFocalDistanceAspectRatio();</span>
             }
         }
 
-<span class="pc bpc" id="L1042" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
+<span class="pc bpc" id="L1040" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
             //principal point is not zero
-<span class="nc" id="L1044">            horizontalPrincipalPoint = params[pos];</span>
+<span class="nc" id="L1042">            horizontalPrincipalPoint = params[pos];</span>
+<span class="nc" id="L1043">            pos++;</span>
+<span class="nc" id="L1044">            verticalPrincipalPoint = params[pos];</span>
 <span class="nc" id="L1045">            pos++;</span>
-<span class="nc" id="L1046">            verticalPrincipalPoint = params[pos];</span>
-<span class="nc" id="L1047">            pos++;</span>
         } else {
             //principal point is zero
-<span class="fc" id="L1050">            horizontalPrincipalPoint = verticalPrincipalPoint = 0.0;</span>
+<span class="fc" id="L1048">            horizontalPrincipalPoint = verticalPrincipalPoint = 0.0;</span>
         }
         
         //update intrinsic parameters
-<span class="fc" id="L1054">        mIntrinsic.setHorizontalFocalLength(horizontalFocalLength);</span>
-<span class="fc" id="L1055">        mIntrinsic.setVerticalFocalLength(verticalFocalLength);</span>
-<span class="fc" id="L1056">        mIntrinsic.setSkewness(skewness);</span>
-<span class="fc" id="L1057">        mIntrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);</span>
-<span class="fc" id="L1058">        mIntrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);</span>
+<span class="fc" id="L1052">        mIntrinsic.setHorizontalFocalLength(horizontalFocalLength);</span>
+<span class="fc" id="L1053">        mIntrinsic.setVerticalFocalLength(verticalFocalLength);</span>
+<span class="fc" id="L1054">        mIntrinsic.setSkewness(skewness);</span>
+<span class="fc" id="L1055">        mIntrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);</span>
+<span class="fc" id="L1056">        mIntrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);</span>
         
         //radial distortion parameters
-<span class="fc" id="L1061">        double[] kParams = mDistortion.getKParams();</span>
-<span class="fc bfc" id="L1062" title="All 2 branches covered.">        for (int i = 0; i &lt; kParams.length; i++) {</span>
-<span class="fc" id="L1063">            kParams[i] = params[pos];</span>
-<span class="fc" id="L1064">            pos++;</span>
+<span class="fc" id="L1059">        double[] kParams = mDistortion.getKParams();</span>
+<span class="fc bfc" id="L1060" title="All 2 branches covered.">        for (int i = 0; i &lt; kParams.length; i++) {</span>
+<span class="fc" id="L1061">            kParams[i] = params[pos];</span>
+<span class="fc" id="L1062">            pos++;</span>
         }
         
         //sample parameters
-<span class="fc bfc" id="L1068" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L1069" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
-<span class="fc" id="L1070">                continue;</span>
+<span class="fc bfc" id="L1066" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L1067" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="fc" id="L1068">                continue;</span>
             }
             
             //4 rotation parameters
             AxisRotation3D rot;
-<span class="pc bpc" id="L1075" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
+<span class="pc bpc" id="L1073" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == </span>
                     Rotation3DType.AXIS_ROTATION3D) {
-<span class="nc" id="L1077">                rot = (AxisRotation3D)sample.getRotation();</span>
+<span class="nc" id="L1075">                rot = (AxisRotation3D)sample.getRotation();</span>
             } else {
-<span class="fc" id="L1079">                rot = new AxisRotation3D();</span>
+<span class="fc" id="L1077">                rot = new AxisRotation3D();</span>
                 //update sample
-<span class="fc" id="L1081">                sample.setRotation(rot);</span>
+<span class="fc" id="L1079">                sample.setRotation(rot);</span>
             }
             
-<span class="fc" id="L1084">            double rotAngle = params[pos];</span>
+<span class="fc" id="L1082">            double rotAngle = params[pos];</span>
+<span class="fc" id="L1083">            pos++;</span>
+<span class="fc" id="L1084">            double axisX = params[pos];</span>
 <span class="fc" id="L1085">            pos++;</span>
-<span class="fc" id="L1086">            double axisX = params[pos];</span>
+<span class="fc" id="L1086">            double axisY = params[pos];</span>
 <span class="fc" id="L1087">            pos++;</span>
-<span class="fc" id="L1088">            double axisY = params[pos];</span>
+<span class="fc" id="L1088">            double axisZ = params[pos];</span>
 <span class="fc" id="L1089">            pos++;</span>
-<span class="fc" id="L1090">            double axisZ = params[pos];</span>
-<span class="fc" id="L1091">            pos++;</span>
             
-<span class="fc" id="L1093">            rot.setAxisAndRotation(axisX, axisY, axisZ, rotAngle);</span>
+<span class="fc" id="L1091">            rot.setAxisAndRotation(axisX, axisY, axisZ, rotAngle);</span>
             
                         
             //3 translation parameters (camera center)
-<span class="fc" id="L1097">            double inhomX = params[pos];</span>
+<span class="fc" id="L1095">            double inhomX = params[pos];</span>
+<span class="fc" id="L1096">            pos++;</span>
+<span class="fc" id="L1097">            double inhomY = params[pos];</span>
 <span class="fc" id="L1098">            pos++;</span>
-<span class="fc" id="L1099">            double inhomY = params[pos];</span>
+<span class="fc" id="L1099">            double inhomZ = params[pos];</span>
 <span class="fc" id="L1100">            pos++;</span>
-<span class="fc" id="L1101">            double inhomZ = params[pos];</span>
-<span class="fc" id="L1102">            pos++;</span>
-<span class="fc" id="L1103">            Point3D center = sample.getCameraCenter();</span>
-<span class="fc" id="L1104">            center.setInhomogeneousCoordinates(inhomX, inhomY, inhomZ);            </span>
+<span class="fc" id="L1101">            Point3D center = sample.getCameraCenter();</span>
+<span class="fc" id="L1102">            center.setInhomogeneousCoordinates(inhomX, inhomY, inhomZ);            </span>
             
             //update camera
-<span class="fc" id="L1107">            PinholeCamera camera = sample.getCamera();</span>
-<span class="fc" id="L1108">            camera.setIntrinsicAndExtrinsicParameters(mIntrinsic, rot, center);</span>
-<span class="fc" id="L1109">        }          </span>
-<span class="fc" id="L1110">    }</span>
+<span class="fc" id="L1105">            PinholeCamera camera = sample.getCamera();</span>
+<span class="fc" id="L1106">            camera.setIntrinsicAndExtrinsicParameters(mIntrinsic, rot, center);</span>
+<span class="fc" id="L1107">        }          </span>
+<span class="fc" id="L1108">    }</span>
             
     /**
      * Computes reprojection error taking into account ideal pattern marker
@@ -1125,52 +1123,56 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //using current camera pose
         PinholeCamera camera;
         Point2D marker2D;
-<span class="fc" id="L1128">        Point3D marker3D = Point3D.create();</span>
-<span class="fc" id="L1129">        Point2D undistortedPoint = Point2D.create();</span>
-<span class="fc" id="L1130">        int totalPoints = 0;</span>
-<span class="fc" id="L1131">        Point2D distortedPoint = Point2D.create();</span>
+<span class="fc" id="L1126">        Point3D marker3D = Point3D.create();</span>
+<span class="fc" id="L1127">        Point2D undistortedPoint = Point2D.create();</span>
+<span class="fc" id="L1128">        int totalPoints = 0;</span>
+<span class="fc" id="L1129">        Point2D distortedPoint = Point2D.create();</span>
         Point2D sampledPoint;
-<span class="fc" id="L1133">        double avgError = 0.0;</span>
-<span class="fc bfc" id="L1134" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc" id="L1135">            camera = sample.getCamera();</span>
-<span class="fc bfc" id="L1136" title="All 2 branches covered.">            if (camera == null) {</span>
-<span class="fc" id="L1137">                continue;</span>
+<span class="fc" id="L1131">        double avgError = 0.0;</span>
+<span class="fc bfc" id="L1132" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc" id="L1133">            camera = sample.getCamera();</span>
+<span class="fc bfc" id="L1134" title="All 2 branches covered.">            if (camera == null) {</span>
+<span class="fc" id="L1135">                continue;</span>
             }
             
             List&lt;Point2D&gt; idealPatternMarkers;
-<span class="fc bfc" id="L1141" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
-<span class="fc" id="L1142">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+<span class="fc bfc" id="L1139" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+<span class="fc" id="L1140">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
             } else {
-<span class="fc" id="L1144">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+<span class="fc" id="L1142">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
             }
             
-<span class="fc" id="L1147">            int pointsPerSample = idealPatternMarkers.size();</span>
-<span class="fc bfc" id="L1148" title="All 2 branches covered.">            for (int i = 0; i &lt; pointsPerSample; i++) {</span>
-<span class="fc" id="L1149">                marker2D = idealPatternMarkers.get(i);</span>
-<span class="fc" id="L1150">                sampledPoint = sample.getSampledMarkers().get(i);</span>
+<span class="fc" id="L1145">            int pointsPerSample = idealPatternMarkers.size();</span>
+<span class="fc bfc" id="L1146" title="All 2 branches covered.">            for (int i = 0; i &lt; pointsPerSample; i++) {</span>
+<span class="fc" id="L1147">                marker2D = idealPatternMarkers.get(i);</span>
+<span class="fc" id="L1148">                sampledPoint = sample.getSampledMarkers().get(i);</span>
                 
                 //conver ideal marker point into a 3D point placed in plane
                 //z = 0
-<span class="fc" id="L1154">                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(), </span>
-<span class="fc" id="L1155">                        marker2D.getInhomY(), 0.0);</span>
+<span class="fc" id="L1152">                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(), </span>
+<span class="fc" id="L1153">                        marker2D.getInhomY(), 0.0);</span>
                 
                 //project 3D marker point using estimated camera on current 
                 //sample (i.e. view)
-<span class="fc" id="L1159">                camera.project(marker3D, undistortedPoint);</span>
+<span class="fc" id="L1157">                camera.project(marker3D, undistortedPoint);</span>
                 
                 //add distortion to ideal projected point
-<span class="fc" id="L1162">                mDistortion.distort(undistortedPoint, distortedPoint);</span>
+<span class="fc" id="L1160">                mDistortion.distort(undistortedPoint, distortedPoint);</span>
                 
                 //obtain distance between sampled point and ideal projected
                 //point with added distortion
-<span class="fc" id="L1166">                avgError += sampledPoint.distanceTo(distortedPoint);</span>
-<span class="fc" id="L1167">                totalPoints++;</span>
+<span class="fc" id="L1164">                avgError += sampledPoint.distanceTo(distortedPoint);</span>
+<span class="fc" id="L1165">                totalPoints++;</span>
             }
-<span class="fc" id="L1169">        }</span>
+<span class="fc" id="L1167">        }</span>
+
+<span class="pc bpc" id="L1169" title="1 of 2 branches missed.">        if (totalPoints == 0) {</span>
+<span class="nc" id="L1170">            avgError = Double.MAX_VALUE;</span>
+        } else {
+<span class="fc" id="L1172">            avgError /= (double) totalPoints;</span>
+        }
         
-<span class="fc" id="L1171">        avgError /= (double)totalPoints;</span>
-        
-<span class="fc" id="L1173">        return avgError;</span>
+<span class="fc" id="L1175">        return avgError;</span>
     }
     
     /**
@@ -1183,37 +1185,38 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     private void internalSetDistortionMethod(
             RobustEstimatorMethod distortionMethod) {
         //im method changes, recreat estimator
-<span class="fc bfc" id="L1186" title="All 2 branches covered.">        if (distortionMethod != mDistortionMethod) {</span>
-<span class="fc bfc" id="L1187" title="All 2 branches covered.">            boolean previousAvailable = mDistortionMethod != null;</span>
-<span class="fc" id="L1188">            double threshold = 0.0, confidence = 0.0;</span>
-<span class="fc" id="L1189">            int maxIterations = 0;</span>
-<span class="fc bfc" id="L1190" title="All 2 branches covered.">            if (previousAvailable) {</span>
-<span class="fc" id="L1191">                threshold = getDistortionEstimatorThreshold();</span>
-<span class="fc" id="L1192">                confidence = getDistortionEstimatorConfidence();</span>
-<span class="fc" id="L1193">                maxIterations = getDistortionEstimatorMaxIterations();</span>
+<span class="fc bfc" id="L1188" title="All 2 branches covered.">        if (distortionMethod != mDistortionMethod) {</span>
+<span class="fc bfc" id="L1189" title="All 2 branches covered.">            boolean previousAvailable = mDistortionMethod != null;</span>
+<span class="fc" id="L1190">            double threshold = 0.0;</span>
+<span class="fc" id="L1191">            double confidence = 0.0;</span>
+<span class="fc" id="L1192">            int maxIterations = 0;</span>
+<span class="fc bfc" id="L1193" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1194">                threshold = getDistortionEstimatorThreshold();</span>
+<span class="fc" id="L1195">                confidence = getDistortionEstimatorConfidence();</span>
+<span class="fc" id="L1196">                maxIterations = getDistortionEstimatorMaxIterations();</span>
             }
             
-<span class="fc" id="L1196">            mDistortionEstimator = RadialDistortionRobustEstimator.create(</span>
+<span class="fc" id="L1199">            mDistortionEstimator = RadialDistortionRobustEstimator.create(</span>
                     distortionMethod);
             
             //configure new estimator
-<span class="fc" id="L1200">            refreshDistortionEstimatorListener();</span>
-<span class="fc bfc" id="L1201" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1203">            refreshDistortionEstimatorListener();</span>
+<span class="fc bfc" id="L1204" title="All 2 branches covered.">            if (previousAvailable) {</span>
                 try {
-<span class="fc" id="L1203">                    setDistortionEstimatorThreshold(threshold);</span>
-<span class="fc" id="L1204">                    setDistortionEstimatorConfidence(confidence);</span>
-<span class="fc" id="L1205">                    setDistortionEstimatorMaxIterations(maxIterations);</span>
-<span class="nc" id="L1206">                } catch (LockedException e) {</span>
-<span class="nc" id="L1207">                    Logger.getLogger(</span>
-<span class="nc" id="L1208">                            AlternatingCameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L1206">                    setDistortionEstimatorThreshold(threshold);</span>
+<span class="fc" id="L1207">                    setDistortionEstimatorConfidence(confidence);</span>
+<span class="fc" id="L1208">                    setDistortionEstimatorMaxIterations(maxIterations);</span>
+<span class="nc" id="L1209">                } catch (LockedException e) {</span>
+<span class="nc" id="L1210">                    Logger.getLogger(</span>
+<span class="nc" id="L1211">                            AlternatingCameraCalibrator.class.getName()).log(</span>
                             Level.WARNING, &quot;Could not reconfigure distortion estimator&quot;, 
                             e);
-<span class="fc" id="L1211">                }</span>
+<span class="fc" id="L1214">                }</span>
             }                        
         }
         
-<span class="fc" id="L1215">        mDistortionMethod = distortionMethod;</span>
-<span class="fc" id="L1216">    } </span>
+<span class="fc" id="L1218">        mDistortionMethod = distortionMethod;</span>
+<span class="fc" id="L1219">    } </span>
     
     /**
      * Returns number of parameters of cost function.
@@ -1227,8 +1230,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //- x intrinsic parameters (depending on settings)
         //- x radial distortion parameters (K params length)
         
-<span class="fc" id="L1230">        return 7 * numHomographies + numIntrinsicParameters() +</span>
-<span class="fc" id="L1231">                mDistortion.getKParams().length;</span>
+<span class="fc" id="L1233">        return 7 * numHomographies + numIntrinsicParameters() +</span>
+<span class="fc" id="L1234">                mDistortion.getKParams().length;</span>
     }
     
     /**
@@ -1241,18 +1244,18 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //if no constraints, there are 5 intrinsic parameters (horizontal
         //focal length, verticla focal length, skewness, horizontal principal
         //point and vertical principal point
-<span class="fc" id="L1244">        int num = 5; </span>
-<span class="pc bpc" id="L1245" title="1 of 2 branches missed.">        if (isZeroSkewness()) {</span>
-<span class="pc bpc" id="L1246" title="1 of 2 branches missed.">            if (isFocalDistanceAspectRatioKnown()) {</span>
-<span class="fc" id="L1247">                num--;</span>
+<span class="fc" id="L1247">        int num = 5; </span>
+<span class="pc bpc" id="L1248" title="1 of 2 branches missed.">        if (isZeroSkewness()) {</span>
+<span class="pc bpc" id="L1249" title="1 of 2 branches missed.">            if (isFocalDistanceAspectRatioKnown()) {</span>
+<span class="fc" id="L1250">                num--;</span>
             }
-<span class="fc" id="L1249">            num--;</span>
+<span class="fc" id="L1252">            num--;</span>
         }
-<span class="pc bpc" id="L1251" title="1 of 2 branches missed.">        if (isPrincipalPointAtOrigin()) {</span>
-<span class="fc" id="L1252">            num -= 2;</span>
+<span class="pc bpc" id="L1254" title="1 of 2 branches missed.">        if (isPrincipalPointAtOrigin()) {</span>
+<span class="fc" id="L1255">            num -= 2;</span>
         }
         
-<span class="fc" id="L1255">        return num;</span>
+<span class="fc" id="L1258">        return num;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

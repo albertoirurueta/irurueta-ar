@@ -83,17 +83,16 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      * @throws NonSymmetricMatrixException Raised when the conic matrix is not 
      * symmetric.
      */
-    public DualImageOfAbsoluteConic(Matrix m) throws IllegalArgumentException, 
-            NonSymmetricMatrixException {
-<span class="fc" id="L88">        super(m);</span>
-<span class="fc" id="L89">    }    </span>
+    public DualImageOfAbsoluteConic(Matrix m) throws NonSymmetricMatrixException {
+<span class="fc" id="L87">        super(m);</span>
+<span class="fc" id="L88">    }    </span>
     
     /**
      * Constructor without arguments.
      */
     protected DualImageOfAbsoluteConic() {
-<span class="fc" id="L95">        super();</span>
-<span class="fc" id="L96">    }</span>
+<span class="fc" id="L94">        super();</span>
+<span class="fc" id="L95">    }</span>
     
     /**
      * Computes the conic corresponding to this dual conic.
@@ -103,9 +102,9 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      */
     @Override
     public Conic getConic() throws ConicNotAvailableException {
-<span class="fc" id="L106">        ImageOfAbsoluteConic c = new ImageOfAbsoluteConic();</span>
-<span class="fc" id="L107">        conic(c);</span>
-<span class="fc" id="L108">        return c;</span>
+<span class="fc" id="L105">        ImageOfAbsoluteConic c = new ImageOfAbsoluteConic();</span>
+<span class="fc" id="L106">        conic(c);</span>
+<span class="fc" id="L107">        return c;</span>
     }
     
     
@@ -116,12 +115,14 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      */
     public final void setFromPinholeCameraIntrinsicParameters(
             PinholeCameraIntrinsicParameters k) {
-<span class="fc" id="L119">        Matrix kMatrix = k.getInternalMatrix();</span>
+<span class="fc" id="L118">        Matrix kMatrix = k.getInternalMatrix();</span>
         try {
-<span class="fc" id="L121">            setParameters(kMatrix.multiplyAndReturnNew(</span>
-<span class="fc" id="L122">                    kMatrix.transposeAndReturnNew()));</span>
-<span class="pc" id="L123">        } catch (WrongSizeException | NonSymmetricMatrixException ignore) { }</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L120">            setParameters(kMatrix.multiplyAndReturnNew(</span>
+<span class="fc" id="L121">                    kMatrix.transposeAndReturnNew()));</span>
+<span class="nc" id="L122">        } catch (WrongSizeException | NonSymmetricMatrixException ignore) {</span>
+            //never happens
+<span class="fc" id="L124">        }</span>
+<span class="fc" id="L125">    }</span>
     
     /**
      * Sets DIAC parameters by projecting provided dual absolute quadric using
@@ -132,8 +133,8 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      */
     public final void setFromCameraAndDualAbsoluteQuadric(PinholeCamera camera,
             DualQuadric dualAbsoluteQuadric) {
-<span class="fc" id="L135">        camera.project(dualAbsoluteQuadric, this);</span>
-<span class="fc" id="L136">    }</span>
+<span class="fc" id="L136">        camera.project(dualAbsoluteQuadric, this);</span>
+<span class="fc" id="L137">    }</span>
     
     /**
      * Assuming that we are working in a metric stratum this method obtains the
@@ -151,21 +152,21 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
     public PinholeCameraIntrinsicParameters getIntrinsicParameters() 
             throws InvalidPinholeCameraIntrinsicParametersException {
         try {
-<span class="fc" id="L154">            normalize();</span>
+<span class="fc" id="L155">            normalize();</span>
             //the DIAC is a dual conic, and hence it is symmetric, hence:
             //C^-1=K*K'=(K*K')'=(C^-1)'
             //C=(K*K')^-1 = K'^-1*K^-1 = (K^-1)'*(K^-1), where K^-1 is still 
             //upper triangular
-<span class="fc" id="L159">            Matrix m = asMatrix();</span>
-<span class="fc" id="L160">            Matrix invM = com.irurueta.algebra.Utils.inverse(m);</span>
-<span class="fc" id="L161">            CholeskyDecomposer decomposer = new CholeskyDecomposer(invM);</span>
-<span class="fc" id="L162">            decomposer.decompose();            </span>
-<span class="fc" id="L163">            Matrix inverseInternalParamsMatrix = decomposer.getR();</span>
-<span class="fc" id="L164">            Matrix internalParamsMatrix = com.irurueta.algebra.Utils.inverse(</span>
+<span class="fc" id="L160">            Matrix m = asMatrix();</span>
+<span class="fc" id="L161">            Matrix invM = com.irurueta.algebra.Utils.inverse(m);</span>
+<span class="fc" id="L162">            CholeskyDecomposer decomposer = new CholeskyDecomposer(invM);</span>
+<span class="fc" id="L163">            decomposer.decompose();            </span>
+<span class="fc" id="L164">            Matrix inverseInternalParamsMatrix = decomposer.getR();</span>
+<span class="fc" id="L165">            Matrix internalParamsMatrix = com.irurueta.algebra.Utils.inverse(</span>
                     inverseInternalParamsMatrix);
-<span class="fc" id="L166">            return new PinholeCameraIntrinsicParameters(internalParamsMatrix);</span>
-<span class="nc" id="L167">        } catch (AlgebraException e) {</span>
-<span class="nc" id="L168">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
+<span class="fc" id="L167">            return new PinholeCameraIntrinsicParameters(internalParamsMatrix);</span>
+<span class="nc" id="L168">        } catch (AlgebraException e) {</span>
+<span class="nc" id="L169">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
         }
     }
 

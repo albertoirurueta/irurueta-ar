@@ -15,12 +15,12 @@
  */
 package com.irurueta.ar.calibration;
 
-import com.irurueta.geometry.GeometryException;
+import com.irurueta.ar.ARException;
 
 /**
  * Raised when an error occurs while using a Distortion.
  */
-public class DistortionException extends GeometryException {
+public class DistortionException extends ARException {
     /**
      * Constructor.
      */

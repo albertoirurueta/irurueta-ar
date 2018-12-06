@@ -605,7 +605,7 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
 <span class="fc" id="L605">                    mListener.onFundamentalMatrixEstimated((R)this, viewId1, viewId2,</span>
                             mCurrentEstimatedFundamentalMatrix);
 
-<span class="fc bfc" id="L608" title="All 2 branches covered.">                    if(estimatePairOfCamerasAndPoints(isInitialPairOfViews)) {</span>
+<span class="pc bpc" id="L608" title="1 of 2 branches missed.">                    if(estimatePairOfCamerasAndPoints(isInitialPairOfViews)) {</span>
                         //noinspection unchecked
 <span class="fc" id="L610">                        mListener.onEuclideanCameraPairEstimated((R)this,</span>
                                 mPreviousViewId, mCurrentViewId, mCurrentScale,
@@ -618,10 +618,10 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
 <span class="fc" id="L618">                        return true;</span>
                     } else {
                         //pair of cameras estimation failed
-<span class="fc" id="L621">                        mFailed = true;</span>
+<span class="nc" id="L621">                        mFailed = true;</span>
                         //noinspection unchecked
-<span class="fc" id="L623">                        mListener.onFail((R)this);</span>
-<span class="fc" id="L624">                        return false;</span>
+<span class="nc" id="L623">                        mListener.onFail((R)this);</span>
+<span class="nc" id="L624">                        return false;</span>
                     }
                 } else {
                     //estimation of fundamental matrix failed
@@ -1277,7 +1277,7 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
                         triangulatedPoint);
 <span class="fc" id="L1278">                boolean front2 = camera2.isPointInFrontOfCamera(</span>
                         triangulatedPoint);
-<span class="pc bpc" id="L1280" title="1 of 4 branches missed.">                reconstructedPoint.setInlier(front1 &amp;&amp; front2);</span>
+<span class="fc bfc" id="L1280" title="All 4 branches covered.">                reconstructedPoint.setInlier(front1 &amp;&amp; front2);</span>
 
 <span class="fc" id="L1282">                mMetricReconstructedPoints.add(reconstructedPoint);</span>
             }
@@ -1368,8 +1368,8 @@ public abstract class BasePairedViewsSparseReconstructor&lt;
 
 <span class="fc" id="L1369">            return transformPairOfCamerasAndPoints(isInitialPairOfViews,</span>
 <span class="fc" id="L1370">                    hasAbsoluteOrientation());</span>
-<span class="fc" id="L1371">        } catch (Exception e) {</span>
-<span class="fc" id="L1372">            return false;</span>
+<span class="nc" id="L1371">        } catch (Exception e) {</span>
+<span class="nc" id="L1372">            return false;</span>
         }
     }
 

@@ -72,8 +72,8 @@ com.irurueta:irurueta-ar
 <th>Errors</th>
 <th>Missing Classes</th></tr>
 <tr class="b">
-<td>307</td>
-<td>102</td>
+<td>308</td>
+<td>101</td>
 <td>0</td>
 <td>26</td></tr></table></div>
 <div class="section">
@@ -84,7 +84,7 @@ com.irurueta:irurueta-ar
 <th>Bugs</th></tr>
 <tr class="b">
 <td><a href="#com.irurueta.ar.calibration.CameraCalibrator">com.irurueta.ar.calibration.CameraCalibrator</a></td>
-<td>3</td></tr>
+<td>2</td></tr>
 <tr class="a">
 <td><a href="#com.irurueta.ar.calibration.CameraCalibratorSample">com.irurueta.ar.calibration.CameraCalibratorSample</a></td>
 <td>2</td></tr>
@@ -287,78 +287,72 @@ com.irurueta:irurueta-ar
 <td>com.irurueta.ar.calibration.CameraCalibrator.getHomographyQualityScores() may expose internal representation by returning CameraCalibrator.mHomographyQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibrator.html#L419">419</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibrator.html#L415">415</a></td>
 <td>Medium</td></tr>
 <tr class="b">
 <td>com.irurueta.ar.calibration.CameraCalibrator.getSamplesQualityScores() may expose internal representation by returning CameraCalibrator.mSamplesQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibrator.html#L383">383</a></td>
-<td>Medium</td></tr>
-<tr class="a">
-<td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.CameraCalibrator.estimateIntrinsicParameters(List)</td>
-<td>STYLE</td>
-<td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibrator.html#L1297">1297</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibrator.html#L379">379</a></td>
 <td>Medium</td></tr></table></div><a name="com.irurueta.ar.calibration.CameraCalibratorSample"></a>
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.CameraCalibratorSample"></a>com.irurueta.ar.calibration.CameraCalibratorSample</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.calibration.CameraCalibratorSample.getSampledMarkersQualityScores() may expose internal representation by returning CameraCalibratorSample.mSampledMarkersQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibratorSample.html#L230">230</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibratorSample.html#L226">226</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.CameraCalibratorSample.setSampledMarkersQualityScores(double[]) may expose internal representation by storing an externally mutable object into CameraCalibratorSample.mSampledMarkersQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibratorSample.html#L250">250</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/CameraCalibratorSample.html#L245">245</a></td>
 <td>Medium</td></tr></table></div><a name="com.irurueta.ar.calibration.RadialDistortion"></a>
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.RadialDistortion"></a>com.irurueta.ar.calibration.RadialDistortion</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.RadialDistortion.getKParams() may expose internal representation by returning RadialDistortion.mKParams</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/RadialDistortion.html#L468">468</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/RadialDistortion.html#L472">472</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>new com.irurueta.ar.calibration.RadialDistortion(double[]) may expose internal representation by storing an externally mutable object into RadialDistortion.mKParams</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/RadialDistortion.html#L141">141</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/RadialDistortion.html#L145">145</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.RadialDistortion.setKParams(double[]) may expose internal representation by storing an externally mutable object into RadialDistortion.mKParams</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
-<td><a href="./xref/com/irurueta/ar/calibration/RadialDistortion.html#L477">477</a></td>
+<td><a href="./xref/com/irurueta/ar/calibration/RadialDistortion.html#L481">481</a></td>
 <td>Medium</td></tr></table></div><a name="com.irurueta.ar.calibration.estimators.LMedSDualAbsoluteQuadricRobustEstimator1"></a>
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.LMedSDualAbsoluteQuadricRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.LMedSDualAbsoluteQuadricRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.LMedSDualAbsoluteQuadricRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -367,13 +361,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.LMedSImageOfAbsoluteConicRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.LMedSImageOfAbsoluteConicRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.LMedSImageOfAbsoluteConicRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -382,13 +376,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -397,13 +391,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.MSACDualAbsoluteQuadricRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.MSACDualAbsoluteQuadricRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.MSACDualAbsoluteQuadricRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -412,13 +406,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.MSACImageOfAbsoluteConicRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.MSACImageOfAbsoluteConicRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.MSACImageOfAbsoluteConicRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -427,13 +421,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.MSACRadialDistortionRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.MSACRadialDistortionRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.MSACRadialDistortionRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -442,13 +436,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROMedSDualAbsoluteQuadricRobustEstimator"></a>com.irurueta.ar.calibration.estimators.PROMedSDualAbsoluteQuadricRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.PROMedSDualAbsoluteQuadricRobustEstimator.getQualityScores() may expose internal representation by returning PROMedSDualAbsoluteQuadricRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -457,13 +451,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROMedSDualAbsoluteQuadricRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.PROMedSDualAbsoluteQuadricRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.PROMedSDualAbsoluteQuadricRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -472,13 +466,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator"></a>com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator.getQualityScores() may expose internal representation by returning PROMedSImageOfAbsoluteConicRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -487,13 +481,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -502,13 +496,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator"></a>com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator.getQualityScores() may expose internal representation by returning PROMedSRadialDistortionRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -517,13 +511,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -532,13 +526,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROSACDualAbsoluteQuadricRobustEstimator"></a>com.irurueta.ar.calibration.estimators.PROSACDualAbsoluteQuadricRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.PROSACDualAbsoluteQuadricRobustEstimator.getQualityScores() may expose internal representation by returning PROSACDualAbsoluteQuadricRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -547,13 +541,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROSACDualAbsoluteQuadricRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.PROSACDualAbsoluteQuadricRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.PROSACDualAbsoluteQuadricRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -562,13 +556,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator"></a>com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator.getQualityScores() may expose internal representation by returning PROSACImageOfAbsoluteConicRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -577,13 +571,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -592,13 +586,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator"></a>com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator.getQualityScores() may expose internal representation by returning PROSACRadialDistortionRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -607,13 +601,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -622,13 +616,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.RANSACDualAbsoluteQuadricRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.RANSACDualAbsoluteQuadricRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.RANSACDualAbsoluteQuadricRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -637,13 +631,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.RANSACImageOfAbsoluteConicRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.RANSACImageOfAbsoluteConicRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.RANSACImageOfAbsoluteConicRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -652,13 +646,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.RANSACRadialDistortionRobustEstimator.241"></a>com.irurueta.ar.calibration.estimators.RANSACRadialDistortionRobustEstimator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.calibration.estimators.RANSACRadialDistortionRobustEstimator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -667,25 +661,25 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.WeightedDualAbsoluteQuadricEstimator"></a>com.irurueta.ar.calibration.estimators.WeightedDualAbsoluteQuadricEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.WeightedDualAbsoluteQuadricEstimator.getWeights() may expose internal representation by returning WeightedDualAbsoluteQuadricEstimator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedDualAbsoluteQuadricEstimator.html#L191">191</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.calibration.estimators.WeightedDualAbsoluteQuadricEstimator.setCamerasAndWeights(List, double[]) may expose internal representation by storing an externally mutable object into WeightedDualAbsoluteQuadricEstimator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedDualAbsoluteQuadricEstimator.html#L238">238</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.WeightedDualAbsoluteQuadricEstimator.setWeights(double[]) may expose internal representation by storing an externally mutable object into WeightedDualAbsoluteQuadricEstimator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
@@ -694,13 +688,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.WeightedImageOfAbsoluteConicEstimator"></a>com.irurueta.ar.calibration.estimators.WeightedImageOfAbsoluteConicEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.WeightedImageOfAbsoluteConicEstimator.getWeights() may expose internal representation by returning WeightedImageOfAbsoluteConicEstimator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -709,13 +703,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.calibration.estimators.WeightedRadialDistortionEstimator"></a>com.irurueta.ar.calibration.estimators.WeightedRadialDistortionEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.calibration.estimators.WeightedRadialDistortionEstimator.getWeights() may expose internal representation by returning WeightedRadialDistortionEstimator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -724,13 +718,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator"></a>com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator.attemptRefine(FundamentalMatrix)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -739,19 +733,19 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.estimators.HomographyDecomposition"></a>com.irurueta.ar.epipolar.estimators.HomographyDecomposition</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.epipolar.estimators.HomographyDecomposition.getPlaneNormal() may expose internal representation by returning HomographyDecomposition.mPlaneNormal</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/HomographyDecomposition.html#L91">91</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.epipolar.estimators.HomographyDecomposition.setPlaneNormal(double[]) may expose internal representation by storing an externally mutable object into HomographyDecomposition.mPlaneNormal</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
@@ -760,13 +754,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.estimators.PROMedSFundamentalMatrixRobustEstimator"></a>com.irurueta.ar.epipolar.estimators.PROMedSFundamentalMatrixRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.epipolar.estimators.PROMedSFundamentalMatrixRobustEstimator.getQualityScores() may expose internal representation by returning PROMedSFundamentalMatrixRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -775,13 +769,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator"></a>com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator.getQualityScores() may expose internal representation by returning PROSACFundamentalMatrixRobustEstimator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -790,13 +784,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.refiners.FundamentalMatrixRefiner"></a>com.irurueta.ar.epipolar.refiners.FundamentalMatrixRefiner</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.epipolar.refiners.FundamentalMatrixRefiner.refine(FundamentalMatrix)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -805,19 +799,19 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.refiners.HomogeneousRightEpipoleRefiner"></a>com.irurueta.ar.epipolar.refiners.HomogeneousRightEpipoleRefiner</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.epipolar.refiners.HomogeneousRightEpipoleRefiner.MAX_ITERS isn't final but should be</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL</a></td>
 <td><a href="./xref/com/irurueta/ar/epipolar/refiners/HomogeneousRightEpipoleRefiner.html#L58">58</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.epipolar.refiners.HomogeneousRightEpipoleRefiner.refine(Point2D)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -826,19 +820,19 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.epipolar.refiners.InhomogeneousRightEpipoleRefiner"></a>com.irurueta.ar.epipolar.refiners.InhomogeneousRightEpipoleRefiner</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.epipolar.refiners.InhomogeneousRightEpipoleRefiner.MAX_ITERS isn't final but should be</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL</a></td>
 <td><a href="./xref/com/irurueta/ar/epipolar/refiners/InhomogeneousRightEpipoleRefiner.html#L60">60</a></td>
 <td>High</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.epipolar.refiners.InhomogeneousRightEpipoleRefiner.refine(Point2D)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -847,13 +841,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseAbsoluteOrientationSlamSparseReconstructor"></a>com.irurueta.ar.sfm.BaseAbsoluteOrientationSlamSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseAbsoluteOrientationSlamSparseReconstructor.updateScaleAndOrientation(boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -862,13 +856,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor"></a>com.irurueta.ar.sfm.BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor.updateScaleAndOrientation()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -877,43 +871,43 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor"></a>com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor.estimateFundamentalMatrix(List, int, int)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L844">844</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor.estimateInitialCamerasAndPointsDAQ(boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1287">1287</a></td>
 <td>High</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor.estimatePlanarFundamentalMatrix(List, int, int)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1036">1036</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor.estimateInitialCamerasAndPointsDAQAndEssential(boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1128">1128</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor.estimateInitialCamerasAndPointsDIAC(boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1371">1371</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BasePairedViewsSparseReconstructor.estimateInitialCamerasAndPointsEssential(PinholeCameraIntrinsicParameters, PinholeCameraIntrinsicParameters)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -922,13 +916,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorConfiguration"></a>com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorConfiguration</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE isn't final but should be</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL</a></td>
@@ -937,13 +931,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseSlamPairedViewsSparseReconstructor"></a>com.irurueta.ar.sfm.BaseSlamPairedViewsSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSlamPairedViewsSparseReconstructor.estimateCurrentScale()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -952,13 +946,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseSlamSparseReconstructor"></a>com.irurueta.ar.sfm.BaseSlamSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSlamSparseReconstructor.updateScale(boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -967,13 +961,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseSlamTwoViewsSparseReconstructor"></a>com.irurueta.ar.sfm.BaseSlamTwoViewsSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSlamTwoViewsSparseReconstructor.updateScale()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -982,67 +976,67 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseSparseReconstructor"></a>com.irurueta.ar.sfm.BaseSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateFundamentalMatrix(List, int, int, boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1545">1545</a></td>
 <td>High</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateInitialCamerasAndPointsDAQ()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2014">2014</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimatePlanarFundamentalMatrix(List, int, int, boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1758">1758</a></td>
 <td>High</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.processAdditionalView()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L783">783</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.reconstructAndRefineMatches()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1168">1168</a></td>
 <td>High</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateInitialCamerasAndPointsDAQAndEssential()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1855">1855</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateInitialCamerasAndPointsDIAC()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2093">2093</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateInitialCamerasAndPointsEssential(PinholeCameraIntrinsicParameters, PinholeCameraIntrinsicParameters)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2197">2197</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateIntrinsicsDAQ()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1291">1291</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseSparseReconstructor.estimateIntrinsicsDIAC()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1051,13 +1045,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseSparseReconstructorConfiguration"></a>com.irurueta.ar.sfm.BaseSparseReconstructorConfiguration</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.BaseSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE isn't final but should be</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL</a></td>
@@ -1066,43 +1060,43 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor"></a>com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.estimateFundamentalMatrix(List, int, int)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L594">594</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.estimateInitialCamerasAndPointsDAQ()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1016">1016</a></td>
 <td>High</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.estimatePlanarFundamentalMatrix(List, int, int)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L784">784</a></td>
 <td>High</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.estimateInitialCamerasAndPointsDAQAndEssential()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L865">865</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.estimateInitialCamerasAndPointsDIAC()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1092">1092</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.estimateInitialCamerasAndPointsEssential(PinholeCameraIntrinsicParameters, PinholeCameraIntrinsicParameters)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1111,13 +1105,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructorConfiguration"></a>com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructorConfiguration</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE isn't final but should be</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL</a></td>
@@ -1126,13 +1120,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.KnownBaselineSparseReconstructor"></a>com.irurueta.ar.sfm.KnownBaselineSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.KnownBaselineSparseReconstructor.postProcessOne(boolean)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1141,13 +1135,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.KnownBaselineTwoViewsSparseReconstructor"></a>com.irurueta.ar.sfm.KnownBaselineTwoViewsSparseReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.KnownBaselineTwoViewsSparseReconstructor.postProcessOne()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1156,13 +1150,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.LMedSRobustSinglePoint3DTriangulator.241"></a>com.irurueta.ar.sfm.LMedSRobustSinglePoint3DTriangulator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.LMedSRobustSinglePoint3DTriangulator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1171,13 +1165,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.MSACRobustSinglePoint3DTriangulator.241"></a>com.irurueta.ar.sfm.MSACRobustSinglePoint3DTriangulator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.MSACRobustSinglePoint3DTriangulator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1186,43 +1180,43 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.MatchedSamples"></a>com.irurueta.ar.sfm.MatchedSamples</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.sfm.MatchedSamples.getCameras() may expose internal representation by returning MatchedSamples.mCameras</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/MatchedSamples.html#L98">98</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.MatchedSamples.getSamples() may expose internal representation by returning MatchedSamples.mSamples</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/MatchedSamples.html#L80">80</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.sfm.MatchedSamples.getViewIds() may expose internal representation by returning MatchedSamples.mViewIds</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/MatchedSamples.html#L115">115</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.MatchedSamples.setCameras(EstimatedCamera[]) may expose internal representation by storing an externally mutable object into MatchedSamples.mCameras</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/MatchedSamples.html#L107">107</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.sfm.MatchedSamples.setSamples(Sample2D[]) may expose internal representation by storing an externally mutable object into MatchedSamples.mSamples</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/MatchedSamples.html#L90">90</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.MatchedSamples.setViewIds(int[]) may expose internal representation by storing an externally mutable object into MatchedSamples.mViewIds</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
@@ -1231,13 +1225,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.PROMedSRobustSinglePoint3DTriangulator"></a>com.irurueta.ar.sfm.PROMedSRobustSinglePoint3DTriangulator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.PROMedSRobustSinglePoint3DTriangulator.getQualityScores() may expose internal representation by returning PROMedSRobustSinglePoint3DTriangulator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -1246,13 +1240,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.PROMedSRobustSinglePoint3DTriangulator.241"></a>com.irurueta.ar.sfm.PROMedSRobustSinglePoint3DTriangulator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.PROMedSRobustSinglePoint3DTriangulator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1261,13 +1255,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator"></a>com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator.getQualityScores() may expose internal representation by returning PROSACRobustSinglePoint3DTriangulator.mQualityScores</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -1276,13 +1270,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator.241"></a>com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1291,25 +1285,25 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.PlanarBestFundamentalMatrixEstimatorAndReconstructor"></a>com.irurueta.ar.sfm.PlanarBestFundamentalMatrixEstimatorAndReconstructor</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Switch statement found in com.irurueta.ar.sfm.PlanarBestFundamentalMatrixEstimatorAndReconstructor.enableHomographyInliersEstimation() where one case falls through to the next case</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#SF_SWITCH_FALLTHROUGH">SF_SWITCH_FALLTHROUGH</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/PlanarBestFundamentalMatrixEstimatorAndReconstructor.html#L756">756-758</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>Switch statement found in com.irurueta.ar.sfm.PlanarBestFundamentalMatrixEstimatorAndReconstructor.enableHomographyInliersEstimation() where default case is missing</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#SF_SWITCH_NO_DEFAULT">SF_SWITCH_NO_DEFAULT</a></td>
 <td><a href="./xref/com/irurueta/ar/sfm/PlanarBestFundamentalMatrixEstimatorAndReconstructor.html#L751">751-761</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>Switch statement found in com.irurueta.ar.sfm.PlanarBestFundamentalMatrixEstimatorAndReconstructor.internalSetLeftAndRightPoints(List, List) where default case is missing</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#SF_SWITCH_NO_DEFAULT">SF_SWITCH_NO_DEFAULT</a></td>
@@ -1318,13 +1312,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.RANSACRobustSinglePoint3DTriangulator.241"></a>com.irurueta.ar.sfm.RANSACRobustSinglePoint3DTriangulator$1</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.sfm.RANSACRobustSinglePoint3DTriangulator$1.estimatePreliminarSolutions(int[], List)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1333,13 +1327,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.WeightedHomogeneousSinglePoint3DTriangulator"></a>com.irurueta.ar.sfm.WeightedHomogeneousSinglePoint3DTriangulator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.WeightedHomogeneousSinglePoint3DTriangulator.getWeights() may expose internal representation by returning WeightedHomogeneousSinglePoint3DTriangulator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -1348,13 +1342,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.sfm.WeightedInhomogeneousSinglePoint3DTriangulator"></a>com.irurueta.ar.sfm.WeightedInhomogeneousSinglePoint3DTriangulator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.sfm.WeightedInhomogeneousSinglePoint3DTriangulator.getWeights() may expose internal representation by returning WeightedInhomogeneousSinglePoint3DTriangulator.mWeights</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
@@ -1363,13 +1357,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimator"></a>com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimator.processFullSample()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1378,13 +1372,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.slam.AbsoluteOrientationSlamEstimator"></a>com.irurueta.ar.slam.AbsoluteOrientationSlamEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.slam.AbsoluteOrientationSlamEstimator.processFullSample()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1393,25 +1387,25 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.slam.BaseCalibrationData"></a>com.irurueta.ar.slam.BaseCalibrationData</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.slam.BaseCalibrationData.getControlMean() may expose internal representation by returning BaseCalibrationData.mControlMean</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP">EI_EXPOSE_REP</a></td>
 <td><a href="./xref/com/irurueta/ar/slam/BaseCalibrationData.html#L97">97</a></td>
 <td>Medium</td></tr>
-<tr class="b">
+<tr class="a">
 <td>com.irurueta.ar.slam.BaseCalibrationData.setControlMean(double[]) may expose internal representation by storing an externally mutable object into BaseCalibrationData.mControlMean</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
 <td><a href="./xref/com/irurueta/ar/slam/BaseCalibrationData.html#L112">112</a></td>
 <td>Medium</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.irurueta.ar.slam.BaseCalibrationData.setControlMeanAndCovariance(double[], Matrix) may expose internal representation by storing an externally mutable object into BaseCalibrationData.mControlMean</td>
 <td>MALICIOUS_CODE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#EI_EXPOSE_REP2">EI_EXPOSE_REP2</a></td>
@@ -1420,13 +1414,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.slam.BaseSlamCalibrator"></a>com.irurueta.ar.slam.BaseSlamCalibrator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in new com.irurueta.ar.slam.BaseSlamCalibrator(int)</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1435,13 +1429,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator"></a>com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator.processFullSample()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>
@@ -1450,13 +1444,13 @@ com.irurueta:irurueta-ar
 <div class="section">
 <h3><a name="com.irurueta.ar.slam.SlamEstimator"></a>com.irurueta.ar.slam.SlamEstimator</h3>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>Bug</th>
 <th>Category</th>
 <th>Details</th>
 <th>Line</th>
 <th>Priority</th></tr>
-<tr class="a">
+<tr class="b">
 <td>Exception is caught when Exception is not thrown in com.irurueta.ar.slam.SlamEstimator.processFullSample()</td>
 <td>STYLE</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/bugDescriptions.html#REC_CATCH_EXCEPTION">REC_CATCH_EXCEPTION</a></td>

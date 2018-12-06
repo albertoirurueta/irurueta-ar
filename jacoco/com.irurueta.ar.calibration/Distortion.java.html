@@ -56,15 +56,16 @@ import java.util.List;
      * not support distorting points.
      * @throws DistortionException raised if distortion computation failed.
      */
+    @SuppressWarnings(&quot;Duplicates&quot;)
     public List&lt;Point2D&gt; distort(List&lt;Point2D&gt; undistortedPoints) 
             throws NotSupportedException, DistortionException {
-<span class="fc" id="L61">        int size = undistortedPoints.size();</span>
-<span class="fc" id="L62">        List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;(size);</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
-<span class="fc" id="L64">            distortedPoints.add(Point2D.create());</span>
+<span class="fc" id="L62">        int size = undistortedPoints.size();</span>
+<span class="fc" id="L63">        List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;(size);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L65">            distortedPoints.add(Point2D.create());</span>
         }
-<span class="fc" id="L66">        distort(undistortedPoints, distortedPoints);</span>
-<span class="fc" id="L67">        return distortedPoints;</span>
+<span class="fc" id="L67">        distort(undistortedPoints, distortedPoints);</span>
+<span class="fc" id="L68">        return distortedPoints;</span>
     }
     
     /**
@@ -78,20 +79,20 @@ import java.util.List;
      * @throws DistortionException raised if distortion computation failed.
      */
     public void distort(List&lt;Point2D&gt; undistortedPoints, 
-            List&lt;Point2D&gt; distortedPoints) throws IllegalArgumentException, 
-            NotSupportedException, DistortionException {
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (undistortedPoints.size() != distortedPoints.size()) {</span>
-<span class="nc" id="L84">            throw new IllegalArgumentException();</span>
+            List&lt;Point2D&gt; distortedPoints) throws NotSupportedException,
+            DistortionException {
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (undistortedPoints.size() != distortedPoints.size()) {</span>
+<span class="nc" id="L85">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L87">        Iterator&lt;Point2D&gt; it1 = undistortedPoints.iterator();</span>
-<span class="fc" id="L88">        Iterator&lt;Point2D&gt; it2 = distortedPoints.iterator();</span>
-<span class="pc bpc" id="L89" title="1 of 4 branches missed.">        while (it1.hasNext() &amp;&amp; it2.hasNext()) {</span>
-<span class="fc" id="L90">            Point2D undistortedPoint = it1.next();</span>
-<span class="fc" id="L91">            Point2D distortedPoint = it2.next();</span>
-<span class="fc" id="L92">            distort(undistortedPoint, distortedPoint);</span>
-<span class="fc" id="L93">        }</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L88">        Iterator&lt;Point2D&gt; it1 = undistortedPoints.iterator();</span>
+<span class="fc" id="L89">        Iterator&lt;Point2D&gt; it2 = distortedPoints.iterator();</span>
+<span class="pc bpc" id="L90" title="1 of 4 branches missed.">        while (it1.hasNext() &amp;&amp; it2.hasNext()) {</span>
+<span class="fc" id="L91">            Point2D undistortedPoint = it1.next();</span>
+<span class="fc" id="L92">            Point2D distortedPoint = it2.next();</span>
+<span class="fc" id="L93">            distort(undistortedPoint, distortedPoint);</span>
+<span class="fc" id="L94">        }</span>
+<span class="fc" id="L95">    }</span>
         
     /**
      * Undistorts provided 2D point.
@@ -103,9 +104,9 @@ import java.util.List;
      */
     public Point2D undistort(Point2D distortedPoint) 
             throws NotSupportedException, DistortionException {
-<span class="fc" id="L106">        Point2D undistortedPoint = Point2D.create();</span>
-<span class="fc" id="L107">        undistort(distortedPoint, undistortedPoint);</span>
-<span class="fc" id="L108">        return undistortedPoint;</span>
+<span class="fc" id="L107">        Point2D undistortedPoint = Point2D.create();</span>
+<span class="fc" id="L108">        undistort(distortedPoint, undistortedPoint);</span>
+<span class="fc" id="L109">        return undistortedPoint;</span>
     }
     
     /**
@@ -116,15 +117,16 @@ import java.util.List;
      * not support undistorting points.
      * @throws DistortionException raised if undistortion computation failed.
      */
+    @SuppressWarnings(&quot;Duplicates&quot;)
     public List&lt;Point2D&gt; undistort(List&lt;Point2D&gt; distortedPoints) 
             throws NotSupportedException, DistortionException {
-<span class="fc" id="L121">        int size = distortedPoints.size();</span>
-<span class="fc" id="L122">        List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;(size);</span>
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
-<span class="fc" id="L124">            undistortedPoints.add(Point2D.create());</span>
+<span class="fc" id="L123">        int size = distortedPoints.size();</span>
+<span class="fc" id="L124">        List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;(size);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L126">            undistortedPoints.add(Point2D.create());</span>
         }
-<span class="fc" id="L126">        undistort(distortedPoints, undistortedPoints);</span>
-<span class="fc" id="L127">        return undistortedPoints;        </span>
+<span class="fc" id="L128">        undistort(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L129">        return undistortedPoints;        </span>
     }
     
     /**
@@ -138,20 +140,20 @@ import java.util.List;
      * @throws DistortionException raised if undistortion computation failed.
      */
     public void undistort(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException, 
-            NotSupportedException, DistortionException {
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (distortedPoints.size() != undistortedPoints.size()) {</span>
-<span class="nc" id="L144">            throw new IllegalArgumentException();</span>
+            List&lt;Point2D&gt; undistortedPoints) throws NotSupportedException,
+            DistortionException {
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (distortedPoints.size() != undistortedPoints.size()) {</span>
+<span class="nc" id="L146">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L147">        Iterator&lt;Point2D&gt; it1 = distortedPoints.iterator();</span>
-<span class="fc" id="L148">        Iterator&lt;Point2D&gt; it2 = undistortedPoints.iterator();</span>
-<span class="pc bpc" id="L149" title="1 of 4 branches missed.">        while (it1.hasNext() &amp;&amp; it2.hasNext()) {</span>
-<span class="fc" id="L150">            Point2D distortedPoint = it1.next();</span>
-<span class="fc" id="L151">            Point2D undistortedPoint = it2.next();</span>
-<span class="fc" id="L152">            undistort(distortedPoint, undistortedPoint);</span>
-<span class="fc" id="L153">        }</span>
-<span class="fc" id="L154">    }</span>
+<span class="fc" id="L149">        Iterator&lt;Point2D&gt; it1 = distortedPoints.iterator();</span>
+<span class="fc" id="L150">        Iterator&lt;Point2D&gt; it2 = undistortedPoints.iterator();</span>
+<span class="pc bpc" id="L151" title="1 of 4 branches missed.">        while (it1.hasNext() &amp;&amp; it2.hasNext()) {</span>
+<span class="fc" id="L152">            Point2D distortedPoint = it1.next();</span>
+<span class="fc" id="L153">            Point2D undistortedPoint = it2.next();</span>
+<span class="fc" id="L154">            undistort(distortedPoint, undistortedPoint);</span>
+<span class="fc" id="L155">        }</span>
+<span class="fc" id="L156">    }</span>
     
     /**
      * Distorts provided 2D point and stores result into provided distorted

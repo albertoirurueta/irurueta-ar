@@ -67,103 +67,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L466">466</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L831">831</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    private void estimateUnknownAspectRatio(DualImageOfAbsoluteConic result)
-            throws KruppaDualImageOfAbsoluteConicEstimatorException {
-        try {
-            double x0 = mPrincipalPointX;
-            double y0 = mPrincipalPointY;      
-        
-            //SVD decompose fundamental matrix
-            mFundamentalMatrix.normalize();
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    mFundamentalMatrix.getInternalMatrix());
-            decomposer.decompose();
-            
-            double[] sigmas = decomposer.getSingularValues();
-            Matrix u = decomposer.getU();
-            Matrix v = decomposer.getV();
-            
-            double sigma1 = sigmas[0];
-            double sigma2 = sigmas[1];
-            
-            //Column u1
-            double u11 = u.getElementAt(0, 0);
-            double u21 = u.getElementAt(1, 0);
-            double u31 = u.getElementAt(2, 0);
-            
-            //Column u2
-            double u12 = u.getElementAt(0, 1);
-            double u22 = u.getElementAt(1, 1);
-            double u32 = u.getElementAt(2, 1);
-            
-            //Column v1
-            double v11 = v.getElementAt(0, 0);
-            double v21 = v.getElementAt(1, 0);
-            double v31 = v.getElementAt(2, 0);
-            
-            //Column v2
-            double v12 = v.getElementAt(0, 1);
-            double v22 = v.getElementAt(1, 1);
-            double v32 = v.getElementAt(2, 1);
-            
-            //build Kruppa equations
-            double A = u12*u11;
-            double B = u22*u21;
-            double C = Math.pow(x0,2.0)*u12*u11 + x0*y0*u22*u11 + x0*u32*u11 + 
-                    x0*y0*u12*u21 + Math.pow(y0,2.0)*u22*u21 + y0*u32*u21 + 
-                    x0*u12*u31 + y0*u22*u31 + u32*u31;
-            double D = Math.pow(sigma2,2.0)*v12*v12;
-            double E = Math.pow(sigma2,2.0)*v22*v22;
-            double F = Math.pow(sigma2*x0,2.0)*v12*v12 + 
-                    Math.pow(sigma2,2.0)*x0*y0*v22*v12 + 
-                    Math.pow(sigma2,2.0)*x0*v32*v12 + 
-                    Math.pow(sigma2,2.0)*x0*y0*v12*v22 + 
-                    Math.pow(sigma2*y0,2)*v22*v22 + 
-                    Math.pow(sigma2,2.0)*y0*v32*v22 + 
-                    Math.pow(sigma2,2.0)*x0*v12*v32 + 
-                    Math.pow(sigma2,2.0)*y0*v22*v32 + 
-                    Math.pow(sigma2,2.0)*v32*v32;
-            double G = u11*u11;
-            double H = u21*u21;
-            double I = Math.pow(x0,2.0)*u11*u11 + x0*y0*u21*u11 + x0*u31*u11 + 
-                    x0*y0*u11*u21 + Math.pow(y0,2.0)*u21*u21 + y0*u31*u21 + 
-                    x0*u11*u31 + y0*u21*u31 + u31*u31;
-            double J = sigma1*sigma2*v12*v11;
-            double K = sigma1*sigma2*v22*v21;
-            double L = sigma1*sigma2*Math.pow(x0,2.0)*v12*v11 + 
-                    sigma1*sigma2*x0*y0*v22*v11 + sigma1*sigma2*x0*v32*v11 + 
-                    sigma1*sigma2*x0*y0*v12*v21 + 
-                    sigma1*sigma2*Math.pow(y0,2.0)*v22*v21 + 
-                    sigma1*sigma2*y0*v32*v21 + sigma1*sigma2*x0*v12*v31 + 
-                    sigma1*sigma2*y0*v22*v31 + sigma1*sigma2*v32*v31;
-            double M = Math.pow(sigma1,2.0)*v11*v11;
-            double N = Math.pow(sigma1,2.0)*v21*v21;
-            double O = Math.pow(sigma1*x0,2.0)*v11*v11 + 
-                    Math.pow(sigma1,2.0)*x0*y0*v21*v11 + 
-                    Math.pow(sigma1,2.0)*x0*v31*v11 + 
-                    Math.pow(sigma1,2.0)*x0*y0*v11*v21 + 
-                    Math.pow(sigma1*y0,2.0)*v21*v21 + 
-                    Math.pow(sigma1,2.0)*y0*v31*v21 + 
-                    Math.pow(sigma1,2.0)*x0*v11*v31 + 
-                    Math.pow(sigma1,2.0)*y0*v21*v31 + 
-                    Math.pow(sigma1,2.0)*v31*v31;
-            double P = u12*u12;
-            double Q = u22*u22;
-            double R = Math.pow(x0,2.0)*u12*u12 + x0*y0*u22*u12 + x0*u32*u12 + 
-                    x0*y0*u12*u22 + Math.pow(y0,2.0)*u22*u22 + y0*u32*u22 + 
-                    x0*u12*u32 + y0*u22*u32 + u32*u32;</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructorConfiguration.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructorConfiguration.html#L872">872</a></td></tr>
 <tr class="a">
@@ -1449,7 +1352,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L221">221</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L241">241</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L239">239</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>    }
@@ -1528,8 +1431,7 @@ com.irurueta:irurueta-ar
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setDistortionEstimatorThreshold(
-            double distortionEstimatorThreshold) throws LockedException,
-            IllegalArgumentException {
+            double distortionEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1596,8 +1498,7 @@ com.irurueta:irurueta-ar
      * 1.0.
      */
     public void setDistortionEstimatorConfidence(
-            double distortionEstimatorConfidence) throws LockedException,
-            IllegalArgumentException {
+            double distortionEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1632,8 +1533,7 @@ com.irurueta:irurueta-ar
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setDistortionEstimatorMaxIterations(
-            int distortionEstimatorMaxIterations) throws LockedException,
-            IllegalArgumentException {
+            int distortionEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -6702,6 +6602,59 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L466">466</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L836">836</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>    private void estimateUnknownAspectRatio(DualImageOfAbsoluteConic result)
+            throws KruppaDualImageOfAbsoluteConicEstimatorException {
+        try {
+            double x0 = mPrincipalPointX;
+            double y0 = mPrincipalPointY;      
+        
+            //SVD decompose fundamental matrix
+            mFundamentalMatrix.normalize();
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    mFundamentalMatrix.getInternalMatrix());
+            decomposer.decompose();
+            
+            double[] sigmas = decomposer.getSingularValues();
+            Matrix u = decomposer.getU();
+            Matrix v = decomposer.getV();
+            
+            double sigma1 = sigmas[0];
+            double sigma2 = sigmas[1];
+            
+            //Column u1
+            double u11 = u.getElementAt(0, 0);
+            double u21 = u.getElementAt(1, 0);
+            double u31 = u.getElementAt(2, 0);
+            
+            //Column u2
+            double u12 = u.getElementAt(0, 1);
+            double u22 = u.getElementAt(1, 1);
+            double u32 = u.getElementAt(2, 1);
+            
+            //Column v1
+            double v11 = v.getElementAt(0, 0);
+            double v21 = v.getElementAt(1, 0);
+            double v31 = v.getElementAt(2, 0);
+            
+            //Column v2
+            double v12 = v.getElementAt(0, 1);
+            double v22 = v.getElementAt(1, 1);
+            double v32 = v.getElementAt(2, 1);
+            
+            //build Kruppa equations
+            double polyA = u12*u11;</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L541">541</a></td></tr>
 <tr class="a">
@@ -10766,67 +10719,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L604">604</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L951">951</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {
-                        double horizontalFocalLength = Math.sqrt(x);
-                        double verticalFocalLength = Math.sqrt(y);
-                        try {
-                            valid = buildDiac(horizontalFocalLength, 
-                                verticalFocalLength, diac);
-                        } catch (AlgebraException e) {
-                            valid = false;
-                        }
-                    }
-                    
-                    if (valid) {
-                        break;
-                    }
-                }
-            } else {
-                throw new KruppaDualImageOfAbsoluteConicEstimatorException();
-            }
-            
-            if (valid) {
-                //copy to result
-                result.setParameters(diac.getA(), diac.getB(), diac.getC(), 
-                        diac.getD(), diac.getE(), diac.getF());
-            } else {
-                //no valid DIAC could be found
-                throw new KruppaDualImageOfAbsoluteConicEstimatorException();
-            }
-            
-        } catch (KruppaDualImageOfAbsoluteConicEstimatorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new KruppaDualImageOfAbsoluteConicEstimatorException(e);
-        }        
-    }
-        
-    /**
-     * Gets x value from current y value.
-     * X and y values are the squared values of estimated focal lngth 
-     * components.
-     * This method is used internally when aspect ratio is not known.
-     * @param y y value to obtian x value from.
-     * @param S internal value from Kruppa's equations.
-     * @param T internal value from Kruppa's equations.
-     * @param U internal value from Kruppa's equations.
-     * @param V internal value from Kruppa's equations.
-     * @param W internal value from Kruppa's equations.
-     * @return x value.
-     */
-    private double getXFromY(double y, double S, double T, double U, double V, </pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L572">572</a></td></tr>
 <tr class="a">
@@ -11757,10 +11649,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/AlternatingCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L535">535</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L534">534</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L559">559</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L553">553</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>        double[] qualityScores = null;
@@ -11770,7 +11662,8 @@ com.irurueta:irurueta-ar
         }
         
         //estimate camera pose for each sample        
-        int pointCounter = 0, sampleCounter = 0;
+        int pointCounter = 0;
+        int sampleCounter = 0;
         for (CameraCalibratorSample sample : mSamples) {
             if (sample.getHomography() == null) {
                 //homography computation failed, so we cannot compute camera
@@ -11812,6 +11705,28 @@ com.irurueta:irurueta-ar
             undistortedPoints.addAll(transformedIdealPatternMarkers);            
             
             int markersSize = transformedIdealPatternMarkers.size();</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L537">537</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L907">907</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
+                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
+                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
+                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
+                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
+                    Math.pow(sigma1, 2.0) * v31 * v31;
+            double polyP = u12 * u12;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -12167,10 +12082,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/AlternatingCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L698">698</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L702">702</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L753">753</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L748">748</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>        }
@@ -12200,7 +12115,7 @@ com.irurueta:irurueta-ar
                 @Override
                 public void onEstimateNextIteration(
                         RadialDistortionRobustEstimator estimator, 
-                        int iteration) { }
+                        int iteration) { /* not needed */ }
 
                 @Override
                 public void onEstimateProgressChange(
@@ -14150,10 +14065,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/AlternatingCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L744">744</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L748">748</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L1174">1174</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L1176">1176</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>    }
@@ -14170,7 +14085,8 @@ com.irurueta:irurueta-ar
         //im method changes, recreat estimator
         if (distortionMethod != mDistortionMethod) {
             boolean previousAvailable = mDistortionMethod != null;
-            double threshold = 0.0, confidence = 0.0;
+            double threshold = 0.0;
+            double confidence = 0.0;
             int maxIterations = 0;
             if (previousAvailable) {
                 threshold = getDistortionEstimatorThreshold();
@@ -16089,6 +16005,25 @@ com.irurueta:irurueta-ar
      * @return current estimated euclidean camera.
      */
     public EstimatedCamera getCurrentEuclideanEstimatedCamera() {</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L529">529</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L899">899</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
+                    sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
+                    sigma1 * sigma2 * x0 * y0 * v12 * v21 +
+                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
+                    sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
+                    sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>

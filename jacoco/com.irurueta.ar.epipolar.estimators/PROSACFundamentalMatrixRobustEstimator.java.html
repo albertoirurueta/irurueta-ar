@@ -580,8 +580,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
             public void onEstimateProgressChange(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     float progress) {
-<span class="fc bfc" id="L583" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L584">                    mListener.onEstimateProgressChange(</span>
+<span class="pc bpc" id="L583" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="nc" id="L584">                    mListener.onEstimateProgressChange(</span>
                             PROSACFundamentalMatrixRobustEstimator.this, 
                             progress);
                 }

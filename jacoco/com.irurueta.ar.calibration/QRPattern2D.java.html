@@ -105,7 +105,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * @param codeWidth QR code width expressed in meters.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setCodeWidth(double codeWidth) throws IllegalArgumentException {
+    public void setCodeWidth(double codeWidth) {
 <span class="fc bfc" id="L109" title="All 2 branches covered.">        if (codeWidth &lt;= 0.0) {</span>
 <span class="fc" id="L110">            throw new IllegalArgumentException();</span>
         }
@@ -128,14 +128,13 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * @param codeHeight QR code width expressed in meters.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setCodeHeight(double codeHeight) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (codeHeight &lt;= 0.0) {</span>
-<span class="fc" id="L134">            throw new IllegalArgumentException();</span>
+    public void setCodeHeight(double codeHeight) {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (codeHeight &lt;= 0.0) {</span>
+<span class="fc" id="L133">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L137">        mCodeHeight = codeHeight;</span>
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L136">        mCodeHeight = codeHeight;</span>
+<span class="fc" id="L137">    }</span>
 
     /**
      * Returns ideal points coordinates contained in a QR 2D pattern and 
@@ -144,7 +143,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      */
     @Override
     public List&lt;Point2D&gt; getIdealPoints() {
-<span class="fc" id="L147">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L146">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
         
         //The size of a QR code (expressed in modules, i.e. each small square) 
         //can be calculated with the fomula (((V-1)*4)+21), where V is the QR 
@@ -180,31 +179,31 @@ public class QRPattern2D extends Pattern2D implements Serializable {
         //so for version 2 this is equal to (15, 15)
 
         //noinspection all
-<span class="fc" id="L183">        int numModules = ((QR_VERSION - 1) * 4) + 21;</span>
-<span class="fc" id="L184">        double moduleWidth = mCodeWidth / (double)numModules;</span>
-<span class="fc" id="L185">        double moduleHeight = mCodeHeight / (double)numModules;</span>
+<span class="fc" id="L182">        int numModules = ((QR_VERSION - 1) * 4) + 21;</span>
+<span class="fc" id="L183">        double moduleWidth = mCodeWidth / (double)numModules;</span>
+<span class="fc" id="L184">        double moduleHeight = mCodeHeight / (double)numModules;</span>
         
         //below is equivalent to [(((V-1)*4)+21) - 7] = 18
         //noinspection all
-<span class="fc" id="L189">        int finderModulePos = ((QR_VERSION - 1) * 4) + 21 - 3 - ORIGIN_OFFSET;</span>
+<span class="fc" id="L188">        int finderModulePos = ((QR_VERSION - 1) * 4) + 21 - 3 - ORIGIN_OFFSET;</span>
         //below is always 15
-<span class="fc" id="L191">        int alignModulePos = finderModulePos - 3;</span>
+<span class="fc" id="L190">        int alignModulePos = finderModulePos - 3;</span>
         
         //bottom-left finder pattern
-<span class="fc" id="L194">        points.add(new InhomogeneousPoint2D(0.0, </span>
+<span class="fc" id="L193">        points.add(new InhomogeneousPoint2D(0.0, </span>
                 (double)finderModulePos * moduleHeight));        
         //top-left finder pattern
-<span class="fc" id="L197">        points.add(new InhomogeneousPoint2D(0.0, 0.0));</span>
+<span class="fc" id="L196">        points.add(new InhomogeneousPoint2D(0.0, 0.0));</span>
         //top-right finder pattern
-<span class="fc" id="L199">        points.add(new InhomogeneousPoint2D(</span>
+<span class="fc" id="L198">        points.add(new InhomogeneousPoint2D(</span>
                 (double)finderModulePos * moduleWidth, 0.0));
         
         //bottom-right alignment pattern
-<span class="fc" id="L203">        points.add(new InhomogeneousPoint2D(</span>
+<span class="fc" id="L202">        points.add(new InhomogeneousPoint2D(</span>
                 (double)alignModulePos * moduleWidth, 
                 (double)alignModulePos * moduleHeight));
         
-<span class="fc" id="L207">        return points;</span>
+<span class="fc" id="L206">        return points;</span>
     }
     
     /**
@@ -213,13 +212,13 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      */
     @Override
     public int getNumberOfPoints() {
-<span class="fc" id="L216">        return NUMBER_OF_POINTS;</span>
+<span class="fc" id="L215">        return NUMBER_OF_POINTS;</span>
     }
 
 
     @Override
     public Pattern2DType getType() {
-<span class="fc" id="L222">        return Pattern2DType.QR;</span>
+<span class="fc" id="L221">        return Pattern2DType.QR;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

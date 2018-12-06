@@ -111,8 +111,10 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
 <span class="fc" id="L112">            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
                 DEFAULT_SKEW);
-<span class="pc" id="L114">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L115">    }</span>
+<span class="nc" id="L114">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L116">        }</span>
+<span class="fc" id="L117">    }</span>
     
     /**
      * Constructor with radial distortion parameters and center assumed to be
@@ -120,13 +122,15 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param k1 first degree distortion parameter.
      * @param k2 second degree distortion parameter.
      */
-<span class="fc" id="L123">    public RadialDistortion(double k1, double k2) {</span>
-<span class="fc" id="L124">        mKParams = new double[]{ k1, k2 };</span>
+<span class="fc" id="L125">    public RadialDistortion(double k1, double k2) {</span>
+<span class="fc" id="L126">        mKParams = new double[]{ k1, k2 };</span>
         try {
-<span class="fc" id="L126">            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L128">            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
                 DEFAULT_SKEW);
-<span class="pc" id="L128">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L129">    }</span>
+<span class="nc" id="L130">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L132">        }</span>
+<span class="fc" id="L133">    }</span>
     
     /**
      * Constructor with radial distortion parameters and center assumed to be
@@ -134,16 +138,16 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param kParams radial distortion parameters of any length.
      * @throws IllegalArgumentException if radial distortion parameters is null.
      */
-<span class="fc" id="L137">    public RadialDistortion(double[] kParams) throws IllegalArgumentException {</span>
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (kParams == null) {</span>
-<span class="fc" id="L139">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L141">    public RadialDistortion(double[] kParams) throws IllegalArgumentException {</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (kParams == null) {</span>
+<span class="fc" id="L143">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L141">        mKParams = kParams;</span>
+<span class="fc" id="L145">        mKParams = kParams;</span>
         try {
-<span class="fc" id="L143">            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L147">            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
                 DEFAULT_SKEW);
-<span class="pc" id="L145">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L146">    }        </span>
+<span class="pc" id="L149">        } catch (RadialDistortionException ignore) { }</span>
+<span class="fc" id="L150">    }        </span>
     
     /**
      * Constructor with radial distortion parameters and center.
@@ -153,12 +157,12 @@ public class RadialDistortion extends Distortion implements Serializable {
      * at the origin of coordinates (0, 0), which is the typical value.
      */
     public RadialDistortion(double k1, double k2, Point2D center) {
-<span class="fc" id="L156">        this(k1, k2);</span>
+<span class="fc" id="L160">        this(k1, k2);</span>
         try {
-<span class="fc" id="L158">            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L162">            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
                 DEFAULT_SKEW);
-<span class="pc" id="L160">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L161">    }</span>
+<span class="pc" id="L164">        } catch (RadialDistortionException ignore) { }</span>
+<span class="fc" id="L165">    }</span>
     
     /**
      * Constructor with radial distortion parameters and center.
@@ -169,12 +173,12 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public RadialDistortion(double[] kParams, Point2D center)
             throws IllegalArgumentException {
-<span class="fc" id="L172">        this(kParams);</span>
+<span class="fc" id="L176">        this(kParams);</span>
         try {
-<span class="fc" id="L174">            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L178">            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, </span>
                 DEFAULT_SKEW);        
-<span class="pc" id="L176">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L177">    }</span>
+<span class="pc" id="L180">        } catch (RadialDistortionException ignore) { }</span>
+<span class="fc" id="L181">    }</span>
     
     /**
      * Constructor with radial distortion parameters, center and other 
@@ -192,9 +196,9 @@ public class RadialDistortion extends Distortion implements Serializable {
     public RadialDistortion(double k1, double k2, Point2D center, 
             double horizontalFocalLength, double verticalFocalLength, 
             double skew) throws RadialDistortionException {
-<span class="fc" id="L195">        this(k1, k2);</span>
-<span class="fc" id="L196">        setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);</span>
-<span class="fc" id="L197">    }</span>
+<span class="fc" id="L199">        this(k1, k2);</span>
+<span class="fc" id="L200">        setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);</span>
+<span class="fc" id="L201">    }</span>
     
     /**
      * Constructor with radial distortion parameters, center and other camera
@@ -213,10 +217,10 @@ public class RadialDistortion extends Distortion implements Serializable {
             double horizontalFocalLength, double verticalFocalLength,
             double skew) throws RadialDistortionException, 
             IllegalArgumentException {
-<span class="fc" id="L216">        this(kParams);</span>
-<span class="fc" id="L217">        setIntrinsic(center, horizontalFocalLength, verticalFocalLength,</span>
+<span class="fc" id="L220">        this(kParams);</span>
+<span class="fc" id="L221">        setIntrinsic(center, horizontalFocalLength, verticalFocalLength,</span>
                 skew);
-<span class="fc" id="L219">    }</span>
+<span class="fc" id="L223">    }</span>
         
     /**
      * Constructor with points and distortion center.
@@ -231,11 +235,11 @@ public class RadialDistortion extends Distortion implements Serializable {
     public RadialDistortion(Point2D distortedPoint1, Point2D distortedPoint2, 
             Point2D undistortedPoint1, Point2D undistortedPoint2, 
             Point2D distortionCenter) throws RadialDistortionException {
-<span class="fc" id="L234">        super();</span>
+<span class="fc" id="L238">        super();</span>
         
-<span class="fc" id="L236">        setFromPointsAndCenter(distortedPoint1, distortedPoint2, </span>
+<span class="fc" id="L240">        setFromPointsAndCenter(distortedPoint1, distortedPoint2, </span>
                 undistortedPoint1, undistortedPoint2, distortionCenter);
-<span class="fc" id="L238">    }</span>
+<span class="fc" id="L242">    }</span>
     
     /**
      * Estimates this radial distortion from points and distortion center.
@@ -252,35 +256,35 @@ public class RadialDistortion extends Distortion implements Serializable {
             Point2D undistortedPoint2, Point2D distortionCenter) 
             throws RadialDistortionException {
         
-<span class="fc" id="L255">        List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L256">        List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L259">        List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L260">        List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;();</span>
         
-<span class="fc" id="L258">        distortedPoints.add(distortedPoint1);</span>
-<span class="fc" id="L259">        distortedPoints.add(distortedPoint2);</span>
+<span class="fc" id="L262">        distortedPoints.add(distortedPoint1);</span>
+<span class="fc" id="L263">        distortedPoints.add(distortedPoint2);</span>
         
-<span class="fc" id="L261">        undistortedPoints.add(undistortedPoint1);</span>
-<span class="fc" id="L262">        undistortedPoints.add(undistortedPoint2);</span>
+<span class="fc" id="L265">        undistortedPoints.add(undistortedPoint1);</span>
+<span class="fc" id="L266">        undistortedPoints.add(undistortedPoint2);</span>
         
         try {
-<span class="fc" id="L265">            LMSERadialDistortionEstimator estimator = </span>
+<span class="fc" id="L269">            LMSERadialDistortionEstimator estimator = </span>
                     new LMSERadialDistortionEstimator(distortedPoints, 
                     undistortedPoints, distortionCenter);
-<span class="fc" id="L268">            estimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L269">            RadialDistortion distortion = estimator.estimate();</span>
+<span class="fc" id="L272">            estimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L273">            RadialDistortion distortion = estimator.estimate();</span>
         
-<span class="fc" id="L271">            mKParams = distortion.mKParams;</span>
-<span class="fc" id="L272">            mCenter = distortion.mCenter;</span>
-<span class="nc" id="L273">        } catch (Exception e) {</span>
-<span class="nc" id="L274">            throw new RadialDistortionException(e);</span>
-<span class="fc" id="L275">        }</span>
-<span class="fc" id="L276">    }</span>
+<span class="fc" id="L275">            mKParams = distortion.mKParams;</span>
+<span class="fc" id="L276">            mCenter = distortion.mCenter;</span>
+<span class="nc" id="L277">        } catch (Exception e) {</span>
+<span class="nc" id="L278">            throw new RadialDistortionException(e);</span>
+<span class="fc" id="L279">        }</span>
+<span class="fc" id="L280">    }</span>
     
     /**
      * Returns radial distortion center.
      * @return radial distortion center.
      */
     public Point2D getCenter() {
-<span class="fc" id="L283">        return mCenter;</span>
+<span class="fc" id="L287">        return mCenter;</span>
     }
     
     /**
@@ -289,17 +293,17 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setCenter(Point2D center) {
         try {
-<span class="fc" id="L292">            setIntrinsic(center, mHorizontalFocalLength, mVerticalFocalLength, </span>
+<span class="fc" id="L296">            setIntrinsic(center, mHorizontalFocalLength, mVerticalFocalLength, </span>
                 mSkew);
-<span class="pc" id="L294">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L295">    }</span>
+<span class="pc" id="L298">        } catch (RadialDistortionException ignore) { }</span>
+<span class="fc" id="L299">    }</span>
     
     /**
      * Returns horizontal focal length expressed in pixels.
      * @return horizontal focal length expressed in pixels.
      */
     public double getHorizontalFocalLength() {
-<span class="fc" id="L302">        return mHorizontalFocalLength;</span>
+<span class="fc" id="L306">        return mHorizontalFocalLength;</span>
     }
     
     /**
@@ -310,16 +314,16 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setHorizontalFocalLength(double horizontalFocalLength)
             throws RadialDistortionException {
-<span class="fc" id="L313">        setIntrinsic(mCenter, horizontalFocalLength, mVerticalFocalLength, </span>
+<span class="fc" id="L317">        setIntrinsic(mCenter, horizontalFocalLength, mVerticalFocalLength, </span>
                 mSkew);
-<span class="fc" id="L315">    }</span>
+<span class="fc" id="L319">    }</span>
     
     /**
      * Returns vertical focal length expressed in pixels.
      * @return vertical focal length expressed in pixels.
      */
     public double getVerticalFocalLength() {
-<span class="fc" id="L322">        return mVerticalFocalLength;</span>
+<span class="fc" id="L326">        return mVerticalFocalLength;</span>
     }
     
     /**
@@ -330,16 +334,16 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setVerticalFocalLength(double verticalFocalLength)
             throws RadialDistortionException {
-<span class="fc" id="L333">        setIntrinsic(mCenter, mHorizontalFocalLength, verticalFocalLength, </span>
+<span class="fc" id="L337">        setIntrinsic(mCenter, mHorizontalFocalLength, verticalFocalLength, </span>
                 mSkew);
-<span class="fc" id="L335">    }</span>
+<span class="fc" id="L339">    }</span>
     
     /**
      * Returns skew expressed in pixels.
      * @return skew expressed in pixels.
      */
     public double getSkew() {
-<span class="fc" id="L342">        return mSkew;</span>
+<span class="fc" id="L346">        return mSkew;</span>
     }
     
     /**
@@ -348,20 +352,20 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setSkew(double skew) {
         try {
-<span class="fc" id="L351">            setIntrinsic(mCenter, mHorizontalFocalLength, mVerticalFocalLength, </span>
+<span class="fc" id="L355">            setIntrinsic(mCenter, mHorizontalFocalLength, mVerticalFocalLength, </span>
                 skew);
-<span class="pc" id="L353">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L354">    }</span>
+<span class="pc" id="L357">        } catch (RadialDistortionException ignore) { }</span>
+<span class="fc" id="L358">    }</span>
     
     /**
      * Returns pinhole camera intrinsic parameters associated to this distortion.
      * @return pinhole camera intrinsic parameters associated to this distortion.
      */
     public PinholeCameraIntrinsicParameters getIntrinsic() {
-<span class="fc" id="L361">        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength, </span>
+<span class="fc" id="L365">        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength, </span>
                 mVerticalFocalLength, 
-<span class="fc bfc" id="L363" title="All 2 branches covered.">                mCenter != null ? mCenter.getInhomX() : 0.0, </span>
-<span class="fc bfc" id="L364" title="All 2 branches covered.">                mCenter != null ? mCenter.getInhomY() : 0.0,</span>
+<span class="fc bfc" id="L367" title="All 2 branches covered.">                mCenter != null ? mCenter.getInhomX() : 0.0, </span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">                mCenter != null ? mCenter.getInhomY() : 0.0,</span>
                 mSkew);
     }
     
@@ -373,13 +377,13 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setIntrinsic(PinholeCameraIntrinsicParameters intrinsic) 
             throws RadialDistortionException {
-<span class="fc" id="L376">        setIntrinsic(new InhomogeneousPoint2D(</span>
-<span class="fc" id="L377">                intrinsic.getHorizontalPrincipalPoint(),</span>
-<span class="fc" id="L378">                intrinsic.getVerticalPrincipalPoint()), </span>
-<span class="fc" id="L379">                intrinsic.getHorizontalFocalLength(),</span>
-<span class="fc" id="L380">                intrinsic.getVerticalFocalLength(),</span>
-<span class="fc" id="L381">                intrinsic.getSkewness());</span>
-<span class="fc" id="L382">    }</span>
+<span class="fc" id="L380">        setIntrinsic(new InhomogeneousPoint2D(</span>
+<span class="fc" id="L381">                intrinsic.getHorizontalPrincipalPoint(),</span>
+<span class="fc" id="L382">                intrinsic.getVerticalPrincipalPoint()), </span>
+<span class="fc" id="L383">                intrinsic.getHorizontalFocalLength(),</span>
+<span class="fc" id="L384">                intrinsic.getVerticalFocalLength(),</span>
+<span class="fc" id="L385">                intrinsic.getSkewness());</span>
+<span class="fc" id="L386">    }</span>
     
     /**
      * Sets intrinsic parameters.
@@ -393,39 +397,39 @@ public class RadialDistortion extends Distortion implements Serializable {
     public final void setIntrinsic(Point2D center, double horizontalFocalLength,
             double verticalFocalLength, double skew) 
             throws RadialDistortionException {
-<span class="fc" id="L396">        mCenter = center;</span>
-<span class="fc" id="L397">        mHorizontalFocalLength = horizontalFocalLength;</span>
-<span class="fc" id="L398">        mVerticalFocalLength = verticalFocalLength;</span>
-<span class="fc" id="L399">        mSkew = skew;</span>
+<span class="fc" id="L400">        mCenter = center;</span>
+<span class="fc" id="L401">        mHorizontalFocalLength = horizontalFocalLength;</span>
+<span class="fc" id="L402">        mVerticalFocalLength = verticalFocalLength;</span>
+<span class="fc" id="L403">        mSkew = skew;</span>
         
         try {
-<span class="fc bfc" id="L402" title="All 2 branches covered.">            if (mKinv == null) {</span>
-<span class="fc" id="L403">                mKinv = new Matrix(3, 3);</span>
+<span class="fc bfc" id="L406" title="All 2 branches covered.">            if (mKinv == null) {</span>
+<span class="fc" id="L407">                mKinv = new Matrix(3, 3);</span>
             }
         
-<span class="fc" id="L406">            Matrix K = new Matrix(3, 3); //initially matrix is zero</span>
+<span class="fc" id="L410">            Matrix K = new Matrix(3, 3); //initially matrix is zero</span>
             
-<span class="fc" id="L408">            K.setElementAt(0, 0, horizontalFocalLength);</span>
-<span class="fc" id="L409">            K.setElementAt(1, 1, verticalFocalLength);</span>
-<span class="fc" id="L410">            K.setElementAt(0, 1, skew);</span>
-<span class="fc bfc" id="L411" title="All 2 branches covered.">            if (mCenter != null) {</span>
-<span class="fc" id="L412">                K.setElementAt(0, 2, mCenter.getInhomX());</span>
-<span class="fc" id="L413">                K.setElementAt(1, 2, mCenter.getInhomY());</span>
+<span class="fc" id="L412">            K.setElementAt(0, 0, horizontalFocalLength);</span>
+<span class="fc" id="L413">            K.setElementAt(1, 1, verticalFocalLength);</span>
+<span class="fc" id="L414">            K.setElementAt(0, 1, skew);</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">            if (mCenter != null) {</span>
+<span class="fc" id="L416">                K.setElementAt(0, 2, mCenter.getInhomX());</span>
+<span class="fc" id="L417">                K.setElementAt(1, 2, mCenter.getInhomY());</span>
             } //if center is not provided, values are zero
-<span class="fc" id="L415">            K.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L419">            K.setElementAt(2, 2, 1.0);</span>
             
-<span class="fc" id="L417">            Utils.inverse(K, mKinv);</span>
-<span class="fc" id="L418">        } catch (AlgebraException e) {</span>
-<span class="fc" id="L419">            throw new RadialDistortionException(e);</span>
-<span class="fc" id="L420">        }</span>
-<span class="fc" id="L421">    }</span>
+<span class="fc" id="L421">            Utils.inverse(K, mKinv);</span>
+<span class="fc" id="L422">        } catch (AlgebraException e) {</span>
+<span class="fc" id="L423">            throw new RadialDistortionException(e);</span>
+<span class="fc" id="L424">        }</span>
+<span class="fc" id="L425">    }</span>
     
     /**
      * Returns first degree distortion parameter or zero if not available.
      * @return first degree distortion parameter or zero if not available.
      */
     public double getK1() {
-<span class="pc bpc" id="L428" title="1 of 4 branches missed.">        return mKParams != null &amp;&amp; mKParams.length &gt; 0 ? mKParams[0] : 0.0;</span>
+<span class="pc bpc" id="L432" title="1 of 4 branches missed.">        return mKParams != null &amp;&amp; mKParams.length &gt; 0 ? mKParams[0] : 0.0;</span>
     }
     
     /**
@@ -433,17 +437,17 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param k1 first degree distortion parameter.
      */
     public void setK1(double k1) {
-<span class="pc bpc" id="L436" title="3 of 4 branches missed.">        if (mKParams == null || mKParams.length &lt; 1) {</span>
-<span class="fc" id="L437">            mKParams = new double[]{ k1 };            </span>
+<span class="pc bpc" id="L440" title="3 of 4 branches missed.">        if (mKParams == null || mKParams.length &lt; 1) {</span>
+<span class="fc" id="L441">            mKParams = new double[]{ k1 };            </span>
         }
-<span class="fc" id="L439">    }</span>
+<span class="fc" id="L443">    }</span>
     
     /**
      * Returns second degree distortion parameter or zero if not available.
      * @return second degree distortion parameter or zero if not available.
      */
     public double getK2() {
-<span class="pc bpc" id="L446" title="1 of 4 branches missed.">        return mKParams != null &amp;&amp; mKParams.length &gt; 1 ? mKParams[1] : 0.0;</span>
+<span class="pc bpc" id="L450" title="1 of 4 branches missed.">        return mKParams != null &amp;&amp; mKParams.length &gt; 1 ? mKParams[1] : 0.0;</span>
     }
     
     /**
@@ -451,13 +455,13 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param k2 second degree distortion parameter to be set.
      */
     public void setK2(double k2) {
-<span class="pc bpc" id="L454" title="3 of 4 branches missed.">        if (mKParams == null || mKParams.length &lt; 2) {</span>
-<span class="fc" id="L455">            double[] kParams = new double[2];</span>
-<span class="fc" id="L456">            kParams[0] = getK1();</span>
-<span class="fc" id="L457">            mKParams = kParams;</span>
+<span class="pc bpc" id="L458" title="3 of 4 branches missed.">        if (mKParams == null || mKParams.length &lt; 2) {</span>
+<span class="fc" id="L459">            double[] kParams = new double[2];</span>
+<span class="fc" id="L460">            kParams[0] = getK1();</span>
+<span class="fc" id="L461">            mKParams = kParams;</span>
         }
-<span class="fc" id="L459">        mKParams[1] = k2;</span>
-<span class="fc" id="L460">    }</span>
+<span class="fc" id="L463">        mKParams[1] = k2;</span>
+<span class="fc" id="L464">    }</span>
     
     /**
      * Returns all radial distortion parameters. Typically only first and second
@@ -465,7 +469,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return all radial distortion parameters.
      */
     public double[] getKParams() {
-<span class="fc" id="L468">        return mKParams;</span>
+<span class="fc" id="L472">        return mKParams;</span>
     }
     
     /**
@@ -474,8 +478,8 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param kParams radial distortion parameters to be set.
      */
     public void setKParams(double[] kParams) {
-<span class="fc" id="L477">        mKParams = kParams;</span>
-<span class="fc" id="L478">    }            </span>
+<span class="fc" id="L481">        mKParams = kParams;</span>
+<span class="fc" id="L482">    }            </span>
                 
     /**
      * Distorts provided 2D point and stores result into provided distorted
@@ -486,52 +490,52 @@ public class RadialDistortion extends Distortion implements Serializable {
     @Override
     public void distort(final Point2D undistortedPoint, Point2D distortedPoint) {   
         
-<span class="fc" id="L489">        undistortedPoint.normalize();</span>
+<span class="fc" id="L493">        undistortedPoint.normalize();</span>
         
-<span class="fc" id="L491">        double uHomX = undistortedPoint.getHomX();</span>
-<span class="fc" id="L492">        double uHomY = undistortedPoint.getHomY();</span>
-<span class="fc" id="L493">        double uHomW = undistortedPoint.getHomW();                </span>
+<span class="fc" id="L495">        double uHomX = undistortedPoint.getHomX();</span>
+<span class="fc" id="L496">        double uHomY = undistortedPoint.getHomY();</span>
+<span class="fc" id="L497">        double uHomW = undistortedPoint.getHomW();                </span>
         
         //multiply mKinv with homogeneous undistorted point coordinates 
         //to normalize them respect to principal point and image size
-<span class="fc" id="L497">        double uNormHomX = mKinv.getElementAt(0, 0) * uHomX +</span>
-<span class="fc" id="L498">                mKinv.getElementAt(0, 1) * uHomY +</span>
-<span class="fc" id="L499">                mKinv.getElementAt(0, 2) * uHomW;</span>
-<span class="fc" id="L500">        double uNormHomY = mKinv.getElementAt(1, 0) * uHomX +</span>
-<span class="fc" id="L501">                mKinv.getElementAt(1, 1) * uHomY +</span>
-<span class="fc" id="L502">                mKinv.getElementAt(1, 2) * uHomW;</span>
-<span class="fc" id="L503">        double uNormHomW = mKinv.getElementAt(2, 0) * uHomX + </span>
-<span class="fc" id="L504">                mKinv.getElementAt(2, 1) * uHomY + </span>
-<span class="fc" id="L505">                mKinv.getElementAt(2, 2) * uHomW;</span>
+<span class="fc" id="L501">        double uNormHomX = mKinv.getElementAt(0, 0) * uHomX +</span>
+<span class="fc" id="L502">                mKinv.getElementAt(0, 1) * uHomY +</span>
+<span class="fc" id="L503">                mKinv.getElementAt(0, 2) * uHomW;</span>
+<span class="fc" id="L504">        double uNormHomY = mKinv.getElementAt(1, 0) * uHomX +</span>
+<span class="fc" id="L505">                mKinv.getElementAt(1, 1) * uHomY +</span>
+<span class="fc" id="L506">                mKinv.getElementAt(1, 2) * uHomW;</span>
+<span class="fc" id="L507">        double uNormHomW = mKinv.getElementAt(2, 0) * uHomX + </span>
+<span class="fc" id="L508">                mKinv.getElementAt(2, 1) * uHomY + </span>
+<span class="fc" id="L509">                mKinv.getElementAt(2, 2) * uHomW;</span>
         
-<span class="fc" id="L507">        double uNormInhomX = uNormHomX / uNormHomW;</span>
-<span class="fc" id="L508">        double uNormInhomY = uNormHomY / uNormHomW;</span>
+<span class="fc" id="L511">        double uNormInhomX = uNormHomX / uNormHomW;</span>
+<span class="fc" id="L512">        double uNormInhomY = uNormHomY / uNormHomW;</span>
         
-<span class="fc" id="L510">        double r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
-<span class="fc" id="L511">        double r = r2;</span>
+<span class="fc" id="L514">        double r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
+<span class="fc" id="L515">        double r = r2;</span>
         
-<span class="fc" id="L513">        double sum = 0.0;</span>
-<span class="pc bpc" id="L514" title="1 of 2 branches missed.">        if (mKParams != null) {</span>
-<span class="fc bfc" id="L515" title="All 2 branches covered.">            for (double kParam : mKParams) {</span>
-<span class="fc" id="L516">                sum += kParam * r;</span>
-<span class="fc" id="L517">                r *= r2;</span>
+<span class="fc" id="L517">        double sum = 0.0;</span>
+<span class="pc bpc" id="L518" title="1 of 2 branches missed.">        if (mKParams != null) {</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">            for (double kParam : mKParams) {</span>
+<span class="fc" id="L520">                sum += kParam * r;</span>
+<span class="fc" id="L521">                r *= r2;</span>
             }
         }
         
-<span class="fc" id="L521">        double uInhomX = uHomX / uHomW;</span>
-<span class="fc" id="L522">        double uInhomY = uHomY / uHomW;</span>
+<span class="fc" id="L525">        double uInhomX = uHomX / uHomW;</span>
+<span class="fc" id="L526">        double uInhomY = uHomY / uHomW;</span>
         
-<span class="fc" id="L524">        double centerX = 0.0, centerY = 0.0;</span>
-<span class="pc bpc" id="L525" title="1 of 2 branches missed.">        if (mCenter != null) {</span>
-<span class="fc" id="L526">            centerX = mCenter.getInhomX();</span>
-<span class="fc" id="L527">            centerY = mCenter.getInhomY();</span>
+<span class="fc" id="L528">        double centerX = 0.0, centerY = 0.0;</span>
+<span class="pc bpc" id="L529" title="1 of 2 branches missed.">        if (mCenter != null) {</span>
+<span class="fc" id="L530">            centerX = mCenter.getInhomX();</span>
+<span class="fc" id="L531">            centerY = mCenter.getInhomY();</span>
         }
         
-<span class="fc" id="L530">        double dInhomX = uInhomX + (uInhomX - centerX) * sum;</span>
-<span class="fc" id="L531">        double dInhomY = uInhomY + (uInhomY - centerY) * sum;</span>
+<span class="fc" id="L534">        double dInhomX = uInhomX + (uInhomX - centerX) * sum;</span>
+<span class="fc" id="L535">        double dInhomY = uInhomY + (uInhomY - centerY) * sum;</span>
         
-<span class="fc" id="L533">        distortedPoint.setInhomogeneousCoordinates(dInhomX, dInhomY);</span>
-<span class="fc" id="L534">    }</span>
+<span class="fc" id="L537">        distortedPoint.setInhomogeneousCoordinates(dInhomX, dInhomY);</span>
+<span class="fc" id="L538">    }</span>
         
     /**
      * Undistorts provided 2D point and stores result into provided undistorted
@@ -541,9 +545,9 @@ public class RadialDistortion extends Distortion implements Serializable {
      */    
     @Override
     public void undistort(Point2D distortedPoint, Point2D undistortedPoint) {
-<span class="fc" id="L544">        undistort(distortedPoint, undistortedPoint, DEFAULT_MAX_ITERS, </span>
+<span class="fc" id="L548">        undistort(distortedPoint, undistortedPoint, DEFAULT_MAX_ITERS, </span>
                 DEFAULT_TOLERANCE);
-<span class="fc" id="L546">    }</span>
+<span class="fc" id="L550">    }</span>
         
     /**
      * Undistorts provided 2D point and stores result into provided undistorted
@@ -556,82 +560,82 @@ public class RadialDistortion extends Distortion implements Serializable {
      */    
     public void undistort(Point2D distortedPoint, Point2D undistortedPoint, 
             int maxIters, double tolerance) {
-<span class="pc bpc" id="L559" title="1 of 2 branches missed.">        if (maxIters &lt;= 0) {</span>
-<span class="nc" id="L560">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">        if (maxIters &lt;= 0) {</span>
+<span class="nc" id="L564">            throw new IllegalArgumentException();</span>
         }
-<span class="pc bpc" id="L562" title="1 of 2 branches missed.">        if (tolerance &lt;= 0.0) {</span>
-<span class="nc" id="L563">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L566" title="1 of 2 branches missed.">        if (tolerance &lt;= 0.0) {</span>
+<span class="nc" id="L567">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L566">        distortedPoint.normalize();</span>
+<span class="fc" id="L570">        distortedPoint.normalize();</span>
                 
-<span class="fc" id="L568">        double dHomX = distortedPoint.getHomX();</span>
-<span class="fc" id="L569">        double dHomY = distortedPoint.getHomY();</span>
-<span class="fc" id="L570">        double dHomW = distortedPoint.getHomW();                </span>
+<span class="fc" id="L572">        double dHomX = distortedPoint.getHomX();</span>
+<span class="fc" id="L573">        double dHomY = distortedPoint.getHomY();</span>
+<span class="fc" id="L574">        double dHomW = distortedPoint.getHomW();                </span>
         
         //initial estimate of undistorted point        
-<span class="fc" id="L573">        undistortedPoint.setHomogeneousCoordinates(dHomX, dHomY, dHomW);</span>
+<span class="fc" id="L577">        undistortedPoint.setHomogeneousCoordinates(dHomX, dHomY, dHomW);</span>
         
-<span class="fc" id="L575">        double uHomX = undistortedPoint.getHomX();</span>
-<span class="fc" id="L576">        double uHomY = undistortedPoint.getHomY();</span>
-<span class="fc" id="L577">        double uHomW = undistortedPoint.getHomW();</span>
+<span class="fc" id="L579">        double uHomX = undistortedPoint.getHomX();</span>
+<span class="fc" id="L580">        double uHomY = undistortedPoint.getHomY();</span>
+<span class="fc" id="L581">        double uHomW = undistortedPoint.getHomW();</span>
         
         
         //multiply mKinv with homogeneous undistorted point coordinates        
-<span class="fc" id="L581">        double uHomXDenorm = mKinv.getElementAt(0, 0) * uHomX +</span>
-<span class="fc" id="L582">                mKinv.getElementAt(0, 1) * uHomY +</span>
-<span class="fc" id="L583">                mKinv.getElementAt(0, 2) * uHomW;</span>
-<span class="fc" id="L584">        double uHomYDenorm = mKinv.getElementAt(1, 0) * uHomX +</span>
-<span class="fc" id="L585">                mKinv.getElementAt(1, 1) * uHomY +</span>
-<span class="fc" id="L586">                mKinv.getElementAt(1, 2) * uHomW;</span>
-<span class="fc" id="L587">        double uHomWDenorm = mKinv.getElementAt(2, 0) * uHomX + </span>
-<span class="fc" id="L588">                mKinv.getElementAt(2, 1) * uHomY + </span>
-<span class="fc" id="L589">                mKinv.getElementAt(2, 2) * uHomW;</span>
+<span class="fc" id="L585">        double uHomXDenorm = mKinv.getElementAt(0, 0) * uHomX +</span>
+<span class="fc" id="L586">                mKinv.getElementAt(0, 1) * uHomY +</span>
+<span class="fc" id="L587">                mKinv.getElementAt(0, 2) * uHomW;</span>
+<span class="fc" id="L588">        double uHomYDenorm = mKinv.getElementAt(1, 0) * uHomX +</span>
+<span class="fc" id="L589">                mKinv.getElementAt(1, 1) * uHomY +</span>
+<span class="fc" id="L590">                mKinv.getElementAt(1, 2) * uHomW;</span>
+<span class="fc" id="L591">        double uHomWDenorm = mKinv.getElementAt(2, 0) * uHomX + </span>
+<span class="fc" id="L592">                mKinv.getElementAt(2, 1) * uHomY + </span>
+<span class="fc" id="L593">                mKinv.getElementAt(2, 2) * uHomW;</span>
         
-<span class="fc" id="L591">        double origX = uHomXDenorm / uHomWDenorm;</span>
-<span class="fc" id="L592">        double origY = uHomYDenorm / uHomWDenorm;</span>
-<span class="fc" id="L593">        double uInhomX = origX;</span>
-<span class="fc" id="L594">        double uInhomY = origY;</span>
+<span class="fc" id="L595">        double origX = uHomXDenorm / uHomWDenorm;</span>
+<span class="fc" id="L596">        double origY = uHomYDenorm / uHomWDenorm;</span>
+<span class="fc" id="L597">        double uInhomX = origX;</span>
+<span class="fc" id="L598">        double uInhomY = origY;</span>
         
-<span class="fc" id="L596">        double sum = 0.0; //radial distortion magnitude</span>
-<span class="fc" id="L597">        double prevSum = 0.0;</span>
-<span class="fc bfc" id="L598" title="All 2 branches covered.">        for (int iter = 0; iter &lt; maxIters; iter++) {</span>
+<span class="fc" id="L600">        double sum = 0.0; //radial distortion magnitude</span>
+<span class="fc" id="L601">        double prevSum = 0.0;</span>
+<span class="fc bfc" id="L602" title="All 2 branches covered.">        for (int iter = 0; iter &lt; maxIters; iter++) {</span>
             //estimate the radial distance
-<span class="fc" id="L600">            double r2 = uInhomX * uInhomX + uInhomY * uInhomY;</span>
-<span class="fc" id="L601">            double r = r2;</span>
+<span class="fc" id="L604">            double r2 = uInhomX * uInhomX + uInhomY * uInhomY;</span>
+<span class="fc" id="L605">            double r = r2;</span>
             
-<span class="fc" id="L603">            sum = 0.0;</span>
-<span class="pc bpc" id="L604" title="1 of 2 branches missed.">            if (mKParams != null) {</span>
-<span class="fc bfc" id="L605" title="All 2 branches covered.">                for (double mKParam : mKParams) {</span>
-<span class="fc" id="L606">                    sum += mKParam * r;</span>
-<span class="fc" id="L607">                    r *= r2;</span>
+<span class="fc" id="L607">            sum = 0.0;</span>
+<span class="pc bpc" id="L608" title="1 of 2 branches missed.">            if (mKParams != null) {</span>
+<span class="fc bfc" id="L609" title="All 2 branches covered.">                for (double mKParam : mKParams) {</span>
+<span class="fc" id="L610">                    sum += mKParam * r;</span>
+<span class="fc" id="L611">                    r *= r2;</span>
                 }
             }
             
-<span class="fc" id="L611">            uInhomX = origX / (1.0 + sum);</span>
-<span class="fc" id="L612">            uInhomY = origY / (1.0 + sum);</span>
+<span class="fc" id="L615">            uInhomX = origX / (1.0 + sum);</span>
+<span class="fc" id="L616">            uInhomY = origY / (1.0 + sum);</span>
             
-<span class="fc bfc" id="L614" title="All 2 branches covered.">            if (Math.abs(prevSum - sum) &lt;= tolerance) {</span>
-<span class="fc" id="L615">                break;</span>
+<span class="fc bfc" id="L618" title="All 2 branches covered.">            if (Math.abs(prevSum - sum) &lt;= tolerance) {</span>
+<span class="fc" id="L619">                break;</span>
             } else {
-<span class="fc" id="L617">                prevSum = sum;</span>
+<span class="fc" id="L621">                prevSum = sum;</span>
             }
         }
         
-<span class="fc" id="L621">        double dInhomX = dHomX / dHomW;</span>
-<span class="fc" id="L622">        double dInhomY = dHomY / dHomW;</span>
+<span class="fc" id="L625">        double dInhomX = dHomX / dHomW;</span>
+<span class="fc" id="L626">        double dInhomY = dHomY / dHomW;</span>
         
-<span class="fc" id="L624">        double centerX = 0.0, centerY = 0.0;</span>
-<span class="pc bpc" id="L625" title="1 of 2 branches missed.">        if (mCenter != null) {</span>
-<span class="fc" id="L626">            centerX = mCenter.getInhomX();</span>
-<span class="fc" id="L627">            centerY = mCenter.getInhomY();</span>
+<span class="fc" id="L628">        double centerX = 0.0, centerY = 0.0;</span>
+<span class="pc bpc" id="L629" title="1 of 2 branches missed.">        if (mCenter != null) {</span>
+<span class="fc" id="L630">            centerX = mCenter.getInhomX();</span>
+<span class="fc" id="L631">            centerY = mCenter.getInhomY();</span>
         }
         
-<span class="fc" id="L630">        uInhomX = (dInhomX + centerX * sum) / (1.0 + sum);</span>
-<span class="fc" id="L631">        uInhomY = (dInhomY + centerY * sum) / (1.0 + sum);</span>
+<span class="fc" id="L634">        uInhomX = (dInhomX + centerX * sum) / (1.0 + sum);</span>
+<span class="fc" id="L635">        uInhomY = (dInhomY + centerY * sum) / (1.0 + sum);</span>
         
-<span class="fc" id="L633">        undistortedPoint.setInhomogeneousCoordinates(uInhomX, uInhomY);        </span>
-<span class="fc" id="L634">    }</span>
+<span class="fc" id="L637">        undistortedPoint.setInhomogeneousCoordinates(uInhomX, uInhomY);        </span>
+<span class="fc" id="L638">    }</span>
     
     /**
      * Indicates whether this instance can distort points.
@@ -641,7 +645,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public boolean canDistort() {
-<span class="fc" id="L644">        return true;</span>
+<span class="fc" id="L648">        return true;</span>
     }
     
     /**
@@ -651,7 +655,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public boolean canUndistort() {
-<span class="fc" id="L654">        return true;</span>
+<span class="fc" id="L658">        return true;</span>
     }
     
     
@@ -661,7 +665,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public DistortionKind getKind() {
-<span class="fc" id="L664">        return DistortionKind.BROWN_RADIAL_DISTORTION;</span>
+<span class="fc" id="L668">        return DistortionKind.BROWN_RADIAL_DISTORTION;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

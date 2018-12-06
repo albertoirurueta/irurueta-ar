@@ -2000,13 +2000,13 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
                         triangulatedPoint);
 <span class="fc" id="L2001">                boolean front2 = camera2.isPointInFrontOfCamera(</span>
                         triangulatedPoint);
-<span class="pc bpc" id="L2003" title="1 of 4 branches missed.">                boolean inlier = front1 &amp;&amp; front2;</span>
+<span class="fc bfc" id="L2003" title="All 4 branches covered.">                boolean inlier = front1 &amp;&amp; front2;</span>
 <span class="fc" id="L2004">                reconstructedPoint.setInlier(inlier);</span>
 
 <span class="fc" id="L2006">                mActiveMetricReconstructedPoints.add(reconstructedPoint);</span>
 
-<span class="pc bpc" id="L2008" title="1 of 2 branches missed.">                if (inlier) {</span>
-<span class="nc" id="L2009">                    mMatches.get(i).setReconstructedPoint(reconstructedPoint);</span>
+<span class="fc bfc" id="L2008" title="All 2 branches covered.">                if (inlier) {</span>
+<span class="fc" id="L2009">                    mMatches.get(i).setReconstructedPoint(reconstructedPoint);</span>
                 }
             }
 

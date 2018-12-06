@@ -74,17 +74,16 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      * @throws NonSymmetricMatrixException Raised when the conic matrix is not 
      * symmetric.
      */
-    public ImageOfAbsoluteConic(Matrix m) throws IllegalArgumentException, 
-            NonSymmetricMatrixException {
-<span class="fc" id="L79">        super(m);</span>
-<span class="fc" id="L80">    }    </span>
+    public ImageOfAbsoluteConic(Matrix m) throws NonSymmetricMatrixException {
+<span class="fc" id="L78">        super(m);</span>
+<span class="fc" id="L79">    }    </span>
     
     /**
      * Constructor without arguments.
      */
     protected ImageOfAbsoluteConic() {
-<span class="fc" id="L86">        super();</span>
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L85">        super();</span>
+<span class="fc" id="L86">    }</span>
     
     /**
      * Computes the dual conic of this conic.
@@ -96,9 +95,9 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      */
     @Override
     public DualConic getDualConic() throws DualConicNotAvailableException {
-<span class="fc" id="L99">        DualImageOfAbsoluteConic dualConic = new DualImageOfAbsoluteConic();</span>
-<span class="fc" id="L100">        dualConic(dualConic);</span>
-<span class="fc" id="L101">        return dualConic;</span>
+<span class="fc" id="L98">        DualImageOfAbsoluteConic dualConic = new DualImageOfAbsoluteConic();</span>
+<span class="fc" id="L99">        dualConic(dualConic);</span>
+<span class="fc" id="L100">        return dualConic;</span>
     }
     
     /**
@@ -113,15 +112,17 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
     public final void setFromPinholeCameraIntrinsicParameters(
             PinholeCameraIntrinsicParameters k) 
             throws InvalidPinholeCameraIntrinsicParametersException{
-<span class="fc" id="L116">        Matrix kMatrix = k.getInternalMatrix();</span>
+<span class="fc" id="L115">        Matrix kMatrix = k.getInternalMatrix();</span>
         try {
-<span class="fc" id="L118">            Matrix invKMatrix = com.irurueta.algebra.Utils.inverse(kMatrix);</span>
-<span class="fc" id="L119">            setParameters(invKMatrix.transposeAndReturnNew().</span>
-<span class="fc" id="L120">                    multiplyAndReturnNew(invKMatrix));</span>
-<span class="nc" id="L121">        } catch (AlgebraException e) {</span>
-<span class="nc" id="L122">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
-<span class="pc" id="L123">        } catch (NonSymmetricMatrixException ignore) { } //this will never happen</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L117">            Matrix invKMatrix = com.irurueta.algebra.Utils.inverse(kMatrix);</span>
+<span class="fc" id="L118">            setParameters(invKMatrix.transposeAndReturnNew().</span>
+<span class="fc" id="L119">                    multiplyAndReturnNew(invKMatrix));</span>
+<span class="nc" id="L120">        } catch (AlgebraException e) {</span>
+<span class="nc" id="L121">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
+<span class="nc" id="L122">        } catch (NonSymmetricMatrixException ignore) {</span>
+            //this will never happen
+<span class="fc" id="L124">        }</span>
+<span class="fc" id="L125">    }</span>
     
     /**
      * Assuming that we are working in a metric stratum this method obtains the
@@ -135,17 +136,17 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
     public PinholeCameraIntrinsicParameters getIntrinsicParameters() 
             throws InvalidPinholeCameraIntrinsicParametersException {
         try {
-<span class="fc" id="L138">            normalize();</span>
+<span class="fc" id="L139">            normalize();</span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
-<span class="fc" id="L143">            double b11 = getA();</span>
-<span class="fc" id="L144">            double b12 = getB();</span>
-<span class="fc" id="L145">            double b22 = getC();</span>
-<span class="fc" id="L146">            double b13 = getD();</span>
-<span class="fc" id="L147">            double b23 = getE();</span>
-<span class="fc" id="L148">            double b33 = getF();</span>
+<span class="fc" id="L144">            double b11 = getA();</span>
+<span class="fc" id="L145">            double b12 = getB();</span>
+<span class="fc" id="L146">            double b22 = getC();</span>
+<span class="fc" id="L147">            double b13 = getD();</span>
+<span class="fc" id="L148">            double b23 = getE();</span>
+<span class="fc" id="L149">            double b33 = getF();</span>
             
             //alpha = horizontal focal distance
             //beta = vertical focal distance
@@ -153,48 +154,48 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
             //u0 = horizontal principal point
             //v0 = vertical principal point
             //lambda = scale
-<span class="fc" id="L156">            double v0 = (b12 * b13 - b11 * b23) /</span>
+<span class="fc" id="L157">            double v0 = (b12 * b13 - b11 * b23) /</span>
                     (b11 * b22 - b12 * b12);
-<span class="pc bpc" id="L158" title="2 of 4 branches missed.">            if (Double.isNaN(v0) || Double.isInfinite(v0)) {</span>
-<span class="nc" id="L159">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
+<span class="pc bpc" id="L159" title="2 of 4 branches missed.">            if (Double.isNaN(v0) || Double.isInfinite(v0)) {</span>
+<span class="nc" id="L160">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
             }
             
             //lambda is an arbitrary scale, because conics are defined up to 
             //scale and we are obtaining intrinsic parameters from IAC (Image
             //of Absolute Conic)
-<span class="fc" id="L165">            double lambda = b33 - (b13 * b13 + v0 * (b12 * b13 - b11 * b23)) / </span>
+<span class="fc" id="L166">            double lambda = b33 - (b13 * b13 + v0 * (b12 * b13 - b11 * b23)) / </span>
                     b11;
             //fix sign of lambda so that squared roots are always positive
-<span class="fc" id="L168">            lambda *= Math.signum(lambda) * Math.signum(b11);</span>
+<span class="fc" id="L169">            lambda *= Math.signum(lambda) * Math.signum(b11);</span>
             
-<span class="pc bpc" id="L170" title="2 of 4 branches missed.">            if (Double.isNaN(lambda) || Double.isInfinite(lambda)) {</span>
-<span class="nc" id="L171">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
+<span class="pc bpc" id="L171" title="2 of 4 branches missed.">            if (Double.isNaN(lambda) || Double.isInfinite(lambda)) {</span>
+<span class="nc" id="L172">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
             }
             
-<span class="fc" id="L174">            double alpha = Math.sqrt(lambda / b11);</span>
-<span class="pc bpc" id="L175" title="2 of 4 branches missed.">            if (Double.isNaN(alpha) || Double.isInfinite(alpha)) {</span>
-<span class="nc" id="L176">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
+<span class="fc" id="L175">            double alpha = Math.sqrt(lambda / b11);</span>
+<span class="pc bpc" id="L176" title="2 of 4 branches missed.">            if (Double.isNaN(alpha) || Double.isInfinite(alpha)) {</span>
+<span class="nc" id="L177">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
             }
             
-<span class="fc" id="L179">            double beta = Math.sqrt(lambda * b11 / (b11 * b22 - b12 * b12));</span>
-<span class="pc bpc" id="L180" title="2 of 4 branches missed.">            if (Double.isNaN(beta) || Double.isInfinite(beta)) {</span>
-<span class="nc" id="L181">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
+<span class="fc" id="L180">            double beta = Math.sqrt(lambda * b11 / (b11 * b22 - b12 * b12));</span>
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">            if (Double.isNaN(beta) || Double.isInfinite(beta)) {</span>
+<span class="nc" id="L182">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
             }
             
-<span class="fc" id="L184">            double gamma = -b12 * alpha * alpha * beta / lambda;</span>
-<span class="pc bpc" id="L185" title="2 of 4 branches missed.">            if (Double.isNaN(gamma) || Double.isInfinite(gamma)) {</span>
-<span class="nc" id="L186">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
+<span class="fc" id="L185">            double gamma = -b12 * alpha * alpha * beta / lambda;</span>
+<span class="pc bpc" id="L186" title="2 of 4 branches missed.">            if (Double.isNaN(gamma) || Double.isInfinite(gamma)) {</span>
+<span class="nc" id="L187">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
             }
             
-<span class="fc" id="L189">            double u0 = gamma * v0 / beta - b13 * alpha * alpha / lambda;</span>
-<span class="pc bpc" id="L190" title="2 of 4 branches missed.">            if (Double.isNaN(u0) || Double.isInfinite(u0)) {</span>
-<span class="nc" id="L191">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
+<span class="fc" id="L190">            double u0 = gamma * v0 / beta - b13 * alpha * alpha / lambda;</span>
+<span class="pc bpc" id="L191" title="2 of 4 branches missed.">            if (Double.isNaN(u0) || Double.isInfinite(u0)) {</span>
+<span class="nc" id="L192">                throw new InvalidPinholeCameraIntrinsicParametersException();</span>
             }
             
-<span class="fc" id="L194">            return new PinholeCameraIntrinsicParameters(alpha, beta, u0, v0, </span>
+<span class="fc" id="L195">            return new PinholeCameraIntrinsicParameters(alpha, beta, u0, v0, </span>
                     gamma);
-<span class="nc" id="L196">        } catch (ArithmeticException e) {</span>
-<span class="nc" id="L197">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
+<span class="nc" id="L197">        } catch (ArithmeticException e) {</span>
+<span class="nc" id="L198">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
         }
     }
     
@@ -209,17 +210,17 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
     public PinholeCameraIntrinsicParameters getIntrinsicParametersCholesky()
             throws InvalidPinholeCameraIntrinsicParametersException {
         try {
-<span class="fc" id="L212">            normalize();</span>
+<span class="fc" id="L213">            normalize();</span>
         
-<span class="fc" id="L214">            Matrix m = asMatrix();</span>
-<span class="fc" id="L215">            CholeskyDecomposer decomposer = new CholeskyDecomposer(m);</span>
-<span class="fc" id="L216">            decomposer.decompose();</span>
-<span class="fc" id="L217">            Matrix inverseInternalParamsMatrix = decomposer.getR();</span>
-<span class="fc" id="L218">            Matrix internalParamsMatrix = com.irurueta.algebra.Utils.inverse(</span>
+<span class="fc" id="L215">            Matrix m = asMatrix();</span>
+<span class="fc" id="L216">            CholeskyDecomposer decomposer = new CholeskyDecomposer(m);</span>
+<span class="fc" id="L217">            decomposer.decompose();</span>
+<span class="fc" id="L218">            Matrix inverseInternalParamsMatrix = decomposer.getR();</span>
+<span class="fc" id="L219">            Matrix internalParamsMatrix = com.irurueta.algebra.Utils.inverse(</span>
                     inverseInternalParamsMatrix);
-<span class="fc" id="L220">            return new PinholeCameraIntrinsicParameters(internalParamsMatrix);</span>
-<span class="nc" id="L221">        } catch (AlgebraException e) {</span>
-<span class="nc" id="L222">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
+<span class="fc" id="L221">            return new PinholeCameraIntrinsicParameters(internalParamsMatrix);</span>
+<span class="nc" id="L222">        } catch (AlgebraException e) {</span>
+<span class="nc" id="L223">            throw new InvalidPinholeCameraIntrinsicParametersException(e);</span>
         }        
     }
 }

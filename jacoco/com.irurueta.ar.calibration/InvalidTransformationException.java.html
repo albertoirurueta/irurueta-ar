@@ -15,25 +15,27 @@
  */
 package com.irurueta.ar.calibration;
 
+import com.irurueta.ar.ARException;
+
 /**
  * Exception produced when provided transformation is numerically unstable.
  */
-public class InvalidTransformationException extends CalibrationException {
+public class InvalidTransformationException extends ARException {
     
     /**
      * Constructor.
      */
     public InvalidTransformationException() {
-<span class="fc" id="L27">        super();</span>
-<span class="fc" id="L28">    }</span>
+<span class="fc" id="L29">        super();</span>
+<span class="fc" id="L30">    }</span>
     
     /**
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
     public InvalidTransformationException(String message) {
-<span class="fc" id="L35">        super(message);</span>
-<span class="fc" id="L36">    }</span>
+<span class="fc" id="L37">        super(message);</span>
+<span class="fc" id="L38">    }</span>
     
     /**
      * Constructor with message and cause.
@@ -41,15 +43,15 @@ public class InvalidTransformationException extends CalibrationException {
      * @param cause instance containing the cause of the exception.
      */
     public InvalidTransformationException(String message, Throwable cause) {
-<span class="fc" id="L44">        super(message, cause);</span>
-<span class="fc" id="L45">    }</span>
+<span class="fc" id="L46">        super(message, cause);</span>
+<span class="fc" id="L47">    }</span>
     
     /**
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
     public InvalidTransformationException(Throwable cause) {
-<span class="fc" id="L52">        super(cause);</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L54">        super(cause);</span>
+<span class="fc" id="L55">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

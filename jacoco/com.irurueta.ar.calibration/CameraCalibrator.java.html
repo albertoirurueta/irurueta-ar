@@ -16,11 +16,9 @@
 package com.irurueta.ar.calibration;
 
 import com.irurueta.ar.calibration.estimators.*;
-import com.irurueta.geometry.HomogeneousPoint2D;
-import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
-import com.irurueta.geometry.Point2D;
-import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.*;
+import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.ArrayList;
@@ -39,13 +37,13 @@ public abstract class CameraCalibrator {
     /**
      * Default robust estimator method to be used for homography estimations.
      */
-<span class="fc" id="L42">    public static final RobustEstimatorMethod DEFAULT_HOMOGRAPHY_METHOD =</span>
+<span class="fc" id="L40">    public static final RobustEstimatorMethod DEFAULT_HOMOGRAPHY_METHOD =</span>
             RobustEstimatorMethod.PROSAC;
     
     /**
      * Default robust estimator method to be used for IAC estimation.
      */
-<span class="fc" id="L48">    public static final RobustEstimatorMethod DEFAULT_IAC_METHOD = </span>
+<span class="fc" id="L46">    public static final RobustEstimatorMethod DEFAULT_IAC_METHOD = </span>
             RobustEstimatorMethod.PROSAC;
     
     /**
@@ -77,7 +75,7 @@ public abstract class CameraCalibrator {
      * for distortion, which is then used to correct initially sampled points
      * and repeat the whole process until convergence is achieved.
      */
-<span class="fc" id="L80">    public static final CameraCalibratorMethod DEFAULT_METHOD = </span>
+<span class="fc" id="L78">    public static final CameraCalibratorMethod DEFAULT_METHOD = </span>
             CameraCalibratorMethod.ERROR_OPTIMIZATION;
     
     /**
@@ -239,23 +237,23 @@ public abstract class CameraCalibrator {
     /**
      * Constructor.
      */
-<span class="fc" id="L242">    public CameraCalibrator() {</span>
-<span class="fc" id="L243">        mPattern = null;</span>
-<span class="fc" id="L244">        mHomographies = null;</span>
-<span class="fc" id="L245">        mHomographyQualityScores = null;</span>
-<span class="fc" id="L246">        mIAC = null;</span>
-<span class="fc" id="L247">        mIntrinsic = null;</span>
-<span class="fc" id="L248">        mDistortion = null;</span>
-<span class="fc" id="L249">        mEstimateRadialDistortion = DEFAULT_ESTIMATE_RADIAL_DISTORTION;</span>
+<span class="fc" id="L240">    public CameraCalibrator() {</span>
+<span class="fc" id="L241">        mPattern = null;</span>
+<span class="fc" id="L242">        mHomographies = null;</span>
+<span class="fc" id="L243">        mHomographyQualityScores = null;</span>
+<span class="fc" id="L244">        mIAC = null;</span>
+<span class="fc" id="L245">        mIntrinsic = null;</span>
+<span class="fc" id="L246">        mDistortion = null;</span>
+<span class="fc" id="L247">        mEstimateRadialDistortion = DEFAULT_ESTIMATE_RADIAL_DISTORTION;</span>
 
-<span class="fc" id="L251">        internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);</span>
-<span class="fc" id="L252">        internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);</span>
+<span class="fc" id="L249">        internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);</span>
+<span class="fc" id="L250">        internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);</span>
         
-<span class="fc" id="L254">        mSamples = null;</span>
-<span class="fc" id="L255">        mSamplesQualityScores = null;</span>
+<span class="fc" id="L252">        mSamples = null;</span>
+<span class="fc" id="L253">        mSamplesQualityScores = null;</span>
         
-<span class="fc" id="L257">        mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
-<span class="fc" id="L258">    }</span>
+<span class="fc" id="L255">        mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L256">    }</span>
     
     /**
      * Constructor.
@@ -264,24 +262,23 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public CameraCalibrator(Pattern2D pattern, 
-            List&lt;CameraCalibratorSample&gt; samples) 
-<span class="fc" id="L268">            throws IllegalArgumentException {</span>
-<span class="fc" id="L269">        mPattern = pattern;        </span>
-<span class="fc" id="L270">        mHomographies = null;</span>
-<span class="fc" id="L271">        mHomographyQualityScores = null;</span>
-<span class="fc" id="L272">        mIAC = null;</span>
-<span class="fc" id="L273">        mIntrinsic = null;</span>
-<span class="fc" id="L274">        mDistortion = null;</span>
-<span class="fc" id="L275">        mEstimateRadialDistortion = DEFAULT_ESTIMATE_RADIAL_DISTORTION;</span>
+<span class="fc" id="L265">            List&lt;CameraCalibratorSample&gt; samples) {</span>
+<span class="fc" id="L266">        mPattern = pattern;        </span>
+<span class="fc" id="L267">        mHomographies = null;</span>
+<span class="fc" id="L268">        mHomographyQualityScores = null;</span>
+<span class="fc" id="L269">        mIAC = null;</span>
+<span class="fc" id="L270">        mIntrinsic = null;</span>
+<span class="fc" id="L271">        mDistortion = null;</span>
+<span class="fc" id="L272">        mEstimateRadialDistortion = DEFAULT_ESTIMATE_RADIAL_DISTORTION;</span>
 
-<span class="fc" id="L277">        internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);</span>
-<span class="fc" id="L278">        internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);</span>
+<span class="fc" id="L274">        internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);</span>
+<span class="fc" id="L275">        internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);</span>
         
-<span class="fc" id="L280">        internalSetSamples(samples);</span>
-<span class="fc" id="L281">        mSamplesQualityScores = null;</span>
+<span class="fc" id="L277">        internalSetSamples(samples);</span>
+<span class="fc" id="L278">        mSamplesQualityScores = null;</span>
 
-<span class="fc" id="L283">        mProgressDelta = DEFAULT_PROGRESS_DELTA;        </span>
-<span class="fc" id="L284">    }</span>
+<span class="fc" id="L280">        mProgressDelta = DEFAULT_PROGRESS_DELTA;        </span>
+<span class="fc" id="L281">    }</span>
     
     /**
      * Constructor.
@@ -293,27 +290,27 @@ public abstract class CameraCalibrator {
      */
     public CameraCalibrator(Pattern2D pattern,
             List&lt;CameraCalibratorSample&gt; samples,
-<span class="fc" id="L296">            double[] samplesQualityScores) throws IllegalArgumentException {</span>
-<span class="fc bfc" id="L297" title="All 2 branches covered.">        if (samples.size() != samplesQualityScores.length) {</span>
-<span class="fc" id="L298">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L293">            double[] samplesQualityScores) {</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">        if (samples.size() != samplesQualityScores.length) {</span>
+<span class="fc" id="L295">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L301">        mPattern = pattern;        </span>
-<span class="fc" id="L302">        mHomographies = null;</span>
-<span class="fc" id="L303">        mHomographyQualityScores = null;</span>
-<span class="fc" id="L304">        mIAC = null;</span>
-<span class="fc" id="L305">        mIntrinsic = null;</span>
-<span class="fc" id="L306">        mDistortion = null;</span>
-<span class="fc" id="L307">        mEstimateRadialDistortion = DEFAULT_ESTIMATE_RADIAL_DISTORTION;</span>
+<span class="fc" id="L298">        mPattern = pattern;        </span>
+<span class="fc" id="L299">        mHomographies = null;</span>
+<span class="fc" id="L300">        mHomographyQualityScores = null;</span>
+<span class="fc" id="L301">        mIAC = null;</span>
+<span class="fc" id="L302">        mIntrinsic = null;</span>
+<span class="fc" id="L303">        mDistortion = null;</span>
+<span class="fc" id="L304">        mEstimateRadialDistortion = DEFAULT_ESTIMATE_RADIAL_DISTORTION;</span>
 
-<span class="fc" id="L309">        internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);</span>
-<span class="fc" id="L310">        internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);</span>
+<span class="fc" id="L306">        internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);</span>
+<span class="fc" id="L307">        internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);</span>
         
-<span class="fc" id="L312">        internalSetSamples(samples);</span>
-<span class="fc" id="L313">        internalSetSamplesQualityScores(samplesQualityScores);</span>
+<span class="fc" id="L309">        internalSetSamples(samples);</span>
+<span class="fc" id="L310">        internalSetSamplesQualityScores(samplesQualityScores);</span>
 
-<span class="fc" id="L315">        mProgressDelta = DEFAULT_PROGRESS_DELTA;        </span>
-<span class="fc" id="L316">    }</span>
+<span class="fc" id="L312">        mProgressDelta = DEFAULT_PROGRESS_DELTA;        </span>
+<span class="fc" id="L313">    }</span>
     
     /**
      * Returns pattern used for camera calibration. Each pattern contain a 
@@ -322,7 +319,7 @@ public abstract class CameraCalibrator {
      * @return pattern used for camera calibration.
      */
     public Pattern2D getPattern() {
-<span class="fc" id="L325">        return mPattern;</span>
+<span class="fc" id="L322">        return mPattern;</span>
     }
     
     /**
@@ -333,12 +330,12 @@ public abstract class CameraCalibrator {
      * @throws LockedException if this instance is locked.
      */
     public void setPattern(Pattern2D pattern) throws LockedException {
-<span class="fc bfc" id="L336" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L337">            throw new LockedException();</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L334">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L340">        mPattern = pattern;</span>
-<span class="fc" id="L341">    }</span>
+<span class="fc" id="L337">        mPattern = pattern;</span>
+<span class="fc" id="L338">    }</span>
     
     /**
      * Returns list of samples obtained from different pictures using the same
@@ -348,7 +345,7 @@ public abstract class CameraCalibrator {
      * @return list of samples.
      */
     public List&lt;CameraCalibratorSample&gt; getSamples() {
-<span class="fc" id="L351">        return mSamples;</span>
+<span class="fc" id="L348">        return mSamples;</span>
     }
     
     /**
@@ -362,13 +359,12 @@ public abstract class CameraCalibrator {
      * estimate the intrinsic parameters. By default the minimum is 1, but 
      * depending on the settings at least 3 samples might be required.
      */
-    public void setSamples(List&lt;CameraCalibratorSample&gt; samples) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L367" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L368">            throw new LockedException();</span>
+    public void setSamples(List&lt;CameraCalibratorSample&gt; samples) throws LockedException {
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L364">            throw new LockedException();</span>
         }
-<span class="fc" id="L370">        internalSetSamples(samples);</span>
-<span class="fc" id="L371">    }</span>
+<span class="fc" id="L366">        internalSetSamples(samples);</span>
+<span class="fc" id="L367">    }</span>
         
     /**
      * Returns quality scores assigned to each provided sample. This can be used
@@ -380,7 +376,7 @@ public abstract class CameraCalibrator {
      * @return quality scores assigned to each provided sample.
      */
     public double[] getSamplesQualityScores() {
-<span class="fc" id="L383">        return mSamplesQualityScores;</span>
+<span class="fc" id="L379">        return mSamplesQualityScores;</span>
     }
     
     /**
@@ -397,12 +393,12 @@ public abstract class CameraCalibrator {
      * least 3 samples might be required.
      */
     public void setSamplesQualityScores(double[] samplesQualityScores)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L401" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L402">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L397" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L398">            throw new LockedException();</span>
         }
-<span class="fc" id="L404">        internalSetSamplesQualityScores(samplesQualityScores);</span>
-<span class="fc" id="L405">    }</span>
+<span class="fc" id="L400">        internalSetSamplesQualityScores(samplesQualityScores);</span>
+<span class="fc" id="L401">    }</span>
     
     /**
      * Returns quality scores for estimated homographies.
@@ -416,7 +412,7 @@ public abstract class CameraCalibrator {
      * @return estimated quality scores for homographies.
      */
     public double[] getHomographyQualityScores() {
-<span class="fc" id="L419">        return mHomographyQualityScores;</span>
+<span class="fc" id="L415">        return mHomographyQualityScores;</span>
     }
     
     /**
@@ -426,7 +422,7 @@ public abstract class CameraCalibrator {
      * been completed.
      */
     public ImageOfAbsoluteConic getEstimatedImageOfAbsoluteConic() {
-<span class="fc" id="L429">        return mIAC;</span>
+<span class="fc" id="L425">        return mIAC;</span>
     }
     
     /**
@@ -435,7 +431,7 @@ public abstract class CameraCalibrator {
      * estimation has not been completed.
      */
     public PinholeCameraIntrinsicParameters getEstimatedIntrinsicParameters() {
-<span class="fc" id="L438">        return mIntrinsic;</span>
+<span class="fc" id="L434">        return mIntrinsic;</span>
     }
     
     /**
@@ -444,7 +440,7 @@ public abstract class CameraCalibrator {
      * completed or radial distortion was not requested.
      */
     public RadialDistortion getDistortion() {
-<span class="fc" id="L447">        return mDistortion;</span>
+<span class="fc" id="L443">        return mDistortion;</span>
     }
     
     /**
@@ -453,7 +449,7 @@ public abstract class CameraCalibrator {
      * @return true if radial distortion must be estimated, false otherwise.
      */
     public boolean getEstimateRadialDistortion() {
-<span class="fc" id="L456">        return mEstimateRadialDistortion;</span>
+<span class="fc" id="L452">        return mEstimateRadialDistortion;</span>
     }
     
     /**
@@ -465,12 +461,12 @@ public abstract class CameraCalibrator {
      */
     public void setEstimateRadialDistortion(boolean estimateRadialDistortion)
             throws LockedException {
-<span class="fc bfc" id="L468" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L469">            throw new LockedException();</span>
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L465">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L472">        mEstimateRadialDistortion = estimateRadialDistortion;</span>
-<span class="fc" id="L473">    }</span>
+<span class="fc" id="L468">        mEstimateRadialDistortion = estimateRadialDistortion;</span>
+<span class="fc" id="L469">    }</span>
     
     /**
      * Returns robust estimator method to be used during homography estimation.
@@ -480,7 +476,7 @@ public abstract class CameraCalibrator {
      * @return robust estimator method to be used during homography estimation.
      */
     public RobustEstimatorMethod getHomographyMethod() {
-<span class="fc" id="L483">        return mHomographyMethod;</span>
+<span class="fc" id="L479">        return mHomographyMethod;</span>
     }
     
     /**
@@ -494,11 +490,11 @@ public abstract class CameraCalibrator {
      */
     public void setHomographyMethod(RobustEstimatorMethod homographyMethod)
             throws LockedException {
-<span class="fc bfc" id="L497" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L498">            throw new LockedException();</span>
+<span class="fc bfc" id="L493" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L494">            throw new LockedException();</span>
         }
-<span class="fc" id="L500">        internalSetHomographyMethod(homographyMethod);</span>
-<span class="fc" id="L501">    }</span>
+<span class="fc" id="L496">        internalSetHomographyMethod(homographyMethod);</span>
+<span class="fc" id="L497">    }</span>
             
     /**
      * Returns robust estimator method to be used during IAC estimation.
@@ -508,7 +504,7 @@ public abstract class CameraCalibrator {
      * @return robust estimator method to be used during IAC estimation
      */
     public RobustEstimatorMethod getImageOfAbsoluteConicMethod(){
-<span class="fc" id="L511">        return mImageOfAbsoluteConicMethod;</span>
+<span class="fc" id="L507">        return mImageOfAbsoluteConicMethod;</span>
     }
     
     /**
@@ -523,11 +519,11 @@ public abstract class CameraCalibrator {
     public void setImageOfAbsoluteConicMethod(
             RobustEstimatorMethod imageOfAbsoluteConicMethod)
             throws LockedException {
-<span class="fc bfc" id="L526" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L527">            throw new LockedException();</span>
+<span class="fc bfc" id="L522" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L523">            throw new LockedException();</span>
         }
-<span class="fc" id="L529">        internalSetImageOfAbsoluteConicMethod(imageOfAbsoluteConicMethod);</span>
-<span class="fc" id="L530">    }</span>
+<span class="fc" id="L525">        internalSetImageOfAbsoluteConicMethod(imageOfAbsoluteConicMethod);</span>
+<span class="fc" id="L526">    }</span>
             
     /**
      * Returns homography estimator, which can be retrieved in case that some
@@ -538,7 +534,7 @@ public abstract class CameraCalibrator {
      */
     public PointCorrespondenceProjectiveTransformation2DRobustEstimator
             getHomographyEstimator() {
-<span class="fc" id="L541">        return mHomographyEstimator;</span>
+<span class="fc" id="L537">        return mHomographyEstimator;</span>
     }
     
     /**
@@ -549,7 +545,7 @@ public abstract class CameraCalibrator {
      * @return IAC estimator.
      */
     public ImageOfAbsoluteConicRobustEstimator getIACEstimator() {
-<span class="fc" id="L552">        return mIACEstimator;</span>
+<span class="fc" id="L548">        return mIACEstimator;</span>
     }
     
     /**
@@ -562,7 +558,7 @@ public abstract class CameraCalibrator {
      * skewness is estimated.
      */
     public boolean isZeroSkewness() {
-<span class="fc" id="L565">        return mIACEstimator.isZeroSkewness();</span>
+<span class="fc" id="L561">        return mIACEstimator.isZeroSkewness();</span>
     }
     
     /**
@@ -576,12 +572,12 @@ public abstract class CameraCalibrator {
      * @throws LockedException if this instance is locked.
      */
     public void setZeroSkewness(boolean zeroSkewness) throws LockedException {
-<span class="fc bfc" id="L579" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L580">            throw new LockedException();</span>
+<span class="fc bfc" id="L575" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L576">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L583">        mIACEstimator.setZeroSkewness(zeroSkewness);</span>
-<span class="fc" id="L584">    }</span>
+<span class="fc" id="L579">        mIACEstimator.setZeroSkewness(zeroSkewness);</span>
+<span class="fc" id="L580">    }</span>
     
     /**
      * Returns boolean indicating whether principal point is assumed to be at
@@ -593,7 +589,7 @@ public abstract class CameraCalibrator {
      * coordinates, false if principal point must be estimated.
      */
     public boolean isPrincipalPointAtOrigin() {
-<span class="fc" id="L596">        return mIACEstimator.isPrincipalPointAtOrigin();</span>
+<span class="fc" id="L592">        return mIACEstimator.isPrincipalPointAtOrigin();</span>
     }
     
     /**
@@ -608,12 +604,12 @@ public abstract class CameraCalibrator {
      */
     public void setPrincipalPointAtOrigin(boolean principalPointAtOrigin)
             throws LockedException {
-<span class="fc bfc" id="L611" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L612">            throw new LockedException();</span>
+<span class="fc bfc" id="L607" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L608">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L615">        mIACEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
-<span class="fc" id="L616">    }</span>
+<span class="fc" id="L611">        mIACEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
+<span class="fc" id="L612">    }</span>
 
     /**
      * Returns boolean indicating whether aspect ratio of focal distances (i.e.
@@ -627,7 +623,7 @@ public abstract class CameraCalibrator {
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
     public boolean isFocalDistanceAspectRatioKnown() {
-<span class="fc" id="L630">        return mIACEstimator.isFocalDistanceAspectRatioKnown();</span>
+<span class="fc" id="L626">        return mIACEstimator.isFocalDistanceAspectRatioKnown();</span>
     }
     
     /**
@@ -645,13 +641,13 @@ public abstract class CameraCalibrator {
      */
     public void setFocalDistanceAspectRatioKnown(
             boolean focalDistanceAspectRatioKnown) throws LockedException {
-<span class="fc bfc" id="L648" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L649">            throw new LockedException();</span>
+<span class="fc bfc" id="L644" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L645">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L652">        mIACEstimator.setFocalDistanceAspectRatioKnown(</span>
+<span class="fc" id="L648">        mIACEstimator.setFocalDistanceAspectRatioKnown(</span>
                 focalDistanceAspectRatioKnown);
-<span class="fc" id="L654">    }</span>
+<span class="fc" id="L650">    }</span>
     
     /**
      * Returns aspect ratio of focal distances (i.e. vertical focal distance
@@ -672,7 +668,7 @@ public abstract class CameraCalibrator {
      * @return aspect ratio of focal distances.
      */    
     public double getFocalDistanceAspectRatio() {
-<span class="fc" id="L675">        return mIACEstimator.getFocalDistanceAspectRatio();</span>
+<span class="fc" id="L671">        return mIACEstimator.getFocalDistanceAspectRatio();</span>
     }
     
     /**
@@ -697,13 +693,13 @@ public abstract class CameraCalibrator {
      * close to zero, as it might produce numerical instabilities.
      */    
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L701" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L702">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L697" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L698">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L705">        mIACEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
-<span class="fc" id="L706">    }</span>
+<span class="fc" id="L701">        mIACEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
+<span class="fc" id="L702">    }</span>
     
     /**
      * Indicates whether this instance is locked because calibration is in 
@@ -711,7 +707,7 @@ public abstract class CameraCalibrator {
      * @return true if this instance, false otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L714">        return mLocked;</span>
+<span class="fc" id="L710">        return mLocked;</span>
     }
     
     /**
@@ -721,7 +717,7 @@ public abstract class CameraCalibrator {
      * during estimation.
      */
     public float getProgressDelta() {
-<span class="fc" id="L724">        return mProgressDelta;</span>
+<span class="fc" id="L720">        return mProgressDelta;</span>
     }
     
     /**
@@ -734,17 +730,16 @@ public abstract class CameraCalibrator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L739" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L740">            throw new LockedException();</span>
+    public void setProgressDelta(float progressDelta) throws LockedException {
+<span class="fc bfc" id="L734" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L735">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L742" title="2 of 4 branches missed.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
+<span class="pc bpc" id="L737" title="2 of 4 branches missed.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
                 progressDelta &gt; MAX_PROGRESS_DELTA) {
-<span class="nc" id="L744">            throw new IllegalArgumentException();</span>
+<span class="nc" id="L739">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L746">        mProgressDelta = progressDelta;</span>
-<span class="fc" id="L747">    }</span>
+<span class="fc" id="L741">        mProgressDelta = progressDelta;</span>
+<span class="fc" id="L742">    }</span>
     
     /**
      * Indicates whether this instance is ready to start camera calibration
@@ -752,8 +747,8 @@ public abstract class CameraCalibrator {
      * calibration, false otherwise.
      */
     public boolean isReady() {
-<span class="pc bpc" id="L755" title="1 of 4 branches missed.">        return mPattern != null &amp;&amp; mSamples != null &amp;&amp; </span>
-<span class="pc bpc" id="L756" title="1 of 2 branches missed.">                mSamples.size() &gt;= mIACEstimator.getMinNumberOfRequiredHomographies();</span>
+<span class="pc bpc" id="L750" title="1 of 4 branches missed.">        return mPattern != null &amp;&amp; mSamples != null &amp;&amp; </span>
+<span class="pc bpc" id="L751" title="1 of 2 branches missed.">                mSamples.size() &gt;= mIACEstimator.getMinNumberOfRequiredHomographies();</span>
     }
     
     /**
@@ -765,18 +760,18 @@ public abstract class CameraCalibrator {
      * markers and sampled pattern markers.
      */
     public double getHomographyEstimatorThreshold() {
-<span class="fc bfc" id="L768" title="All 5 branches covered.">        switch (mHomographyEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L763" title="All 5 branches covered.">        switch (mHomographyEstimator.getMethod()) {</span>
             case LMedS:
-<span class="fc" id="L770">                return ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getStopThreshold();</span>
+<span class="fc" id="L765">                return ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getStopThreshold();</span>
             case MSAC:
-<span class="fc" id="L772">                return ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();</span>
+<span class="fc" id="L767">                return ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();</span>
             case PROSAC:
-<span class="fc" id="L774">                return ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();</span>
+<span class="fc" id="L769">                return ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();</span>
             case PROMedS:
-<span class="fc" id="L776">                return ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getStopThreshold();</span>
+<span class="fc" id="L771">                return ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getStopThreshold();</span>
             case RANSAC:
             default:
-<span class="fc" id="L779">                return ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();</span>
+<span class="fc" id="L774">                return ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();</span>
         }
     }
     
@@ -791,36 +786,35 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setHomographyEstimatorThreshold(
-            double homographyEstimatorThreshold) throws LockedException, 
-            IllegalArgumentException {
-<span class="fc bfc" id="L796" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L797">            throw new LockedException();</span>
+            double homographyEstimatorThreshold) throws LockedException {
+<span class="fc bfc" id="L790" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L791">            throw new LockedException();</span>
         }
         
-<span class="fc bfc" id="L800" title="All 5 branches covered.">        switch (mHomographyEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L794" title="All 5 branches covered.">        switch (mHomographyEstimator.getMethod()) {</span>
             case LMedS:
-<span class="fc" id="L802">                ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
-<span class="fc" id="L803">                        setStopThreshold(homographyEstimatorThreshold);</span>
-<span class="fc" id="L804">                break;</span>
+<span class="fc" id="L796">                ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
+<span class="fc" id="L797">                        setStopThreshold(homographyEstimatorThreshold);</span>
+<span class="fc" id="L798">                break;</span>
             case MSAC:
-<span class="fc" id="L806">                ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
-<span class="fc" id="L807">                        setThreshold(homographyEstimatorThreshold);</span>
-<span class="fc" id="L808">                break;</span>
+<span class="fc" id="L800">                ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
+<span class="fc" id="L801">                        setThreshold(homographyEstimatorThreshold);</span>
+<span class="fc" id="L802">                break;</span>
             case PROSAC:
-<span class="fc" id="L810">                ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
-<span class="fc" id="L811">                        setThreshold(homographyEstimatorThreshold);</span>
-<span class="fc" id="L812">                break;</span>
+<span class="fc" id="L804">                ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
+<span class="fc" id="L805">                        setThreshold(homographyEstimatorThreshold);</span>
+<span class="fc" id="L806">                break;</span>
             case PROMedS:
-<span class="fc" id="L814">                ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
-<span class="fc" id="L815">                        setStopThreshold(homographyEstimatorThreshold);</span>
-<span class="fc" id="L816">                break;</span>
+<span class="fc" id="L808">                ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
+<span class="fc" id="L809">                        setStopThreshold(homographyEstimatorThreshold);</span>
+<span class="fc" id="L810">                break;</span>
             case RANSAC:
             default:
-<span class="fc" id="L819">                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
-<span class="fc" id="L820">                        setThreshold(homographyEstimatorThreshold);</span>
+<span class="fc" id="L813">                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).</span>
+<span class="fc" id="L814">                        setThreshold(homographyEstimatorThreshold);</span>
                 break;                
         }
-<span class="fc" id="L823">    }</span>
+<span class="fc" id="L817">    }</span>
     
     /**
      * Returns confidence to robustly estimate homographies between ideal 
@@ -838,7 +832,7 @@ public abstract class CameraCalibrator {
      * @return confidence to robustly estimate homographies.
      */
     public double getHomographyEstimatorConfidence() {
-<span class="fc" id="L841">        return mHomographyEstimator.getConfidence();</span>
+<span class="fc" id="L835">        return mHomographyEstimator.getConfidence();</span>
     }
     
     /**
@@ -861,14 +855,13 @@ public abstract class CameraCalibrator {
      * 1.0.
      */
     public void setHomographyEstimatorConfidence(
-            double homographyEstimatorConfidence) throws LockedException, 
-            IllegalArgumentException {
-<span class="fc bfc" id="L866" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L867">            throw new LockedException();</span>
+            double homographyEstimatorConfidence) throws LockedException {
+<span class="fc bfc" id="L859" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L860">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L870">        mHomographyEstimator.setConfidence(homographyEstimatorConfidence);</span>
-<span class="fc" id="L871">    }</span>
+<span class="fc" id="L863">        mHomographyEstimator.setConfidence(homographyEstimatorConfidence);</span>
+<span class="fc" id="L864">    }</span>
     
     /**
      * Returns the maximum number of iterations to be done when estimating
@@ -882,7 +875,7 @@ public abstract class CameraCalibrator {
      * homographies.
      */
     public int getHomographyEstimatorMaxIterations() {
-<span class="fc" id="L885">        return mHomographyEstimator.getMaxIterations();</span>
+<span class="fc" id="L878">        return mHomographyEstimator.getMaxIterations();</span>
     }
     
     /**
@@ -899,14 +892,13 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setHomographyEstimatorMaxIterations(
-            int homographyEstimatorMaxIterations) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L904" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L905">            throw new LockedException();</span>
+            int homographyEstimatorMaxIterations) throws LockedException {
+<span class="fc bfc" id="L896" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L897">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L908">        mHomographyEstimator.setMaxIterations(homographyEstimatorMaxIterations);</span>
-<span class="fc" id="L909">    }</span>
+<span class="fc" id="L900">        mHomographyEstimator.setMaxIterations(homographyEstimatorMaxIterations);</span>
+<span class="fc" id="L901">    }</span>
     
     /**
      * Returns threshold to robustly estimate the image of absolute conic.
@@ -915,18 +907,18 @@ public abstract class CameraCalibrator {
      * @return threshold to robustly estimate the image of absolute conic.
      */
     public double getIACEstimatorThreshold() {
-<span class="fc bfc" id="L918" title="All 5 branches covered.">        switch (mIACEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L910" title="All 5 branches covered.">        switch (mIACEstimator.getMethod()) {</span>
             case LMedS:
-<span class="fc" id="L920">                return ((LMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).getStopThreshold();</span>
+<span class="fc" id="L912">                return ((LMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).getStopThreshold();</span>
             case MSAC:
-<span class="fc" id="L922">                return ((MSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();</span>
+<span class="fc" id="L914">                return ((MSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();</span>
             case PROSAC:
-<span class="fc" id="L924">                return ((PROSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();</span>
+<span class="fc" id="L916">                return ((PROSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();</span>
             case PROMedS:
-<span class="fc" id="L926">                return ((PROMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).getStopThreshold();</span>
+<span class="fc" id="L918">                return ((PROMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).getStopThreshold();</span>
             case RANSAC:
             default:
-<span class="fc" id="L929">                return ((RANSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();</span>
+<span class="fc" id="L921">                return ((RANSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();</span>
         }
     }
     
@@ -940,35 +932,35 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setIACEstimatorThreshold(double iacEstimatorThreshold)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L944" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L945">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L936" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L937">            throw new LockedException();</span>
         }
         
-<span class="fc bfc" id="L948" title="All 5 branches covered.">        switch (mIACEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L940" title="All 5 branches covered.">        switch (mIACEstimator.getMethod()) {</span>
             case LMedS:
-<span class="fc" id="L950">                ((LMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
-<span class="fc" id="L951">                        setStopThreshold(iacEstimatorThreshold);</span>
-<span class="fc" id="L952">                break;</span>
+<span class="fc" id="L942">                ((LMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
+<span class="fc" id="L943">                        setStopThreshold(iacEstimatorThreshold);</span>
+<span class="fc" id="L944">                break;</span>
             case MSAC:
-<span class="fc" id="L954">                ((MSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
-<span class="fc" id="L955">                        setThreshold(iacEstimatorThreshold);</span>
-<span class="fc" id="L956">                break;</span>
+<span class="fc" id="L946">                ((MSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
+<span class="fc" id="L947">                        setThreshold(iacEstimatorThreshold);</span>
+<span class="fc" id="L948">                break;</span>
             case PROSAC:
-<span class="fc" id="L958">                ((PROSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
-<span class="fc" id="L959">                        setThreshold(iacEstimatorThreshold);</span>
-<span class="fc" id="L960">                break;</span>
+<span class="fc" id="L950">                ((PROSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
+<span class="fc" id="L951">                        setThreshold(iacEstimatorThreshold);</span>
+<span class="fc" id="L952">                break;</span>
             case PROMedS:
-<span class="fc" id="L962">                ((PROMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
-<span class="fc" id="L963">                        setStopThreshold(iacEstimatorThreshold);</span>
-<span class="fc" id="L964">                break;</span>
+<span class="fc" id="L954">                ((PROMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
+<span class="fc" id="L955">                        setStopThreshold(iacEstimatorThreshold);</span>
+<span class="fc" id="L956">                break;</span>
             case RANSAC:
             default:
-<span class="fc" id="L967">                ((RANSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
-<span class="fc" id="L968">                        setThreshold(iacEstimatorThreshold);</span>
+<span class="fc" id="L959">                ((RANSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).</span>
+<span class="fc" id="L960">                        setThreshold(iacEstimatorThreshold);</span>
                 break;
         }
-<span class="fc" id="L971">    }</span>
+<span class="fc" id="L963">    }</span>
     
     /**
      * Returns confidence to robustly estimate image of absolute conic
@@ -985,7 +977,7 @@ public abstract class CameraCalibrator {
      * @return confidence to robustly estimate the IAC.
      */
     public double getIACEstimatorConfidence() {
-<span class="fc" id="L988">        return mIACEstimator.getConfidence();</span>
+<span class="fc" id="L980">        return mIACEstimator.getConfidence();</span>
     }
     
     /**
@@ -1006,13 +998,13 @@ public abstract class CameraCalibrator {
      * 1.0.
      */
     public void setIACEstimatorConfidence(double iacEstimatorConfidence)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L1010" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L1011">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L1002" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L1003">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L1014">        mIACEstimator.setConfidence(iacEstimatorConfidence);</span>
-<span class="fc" id="L1015">    }</span>
+<span class="fc" id="L1006">        mIACEstimator.setConfidence(iacEstimatorConfidence);</span>
+<span class="fc" id="L1007">    }</span>
     
     /**
      * Returns the maximum number of iterations to be done when estimating 
@@ -1025,7 +1017,7 @@ public abstract class CameraCalibrator {
      * image of absolute conic.
      */
     public int getIACEstimatorMaxIterations() {
-<span class="fc" id="L1028">        return mIACEstimator.getMaxIterations();</span>
+<span class="fc" id="L1020">        return mIACEstimator.getMaxIterations();</span>
     }
     
     /**
@@ -1041,13 +1033,13 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setIACEstimatorMaxIterations(int iacEstimatorMaxIterations)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L1045" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L1046">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L1037" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L1038">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L1049">        mIACEstimator.setMaxIterations(iacEstimatorMaxIterations);</span>
-<span class="fc" id="L1050">    }</span>
+<span class="fc" id="L1041">        mIACEstimator.setMaxIterations(iacEstimatorMaxIterations);</span>
+<span class="fc" id="L1042">    }</span>
     
     /**
      * Returns listener to notify when calibration starts, finishes or its 
@@ -1056,7 +1048,7 @@ public abstract class CameraCalibrator {
      * progress significantly changes.
      */
     public CameraCalibratorListener getListener() {
-<span class="fc" id="L1059">        return mListener;</span>
+<span class="fc" id="L1051">        return mListener;</span>
     }
     
     /**
@@ -1068,12 +1060,12 @@ public abstract class CameraCalibrator {
      */
     public void setListener(CameraCalibratorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L1071" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L1072">            throw new LockedException();</span>
+<span class="fc bfc" id="L1063" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L1064">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L1075">        mListener = listener;</span>
-<span class="fc" id="L1076">    }</span>
+<span class="fc" id="L1067">        mListener = listener;</span>
+<span class="fc" id="L1068">    }</span>
     
     /**
      * Creates a camera calibrator using provided method.
@@ -1081,12 +1073,12 @@ public abstract class CameraCalibrator {
      * @return a camera calibrator.
      */
     public static CameraCalibrator create(CameraCalibratorMethod method) {
-<span class="fc bfc" id="L1084" title="All 2 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L1076" title="All 2 branches covered.">        switch (method) {</span>
             case ERROR_OPTIMIZATION:
-<span class="fc" id="L1086">                return new ErrorOptimizationCameraCalibrator();</span>
+<span class="fc" id="L1078">                return new ErrorOptimizationCameraCalibrator();</span>
             case ALTERNATING_CALIBRATOR:
             default:
-<span class="fc" id="L1089">                return new AlternatingCameraCalibrator();</span>
+<span class="fc" id="L1081">                return new AlternatingCameraCalibrator();</span>
         }
     }
     
@@ -1101,14 +1093,13 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public static CameraCalibrator create(Pattern2D pattern,
-            List&lt;CameraCalibratorSample&gt; samples, CameraCalibratorMethod method)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L1106" title="All 2 branches covered.">        switch (method) {</span>
+            List&lt;CameraCalibratorSample&gt; samples, CameraCalibratorMethod method) {
+<span class="fc bfc" id="L1097" title="All 2 branches covered.">        switch (method) {</span>
             case ERROR_OPTIMIZATION:
-<span class="fc" id="L1108">                return new ErrorOptimizationCameraCalibrator(pattern, samples);</span>
+<span class="fc" id="L1099">                return new ErrorOptimizationCameraCalibrator(pattern, samples);</span>
             case ALTERNATING_CALIBRATOR:
             default:
-<span class="fc" id="L1111">                return new AlternatingCameraCalibrator(pattern, samples);</span>
+<span class="fc" id="L1102">                return new AlternatingCameraCalibrator(pattern, samples);</span>
         }
     }
     
@@ -1124,14 +1115,14 @@ public abstract class CameraCalibrator {
      */
     public static CameraCalibrator create(Pattern2D pattern,
             List&lt;CameraCalibratorSample&gt; samples, double[] samplesQualityScores,
-            CameraCalibratorMethod method) throws IllegalArgumentException {
-<span class="fc bfc" id="L1128" title="All 2 branches covered.">        switch (method) {</span>
+            CameraCalibratorMethod method) {
+<span class="fc bfc" id="L1119" title="All 2 branches covered.">        switch (method) {</span>
             case ERROR_OPTIMIZATION:
-<span class="fc" id="L1130">                return new ErrorOptimizationCameraCalibrator(pattern, samples,</span>
+<span class="fc" id="L1121">                return new ErrorOptimizationCameraCalibrator(pattern, samples,</span>
                         samplesQualityScores);
             case ALTERNATING_CALIBRATOR:
             default:
-<span class="fc" id="L1134">                return new AlternatingCameraCalibrator(pattern, samples, </span>
+<span class="fc" id="L1125">                return new AlternatingCameraCalibrator(pattern, samples, </span>
                         samplesQualityScores);
         }
     }
@@ -1141,7 +1132,7 @@ public abstract class CameraCalibrator {
      * @return a camera calibrator.
      */
     public static CameraCalibrator create() {
-<span class="nc" id="L1144">        return create(DEFAULT_METHOD);</span>
+<span class="nc" id="L1135">        return create(DEFAULT_METHOD);</span>
     }
     
     /**
@@ -1154,9 +1145,8 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public static CameraCalibrator create(Pattern2D pattern,
-            List&lt;CameraCalibratorSample&gt; samples)
-            throws IllegalArgumentException {
-<span class="nc" id="L1159">        return create(pattern, samples, DEFAULT_METHOD);</span>
+            List&lt;CameraCalibratorSample&gt; samples) {
+<span class="nc" id="L1149">        return create(pattern, samples, DEFAULT_METHOD);</span>
     }
     
     /**
@@ -1170,9 +1160,8 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public static CameraCalibrator create(Pattern2D pattern,
-            List&lt;CameraCalibratorSample&gt; samples, double[] samplesQualityScores)
-            throws IllegalArgumentException {
-<span class="nc" id="L1175">        return create(pattern, samples, samplesQualityScores, DEFAULT_METHOD);</span>
+            List&lt;CameraCalibratorSample&gt; samples, double[] samplesQualityScores) {
+<span class="nc" id="L1164">        return create(pattern, samples, samplesQualityScores, DEFAULT_METHOD);</span>
     }    
     
     /**
@@ -1206,29 +1195,29 @@ public abstract class CameraCalibrator {
      * Computes intrinsic estimation progress.
      */
     protected void computeIntrinsicProgress() {
-<span class="fc" id="L1209">        float lambda = 1.0f / (float)mSamples.size();</span>
-<span class="fc" id="L1210">        mIntrinsicProgress = </span>
+<span class="fc" id="L1198">        float lambda = 1.0f / (float)mSamples.size();</span>
+<span class="fc" id="L1199">        mIntrinsicProgress = </span>
                 0.5f * (mSampleProgress + lambda * mHomographyProgress) +
                 0.5f * mIACProgress;
-<span class="fc" id="L1213">    }</span>
+<span class="fc" id="L1202">    }</span>
     
     /**
      * Resets estimated value to their initial values.
      */
     protected void reset() {
-<span class="fc" id="L1219">        mHomographies = null;</span>
-<span class="fc bfc" id="L1220" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc" id="L1221">            sample.setUndistortedMarkers(null);</span>
-<span class="fc" id="L1222">            sample.setHomography(null);</span>
-<span class="fc" id="L1223">            sample.setRotation(null);</span>
-<span class="fc" id="L1224">            sample.setCameraCenter(null);</span>
-<span class="fc" id="L1225">            sample.setCamera(null);</span>
-<span class="fc" id="L1226">        }</span>
-<span class="fc" id="L1227">        mHomographyQualityScores = null;</span>
-<span class="fc" id="L1228">        mIAC = null;</span>
-<span class="fc" id="L1229">        mIntrinsic = null;</span>
-<span class="fc" id="L1230">        mDistortion = null;</span>
-<span class="fc" id="L1231">    }</span>
+<span class="fc" id="L1208">        mHomographies = null;</span>
+<span class="fc bfc" id="L1209" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc" id="L1210">            sample.setUndistortedMarkers(null);</span>
+<span class="fc" id="L1211">            sample.setHomography(null);</span>
+<span class="fc" id="L1212">            sample.setRotation(null);</span>
+<span class="fc" id="L1213">            sample.setCameraCenter(null);</span>
+<span class="fc" id="L1214">            sample.setCamera(null);</span>
+<span class="fc" id="L1215">        }</span>
+<span class="fc" id="L1216">        mHomographyQualityScores = null;</span>
+<span class="fc" id="L1217">        mIAC = null;</span>
+<span class="fc" id="L1218">        mIntrinsic = null;</span>
+<span class="fc" id="L1219">        mDistortion = null;</span>
+<span class="fc" id="L1220">    }</span>
     
     /**
      * Estimates pinhole camera intrinsic parameters without accounting for
@@ -1241,94 +1230,97 @@ public abstract class CameraCalibrator {
             List&lt;Point2D&gt; idealFallbackPatternMarkers) 
             throws CalibrationException {
         
-<span class="fc" id="L1244">        mHomographyProgress = mSampleProgress = mIACProgress =</span>
+<span class="fc" id="L1233">        mHomographyProgress = mSampleProgress = mIACProgress =</span>
                 mIntrinsicProgress = 0.0f;
         
-<span class="pc bpc" id="L1247" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L1248">            mListener.onIntrinsicParametersEstimationStarts(this);</span>
+<span class="pc bpc" id="L1236" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L1237">            mListener.onIntrinsicParametersEstimationStarts(this);</span>
         }
                 
         //for each sample estimate the homography between the ideal pattern 
         //markers and the sampled ones
         List&lt;Point2D&gt; sampledPatternMarkers;
         Transformation2D homography;
-<span class="fc" id="L1255">        int sampleSize = mSamples.size();</span>
-<span class="fc" id="L1256">        mHomographies = new ArrayList&lt;&gt;(sampleSize);</span>
-<span class="fc" id="L1257">        double[] tmpHomographyQualityScores = new double[sampleSize];</span>
-<span class="fc" id="L1258">        int index = 0, counter = 0;</span>
+<span class="fc" id="L1244">        int sampleSize = mSamples.size();</span>
+<span class="fc" id="L1245">        mHomographies = new ArrayList&lt;&gt;(sampleSize);</span>
+<span class="fc" id="L1246">        double[] tmpHomographyQualityScores = new double[sampleSize];</span>
+<span class="fc" id="L1247">        int index = 0;</span>
+<span class="fc" id="L1248">        int counter = 0;</span>
         double error;
-<span class="fc bfc" id="L1260" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L1250" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
             try {
                 //reset homography before estimation in case that estimation
                 //fails on current iteration
-<span class="fc" id="L1264">                sample.setHomography(null);</span>
+<span class="fc" id="L1254">                sample.setHomography(null);</span>
                 List&lt;Point2D&gt; idealPatternMarkers;
-<span class="fc bfc" id="L1266" title="All 2 branches covered.">                if (sample.getPattern() != null) {</span>
+<span class="fc bfc" id="L1256" title="All 2 branches covered.">                if (sample.getPattern() != null) {</span>
                     //use sample pattern for homography estimation
-<span class="fc" id="L1268">                    idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+<span class="fc" id="L1258">                    idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
                 } else {
                     //use fallback pattern common to all samples
-<span class="fc" id="L1271">                    idealPatternMarkers = idealFallbackPatternMarkers;</span>
+<span class="fc" id="L1261">                    idealPatternMarkers = idealFallbackPatternMarkers;</span>
                 }
-<span class="fc" id="L1273">                homography = sample.estimateHomography(mHomographyEstimator, </span>
+<span class="fc" id="L1263">                homography = sample.estimateHomography(mHomographyEstimator, </span>
                         idealPatternMarkers);
-<span class="fc bfc" id="L1275" title="All 2 branches covered.">                sampledPatternMarkers = sample.getUndistortedMarkers() != null ?</span>
-<span class="fc" id="L1276">                        sample.getUndistortedMarkers() : </span>
-<span class="fc" id="L1277">                        sample.getSampledMarkers();</span>
-<span class="fc" id="L1278">                sample.setHomography(homography);</span>
-<span class="fc" id="L1279">                mHomographies.add(homography);</span>
+<span class="fc bfc" id="L1265" title="All 2 branches covered.">                sampledPatternMarkers = sample.getUndistortedMarkers() != null ?</span>
+<span class="fc" id="L1266">                        sample.getUndistortedMarkers() : </span>
+<span class="fc" id="L1267">                        sample.getSampledMarkers();</span>
+<span class="fc" id="L1268">                sample.setHomography(homography);</span>
+<span class="fc" id="L1269">                mHomographies.add(homography);</span>
                 
-<span class="fc bfc" id="L1281" title="All 2 branches covered.">                if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
-<span class="pc bpc" id="L1282" title="3 of 4 branches missed.">                        mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||</span>
+<span class="fc bfc" id="L1271" title="All 2 branches covered.">                if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
+<span class="pc bpc" id="L1272" title="3 of 4 branches missed.">                        mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||</span>
                         mHomographyQualityScoresRequired) {
-<span class="pc bpc" id="L1284" title="1 of 2 branches missed.">                    if (mSamplesQualityScores != null) {</span>
+<span class="pc bpc" id="L1274" title="1 of 2 branches missed.">                    if (mSamplesQualityScores != null) {</span>
                         //pick corresponding quality score
-<span class="nc" id="L1286">                        tmpHomographyQualityScores[counter] = </span>
+<span class="nc" id="L1276">                        tmpHomographyQualityScores[counter] = </span>
                             mSamplesQualityScores[index];
                     } else {
                         //compute reprojection error
-<span class="fc" id="L1290">                        error = homographyTransformationError(homography,</span>
+<span class="fc" id="L1280">                        error = homographyTransformationError(homography,</span>
                                 idealPatternMarkers, sampledPatternMarkers);
-<span class="fc" id="L1292">                        tmpHomographyQualityScores[counter] = </span>
+<span class="fc" id="L1282">                        tmpHomographyQualityScores[counter] = </span>
                                 1.0 / (1.0 + error);
                     }
                 }
-<span class="fc" id="L1296">                counter++; //counter of homography estimation successes</span>
-<span class="fc" id="L1297">            } catch (Exception ignore) { }</span>
+<span class="fc" id="L1286">                counter++; //counter of homography estimation successes</span>
+<span class="fc" id="L1287">            } catch (NumericalException | GeometryException ignore) {</span>
+                //homographies are attempted to be estimated. It's ok if some fail
+<span class="fc" id="L1289">            }</span>
             
-<span class="fc" id="L1299">            index++; //position index (regardless of homography estimation success)</span>
+<span class="fc" id="L1291">            index++; //position index (regardless of homography estimation success)</span>
             
-<span class="fc" id="L1301">            mHomographyProgress = 0.0f;</span>
-<span class="fc" id="L1302">            mSampleProgress = (float)index / (float)sampleSize;</span>
-<span class="fc" id="L1303">            computeIntrinsicProgress();</span>
-<span class="fc" id="L1304">            notifyProgress();</span>
-<span class="fc" id="L1305">        }</span>
+<span class="fc" id="L1293">            mHomographyProgress = 0.0f;</span>
+<span class="fc" id="L1294">            mSampleProgress = (float)index / (float)sampleSize;</span>
+<span class="fc" id="L1295">            computeIntrinsicProgress();</span>
+<span class="fc" id="L1296">            notifyProgress();</span>
+<span class="fc" id="L1297">        }</span>
 
-<span class="fc bfc" id="L1307" title="All 2 branches covered.">        if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
-<span class="pc bpc" id="L1308" title="3 of 4 branches missed.">                mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||</span>
+<span class="fc bfc" id="L1299" title="All 2 branches covered.">        if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
+<span class="pc bpc" id="L1300" title="3 of 4 branches missed.">                mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||</span>
                 mHomographyQualityScoresRequired) {
         
             //truncate tmpHomographyQualityScores to contain only actual number of
             //successfully estimated homographies
-<span class="fc" id="L1313">            mHomographyQualityScores = Arrays.copyOf(tmpHomographyQualityScores, </span>
+<span class="fc" id="L1305">            mHomographyQualityScores = Arrays.copyOf(tmpHomographyQualityScores, </span>
                     counter);
         }
         
         //estimate IAC using estimated homographies
         try {
-<span class="fc" id="L1319">            mIACEstimator.setHomographies(mHomographies);</span>
-<span class="fc" id="L1320">            mIACEstimator.setQualityScores(mHomographyQualityScores);</span>
-<span class="fc" id="L1321">            mIAC = mIACEstimator.estimate();</span>
+<span class="fc" id="L1311">            mIACEstimator.setHomographies(mHomographies);</span>
+<span class="fc" id="L1312">            mIACEstimator.setQualityScores(mHomographyQualityScores);</span>
+<span class="fc" id="L1313">            mIAC = mIACEstimator.estimate();</span>
             
-<span class="fc" id="L1323">            mIntrinsic = mIAC.getIntrinsicParameters();</span>
-<span class="nc" id="L1324">        } catch (Exception e) {</span>
-<span class="nc" id="L1325">            throw new CalibrationException(e);</span>
-<span class="fc" id="L1326">        } </span>
+<span class="fc" id="L1315">            mIntrinsic = mIAC.getIntrinsicParameters();</span>
+<span class="nc" id="L1316">        } catch (GeometryException | NumericalException e) {</span>
+<span class="nc" id="L1317">            throw new CalibrationException(e);</span>
+<span class="fc" id="L1318">        } </span>
         
-<span class="pc bpc" id="L1328" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L1329">            mListener.onIntrinsicParametersEstimationEnds(this, mIntrinsic);</span>
+<span class="pc bpc" id="L1320" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L1321">            mListener.onIntrinsicParametersEstimationEnds(this, mIntrinsic);</span>
         }
-<span class="fc" id="L1331">    }</span>
+<span class="fc" id="L1323">    }</span>
     
     /**
      * Computes average transformation error as a result of comparing sampled 
@@ -1344,118 +1336,120 @@ public abstract class CameraCalibrator {
             List&lt;Point2D&gt; idealPatternMarkers, 
             List&lt;Point2D&gt; sampledPatternMarkers) {
         
-<span class="fc" id="L1347">        Point2D transformedPoint = new HomogeneousPoint2D();</span>
-        Point2D idealPatternMarker, sampledPatternMarker;
-<span class="fc" id="L1349">        double avgError = 0.0, distance;</span>
-<span class="fc" id="L1350">        int size = sampledPatternMarkers.size();</span>
-<span class="fc bfc" id="L1351" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
-<span class="fc" id="L1352">            idealPatternMarker = idealPatternMarkers.get(i);            </span>
-<span class="fc" id="L1353">            sampledPatternMarker = sampledPatternMarkers.get(i);</span>
+<span class="fc" id="L1339">        Point2D transformedPoint = new HomogeneousPoint2D();</span>
+        Point2D idealPatternMarker;
+        Point2D sampledPatternMarker;
+<span class="fc" id="L1342">        double avgError = 0.0;</span>
+        double distance;
+<span class="fc" id="L1344">        int size = sampledPatternMarkers.size();</span>
+<span class="fc bfc" id="L1345" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L1346">            idealPatternMarker = idealPatternMarkers.get(i);            </span>
+<span class="fc" id="L1347">            sampledPatternMarker = sampledPatternMarkers.get(i);</span>
             
-<span class="fc" id="L1355">            homography.transform(idealPatternMarker, transformedPoint);</span>
-<span class="fc" id="L1356">            distance = transformedPoint.distanceTo(sampledPatternMarker);</span>
-<span class="fc" id="L1357">            avgError += distance;</span>
+<span class="fc" id="L1349">            homography.transform(idealPatternMarker, transformedPoint);</span>
+<span class="fc" id="L1350">            distance = transformedPoint.distanceTo(sampledPatternMarker);</span>
+<span class="fc" id="L1351">            avgError += distance;</span>
         }
         
-<span class="fc" id="L1360">        avgError /= (double)size;</span>
+<span class="fc" id="L1354">        avgError /= (double)size;</span>
         
-<span class="fc" id="L1362">        return avgError;</span>
+<span class="fc" id="L1356">        return avgError;</span>
     }
     
     /**
      * Refreshes listener of homography estimator.
      */
     protected void refreshHomographyEstimatorListener() {
-<span class="fc bfc" id="L1369" title="All 2 branches covered.">        if (mHomographyEstimatorListener == null) {</span>
-<span class="fc" id="L1370">            mHomographyEstimatorListener = new ProjectiveTransformation2DRobustEstimatorListener() {</span>
+<span class="fc bfc" id="L1363" title="All 2 branches covered.">        if (mHomographyEstimatorListener == null) {</span>
+<span class="fc" id="L1364">            mHomographyEstimatorListener = new ProjectiveTransformation2DRobustEstimatorListener() {</span>
 
                 @Override
                 public void onEstimateStart(
                         ProjectiveTransformation2DRobustEstimator estimator) {
-<span class="fc" id="L1375">                    mHomographyProgress = 0.0f;</span>
-<span class="fc" id="L1376">                    computeIntrinsicProgress();</span>
-<span class="fc" id="L1377">                    notifyProgress();</span>
-<span class="fc" id="L1378">                }</span>
+<span class="fc" id="L1369">                    mHomographyProgress = 0.0f;</span>
+<span class="fc" id="L1370">                    computeIntrinsicProgress();</span>
+<span class="fc" id="L1371">                    notifyProgress();</span>
+<span class="fc" id="L1372">                }</span>
 
                 @Override
                 public void onEstimateEnd(
                         ProjectiveTransformation2DRobustEstimator estimator) {
-<span class="fc" id="L1383">                    mHomographyProgress = 1.0f;</span>
-<span class="fc" id="L1384">                    computeIntrinsicProgress();</span>
-<span class="fc" id="L1385">                    notifyProgress();</span>
-<span class="fc" id="L1386">                }</span>
+<span class="fc" id="L1377">                    mHomographyProgress = 1.0f;</span>
+<span class="fc" id="L1378">                    computeIntrinsicProgress();</span>
+<span class="fc" id="L1379">                    notifyProgress();</span>
+<span class="fc" id="L1380">                }</span>
 
                 @Override
                 public void onEstimateNextIteration(
                         ProjectiveTransformation2DRobustEstimator estimator, 
-<span class="fc" id="L1391">                        int iteration) { }</span>
+<span class="fc" id="L1385">                        int iteration) { /* not used */ }</span>
 
                 @Override
                 public void onEstimateProgressChange(
                         ProjectiveTransformation2DRobustEstimator estimator, 
                         float progress) {
-<span class="fc" id="L1397">                    mHomographyProgress = progress;</span>
-<span class="fc" id="L1398">                    computeIntrinsicProgress();</span>
-<span class="fc" id="L1399">                    notifyProgress();</span>
-<span class="fc" id="L1400">                }</span>
+<span class="fc" id="L1391">                    mHomographyProgress = progress;</span>
+<span class="fc" id="L1392">                    computeIntrinsicProgress();</span>
+<span class="fc" id="L1393">                    notifyProgress();</span>
+<span class="fc" id="L1394">                }</span>
             };
         }
         
         try {
-<span class="fc" id="L1405">            mHomographyEstimator.setListener(mHomographyEstimatorListener);</span>
-<span class="nc" id="L1406">        } catch (LockedException e) {</span>
-<span class="nc" id="L1407">            Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L1399">            mHomographyEstimator.setListener(mHomographyEstimatorListener);</span>
+<span class="nc" id="L1400">        } catch (LockedException e) {</span>
+<span class="nc" id="L1401">            Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
                     Level.WARNING, 
                     &quot;Could not set homography estimator listener&quot;, e);
-<span class="fc" id="L1410">        }</span>
-<span class="fc" id="L1411">    }    </span>
+<span class="fc" id="L1404">        }</span>
+<span class="fc" id="L1405">    }    </span>
     
     /**
      * Refreshes listener of IAC estimator.
      */
     protected void refreshIACEstimatorListener() {
-<span class="fc bfc" id="L1417" title="All 2 branches covered.">        if (mIACEstimatorListener == null) {</span>
-<span class="fc" id="L1418">            mIACEstimatorListener = new ImageOfAbsoluteConicRobustEstimatorListener() {</span>
+<span class="fc bfc" id="L1411" title="All 2 branches covered.">        if (mIACEstimatorListener == null) {</span>
+<span class="fc" id="L1412">            mIACEstimatorListener = new ImageOfAbsoluteConicRobustEstimatorListener() {</span>
 
                 @Override
                 public void onEstimateStart(
                         ImageOfAbsoluteConicRobustEstimator estimator) {
-<span class="fc" id="L1423">                    mIACProgress = 0.0f;</span>
-<span class="fc" id="L1424">                    computeIntrinsicProgress();</span>
-<span class="fc" id="L1425">                    notifyProgress();</span>
-<span class="fc" id="L1426">                }</span>
+<span class="fc" id="L1417">                    mIACProgress = 0.0f;</span>
+<span class="fc" id="L1418">                    computeIntrinsicProgress();</span>
+<span class="fc" id="L1419">                    notifyProgress();</span>
+<span class="fc" id="L1420">                }</span>
 
                 @Override
                 public void onEstimateEnd(
                         ImageOfAbsoluteConicRobustEstimator estimator) {
-<span class="fc" id="L1431">                    mIACProgress = 1.0f;</span>
-<span class="fc" id="L1432">                    computeIntrinsicProgress();</span>
-<span class="fc" id="L1433">                    notifyProgress();</span>
-<span class="fc" id="L1434">                }</span>
+<span class="fc" id="L1425">                    mIACProgress = 1.0f;</span>
+<span class="fc" id="L1426">                    computeIntrinsicProgress();</span>
+<span class="fc" id="L1427">                    notifyProgress();</span>
+<span class="fc" id="L1428">                }</span>
 
                 @Override
                 public void onEstimateNextIteration(
                         ImageOfAbsoluteConicRobustEstimator estimator, 
-<span class="fc" id="L1439">                        int iteration) { }</span>
+<span class="fc" id="L1433">                        int iteration) { /* not used */ }</span>
 
                 @Override
                 public void onEstimateProgressChange(
                         ImageOfAbsoluteConicRobustEstimator estimator, 
                         float progress) {
-<span class="fc" id="L1445">                    mIACProgress = progress;</span>
-<span class="fc" id="L1446">                    computeIntrinsicProgress();</span>
-<span class="fc" id="L1447">                    notifyProgress();</span>
-<span class="fc" id="L1448">                }</span>
+<span class="fc" id="L1439">                    mIACProgress = progress;</span>
+<span class="fc" id="L1440">                    computeIntrinsicProgress();</span>
+<span class="fc" id="L1441">                    notifyProgress();</span>
+<span class="fc" id="L1442">                }</span>
             };
         }
         
         try {
-<span class="fc" id="L1453">            mIACEstimator.setListener(mIACEstimatorListener);</span>
-<span class="nc" id="L1454">        } catch (LockedException e) {</span>
-<span class="nc" id="L1455">            Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L1447">            mIACEstimator.setListener(mIACEstimatorListener);</span>
+<span class="nc" id="L1448">        } catch (LockedException e) {</span>
+<span class="nc" id="L1449">            Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
                     Level.WARNING, &quot;Could not set IAC estimator listener&quot;, e);
-<span class="fc" id="L1457">        }</span>
-<span class="fc" id="L1458">    }  </span>
+<span class="fc" id="L1451">        }</span>
+<span class="fc" id="L1452">    }  </span>
     
     /**
      * Internal method to set list of samples obtained from different pictures 
@@ -1470,14 +1464,13 @@ public abstract class CameraCalibrator {
      * estimate the intrinsic parameters. By default the minimum is 1, but
      * depending on the settings at least 3 samples might be required.
      */
-    private void internalSetSamples(List&lt;CameraCalibratorSample&gt; samples)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L1475" title="All 2 branches covered.">        if (samples.size() &lt; mIACEstimator.getMinNumberOfRequiredHomographies()) {</span>
-<span class="fc" id="L1476">            throw new IllegalArgumentException();</span>
+    private void internalSetSamples(List&lt;CameraCalibratorSample&gt; samples) {
+<span class="fc bfc" id="L1468" title="All 2 branches covered.">        if (samples.size() &lt; mIACEstimator.getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L1469">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L1479">        mSamples = samples;        </span>
-<span class="fc" id="L1480">    }    </span>
+<span class="fc" id="L1472">        mSamples = samples;        </span>
+<span class="fc" id="L1473">    }    </span>
     
     /**
      * Sets quality scores assigned to each provided sample. This can be used on
@@ -1493,14 +1486,13 @@ public abstract class CameraCalibrator {
      * parameters. By default the minimum is 1, but depending on the settings at
      * least 3 samples might be required.
      */    
-    private void internalSetSamplesQualityScores(double[] samplesQualityScores)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L1498" title="All 2 branches covered.">        if (samplesQualityScores.length &lt; mIACEstimator.getMinNumberOfRequiredHomographies()) {</span>
-<span class="fc" id="L1499">            throw new IllegalArgumentException();</span>
+    private void internalSetSamplesQualityScores(double[] samplesQualityScores) {
+<span class="fc bfc" id="L1490" title="All 2 branches covered.">        if (samplesQualityScores.length &lt; mIACEstimator.getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L1491">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L1502">        mSamplesQualityScores = samplesQualityScores;        </span>
-<span class="fc" id="L1503">    }</span>
+<span class="fc" id="L1494">        mSamplesQualityScores = samplesQualityScores;        </span>
+<span class="fc" id="L1495">    }</span>
         
     /**
      * Sets robust homography estimation method.
@@ -1511,36 +1503,37 @@ public abstract class CameraCalibrator {
     private void internalSetHomographyMethod(
             RobustEstimatorMethod homographyMethod) {
         //if method changes, homography estimator must be recreated
-<span class="pc bpc" id="L1514" title="1 of 2 branches missed.">        if (homographyMethod != mHomographyMethod) {</span>
-<span class="fc bfc" id="L1515" title="All 2 branches covered.">            boolean previousAvailable = mHomographyEstimator != null;</span>
-<span class="fc" id="L1516">            double threshold = 0.0, confidence = 0.0;</span>
-<span class="fc" id="L1517">            int maxIterations = 0;</span>
-<span class="fc bfc" id="L1518" title="All 2 branches covered.">            if (previousAvailable) {</span>
-<span class="fc" id="L1519">                threshold = getHomographyEstimatorThreshold();</span>
-<span class="fc" id="L1520">                confidence = getHomographyEstimatorConfidence();</span>
-<span class="fc" id="L1521">                maxIterations = getHomographyEstimatorMaxIterations();</span>
+<span class="pc bpc" id="L1506" title="1 of 2 branches missed.">        if (homographyMethod != mHomographyMethod) {</span>
+<span class="fc bfc" id="L1507" title="All 2 branches covered.">            boolean previousAvailable = mHomographyEstimator != null;</span>
+<span class="fc" id="L1508">            double threshold = 0.0;</span>
+<span class="fc" id="L1509">            double confidence = 0.0;</span>
+<span class="fc" id="L1510">            int maxIterations = 0;</span>
+<span class="fc bfc" id="L1511" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1512">                threshold = getHomographyEstimatorThreshold();</span>
+<span class="fc" id="L1513">                confidence = getHomographyEstimatorConfidence();</span>
+<span class="fc" id="L1514">                maxIterations = getHomographyEstimatorMaxIterations();</span>
             }
             
-<span class="fc" id="L1524">            mHomographyEstimator = </span>
+<span class="fc" id="L1517">            mHomographyEstimator = </span>
                     PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-<span class="fc" id="L1526">                    create(homographyMethod);</span>
+<span class="fc" id="L1519">                    create(homographyMethod);</span>
             
             //configure new estimator
-<span class="fc" id="L1529">            refreshHomographyEstimatorListener();</span>
-<span class="fc bfc" id="L1530" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1522">            refreshHomographyEstimatorListener();</span>
+<span class="fc bfc" id="L1523" title="All 2 branches covered.">            if (previousAvailable) {</span>
                 try {
-<span class="fc" id="L1532">                    setHomographyEstimatorThreshold(threshold);</span>
-<span class="fc" id="L1533">                    setHomographyEstimatorConfidence(confidence);</span>
-<span class="fc" id="L1534">                    setHomographyEstimatorMaxIterations(maxIterations);</span>
-<span class="nc" id="L1535">                } catch (LockedException e) {</span>
-<span class="nc" id="L1536">                    Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L1525">                    setHomographyEstimatorThreshold(threshold);</span>
+<span class="fc" id="L1526">                    setHomographyEstimatorConfidence(confidence);</span>
+<span class="fc" id="L1527">                    setHomographyEstimatorMaxIterations(maxIterations);</span>
+<span class="nc" id="L1528">                } catch (LockedException e) {</span>
+<span class="nc" id="L1529">                    Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
                             Level.WARNING, 
                             &quot;Could not reconfigure homography estimator&quot;, e);
-<span class="fc" id="L1539">                }</span>
+<span class="fc" id="L1532">                }</span>
             }
         }
-<span class="fc" id="L1542">        mHomographyMethod = homographyMethod;        </span>
-<span class="fc" id="L1543">    }</span>
+<span class="fc" id="L1535">        mHomographyMethod = homographyMethod;        </span>
+<span class="fc" id="L1536">    }</span>
 
     /**
      * Sets robust IAC estimation method.
@@ -1551,47 +1544,49 @@ public abstract class CameraCalibrator {
     private void internalSetImageOfAbsoluteConicMethod(
             RobustEstimatorMethod imageOfAbsoluteConicMethod) {
         //if method changes, iac estimator must be recreated
-<span class="fc bfc" id="L1554" title="All 2 branches covered.">        if (imageOfAbsoluteConicMethod != mImageOfAbsoluteConicMethod) {</span>
-<span class="fc bfc" id="L1555" title="All 2 branches covered.">            boolean previousAvailable = mIACEstimator != null;</span>
-<span class="fc" id="L1556">            double threshold = 0.0, confidence = 0.0;</span>
-<span class="fc" id="L1557">            int maxIterations = 0;</span>
-<span class="fc" id="L1558">            boolean zeroSkewness = false, principalPointAtOrigin = false, </span>
-<span class="fc" id="L1559">                    focalDistanceAspectRatioKnown = false;</span>
-<span class="fc" id="L1560">            double focalDistanceAspectRatio = 0.0;</span>
-<span class="fc bfc" id="L1561" title="All 2 branches covered.">            if (previousAvailable) {</span>
-<span class="fc" id="L1562">                threshold = getIACEstimatorThreshold();</span>
-<span class="fc" id="L1563">                confidence = getIACEstimatorConfidence();</span>
-<span class="fc" id="L1564">                maxIterations = getIACEstimatorMaxIterations();</span>
-<span class="fc" id="L1565">                zeroSkewness = isZeroSkewness();</span>
-<span class="fc" id="L1566">                principalPointAtOrigin = isPrincipalPointAtOrigin();</span>
-<span class="fc" id="L1567">                focalDistanceAspectRatioKnown = </span>
-<span class="fc" id="L1568">                        isFocalDistanceAspectRatioKnown();</span>
-<span class="fc" id="L1569">                focalDistanceAspectRatio = getFocalDistanceAspectRatio();</span>
+<span class="fc bfc" id="L1547" title="All 2 branches covered.">        if (imageOfAbsoluteConicMethod != mImageOfAbsoluteConicMethod) {</span>
+<span class="fc bfc" id="L1548" title="All 2 branches covered.">            boolean previousAvailable = mIACEstimator != null;</span>
+<span class="fc" id="L1549">            double threshold = 0.0;</span>
+<span class="fc" id="L1550">            double confidence = 0.0;</span>
+<span class="fc" id="L1551">            int maxIterations = 0;</span>
+<span class="fc" id="L1552">            boolean zeroSkewness = false;</span>
+<span class="fc" id="L1553">            boolean principalPointAtOrigin = false;</span>
+<span class="fc" id="L1554">            boolean focalDistanceAspectRatioKnown = false;</span>
+<span class="fc" id="L1555">            double focalDistanceAspectRatio = 0.0;</span>
+<span class="fc bfc" id="L1556" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1557">                threshold = getIACEstimatorThreshold();</span>
+<span class="fc" id="L1558">                confidence = getIACEstimatorConfidence();</span>
+<span class="fc" id="L1559">                maxIterations = getIACEstimatorMaxIterations();</span>
+<span class="fc" id="L1560">                zeroSkewness = isZeroSkewness();</span>
+<span class="fc" id="L1561">                principalPointAtOrigin = isPrincipalPointAtOrigin();</span>
+<span class="fc" id="L1562">                focalDistanceAspectRatioKnown = </span>
+<span class="fc" id="L1563">                        isFocalDistanceAspectRatioKnown();</span>
+<span class="fc" id="L1564">                focalDistanceAspectRatio = getFocalDistanceAspectRatio();</span>
             }
             
-<span class="fc" id="L1572">            mIACEstimator = ImageOfAbsoluteConicRobustEstimator.create(</span>
+<span class="fc" id="L1567">            mIACEstimator = ImageOfAbsoluteConicRobustEstimator.create(</span>
                 imageOfAbsoluteConicMethod);
             
             //configure new estimator
-<span class="fc" id="L1576">            refreshIACEstimatorListener();</span>
-<span class="fc bfc" id="L1577" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1571">            refreshIACEstimatorListener();</span>
+<span class="fc bfc" id="L1572" title="All 2 branches covered.">            if (previousAvailable) {</span>
                 try {
-<span class="fc" id="L1579">                    setIACEstimatorThreshold(threshold);</span>
-<span class="fc" id="L1580">                    setIACEstimatorConfidence(confidence);</span>
-<span class="fc" id="L1581">                    setIACEstimatorMaxIterations(maxIterations);</span>
-<span class="fc" id="L1582">                    setZeroSkewness(zeroSkewness);</span>
-<span class="fc" id="L1583">                    setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
-<span class="fc" id="L1584">                    setFocalDistanceAspectRatioKnown(</span>
+<span class="fc" id="L1574">                    setIACEstimatorThreshold(threshold);</span>
+<span class="fc" id="L1575">                    setIACEstimatorConfidence(confidence);</span>
+<span class="fc" id="L1576">                    setIACEstimatorMaxIterations(maxIterations);</span>
+<span class="fc" id="L1577">                    setZeroSkewness(zeroSkewness);</span>
+<span class="fc" id="L1578">                    setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
+<span class="fc" id="L1579">                    setFocalDistanceAspectRatioKnown(</span>
                             focalDistanceAspectRatioKnown);
-<span class="fc" id="L1586">                    setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
-<span class="nc" id="L1587">                } catch (LockedException e) {</span>
-<span class="nc" id="L1588">                    Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
+<span class="fc" id="L1581">                    setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
+<span class="nc" id="L1582">                } catch (LockedException e) {</span>
+<span class="nc" id="L1583">                    Logger.getLogger(CameraCalibrator.class.getName()).log(</span>
                             Level.WARNING, 
                             &quot;Could not reconfigure IAC estimator&quot;, e);
-<span class="fc" id="L1591">                }</span>
+<span class="fc" id="L1586">                }</span>
             }
         }
-<span class="fc" id="L1594">        mImageOfAbsoluteConicMethod = imageOfAbsoluteConicMethod;        </span>
-<span class="fc" id="L1595">    }    </span>
+<span class="fc" id="L1589">        mImageOfAbsoluteConicMethod = imageOfAbsoluteConicMethod;        </span>
+<span class="fc" id="L1590">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
