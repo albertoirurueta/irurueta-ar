@@ -503,61 +503,66 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             double v32 = v.getElementAt(2, 1);
             
             //build Kruppa equations
-            double A = u12*u11;
-            double B = u22*u21;
-            double C = Math.pow(x0,2.0)*u12*u11 + x0*y0*u22*u11 + x0*u32*u11 + 
-                    x0*y0*u12*u21 + Math.pow(y0,2.0)*u22*u21 + y0*u32*u21 + 
-                    x0*u12*u31 + y0*u22*u31 + u32*u31;
-            double D = Math.pow(sigma2,2.0)*v12*v12;
-            double E = Math.pow(sigma2,2.0)*v22*v22;
-            double F = Math.pow(sigma2*x0,2.0)*v12*v12 + 
-                    Math.pow(sigma2,2.0)*x0*y0*v22*v12 + 
-                    Math.pow(sigma2,2.0)*x0*v32*v12 + 
-                    Math.pow(sigma2,2.0)*x0*y0*v12*v22 + 
-                    Math.pow(sigma2*y0,2)*v22*v22 + 
-                    Math.pow(sigma2,2.0)*y0*v32*v22 + 
-                    Math.pow(sigma2,2.0)*x0*v12*v32 + 
-                    Math.pow(sigma2,2.0)*y0*v22*v32 + 
-                    Math.pow(sigma2,2.0)*v32*v32;
-            double G = u11*u11;
-            double H = u21*u21;
-            double I = Math.pow(x0,2.0)*u11*u11 + x0*y0*u21*u11 + x0*u31*u11 + 
-                    x0*y0*u11*u21 + Math.pow(y0,2.0)*u21*u21 + y0*u31*u21 + 
-                    x0*u11*u31 + y0*u21*u31 + u31*u31;
-            double J = sigma1*sigma2*v12*v11;
-            double K = sigma1*sigma2*v22*v21;
-            double L = sigma1*sigma2*Math.pow(x0,2.0)*v12*v11 + 
-                    sigma1*sigma2*x0*y0*v22*v11 + sigma1*sigma2*x0*v32*v11 + 
-                    sigma1*sigma2*x0*y0*v12*v21 + 
-                    sigma1*sigma2*Math.pow(y0,2.0)*v22*v21 + 
-                    sigma1*sigma2*y0*v32*v21 + sigma1*sigma2*x0*v12*v31 + 
-                    sigma1*sigma2*y0*v22*v31 + sigma1*sigma2*v32*v31;
-            double M = Math.pow(sigma1,2.0)*v11*v11;
-            double N = Math.pow(sigma1,2.0)*v21*v21;
-            double O = Math.pow(sigma1*x0,2.0)*v11*v11 + 
-                    Math.pow(sigma1,2.0)*x0*y0*v21*v11 + 
-                    Math.pow(sigma1,2.0)*x0*v31*v11 + 
-                    Math.pow(sigma1,2.0)*x0*y0*v11*v21 + 
-                    Math.pow(sigma1*y0,2.0)*v21*v21 + 
-                    Math.pow(sigma1,2.0)*y0*v31*v21 + 
-                    Math.pow(sigma1,2.0)*x0*v11*v31 + 
-                    Math.pow(sigma1,2.0)*y0*v21*v31 + 
-                    Math.pow(sigma1,2.0)*v31*v31;
-            double P = u12*u12;
-            double Q = u22*u22;
-            double R = Math.pow(x0,2.0)*u12*u12 + x0*y0*u22*u12 + x0*u32*u12 + 
-                    x0*y0*u12*u22 + Math.pow(y0,2.0)*u22*u22 + y0*u32*u22 + 
-                    x0*u12*u32 + y0*u22*u32 + u32*u32;
+            double polyA = u12*u11;
+            double polyB = u22*u21;
+            double polyC = Math.pow(x0,2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
+                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
+                    x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
+            double polyD = Math.pow(sigma2, 2.0) * v12 * v12;
+            double polyE = Math.pow(sigma2, 2.0) * v22 * v22;
+            double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
+                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
+                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
+                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
+                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
+                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
+                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
+                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
+                    Math.pow(sigma2, 2.0) * v32 * v32;
+            double polyG = u11*u11;
+            double polyH = u21*u21;
+            double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
+                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
+                    x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
+            double polyJ = sigma1 * sigma2 * v12 * v11;
+            double polyK = sigma1 * sigma2 * v22 * v21;
+            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
+                    sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
+                    sigma1 * sigma2 * x0 * y0 * v12 * v21 +
+                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
+                    sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
+                    sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;
+            double polyN = Math.pow(sigma1, 2.0) * v21 * v21;
+            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
+                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
+                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
+                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
+                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
+                    Math.pow(sigma1, 2.0) * v31 * v31;
+            double polyP = u12 * u12;
+            double polyQ = u22 * u22;
+            double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
+                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
+                    x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
             
             
-            double S = ((P*J + A*M)/(G*M - P*D)*(H*N - Q*E) - (Q*K + B*N));
-            double T = ((P*J + A*M)/(G*M - P*D)*(G*N + H*M - P*E - Q*D) - 
-                    (P*K + Q*J + A*N + B*M));
-            double U = ((P*J + A*M)/(G*M - P*D)*(G*O + M*I - P*F - D*R) - 
-                    (P*L + J*R + A*O + M*C));
-            double V = ((P*J + A*M)/(G*M - P*D)*(H*O + N*I - Q*F - E*R) - 
-                    (Q*L + K*R + B*O + N*C));
-            double W = ((P*J + A*M)/(G*M - P*D)*(O*I - F*R) - (L*R + O*C));
+            double polyS = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+                    (polyH * polyN - polyQ * polyE) - (polyQ * polyK + polyB * polyN));
+            double polyT = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+                    (polyG * polyN + polyH * polyM - polyP * polyE - polyQ * polyD) -
+                    (polyP * polyK + polyQ * polyJ + polyA * polyN + polyB * polyM));
+            double polyU = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+                    (polyG * polyO + polyM * polyI - polyP * polyF - polyD * polyR) -
+                    (polyP * polyL + polyJ * polyR + polyA * polyO + polyM * polyC));
+            double polyV = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+                    (polyH * polyO + polyN * polyI - polyQ * polyF - polyE * polyR) -
+                    (polyQ * polyL + polyK * polyR + polyB * polyO + polyN * polyC));
+            double polyW = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+                    (polyO * polyI - polyF * polyR) - (polyL * polyR + polyO * polyC));
             
             //assuming that x = ax^2, y = ay^2 which are the horizontal and
             //vertical focal lengths, we obtain the following equations
@@ -577,13 +582,13 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             //then use obtained y to solve x
             Complex[] roots;
             try {
-                Polynomial poly1 = buildPolynomial1(A, B, C, D, E, F, G, H, I, 
-                        J, K, L, S, T, U, V, W);
+                Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+                        polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
                 roots = poly1.getRoots();
-            } catch (NumericalException e1) {
+            } catch (NumericalException ex1) {
                 //if solution for poly1 fails, try with second polynomial
-                Polynomial poly2 = buildPolynomial2(D, E, F, G, H, I,
-                        M, N, O, P, Q, R, S, T, U, V, W);
+                Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
+                        polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
                 roots = poly2.getRoots();
             }
             
@@ -598,7 +603,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             if (roots != null) {
                 for (Complex root : roots) {
                     double y = root.getReal();
-                    double x = getXFromY(y, S, T, U, V, W);
+                    double x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);
                     
                     //build DIAC matrix and check if it is positive definite
                     if (x >= 0.0 && y >= 0.0) {
@@ -607,7 +612,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                         try {
                             valid = buildDiac(horizontalFocalLength, 
                                 verticalFocalLength, diac);
-                        } catch (AlgebraException e) {
+                        } catch (AlgebraException ex) {
                             valid = false;
                         }
                     }
@@ -629,10 +634,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                 throw new KruppaDualImageOfAbsoluteConicEstimatorException();
             }
             
-        } catch (KruppaDualImageOfAbsoluteConicEstimatorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new KruppaDualImageOfAbsoluteConicEstimatorException(e);
+        } catch (KruppaDualImageOfAbsoluteConicEstimatorException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new KruppaDualImageOfAbsoluteConicEstimatorException(ex);
         }        
     }
         
@@ -642,45 +647,45 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * components.
      * This method is used internally when aspect ratio is not known.
      * @param y y value to obtian x value from.
-     * @param S internal value from Kruppa's equations.
-     * @param T internal value from Kruppa's equations.
-     * @param U internal value from Kruppa's equations.
-     * @param V internal value from Kruppa's equations.
-     * @param W internal value from Kruppa's equations.
+     * @param s internal value from Kruppa's equations.
+     * @param t internal value from Kruppa's equations.
+     * @param u internal value from Kruppa's equations.
+     * @param v internal value from Kruppa's equations.
+     * @param w internal value from Kruppa's equations.
      * @return x value.
      */
-    private double getXFromY(double y, double S, double T, double U, double V, 
-            double W) {
-        return (-Math.pow(y, 2.0)*S - y*V - W) / (y*T + U);
+    private double getXFromY(double y, double s, double t, double u, double v,
+            double w) {
+        return (-Math.pow(y, 2.0)*s - y*v - w) / (y*t + u);
     }
     
     /**
      * One of Kruppa's equations expressed as a polynomial of degree 4 to solve
      * y value, which is the squared value of vertical focal length.
      * This method is only used when aspect ratio is unknown.
-     * @param A internal value from Kruppa's equations.
-     * @param B internal value from Kruppa's equations.
-     * @param C internal value from Kruppa's equations.
-     * @param D internal value from Kruppa's equations.
-     * @param E internal value from Kruppa's equations.
-     * @param F internal value from Kruppa's equations.
-     * @param G internal value from Kruppa's equations.
-     * @param H internal value from Kruppa's equations.
-     * @param I internal value from Kruppa's equations.
-     * @param J internal value from Kruppa's equations.
-     * @param K internal value from Kruppa's equations.
-     * @param L internal value from Kruppa's equations.
-     * @param S internal value from Kruppa's equations.
-     * @param T internal value from Kruppa's equations.
-     * @param U internal value from Kruppa's equations.
-     * @param V internal value from Kruppa's equations.
-     * @param W internal value from Kruppa's equations.
+     * @param a internal value from Kruppa's equations.
+     * @param b internal value from Kruppa's equations.
+     * @param c internal value from Kruppa's equations.
+     * @param d internal value from Kruppa's equations.
+     * @param e internal value from Kruppa's equations.
+     * @param f internal value from Kruppa's equations.
+     * @param g internal value from Kruppa's equations.
+     * @param h internal value from Kruppa's equations.
+     * @param i internal value from Kruppa's equations.
+     * @param j internal value from Kruppa's equations.
+     * @param k internal value from Kruppa's equations.
+     * @param l internal value from Kruppa's equations.
+     * @param s internal value from Kruppa's equations.
+     * @param t internal value from Kruppa's equations.
+     * @param u internal value from Kruppa's equations.
+     * @param v internal value from Kruppa's equations.
+     * @param w internal value from Kruppa's equations.
      * @return a polynomial.
      */
-    private Polynomial buildPolynomial1(double A, double B, double C, double D,
-            double E, double F, double G, double H, double I, double J, 
-            double K, double L, double S, double T, double U, double V,
-            double W) {
+    private Polynomial buildPolynomial1(double a, double b, double c, double d,
+            double e, double f, double g, double h, double i, double j,
+            double k, double l, double s, double t, double u, double v,
+            double w) {
         //(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + 
         //(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + 
         //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + 
@@ -690,49 +695,49 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
         
         //(-y^2*S - y*V - W)^2 *(-A*D - G*J)
-        Polynomial tmp = new Polynomial(-W, -V, -S);
-        Polynomial tmp2 = new Polynomial(-W, -V, -S);
+        Polynomial tmp = new Polynomial(-w, -v, -s);
+        Polynomial tmp2 = new Polynomial(-w, -v, -s);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(-A*D - G*J);
+        tmp.multiplyByScalar(-a*d - g*j);
         result.add(tmp);
         
         //y^2*(y*T + U)^2*(-B*E - H*K)
         tmp.setPolyParams(0.0, 0.0, 1.0);
-        tmp2.setPolyParams(U, T);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(-B*E - H*K);
+        tmp.multiplyByScalar(-b*e - h*k);
         result.add(tmp);
         
         //(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J)
-        tmp.setPolyParams(-W, -V, -S);
-        tmp2.setPolyParams(U, T);
+        tmp.setPolyParams(-w, -v, -s);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
         tmp2.setPolyParams(0.0, 1);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(-A*E - B*D - G*K - H*J);
+        tmp.multiplyByScalar(-a*e - b*d - g*k - h*j);
         result.add(tmp);
         
         //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I)
-        tmp.setPolyParams(-W, -V, -S);
-        tmp2.setPolyParams(U, T);
+        tmp.setPolyParams(-w, -v, -s);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(-A*F - D*C - G*L - J*I);
+        tmp.multiplyByScalar(-a*f - d*c - g*l - j*i);
         result.add(tmp);
         
         //y*(y*T + U)^2*(-B*F - E*C - H*L - K*I)
         tmp.setPolyParams(0.0, 1.0);
-        tmp2.setPolyParams(U, T);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(-B*F - E*C - H*L - K*I);
+        tmp.multiplyByScalar(-b*f - e*c - h*l - k*i);
         result.add(tmp);
         
         //(y*T + U)^2*(- F*C - L*I)
-        tmp.setPolyParams(U, T);
-        tmp2.setPolyParams(U, T);
+        tmp.setPolyParams(u, t);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(-F*C - L*I);
+        tmp.multiplyByScalar(-f*c - l*i);
         result.add(tmp);
         
         return result;
@@ -742,30 +747,30 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * Another of Kruppa's equations expressed as a polynomial of degree 4 to
      * solve y value, which is the squared value of vertical focal length.
      * This method is only used when aspect ratio is unknown.
-     * @param D internal value from Kruppa's equations.
-     * @param E internal value from Kruppa's equations.
-     * @param F internal value from Kruppa's equations.
-     * @param G internal value from Kruppa's equations.
-     * @param H internal value from Kruppa's equations.
-     * @param I internal value from Kruppa's equations.
-     * @param M internal value from Kruppa's equations.
-     * @param N internal value from Kruppa's equations.
-     * @param O internal value from Kruppa's equations.
-     * @param P internal value from Kruppa's equations.
-     * @param Q internal value from Kruppa's equations.
-     * @param R internal value from Kruppa's equations.
-     * @param S internal value from Kruppa's equations.
-     * @param T internal value from Kruppa's equations.
-     * @param U internal value from Kruppa's equations.
-     * @param V internal value from Kruppa's equations.
-     * @param W internal value from Kruppa's equations.
+     * @param d internal value from Kruppa's equations.
+     * @param e internal value from Kruppa's equations.
+     * @param f internal value from Kruppa's equations.
+     * @param g internal value from Kruppa's equations.
+     * @param h internal value from Kruppa's equations.
+     * @param i internal value from Kruppa's equations.
+     * @param m internal value from Kruppa's equations.
+     * @param n internal value from Kruppa's equations.
+     * @param o internal value from Kruppa's equations.
+     * @param p internal value from Kruppa's equations.
+     * @param q internal value from Kruppa's equations.
+     * @param r internal value from Kruppa's equations.
+     * @param s internal value from Kruppa's equations.
+     * @param t internal value from Kruppa's equations.
+     * @param u internal value from Kruppa's equations.
+     * @param v internal value from Kruppa's equations.
+     * @param w internal value from Kruppa's equations.
      * @return a polynomial.
      */
-    private Polynomial buildPolynomial2(double D,
-            double E, double F, double G, double H, double I,
-            double M, double N, double O, double P,
-            double Q, double R, double S, double T, double U, double V, 
-            double W) {
+    private Polynomial buildPolynomial2(double d,
+            double e, double f, double g, double h, double i,
+            double m, double n, double o, double p,
+            double q, double r, double s, double t, double u, double v,
+            double w) {
         //(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + 
         //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + 
         //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + 
@@ -774,48 +779,48 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
         
         //(-y^2*S - y*V - W)^2*(G*M - P*D)
-        Polynomial tmp = new Polynomial(-W, -V, -S);
-        Polynomial tmp2 = new Polynomial(-W, -V, -S);
+        Polynomial tmp = new Polynomial(-w, -v, -s);
+        Polynomial tmp2 = new Polynomial(-w, -v, -s);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(G*M - P*D);
+        tmp.multiplyByScalar(g*m - p*d);
         result.add(tmp);
         
         //y^2*(y*T + U)^2*(H*N - Q*E)
         tmp.setPolyParams(0.0, 0.0, 1.0);
-        tmp2.setPolyParams(U, T);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(H*N - Q*E);
+        tmp.multiplyByScalar(h*n - q*e);
         result.add(tmp);
         
         //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D)
-        tmp.setPolyParams(-W, -V, -S);
-        tmp2.setPolyParams(U, T);
+        tmp.setPolyParams(-w, -v, -s);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
         tmp2.setPolyParams(0.0, 1.0);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(G*N + H*M - P*E - Q*D);
+        tmp.multiplyByScalar(g*n + h*m - p*e - q*d);
         result.add(tmp);
         
         //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R)
-        tmp.setPolyParams(-W, -V, -S);
-        tmp2.setPolyParams(U, T);
+        tmp.setPolyParams(-w, -v, -s);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(G*O + M*I - P*F - D*R);
+        tmp.multiplyByScalar(g*o + m*i - p*f - d*r);
         result.add(tmp);
         
         //y*(y*T + U)^2*(H*O + N*I - Q*F - E*R)
         tmp.setPolyParams(0.0, 1.0);
-        tmp2.setPolyParams(U, T);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(H*O + N*I - Q*F - E*R);
+        tmp.multiplyByScalar(h*o + n*i - q*f - e*r);
         result.add(tmp);
         
         //(y*T + U)^2*(O*I - F*R)
-        tmp.setPolyParams(U, T);
-        tmp2.setPolyParams(U, T);
+        tmp.setPolyParams(u, t);
+        tmp2.setPolyParams(u, t);
         tmp.multiply(tmp2);
-        tmp.multiplyByScalar(O*I - F*R);
+        tmp.multiplyByScalar(o*i - f*r);
         result.add(tmp);
         
         return result;

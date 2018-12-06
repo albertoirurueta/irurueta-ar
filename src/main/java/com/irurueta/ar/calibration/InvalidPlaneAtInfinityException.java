@@ -15,13 +15,11 @@
  */
 package com.irurueta.ar.calibration;
 
-import com.irurueta.ar.ARException;
-
 /**
  * Exception produced when plane at infinity cannot be determined.
  */
 @SuppressWarnings("WeakerAccess")
-public class InvalidPlaneAtInfinityException extends ARException {
+public class InvalidPlaneAtInfinityException extends CalibrationException {
     
     /**
      * Constructor.
