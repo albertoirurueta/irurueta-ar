@@ -17,6 +17,7 @@ package com.irurueta.ar.epipolar.refiners;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
 import com.irurueta.geometry.CoordinatesType;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
@@ -24,6 +25,7 @@ import com.irurueta.geometry.Transformation2D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.geometry.refiners.RefinerException;
+import com.irurueta.numerical.EvaluationException;
 import com.irurueta.numerical.GradientEstimator;
 import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
@@ -55,12 +57,12 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
     /**
      * Maximum allowed number of refinement iterations.
      */
-<span class="fc" id="L58">    public static int MAX_ITERS = 10;   </span>
+<span class="fc" id="L60">    public static int MAX_ITERS = 10;   </span>
     
     /**
      * Constructor.
      */
-<span class="fc" id="L63">    public InhomogeneousRightEpipoleRefiner() { }</span>
+<span class="fc" id="L65">    public InhomogeneousRightEpipoleRefiner() { }</span>
     
     /**
      * Constructor.
@@ -83,10 +85,10 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
             boolean keepCovariance, BitSet inliers, double[] residuals, 
             int numInliers, List&lt;Point2D&gt; samples1, List&lt;Point2D&gt; samples2,
             double refinementStandardDeviation, Transformation2D homography) {
-<span class="fc" id="L86">        super(initialEpipoleEstimation, keepCovariance, inliers, residuals, </span>
+<span class="fc" id="L88">        super(initialEpipoleEstimation, keepCovariance, inliers, residuals, </span>
                 numInliers, samples1, samples2, refinementStandardDeviation, 
                 homography);
-<span class="fc" id="L89">    }</span>
+<span class="fc" id="L91">    }</span>
     
     /**
      * Constructor.
@@ -107,9 +109,9 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
             boolean keepCovariance, InliersData inliersData,
             List&lt;Point2D&gt; samples1, List&lt;Point2D&gt; samples2, 
             double refinementStandardDeviation, Transformation2D homography) {
-<span class="fc" id="L110">        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, </span>
+<span class="fc" id="L112">        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, </span>
                 samples2, refinementStandardDeviation, homography);
-<span class="fc" id="L112">    }</span>
+<span class="fc" id="L114">    }</span>
     
     /**
      * Refines provided initial right epipole estimation.
@@ -126,163 +128,174 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      */
     
     @Override
+    @SuppressWarnings(&quot;Duplicates&quot;)
     public boolean refine(Point2D result) throws NotReadyException, 
             LockedException, RefinerException {
-<span class="fc bfc" id="L131" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L132">            throw new LockedException();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L135">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L135">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L138">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L138">        mLocked = true;</span>
+<span class="fc" id="L141">        mLocked = true;</span>
         
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if (mListener != null) {</span>
-<span class="fc" id="L141">            mListener.onRefineStart(this, mInitialEstimation);</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L144">            mListener.onRefineStart(this, mInitialEstimation);</span>
         }
         
         try {    
-<span class="fc" id="L145">            InhomogeneousPoint2D epipole = new InhomogeneousPoint2D(</span>
+<span class="fc" id="L148">            InhomogeneousPoint2D epipole = new InhomogeneousPoint2D(</span>
                     mInitialEstimation);
-<span class="fc" id="L147">            boolean errorDecreased = false, iterErrorDecreased;</span>
-<span class="fc" id="L148">            int numIter = 0;</span>
+<span class="fc" id="L150">            boolean errorDecreased = false, iterErrorDecreased;</span>
+<span class="fc" id="L151">            int numIter = 0;</span>
             do {
-<span class="fc" id="L150">                FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();</span>
-<span class="fc" id="L151">                computeFundamentalMatrix(mHomography, epipole, </span>
+<span class="fc" id="L153">                FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();</span>
+<span class="fc" id="L154">                computeFundamentalMatrix(mHomography, epipole, </span>
                         fundamentalMatrix);
-<span class="fc" id="L153">                double initialTotalResidual = totalResidual(fundamentalMatrix);</span>
-<span class="fc" id="L154">                final double[] initParams = epipole.asArray();</span>
+<span class="fc" id="L156">                double initialTotalResidual = totalResidual(fundamentalMatrix);</span>
+<span class="fc" id="L157">                final double[] initParams = epipole.asArray();</span>
         
                 //output values to be fitted/optimized will contain residuals
-<span class="fc" id="L157">                double[] y = new double[mNumInliers];</span>
+<span class="fc" id="L160">                double[] y = new double[mNumInliers];</span>
                 //input values will contain 2 points to compute residuals
-<span class="fc" id="L159">                final int nDims = </span>
+<span class="fc" id="L162">                final int nDims = </span>
                         2*Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
-<span class="fc" id="L161">                Matrix x = new Matrix(mNumInliers, nDims);</span>
-<span class="fc" id="L162">                int nSamples = mInliers.length();</span>
-<span class="fc" id="L163">                int pos = 0;</span>
+<span class="fc" id="L164">                Matrix x = new Matrix(mNumInliers, nDims);</span>
+<span class="fc" id="L165">                int nSamples = mInliers.length();</span>
+<span class="fc" id="L166">                int pos = 0;</span>
                 Point2D leftPoint, rightPoint;
-<span class="fc bfc" id="L165" title="All 2 branches covered.">                for (int i = 0; i &lt; nSamples; i++) {</span>
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">                    if (mInliers.get(i)) {</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">                for (int i = 0; i &lt; nSamples; i++) {</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">                    if (mInliers.get(i)) {</span>
                         //sample is inlier
-<span class="fc" id="L168">                        leftPoint = mSamples1.get(i);</span>
-<span class="fc" id="L169">                        rightPoint = mSamples2.get(i);</span>
-<span class="fc" id="L170">                        leftPoint.normalize();</span>
-<span class="fc" id="L171">                        rightPoint.normalize();</span>
-<span class="fc" id="L172">                        x.setElementAt(pos, 0, leftPoint.getInhomX());</span>
-<span class="fc" id="L173">                        x.setElementAt(pos, 1, leftPoint.getInhomY());</span>
-<span class="fc" id="L174">                        x.setElementAt(pos, 2, rightPoint.getInhomX());</span>
-<span class="fc" id="L175">                        x.setElementAt(pos, 3, rightPoint.getInhomY());</span>
+<span class="fc" id="L171">                        leftPoint = mSamples1.get(i);</span>
+<span class="fc" id="L172">                        rightPoint = mSamples2.get(i);</span>
+<span class="fc" id="L173">                        leftPoint.normalize();</span>
+<span class="fc" id="L174">                        rightPoint.normalize();</span>
+<span class="fc" id="L175">                        x.setElementAt(pos, 0, leftPoint.getInhomX());</span>
+<span class="fc" id="L176">                        x.setElementAt(pos, 1, leftPoint.getInhomY());</span>
+<span class="fc" id="L177">                        x.setElementAt(pos, 2, rightPoint.getInhomX());</span>
+<span class="fc" id="L178">                        x.setElementAt(pos, 3, rightPoint.getInhomY());</span>
                         
-<span class="fc" id="L177">                        y[pos] = mResiduals[i];</span>
-<span class="fc" id="L178">                        pos++;                    </span>
+<span class="fc" id="L180">                        y[pos] = mResiduals[i];</span>
+<span class="fc" id="L181">                        pos++;                    </span>
                     }
                 }
             
-<span class="fc" id="L182">                LevenbergMarquardtMultiDimensionFunctionEvaluator evaluator =</span>
-<span class="fc" id="L183">                        new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+<span class="fc" id="L185">                LevenbergMarquardtMultiDimensionFunctionEvaluator evaluator =</span>
+<span class="fc" id="L186">                        new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
                 
-<span class="fc" id="L185">                    private Point2D mLeftPoint = Point2D.create(</span>
+<span class="fc" id="L188">                    private Point2D mLeftPoint = Point2D.create(</span>
                             CoordinatesType.INHOMOGENEOUS_COORDINATES);
                     
-<span class="fc" id="L188">                    private Point2D mRightPoint = Point2D.create(</span>
+<span class="fc" id="L191">                    private Point2D mRightPoint = Point2D.create(</span>
                             CoordinatesType.INHOMOGENEOUS_COORDINATES);
                         
-<span class="fc" id="L191">                    private InhomogeneousPoint2D mEpipole = </span>
+<span class="fc" id="L194">                    private InhomogeneousPoint2D mEpipole = </span>
                             new InhomogeneousPoint2D();
                 
-<span class="fc" id="L194">                    private FundamentalMatrix mFundMatrix = </span>
+<span class="fc" id="L197">                    private FundamentalMatrix mFundMatrix = </span>
                             new FundamentalMatrix();
                 
-<span class="fc" id="L197">                    private GradientEstimator mGradientEstimator =</span>
+<span class="fc" id="L200">                    private GradientEstimator mGradientEstimator =</span>
                             new GradientEstimator(
-<span class="fc" id="L199">                                    new MultiDimensionFunctionEvaluatorListener() {</span>
+<span class="fc" id="L202">                                    new MultiDimensionFunctionEvaluatorListener() {</span>
                         @Override
+                        @SuppressWarnings(&quot;Duplicates&quot;)
                         public double evaluate(double[] point) 
-                                throws Throwable {
-                        
-<span class="fc" id="L204">                            mEpipole.setCoordinates(point);</span>
-<span class="fc" id="L205">                            computeFundamentalMatrix(mHomography, mEpipole, </span>
-<span class="fc" id="L206">                                    mFundMatrix);</span>
-<span class="fc" id="L207">                            return residual(mFundMatrix, mLeftPoint, </span>
-<span class="fc" id="L208">                                    mRightPoint);</span>
+                                throws EvaluationException {
+
+                            try {
+<span class="fc" id="L209">                                mEpipole.setCoordinates(point);</span>
+<span class="fc" id="L210">                                computeFundamentalMatrix(mHomography, mEpipole,</span>
+<span class="fc" id="L211">                                        mFundMatrix);</span>
+<span class="fc" id="L212">                                return residual(mFundMatrix, mLeftPoint,</span>
+<span class="fc" id="L213">                                        mRightPoint);</span>
+<span class="nc" id="L214">                            } catch (InvalidFundamentalMatrixException e) {</span>
+<span class="nc" id="L215">                                throw new EvaluationException(e);</span>
+                            }
                         }
                     });
                         
                     @Override
                     public int getNumberOfDimensions() {
-<span class="fc" id="L214">                        return nDims;</span>
+<span class="fc" id="L222">                        return nDims;</span>
                     }
 
                     @Override
                     public double[] createInitialParametersArray() {
-<span class="fc" id="L219">                        return initParams;</span>
+<span class="fc" id="L227">                        return initParams;</span>
                     }
 
                     @Override
+                    @SuppressWarnings(&quot;Duplicates&quot;)
                     public double evaluate(int i, double[] point, 
                             double[] params, double[] derivatives) 
-                            throws Throwable {
-<span class="fc" id="L226">                        mLeftPoint.setInhomogeneousCoordinates(point[0], </span>
-                                point[1]);
-<span class="fc" id="L228">                        mRightPoint.setInhomogeneousCoordinates(point[2], </span>
-                                point[3]);
+                            throws EvaluationException {
+                        try {
+<span class="fc" id="L236">                            mLeftPoint.setInhomogeneousCoordinates(point[0],</span>
+                                    point[1]);
+<span class="fc" id="L238">                            mRightPoint.setInhomogeneousCoordinates(point[2],</span>
+                                    point[3]);
 
-<span class="fc" id="L231">                        mEpipole.setCoordinates(params);</span>
-<span class="fc" id="L232">                        computeFundamentalMatrix(mHomography, mEpipole, </span>
-                                mFundMatrix);
-                    
-<span class="fc" id="L235">                        double y = residual(mFundMatrix, mLeftPoint, </span>
-                                mRightPoint);
-<span class="fc" id="L237">                        mGradientEstimator.gradient(params, derivatives);</span>
-                    
-<span class="fc" id="L239">                        return y;</span>
+<span class="fc" id="L241">                            mEpipole.setCoordinates(params);</span>
+<span class="fc" id="L242">                            computeFundamentalMatrix(mHomography, mEpipole,</span>
+                                    mFundMatrix);
+
+<span class="fc" id="L245">                            double y = residual(mFundMatrix, mLeftPoint,</span>
+                                    mRightPoint);
+<span class="fc" id="L247">                            mGradientEstimator.gradient(params, derivatives);</span>
+
+<span class="fc" id="L249">                            return y;</span>
+<span class="nc" id="L250">                        } catch (InvalidFundamentalMatrixException e) {</span>
+<span class="nc" id="L251">                            throw new EvaluationException(e);</span>
+                        }
                     }
                 };
         
-<span class="fc" id="L243">                LevenbergMarquardtMultiDimensionFitter fitter =</span>
+<span class="fc" id="L256">                LevenbergMarquardtMultiDimensionFitter fitter =</span>
                         new LevenbergMarquardtMultiDimensionFitter(evaluator, x,
-<span class="fc" id="L245">                                y, getRefinementStandardDeviation());</span>
+<span class="fc" id="L258">                                y, getRefinementStandardDeviation());</span>
                 
-<span class="fc" id="L247">                fitter.fit();</span>
+<span class="fc" id="L260">                fitter.fit();</span>
                 
                 //obtain estimated params
-<span class="fc" id="L250">                double[] params = fitter.getA();</span>
+<span class="fc" id="L263">                double[] params = fitter.getA();</span>
 
                 //update initial epipole for next iteration
-<span class="fc" id="L253">                epipole.setInhomogeneousCoordinates(params[0], params[1]);</span>
+<span class="fc" id="L266">                epipole.setInhomogeneousCoordinates(params[0], params[1]);</span>
                   
-<span class="fc" id="L255">                computeFundamentalMatrix(mHomography, epipole, </span>
+<span class="fc" id="L268">                computeFundamentalMatrix(mHomography, epipole, </span>
                         fundamentalMatrix);
             
-<span class="fc" id="L258">                double finalTotalResidual = totalResidual(fundamentalMatrix);</span>
-<span class="fc bfc" id="L259" title="All 2 branches covered.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;</span>
-<span class="fc bfc" id="L260" title="All 4 branches covered.">                if (iterErrorDecreased || !errorDecreased) {</span>
-<span class="fc" id="L261">                    errorDecreased = true;</span>
+<span class="fc" id="L271">                double finalTotalResidual = totalResidual(fundamentalMatrix);</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;</span>
+<span class="fc bfc" id="L273" title="All 4 branches covered.">                if (iterErrorDecreased || !errorDecreased) {</span>
+<span class="fc" id="L274">                    errorDecreased = true;</span>
                     //update final result
-<span class="fc" id="L263">                    result.setInhomogeneousCoordinates(params[0], params[1]);</span>
+<span class="fc" id="L276">                    result.setInhomogeneousCoordinates(params[0], params[1]);</span>
                     
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">                    if (mKeepCovariance) {</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">                    if (mKeepCovariance) {</span>
                         //keep covariance
-<span class="fc" id="L267">                        mCovariance = fitter.getCovar();</span>
+<span class="fc" id="L280">                        mCovariance = fitter.getCovar();</span>
                     }                    
                 }
-<span class="fc" id="L270">                numIter++;</span>
-<span class="fc bfc" id="L271" title="All 4 branches covered.">            } while (iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);</span>
+<span class="fc" id="L283">                numIter++;</span>
+<span class="fc bfc" id="L284" title="All 4 branches covered.">            } while (iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);</span>
             
-<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">            if (mListener != null) {</span>
                 //noinspection all
-<span class="fc" id="L275">                mListener.onRefineEnd(this, mInitialEstimation, result, </span>
+<span class="fc" id="L288">                mListener.onRefineEnd(this, mInitialEstimation, result, </span>
                         errorDecreased);
             }
 
             //noinspection all
-<span class="fc" id="L280">            return errorDecreased;</span>
+<span class="fc" id="L293">            return errorDecreased;</span>
             
-<span class="nc" id="L282">        } catch (Exception e) {</span>
-<span class="nc" id="L283">            throw new RefinerException(e);</span>
+<span class="nc" id="L295">        } catch (Exception e) {</span>
+<span class="nc" id="L296">            throw new RefinerException(e);</span>
         } finally {
-<span class="fc" id="L285">            mLocked = false;</span>
+<span class="fc" id="L298">            mLocked = false;</span>
         }
     }    
 }
