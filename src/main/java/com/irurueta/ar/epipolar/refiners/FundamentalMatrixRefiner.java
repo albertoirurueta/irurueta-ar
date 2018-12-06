@@ -15,6 +15,7 @@
  */
 package com.irurueta.ar.epipolar.refiners;
 
+import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
@@ -25,6 +26,7 @@ import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.geometry.refiners.PairMatchesAndInliersDataRefiner;
 import com.irurueta.geometry.refiners.RefinerException;
+import com.irurueta.numerical.EvaluationException;
 import com.irurueta.numerical.GradientEstimator;
 import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
@@ -244,16 +246,15 @@ public class FundamentalMatrixRefiner extends
                                 new MultiDimensionFunctionEvaluatorListener() {
                                     
                         @Override
-                        public double evaluate(double[] params) 
-                                throws Throwable {
+                        public double evaluate(double[] params) {
 
-                            mInternalMatrix.fromArray(params);
                             try {
+                                mInternalMatrix.fromArray(params);
                                 mFundMatrix.setInternalMatrix(mInternalMatrix);
                             
                                 return residual(mFundMatrix, mLeftPoint, 
                                         mRightPoint);
-                            } catch (InvalidFundamentalMatrixException e) {
+                            } catch (AlgebraException | InvalidFundamentalMatrixException e) {
                                 return initialTotalResidual;
                             }
                         }
@@ -272,25 +273,27 @@ public class FundamentalMatrixRefiner extends
                     @Override
                     public double evaluate(int i, double[] point, 
                             double[] params, double[] derivatives) 
-                            throws Throwable {
+                            throws EvaluationException {
                         mLeftPoint.setHomogeneousCoordinates(point[0], point[1],
                                 point[2]);
                         mRightPoint.setHomogeneousCoordinates(point[3], 
                                 point[4], point[5]);
-                        
-                        if (mInternalMatrix == null) {
-                            mInternalMatrix = new Matrix(
-                                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS, 
-                                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-                        }
-                        mInternalMatrix.fromArray(params);
+
                         double y;
                         try {
+                            if (mInternalMatrix == null) {
+                                mInternalMatrix = new Matrix(
+                                        FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+                                        FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
+                            }
+                            mInternalMatrix.fromArray(params);
+
+
                             mFundMatrix.setInternalMatrix(mInternalMatrix);
-                        
-                            y = residual(mFundMatrix, mLeftPoint, 
+
+                            y = residual(mFundMatrix, mLeftPoint,
                                     mRightPoint);
-                        } catch (InvalidFundamentalMatrixException e) {
+                        } catch (AlgebraException | InvalidFundamentalMatrixException e) {
                             y = initialTotalResidual;
                         }
                         mGradientEstimator.gradient(params, derivatives);

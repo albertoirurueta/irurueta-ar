@@ -21,6 +21,7 @@ import com.irurueta.ar.calibration.estimators.*;
 import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.EvaluationException;
 import com.irurueta.numerical.JacobianEstimator;
 import com.irurueta.numerical.MultiVariateFunctionEvaluatorListener;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiVariateFitter;
@@ -716,7 +717,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 //Evaluates function to be fitted and computes Jacobian
                 @Override
                 public void evaluate(int i, double[] point, double[] result, 
-                        double[] params, Matrix jacobian) throws Throwable {
+                        double[] params, Matrix jacobian) throws EvaluationException {
                     mI = i;
                     mPoint = point;
                     evaluateFunction(mI, mPoint, params, result);

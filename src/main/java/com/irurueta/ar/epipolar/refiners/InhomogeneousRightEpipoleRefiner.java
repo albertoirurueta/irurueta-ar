@@ -17,6 +17,7 @@ package com.irurueta.ar.epipolar.refiners;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
 import com.irurueta.geometry.CoordinatesType;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
@@ -24,6 +25,7 @@ import com.irurueta.geometry.Transformation2D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.geometry.refiners.RefinerException;
+import com.irurueta.numerical.EvaluationException;
 import com.irurueta.numerical.GradientEstimator;
 import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
@@ -126,6 +128,7 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      */
     
     @Override
+    @SuppressWarnings("Duplicates")
     public boolean refine(Point2D result) throws NotReadyException, 
             LockedException, RefinerException {
         if (isLocked()) {
@@ -198,14 +201,19 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                             new GradientEstimator(
                                     new MultiDimensionFunctionEvaluatorListener() {
                         @Override
+                        @SuppressWarnings("Duplicates")
                         public double evaluate(double[] point) 
-                                throws Throwable {
-                        
-                            mEpipole.setCoordinates(point);
-                            computeFundamentalMatrix(mHomography, mEpipole, 
-                                    mFundMatrix);
-                            return residual(mFundMatrix, mLeftPoint, 
-                                    mRightPoint);
+                                throws EvaluationException {
+
+                            try {
+                                mEpipole.setCoordinates(point);
+                                computeFundamentalMatrix(mHomography, mEpipole,
+                                        mFundMatrix);
+                                return residual(mFundMatrix, mLeftPoint,
+                                        mRightPoint);
+                            } catch (InvalidFundamentalMatrixException e) {
+                                throw new EvaluationException(e);
+                            }
                         }
                     });
                         
@@ -220,23 +228,28 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                     }
 
                     @Override
+                    @SuppressWarnings("Duplicates")
                     public double evaluate(int i, double[] point, 
                             double[] params, double[] derivatives) 
-                            throws Throwable {
-                        mLeftPoint.setInhomogeneousCoordinates(point[0], 
-                                point[1]);
-                        mRightPoint.setInhomogeneousCoordinates(point[2], 
-                                point[3]);
+                            throws EvaluationException {
+                        try {
+                            mLeftPoint.setInhomogeneousCoordinates(point[0],
+                                    point[1]);
+                            mRightPoint.setInhomogeneousCoordinates(point[2],
+                                    point[3]);
 
-                        mEpipole.setCoordinates(params);
-                        computeFundamentalMatrix(mHomography, mEpipole, 
-                                mFundMatrix);
-                    
-                        double y = residual(mFundMatrix, mLeftPoint, 
-                                mRightPoint);
-                        mGradientEstimator.gradient(params, derivatives);
-                    
-                        return y;
+                            mEpipole.setCoordinates(params);
+                            computeFundamentalMatrix(mHomography, mEpipole,
+                                    mFundMatrix);
+
+                            double y = residual(mFundMatrix, mLeftPoint,
+                                    mRightPoint);
+                            mGradientEstimator.gradient(params, derivatives);
+
+                            return y;
+                        } catch (InvalidFundamentalMatrixException e) {
+                            throw new EvaluationException(e);
+                        }
                     }
                 };
         
