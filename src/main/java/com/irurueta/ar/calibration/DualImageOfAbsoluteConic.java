@@ -83,8 +83,7 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      * @throws NonSymmetricMatrixException Raised when the conic matrix is not 
      * symmetric.
      */
-    public DualImageOfAbsoluteConic(Matrix m) throws IllegalArgumentException, 
-            NonSymmetricMatrixException {
+    public DualImageOfAbsoluteConic(Matrix m) throws NonSymmetricMatrixException {
         super(m);
     }    
     
@@ -120,7 +119,9 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
         try {
             setParameters(kMatrix.multiplyAndReturnNew(
                     kMatrix.transposeAndReturnNew()));
-        } catch (WrongSizeException | NonSymmetricMatrixException ignore) { }
+        } catch (WrongSizeException | NonSymmetricMatrixException ignore) {
+            //never happens
+        }
     }
     
     /**

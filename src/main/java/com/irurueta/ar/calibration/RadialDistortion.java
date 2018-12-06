@@ -111,7 +111,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
             setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, 
                 DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -125,7 +127,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
             setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, 
                 DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**

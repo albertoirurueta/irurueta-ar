@@ -105,7 +105,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * @param codeWidth QR code width expressed in meters.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setCodeWidth(double codeWidth) throws IllegalArgumentException {
+    public void setCodeWidth(double codeWidth) {
         if (codeWidth <= 0.0) {
             throw new IllegalArgumentException();
         }
@@ -128,8 +128,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * @param codeHeight QR code width expressed in meters.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setCodeHeight(double codeHeight) 
-            throws IllegalArgumentException {
+    public void setCodeHeight(double codeHeight) {
         if (codeHeight <= 0.0) {
             throw new IllegalArgumentException();
         }

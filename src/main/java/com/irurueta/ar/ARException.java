@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,43 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.ar.calibration;
-
-import com.irurueta.ar.ARException;
+package com.irurueta.ar;
 
 /**
- * Base exception class for calibration package.
+ * Base exception for AR.
  */
-public class CalibrationException extends ARException {
+public class ARException extends Exception {
     /**
      * Constructor.
      */
-    public CalibrationException() {
+    public ARException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
      * @param message Message indicating the cause of the exception.
      */
-    public CalibrationException(String message) {
+    public ARException(String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
      * @param message Message describing the cause of the exception.
      * @param cause Instance containing the cause of the exception.
      */
-    public CalibrationException(String message, Throwable cause) {
+    public ARException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
      * @param cause Instance containing the cause of the exception.
      */
-    public CalibrationException(Throwable cause) {
+    public ARException(Throwable cause) {
         super(cause);
-    }                
+    }
 }

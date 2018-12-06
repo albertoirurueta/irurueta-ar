@@ -19,7 +19,7 @@ package com.irurueta.ar.epipolar;
  * Raised when fundamental matrices comparison fails.
  */
 @SuppressWarnings("WeakerAccess")
-public class FundamentalMatrixComparatorException extends EpipolarException{
+public class FundamentalMatrixComparatorException extends EpipolarException {
     
     /**
      * Constructor.

@@ -74,8 +74,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      * @throws NonSymmetricMatrixException Raised when the conic matrix is not 
      * symmetric.
      */
-    public ImageOfAbsoluteConic(Matrix m) throws IllegalArgumentException, 
-            NonSymmetricMatrixException {
+    public ImageOfAbsoluteConic(Matrix m) throws NonSymmetricMatrixException {
         super(m);
     }    
     
@@ -120,7 +119,9 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
                     multiplyAndReturnNew(invKMatrix));
         } catch (AlgebraException e) {
             throw new InvalidPinholeCameraIntrinsicParametersException(e);
-        } catch (NonSymmetricMatrixException ignore) { } //this will never happen
+        } catch (NonSymmetricMatrixException ignore) {
+            //this will never happen
+        }
     }
     
     /**

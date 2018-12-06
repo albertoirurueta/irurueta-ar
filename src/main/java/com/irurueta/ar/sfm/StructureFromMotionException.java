@@ -15,13 +15,13 @@
  */
 package com.irurueta.ar.sfm;
 
-import com.irurueta.geometry.GeometryException;
+import com.irurueta.ar.ARException;
 
 /**
  * Base exception for all exceptions in the com.irurueta.ar.sfm package.
  */
 @SuppressWarnings("WeakerAccess")
-public class StructureFromMotionException extends GeometryException {
+public class StructureFromMotionException extends ARException {
     
     /**
      * Constructor.

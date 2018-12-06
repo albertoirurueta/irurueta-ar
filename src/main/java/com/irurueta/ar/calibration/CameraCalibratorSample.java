@@ -106,8 +106,7 @@ public class CameraCalibratorSample {
      * markers is smaller than the required minimum (4) to estimate an
      * homography.
      */
-    public CameraCalibratorSample(List<Point2D> sampledMarkers) 
-            throws IllegalArgumentException {
+    public CameraCalibratorSample(List<Point2D> sampledMarkers) {
         setSampledMarkers(sampledMarkers);
     }
 
@@ -123,8 +122,7 @@ public class CameraCalibratorSample {
      * an homography, or if their sizes do not match.
      */
     public CameraCalibratorSample(List<Point2D> sampledMarkers, 
-            double[] sampledMarkersQualityScores) 
-            throws IllegalArgumentException {
+            double[] sampledMarkersQualityScores) {
         if (sampledMarkers.size() != sampledMarkersQualityScores.length) {
             throw new IllegalArgumentException();
         }
@@ -143,7 +141,7 @@ public class CameraCalibratorSample {
      * homography.
      */
     public CameraCalibratorSample(Pattern2D pattern, 
-            List<Point2D> sampledMarkers) throws IllegalArgumentException {
+            List<Point2D> sampledMarkers) {
         mPattern = pattern;
         setSampledMarkers(sampledMarkers);
     }
@@ -161,8 +159,7 @@ public class CameraCalibratorSample {
      * an homography, or if their sizes do not match.
      */
     public CameraCalibratorSample(Pattern2D pattern, 
-            List<Point2D> sampledMarkers, double[] sampledMarkersQualityScores) 
-            throws IllegalArgumentException {
+            List<Point2D> sampledMarkers, double[] sampledMarkersQualityScores) {
         if (sampledMarkers.size() != sampledMarkersQualityScores.length) {
             throw new IllegalArgumentException();
         }
@@ -209,8 +206,7 @@ public class CameraCalibratorSample {
      * markers is smaller than the required minimum (4) to estimate an
      * homography.
      */
-    public final void setSampledMarkers(List<Point2D> sampledMarkers)
-            throws IllegalArgumentException {
+    public final void setSampledMarkers(List<Point2D> sampledMarkers) {
         if (sampledMarkers.size() < MIN_REQUIRED_SAMPLED_MARKERS) {
             throw new IllegalArgumentException();
         }
@@ -241,8 +237,7 @@ public class CameraCalibratorSample {
      * is smaller than the required minimum (4) to estimate an homography.
      */
     public final void setSampledMarkersQualityScores(
-            double[] sampledMarkersQualityScores) 
-            throws IllegalArgumentException {
+            double[] sampledMarkersQualityScores) {
         if (sampledMarkersQualityScores.length < MIN_REQUIRED_SAMPLED_MARKERS) {
             throw new IllegalArgumentException();
         }
@@ -271,7 +266,8 @@ public class CameraCalibratorSample {
         double[] qualityScores = new double[sampledMarkers.size()];
 
         int counter = 0;
-        double distance, qualityScore;
+        double distance;
+        double qualityScore;
         for (Point2D sampledMarker : sampledMarkers) {
             distance = sampledMarker.distanceTo(center);
             qualityScore = 1.0 / (1.0 + distance);

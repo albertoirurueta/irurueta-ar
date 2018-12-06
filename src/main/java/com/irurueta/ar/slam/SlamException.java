@@ -15,13 +15,13 @@
  */
 package com.irurueta.ar.slam;
 
-import com.irurueta.geometry.GeometryException;
+import com.irurueta.ar.ARException;
 
 /**
  * Base exception for all exceptions related to SLAM.
  */
 @SuppressWarnings("WeakerAccess")
-public class SlamException extends GeometryException {
+public class SlamException extends ARException {
     
     /**
      * Constructor.

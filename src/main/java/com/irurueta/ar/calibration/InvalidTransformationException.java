@@ -15,10 +15,12 @@
  */
 package com.irurueta.ar.calibration;
 
+import com.irurueta.ar.ARException;
+
 /**
  * Exception produced when provided transformation is numerically unstable.
  */
-public class InvalidTransformationException extends CalibrationException {
+public class InvalidTransformationException extends ARException {
     
     /**
      * Constructor.

@@ -151,8 +151,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public ErrorOptimizationCameraCalibrator(Pattern2D pattern,
-            List<CameraCalibratorSample> samples)
-            throws IllegalArgumentException {
+            List<CameraCalibratorSample> samples) {
         super(pattern, samples);
         mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
         mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;        
@@ -171,7 +170,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */
     public ErrorOptimizationCameraCalibrator(Pattern2D pattern,
             List<CameraCalibratorSample> samples,
-            double[] samplesQualityScores) throws IllegalArgumentException {
+            double[] samplesQualityScores) {
         super(pattern, samples, samplesQualityScores);
         mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
         mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;        
@@ -199,7 +198,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws LockedException if this instance is locked.
      */
     public void setLevenbergMarquardtMaxIters(int levenbergMarquardtMaxIters)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -229,8 +228,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws LockedException if this instance is locked.
      */
     public void setLevenbergMarquardtTolerance(
-            double levenbergMarquardtTolerance) throws IllegalArgumentException,
-            LockedException {
+            double levenbergMarquardtTolerance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -314,8 +312,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setDistortionEstimatorThreshold(
-            double distortionEstimatorThreshold) throws LockedException,
-            IllegalArgumentException {
+            double distortionEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -382,8 +379,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * 1.0.
      */
     public void setDistortionEstimatorConfidence(
-            double distortionEstimatorConfidence) throws LockedException,
-            IllegalArgumentException {
+            double distortionEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -418,8 +414,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setDistortionEstimatorMaxIterations(
-            int distortionEstimatorMaxIterations) throws LockedException,
-            IllegalArgumentException {
+            int distortionEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -506,11 +501,10 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             progress = 0.5f * mIntrinsicProgress + 0.5f * mFittingProgress;
         }
         
-        if (mListener != null) {
-            if ((progress - mPreviousNotifiedProgress) > mProgressDelta) {
-                mListener.onCalibrateProgressChange(this, progress);
-                mPreviousNotifiedProgress = progress;
-            }
+        if (mListener != null &&
+                (progress - mPreviousNotifiedProgress) > mProgressDelta) {
+            mListener.onCalibrateProgressChange(this, progress);
+            mPreviousNotifiedProgress = progress;
         }
     }
         
@@ -563,7 +557,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             }
         
             //estimate camera pose for each sample        
-            int pointCounter = 0, sampleCounter = 0;
+            int pointCounter = 0;
+            int sampleCounter = 0;
             for (CameraCalibratorSample sample : mSamples) {
                 if (sample.getHomography() == null) {
                     //homography computation failed, so we cannot compute camera
@@ -779,7 +774,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 @Override
                 public void onEstimateNextIteration(
                         RadialDistortionRobustEstimator estimator, 
-                        int iteration) { }
+                        int iteration) { /* not used */ }
 
                 @Override
                 public void onEstimateProgressChange(
@@ -1010,8 +1005,11 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         int pos = 0;
         
         //intrinsic parameters
-        double horizontalFocalLength, verticalFocalLength, skewness,
-                horizontalPrincipalPoint, verticalPrincipalPoint;
+        double horizontalFocalLength;
+        double verticalFocalLength;
+        double skewness;
+        double horizontalPrincipalPoint;
+        double verticalPrincipalPoint;
         if (!isZeroSkewness()) {
             //aspect ratio is not known (2 different focal distances) and
             //skewness is not zero
@@ -1167,8 +1165,12 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 totalPoints++;
             }
         }
-        
-        avgError /= (double)totalPoints;
+
+        if (totalPoints == 0) {
+            avgError = Double.MAX_VALUE;
+        } else {
+            avgError /= (double) totalPoints;
+        }
         
         return avgError;
     }
@@ -1185,7 +1187,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         //im method changes, recreat estimator
         if (distortionMethod != mDistortionMethod) {
             boolean previousAvailable = mDistortionMethod != null;
-            double threshold = 0.0, confidence = 0.0;
+            double threshold = 0.0;
+            double confidence = 0.0;
             int maxIterations = 0;
             if (previousAvailable) {
                 threshold = getDistortionEstimatorThreshold();

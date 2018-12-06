@@ -16,10 +16,12 @@
 package com.irurueta.ar.calibration;
 
 import com.irurueta.ar.calibration.estimators.*;
+import com.irurueta.geometry.GeometryException;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.ArrayList;
@@ -134,8 +136,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public AlternatingCameraCalibrator(Pattern2D pattern,
-                                       List<CameraCalibratorSample> samples)
-            throws IllegalArgumentException {
+            List<CameraCalibratorSample> samples) {
         super(pattern, samples);
         mMaxIterations = DEFAULT_MAX_ITERATIONS;
         mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;        
@@ -153,7 +154,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      */
     public AlternatingCameraCalibrator(Pattern2D pattern,
             List<CameraCalibratorSample> samples,
-            double[] samplesQualityScores) throws IllegalArgumentException {
+            double[] samplesQualityScores) {
         super(pattern, samples, samplesQualityScores);
         mMaxIterations = DEFAULT_MAX_ITERATIONS;
         mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;                
@@ -178,8 +179,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws LockedException if this instance is locked.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setMaxIterations(int maxIterations) 
-            throws LockedException, IllegalArgumentException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -209,7 +209,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setConvergenceThreshold(double convergenceThreshold)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -294,8 +294,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setDistortionEstimatorThreshold(
-            double distortionEstimatorThreshold) throws LockedException,
-            IllegalArgumentException {
+            double distortionEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -362,8 +361,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * 1.0.
      */
     public void setDistortionEstimatorConfidence(
-            double distortionEstimatorConfidence) throws LockedException,
-            IllegalArgumentException {
+            double distortionEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -398,8 +396,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setDistortionEstimatorMaxIterations(
-            int distortionEstimatorMaxIterations) throws LockedException,
-            IllegalArgumentException {
+            int distortionEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -448,7 +445,9 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
         List<Point2D> idealFallbackPatternMarkers = mPattern.getIdealPoints();
                 
         try {
-            double errorDiff, previousError, currentError = Double.MAX_VALUE;
+            double errorDiff;
+            double previousError;
+            double currentError = Double.MAX_VALUE;
             double bestError = Double.MAX_VALUE;
             PinholeCameraIntrinsicParameters bestIntrinsic = null;
             RadialDistortion bestDistortion = null;
@@ -539,7 +538,8 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
         }
         
         //estimate camera pose for each sample        
-        int pointCounter = 0, sampleCounter = 0;
+        int pointCounter = 0;
+        int sampleCounter = 0;
         for (CameraCalibratorSample sample : mSamples) {
             if (sample.getHomography() == null) {
                 //homography computation failed, so we cannot compute camera
@@ -634,7 +634,8 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             //with distortedPoints2 (obtained after applying homography to
             //ideal marker points and applying distortion with estimated 
             //distortion)
-            Point2D distortedPoint1, distortedPoint2;
+            Point2D distortedPoint1;
+            Point2D distortedPoint2;
             totalPoints = distortedPoints.size();
             int inlierCount = 0;
             for (int i = 0; i < totalPoints; i++) {
@@ -648,12 +649,16 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
                     inlierCount++;
                 }                
             }
+
+            if (inlierCount == 0) {
+                throw new CalibrationException();
+            }
             
             avgError /= (double)inlierCount;
             
             mDistortion = distortion;
             
-        } catch(Exception e) {
+        } catch(GeometryException | NumericalException | DistortionException e) {
             throw new CalibrationException(e);
         }
                 
@@ -690,11 +695,10 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             progress = mIterProgress + lambda * partial;
         }
         
-        if (mListener != null) {
-            if ((progress - mPreviousNotifiedProgress) > mProgressDelta) {
-                mListener.onCalibrateProgressChange(this, progress);
-                mPreviousNotifiedProgress = progress;
-            }
+        if (mListener != null &&
+                (progress - mPreviousNotifiedProgress) > mProgressDelta) {
+            mListener.onCalibrateProgressChange(this, progress);
+            mPreviousNotifiedProgress = progress;
         }
     }
     
@@ -722,7 +726,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
                 @Override
                 public void onEstimateNextIteration(
                         RadialDistortionRobustEstimator estimator, 
-                        int iteration) { }
+                        int iteration) { /* not needed */ }
 
                 @Override
                 public void onEstimateProgressChange(
@@ -755,7 +759,8 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
         //im method changes, recreat estimator
         if (distortionMethod != mDistortionMethod) {
             boolean previousAvailable = mDistortionMethod != null;
-            double threshold = 0.0, confidence = 0.0;
+            double threshold = 0.0;
+            double confidence = 0.0;
             int maxIterations = 0;
             if (previousAvailable) {
                 threshold = getDistortionEstimatorThreshold();

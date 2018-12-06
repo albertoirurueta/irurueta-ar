@@ -56,6 +56,7 @@ public abstract class Distortion {
      * not support distorting points.
      * @throws DistortionException raised if distortion computation failed.
      */
+    @SuppressWarnings("Duplicates")
     public List<Point2D> distort(List<Point2D> undistortedPoints) 
             throws NotSupportedException, DistortionException {
         int size = undistortedPoints.size();
@@ -78,8 +79,8 @@ public abstract class Distortion {
      * @throws DistortionException raised if distortion computation failed.
      */
     public void distort(List<Point2D> undistortedPoints, 
-            List<Point2D> distortedPoints) throws IllegalArgumentException, 
-            NotSupportedException, DistortionException {
+            List<Point2D> distortedPoints) throws NotSupportedException,
+            DistortionException {
         if (undistortedPoints.size() != distortedPoints.size()) {
             throw new IllegalArgumentException();
         }
@@ -116,6 +117,7 @@ public abstract class Distortion {
      * not support undistorting points.
      * @throws DistortionException raised if undistortion computation failed.
      */
+    @SuppressWarnings("Duplicates")
     public List<Point2D> undistort(List<Point2D> distortedPoints) 
             throws NotSupportedException, DistortionException {
         int size = distortedPoints.size();
@@ -138,8 +140,8 @@ public abstract class Distortion {
      * @throws DistortionException raised if undistortion computation failed.
      */
     public void undistort(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) throws IllegalArgumentException, 
-            NotSupportedException, DistortionException {
+            List<Point2D> undistortedPoints) throws NotSupportedException,
+            DistortionException {
         if (distortedPoints.size() != undistortedPoints.size()) {
             throw new IllegalArgumentException();
         }

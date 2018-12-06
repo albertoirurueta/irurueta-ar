@@ -16,11 +16,9 @@
 package com.irurueta.ar.calibration;
 
 import com.irurueta.ar.calibration.estimators.*;
-import com.irurueta.geometry.HomogeneousPoint2D;
-import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
-import com.irurueta.geometry.Point2D;
-import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.*;
+import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.ArrayList;
@@ -264,8 +262,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public CameraCalibrator(Pattern2D pattern, 
-            List<CameraCalibratorSample> samples) 
-            throws IllegalArgumentException {
+            List<CameraCalibratorSample> samples) {
         mPattern = pattern;        
         mHomographies = null;
         mHomographyQualityScores = null;
@@ -293,7 +290,7 @@ public abstract class CameraCalibrator {
      */
     public CameraCalibrator(Pattern2D pattern,
             List<CameraCalibratorSample> samples,
-            double[] samplesQualityScores) throws IllegalArgumentException {
+            double[] samplesQualityScores) {
         if (samples.size() != samplesQualityScores.length) {
             throw new IllegalArgumentException();
         }
@@ -362,8 +359,7 @@ public abstract class CameraCalibrator {
      * estimate the intrinsic parameters. By default the minimum is 1, but 
      * depending on the settings at least 3 samples might be required.
      */
-    public void setSamples(List<CameraCalibratorSample> samples) throws LockedException,
-            IllegalArgumentException {
+    public void setSamples(List<CameraCalibratorSample> samples) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -397,7 +393,7 @@ public abstract class CameraCalibrator {
      * least 3 samples might be required.
      */
     public void setSamplesQualityScores(double[] samplesQualityScores)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -697,7 +693,7 @@ public abstract class CameraCalibrator {
      * close to zero, as it might produce numerical instabilities.
      */    
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -734,8 +730,7 @@ public abstract class CameraCalibrator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -791,8 +786,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setHomographyEstimatorThreshold(
-            double homographyEstimatorThreshold) throws LockedException, 
-            IllegalArgumentException {
+            double homographyEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -861,8 +855,7 @@ public abstract class CameraCalibrator {
      * 1.0.
      */
     public void setHomographyEstimatorConfidence(
-            double homographyEstimatorConfidence) throws LockedException, 
-            IllegalArgumentException {
+            double homographyEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -899,8 +892,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setHomographyEstimatorMaxIterations(
-            int homographyEstimatorMaxIterations) throws LockedException,
-            IllegalArgumentException {
+            int homographyEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -940,7 +932,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setIACEstimatorThreshold(double iacEstimatorThreshold)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1006,7 +998,7 @@ public abstract class CameraCalibrator {
      * 1.0.
      */
     public void setIACEstimatorConfidence(double iacEstimatorConfidence)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1041,7 +1033,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setIACEstimatorMaxIterations(int iacEstimatorMaxIterations)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1101,8 +1093,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples, CameraCalibratorMethod method)
-            throws IllegalArgumentException {
+            List<CameraCalibratorSample> samples, CameraCalibratorMethod method) {
         switch (method) {
             case ERROR_OPTIMIZATION:
                 return new ErrorOptimizationCameraCalibrator(pattern, samples);
@@ -1124,7 +1115,7 @@ public abstract class CameraCalibrator {
      */
     public static CameraCalibrator create(Pattern2D pattern,
             List<CameraCalibratorSample> samples, double[] samplesQualityScores,
-            CameraCalibratorMethod method) throws IllegalArgumentException {
+            CameraCalibratorMethod method) {
         switch (method) {
             case ERROR_OPTIMIZATION:
                 return new ErrorOptimizationCameraCalibrator(pattern, samples,
@@ -1154,8 +1145,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples)
-            throws IllegalArgumentException {
+            List<CameraCalibratorSample> samples) {
         return create(pattern, samples, DEFAULT_METHOD);
     }
     
@@ -1170,8 +1160,7 @@ public abstract class CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided.
      */
     public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples, double[] samplesQualityScores)
-            throws IllegalArgumentException {
+            List<CameraCalibratorSample> samples, double[] samplesQualityScores) {
         return create(pattern, samples, samplesQualityScores, DEFAULT_METHOD);
     }    
     
@@ -1255,7 +1244,8 @@ public abstract class CameraCalibrator {
         int sampleSize = mSamples.size();
         mHomographies = new ArrayList<>(sampleSize);
         double[] tmpHomographyQualityScores = new double[sampleSize];
-        int index = 0, counter = 0;
+        int index = 0;
+        int counter = 0;
         double error;
         for (CameraCalibratorSample sample : mSamples) {
             try {
@@ -1294,7 +1284,9 @@ public abstract class CameraCalibrator {
                     }
                 }
                 counter++; //counter of homography estimation successes
-            } catch (Exception ignore) { }
+            } catch (NumericalException | GeometryException ignore) {
+                //homographies are attempted to be estimated. It's ok if some fail
+            }
             
             index++; //position index (regardless of homography estimation success)
             
@@ -1321,7 +1313,7 @@ public abstract class CameraCalibrator {
             mIAC = mIACEstimator.estimate();
             
             mIntrinsic = mIAC.getIntrinsicParameters();
-        } catch (Exception e) {
+        } catch (GeometryException | NumericalException e) {
             throw new CalibrationException(e);
         } 
         
@@ -1345,8 +1337,10 @@ public abstract class CameraCalibrator {
             List<Point2D> sampledPatternMarkers) {
         
         Point2D transformedPoint = new HomogeneousPoint2D();
-        Point2D idealPatternMarker, sampledPatternMarker;
-        double avgError = 0.0, distance;
+        Point2D idealPatternMarker;
+        Point2D sampledPatternMarker;
+        double avgError = 0.0;
+        double distance;
         int size = sampledPatternMarkers.size();
         for (int i = 0; i < size; i++) {
             idealPatternMarker = idealPatternMarkers.get(i);            
@@ -1388,7 +1382,7 @@ public abstract class CameraCalibrator {
                 @Override
                 public void onEstimateNextIteration(
                         ProjectiveTransformation2DRobustEstimator estimator, 
-                        int iteration) { }
+                        int iteration) { /* not used */ }
 
                 @Override
                 public void onEstimateProgressChange(
@@ -1436,7 +1430,7 @@ public abstract class CameraCalibrator {
                 @Override
                 public void onEstimateNextIteration(
                         ImageOfAbsoluteConicRobustEstimator estimator, 
-                        int iteration) { }
+                        int iteration) { /* not used */ }
 
                 @Override
                 public void onEstimateProgressChange(
@@ -1470,8 +1464,7 @@ public abstract class CameraCalibrator {
      * estimate the intrinsic parameters. By default the minimum is 1, but
      * depending on the settings at least 3 samples might be required.
      */
-    private void internalSetSamples(List<CameraCalibratorSample> samples)
-            throws IllegalArgumentException {
+    private void internalSetSamples(List<CameraCalibratorSample> samples) {
         if (samples.size() < mIACEstimator.getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }
@@ -1493,8 +1486,7 @@ public abstract class CameraCalibrator {
      * parameters. By default the minimum is 1, but depending on the settings at
      * least 3 samples might be required.
      */    
-    private void internalSetSamplesQualityScores(double[] samplesQualityScores)
-            throws IllegalArgumentException {
+    private void internalSetSamplesQualityScores(double[] samplesQualityScores) {
         if (samplesQualityScores.length < mIACEstimator.getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }
@@ -1513,7 +1505,8 @@ public abstract class CameraCalibrator {
         //if method changes, homography estimator must be recreated
         if (homographyMethod != mHomographyMethod) {
             boolean previousAvailable = mHomographyEstimator != null;
-            double threshold = 0.0, confidence = 0.0;
+            double threshold = 0.0;
+            double confidence = 0.0;
             int maxIterations = 0;
             if (previousAvailable) {
                 threshold = getHomographyEstimatorThreshold();
@@ -1553,10 +1546,12 @@ public abstract class CameraCalibrator {
         //if method changes, iac estimator must be recreated
         if (imageOfAbsoluteConicMethod != mImageOfAbsoluteConicMethod) {
             boolean previousAvailable = mIACEstimator != null;
-            double threshold = 0.0, confidence = 0.0;
+            double threshold = 0.0;
+            double confidence = 0.0;
             int maxIterations = 0;
-            boolean zeroSkewness = false, principalPointAtOrigin = false, 
-                    focalDistanceAspectRatioKnown = false;
+            boolean zeroSkewness = false;
+            boolean principalPointAtOrigin = false;
+            boolean focalDistanceAspectRatioKnown = false;
             double focalDistanceAspectRatio = 0.0;
             if (previousAvailable) {
                 threshold = getIACEstimatorThreshold();

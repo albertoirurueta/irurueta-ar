@@ -97,8 +97,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @param pointSeparation point separation in the circles pattern.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setPointSeparation(double pointSeparation)
-            throws IllegalArgumentException {
+    public void setPointSeparation(double pointSeparation) {
         if (pointSeparation <= 0.0) {
             throw new IllegalArgumentException();
         }
@@ -119,7 +118,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @param cols number of columns in the circles pattern.
      * @throws IllegalArgumentException if provided value is less than 2.
      */
-    public void setCols(int cols) throws IllegalArgumentException {
+    public void setCols(int cols) {
         if (cols < MIN_COLS) {
             throw new IllegalArgumentException();
         }
@@ -140,7 +139,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @param rows number of rows in the circles pattern.
      * @throws IllegalArgumentException if provided value is less than 2.
      */
-    public void setRows(int rows) throws IllegalArgumentException {
+    public void setRows(int rows) {
         if (rows < MIN_ROWS) {
             throw new IllegalArgumentException();
         }
@@ -157,7 +156,8 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
     public List<Point2D> getIdealPoints() {
         List<Point2D> points = new ArrayList<>();
         
-        double x, y;
+        double x;
+        double y;
         for (int i = 0; i < mRows; i++) {
             for (int j = 0; j < mCols; j++) {
                 x = (double)(2 * j + i % 2) * mPointSeparation;
