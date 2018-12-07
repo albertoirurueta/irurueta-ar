@@ -834,6 +834,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                             ransacCameraEstimator.setComputeAndKeepResidualsEnabled(
                                     mConfiguration.getAdditionalCamerasComputeAndKeepResiduals());
                             break;
+                        default:
+                            break;
                     }
 
                     cameraEstimator.setSkewness(mConfiguration.getAdditionalCamerasSkewness());
@@ -931,6 +933,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                             ransacCameraEstimator.setComputeAndKeepResidualsEnabled(
                                     mConfiguration.getAdditionalCamerasComputeAndKeepResiduals());
                             break;
+                         default:
+                             break;
                     }
 
                     cameraEstimator.setSuggestSkewnessValueEnabled(
@@ -1064,6 +1068,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                     case RANSAC:
                         ((RANSACRobustSinglePoint3DTriangulator) robustTriangulator).setThreshold(threshold);
                         break;
+                    default:
+                        break;
                 }
 
             } else {
@@ -1135,7 +1141,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                     if(qualityScoresRequired) {
                         //copy quality scores
                         double[] qualityScores = new double[numValid];
-                        for (int i = 0, j = 0; i < samples.length; i++) {
+                        int j = 0;
+                        for (int i = 0; i < samples.length; i++) {
                             if(validSamples.get(i)) {
                                 qualityScores[j] = samples[i].getQualityScore();
                                 j++;
@@ -1361,11 +1368,12 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
      */
     private boolean hasEnoughSamplesOrMatchesForFundamentalMatrixEstimation(int count) {
         if (mConfiguration.isGeneralSceneAllowed()) {
-            switch (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod()) {
-                case EIGHT_POINTS_ALGORITHM:
-                    return count >= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
-                case SEVEN_POINTS_ALGORITHM:
-                    return count >= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
+            if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
+                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+                return count >= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
+            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
+                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+                return count >= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
             }
         } else if (mConfiguration.isPlanarSceneAllowed()) {
             return count >= ProjectiveTransformation2DRobustEstimator.MINIMUM_SIZE;
@@ -1395,7 +1403,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
         List<Point2D> leftPoints = new ArrayList<>(count);
         List<Point2D> rightPoints = new ArrayList<>(count);
         double[] qualityScores = new double[count];
-        double principalPointX, principalPointY;
+        double principalPointX;
+        double principalPointY;
         if (isInitialPairOfViews) {
             if (mConfiguration.getInitialCamerasEstimatorMethod() ==
                     InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
@@ -1507,6 +1516,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                             mConfiguration.
                                     getFundamentalMatrixComputeAndKeepResiduals());
                     break;
+                default:
+                    break;
             }
 
             FundamentalMatrix fundamentalMatrix = estimator.estimate();
@@ -1568,7 +1579,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
         List<Point2D> leftPoints = new ArrayList<>(count);
         List<Point2D> rightPoints = new ArrayList<>(count);
         double[] qualityScores = new double[count];
-        double principalPointX, principalPointY;
+        double principalPointX;
+        double principalPointY;
         if (isInitialPairOfViews) {
             if (mConfiguration.getInitialCamerasEstimatorMethod() ==
                     InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
@@ -1681,6 +1693,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                             mConfiguration.getPlanarHomographyComputeAndKeepInliers());
                     ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(
                             mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
+                    break;
+                default:
                     break;
             }
 
@@ -2179,7 +2193,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
             mActiveMetricReconstructedPoints = new ArrayList<>();
             int triangulatedPointsSize = triangulatedPoints.size();
             int matchesSize = mMatches.size();
-            for (int i = 0, j = 0; i < triangulatedPointsSize && j < matchesSize; i++) {
+            int j = 0;
+            for (int i = 0; i < triangulatedPointsSize && j < matchesSize; i++) {
                 if(!validTriangulatedPoints.get(i)) {
                     continue;
                 }

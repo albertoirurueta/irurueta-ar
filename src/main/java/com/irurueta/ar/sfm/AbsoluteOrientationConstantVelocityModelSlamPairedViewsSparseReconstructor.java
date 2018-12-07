@@ -44,8 +44,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
      */
     public AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor(
             AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+            AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -56,8 +55,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
      * provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+            AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener) {
         this(new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration(),
                 listener);
     }

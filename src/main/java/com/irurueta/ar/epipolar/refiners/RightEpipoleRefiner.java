@@ -257,7 +257,8 @@ public abstract class RightEpipoleRefiner extends
         double result = 0.0;
         
         int nSamples = mInliers.length();
-        Point2D leftPoint, rightPoint;
+        Point2D leftPoint;
+        Point2D rightPoint;
         for (int i = 0; i < nSamples; i++) {
             if (mInliers.get(i)) {
                 //sample is inlier

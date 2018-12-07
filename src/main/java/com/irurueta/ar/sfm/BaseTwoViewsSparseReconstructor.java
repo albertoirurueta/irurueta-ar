@@ -135,7 +135,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
      * provided.
      */
     public BaseTwoViewsSparseReconstructor(C configuration,
-            L listener) throws NullPointerException {
+            L listener) {
         if  (configuration == null || listener == null) {
                 throw new NullPointerException();
         }
@@ -426,12 +426,13 @@ public abstract class BaseTwoViewsSparseReconstructor<
      */
     private boolean hasEnoughSamplesOrMatches(int count) {
         if (mConfiguration.isGeneralSceneAllowed()) {
-            switch (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod()) {
-                case EIGHT_POINTS_ALGORITHM:
-                    return count >= EightPointsFundamentalMatrixEstimator.
-                            MIN_REQUIRED_POINTS;
-                case SEVEN_POINTS_ALGORITHM:
-                    return count >= SevenPointsFundamentalMatrixEstimator.
+            if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
+                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+                return count >= EightPointsFundamentalMatrixEstimator.
+                        MIN_REQUIRED_POINTS;
+            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
+                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+                return count >= SevenPointsFundamentalMatrixEstimator.
                         MIN_REQUIRED_POINTS;
             }
         } else if (mConfiguration.isPlanarSceneAllowed()) {
@@ -461,7 +462,8 @@ public abstract class BaseTwoViewsSparseReconstructor<
         List<Point2D> leftPoints = new ArrayList<>(count);
         List<Point2D> rightPoints = new ArrayList<>(count);
         double[] qualityScores = new double[count];
-        double principalPointX, principalPointY;
+        double principalPointX;
+        double principalPointY;
         if (mConfiguration.getInitialCamerasEstimatorMethod() == 
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
                 mConfiguration.getInitialCamerasEstimatorMethod() ==
@@ -554,6 +556,8 @@ public abstract class BaseTwoViewsSparseReconstructor<
                     ransacEstimator.setComputeAndKeepResidualsEnabled(
                             mConfiguration.
                             getFundamentalMatrixComputeAndKeepResiduals());
+                    break;
+                default:
                     break;
             }
         
