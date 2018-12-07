@@ -103,8 +103,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * for default constraints during IAC estimation.
      */
     public WeightedImageOfAbsoluteConicEstimator(
-            List<Transformation2D> homographies, double[] weights)
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies, double[] weights) {
         super();
         internalSetHomographiesAndWeights(homographies, weights);
         mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
@@ -126,8 +125,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      */
     public WeightedImageOfAbsoluteConicEstimator(
             List<Transformation2D> homographies, double[] weights,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicEstimatorListener listener) {
         super(listener);
         internalSetHomographiesAndWeights(homographies, weights);
         mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
@@ -142,8 +140,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException always thrown in this implementation.
      */
     @Override
-    public void setHomographies(List<Transformation2D> homographies)
-            throws IllegalArgumentException {
+    public void setHomographies(List<Transformation2D> homographies) {
         throw new IllegalArgumentException();        
     }
     
@@ -159,7 +156,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * for default constraints during IAC estimation.
      */
     public void setHomographiesAndWeights(List<Transformation2D> homographies,
-            double[] weights) throws LockedException, IllegalArgumentException {
+            double[] weights) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -205,8 +202,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * minimum allowed number of homographies.
      * @throws LockedException if this instance is locked.
      */
-    public void setMaxHomographies(int maxHomographies) 
-            throws IllegalArgumentException, LockedException {
+    public void setMaxHomographies(int maxHomographies) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -333,8 +329,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * contain enough elements to estimate the IAC using current settings.
      */
     private void internalSetHomographiesAndWeights(
-            List<Transformation2D> homographies, double[] weights) 
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies, double[] weights) {
         if (weights == null || homographies == null || 
                 weights.length != homographies.size()) {
             throw new IllegalArgumentException();
@@ -362,12 +357,21 @@ public class WeightedImageOfAbsoluteConicEstimator extends
 
             Matrix a = new Matrix(2 * nHomographies, 6);
             
-            int index = 0, counter = 0;
+            int index = 0;
+            int counter = 0;
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
             for (Transformation2D homography : mHomographies) {
                 
                 if (selected[index]) {
@@ -518,12 +522,21 @@ public class WeightedImageOfAbsoluteConicEstimator extends
 
             Matrix a = new Matrix(2 * nHomographies, 5);
             
-            int index = 0, counter = 0;
+            int index = 0;
+            int counter = 0;
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
             for (Transformation2D homography : mHomographies){
                 
                 if (selected[index]) {
@@ -668,12 +681,21 @@ public class WeightedImageOfAbsoluteConicEstimator extends
 
             Matrix a = new Matrix(2 * nHomographies, 4);
             
-            int index = 0, counter = 0;
+            int index = 0;
+            int counter = 0;
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
             for (Transformation2D homography : mHomographies) {
                 
                 if (selected[index]) {

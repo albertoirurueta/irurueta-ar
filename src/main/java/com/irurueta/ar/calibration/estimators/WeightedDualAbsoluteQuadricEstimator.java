@@ -103,8 +103,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * (DAQ).
      * @throws IllegalArgumentException if list of cameras is null.
      */
-    public WeightedDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras)
-            throws IllegalArgumentException {
+    public WeightedDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras) {
         super(cameras);
         mMaxCameras = DEFAULT_MAX_CAMERAS;
         mSortWeights = DEFAULT_SORT_WEIGHTS;
@@ -120,8 +119,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @throws IllegalArgumentException if list of cameras is null.
      */
     public WeightedDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricEstimatorListener listener) {
         super(cameras, listener);
         mMaxCameras = DEFAULT_MAX_CAMERAS;
         mSortWeights = DEFAULT_SORT_WEIGHTS;
@@ -139,7 +137,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * don't have the same size or enough cameras.
      */
     public WeightedDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras,
-            double[] weights) throws IllegalArgumentException {
+            double[] weights) {
         super(cameras);    
         try {
             setWeights(weights);
@@ -159,8 +157,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * don't have the same size or enough cameras.
      */
     public WeightedDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras,
-            double[] weights, DualAbsoluteQuadricEstimatorListener listener)
-            throws IllegalArgumentException {
+            double[] weights, DualAbsoluteQuadricEstimatorListener listener) {
         super(cameras, listener);
         try {
             setWeights(weights);
@@ -200,8 +197,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * don't have the same size or enough cameras.
      * @throws LockedException if estimator is locked.
      */
-    public final void setWeights(double[] weights) 
-            throws IllegalArgumentException, LockedException {
+    public final void setWeights(double[] weights) throws LockedException {
         if (!areValidCamerasAndWeights(mCameras, weights)) {
             throw new IllegalArgumentException(
                     "cameras and weights must have the same length");
@@ -225,7 +221,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @throws LockedException if estimator is locked.
      */
     public void setCamerasAndWeights(List<PinholeCamera> cameras, 
-            double[] weights) throws IllegalArgumentException, LockedException {
+            double[] weights) throws LockedException {
         if (!areValidCamerasAndWeights(cameras, weights)) {
             throw new IllegalArgumentException(
                     "cameras and weights must have the same length");
@@ -262,8 +258,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @throws IllegalArgumentException if provided value is less than 2.
      * @throws LockedException if estimator is locked.
      */
-    public void setMaxCameras(int maxCameras) throws IllegalArgumentException,
-            LockedException {
+    public void setMaxCameras(int maxCameras) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -287,8 +282,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setSortWeightsEnabled(boolean sortWeights)
-            throws LockedException {
+    public void setSortWeightsEnabled(boolean sortWeights) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -408,9 +402,18 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     DualAbsoluteQuadric.N_PARAMS);
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter;
             int cameraCounter = 0;  
             double weight;
@@ -527,9 +530,18 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     DualAbsoluteQuadric.N_PARAMS);
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter;
             int cameraCounter = 0;  
             double weight;
@@ -637,9 +649,18 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     DualAbsoluteQuadric.N_PARAMS);
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter;
             int cameraCounter = 0;  
             double weight;

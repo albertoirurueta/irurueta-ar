@@ -79,8 +79,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param homography homography to estimate canera and intrinsic parameters.
      * @throws NullPointerException if provided homography is null.
      */
-    public SingleHomographyPinholeCameraEstimator(Transformation2D homography) 
-            throws NullPointerException {
+    public SingleHomographyPinholeCameraEstimator(Transformation2D homography) {
         internalSetHomography(homography);
     }
     
@@ -260,8 +259,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param homography homography to be set.
      * @throws NullPointerException if provided homography is null.
      */
-    private void internalSetHomography(Transformation2D homography) 
-            throws NullPointerException {
+    private void internalSetHomography(Transformation2D homography) {
         if (homography == null) {
             throw new NullPointerException();
         }

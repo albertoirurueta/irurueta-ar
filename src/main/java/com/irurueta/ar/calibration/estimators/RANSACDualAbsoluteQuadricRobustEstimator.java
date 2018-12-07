@@ -80,7 +80,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * default settings. Hence, at least 2 cameras must be provided.
      */
     public RANSACDualAbsoluteQuadricRobustEstimator(
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(cameras);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -95,8 +95,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * default settings. Hence, at least 2 cameras must be provided.
      */
     public RANSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
