@@ -35,8 +35,7 @@ public class TwoViewsSparseReconstructor extends
      */
     public TwoViewsSparseReconstructor(
             TwoViewsSparseReconstructorConfiguration configuration,
-            TwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            TwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
     
@@ -46,8 +45,7 @@ public class TwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public TwoViewsSparseReconstructor(
-            TwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            TwoViewsSparseReconstructorListener listener) {
         this(new TwoViewsSparseReconstructorConfiguration(), listener);
     }
 

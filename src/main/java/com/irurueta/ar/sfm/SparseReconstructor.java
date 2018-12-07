@@ -33,7 +33,7 @@ public class SparseReconstructor extends
      * provided.
      */
     public SparseReconstructor(SparseReconstructorConfiguration configuration,
-            SparseReconstructorListener listener) throws NullPointerException {
+            SparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -42,8 +42,7 @@ public class SparseReconstructor extends
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public SparseReconstructor(SparseReconstructorListener listener)
-            throws NullPointerException {
+    public SparseReconstructor(SparseReconstructorListener listener) {
         this(new SparseReconstructorConfiguration(), listener);
     }
 

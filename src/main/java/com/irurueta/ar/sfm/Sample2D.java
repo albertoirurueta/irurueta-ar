@@ -74,12 +74,7 @@ public class Sample2D implements Serializable {
      * Color data of sampled point (i.e. RGB or YUV values), if available.
      */
     private PointColorData mColorData;
-    
-    /**
-     * Constructor.
-     */
-    public Sample2D() { }
-    
+
     /**
      * Gets id to identify this instance. This is useful in case that this data
      * is stored in some sort of database and must be set externally.

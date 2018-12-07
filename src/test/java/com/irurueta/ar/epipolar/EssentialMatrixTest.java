@@ -1266,7 +1266,7 @@ public class EssentialMatrixTest {
     public void testComputePossibleRotationsAndTranslations() 
             throws InvalidRotationAndTranslationException, 
             InvalidEssentialMatrixException, NotAvailableException, 
-            InvalidPairOfCamerasException, InvalidPairOfIntrinsicParametersException, WrongSizeException{
+            InvalidPairOfIntrinsicParametersException, WrongSizeException{
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             //Create rotation and translation
@@ -1400,8 +1400,12 @@ public class EssentialMatrixTest {
                     cameraCenter2);
             
             //compute their respective fundamental matrix
-            FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, 
-                    camera2);
+            FundamentalMatrix fundamentalMatrix;
+            try {
+                fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            } catch (InvalidPairOfCamerasException e) {
+                continue;
+            }
             
             //obtain essential matrix from fundamental matrix and intrinsic 
             //parameters of both cameras

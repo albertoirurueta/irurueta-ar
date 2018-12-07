@@ -35,8 +35,7 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor<SlamSpa
      */
     public SlamSparseReconstructor(
             SlamSparseReconstructorConfiguration configuration,
-            SlamSparseReconstructorListener listener)
-            throws NullPointerException {
+            SlamSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -46,8 +45,7 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor<SlamSpa
      * @throws NullPointerException if listener is not provided.
      */
     public SlamSparseReconstructor(
-            SlamSparseReconstructorListener listener)
-            throws NullPointerException {
+            SlamSparseReconstructorListener listener) {
         this(new SlamSparseReconstructorConfiguration(), listener);
     }
 

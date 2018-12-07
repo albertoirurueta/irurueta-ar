@@ -27,11 +27,6 @@ public class TwoViewsSparseReconstructorConfiguration extends
     
 
     /**
-     * Constructor.
-     */
-    public TwoViewsSparseReconstructorConfiguration() { }
-    
-    /**
      * Creates an instance of a two views sparse reconstructor configuration.
      * @return configuration instance.
      */

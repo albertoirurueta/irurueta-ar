@@ -37,8 +37,7 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      */
     public SlamPairedViewsSparseReconstructor(
             SlamPairedViewsSparseReconstructorConfiguration configuration,
-            SlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+            SlamPairedViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -48,8 +47,7 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      * @throws NullPointerException if listener or configuration is not
      * provided.
      */
-    public SlamPairedViewsSparseReconstructor(SlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+    public SlamPairedViewsSparseReconstructor(SlamPairedViewsSparseReconstructorListener listener) {
         super(new SlamPairedViewsSparseReconstructorConfiguration(), listener);
     }
 

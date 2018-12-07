@@ -89,7 +89,7 @@ public abstract class SinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public SinglePoint3DTriangulator(List<Point2D> points2D, 
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         internalSetPointsAndCameras(points2D, cameras);
     }
     
@@ -116,8 +116,7 @@ public abstract class SinglePoint3DTriangulator {
      */
     public SinglePoint3DTriangulator(List<Point2D> points2D, 
             List<PinholeCamera> cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            SinglePoint3DTriangulatorListener listener) {
         this(points2D, cameras);
         mListener = listener;
     }
@@ -151,8 +150,7 @@ public abstract class SinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public void setPointsAndCameras(List<Point2D> points2D, 
-            List<PinholeCamera> cameras) throws LockedException, 
-            IllegalArgumentException {
+            List<PinholeCamera> cameras) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -300,8 +298,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
-            List<PinholeCamera> cameras, Point3DTriangulatorType type) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, Point3DTriangulatorType type) {
         switch (type) {
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
                 return new WeightedInhomogeneousSinglePoint3DTriangulator(
@@ -335,7 +332,7 @@ public abstract class SinglePoint3DTriangulator {
      */    
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
             List<PinholeCamera> cameras, double[] weights, 
-            Point3DTriangulatorType type) throws IllegalArgumentException {
+            Point3DTriangulatorType type) {
         switch (type) {
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
                 return new WeightedInhomogeneousSinglePoint3DTriangulator(
@@ -396,7 +393,7 @@ public abstract class SinglePoint3DTriangulator {
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
             List<PinholeCamera> cameras, 
             SinglePoint3DTriangulatorListener listener, 
-            Point3DTriangulatorType type) throws IllegalArgumentException {
+            Point3DTriangulatorType type) {
         switch (type) {
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
                 return new WeightedInhomogeneousSinglePoint3DTriangulator(
@@ -432,7 +429,7 @@ public abstract class SinglePoint3DTriangulator {
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
             List<PinholeCamera> cameras, double[] weights, 
             SinglePoint3DTriangulatorListener listener, 
-            Point3DTriangulatorType type) throws IllegalArgumentException {
+            Point3DTriangulatorType type) {
         switch (type) {
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
                 return new WeightedInhomogeneousSinglePoint3DTriangulator(
@@ -470,7 +467,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         return create(points2D, cameras, DEFAULT_TYPE);
     }
     
@@ -487,8 +484,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */    
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
-            List<PinholeCamera> cameras, double[] weights) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, double[] weights) {
         return create(points2D, cameras, weights, DEFAULT_TYPE);
     }
 
@@ -519,8 +515,7 @@ public abstract class SinglePoint3DTriangulator {
      */
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
             List<PinholeCamera> cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            SinglePoint3DTriangulatorListener listener) {
         return create(points2D, cameras, listener, DEFAULT_TYPE);
     }
     
@@ -540,8 +535,7 @@ public abstract class SinglePoint3DTriangulator {
      */    
     public static SinglePoint3DTriangulator create(List<Point2D> points2D,
             List<PinholeCamera> cameras, double[] weights, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            SinglePoint3DTriangulatorListener listener) {
         return create(points2D, cameras, weights, listener, DEFAULT_TYPE);
     }    
     
@@ -583,7 +577,7 @@ public abstract class SinglePoint3DTriangulator {
      * required to compute triangulation.
      */    
     private void internalSetPointsAndCameras(List<Point2D> points2D,
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         
         if (!areValidPointsAndCameras(points2D, cameras)) {
             throw new IllegalArgumentException();

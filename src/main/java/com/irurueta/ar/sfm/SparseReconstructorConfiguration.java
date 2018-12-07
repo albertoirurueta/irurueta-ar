@@ -26,11 +26,6 @@ public class SparseReconstructorConfiguration extends
         BaseSparseReconstructorConfiguration<SparseReconstructorConfiguration> implements Serializable {
 
     /**
-     * Constructor.
-     */
-    public SparseReconstructorConfiguration() { }
-
-    /**
      * Creates an instance of a sparse reconstructor configuration.
      * @return configuration instance.
      */

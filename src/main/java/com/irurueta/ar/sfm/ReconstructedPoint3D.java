@@ -66,12 +66,7 @@ public class ReconstructedPoint3D implements Serializable {
      * Color data of reconstructed point (i.e. RGB or YUV values), if available.
      */
     private PointColorData mColorData;
-        
-    /**
-     * Construtor.
-     */
-    public ReconstructedPoint3D() { }
-    
+
     /**
      * Gets id to identify this instance. This is useful in case that this data
      * is stored in some sort of database and must be set externally.

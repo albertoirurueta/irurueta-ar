@@ -180,7 +180,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public RobustSinglePoint3DTriangulator(List<Point2D> points, 
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         this();
         internalSetPointsAndCameras(points, cameras);
     }
@@ -199,8 +199,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public RobustSinglePoint3DTriangulator(List<Point2D> points,
             List<PinholeCamera> cameras, 
-            RobustSinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            RobustSinglePoint3DTriangulatorListener listener) {
         this(points, cameras);
         mListener = listener;
     }
@@ -297,8 +296,9 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
+    @SuppressWarnings("Duplicates")
     public void setProgressDelta(float progressDelta) 
-            throws IllegalArgumentException, LockedException{
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -331,8 +331,8 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException if this estimator is locked because an estimator 
      * is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    @SuppressWarnings("Duplicates")
+    public void setConfidence(double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -361,8 +361,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -384,8 +383,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public void setPointsAndCameras(List<Point2D> points2D, 
-            List<PinholeCamera> cameras) throws LockedException, 
-            IllegalArgumentException {
+            List<PinholeCamera> cameras) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -431,8 +429,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MIN_REQUIRED_VIEWS (i.e. 2 views).
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException { }
+    public void setQualityScores(double[] qualityScores) throws LockedException { }
     
     
     /**
@@ -508,8 +505,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create(List<Point2D> points,
-            List<PinholeCamera> cameras, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustSinglePoint3DTriangulator(points, 
@@ -546,8 +542,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public static RobustSinglePoint3DTriangulator create(List<Point2D> points,
             List<PinholeCamera> cameras, double[] qualityScores, 
-            RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustSinglePoint3DTriangulator(points, 
@@ -589,7 +584,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create(List<Point2D> points,
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         return create(points, cameras, DEFAULT_ROBUST_METHOD);
     }
 
@@ -607,8 +602,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create(List<Point2D> points,
-            List<PinholeCamera> cameras, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, double[] qualityScores) {
         return create(points, cameras, qualityScores, DEFAULT_ROBUST_METHOD);
     }
     
@@ -624,7 +618,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * required to compute triangulation.
      */    
     private void internalSetPointsAndCameras(List<Point2D> points2D,
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         
         if (!SinglePoint3DTriangulator.areValidPointsAndCameras(points2D, cameras)) {
             throw new IllegalArgumentException();

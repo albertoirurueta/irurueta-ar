@@ -39,8 +39,7 @@ public class SlamTwoViewsSparseReconstructor extends
      */
     public SlamTwoViewsSparseReconstructor(
             SlamTwoViewsSparseReconstructorConfiguration configuration,
-            SlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            SlamTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
     
@@ -50,8 +49,7 @@ public class SlamTwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public SlamTwoViewsSparseReconstructor(
-            SlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            SlamTwoViewsSparseReconstructorListener listener) {
         this(new SlamTwoViewsSparseReconstructorConfiguration(), listener);
     }
 
