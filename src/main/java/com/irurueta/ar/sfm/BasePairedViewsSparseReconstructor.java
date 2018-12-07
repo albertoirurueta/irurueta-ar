@@ -213,8 +213,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @throws NullPointerException if listener or configuration is not
      * provided.
      */
-    public BasePairedViewsSparseReconstructor(C configuration,
-                                              L listener) throws NullPointerException {
+    public BasePairedViewsSparseReconstructor(C configuration, L listener) {
         if  (configuration == null || listener == null) {
             throw new NullPointerException();
         }
@@ -676,13 +675,14 @@ public abstract class BasePairedViewsSparseReconstructor<
      */
     private boolean hasEnoughSamplesOrMatches(int count) {
         if (mConfiguration.isGeneralSceneAllowed()) {
-            switch (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod()) {
-                case EIGHT_POINTS_ALGORITHM:
-                    return count >= EightPointsFundamentalMatrixEstimator.
-                            MIN_REQUIRED_POINTS;
-                case SEVEN_POINTS_ALGORITHM:
-                    return count >= SevenPointsFundamentalMatrixEstimator.
-                            MIN_REQUIRED_POINTS;
+            if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
+                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+                return count >= EightPointsFundamentalMatrixEstimator.
+                        MIN_REQUIRED_POINTS;
+            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
+                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+                return count >= SevenPointsFundamentalMatrixEstimator.
+                        MIN_REQUIRED_POINTS;
             }
         } else if (mConfiguration.isPlanarSceneAllowed()) {
             return count >= ProjectiveTransformation2DRobustEstimator.
@@ -711,7 +711,8 @@ public abstract class BasePairedViewsSparseReconstructor<
         List<Point2D> leftPoints = new ArrayList<>(count);
         List<Point2D> rightPoints = new ArrayList<>(count);
         double[] qualityScores = new double[count];
-        double principalPointX, principalPointY;
+        double principalPointX;
+        double principalPointY;
         if (mConfiguration.getPairedCamerasEstimatorMethod() ==
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
                 mConfiguration.getPairedCamerasEstimatorMethod() ==
@@ -805,6 +806,8 @@ public abstract class BasePairedViewsSparseReconstructor<
                             mConfiguration.
                                     getFundamentalMatrixComputeAndKeepResiduals());
                     break;
+                default:
+                    break;
             }
 
 
@@ -866,7 +869,8 @@ public abstract class BasePairedViewsSparseReconstructor<
         List<Point2D> leftPoints = new ArrayList<>();
         List<Point2D> rightPoints = new ArrayList<>();
         double[] qualityScores = new double[count];
-        double principalPointX, principalPointY;
+        double principalPointX;
+        double principalPointY;
         if (mConfiguration.getPairedCamerasEstimatorMethod() ==
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
                 mConfiguration.getPairedCamerasEstimatorMethod() ==
@@ -955,6 +959,8 @@ public abstract class BasePairedViewsSparseReconstructor<
                             mConfiguration.getPlanarHomographyComputeAndKeepInliers());
                     ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(
                             mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
+                    break;
+                default:
                     break;
             }
 

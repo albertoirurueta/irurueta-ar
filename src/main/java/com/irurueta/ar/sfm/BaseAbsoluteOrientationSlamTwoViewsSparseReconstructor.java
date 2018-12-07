@@ -59,8 +59,7 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor<
      * provided.
      */
     public BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor(
-            C configuration, L listener)
-            throws NullPointerException {
+            C configuration, L listener) {
         super(configuration, listener);
     }    
     

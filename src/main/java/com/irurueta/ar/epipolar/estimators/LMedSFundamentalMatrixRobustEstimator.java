@@ -108,8 +108,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      */
     public LMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -128,8 +127,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
     public LMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List<Point2D> leftPoints, List<Point2D> rightPoints,
-            FundamentalMatrixRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -159,7 +157,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 7 points.
      */
     public LMedSFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints);
     }
@@ -175,8 +173,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      */
     public LMedSFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
             List<Point2D> rightPoints,
-            FundamentalMatrixRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints, listener);
     }
@@ -224,8 +221,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

@@ -44,8 +44,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
             AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
     
@@ -55,8 +54,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      * @throws NullPointerException if listener is not provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
         this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(), 
                 listener);
     }

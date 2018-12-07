@@ -72,8 +72,7 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
      * @throws NullPointerException if listener or configuration is not
      * provided.
      */
-    public BaseSlamPairedViewsSparseReconstructor(C configuration, L listener)
-            throws NullPointerException {
+    public BaseSlamPairedViewsSparseReconstructor(C configuration, L listener) {
         super(configuration, listener);
     }
 
@@ -116,8 +115,7 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
      * @throws IllegalArgumentException if provided array does not have length
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
+    public void updateAccelerometerSample(long timestamp, float[] data) {
         if (mLastViewPairTimestamp < 0) {
             mLastViewPairTimestamp = timestamp;
         }
@@ -164,8 +162,7 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
      * @throws IllegalArgumentException if provided array does not have length
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
+    public void updateGyroscopeSample(long timestamp, float[] data) {
         if (mLastViewPairTimestamp < 0) {
             mLastViewPairTimestamp = timestamp;
         }
@@ -307,7 +304,8 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
             //transform points
             mEuclideanReconstructedPoints = new ArrayList<>();
             ReconstructedPoint3D euclideanReconstructedPoint;
-            Point3D metricPoint, euclideanPoint;
+            Point3D metricPoint;
+            Point3D euclideanPoint;
             for (ReconstructedPoint3D metricReconstructedPoint : mMetricReconstructedPoints) {
                 metricPoint = metricReconstructedPoint.getPoint();
                 euclideanPoint = mReferenceEuclideanTransformation.transformAndReturnNew(

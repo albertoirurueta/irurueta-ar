@@ -235,7 +235,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
         try {
             ProjectiveTransformation2D leftNormalization = null;
             ProjectiveTransformation2D rightNormalization = null;
-            List<Point2D> leftPoints, rightPoints;
+            List<Point2D> leftPoints;
+            List<Point2D> rightPoints;
             if (mNormalizePoints) {
                 //normalize points on left view
                 Point2DNormalizer normalizer = new Point2DNormalizer(

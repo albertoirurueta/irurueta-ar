@@ -68,7 +68,7 @@ public abstract class BaseSlamSparseReconstructor<
      * provided.
      */
     public BaseSlamSparseReconstructor(C configuration,
-            L listener) throws NullPointerException {
+            L listener) {
         super(configuration, listener);
     }
 
@@ -106,8 +106,7 @@ public abstract class BaseSlamSparseReconstructor<
      * @throws IllegalArgumentException if provided array does not have length
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
+    public void updateAccelerometerSample(long timestamp, float[] data) {
         if (mSlamEstimator != null) {
             mSlamEstimator.updateAccelerometerSample(timestamp, data);
         }
@@ -143,8 +142,7 @@ public abstract class BaseSlamSparseReconstructor<
      * @throws IllegalArgumentException if provided array does not have length
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
+    public void updateGyroscopeSample(long timestamp, float[] data) {
         if (mSlamEstimator != null) {
             mSlamEstimator.updateGyroscopeSample(timestamp, data);
         }
@@ -197,7 +195,9 @@ public abstract class BaseSlamSparseReconstructor<
             PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();
             PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();
 
-            double slamPosX, slamPosY, slamPosZ;
+            double slamPosX;
+            double slamPosY;
+            double slamPosZ;
             double scale;
             if (isInitialPairOfViews) {
                 //obtain baseline (camera separation from slam estimator data

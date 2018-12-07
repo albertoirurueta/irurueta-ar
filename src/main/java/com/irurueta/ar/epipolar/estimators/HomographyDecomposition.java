@@ -59,8 +59,7 @@ public class HomographyDecomposition {
      * length 3.
      */
     public HomographyDecomposition(EuclideanTransformation3D transformation, 
-            double[] planeNormal, double planeDistance) 
-            throws IllegalArgumentException {
+            double[] planeNormal, double planeDistance) {
         setPlaneNormal(planeNormal);
         mTransformation = transformation;
         mPlaneDistance = planeDistance;
@@ -97,8 +96,7 @@ public class HomographyDecomposition {
      * @throws IllegalArgumentException if provided plane normal does not have
      * length 3.
      */
-    public final void setPlaneNormal(double[] planeNormal) 
-            throws IllegalArgumentException {
+    public final void setPlaneNormal(double[] planeNormal) {
         if (planeNormal.length != PLANE_NORMAL_LENGTH) {
             throw new IllegalArgumentException();
         }

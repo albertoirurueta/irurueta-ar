@@ -63,8 +63,7 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
      * provided.
      */
     public BaseAbsoluteOrientationSlamSparseReconstructor(
-            C configuration, L listener)
-            throws NullPointerException {
+            C configuration, L listener) {
         super(configuration, listener);
     }
 
@@ -98,7 +97,9 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
             PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();
             PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();
 
-            double slamPosX, slamPosY, slamPosZ;
+            double slamPosX;
+            double slamPosY;
+            double slamPosZ;
             double scale;
             if (isInitialPairOfViews) {
                 //obtain baseline (camera separation from slam estimator data

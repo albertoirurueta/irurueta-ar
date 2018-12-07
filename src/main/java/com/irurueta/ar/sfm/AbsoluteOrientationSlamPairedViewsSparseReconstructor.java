@@ -40,8 +40,7 @@ public class AbsoluteOrientationSlamPairedViewsSparseReconstructor extends
      */
     public AbsoluteOrientationSlamPairedViewsSparseReconstructor(
             AbsoluteOrientationSlamPairedViewsSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationSlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+            AbsoluteOrientationSlamPairedViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -52,8 +51,7 @@ public class AbsoluteOrientationSlamPairedViewsSparseReconstructor extends
      * provided.
      */
     public AbsoluteOrientationSlamPairedViewsSparseReconstructor(
-            AbsoluteOrientationSlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+            AbsoluteOrientationSlamPairedViewsSparseReconstructorListener listener) {
         this(new AbsoluteOrientationSlamPairedViewsSparseReconstructorConfiguration(),
                 listener);
     }

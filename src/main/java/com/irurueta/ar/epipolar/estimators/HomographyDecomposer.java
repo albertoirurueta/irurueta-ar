@@ -37,7 +37,7 @@ import java.util.List;
  * O. Faugeras, Motion and structure from motion in a piecewise planar 
  * environment.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class HomographyDecomposer {
     
     /**
@@ -257,7 +257,7 @@ public class HomographyDecomposer {
                 mListener.onDecomposeStart(this);
             }   
             
-            Matrix H = computeNormalizedCoordinatesHomographyMatrix();
+            Matrix h = computeNormalizedCoordinatesHomographyMatrix();
             
             //Homography matrix H can be expressed as:
             //H = d*R + t*n^T
@@ -282,20 +282,20 @@ public class HomographyDecomposer {
             //n^T = n'T*V^T --> n = V*n'
             
             SingularValueDecomposer svdDecomposer = 
-                    new SingularValueDecomposer(H);
+                    new SingularValueDecomposer(h);
             svdDecomposer.decompose();
-            Matrix U = svdDecomposer.getU();
+            Matrix u = svdDecomposer.getU();
             double[] singularValues = svdDecomposer.getSingularValues();
-            Matrix V = svdDecomposer.getV();
+            Matrix v = svdDecomposer.getV();
             
             List<double[]> n = new ArrayList<>();
-            List<Matrix> R = new ArrayList<>();
+            List<Matrix> r = new ArrayList<>();
             List<double[]> t = new ArrayList<>();
             List<Double> d = new ArrayList<>();
             int numSolutions = decomposeAllFromSingularValues(singularValues, n,
-                    R, t, d);
+                    r, t, d);
             
-            Matrix transV = V.transposeAndReturnNew();
+            Matrix transV = v.transposeAndReturnNew();
             Matrix translationMatrix = new Matrix(NUM_COORDS_3D, 1);
             Matrix planeNormalMatrix = new Matrix(NUM_COORDS_3D, 1);
             
@@ -303,18 +303,18 @@ public class HomographyDecomposer {
                 //undo U, V decomposition
 
                 //R = U*R'*V^T
-                Matrix denormalizedR = U.clone();
-                denormalizedR.multiply(R.get(i));
+                Matrix denormalizedR = u.clone();
+                denormalizedR.multiply(r.get(i));
                 denormalizedR.multiply(transV);
                 
                 //t = U*t'
                 translationMatrix.fromArray(t.get(i), true);
-                Matrix denormalizedTranslationMatrix = U.multiplyAndReturnNew(
+                Matrix denormalizedTranslationMatrix = u.multiplyAndReturnNew(
                         translationMatrix);
                 
                 //n = V*n'
                 planeNormalMatrix.fromArray(n.get(i));
-                Matrix denormalizedPlaneNormalMatrix = V.multiplyAndReturnNew(
+                Matrix denormalizedPlaneNormalMatrix = v.multiplyAndReturnNew(
                         planeNormalMatrix);
                 
                 double denormalizedPlaneDistance = d.get(i);
@@ -349,18 +349,18 @@ public class HomographyDecomposer {
      * Decompose solutions from singular values.
      * @param singularValues input singular values.
      * @param n list containing possible plane normals.
-     * @param R list containing possible camera rotations.
+     * @param r list containing possible camera rotations.
      * @param t list containing possible camera translations.
      * @param d list of distances to plane.
      * @return number of solutions.
      * @throws HomographyDecomposerException if decomposition fails (i.e. numerical instabilities, etc).
      */
     private int decomposeAllFromSingularValues(double[] singularValues, 
-            List<double[]> n, List<Matrix> R, List<double[]> t, List<Double> d) 
+            List<double[]> n, List<Matrix> r, List<double[]> t, List<Double> d)
             throws HomographyDecomposerException {
         
         n.clear();
-        R.clear();
+        r.clear();
         t.clear();
         d.clear();
         
@@ -370,12 +370,15 @@ public class HomographyDecomposer {
             double[] n2 = new double[NUM_COORDS_3D];
             double[] n3 = new double[NUM_COORDS_3D];
             double[] n4 = new double[NUM_COORDS_3D];
-            Matrix R1 = null, R2 = null, R3 = null, R4 = null;
+            Matrix r1 = null;
+            Matrix r2 = null;
+            Matrix r3 = null;
+            Matrix r4 = null;
             try {
-                R1 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
-                R2 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
-                R3 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
-                R4 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
+                r1 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
+                r2 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
+                r3 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
+                r4 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
             } catch (AlgebraException ignore) { /* never thrown */ }
             double[] t1 = new double[NUM_COORDS_3D];
             double[] t2 = new double[NUM_COORDS_3D];
@@ -383,23 +386,23 @@ public class HomographyDecomposer {
             double[] t4 = new double[NUM_COORDS_3D];
                         
             double planeDistance1 = decomposeFromSingularValues(singularValues, 
-                    n1, R1, t1, true, true);
+                    n1, r1, t1, true, true);
             double planeDistance2 = decomposeFromSingularValues(singularValues, 
-                    n2, R2, t2, false, true);
+                    n2, r2, t2, false, true);
             double planeDistance3 = decomposeFromSingularValues(singularValues, 
-                    n3, R3, t3, true, false);
+                    n3, r3, t3, true, false);
             double planeDistance4 = decomposeFromSingularValues(singularValues, 
-                    n4, R4, t4, false, false);
+                    n4, r4, t4, false, false);
             
             n.add(n1);
             n.add(n2);
             n.add(n3);
             n.add(n4);
             
-            R.add(R1);
-            R.add(R2);
-            R.add(R3);
-            R.add(R4);
+            r.add(r1);
+            r.add(r2);
+            r.add(r3);
+            r.add(r4);
             
             t.add(t1);
             t.add(t2);
@@ -417,24 +420,25 @@ public class HomographyDecomposer {
             //Two different singular values
             double[] n1 = new double[NUM_COORDS_3D];
             double[] n2 = new double[NUM_COORDS_3D];
-            Matrix R1 = null, R2 = null;
+            Matrix r1 = null;
+            Matrix r2 = null;
             try {
-                R1 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
-                R2 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
+                r1 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
+                r2 = new Matrix(NUM_COORDS_3D, NUM_COORDS_3D);
             } catch (AlgebraException ignore) { /* never thrown */ }
             double[] t1 = new double[NUM_COORDS_3D];
             double[] t2 = new double[NUM_COORDS_3D];
             
             double planeDistance1 = decomposeFromSingularValues(singularValues, 
-                    n1, R1, t1, true, true);
+                    n1, r1, t1, true, true);
             double planeDistance2 = decomposeFromSingularValues(singularValues, 
-                    n2, R2, t2, true, false);            
+                    n2, r2, t2, true, false);
             
             n.add(n1);
             n.add(n2);
             
-            R.add(R1);
-            R.add(R2);
+            r.add(r1);
+            r.add(r2);
             
             t.add(t1);
             t.add(t2);
@@ -486,7 +490,7 @@ public class HomographyDecomposer {
      * Decomposes one possible solution using provided singular values and signs
      * @param singularValues singular values to use for 
      * @param n array where plane normal will be store.
-     * @param R matrix where rotation will be stored.
+     * @param r matrix where rotation will be stored.
      * @param t array where translation will be stored.
      * @param positive1 sign of 1st coordinate of plane normal.
      * @param positive3 sign of 2nd coordinate of plane normal.
@@ -495,7 +499,7 @@ public class HomographyDecomposer {
      * when all three singular values are equal.
      */
     private double decomposeFromSingularValues(double[] singularValues, 
-            double[] n, Matrix R, double[] t, boolean positive1, 
+            double[] n, Matrix r, double[] t, boolean positive1,
             boolean positive3) throws HomographyDecomposerException {
         double d1 = singularValues[0];
         double d2 = singularValues[1];
@@ -506,11 +510,11 @@ public class HomographyDecomposer {
             if (d2 > 0.0) {
                 //Three different singular values d1 != d2 != d3 and d'= d2 > 0
                 return decomposeFromThreeDifferentSingularValuesPositive(d1, d2,
-                        d3, n, R, t, positive1, positive3);
+                        d3, n, r, t, positive1, positive3);
             } else {
                 //Three different singular values and d' = d2 < 0
                 return decomposeFromThreeDifferentSingularValuesNegative(d1, d2,
-                        d3, n, R, t, positive1, positive3);                
+                        d3, n, r, t, positive1, positive3);
             }
         } if (areTwoEqualSingularValues(singularValues)) {
             //Two different singular values
@@ -518,12 +522,12 @@ public class HomographyDecomposer {
                 //Two different singular values d1 = d2 != d3 or d1 != d2 = d3 
                 //and d2 > 0
                 return decomposeFromTwoDifferentSingularValuesPositive(d1, d2, 
-                        d3, n, R, t, positive3);
+                        d3, n, r, t, positive3);
             } else {
                 //Two different singular values d1 = d2 != d3 or d1 != d2 = d3 
                 //and d2 < 0
                 return decomposeFromTwoDifferentSingularValuesNegative(d1, d2, 
-                        d3, n, R, t, positive3);
+                        d3, n, r, t, positive3);
             }
         } else {
             //Three equal singular values
@@ -539,13 +543,13 @@ public class HomographyDecomposer {
      * @param d2 2nd singular value.
      * @param d3 3rd singular value.
      * @param n plane normal.
-     * @param R rotation.
+     * @param r rotation.
      * @param t translation.
      * @param positive3 true to assume positive x3, false otherwise.
      * @return distance to plane.
      */
     private double decomposeFromTwoDifferentSingularValuesNegative(double d1,
-            double d2, double d3, double[] n, Matrix R, double[] t, 
+            double d2, double d3, double[] n, Matrix r, double[] t,
             boolean positive3) {
 
         //fill plane normal solution
@@ -557,17 +561,17 @@ public class HomographyDecomposer {
         //compute rotation
         
         //fill rotation matrix
-        R.setElementAt(0, 0, -1.0);
-        R.setElementAt(1, 0, 0.0);
-        R.setElementAt(2, 0, 0.0);
+        r.setElementAt(0, 0, -1.0);
+        r.setElementAt(1, 0, 0.0);
+        r.setElementAt(2, 0, 0.0);
         
-        R.setElementAt(0, 1, 0.0);
-        R.setElementAt(1, 1, -1.0);
-        R.setElementAt(2, 1, 0.0);
+        r.setElementAt(0, 1, 0.0);
+        r.setElementAt(1, 1, -1.0);
+        r.setElementAt(2, 1, 0.0);
         
-        R.setElementAt(0, 2, 0.0);
-        R.setElementAt(1, 2, 0.0);
-        R.setElementAt(2, 2, 1.0);
+        r.setElementAt(0, 2, 0.0);
+        r.setElementAt(1, 2, 0.0);
+        r.setElementAt(2, 2, 1.0);
 
         //compute translation
         double sum = d3 + d1;
@@ -587,13 +591,13 @@ public class HomographyDecomposer {
      * @param d2 2nd singular value.
      * @param d3 3rd singular value.
      * @param n plane normal.
-     * @param R rotation.
+     * @param r rotation.
      * @param t translation.
      * @param positive3 true to assume positive x3, false otherwise.
      * @return distance to plane.
      */
     private double decomposeFromTwoDifferentSingularValuesPositive(double d1,
-            double d2, double d3, double[] n, Matrix R, double[] t, 
+            double d2, double d3, double[] n, Matrix r, double[] t,
             boolean positive3) {
 
         //fill plane normal solution
@@ -605,17 +609,17 @@ public class HomographyDecomposer {
         //compute rotation
         
         //fill rotation matrix
-        R.setElementAt(0, 0, 1.0);
-        R.setElementAt(1, 0, 0.0);
-        R.setElementAt(2, 0, 0.0);
+        r.setElementAt(0, 0, 1.0);
+        r.setElementAt(1, 0, 0.0);
+        r.setElementAt(2, 0, 0.0);
         
-        R.setElementAt(0, 1, 0.0);
-        R.setElementAt(1, 1, 1.0);
-        R.setElementAt(2, 1, 0.0);
+        r.setElementAt(0, 1, 0.0);
+        r.setElementAt(1, 1, 1.0);
+        r.setElementAt(2, 1, 0.0);
         
-        R.setElementAt(0, 2, 0.0);
-        R.setElementAt(1, 2, 0.0);
-        R.setElementAt(2, 2, 1.0);
+        r.setElementAt(0, 2, 0.0);
+        r.setElementAt(1, 2, 0.0);
+        r.setElementAt(2, 2, 1.0);
 
         //compute translation
         double diff = d1 - d3;
@@ -635,14 +639,14 @@ public class HomographyDecomposer {
      * @param d2 2nd singular value.
      * @param d3 3rd singular value.
      * @param n plane normal.
-     * @param R rotation.
+     * @param r rotation.
      * @param t translation.
      * @param positive1 true to assume positive x1, false otherwise.
      * @param positive3 true to assume positive x3, false otherwise.
      * @return distance to plane.
      */    
     private double decomposeFromThreeDifferentSingularValuesNegative(double d1, 
-            double d2, double d3, double[] n, Matrix R, double[] t,
+            double d2, double d3, double[] n, Matrix r, double[] t,
             boolean positive1, boolean positive3) {
         double d1Sqr = d1*d1;
         double d2Sqr = d2*d2;
@@ -677,17 +681,17 @@ public class HomographyDecomposer {
         double cosTheta = (d3*x1Sqr - d1*x3Sqr)/d2;
         
         //fill rotation matrix
-        R.setElementAt(0, 0, cosTheta);
-        R.setElementAt(1, 0, 0.0);
-        R.setElementAt(2, 0, sinTheta);
+        r.setElementAt(0, 0, cosTheta);
+        r.setElementAt(1, 0, 0.0);
+        r.setElementAt(2, 0, sinTheta);
         
-        R.setElementAt(0, 1, 0.0);
-        R.setElementAt(1, 1, 1.0);
-        R.setElementAt(2, 1, 0.0);
+        r.setElementAt(0, 1, 0.0);
+        r.setElementAt(1, 1, 1.0);
+        r.setElementAt(2, 1, 0.0);
         
-        R.setElementAt(0, 2, -sinTheta);
-        R.setElementAt(1, 2, 0.0);
-        R.setElementAt(2, 2, cosTheta);
+        r.setElementAt(0, 2, -sinTheta);
+        r.setElementAt(1, 2, 0.0);
+        r.setElementAt(2, 2, cosTheta);
         
         
         //compute translation
@@ -708,14 +712,14 @@ public class HomographyDecomposer {
      * @param d2 2nd singular value.
      * @param d3 3rd singular value.
      * @param n plane normal.
-     * @param R rotation.
+     * @param r rotation.
      * @param t translation.
      * @param positive1 true to assume positive x1, false otherwise.
      * @param positive3 true to assume positive x3, false otherwise.
      * @return distance to plane.
      */
     private double decomposeFromThreeDifferentSingularValuesPositive(
-            double d1, double d2, double d3, double[] n, Matrix R, double[] t, 
+            double d1, double d2, double d3, double[] n, Matrix r, double[] t,
             boolean positive1, boolean positive3) {
         double d1Sqr = d1*d1;
         double d2Sqr = d2*d2;
@@ -750,17 +754,17 @@ public class HomographyDecomposer {
         double cosTheta = (d1*x3Sqr + d3*x1Sqr)/d2;
         
         //fill rotation matrix
-        R.setElementAt(0, 0, cosTheta);
-        R.setElementAt(1, 0, 0.0);
-        R.setElementAt(2, 0, sinTheta);
+        r.setElementAt(0, 0, cosTheta);
+        r.setElementAt(1, 0, 0.0);
+        r.setElementAt(2, 0, sinTheta);
         
-        R.setElementAt(0, 1, 0.0);
-        R.setElementAt(1, 1, 1.0);
-        R.setElementAt(2, 1, 0.0);
+        r.setElementAt(0, 1, 0.0);
+        r.setElementAt(1, 1, 1.0);
+        r.setElementAt(2, 1, 0.0);
         
-        R.setElementAt(0, 2, -sinTheta);
-        R.setElementAt(1, 2, 0.0);
-        R.setElementAt(2, 2, cosTheta);
+        r.setElementAt(0, 2, -sinTheta);
+        r.setElementAt(1, 2, 0.0);
+        r.setElementAt(2, 2, cosTheta);
         
         
         //compute translation
@@ -795,13 +799,13 @@ public class HomographyDecomposer {
             //and so we obtain:
             //H = K2^-1*G*K1, which is an homography in normalized coordinates
             
-            Matrix K1 = mLeftIntrinsics.getInternalMatrix();
+            Matrix k1 = mLeftIntrinsics.getInternalMatrix();
             Matrix invK2 = mRightIntrinsics.getInverseInternalMatrix();
-            Matrix G = mHomography.asMatrix();
+            Matrix g = mHomography.asMatrix();
             
             //compute H = K2^-1*G*K1
-            G.multiply(K1);
-            invK2.multiply(G);   
+            g.multiply(k1);
+            invK2.multiply(g);
             return invK2;
     }    
 }
