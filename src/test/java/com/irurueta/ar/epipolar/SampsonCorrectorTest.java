@@ -574,8 +574,12 @@ public class SampsonCorrectorTest implements CorrectorListener {
             
             //create fundamental matrix for the same pair of cameras used to
             //project points
-            FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, 
-                    camera2);            
+            FundamentalMatrix fundamentalMatrix;
+            try {
+                fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            } catch (InvalidPairOfCamerasException e) {
+                continue;
+            }
             
             //check that points without error belong to epipolar lines
             boolean validPoints = true;
