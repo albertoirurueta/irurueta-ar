@@ -52,10 +52,11 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if any of provided jacobians does not
      * have proper size.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
-     */    
+     */
+    @SuppressWarnings("Duplicates")
     public static void predict(Quaternion q, double wx, double wy, double wz,
             double dt, boolean exactMethod, Quaternion result, Matrix jacobianQ,
-            Matrix jacobianW) throws IllegalArgumentException {
+            Matrix jacobianW) {
         
         if(jacobianQ != null && (jacobianQ.getRows() != Quaternion.N_PARAMS ||
                 jacobianQ.getColumns() != Quaternion.N_PARAMS)) {
@@ -79,7 +80,9 @@ public class QuaternionPredictor {
                 try {
                     jacobianQ2 = new Matrix(Quaternion.N_PARAMS, 
                             Quaternion.N_PARAMS);
-                } catch(WrongSizeException ignore) { }
+                } catch(WrongSizeException ignore) {
+                    //never happens
+                }
             }
             Quaternion.product(q, result, result, jacobianQ, jacobianQ2);
             
@@ -87,26 +90,30 @@ public class QuaternionPredictor {
                 try {
                     jacobianQ2.multiply(jacobianW);
                     jacobianW.copyFrom(jacobianQ2);
-                } catch(WrongSizeException ignore) { }
+                } catch(WrongSizeException ignore) {
+                    //never happens
+                }
             }
         } else {
             //tustin integration - fits with jacobians
-            Matrix W = RotationUtils.w2omega(w);
+            Matrix skewW = RotationUtils.w2omega(w);
             try {
-                Matrix Q = new Matrix(Quaternion.N_PARAMS, 1);
-                Q.setElementAtIndex(0, q.getA());
-                Q.setElementAtIndex(1, q.getB());
-                Q.setElementAtIndex(2, q.getC());
-                Q.setElementAtIndex(3, q.getD());
-                W.multiply(Q);
-            } catch(WrongSizeException ignore) { }
+                Matrix qMatrix = new Matrix(Quaternion.N_PARAMS, 1);
+                qMatrix.setElementAtIndex(0, q.getA());
+                qMatrix.setElementAtIndex(1, q.getB());
+                qMatrix.setElementAtIndex(2, q.getC());
+                qMatrix.setElementAtIndex(3, q.getD());
+                skewW.multiply(qMatrix);
+            } catch(WrongSizeException ignore) {
+                //never happens
+            }
             
-            W.multiplyByScalar(0.5 * dt);
+            skewW.multiplyByScalar(0.5 * dt);
             
-            result.setA(q.getA() + W.getElementAtIndex(0));
-            result.setB(q.getB() + W.getElementAtIndex(1));
-            result.setC(q.getC() + W.getElementAtIndex(2));
-            result.setD(q.getD() + W.getElementAtIndex(3));
+            result.setA(q.getA() + skewW.getElementAtIndex(0));
+            result.setB(q.getB() + skewW.getElementAtIndex(1));
+            result.setC(q.getC() + skewW.getElementAtIndex(2));
+            result.setD(q.getD() + skewW.getElementAtIndex(3));
             
             if(jacobianQ != null) {
                 try {
@@ -116,12 +123,14 @@ public class QuaternionPredictor {
                     w[1] = wy;
                     w[2] = wz;
                 
-                    W = RotationUtils.w2omega(w);
+                    skewW = RotationUtils.w2omega(w);
                     jacobianQ.copyFrom(Matrix.identity(Quaternion.N_PARAMS, 
                             Quaternion.N_PARAMS));
-                    jacobianQ.add(W);
+                    jacobianQ.add(skewW);
                     jacobianQ.multiplyByScalar(0.5*dt);
-                } catch(WrongSizeException ignore) { }
+                } catch(WrongSizeException ignore) {
+                    //never happens
+                }
             }
         
             if(jacobianW != null) {
@@ -149,7 +158,7 @@ public class QuaternionPredictor {
      */
     public static void predict(Quaternion q, double[] w, double dt,
             boolean exactMethod, Quaternion result, Matrix jacobianQ, 
-            Matrix jacobianW) throws IllegalArgumentException {
+            Matrix jacobianW) {
         if (w.length != ANGULAR_SPEED_COMPONENTS) {
             throw new IllegalArgumentException("w must have length 3");
         }
@@ -175,7 +184,7 @@ public class QuaternionPredictor {
      */
     public static void predict(Quaternion q, double wx, double wy,
             double wz, double dt, Quaternion result, Matrix jacobianQ, 
-            Matrix jacobianW) throws IllegalArgumentException {
+            Matrix jacobianW) {
         predict(q, wx, wy, wz, dt, true, result, jacobianQ, jacobianW);
     }
     
@@ -195,8 +204,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double[] w, double dt,
-            Quaternion result, Matrix jacobianQ, Matrix jacobianW)
-            throws IllegalArgumentException {
+            Quaternion result, Matrix jacobianQ, Matrix jacobianW) {
         predict(q, w, dt, true, result, jacobianQ, jacobianW);
     }
 
@@ -232,8 +240,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double[] w, double dt,
-            boolean exactMethod, Quaternion result) 
-            throws IllegalArgumentException {
+            boolean exactMethod, Quaternion result) {
         predict(q, w, dt, exactMethod, result, null, null);
     }
     
@@ -267,7 +274,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double[] w, double dt,
-            Quaternion result) throws IllegalArgumentException {
+            Quaternion result) {
         predict(q, w, dt, result, null, null);
     }
     
@@ -290,8 +297,7 @@ public class QuaternionPredictor {
      */
     public static Quaternion predict(Quaternion q, double wx, 
             double wy, double wz, double dt, boolean exactMethod, 
-            Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            Matrix jacobianQ, Matrix jacobianW) {
         Quaternion result = new Quaternion();
         predict(q, wx, wy, wz, dt, exactMethod, result, jacobianQ, jacobianW);
         return result;
@@ -314,8 +320,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double[] w, 
-            double dt, boolean exactMethod, Matrix jacobianQ, Matrix jacobianW)
-            throws IllegalArgumentException {
+            double dt, boolean exactMethod, Matrix jacobianQ, Matrix jacobianW) {
         Quaternion result = new Quaternion();
         predict(q, w, dt, exactMethod, result, jacobianQ, jacobianW);
         return result;
@@ -338,8 +343,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double wx, 
-            double wy, double wz, double dt, Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            double wy, double wz, double dt, Matrix jacobianQ, Matrix jacobianW) {
         Quaternion result = new Quaternion();
         predict(q, wx, wy, wz, dt, result, jacobianQ, jacobianW);
         return result;
@@ -361,8 +365,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double[] w, 
-            double dt, Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            double dt, Matrix jacobianQ, Matrix jacobianW) {
         Quaternion result = new Quaternion();
         predict(q, w, dt, result, jacobianQ, jacobianW);
         return result;
@@ -402,7 +405,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double[] w, 
-            double dt, boolean exactMethod) throws IllegalArgumentException {
+            double dt, boolean exactMethod) {
         Quaternion result = new Quaternion();
         predict(q, w, dt, exactMethod, result);
         return result;
@@ -440,7 +443,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double[] w, 
-            double dt) throws IllegalArgumentException {
+            double dt) {
         Quaternion result = new Quaternion();
         predict(q, w, dt, result);
         return result;
@@ -465,7 +468,7 @@ public class QuaternionPredictor {
      */
     public static void predict(Quaternion q, double wx, double wy, 
             double wz, boolean exactMethod, Quaternion result, Matrix jacobianQ,
-            Matrix jacobianW) throws IllegalArgumentException {
+            Matrix jacobianW) {
         predict(q, wx, wy, wz, 1.0, exactMethod, result, jacobianQ, 
                 jacobianW);
     }
@@ -488,7 +491,7 @@ public class QuaternionPredictor {
      */
     public static void predict(Quaternion q, double[] w, 
             boolean exactMethod, Quaternion result, Matrix jacobianQ, 
-            Matrix jacobianW) throws IllegalArgumentException {
+            Matrix jacobianW) {
         predict(q, w, 1.0, exactMethod, result, jacobianQ, jacobianW);
     }
     
@@ -508,8 +511,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double wx, double wy,
-            double wz, Quaternion result, Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            double wz, Quaternion result, Matrix jacobianQ, Matrix jacobianW) {
         predict(q, wx, wy, wz, 1.0, result, jacobianQ, jacobianW);
     }
     
@@ -528,8 +530,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double[] w, 
-            Quaternion result, Matrix jacobianQ, Matrix jacobianW)
-            throws IllegalArgumentException {
+            Quaternion result, Matrix jacobianQ, Matrix jacobianW) {
         predict(q, w, 1.0, result, jacobianQ, jacobianW);
     }
 
@@ -566,8 +567,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double[] w, 
-            boolean exactMethod, Quaternion result) 
-            throws IllegalArgumentException {
+            boolean exactMethod, Quaternion result) {
         predict(q, w, 1.0, exactMethod, result);
     }
     
@@ -600,7 +600,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(Quaternion q, double[] w, 
-            Quaternion result) throws IllegalArgumentException {
+            Quaternion result) {
         predict(q, w, 1.0, result);
     }
     
@@ -623,8 +623,7 @@ public class QuaternionPredictor {
      */
     public static Quaternion predict(Quaternion q, double wx, 
             double wy, double wz, boolean exactMethod, 
-            Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            Matrix jacobianQ, Matrix jacobianW) {
         return predict(q, wx, wy, wz, 1.0, exactMethod, jacobianQ, jacobianW);
     }
     
@@ -645,8 +644,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double[] w, 
-            boolean exactMethod, Matrix jacobianQ, Matrix jacobianW)
-            throws IllegalArgumentException {
+            boolean exactMethod, Matrix jacobianQ, Matrix jacobianW) {
         return predict(q, w, 1.0, exactMethod, jacobianQ, jacobianW);
     }
     
@@ -666,8 +664,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double wx, 
-            double wy, double wz, Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            double wy, double wz, Matrix jacobianQ, Matrix jacobianW) {
         return predict(q, wx, wy, wz, 1.0, jacobianQ, jacobianW);
     }
     
@@ -686,8 +683,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(Quaternion q, double[] w, 
-            Matrix jacobianQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            Matrix jacobianQ, Matrix jacobianW) {
         return predict(q, w, 1.0, jacobianQ, jacobianW);
     }
     
@@ -754,8 +750,7 @@ public class QuaternionPredictor {
      * have proper size.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(Quaternion q, double[] w) 
-            throws IllegalArgumentException {
+    public static Quaternion predict(Quaternion q, double[] w) {
         return predict(q, w, 1.0);
     }
      
@@ -776,10 +771,11 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if any of provided jacobians does not 
      * have proper size.
      */
+    @SuppressWarnings("Duplicates")
     public static void predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double wx, double wy, double wz, double dt, 
             Quaternion result, Matrix jacobianQ, Matrix jacobianDQ, 
-            Matrix jacobianW) throws IllegalArgumentException {
+            Matrix jacobianW) {
         
         if(jacobianQ != null && (jacobianQ.getRows() != Quaternion.N_PARAMS ||
                 jacobianQ.getColumns() != Quaternion.N_PARAMS)) {
@@ -857,8 +853,7 @@ public class QuaternionPredictor {
      */
     public static void predictWithRotationAdjustment(Quaternion q,
             Quaternion dq, double[] w, double dt, Quaternion result, 
-            Matrix jacobianQ, Matrix jacobianDQ, Matrix jacobianW)
-            throws IllegalArgumentException {
+            Matrix jacobianQ, Matrix jacobianDQ, Matrix jacobianW) {
         if(w.length != ANGULAR_SPEED_COMPONENTS) {
             throw new IllegalArgumentException("w must have length 3");
         }
@@ -898,8 +893,7 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if w does not have length 3.
      */
     public static void predictWithRotationAdjustment(Quaternion q,
-            Quaternion dq, double[] w, double dt, Quaternion result) 
-            throws IllegalArgumentException {
+            Quaternion dq, double[] w, double dt, Quaternion result) {
         predictWithRotationAdjustment(q, dq, w, dt, result, null, null, null);
     }
     
@@ -922,8 +916,7 @@ public class QuaternionPredictor {
      */
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double wx, double wy, double wz, double dt, 
-            Matrix jacobianQ, Matrix jacobianDQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            Matrix jacobianQ, Matrix jacobianDQ, Matrix jacobianW) {
         Quaternion result = new Quaternion();
         predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, jacobianQ, 
                 jacobianDQ, jacobianW);
@@ -948,8 +941,7 @@ public class QuaternionPredictor {
      */
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double[] w, double dt, Matrix jacobianQ, 
-            Matrix jacobianDQ, Matrix jacobianW) 
-            throws IllegalArgumentException {
+            Matrix jacobianDQ, Matrix jacobianW) {
         Quaternion result = new Quaternion();
         predictWithRotationAdjustment(q, dq, w, dt, result, jacobianQ, 
                 jacobianDQ, jacobianW);
@@ -988,8 +980,7 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if w does not have length 3.
      */
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
-            Quaternion dq, double[] w, double dt) 
-            throws IllegalArgumentException {
+            Quaternion dq, double[] w, double dt) {
         Quaternion result = new Quaternion();
         predictWithRotationAdjustment(q, dq, w, dt, result);
         return result;

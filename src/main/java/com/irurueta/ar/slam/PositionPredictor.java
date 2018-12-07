@@ -61,8 +61,7 @@ public class PositionPredictor {
     public static void predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double ax, double ay, double az,
             double dt, InhomogeneousPoint3D result, Matrix jacobianR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         if(jacobianR != null && (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
                 jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
             throw new IllegalArgumentException("jacobian wrt r must be 3x3");
@@ -157,13 +156,14 @@ public class PositionPredictor {
      */
     public static void predict(InhomogeneousPoint3D r, double[] v, 
             double[] a, double dt, InhomogeneousPoint3D result, 
-            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) {
         if(v.length != SPEED_COMPONENTS) {
-            throw new IllegalArgumentException("v must have length 3");
+            //v must have length 3
+            throw new IllegalArgumentException();
         }
         if(a.length != ACCELERATION_COMPONENTS) {
-            throw new IllegalArgumentException("a must have length 3");
+            //a must have length 3
+            throw new IllegalArgumentException();
         }
         predict(r, v[0], v[1], v[2], a[0], a[1], a[2], dt, result,
                 jacobianR, jacobianV, jacobianA);
@@ -203,7 +203,7 @@ public class PositionPredictor {
     public static void predict(InhomogeneousPoint3D r,
             double vx, double vy, double vz, double dt, 
             InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianV, 
-            Matrix jacobianA) throws IllegalArgumentException {
+            Matrix jacobianA) {
         predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt, result, jacobianR, jacobianV, 
                 jacobianA);
     }
@@ -240,8 +240,7 @@ public class PositionPredictor {
      */
     public static void predict(InhomogeneousPoint3D r,
             double[] v, double dt, InhomogeneousPoint3D result, 
-            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) {
         if(v.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("v must have length 3");
         }
@@ -261,8 +260,7 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(InhomogeneousPoint3D r,
-            double[] v, double dt, InhomogeneousPoint3D result) 
-            throws IllegalArgumentException {
+            double[] v, double dt, InhomogeneousPoint3D result) {
         predict(r, v, dt, result, null, null, null);
     }
     
@@ -286,8 +284,7 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double ax, double ay, double az, 
-            double dt, Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            double dt, Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV, 
                 jacobianA);
@@ -333,8 +330,7 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double[] v, double[] a, double dt, Matrix jacobianR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predict(r, v, a, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
@@ -375,8 +371,7 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double dt, Matrix jacobianR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predict(r, vx, vy, vz, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
@@ -415,7 +410,7 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double[] v, double dt, Matrix jacobianR, Matrix jacobianV, 
-            Matrix jacobianA) throws IllegalArgumentException {
+            Matrix jacobianA) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predict(r, v, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
@@ -432,7 +427,7 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r,
-            double[] v, double dt) throws IllegalArgumentException {
+            double[] v, double dt) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predict(r, v, dt, result);
         return result;
@@ -464,8 +459,7 @@ public class PositionPredictor {
             double drx, double dry, double drz, double vx, double vy, double vz,
             double ax, double ay, double az, double dt, 
             InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianDR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         if(jacobianR != null && (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
                 jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
             throw new IllegalArgumentException("jacobian wrt r must be 3x3");
@@ -578,8 +572,7 @@ public class PositionPredictor {
     public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
             double[] dr, double[] v, double[] a, double dt, 
             InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianDR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         if(dr.length != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
             throw new IllegalArgumentException("dr must have length 3");
         }
@@ -608,7 +601,7 @@ public class PositionPredictor {
      */
     public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
             double[] dr, double[] v, double[] a, double dt, 
-            InhomogeneousPoint3D result) throws IllegalArgumentException {
+            InhomogeneousPoint3D result) {
         predictWithPositionAdjustment(r, dr, v, a, dt, result, null, null, null,
                 null);
     }
@@ -639,7 +632,7 @@ public class PositionPredictor {
             InhomogeneousPoint3D r, double drx, double dry, double drz,
             double vx, double vy, double vz, double ax, double ay, double az,
             double dt, Matrix jacobianR, Matrix jacobianDR, Matrix jacobianV,
-            Matrix jacobianA) throws IllegalArgumentException {
+            Matrix jacobianA) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, 
                 ay, az, dt, result, jacobianR, jacobianDR, jacobianV, 
@@ -694,7 +687,7 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predictWithPositionAdjustment(
             InhomogeneousPoint3D r, double[] dr, double[] v, double[] a,
             double dt, Matrix jacobianR, Matrix jacobianDR, Matrix jacobianV,
-            Matrix jacobianA) throws IllegalArgumentException {
+            Matrix jacobianA) {
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predictWithPositionAdjustment(r, dr, v, a, dt, result, 
                 jacobianR, jacobianDR, jacobianV, jacobianA);
