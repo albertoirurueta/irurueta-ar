@@ -210,7 +210,7 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public RadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         this();
         internalSetPoints(distortedPoints, undistortedPoints);
     }
@@ -227,7 +227,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public RadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(listener);
         internalSetPoints(distortedPoints, undistortedPoints);
     }
@@ -244,8 +244,7 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public RadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         this(distortedPoints, undistortedPoints);
         mDistortionCenter = distortionCenter;
     }
@@ -265,7 +264,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public RadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, listener);
         mDistortionCenter = distortionCenter;
     }
@@ -330,8 +329,8 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta) 
-            throws IllegalArgumentException, LockedException {
+    @SuppressWarnings("Duplicates")
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -364,8 +363,8 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimator 
      * is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    @SuppressWarnings("Duplicates")
+    public void setConfidence(double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -394,8 +393,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -415,8 +413,7 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size.
      */
     public void setPoints(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) throws LockedException, 
-            IllegalArgumentException {
+            List<Point2D> undistortedPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -596,8 +593,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if number of parameters is less than 1.
      */
-    public void setNumKParams(int numKParams) throws LockedException, 
-            IllegalArgumentException {
+    public void setNumKParams(int numKParams) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -650,8 +646,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException { }
+    public void setQualityScores(double[] qualityScores) throws LockedException { }
 
     /**
      * Estimates a radial distortion using a robust estimator and
@@ -716,7 +711,7 @@ public abstract class RadialDistortionRobustEstimator {
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints, 
             double[] qualityScores, Point2D distortionCenter, 
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case LMedS:
                 return new LMedSRadialDistortionRobustEstimator(distortedPoints,
@@ -757,8 +752,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints, 
-            Point2D distortionCenter, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
+            Point2D distortionCenter, RobustEstimatorMethod method) {
         switch (method) {
             case LMedS:
                 return new LMedSRadialDistortionRobustEstimator(distortedPoints,
@@ -795,8 +789,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints,
-            double[] qualityScores, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
+            double[] qualityScores, RobustEstimatorMethod method) {
         return create(distortedPoints, undistortedPoints, qualityScores, null, 
                 method);
     }
@@ -816,7 +809,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints,
-            RobustEstimatorMethod method) throws IllegalArgumentException{
+            RobustEstimatorMethod method) {
         return create(distortedPoints, undistortedPoints, (Point2D)null, 
                 method);
     }
@@ -844,7 +837,7 @@ public abstract class RadialDistortionRobustEstimator {
      */    
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints,
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         return create(distortedPoints, undistortedPoints, qualityScores,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -861,8 +854,7 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size.
      */    
     public static RadialDistortionRobustEstimator create(
-            List<Point2D> distortedPoints, List<Point2D> undistortedPoints)
-            throws IllegalArgumentException {
+            List<Point2D> distortedPoints, List<Point2D> undistortedPoints) {
         return create(distortedPoints, undistortedPoints, 
                 DEFAULT_ROBUST_METHOD);
     }
@@ -885,8 +877,7 @@ public abstract class RadialDistortionRobustEstimator {
      */    
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints,
-            double[] qualityScores, Point2D distortionCenter) 
-            throws IllegalArgumentException {
+            double[] qualityScores, Point2D distortionCenter) {
         return create(distortedPoints, undistortedPoints, qualityScores, 
                 distortionCenter, DEFAULT_ROBUST_METHOD);
     }
@@ -908,7 +899,7 @@ public abstract class RadialDistortionRobustEstimator {
      */    
     public static RadialDistortionRobustEstimator create(
             List<Point2D> distortedPoints, List<Point2D> undistortedPoints,
-            Point2D distortionCenter) throws IllegalArgumentException {
+            Point2D distortionCenter) {
         return create(distortedPoints, undistortedPoints, distortionCenter,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -941,8 +932,9 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have 
      * the same size.
      */
+    @SuppressWarnings("Duplicates")
     private void internalSetPoints(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
 
         if (distortedPoints == null || undistortedPoints == null) {
             throw new IllegalArgumentException();

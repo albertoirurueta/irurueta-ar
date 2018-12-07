@@ -91,7 +91,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -108,8 +108,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -126,8 +125,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -147,8 +145,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }    
@@ -159,8 +156,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than required size (i.e. 2 points).
      */
-    public PROSACRadialDistortionRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROSACRadialDistortionRobustEstimator(double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -174,7 +170,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * smaller than required size (i.e. 2 points).
      */
     public PROSACRadialDistortionRobustEstimator(double[] qualityScores,
-            RadialDistortionRobustEstimatorListener listener) throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -190,8 +186,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * MIN_NUMBER_OF_POINTS (i.e. 2 points).
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, double[] qualityScores) {
         this(distortedPoints, undistortedPoints);
         internalSetQualityScores(qualityScores);
     }
@@ -210,8 +205,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, double[] qualityScores,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -231,7 +225,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, double[] qualityScores, 
-            Point2D distortionCenter) throws IllegalArgumentException {
+            Point2D distortionCenter) {
         this(distortedPoints, undistortedPoints, distortionCenter);
         internalSetQualityScores(qualityScores);
     }
@@ -254,8 +248,7 @@ public class PROSACRadialDistortionRobustEstimator extends
     public PROSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, double[] qualityScores, 
             Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, distortionCenter, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -283,8 +276,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException, 
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -314,8 +306,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * smaller than MINIMUM_SIZE (i.e. 2 samples).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -514,8 +505,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MINIMUM_SIZE
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < MIN_NUMBER_OF_POINTS) {
             throw new IllegalArgumentException();
         }

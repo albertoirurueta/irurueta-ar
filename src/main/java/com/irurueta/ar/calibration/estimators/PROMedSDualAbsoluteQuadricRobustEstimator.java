@@ -100,7 +100,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * default settings. Hence, at least 2 cameras must be provided.
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(cameras);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -116,8 +116,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(
             List<PinholeCamera> cameras, 
-            DualAbsoluteQuadricRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -130,8 +129,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * smaller than required number of homographies for default settings (i.e.
      * 2 cameras).
      */
-    public PROMedSDualAbsoluteQuadricRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROMedSDualAbsoluteQuadricRobustEstimator(double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -147,8 +145,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * cameras).
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(double[] qualityScores,
-            DualAbsoluteQuadricRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -164,8 +161,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * have the same size.
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(
-            List<PinholeCamera> cameras, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, double[] qualityScores) {
         this(cameras);
         internalSetQualityScores(qualityScores);
     }
@@ -184,8 +180,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(
             List<PinholeCamera> cameras, double[] qualityScores,
-            DualAbsoluteQuadricRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(cameras, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -233,8 +228,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -266,8 +260,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * smaller than minimum required number of cameras (i.e. 2 cameras).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -438,8 +431,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * smaller than the minimum number of required homographies for current
      * settings.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < mDAQEstimator.getMinNumberOfRequiredCameras()) {
             throw new IllegalArgumentException();
         }

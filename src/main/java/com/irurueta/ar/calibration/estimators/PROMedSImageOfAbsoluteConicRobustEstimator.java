@@ -104,8 +104,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * for default settings. Hence, at least 1 homography must be provided.
      */
     public PROMedSImageOfAbsoluteConicRobustEstimator(
-            List<Transformation2D> homographies) 
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies) {
         super(homographies);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -122,8 +121,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      */
     public PROMedSImageOfAbsoluteConicRobustEstimator(
             List<Transformation2D> homographies, 
-            ImageOfAbsoluteConicRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(homographies, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -136,8 +134,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * smaller than required number of homographies for default settings (i.e.
      * 1 homography).
      */
-    public PROMedSImageOfAbsoluteConicRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROMedSImageOfAbsoluteConicRobustEstimator(double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -153,8 +150,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * 1 homography).
      */
     public PROMedSImageOfAbsoluteConicRobustEstimator(double[] qualityScores,
-            ImageOfAbsoluteConicRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -171,8 +167,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * homographies don't have the same size.
      */
     public PROMedSImageOfAbsoluteConicRobustEstimator(
-            List<Transformation2D> homographies, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies, double[] qualityScores) {
         this(homographies);
         internalSetQualityScores(qualityScores);
     }
@@ -192,8 +187,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      */
     public PROMedSImageOfAbsoluteConicRobustEstimator(
             List<Transformation2D> homographies, double[] qualityScores,
-            ImageOfAbsoluteConicRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         this(homographies, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -241,8 +235,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -274,8 +267,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * smaller than minimum required number of homographies (i.e. 1 homography).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -448,8 +440,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * smaller than the minimum number of required homographies for current
      * settings.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < mIACEstimator.getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }

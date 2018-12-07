@@ -122,8 +122,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

@@ -124,7 +124,9 @@ public abstract class RadialDistortionEstimator {
         try {
             setInternalIntrinsic(null, DEFAULT_FOCAL_LENGTH, 
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -139,7 +141,9 @@ public abstract class RadialDistortionEstimator {
         try {
             setInternalIntrinsic(null, DEFAULT_FOCAL_LENGTH, 
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);        
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -151,7 +155,7 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */
     public RadialDistortionEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         this();
         internalSetPoints(distortedPoints, undistortedPoints);
     }
@@ -168,8 +172,7 @@ public abstract class RadialDistortionEstimator {
      */
     public RadialDistortionEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, 
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionEstimatorListener listener) {
         this(listener);
         internalSetPoints(distortedPoints, undistortedPoints);
     }
@@ -187,7 +190,9 @@ public abstract class RadialDistortionEstimator {
         try {
             setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, 
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -204,7 +209,9 @@ public abstract class RadialDistortionEstimator {
         try {
             setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, 
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -219,13 +226,14 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */    
     public RadialDistortionEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, Point2D distortionCenter)
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         this(distortedPoints, undistortedPoints);
         try {
             setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, 
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -243,13 +251,14 @@ public abstract class RadialDistortionEstimator {
      */ 
     public RadialDistortionEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionEstimatorListener listener)
-            throws IllegalArgumentException {
+            RadialDistortionEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, listener);
         try {
             setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, 
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);        
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -294,8 +303,7 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */
     public void setPoints(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) throws LockedException, 
-            IllegalArgumentException {
+            List<Point2D> undistortedPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -347,7 +355,9 @@ public abstract class RadialDistortionEstimator {
         try {
             setInternalIntrinsic(distortionCenter, mHorizontalFocalLength, 
                     mVerticalFocalLength, mSkew);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }    
     
     /**
@@ -421,7 +431,9 @@ public abstract class RadialDistortionEstimator {
         try {
             setInternalIntrinsic(mDistortionCenter, mHorizontalFocalLength, 
                     mVerticalFocalLength, skew);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -489,8 +501,7 @@ public abstract class RadialDistortionEstimator {
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if number of parameters is less than 1.
      */
-    public void setNumKParams(int numKParams) throws LockedException, 
-            IllegalArgumentException {
+    public void setNumKParams(int numKParams) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -619,18 +630,18 @@ public abstract class RadialDistortionEstimator {
                 mKinv = new Matrix(3, 3);
             }
             
-            Matrix K = new Matrix(3, 3); //initially matrix is zero
+            Matrix k = new Matrix(3, 3); //initially matrix is zero
             
-            K.setElementAt(0, 0, horizontalFocalLength);
-            K.setElementAt(1, 1, verticalFocalLength);
-            K.setElementAt(0, 1, skew);
+            k.setElementAt(0, 0, horizontalFocalLength);
+            k.setElementAt(1, 1, verticalFocalLength);
+            k.setElementAt(0, 1, skew);
             if (mDistortionCenter != null) {
-                K.setElementAt(0, 2, mDistortionCenter.getInhomX());
-                K.setElementAt(1, 2, mDistortionCenter.getInhomY());
+                k.setElementAt(0, 2, mDistortionCenter.getInhomX());
+                k.setElementAt(1, 2, mDistortionCenter.getInhomY());
             } //if center is not provided, values are zero
-            K.setElementAt(2, 2, 1.0);
+            k.setElementAt(2, 2, 1.0);
             
-            Utils.inverse(K, mKinv);
+            Utils.inverse(k, mKinv);
         } catch (AlgebraException e) {
             throw new RadialDistortionException(e);
         }
@@ -646,7 +657,7 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */
     private void internalSetPoints(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
 
         if (distortedPoints == null || undistortedPoints == null) {
             throw new IllegalArgumentException();
