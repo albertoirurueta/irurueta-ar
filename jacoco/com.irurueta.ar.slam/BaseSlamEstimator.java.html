@@ -344,15 +344,14 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @param result array where position coordinates will be stored.
      * @throws IllegalArgumentException if the array does not have length 3.
      */
-    public void getStatePosition(double[] result) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L350">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+    public void getStatePosition(double[] result) {
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L349">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc" id="L352">        result[0] = mStatePositionX;</span>
-<span class="fc" id="L353">        result[1] = mStatePositionY;</span>
-<span class="fc" id="L354">        result[2] = mStatePositionZ;        </span>
-<span class="fc" id="L355">    }</span>
+<span class="fc" id="L351">        result[0] = mStatePositionX;</span>
+<span class="fc" id="L352">        result[1] = mStatePositionY;</span>
+<span class="fc" id="L353">        result[2] = mStatePositionZ;        </span>
+<span class="fc" id="L354">    }</span>
     
     /**
      * Gets current linear velocity of the device along x-axis expressed in
@@ -361,7 +360,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * (m/s).
      */
     public double getStateVelocityX() {
-<span class="fc" id="L364">        return mStateVelocityX;</span>
+<span class="fc" id="L363">        return mStateVelocityX;</span>
     }
     
     /**
@@ -371,7 +370,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * (m/s).
      */
     public double getStateVelocityY() {
-<span class="fc" id="L374">        return mStateVelocityY;</span>
+<span class="fc" id="L373">        return mStateVelocityY;</span>
     }
     
     /**
@@ -381,7 +380,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * (m/s).
      */
     public double getStateVelocityZ() {
-<span class="fc" id="L384">        return mStateVelocityZ;</span>
+<span class="fc" id="L383">        return mStateVelocityZ;</span>
     }
     
     /**
@@ -390,7 +389,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return current linear velocity of the device.
      */
     public double[] getStateVelocity() {
-<span class="fc" id="L393">        return new double[]{mStateVelocityX, mStateVelocityY, mStateVelocityZ};</span>
+<span class="fc" id="L392">        return new double[]{mStateVelocityX, mStateVelocityY, mStateVelocityZ};</span>
     }
     
     /**
@@ -399,15 +398,14 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @param result array where linear velocity of the device will be stored.
      * @throws IllegalArgumentException if result array does not have length 3.
      */
-    public void getStateVelocity(double[] result) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L404" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L405">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+    public void getStateVelocity(double[] result) {
+<span class="fc bfc" id="L402" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L403">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc" id="L407">        result[0] = mStateVelocityX;</span>
-<span class="fc" id="L408">        result[1] = mStateVelocityY;</span>
-<span class="fc" id="L409">        result[2] = mStateVelocityZ;        </span>
-<span class="fc" id="L410">    }</span>
+<span class="fc" id="L405">        result[0] = mStateVelocityX;</span>
+<span class="fc" id="L406">        result[1] = mStateVelocityY;</span>
+<span class="fc" id="L407">        result[2] = mStateVelocityZ;        </span>
+<span class="fc" id="L408">    }</span>
     
     /**
      * Gets current linear acceleration of the device along x-axis expressed in
@@ -415,7 +413,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return linear acceleration of the device along x-axis.
      */
     public double getStateAccelerationX() {
-<span class="fc" id="L418">        return mStateAccelerationX;</span>
+<span class="fc" id="L416">        return mStateAccelerationX;</span>
     }
     
     /**
@@ -424,7 +422,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return linear acceleration of the device along y-axis.
      */
     public double getStateAccelerationY() {
-<span class="fc" id="L427">        return mStateAccelerationY;</span>
+<span class="fc" id="L425">        return mStateAccelerationY;</span>
     }
     
     /**
@@ -433,7 +431,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return linear acceleration of the device along z-axis.
      */
     public double getStateAccelerationZ() {
-<span class="fc" id="L436">        return mStateAccelerationZ;</span>
+<span class="fc" id="L434">        return mStateAccelerationZ;</span>
     }
     
     /**
@@ -442,7 +440,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return current linear acceleration of the device.
      */
     public double[] getStateAcceleration() {
-<span class="fc" id="L445">        return new double[]{mStateAccelerationX, mStateAccelerationY, </span>
+<span class="fc" id="L443">        return new double[]{mStateAccelerationX, mStateAccelerationY, </span>
             mStateAccelerationZ};
     }
     
@@ -453,22 +451,21 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * be stored.
      * @throws IllegalArgumentException if array does not have length 3.
      */
-    public void getStateAcceleration(double[] result) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L458" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L459">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+    public void getStateAcceleration(double[] result) {
+<span class="fc bfc" id="L455" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L456">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc" id="L461">        result[0] = mStateAccelerationX;</span>
-<span class="fc" id="L462">        result[1] = mStateAccelerationY;</span>
-<span class="fc" id="L463">        result[2] = mStateAccelerationZ;        </span>
-<span class="fc" id="L464">    }</span>
+<span class="fc" id="L458">        result[0] = mStateAccelerationX;</span>
+<span class="fc" id="L459">        result[1] = mStateAccelerationY;</span>
+<span class="fc" id="L460">        result[2] = mStateAccelerationZ;        </span>
+<span class="fc" id="L461">    }</span>
     
     /**
      * Gets A value of quaternion containing current device orientation.
      * @return A value of quaternion containing current device orientation.
      */
     public double getStateQuaternionA() {
-<span class="fc" id="L471">        return mStateQuaternionA;</span>
+<span class="fc" id="L468">        return mStateQuaternionA;</span>
     }
     
     /**
@@ -476,7 +473,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return B value of quaternion containing current device orientation.
      */
     public double getStateQuaternionB() {
-<span class="fc" id="L479">        return mStateQuaternionB;</span>
+<span class="fc" id="L476">        return mStateQuaternionB;</span>
     }
     
     /**
@@ -484,7 +481,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return C value of quaternion containing current device orientation.
      */
     public double getStateQuaternionC() {
-<span class="fc" id="L487">        return mStateQuaternionC;</span>
+<span class="fc" id="L484">        return mStateQuaternionC;</span>
     }
     
     /**
@@ -492,7 +489,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return D value of quaternion containing current device orientation.
      */
     public double getStateQuaternionD() {
-<span class="fc" id="L495">        return mStateQuaternionD;</span>
+<span class="fc" id="L492">        return mStateQuaternionD;</span>
     }
     
     /**
@@ -502,7 +499,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * orientation.
      */
     public double[] getStateQuaternionArray() {
-<span class="fc" id="L505">        return new double[]{ mStateQuaternionA, mStateQuaternionB, </span>
+<span class="fc" id="L502">        return new double[]{ mStateQuaternionA, mStateQuaternionB, </span>
             mStateQuaternionC, mStateQuaternionD };
     }
     
@@ -514,23 +511,22 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 4.
      */
-    public void getStateQuaternionArray(double[] result) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L519" title="All 2 branches covered.">        if (result.length != Quaternion.N_PARAMS) {</span>
-<span class="fc" id="L520">            throw new IllegalArgumentException(&quot;result must have length 4&quot;);</span>
+    public void getStateQuaternionArray(double[] result) {
+<span class="fc bfc" id="L515" title="All 2 branches covered.">        if (result.length != Quaternion.N_PARAMS) {</span>
+<span class="fc" id="L516">            throw new IllegalArgumentException(&quot;result must have length 4&quot;);</span>
         }
-<span class="fc" id="L522">        result[0] = mStateQuaternionA;</span>
-<span class="fc" id="L523">        result[1] = mStateQuaternionB;</span>
-<span class="fc" id="L524">        result[2] = mStateQuaternionC;</span>
-<span class="fc" id="L525">        result[3] = mStateQuaternionD;        </span>
-<span class="fc" id="L526">    }</span>
+<span class="fc" id="L518">        result[0] = mStateQuaternionA;</span>
+<span class="fc" id="L519">        result[1] = mStateQuaternionB;</span>
+<span class="fc" id="L520">        result[2] = mStateQuaternionC;</span>
+<span class="fc" id="L521">        result[3] = mStateQuaternionD;        </span>
+<span class="fc" id="L522">    }</span>
     
     /**
      * Gets quaternion containing current device orientation.
      * @return quaternion containing current device orientation.
      */
     public Quaternion getStateQuaternion() {
-<span class="fc" id="L533">        return new Quaternion(mStateQuaternionA, mStateQuaternionB, </span>
+<span class="fc" id="L529">        return new Quaternion(mStateQuaternionA, mStateQuaternionB, </span>
                 mStateQuaternionC, mStateQuaternionD);
     }
     
@@ -539,18 +535,18 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @param result instance where quaternion data will be stored.
      */
     public void getStateQuaternion(Quaternion result) {
-<span class="fc" id="L542">        result.setA(mStateQuaternionA);</span>
-<span class="fc" id="L543">        result.setB(mStateQuaternionB);</span>
-<span class="fc" id="L544">        result.setC(mStateQuaternionC);</span>
-<span class="fc" id="L545">        result.setD(mStateQuaternionD);        </span>
-<span class="fc" id="L546">    }</span>
+<span class="fc" id="L538">        result.setA(mStateQuaternionA);</span>
+<span class="fc" id="L539">        result.setB(mStateQuaternionB);</span>
+<span class="fc" id="L540">        result.setC(mStateQuaternionC);</span>
+<span class="fc" id="L541">        result.setD(mStateQuaternionD);        </span>
+<span class="fc" id="L542">    }</span>
     
     /**
      * Gets angular speed along x-axis expressed in radians per second (rad/s).
      * @return angular speed along x-axis.
      */
     public double getStateAngularSpeedX() {
-<span class="fc" id="L553">        return mStateAngularSpeedX;</span>
+<span class="fc" id="L549">        return mStateAngularSpeedX;</span>
     }
     
     /**
@@ -558,7 +554,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return angular speed along y-axis.
      */
     public double getStateAngularSpeedY() {
-<span class="fc" id="L561">        return mStateAngularSpeedY;</span>
+<span class="fc" id="L557">        return mStateAngularSpeedY;</span>
     }
     
     /**
@@ -566,7 +562,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return angular speed along z-axis.
      */
     public double getStateAngularSpeedZ() {
-<span class="fc" id="L569">        return mStateAngularSpeedZ;</span>
+<span class="fc" id="L565">        return mStateAngularSpeedZ;</span>
     }
     
     /**
@@ -575,7 +571,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return device's angular speed.
      */
     public double[] getStateAngularSpeed() {
-<span class="fc" id="L578">        return new double[]{ mStateAngularSpeedX, mStateAngularSpeedY, </span>
+<span class="fc" id="L574">        return new double[]{ mStateAngularSpeedX, mStateAngularSpeedY, </span>
                 mStateAngularSpeedZ };
     }
     
@@ -587,15 +583,14 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getStateAngularSpeed(double[] result) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L592" title="All 2 branches covered.">        if(result.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L593">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+    public void getStateAngularSpeed(double[] result) {
+<span class="fc bfc" id="L587" title="All 2 branches covered.">        if(result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L588">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc" id="L595">        result[0] = mStateAngularSpeedX;</span>
-<span class="fc" id="L596">        result[1] = mStateAngularSpeedY;</span>
-<span class="fc" id="L597">        result[2] = mStateAngularSpeedZ;</span>
-<span class="fc" id="L598">    }</span>
+<span class="fc" id="L590">        result[0] = mStateAngularSpeedX;</span>
+<span class="fc" id="L591">        result[1] = mStateAngularSpeedY;</span>
+<span class="fc" id="L592">        result[2] = mStateAngularSpeedZ;</span>
+<span class="fc" id="L593">    }</span>
 
     /**
      * Gets covariance matrix of state variables (position, velocity, acceleration, orientation and angular speed).
@@ -611,7 +606,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return true if an error occurred since last start time, false otherwise.
      */
     public boolean hasError() {
-<span class="fc" id="L614">        return mError;</span>
+<span class="fc" id="L609">        return mError;</span>
     }
     
     /**
@@ -619,7 +614,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return true if accumulation of samples is enabled, false otherwise.
      */
     public boolean isAccumulationEnabled() {
-<span class="fc" id="L622">        return mAccumulationEnabled;</span>
+<span class="fc" id="L617">        return mAccumulationEnabled;</span>
     }
     
     /**
@@ -628,8 +623,8 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * false otherwise.
      */
     public void setAccumulationEnabled(boolean accumulationEnabled) {
-<span class="fc" id="L631">        mAccumulationEnabled = accumulationEnabled;</span>
-<span class="fc" id="L632">    }</span>
+<span class="fc" id="L626">        mAccumulationEnabled = accumulationEnabled;</span>
+<span class="fc" id="L627">    }</span>
     
     /**
      * Gets timestamp expressed in nanoseconds since the epoch time of the last
@@ -638,7 +633,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * last accelerometer sample, or -1.
      */
     public long getAccelerometerTimestampNanos() {
-<span class="fc" id="L641">        return mAccelerometerTimestampNanos;</span>
+<span class="fc" id="L636">        return mAccelerometerTimestampNanos;</span>
     }
     
     /**
@@ -648,7 +643,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * last gyroscope sample, or -1.
      */
     public long getGyroscopeTimestampNanos() {
-<span class="fc" id="L651">        return mGyroscopeTimestampNanos;</span>
+<span class="fc" id="L646">        return mGyroscopeTimestampNanos;</span>
     }
     
     /**
@@ -657,7 +652,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * sample.
      */
     public int getAccumulatedAccelerometerSamples() {
-<span class="fc" id="L660">        return mAccumulatedAccelerometerSamples;</span>
+<span class="fc" id="L655">        return mAccumulatedAccelerometerSamples;</span>
     }
     
     /**
@@ -665,7 +660,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return number of gyroscope samples accumulated since last full sample.
      */
     public int getAccumulatedGyroscopeSamples() {
-<span class="fc" id="L668">        return mAccumulatedGyroscopeSamples;</span>
+<span class="fc" id="L663">        return mAccumulatedGyroscopeSamples;</span>
     }
     
     /**
@@ -674,7 +669,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return true if accelerometer sample has been received, false otherwise.
      */
     public boolean isAccelerometerSampleReceived() {
-<span class="fc bfc" id="L677" title="All 2 branches covered.">        return mAccumulatedAccelerometerSamples &gt; 0;</span>
+<span class="fc bfc" id="L672" title="All 2 branches covered.">        return mAccumulatedAccelerometerSamples &gt; 0;</span>
     }
     
     /**
@@ -683,7 +678,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return  true if gyroscope sample has been received, false otherwise.
      */
     public boolean isGyroscopeSampleReceived() {
-<span class="fc bfc" id="L686" title="All 2 branches covered.">        return mAccumulatedGyroscopeSamples &gt; 0;</span>
+<span class="fc bfc" id="L681" title="All 2 branches covered.">        return mAccumulatedGyroscopeSamples &gt; 0;</span>
     }
     
     /**
@@ -692,7 +687,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return true if full sample has been received, false otherwise.
      */
     public boolean isFullSampleAvailable() {
-<span class="fc bfc" id="L695" title="All 4 branches covered.">        return isAccelerometerSampleReceived() &amp;&amp; isGyroscopeSampleReceived();</span>
+<span class="fc bfc" id="L690" title="All 4 branches covered.">        return isAccelerometerSampleReceived() &amp;&amp; isGyroscopeSampleReceived();</span>
     }
 
     /**
@@ -702,7 +697,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * sample.
      */
     public double getAccumulatedAccelerationSampleX() {
-<span class="fc" id="L705">        return mAccumulatedAccelerationSampleX;</span>
+<span class="fc" id="L700">        return mAccumulatedAccelerationSampleX;</span>
     }
     
     /**
@@ -712,7 +707,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * sample.
      */
     public double getAccumulatedAccelerationSampleY() {
-<span class="fc" id="L715">        return mAccumulatedAccelerationSampleY;</span>
+<span class="fc" id="L710">        return mAccumulatedAccelerationSampleY;</span>
     }
     
     /**
@@ -722,7 +717,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * sample.
      */
     public double getAccumulatedAccelerationSampleZ() {
-<span class="fc" id="L725">        return mAccumulatedAccelerationSampleZ;</span>
+<span class="fc" id="L720">        return mAccumulatedAccelerationSampleZ;</span>
     }
     
     /**
@@ -732,7 +727,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * squared second (m/s^2).
      */
     public double[] getAccumulatedAccelerationSample() {
-<span class="fc" id="L735">        return new double[]{</span>
+<span class="fc" id="L730">        return new double[]{</span>
             mAccumulatedAccelerationSampleX,
             mAccumulatedAccelerationSampleY,
             mAccumulatedAccelerationSampleZ
@@ -747,15 +742,14 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getAccumulatedAccelerationSample(double[] result)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L752" title="All 2 branches covered.">        if(result.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L753">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+    public void getAccumulatedAccelerationSample(double[] result) {
+<span class="fc bfc" id="L746" title="All 2 branches covered.">        if(result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L747">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc" id="L755">        result[0] = mAccumulatedAccelerationSampleX;</span>
-<span class="fc" id="L756">        result[1] = mAccumulatedAccelerationSampleY;</span>
-<span class="fc" id="L757">        result[2] = mAccumulatedAccelerationSampleZ;</span>
-<span class="fc" id="L758">    }</span>
+<span class="fc" id="L749">        result[0] = mAccumulatedAccelerationSampleX;</span>
+<span class="fc" id="L750">        result[1] = mAccumulatedAccelerationSampleY;</span>
+<span class="fc" id="L751">        result[2] = mAccumulatedAccelerationSampleZ;</span>
+<span class="fc" id="L752">    }</span>
     
     /**
      * Gets average angular speed along x-axis accumulated since last full 
@@ -764,7 +758,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleX() {
-<span class="fc" id="L767">        return mAccumulatedAngularSpeedSampleX;</span>
+<span class="fc" id="L761">        return mAccumulatedAngularSpeedSampleX;</span>
     }
     
     /**
@@ -774,7 +768,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleY() {
-<span class="fc" id="L777">        return mAccumulatedAngularSpeedSampleY;</span>
+<span class="fc" id="L771">        return mAccumulatedAngularSpeedSampleY;</span>
     }
 
     /**
@@ -784,7 +778,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * second.
      */
     public double getAccumulatedAngularSpeedSampleZ() {
-<span class="fc" id="L787">        return mAccumulatedAngularSpeedSampleZ;</span>
+<span class="fc" id="L781">        return mAccumulatedAngularSpeedSampleZ;</span>
     }
 
     /**
@@ -794,7 +788,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * second.
      */
     public double[] getAccumulatedAngularSpeedSample() {
-<span class="fc" id="L797">        return new double[] {</span>
+<span class="fc" id="L791">        return new double[] {</span>
             mAccumulatedAngularSpeedSampleX,
             mAccumulatedAngularSpeedSampleY,
             mAccumulatedAngularSpeedSampleZ
@@ -809,15 +803,14 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getAccumulatedAngularSpeedSample(double[] result)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L814" title="All 2 branches covered.">        if(result.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L815">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+    public void getAccumulatedAngularSpeedSample(double[] result) {
+<span class="fc bfc" id="L807" title="All 2 branches covered.">        if(result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L808">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc" id="L817">        result[0] = mAccumulatedAngularSpeedSampleX;</span>
-<span class="fc" id="L818">        result[1] = mAccumulatedAngularSpeedSampleY;</span>
-<span class="fc" id="L819">        result[2] = mAccumulatedAngularSpeedSampleZ;</span>
-<span class="fc" id="L820">    }</span>
+<span class="fc" id="L810">        result[0] = mAccumulatedAngularSpeedSampleX;</span>
+<span class="fc" id="L811">        result[1] = mAccumulatedAngularSpeedSampleY;</span>
+<span class="fc" id="L812">        result[2] = mAccumulatedAngularSpeedSampleZ;</span>
+<span class="fc" id="L813">    }</span>
             
     /**
      * Provides a new accelerometer sample.
@@ -836,31 +829,31 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      */
     public void updateAccelerometerSample(long timestamp, float accelerationX,
             float accelerationY, float accelerationZ) {
-<span class="pc bpc" id="L839" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
-<span class="fc" id="L840">            mAccelerometerTimestampNanos = timestamp;</span>
-<span class="fc bfc" id="L841" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isAccelerometerSampleReceived()) {</span>
+<span class="pc bpc" id="L832" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
+<span class="fc" id="L833">            mAccelerometerTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L834" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isAccelerometerSampleReceived()) {</span>
                 //accumulation enabled
-<span class="fc" id="L843">                int nextSamples = mAccumulatedAccelerometerSamples + 1;</span>
-<span class="fc" id="L844">                mAccumulatedAccelerationSampleX = </span>
+<span class="fc" id="L836">                int nextSamples = mAccumulatedAccelerometerSamples + 1;</span>
+<span class="fc" id="L837">                mAccumulatedAccelerationSampleX = </span>
                         (mAccumulatedAccelerationSampleX * mAccumulatedAccelerometerSamples + 
                         accelerationX) / nextSamples;
-<span class="fc" id="L847">                mAccumulatedAccelerationSampleY =</span>
+<span class="fc" id="L840">                mAccumulatedAccelerationSampleY =</span>
                         (mAccumulatedAccelerationSampleY * mAccumulatedAccelerometerSamples +
                         accelerationY) / nextSamples;
-<span class="fc" id="L850">                mAccumulatedAccelerationSampleZ =</span>
+<span class="fc" id="L843">                mAccumulatedAccelerationSampleZ =</span>
                         (mAccumulatedAccelerationSampleZ * mAccumulatedAccelerometerSamples +
                         accelerationZ) / nextSamples;
-<span class="fc" id="L853">                mAccumulatedAccelerometerSamples = nextSamples;</span>
-<span class="fc" id="L854">            } else {</span>
+<span class="fc" id="L846">                mAccumulatedAccelerometerSamples = nextSamples;</span>
+<span class="fc" id="L847">            } else {</span>
                 //accumulation disabled
-<span class="fc" id="L856">               mAccumulatedAccelerationSampleX = accelerationX;</span>
-<span class="fc" id="L857">               mAccumulatedAccelerationSampleY = accelerationY;</span>
-<span class="fc" id="L858">               mAccumulatedAccelerationSampleZ = accelerationZ;</span>
-<span class="fc" id="L859">               mAccumulatedAccelerometerSamples++;  </span>
+<span class="fc" id="L849">               mAccumulatedAccelerationSampleX = accelerationX;</span>
+<span class="fc" id="L850">               mAccumulatedAccelerationSampleY = accelerationY;</span>
+<span class="fc" id="L851">               mAccumulatedAccelerationSampleZ = accelerationZ;</span>
+<span class="fc" id="L852">               mAccumulatedAccelerometerSamples++;  </span>
             }                      
-<span class="fc" id="L861">            notifyFullSampleAndResetSampleReceive();</span>
+<span class="fc" id="L854">            notifyFullSampleAndResetSampleReceive();</span>
         }
-<span class="fc" id="L863">    }</span>
+<span class="fc" id="L856">    }</span>
     
     /**
      * Provides a new accelerometer sample.
@@ -875,15 +868,14 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L880" title="All 2 branches covered.">        if(data.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L881">            throw new IllegalArgumentException(</span>
+    public void updateAccelerometerSample(long timestamp, float[] data) {
+<span class="fc bfc" id="L872" title="All 2 branches covered.">        if(data.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L873">            throw new IllegalArgumentException(</span>
                     &quot;acceleration must have length 3&quot;);
         }
-<span class="fc" id="L884">        updateAccelerometerSample(timestamp, data[0], data[1],</span>
+<span class="fc" id="L876">        updateAccelerometerSample(timestamp, data[0], data[1],</span>
                 data[2]);
-<span class="fc" id="L886">    }</span>
+<span class="fc" id="L878">    }</span>
         
     /**
      * Provides a new gyroscope sample.
@@ -902,28 +894,28 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      */
     public void updateGyroscopeSample(long timestamp, float angularSpeedX,
             float angularSpeedY, float angularSpeedZ) {
-<span class="pc bpc" id="L905" title="1 of 2 branches missed.">        if(!isFullSampleAvailable()) {</span>
-<span class="fc" id="L906">            mGyroscopeTimestampNanos = timestamp;</span>
-<span class="fc bfc" id="L907" title="All 4 branches covered.">            if(isAccumulationEnabled() &amp;&amp; isGyroscopeSampleReceived()) {</span>
+<span class="pc bpc" id="L897" title="1 of 2 branches missed.">        if(!isFullSampleAvailable()) {</span>
+<span class="fc" id="L898">            mGyroscopeTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L899" title="All 4 branches covered.">            if(isAccumulationEnabled() &amp;&amp; isGyroscopeSampleReceived()) {</span>
                 //accumulation enabled
-<span class="fc" id="L909">                int nextSamples = mAccumulatedGyroscopeSamples + 1;</span>
-<span class="fc" id="L910">                mAccumulatedAngularSpeedSampleX = (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +</span>
+<span class="fc" id="L901">                int nextSamples = mAccumulatedGyroscopeSamples + 1;</span>
+<span class="fc" id="L902">                mAccumulatedAngularSpeedSampleX = (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +</span>
                         angularSpeedX) / nextSamples;
-<span class="fc" id="L912">                mAccumulatedAngularSpeedSampleY = (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +</span>
+<span class="fc" id="L904">                mAccumulatedAngularSpeedSampleY = (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +</span>
                         angularSpeedY) / nextSamples;
-<span class="fc" id="L914">                mAccumulatedAngularSpeedSampleZ = (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +</span>
+<span class="fc" id="L906">                mAccumulatedAngularSpeedSampleZ = (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +</span>
                         angularSpeedZ) / nextSamples;
-<span class="fc" id="L916">                mAccumulatedGyroscopeSamples = nextSamples;</span>
-<span class="fc" id="L917">            } else {</span>
+<span class="fc" id="L908">                mAccumulatedGyroscopeSamples = nextSamples;</span>
+<span class="fc" id="L909">            } else {</span>
                 //accumulation disabled
-<span class="fc" id="L919">                mAccumulatedAngularSpeedSampleX = angularSpeedX;</span>
-<span class="fc" id="L920">                mAccumulatedAngularSpeedSampleY = angularSpeedY;</span>
-<span class="fc" id="L921">                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;</span>
-<span class="fc" id="L922">                mAccumulatedGyroscopeSamples++;</span>
+<span class="fc" id="L911">                mAccumulatedAngularSpeedSampleX = angularSpeedX;</span>
+<span class="fc" id="L912">                mAccumulatedAngularSpeedSampleY = angularSpeedY;</span>
+<span class="fc" id="L913">                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;</span>
+<span class="fc" id="L914">                mAccumulatedGyroscopeSamples++;</span>
             }
-<span class="fc" id="L924">            notifyFullSampleAndResetSampleReceive();</span>
+<span class="fc" id="L916">            notifyFullSampleAndResetSampleReceive();</span>
         }
-<span class="fc" id="L926">    }</span>
+<span class="fc" id="L918">    }</span>
     
     /**
      * Provides a new gyroscope sample.
@@ -938,14 +930,13 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L943" title="All 2 branches covered.">        if(data.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L944">            throw new IllegalArgumentException(</span>
+    public void updateGyroscopeSample(long timestamp, float[] data) {
+<span class="fc bfc" id="L934" title="All 2 branches covered.">        if(data.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L935">            throw new IllegalArgumentException(</span>
                     &quot;angular speed must have length 3&quot;);
         }
-<span class="fc" id="L947">        updateGyroscopeSample(timestamp, data[0], data[1], data[2]);</span>
-<span class="fc" id="L948">    }</span>
+<span class="fc" id="L938">        updateGyroscopeSample(timestamp, data[0], data[1], data[2]);</span>
+<span class="fc" id="L939">    }</span>
         
     /**
      * Gets most recent timestamp of received partial samples (accelerometer or
@@ -953,8 +944,8 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return most recent timestamp of received partial sample.
      */
     public long getMostRecentTimestampNanos() {
-<span class="fc bfc" id="L956" title="All 2 branches covered.">        return mAccelerometerTimestampNanos &gt; mGyroscopeTimestampNanos ?</span>
-<span class="fc" id="L957">                    mAccelerometerTimestampNanos : mGyroscopeTimestampNanos;</span>
+<span class="fc bfc" id="L947" title="All 2 branches covered.">        return mAccelerometerTimestampNanos &gt; mGyroscopeTimestampNanos ?</span>
+<span class="fc" id="L948">                    mAccelerometerTimestampNanos : mGyroscopeTimestampNanos;</span>
     }
     
     /**
@@ -970,11 +961,10 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * 3x3.
      */
     public void correctWithPositionMeasure(double positionX, double positionY, 
-            double positionZ, Matrix positionCovariance) 
-            throws IllegalArgumentException {        
-<span class="fc" id="L975">        setPositionCovarianceMatrix(positionCovariance);</span>
-<span class="fc" id="L976">        correctWithPositionMeasure(positionX, positionY, positionZ);</span>
-<span class="fc" id="L977">    }</span>
+            double positionZ, Matrix positionCovariance) {
+<span class="fc" id="L965">        setPositionCovarianceMatrix(positionCovariance);</span>
+<span class="fc" id="L966">        correctWithPositionMeasure(positionX, positionY, positionZ);</span>
+<span class="fc" id="L967">    }</span>
     
     /**
      * Corrects system state with provided position measure having an accuracy
@@ -988,13 +978,13 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * 3x3 or if provided position array does not have length 3.
      */
     public void correctWithPositionMeasure(double[] position, 
-            Matrix positionCovariance) throws IllegalArgumentException {
-<span class="fc bfc" id="L992" title="All 2 branches covered.">        if(position.length != N_COMPONENTS_3D) {</span>
-<span class="fc" id="L993">            throw new IllegalArgumentException(&quot;position must have length 3&quot;);</span>
+            Matrix positionCovariance) {
+<span class="fc bfc" id="L982" title="All 2 branches covered.">        if(position.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L983">            throw new IllegalArgumentException(&quot;position must have length 3&quot;);</span>
         }
-<span class="fc" id="L995">        correctWithPositionMeasure(position[0], position[1], position[2], </span>
+<span class="fc" id="L985">        correctWithPositionMeasure(position[0], position[1], position[2], </span>
                 positionCovariance);
-<span class="fc" id="L997">    }</span>
+<span class="fc" id="L987">    }</span>
     
     /**
      * Corrects system state with provided position measure having an accuracy
@@ -1007,10 +997,10 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * 3x3.
      */
     public void correctWithPositionMeasure(Point3D position, 
-            Matrix positionCovariance) throws IllegalArgumentException {
-<span class="fc" id="L1011">        correctWithPositionMeasure(position.getInhomX(), position.getInhomY(),</span>
-<span class="fc" id="L1012">                position.getInhomZ(), positionCovariance);</span>
-<span class="fc" id="L1013">    }</span>
+            Matrix positionCovariance) {
+<span class="fc" id="L1001">        correctWithPositionMeasure(position.getInhomX(), position.getInhomY(),</span>
+<span class="fc" id="L1002">                position.getInhomZ(), positionCovariance);</span>
+<span class="fc" id="L1003">    }</span>
     
     /**
      * Updates covariance matrix of position measures.
@@ -1021,8 +1011,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided covariance matrix is not 
      * 3x3.
      */
-    public abstract void setPositionCovarianceMatrix(Matrix positionCovariance)
-            throws IllegalArgumentException;    
+    public abstract void setPositionCovarianceMatrix(Matrix positionCovariance);
         
     /**
      * Gets current covariance matrix of position measures determining current
@@ -1049,10 +1038,9 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void correctWithPositionMeasure(double[] position) 
-            throws IllegalArgumentException {
-<span class="fc" id="L1054">        correctWithPositionMeasure(position, null);</span>
-<span class="fc" id="L1055">    }</span>
+    public void correctWithPositionMeasure(double[] position) {
+<span class="fc" id="L1042">        correctWithPositionMeasure(position, null);</span>
+<span class="fc" id="L1043">    }</span>
     
     /**
      * Corrects system state with provided position measure using current
@@ -1060,8 +1048,8 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @param position position expressed in meters (m).
      */
     public void correctWithPositionMeasure(Point3D position) {
-<span class="fc" id="L1063">        correctWithPositionMeasure(position, null);</span>
-<span class="fc" id="L1064">    }   </span>
+<span class="fc" id="L1051">        correctWithPositionMeasure(position, null);</span>
+<span class="fc" id="L1052">    }   </span>
     
     /**
      * Gets listener in charge of handling events raised by instances of this 
@@ -1070,7 +1058,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * class.
      */
     public BaseSlamEstimatorListener getListener() {
-<span class="fc" id="L1073">        return mListener;</span>
+<span class="fc" id="L1061">        return mListener;</span>
     }
     
     /**
@@ -1080,8 +1068,8 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * of this class.
      */
     public void setListener(BaseSlamEstimatorListener listener) {
-<span class="fc" id="L1083">        mListener = listener;</span>
-<span class="fc" id="L1084">    }    </span>
+<span class="fc" id="L1071">        mListener = listener;</span>
+<span class="fc" id="L1072">    }    </span>
         
     /**
      * Gets calibration data. When provided, its mean and covariance are used
@@ -1090,7 +1078,7 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @return calibration data.
      */
     public D getCalibrationData() {
-<span class="fc" id="L1093">        return mCalibrationData;</span>
+<span class="fc" id="L1081">        return mCalibrationData;</span>
     }
     
     /**
@@ -1100,8 +1088,8 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
      * @param calibrationData calibration data.
      */
     public void setCalibrationData(D calibrationData) {
-<span class="fc" id="L1103">        mCalibrationData = calibrationData;</span>
-<span class="fc" id="L1104">    }</span>
+<span class="fc" id="L1091">        mCalibrationData = calibrationData;</span>
+<span class="fc" id="L1092">    }</span>
 
     /**
      * Resets position, linear velocity, linear acceleration, orientation and
@@ -1140,35 +1128,35 @@ public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt;
                          double stateQuaternionC, double stateQuaternionD,
                          double stateAngularSpeedX, double stateAngularSpeedY,
                          double stateAngularSpeedZ) {
-<span class="fc" id="L1143">        mStatePositionX = statePositionX;</span>
-<span class="fc" id="L1144">        mStatePositionY = statePositionY;</span>
-<span class="fc" id="L1145">        mStatePositionZ = statePositionZ;</span>
-<span class="fc" id="L1146">        mStateVelocityX = stateVelocityX;</span>
-<span class="fc" id="L1147">        mStateVelocityY = stateVelocityY;</span>
-<span class="fc" id="L1148">        mStateVelocityZ = stateVelocityZ;</span>
-<span class="fc" id="L1149">        mStateAccelerationX = stateAccelerationX;</span>
-<span class="fc" id="L1150">        mStateAccelerationY = stateAccelerationY;</span>
-<span class="fc" id="L1151">        mStateAccelerationZ = stateAccelerationZ;</span>
-<span class="fc" id="L1152">        mStateQuaternionA = stateQuaternionA;</span>
-<span class="fc" id="L1153">        mStateQuaternionB = stateQuaternionB;</span>
-<span class="fc" id="L1154">        mStateQuaternionC = stateQuaternionC;</span>
-<span class="fc" id="L1155">        mStateQuaternionD = stateQuaternionD;</span>
-<span class="fc" id="L1156">        mStateAngularSpeedX = stateAngularSpeedX;</span>
-<span class="fc" id="L1157">        mStateAngularSpeedY = stateAngularSpeedY;</span>
-<span class="fc" id="L1158">        mStateAngularSpeedZ = stateAngularSpeedZ;</span>
-<span class="fc" id="L1159">        mAccelerometerTimestampNanos = mGyroscopeTimestampNanos = -1;</span>
-<span class="fc" id="L1160">    }</span>
+<span class="fc" id="L1131">        mStatePositionX = statePositionX;</span>
+<span class="fc" id="L1132">        mStatePositionY = statePositionY;</span>
+<span class="fc" id="L1133">        mStatePositionZ = statePositionZ;</span>
+<span class="fc" id="L1134">        mStateVelocityX = stateVelocityX;</span>
+<span class="fc" id="L1135">        mStateVelocityY = stateVelocityY;</span>
+<span class="fc" id="L1136">        mStateVelocityZ = stateVelocityZ;</span>
+<span class="fc" id="L1137">        mStateAccelerationX = stateAccelerationX;</span>
+<span class="fc" id="L1138">        mStateAccelerationY = stateAccelerationY;</span>
+<span class="fc" id="L1139">        mStateAccelerationZ = stateAccelerationZ;</span>
+<span class="fc" id="L1140">        mStateQuaternionA = stateQuaternionA;</span>
+<span class="fc" id="L1141">        mStateQuaternionB = stateQuaternionB;</span>
+<span class="fc" id="L1142">        mStateQuaternionC = stateQuaternionC;</span>
+<span class="fc" id="L1143">        mStateQuaternionD = stateQuaternionD;</span>
+<span class="fc" id="L1144">        mStateAngularSpeedX = stateAngularSpeedX;</span>
+<span class="fc" id="L1145">        mStateAngularSpeedY = stateAngularSpeedY;</span>
+<span class="fc" id="L1146">        mStateAngularSpeedZ = stateAngularSpeedZ;</span>
+<span class="fc" id="L1147">        mAccelerometerTimestampNanos = mGyroscopeTimestampNanos = -1;</span>
+<span class="fc" id="L1148">    }</span>
 
     /**
      * Notifies that a full sample has been received and resets flags indicating
      * whether partial samples have been received.
      */
     protected void notifyFullSampleAndResetSampleReceive() {
-<span class="fc bfc" id="L1167" title="All 2 branches covered.">        if(isFullSampleAvailable()) {</span>
-<span class="fc" id="L1168">            processFullSample();     </span>
-<span class="fc" id="L1169">            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;</span>
+<span class="fc bfc" id="L1155" title="All 2 branches covered.">        if(isFullSampleAvailable()) {</span>
+<span class="fc" id="L1156">            processFullSample();     </span>
+<span class="fc" id="L1157">            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;</span>
         }
-<span class="fc" id="L1171">    }</span>
+<span class="fc" id="L1159">    }</span>
 
     /**
      * Method to be implemented in subclasses to process a full sample.

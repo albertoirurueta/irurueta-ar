@@ -268,7 +268,7 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
             
 <span class="fc" id="L269">                double finalTotalResidual = totalResidual(fundamentalMatrix);</span>
 <span class="fc bfc" id="L270" title="All 2 branches covered.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;                </span>
-<span class="fc bfc" id="L271" title="All 4 branches covered.">                if (iterErrorDecreased || !errorDecreased) {</span>
+<span class="pc bpc" id="L271" title="1 of 4 branches missed.">                if (iterErrorDecreased || !errorDecreased) {</span>
 <span class="fc" id="L272">                    errorDecreased = true;</span>
                     //update final result
 <span class="fc" id="L274">                    result.setHomogeneousCoordinates(params[0], params[1], </span>
