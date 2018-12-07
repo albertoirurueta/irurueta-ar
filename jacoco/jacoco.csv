@@ -4,7 +4,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,FundamentalMatrixRefi
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,HomogeneousRightEpipoleRefiner,10,264,3,21,3,58,3,14,0,5
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,RightEpipoleRefiner,3,179,2,10,2,44,2,16,0,12
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,HomogeneousRightEpipoleRefiner.new LevenbergMarquardtMultiDimensionFunctionEvaluator() {...},6,94,0,0,2,15,0,4,0,4
-com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,InhomogeneousRightEpipoleRefiner,10,246,6,18,3,56,6,11,0,5
+com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,InhomogeneousRightEpipoleRefiner,10,246,5,19,3,56,5,12,0,5
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,InhomogeneousRightEpipoleRefiner.1.new MultiDimensionFunctionEvaluatorListener() {...},6,36,0,0,2,6,0,2,0,2
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,InhomogeneousRightEpipoleRefiner.new LevenbergMarquardtMultiDimensionFunctionEvaluator() {...},6,88,0,0,2,15,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.refiners,FundamentalMatrixRefiner.new LevenbergMarquardtMultiDimensionFunctionEvaluator() {...},0,104,0,2,0,19,0,5,0,4
@@ -18,7 +18,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.sfm,EstimatedFundamentalMatrix,0,69,0,0
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BasePairedViewsSparseReconstructorConfiguration,0,311,0,0,0,114,0,56,0,56
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,PointColorData,0,20,0,0,0,8,0,5,0,5
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BaseSlamPairedViewsSparseReconstructorConfiguration,6,71,2,2,1,25,2,10,0,10
-com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BasePairedViewsSparseReconstructor,233,1940,78,131,91,520,71,80,0,41
+com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BasePairedViewsSparseReconstructor,217,1956,74,135,86,525,68,83,0,41
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BaseSlamTwoViewsSparseReconstructor.new BaseSlamEstimator.BaseSlamEstimatorListener() {...},8,14,0,0,4,5,2,3,2,3
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,PROMedSRobustSinglePoint3DTriangulator.new PROMedSRobustEstimatorListener() {...},14,173,6,4,5,36,6,11,1,11
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration,0,7,0,0,0,2,0,2,0,2
@@ -72,10 +72,10 @@ com.irurueta:irurueta-ar,com.irurueta.ar.sfm,ConstantVelocityModelSlamSparseReco
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BaseAbsoluteOrientationSlamSparseReconstructor,33,330,4,14,9,78,4,8,0,3
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,PlanarBestFundamentalMatrixEstimatorAndReconstructor,51,532,17,63,14,162,16,66,0,41
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,WeightedHomogeneousSinglePoint3DTriangulator,10,529,4,22,3,116,4,26,0,17
-com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BaseSparseReconstructor,511,3135,142,203,182,843,131,104,1,48
+com.irurueta:irurueta-ar,com.irurueta.ar.sfm,BaseSparseReconstructor,484,3162,134,211,177,848,123,112,1,48
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,CancelledReconstructionException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,PROMedSRobustSinglePoint3DTriangulator,20,165,3,15,6,52,3,22,0,16
-com.irurueta:irurueta-ar,com.irurueta.ar.sfm,LMSEInhomogeneousSinglePoint3DTriangulator,20,385,5,9,4,80,5,10,0,8
+com.irurueta:irurueta-ar,com.irurueta.ar.sfm,LMSEInhomogeneousSinglePoint3DTriangulator,21,384,5,9,4,80,5,10,0,8
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,SparseReconstructor,0,29,0,0,0,9,0,3,0,3
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,ConstantVelocityModelSlamPairedViewsSparseReconstructor,0,27,0,2,0,9,0,4,0,3
 com.irurueta:irurueta-ar,com.irurueta.ar.sfm,TwoViewsSparseReconstructorConfiguration,0,7,0,0,0,2,0,2,0,2
@@ -111,7 +111,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,AlgebraicFundamentalMatrixComp
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,SingleCorrector,0,160,1,15,0,42,1,29,0,22
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,FundamentalMatrixComparatorException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,InvalidRotationAndTranslationException,0,16,0,0,0,8,0,4,0,4
-com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,EpipolarDistanceFundamentalMatrixComparator,42,870,25,85,12,191,23,57,0,25
+com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,EpipolarDistanceFundamentalMatrixComparator,60,852,33,77,12,191,27,53,0,25
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,EssentialMatrix,47,658,5,29,16,197,5,40,0,28
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,FundamentalMatrixComparatorType,0,24,0,0,0,3,0,1,0,1
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,FundamentalMatrixComparator,0,89,1,13,0,30,1,18,0,12
@@ -120,7 +120,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,GoldStandardCorrector,6,205,2,
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar,InvalidEssentialMatrixException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,HomographyDecomposerException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,RANSACFundamentalMatrixRobustEstimator,34,192,8,12,8,59,8,19,2,15
-com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,SevenPointsFundamentalMatrixEstimator,131,1251,22,56,37,269,18,35,0,14
+com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,SevenPointsFundamentalMatrixEstimator,104,1278,21,57,28,278,17,36,0,14
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,FundamentalMatrixEstimator,0,112,0,12,0,32,0,21,0,14
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,AffineFundamentalMatrixEstimator,41,410,7,33,13,105,7,23,0,10
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,HomographyDecomposer,525,651,34,24,107,158,27,26,4,20
@@ -136,7 +136,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,PROSACFundamentalMa
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,MSACFundamentalMatrixRobustEstimator,12,140,0,8,4,43,0,17,0,13
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,HomographyDecomposition,0,44,0,2,0,17,0,9,0,8
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,FundamentalMatrixEstimatorMethod,0,34,0,0,0,4,0,1,0,1
-com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,PROSACFundamentalMatrixRobustEstimator.new PROSACRobustEstimatorListener() {...},0,153,0,10,0,30,0,17,0,12
+com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,PROSACFundamentalMatrixRobustEstimator.new PROSACRobustEstimatorListener() {...},7,146,1,9,1,29,1,16,0,12
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,RANSACFundamentalMatrixRobustEstimator.new RANSACRobustEstimatorListener() {...},0,149,0,10,0,29,0,16,0,11
 com.irurueta:irurueta-ar,com.irurueta.ar.epipolar.estimators,LMedSFundamentalMatrixRobustEstimator,12,148,0,8,4,46,0,17,0,13
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROMedSImageOfAbsoluteConicRobustEstimator,16,167,2,16,5,53,2,23,0,16
@@ -146,7 +146,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROMedSRadialDis
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROSACDualAbsoluteQuadricRobustEstimator,20,163,3,15,6,52,3,22,0,16
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,ImageOfAbsoluteConicEstimatorException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMedSRadialDistortionRobustEstimator.new LMedSRobustEstimatorListener() {...},9,193,4,4,5,40,4,10,0,10
-com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMSERadialDistortionEstimator,23,446,4,22,7,97,5,20,1,11
+com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMSERadialDistortionEstimator,23,446,4,22,7,98,5,20,1,11
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,MSACImageOfAbsoluteConicRobustEstimator,16,94,1,7,5,30,1,11,0,8
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,RANSACDualAbsoluteQuadricRobustEstimator.new RANSACRobustEstimatorListener() {...},1,136,4,6,1,28,4,12,0,11
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMedSDualAbsoluteQuadricRobustEstimator,16,98,1,7,5,31,1,11,0,8
@@ -161,11 +161,11 @@ com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,ImageOfAbsoluteC
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMedSImageOfAbsoluteConicRobustEstimator.new LMedSRobustEstimatorListener() {...},1,132,4,6,1,27,4,11,0,10
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROSACRadialDistortionRobustEstimator.new PROSACRobustEstimatorListener() {...},9,201,4,4,5,42,4,12,0,12
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,WeightedRadialDistortionEstimator,29,615,11,43,9,138,12,35,1,19
-com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,KruppaDualImageOfAbsoluteConicEstimator,614,2376,4,46,64,293,7,47,3,26
+com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,KruppaDualImageOfAbsoluteConicEstimator,610,2380,3,47,63,294,6,48,3,26
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,RadialDistortionEstimatorException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROMedSDualAbsoluteQuadricRobustEstimator.new PROMedSRobustEstimatorListener() {...},1,140,4,6,1,29,4,13,0,12
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,ImageOfAbsoluteConicEstimator,8,276,3,33,2,85,3,44,0,29
-com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROSACDualAbsoluteQuadricRobustEstimator.new PROSACRobustEstimatorListener() {...},1,140,4,6,1,29,4,13,0,12
+com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROSACDualAbsoluteQuadricRobustEstimator.new PROSACRobustEstimatorListener() {...},0,141,4,6,0,30,4,13,0,12
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROMedSDualAbsoluteQuadricRobustEstimator,20,163,3,15,6,52,3,22,0,16
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,RANSACImageOfAbsoluteConicRobustEstimator.new RANSACRobustEstimatorListener() {...},1,136,4,6,1,28,4,12,0,11
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMSEImageOfAbsoluteConicEstimator,68,2381,9,81,20,408,9,50,0,14
@@ -176,7 +176,7 @@ com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,ImageOfAbsoluteC
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,DualAbsoluteQuadricRobustEstimator,74,1051,3,64,6,187,3,83,0,48
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,PROSACImageOfAbsoluteConicRobustEstimator.new PROSACRobustEstimatorListener() {...},1,140,4,6,1,29,4,13,0,12
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,RadialDistortionEstimator,39,438,9,41,9,124,9,52,1,35
-com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,DualAbsoluteQuadricEstimator,169,1539,16,66,31,315,13,71,4,39
+com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,DualAbsoluteQuadricEstimator,160,1548,14,68,28,318,12,72,4,39
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,KruppaDualImageOfAbsoluteConicEstimatorException,0,16,0,0,0,8,0,4,0,4
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,LMedSRadialDistortionRobustEstimator,16,119,1,7,5,37,1,13,0,10
 com.irurueta:irurueta-ar,com.irurueta.ar.calibration.estimators,SingleHomographyPinholeCameraEstimatorException,0,16,0,0,0,8,0,4,0,4

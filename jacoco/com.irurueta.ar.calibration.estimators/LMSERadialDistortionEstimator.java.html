@@ -81,7 +81,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * the same size.
      */
     public LMSERadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; undistortedPoints) {
 <span class="fc" id="L85">        super(distortedPoints, undistortedPoints);</span>
 <span class="fc" id="L86">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
 <span class="fc" id="L87">    }</span>
@@ -99,11 +99,10 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     
     public LMSERadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
             List&lt;Point2D&gt; undistortedPoints, 
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="nc" id="L104">        super(distortedPoints, undistortedPoints, listener);</span>
-<span class="nc" id="L105">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
-<span class="nc" id="L106">    }</span>
+            RadialDistortionEstimatorListener listener) {
+<span class="nc" id="L103">        super(distortedPoints, undistortedPoints, listener);</span>
+<span class="nc" id="L104">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="nc" id="L105">    }</span>
 
     /**
      * Constructor with distortion center.
@@ -112,8 +111,8 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * the origin of coordinates (0,0).
      */
     public LMSERadialDistortionEstimator(Point2D distortionCenter) {
-<span class="fc" id="L115">        super(distortionCenter);</span>
-<span class="fc" id="L116">    }</span>
+<span class="fc" id="L114">        super(distortionCenter);</span>
+<span class="fc" id="L115">    }</span>
     
     /**
      * Constructor with listener and distortion center.
@@ -125,8 +124,8 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      */
     public LMSERadialDistortionEstimator(Point2D distortionCenter,
             RadialDistortionEstimatorListener listener) {
-<span class="fc" id="L128">        super(distortionCenter, listener);</span>
-<span class="fc" id="L129">    }</span>
+<span class="fc" id="L127">        super(distortionCenter, listener);</span>
+<span class="fc" id="L128">    }</span>
     
     /**
      * Constructor with points and distortion center.
@@ -140,10 +139,9 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * the same size.
      */
     public LMSERadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter)
-            throws IllegalArgumentException {
-<span class="fc" id="L145">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
-<span class="fc" id="L146">    }</span>
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) {
+<span class="fc" id="L143">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
+<span class="fc" id="L144">    }</span>
    
     /**
      * Constructor
@@ -160,10 +158,9 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      */ 
     public LMSERadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
             List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter,
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L165">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
-<span class="fc" id="L166">    }</span>
+            RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L162">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
+<span class="fc" id="L163">    }</span>
         
     /**
      * Indicates if an LMSE (Least Mean Square Error) solution is allowed if 
@@ -173,7 +170,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-<span class="fc" id="L176">        return mAllowLMSESolution;</span>
+<span class="fc" id="L173">        return mAllowLMSESolution;</span>
     }
     
     /**
@@ -185,11 +182,11 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setLMSESolutionAllowed(boolean allowed) throws LockedException {
-<span class="fc bfc" id="L188" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L189">            throw new LockedException();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L186">            throw new LockedException();</span>
         }
-<span class="fc" id="L191">        mAllowLMSESolution = allowed;</span>
-<span class="fc" id="L192">    }    </span>
+<span class="fc" id="L188">        mAllowLMSESolution = allowed;</span>
+<span class="fc" id="L189">    }    </span>
         
     /**
      * Estimates a radial distortion.
@@ -202,164 +199,175 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     @Override
     public RadialDistortion estimate() throws LockedException, 
             NotReadyException, RadialDistortionEstimatorException {
-<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L206">            throw new LockedException();</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L203">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L209">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L206">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L213">            mLocked = true;</span>
-<span class="fc bfc" id="L214" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L215">                mListener.onEstimateStart(this);</span>
+<span class="fc" id="L210">            mLocked = true;</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L212">                mListener.onEstimateStart(this);</span>
             }
             
-<span class="fc" id="L218">            int nPoints = mDistortedPoints.size();</span>
+<span class="fc" id="L215">            int nPoints = mDistortedPoints.size();</span>
             
             int numRows;
-<span class="fc bfc" id="L221" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
                 //initialize new matrix having two rows per point
-<span class="fc" id="L223">                numRows = 2 * nPoints;</span>
+<span class="fc" id="L220">                numRows = 2 * nPoints;</span>
             } else {
                 //when LMSE is not allowed, restrict matrix to two rows (minimum
                 //value required for a solution)
-<span class="fc" id="L227">                numRows = 2 * getMinNumberOfMatchedPoints();</span>
+<span class="fc" id="L224">                numRows = 2 * getMinNumberOfMatchedPoints();</span>
             }
             
-<span class="fc" id="L230">            Matrix A = new Matrix(numRows, mNumKParams);</span>
-<span class="fc" id="L231">            double[] b = new double[numRows];</span>
+<span class="fc" id="L227">            Matrix aMatrix = new Matrix(numRows, mNumKParams);</span>
+<span class="fc" id="L228">            double[] b = new double[numRows];</span>
             
             
-<span class="fc" id="L234">            Iterator&lt;Point2D&gt; iteratorDistorted = mDistortedPoints.iterator();</span>
-<span class="fc" id="L235">            Iterator&lt;Point2D&gt; iteratorUndistorted = </span>
-<span class="fc" id="L236">                    mUndistortedPoints.iterator();</span>
+<span class="fc" id="L231">            Iterator&lt;Point2D&gt; iteratorDistorted = mDistortedPoints.iterator();</span>
+<span class="fc" id="L232">            Iterator&lt;Point2D&gt; iteratorUndistorted = </span>
+<span class="fc" id="L233">                    mUndistortedPoints.iterator();</span>
             
-            Point2D distorted, undistorted;
-<span class="fc" id="L239">            int counter = 0;</span>
+            Point2D distorted;
+            Point2D undistorted;
+<span class="fc" id="L237">            int counter = 0;</span>
             
             //undistorted normalized homogeneous coordinates
-            double uNormHomX, uNormHomY, uNormHomW; 
+            double uNormHomX;
+            double uNormHomY;
+            double uNormHomW;
             //undistorted normalized inhomogeneous coordinates
-            double uNormInhomX, uNormInhomY;
+            double uNormInhomX;
+            double uNormInhomY;
             //undistorted denormalized homogeneous coordinates
-            double uDenormHomX, uDenormHomY, uDenormHomW; 
+            double uDenormHomX;
+            double uDenormHomY;
+            double uDenormHomW;
             //undistorted denormalized inhomogeneous coordinates
-            double uDenormInhomX, uDenormInhomY;
+            double uDenormInhomX;
+            double uDenormInhomY;
             //distorted inhomogeneous coordinates
-            double dInhomX, dInhomY;
-            double rowNormX, rowNormY;
+            double dInhomX;
+            double dInhomY;
+            double rowNormX;
+            double rowNormY;
             
             //radial distortion center
-<span class="fc" id="L254">            double centerX = 0.0, centerY = 0.0;</span>
-<span class="pc bpc" id="L255" title="1 of 2 branches missed.">            if (mDistortionCenter != null) {</span>
-<span class="fc" id="L256">                centerX = mDistortionCenter.getInhomX();</span>
-<span class="fc" id="L257">                centerY = mDistortionCenter.getInhomY();</span>
+<span class="fc" id="L260">            double centerX = 0.0;</span>
+<span class="fc" id="L261">            double centerY = 0.0;</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (mDistortionCenter != null) {</span>
+<span class="fc" id="L263">                centerX = mDistortionCenter.getInhomX();</span>
+<span class="fc" id="L264">                centerY = mDistortionCenter.getInhomY();</span>
             }
             
             //radial distance of undistorted normalized (calibration independent) 
             //coordinates
             double r2; 
-            double a, value;
+            double a;
+            double value;
             
-<span class="pc bpc" id="L265" title="1 of 4 branches missed.">            while (iteratorDistorted.hasNext() &amp;&amp; iteratorUndistorted.hasNext()) {</span>
-<span class="fc" id="L266">                distorted = iteratorDistorted.next();</span>
-<span class="fc" id="L267">                undistorted = iteratorUndistorted.next();</span>
+<span class="pc bpc" id="L273" title="1 of 4 branches missed.">            while (iteratorDistorted.hasNext() &amp;&amp; iteratorUndistorted.hasNext()) {</span>
+<span class="fc" id="L274">                distorted = iteratorDistorted.next();</span>
+<span class="fc" id="L275">                undistorted = iteratorUndistorted.next();</span>
                 
-<span class="fc" id="L269">                undistorted.normalize();</span>
+<span class="fc" id="L277">                undistorted.normalize();</span>
                 
-<span class="fc" id="L271">                uDenormHomX = undistorted.getHomX();</span>
-<span class="fc" id="L272">                uDenormHomY = undistorted.getHomY();</span>
-<span class="fc" id="L273">                uDenormHomW = undistorted.getHomW();</span>
+<span class="fc" id="L279">                uDenormHomX = undistorted.getHomX();</span>
+<span class="fc" id="L280">                uDenormHomY = undistorted.getHomY();</span>
+<span class="fc" id="L281">                uDenormHomW = undistorted.getHomW();</span>
                 
-<span class="fc" id="L275">                uDenormInhomX = uDenormHomX / uDenormHomW;</span>
-<span class="fc" id="L276">                uDenormInhomY = uDenormHomY / uDenormHomW;</span>
+<span class="fc" id="L283">                uDenormInhomX = uDenormHomX / uDenormHomW;</span>
+<span class="fc" id="L284">                uDenormInhomY = uDenormHomY / uDenormHomW;</span>
                 
                 //multiply intrinsic parameters by undistorted point
-<span class="fc" id="L279">                uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +</span>
-<span class="fc" id="L280">                        mKinv.getElementAt(0, 1) * uDenormHomY +</span>
-<span class="fc" id="L281">                        mKinv.getElementAt(0, 2) * uDenormHomW;</span>
-<span class="fc" id="L282">                uNormHomY = mKinv.getElementAt(1, 0) * uDenormHomX +</span>
-<span class="fc" id="L283">                        mKinv.getElementAt(1, 1) * uDenormHomY +</span>
-<span class="fc" id="L284">                        mKinv.getElementAt(1, 2) * uDenormHomW;</span>
-<span class="fc" id="L285">                uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +</span>
-<span class="fc" id="L286">                        mKinv.getElementAt(2, 1) * uDenormHomY +</span>
-<span class="fc" id="L287">                        mKinv.getElementAt(2, 2) * uDenormHomW;</span>
+<span class="fc" id="L287">                uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +</span>
+<span class="fc" id="L288">                        mKinv.getElementAt(0, 1) * uDenormHomY +</span>
+<span class="fc" id="L289">                        mKinv.getElementAt(0, 2) * uDenormHomW;</span>
+<span class="fc" id="L290">                uNormHomY = mKinv.getElementAt(1, 0) * uDenormHomX +</span>
+<span class="fc" id="L291">                        mKinv.getElementAt(1, 1) * uDenormHomY +</span>
+<span class="fc" id="L292">                        mKinv.getElementAt(1, 2) * uDenormHomW;</span>
+<span class="fc" id="L293">                uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +</span>
+<span class="fc" id="L294">                        mKinv.getElementAt(2, 1) * uDenormHomY +</span>
+<span class="fc" id="L295">                        mKinv.getElementAt(2, 2) * uDenormHomW;</span>
                 
-<span class="fc" id="L289">                uNormInhomX = uNormHomX / uNormHomW;</span>
-<span class="fc" id="L290">                uNormInhomY = uNormHomY / uNormHomW;</span>
+<span class="fc" id="L297">                uNormInhomX = uNormHomX / uNormHomW;</span>
+<span class="fc" id="L298">                uNormInhomY = uNormHomY / uNormHomW;</span>
                 
-<span class="fc" id="L292">                r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
+<span class="fc" id="L300">                r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
                 
-<span class="fc" id="L294">                dInhomX = distorted.getInhomX();</span>
-<span class="fc" id="L295">                dInhomY = distorted.getInhomY();</span>
+<span class="fc" id="L302">                dInhomX = distorted.getInhomX();</span>
+<span class="fc" id="L303">                dInhomY = distorted.getInhomY();</span>
                 
-<span class="fc" id="L297">                a = 1.0;</span>
-<span class="fc" id="L298">                rowNormX = rowNormY = 0.0;</span>
-<span class="fc bfc" id="L299" title="All 2 branches covered.">                for (int i = 0; i &lt; mNumKParams; i++) {</span>
-<span class="fc" id="L300">                    a *= r2;</span>
+<span class="fc" id="L305">                a = 1.0;</span>
+<span class="fc" id="L306">                rowNormX = rowNormY = 0.0;</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">                for (int i = 0; i &lt; mNumKParams; i++) {</span>
+<span class="fc" id="L308">                    a *= r2;</span>
                     
                     //x and y coordinates generate linear dependent equations, for 
                     //that reason we need more than one point
                     
                     //x coordinates
-<span class="fc" id="L306">                    value = (uDenormInhomX - centerX) * a;</span>
-<span class="fc" id="L307">                    A.setElementAt(2 * counter, i, value);</span>
+<span class="fc" id="L314">                    value = (uDenormInhomX - centerX) * a;</span>
+<span class="fc" id="L315">                    aMatrix.setElementAt(2 * counter, i, value);</span>
                     
-<span class="fc" id="L309">                    rowNormX += Math.pow(value, 2.0);</span>
+<span class="fc" id="L317">                    rowNormX += Math.pow(value, 2.0);</span>
                     
                     //y coordinates
-<span class="fc" id="L312">                    value = (uDenormInhomY - centerY) * a;</span>
-<span class="fc" id="L313">                    A.setElementAt(2 * counter + 1, i, value);</span>
+<span class="fc" id="L320">                    value = (uDenormInhomY - centerY) * a;</span>
+<span class="fc" id="L321">                    aMatrix.setElementAt(2 * counter + 1, i, value);</span>
                     
-<span class="fc" id="L315">                    rowNormY += Math.pow(value, 2.0);</span>
+<span class="fc" id="L323">                    rowNormY += Math.pow(value, 2.0);</span>
                 }
                 
                 //x coordinates
-<span class="fc" id="L319">                value = dInhomX - uDenormInhomX;</span>
-<span class="fc" id="L320">                b[2 * counter] = value;</span>
+<span class="fc" id="L327">                value = dInhomX - uDenormInhomX;</span>
+<span class="fc" id="L328">                b[2 * counter] = value;</span>
                 
-<span class="fc" id="L322">                rowNormX += Math.pow(value, 2.0);</span>
+<span class="fc" id="L330">                rowNormX += Math.pow(value, 2.0);</span>
                 
                 //y coordinates
-<span class="fc" id="L325">                value = dInhomY - uDenormInhomY;</span>
-<span class="fc" id="L326">                b[2 * counter + 1] = value;</span>
+<span class="fc" id="L333">                value = dInhomY - uDenormInhomY;</span>
+<span class="fc" id="L334">                b[2 * counter + 1] = value;</span>
                 
-<span class="fc" id="L328">                rowNormY += Math.pow(value, 2.0);</span>
+<span class="fc" id="L336">                rowNormY += Math.pow(value, 2.0);</span>
                 
                 //normalize rows to increase accuracy
-<span class="fc bfc" id="L331" title="All 2 branches covered.">                for (int i = 0; i &lt; mNumKParams; i++) {</span>
-<span class="fc" id="L332">                    A.setElementAt(2 * counter, i, </span>
-<span class="fc" id="L333">                            A.getElementAt(2 * counter, i) / rowNormX);</span>
-<span class="fc" id="L334">                    A.setElementAt(2 * counter + 1, i, </span>
-<span class="fc" id="L335">                            A.getElementAt(2 * counter + 1, i) / rowNormY);</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">                for (int i = 0; i &lt; mNumKParams; i++) {</span>
+<span class="fc" id="L340">                    aMatrix.setElementAt(2 * counter, i,</span>
+<span class="fc" id="L341">                            aMatrix.getElementAt(2 * counter, i) / rowNormX);</span>
+<span class="fc" id="L342">                    aMatrix.setElementAt(2 * counter + 1, i,</span>
+<span class="fc" id="L343">                            aMatrix.getElementAt(2 * counter + 1, i) / rowNormY);</span>
                 }
                 
-<span class="fc" id="L338">                b[2 * counter] /= rowNormX;</span>
-<span class="fc" id="L339">                b[2 * counter + 1] /= rowNormY;</span>
+<span class="fc" id="L346">                b[2 * counter] /= rowNormX;</span>
+<span class="fc" id="L347">                b[2 * counter + 1] /= rowNormY;</span>
                                 
-<span class="fc" id="L341">                counter++;</span>
+<span class="fc" id="L349">                counter++;</span>
                 
-<span class="fc bfc" id="L343" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; (counter &gt;= getMinNumberOfMatchedPoints())) {</span>
-<span class="fc" id="L344">                    break;</span>
+<span class="fc bfc" id="L351" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; (counter &gt;= getMinNumberOfMatchedPoints())) {</span>
+<span class="fc" id="L352">                    break;</span>
                 }
             }
             
-<span class="fc" id="L348">            double[] params = Utils.solve(A, b);</span>
+<span class="fc" id="L356">            double[] params = Utils.solve(aMatrix, b);</span>
             
-<span class="fc" id="L350">            RadialDistortion distortion = </span>
+<span class="fc" id="L358">            RadialDistortion distortion = </span>
                     new RadialDistortion(params, mDistortionCenter, 
                     mHorizontalFocalLength, mVerticalFocalLength, mSkew);
             
-<span class="fc bfc" id="L354" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L355">                mListener.onEstimateEnd(this);</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L363">                mListener.onEstimateEnd(this);</span>
             }
             
-<span class="fc" id="L358">            return distortion;</span>
-<span class="nc" id="L359">        } catch (AlgebraException | RadialDistortionException e) {</span>
-<span class="nc" id="L360">            throw new RadialDistortionEstimatorException(e);</span>
+<span class="fc" id="L366">            return distortion;</span>
+<span class="nc" id="L367">        } catch (AlgebraException | RadialDistortionException e) {</span>
+<span class="nc" id="L368">            throw new RadialDistortionEstimatorException(e);</span>
         } finally {
-<span class="fc" id="L362">            mLocked = false;</span>
+<span class="fc" id="L370">            mLocked = false;</span>
         }
     }
 
@@ -369,7 +377,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      */    
     @Override
     public RadialDistortionEstimatorType getType() {
-<span class="fc" id="L372">        return RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR;</span>
+<span class="fc" id="L380">        return RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -104,7 +104,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; undistortedPoints) {
 <span class="fc" id="L108">        super(distortedPoints, undistortedPoints);</span>
 <span class="fc" id="L109">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
 <span class="fc" id="L110">    }</span>
@@ -121,11 +121,10 @@ public class LMedSRadialDistortionRobustEstimator extends
      */
     public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L126">        super(distortedPoints, undistortedPoints, listener);</span>
-<span class="fc" id="L127">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L128">    }</span>
+            RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L125">        super(distortedPoints, undistortedPoints, listener);</span>
+<span class="fc" id="L126">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L127">    }</span>
 
     /**
      * Constructor.
@@ -139,11 +138,10 @@ public class LMedSRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
-            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
-<span class="fc" id="L144">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
-<span class="fc" id="L145">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L146">    }</span>
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) {
+<span class="fc" id="L142">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
+<span class="fc" id="L143">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L144">    }</span>
     
     /**
      * Constructor.
@@ -160,11 +158,10 @@ public class LMedSRadialDistortionRobustEstimator extends
      */
     public LMedSRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L165">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
-<span class="fc" id="L166">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L167">    }    </span>
+            RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L162">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
+<span class="fc" id="L163">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L164">    }    </span>
 
     /**
      * Returns threshold to be used to keep the algorithm iterating in case that 
@@ -185,7 +182,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-<span class="fc" id="L188">        return mStopThreshold;</span>
+<span class="fc" id="L185">        return mStopThreshold;</span>
     }
     
     /**
@@ -209,17 +206,16 @@ public class LMedSRadialDistortionRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L215">            throw new LockedException();</span>
+    public void setStopThreshold(double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L211">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
-<span class="fc" id="L218">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L214">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L221">        mStopThreshold = stopThreshold;</span>
-<span class="fc" id="L222">    }</span>
+<span class="fc" id="L217">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L218">    }</span>
     
     /**
      * Estimates a radial distortion using a robust estimator and
@@ -235,142 +231,142 @@ public class LMedSRadialDistortionRobustEstimator extends
     @Override
     public RadialDistortion estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L239">            throw new LockedException();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L235">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L242">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L238">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L245">        LMedSRobustEstimator&lt;RadialDistortion&gt; innerEstimator = </span>
+<span class="fc" id="L241">        LMedSRobustEstimator&lt;RadialDistortion&gt; innerEstimator = </span>
                 new LMedSRobustEstimator&lt;&gt;(
-<span class="fc" id="L247">                new LMedSRobustEstimatorListener&lt;RadialDistortion&gt;() {</span>
+<span class="fc" id="L243">                new LMedSRobustEstimatorListener&lt;RadialDistortion&gt;() {</span>
                     
                     //point to be reused when computing residuals
-<span class="fc" id="L250">            private Point2D mTestPoint = Point2D.create(</span>
+<span class="fc" id="L246">            private Point2D mTestPoint = Point2D.create(</span>
                     CoordinatesType.INHOMOGENEOUS_COORDINATES);
                     
             //non-robust radial distortion estimator
-<span class="fc" id="L254">            private LMSERadialDistortionEstimator mRadialDistortionEstimator = </span>
+<span class="fc" id="L250">            private LMSERadialDistortionEstimator mRadialDistortionEstimator = </span>
                     new LMSERadialDistortionEstimator();
             
             //subset of distorted (i.e. measured) points
-<span class="fc" id="L258">            private List&lt;Point2D&gt; mSubsetDistorted = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L254">            private List&lt;Point2D&gt; mSubsetDistorted = new ArrayList&lt;&gt;();</span>
             
             //subset of undistorted (i.e. ideal) points
-<span class="fc" id="L261">            private List&lt;Point2D&gt; mSubsetUndistorted = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L257">            private List&lt;Point2D&gt; mSubsetUndistorted = new ArrayList&lt;&gt;();</span>
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L265">                return mDistortedPoints.size();</span>
+<span class="fc" id="L261">                return mDistortedPoints.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L270">                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;</span>
+<span class="fc" id="L266">                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, List&lt;RadialDistortion&gt; solutions) {
-<span class="fc" id="L275">                mSubsetDistorted.clear();</span>
-<span class="fc" id="L276">                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[0]));</span>
-<span class="fc" id="L277">                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[1]));</span>
+<span class="fc" id="L271">                mSubsetDistorted.clear();</span>
+<span class="fc" id="L272">                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[0]));</span>
+<span class="fc" id="L273">                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[1]));</span>
                 
-<span class="fc" id="L279">                mSubsetUndistorted.clear();</span>
-<span class="fc" id="L280">                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[0]));</span>
-<span class="fc" id="L281">                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[1]));</span>
+<span class="fc" id="L275">                mSubsetUndistorted.clear();</span>
+<span class="fc" id="L276">                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[0]));</span>
+<span class="fc" id="L277">                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[1]));</span>
                 
                 try {
-<span class="fc" id="L284">                    mRadialDistortionEstimator.setPoints(mDistortedPoints, </span>
+<span class="fc" id="L280">                    mRadialDistortionEstimator.setPoints(mDistortedPoints, </span>
                             mUndistortedPoints);
-<span class="fc" id="L286">                    mRadialDistortionEstimator.setPoints(mSubsetDistorted, </span>
+<span class="fc" id="L282">                    mRadialDistortionEstimator.setPoints(mSubsetDistorted, </span>
                             mSubsetUndistorted);
                     
-<span class="fc" id="L289">                    RadialDistortion distortion = mRadialDistortionEstimator.</span>
-<span class="fc" id="L290">                            estimate();</span>
-<span class="fc" id="L291">                    solutions.add(distortion);</span>
-<span class="nc" id="L292">                } catch (Exception e) {</span>
+<span class="fc" id="L285">                    RadialDistortion distortion = mRadialDistortionEstimator.</span>
+<span class="fc" id="L286">                            estimate();</span>
+<span class="fc" id="L287">                    solutions.add(distortion);</span>
+<span class="nc" id="L288">                } catch (Exception e) {</span>
                     //if anything fails, no solution is added
-<span class="fc" id="L294">                }</span>
-<span class="fc" id="L295">            }</span>
+<span class="fc" id="L290">                }</span>
+<span class="fc" id="L291">            }</span>
 
             @Override
             public double computeResidual(RadialDistortion currentEstimation, int i) {
-<span class="fc" id="L299">                Point2D distortedPoint = mDistortedPoints.get(i);</span>
-<span class="fc" id="L300">                Point2D undistortedPoint = mUndistortedPoints.get(i);</span>
+<span class="fc" id="L295">                Point2D distortedPoint = mDistortedPoints.get(i);</span>
+<span class="fc" id="L296">                Point2D undistortedPoint = mUndistortedPoints.get(i);</span>
                 
-<span class="fc" id="L302">                currentEstimation.distort(undistortedPoint, mTestPoint);</span>
+<span class="fc" id="L298">                currentEstimation.distort(undistortedPoint, mTestPoint);</span>
                 
-<span class="fc" id="L304">                return mTestPoint.distanceTo(distortedPoint);</span>
+<span class="fc" id="L300">                return mTestPoint.distanceTo(distortedPoint);</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L309">                return LMedSRadialDistortionRobustEstimator.this.isReady();</span>
+<span class="fc" id="L305">                return LMedSRadialDistortionRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;RadialDistortion&gt; estimator) {
                 try {
-<span class="fc" id="L316">                    mRadialDistortionEstimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L317">                    mRadialDistortionEstimator.setIntrinsic(getIntrinsic());</span>
-<span class="nc" id="L318">                } catch(Exception e) {</span>
-<span class="nc" id="L319">                    Logger.getLogger(</span>
-<span class="nc" id="L320">                            LMedSRadialDistortionRobustEstimator.class.getName()).</span>
-<span class="nc" id="L321">                            log(Level.WARNING, </span>
+<span class="fc" id="L312">                    mRadialDistortionEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L313">                    mRadialDistortionEstimator.setIntrinsic(getIntrinsic());</span>
+<span class="nc" id="L314">                } catch(Exception e) {</span>
+<span class="nc" id="L315">                    Logger.getLogger(</span>
+<span class="nc" id="L316">                            LMedSRadialDistortionRobustEstimator.class.getName()).</span>
+<span class="nc" id="L317">                            log(Level.WARNING, </span>
                             &quot;Could not set intrinsic parameters on radial distortion estimator&quot;, e);
-<span class="fc" id="L323">                }</span>
+<span class="fc" id="L319">                }</span>
                 
-<span class="pc bpc" id="L325" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L326">                    mListener.onEstimateStart(LMedSRadialDistortionRobustEstimator.this);</span>
+<span class="pc bpc" id="L321" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L322">                    mListener.onEstimateStart(LMedSRadialDistortionRobustEstimator.this);</span>
                 }
-<span class="fc" id="L328">            }</span>
+<span class="fc" id="L324">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;RadialDistortion&gt; estimator) {
-<span class="pc bpc" id="L333" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L334">                    mListener.onEstimateEnd(LMedSRadialDistortionRobustEstimator.this);</span>
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L330">                    mListener.onEstimateEnd(LMedSRadialDistortionRobustEstimator.this);</span>
                 }
-<span class="fc" id="L336">            }</span>
+<span class="fc" id="L332">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;RadialDistortion&gt; estimator, 
                     int iteration) {
-<span class="pc bpc" id="L342" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L343">                    mListener.onEstimateNextIteration(</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L339">                    mListener.onEstimateNextIteration(</span>
                             LMedSRadialDistortionRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L347">            }</span>
+<span class="fc" id="L343">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;RadialDistortion&gt; estimator, 
                     float progress) {
-<span class="pc bpc" id="L353" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L354">                    mListener.onEstimateProgressChange(</span>
+<span class="pc bpc" id="L349" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L350">                    mListener.onEstimateProgressChange(</span>
                             LMedSRadialDistortionRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L358">            }</span>
+<span class="fc" id="L354">            }</span>
         });
         
         try {
-<span class="fc" id="L362">            mLocked = true;</span>
-<span class="fc" id="L363">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L364">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L365">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L366">            innerEstimator.setStopThreshold(mStopThreshold);</span>
-<span class="fc" id="L367">            return innerEstimator.estimate();            </span>
-<span class="nc" id="L368">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L369">            throw new LockedException(e);</span>
-<span class="nc" id="L370">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L371">            throw new NotReadyException(e);</span>
+<span class="fc" id="L358">            mLocked = true;</span>
+<span class="fc" id="L359">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L360">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L361">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L362">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L363">            return innerEstimator.estimate();            </span>
+<span class="nc" id="L364">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L365">            throw new LockedException(e);</span>
+<span class="nc" id="L366">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L367">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L373">            mLocked = false;</span>
+<span class="fc" id="L369">            mLocked = false;</span>
         }
     }
 
@@ -380,7 +376,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      */    
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L383">        return RobustEstimatorMethod.LMedS;</span>
+<span class="fc" id="L379">        return RobustEstimatorMethod.LMedS;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
