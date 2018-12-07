@@ -225,8 +225,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public FundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this(fundMatrixEstimatorMethod);
         internalSetPoints(leftPoints, rightPoints);
     }
@@ -245,8 +244,7 @@ public abstract class FundamentalMatrixRobustEstimator {
     public FundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, listener);
         internalSetPoints(leftPoints, rightPoints);
     }
@@ -276,8 +274,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the same length or their length is less than 7 points.
      */
     public FundamentalMatrixRobustEstimator(
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints);
     }
@@ -293,8 +290,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      */    
     public FundamentalMatrixRobustEstimator(List<Point2D> leftPoints, 
             List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints, listener);
     }
@@ -352,7 +348,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * points.
      */
     public void setPoints(List<Point2D> leftPoints, List<Point2D> rightPoints)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -422,7 +418,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * is being computed.
      */
     public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -456,7 +452,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * is being computed.
      */
     public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -486,7 +482,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * is being computed.
      */
     public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -603,8 +599,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than minimum required number of homographies.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException { }
+    public void setQualityScores(double[] qualityScores) throws LockedException { }
     
     /**
      * Gets estimated covariance of estimated fundamental matrix if available.
@@ -671,7 +666,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      */    
     public static FundamentalMatrixRobustEstimator create(
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case LMedS:
                 return new LMedSFundamentalMatrixRobustEstimator(leftPoints,
@@ -707,8 +702,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      */        
     public static FundamentalMatrixRobustEstimator create(
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            double[] qualityScores, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
+            double[] qualityScores, RobustEstimatorMethod method) {
         switch (method) {
             case LMedS:
                 return new LMedSFundamentalMatrixRobustEstimator(leftPoints,
@@ -747,8 +741,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the same length or their length is less than 7 points.
      */        
     public static FundamentalMatrixRobustEstimator create(
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         return create(leftPoints, rightPoints, DEFAULT_ROBUST_METHOD);
     }
     
@@ -765,7 +758,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      */            
     public static FundamentalMatrixRobustEstimator create(
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         return create(leftPoints, rightPoints, qualityScores, 
                 DEFAULT_ROBUST_METHOD);
     }
@@ -886,7 +879,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the same size.
      */
     private void internalSetPoints(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         if (leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();
         }

@@ -69,7 +69,7 @@ public abstract class FundamentalMatrixEstimator {
      * have the same length.
      */
     public FundamentalMatrixEstimator(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         internalSetPoints(leftPoints, rightPoints);
     }
     
@@ -98,7 +98,7 @@ public abstract class FundamentalMatrixEstimator {
      * right views do not have the same length.
      */
     public void setPoints(List<Point2D> leftPoints, List<Point2D> rightPoints)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -208,8 +208,7 @@ public abstract class FundamentalMatrixEstimator {
      * have the same length.
      */
     public static FundamentalMatrixEstimator create(List<Point2D> leftPoints,
-            List<Point2D> rightPoints, FundamentalMatrixEstimatorMethod method)
-            throws IllegalArgumentException {
+            List<Point2D> rightPoints, FundamentalMatrixEstimatorMethod method) {
         switch (method) {
             case AFFINE_ALGORITHM:
                 return new AffineFundamentalMatrixEstimator(leftPoints, 
@@ -243,7 +242,7 @@ public abstract class FundamentalMatrixEstimator {
      * have the same length.
      */
     public static FundamentalMatrixEstimator create(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         return create(leftPoints, rightPoints, DEFAULT_METHOD);
     }
     
@@ -256,7 +255,7 @@ public abstract class FundamentalMatrixEstimator {
      * the same size.
      */
     private void internalSetPoints(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         if (leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();
         }

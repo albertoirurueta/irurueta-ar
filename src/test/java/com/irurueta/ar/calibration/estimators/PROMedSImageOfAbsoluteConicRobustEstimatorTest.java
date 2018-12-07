@@ -1343,8 +1343,6 @@ public class PROMedSImageOfAbsoluteConicRobustEstimatorTest implements
         avgVerticalPrincipalPointError /= (double)total;
         
         //check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
         assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
         assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
         assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);

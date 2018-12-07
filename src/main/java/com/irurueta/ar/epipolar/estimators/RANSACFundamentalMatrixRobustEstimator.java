@@ -114,8 +114,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public RANSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -136,8 +135,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
     public RANSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -169,7 +167,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 7 points.
      */
     public RANSACFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints);
     }
@@ -185,8 +183,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public RANSACFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
             List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints, listener);
     }    
@@ -212,8 +209,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

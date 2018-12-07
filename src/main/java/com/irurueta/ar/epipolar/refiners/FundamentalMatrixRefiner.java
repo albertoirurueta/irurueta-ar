@@ -207,7 +207,8 @@ public class FundamentalMatrixRefiner extends
             Matrix x = new Matrix(mNumInliers, nDims);
             int nSamples = mInliers.length();
             int pos = 0;
-            Point2D leftPoint, rightPoint;
+            Point2D leftPoint;
+            Point2D rightPoint;
             for (int i = 0; i < nSamples; i++) {
                 if (mInliers.get(i)) {
                     //sample is inlier
@@ -373,7 +374,8 @@ public class FundamentalMatrixRefiner extends
         double result = 0.0;
         
         int nSamples = mInliers.length();
-        Point2D leftPoint, rightPoint;
+        Point2D leftPoint;
+        Point2D rightPoint;
         for (int i = 0; i < nSamples; i++) {
             if (mInliers.get(i)) {
                 //sample is inlier

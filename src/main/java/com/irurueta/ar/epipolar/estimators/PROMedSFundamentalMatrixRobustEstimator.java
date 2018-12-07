@@ -122,8 +122,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         if (leftPoints.size() < 
                 EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
@@ -146,8 +145,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         if (leftPoints.size() < 
                 EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
@@ -167,7 +165,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, 
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         this(fundMatrixEstimatorMethod);
         internalSetQualityScores(qualityScores);
     }
@@ -186,8 +184,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores,
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -206,7 +203,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         this(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         internalSetQualityScores(qualityScores);
     }
@@ -228,8 +225,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, 
             double[] qualityScores, List<Point2D> leftPoints, 
             List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -259,7 +255,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 8 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints);
     }
@@ -275,8 +271,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
             List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints, listener);
     }
@@ -288,8 +283,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than required size (i.e. 7 matched pair of points).
      */
-    public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, 
                 qualityScores);
     }
@@ -304,8 +298,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * smaller than required size (i.e. 7 matched pair of points).
      */
     public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores,
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,
                 listener);
     }
@@ -320,8 +313,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * scores do not have the same length or their length is less than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, 
                 leftPoints, rightPoints);
     }
@@ -339,8 +331,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores,
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, 
                 leftPoints, rightPoints, listener);
     }
@@ -356,7 +347,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public void setPoints(List<Point2D> leftPoints, List<Point2D> rightPoints)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -411,8 +402,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -445,8 +435,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -641,8 +630,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than 8 points.
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < getMinRequiredPoints()) {
             throw new IllegalArgumentException();
         }

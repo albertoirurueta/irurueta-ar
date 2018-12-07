@@ -55,7 +55,7 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
     /**
      * Maximum allowed number of refinement iterations.
      */
-    public static int MAX_ITERS = 10;   
+    public static final int MAX_ITERS = 10;
     
     /**
      * Constructor.
@@ -143,7 +143,8 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
         try {                        
             HomogeneousPoint2D epipole = new HomogeneousPoint2D(
                     mInitialEstimation);
-            boolean errorDecreased = false, iterErrorDecreased;
+            boolean errorDecreased = false;
+            boolean iterErrorDecreased;
             int numIter = 0;
             do {            
                 FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
@@ -160,7 +161,8 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                 Matrix x = new Matrix(mNumInliers, nDims);
                 int nSamples = mInliers.length();
                 int pos = 0;
-                Point2D leftPoint, rightPoint;
+                Point2D leftPoint;
+                Point2D rightPoint;
                 for (int i = 0; i < nSamples; i++) {
                     if (mInliers.get(i)) {
                         //sample is inlier

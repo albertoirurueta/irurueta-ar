@@ -85,7 +85,7 @@ public class EightPointsFundamentalMatrixEstimator extends
      * have the same length.
      */
     public EightPointsFundamentalMatrixEstimator(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
         mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
@@ -193,9 +193,10 @@ public class EightPointsFundamentalMatrixEstimator extends
         int nPoints = mLeftPoints.size();
                 
         try {
-            ProjectiveTransformation2D leftNormalization = null,
-                    rightNormalization = null;
-            List<Point2D> leftPoints, rightPoints;
+            ProjectiveTransformation2D leftNormalization = null;
+            ProjectiveTransformation2D rightNormalization = null;
+            List<Point2D> leftPoints;
+            List<Point2D> rightPoints;
             if (mNormalizePoints) {
                 //normalize points on left view
                 Point2DNormalizer normalizer = new Point2DNormalizer(
@@ -230,11 +231,24 @@ public class EightPointsFundamentalMatrixEstimator extends
                 a = new Matrix(MIN_REQUIRED_POINTS, 9);
             }
             
-            Point2D leftPoint, rightPoint;
-            double homLeftX, homLeftY, homLeftW, homRightX, homRightY, 
-                    homRightW;
-            double value0, value1, value2, value3, value4, value5, value6, 
-                    value7, value8, rowNorm;
+            Point2D leftPoint;
+            Point2D rightPoint;
+            double homLeftX;
+            double homLeftY;
+            double homLeftW;
+            double homRightX;
+            double homRightY;
+            double homRightW;
+            double value0;
+            double value1;
+            double value2;
+            double value3;
+            double value4;
+            double value5;
+            double value6;
+            double value7;
+            double value8;
+            double rowNorm;
             for (int i = 0; i < nPoints; i++) {
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
@@ -300,22 +314,22 @@ public class EightPointsFundamentalMatrixEstimator extends
                 throw new FundamentalMatrixEstimatorException();
             }
             
-            Matrix V = decomposer.getV();
+            Matrix v = decomposer.getV();
             
             //The fundamental matrix is contained in vector form on the last
             //column of V, we reshape such vector into a 3x3 matrix
             Matrix fundMatrix = new Matrix(
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-            fundMatrix.setElementAt(0, 0, V.getElementAt(0, 8));
-            fundMatrix.setElementAt(0, 1, V.getElementAt(1, 8));
-            fundMatrix.setElementAt(0, 2, V.getElementAt(2, 8));
-            fundMatrix.setElementAt(1, 0, V.getElementAt(3, 8));
-            fundMatrix.setElementAt(1, 1, V.getElementAt(4, 8));
-            fundMatrix.setElementAt(1, 2, V.getElementAt(5, 8));
-            fundMatrix.setElementAt(2, 0, V.getElementAt(6, 8));
-            fundMatrix.setElementAt(2, 1, V.getElementAt(7, 8));
-            fundMatrix.setElementAt(2, 2, V.getElementAt(8, 8));
+            fundMatrix.setElementAt(0, 0, v.getElementAt(0, 8));
+            fundMatrix.setElementAt(0, 1, v.getElementAt(1, 8));
+            fundMatrix.setElementAt(0, 2, v.getElementAt(2, 8));
+            fundMatrix.setElementAt(1, 0, v.getElementAt(3, 8));
+            fundMatrix.setElementAt(1, 1, v.getElementAt(4, 8));
+            fundMatrix.setElementAt(1, 2, v.getElementAt(5, 8));
+            fundMatrix.setElementAt(2, 0, v.getElementAt(6, 8));
+            fundMatrix.setElementAt(2, 1, v.getElementAt(7, 8));
+            fundMatrix.setElementAt(2, 2, v.getElementAt(8, 8));
             
             if (mNormalizePoints && leftNormalization != null) {
                 //denormalize fundMatrix
@@ -324,7 +338,7 @@ public class EightPointsFundamentalMatrixEstimator extends
                 Matrix leftTransformationMatrix = leftNormalization.asMatrix();
                 
                 //compute fundMatrix = transposedRightTransformationMatrix *
-                //fundMatrix * leftTransformationMatrix;
+                //fundMatrix * leftTransformationMatrix
                 fundMatrix.multiply(leftTransformationMatrix);
                 transposedRightTransformationMatrix.multiply(fundMatrix);
                 fundMatrix = transposedRightTransformationMatrix;
@@ -344,21 +358,21 @@ public class EightPointsFundamentalMatrixEstimator extends
             int rank = decomposer.getRank();
             if (rank > FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
                 //rank needs to be reduced
-                Matrix U = decomposer.getU();
-                Matrix W = decomposer.getW();
-                V = decomposer.getV();
+                Matrix u = decomposer.getU();
+                Matrix w = decomposer.getW();
+                v = decomposer.getV();
                 
                 //transpose V
-                V.transpose();
-                Matrix transV = V;
+                v.transpose();
+                Matrix transV = v;
                 
                 //set last singular value to zero to enforce rank 2
-                W.setElementAt(2, 2, 0.0);
+                w.setElementAt(2, 2, 0.0);
                 
                 //compute fundMatrix = U * W * V'
-                W.multiply(transV);
-                U.multiply(W);
-                fundMatrix = U;
+                w.multiply(transV);
+                u.multiply(w);
+                fundMatrix = u;
             } else if (rank < FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
                 //rank is 1, which is lower than required fundamental matrix 
                 //rank (rank 2)

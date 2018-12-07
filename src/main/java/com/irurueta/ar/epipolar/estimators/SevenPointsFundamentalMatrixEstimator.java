@@ -99,7 +99,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * have the same length.
      */
     public SevenPointsFundamentalMatrixEstimator(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
         mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
@@ -233,8 +233,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
         int nPoints = mLeftPoints.size();
                 
         try {
-            ProjectiveTransformation2D leftNormalization = null, 
-                    rightNormalization = null; 
+            ProjectiveTransformation2D leftNormalization = null;
+            ProjectiveTransformation2D rightNormalization = null;
             List<Point2D> leftPoints, rightPoints;
             if (mNormalizePoints) {
                 //normalize points on left view
@@ -270,11 +270,24 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 a = new Matrix(MIN_REQUIRED_POINTS, 9);
             }
             
-            Point2D leftPoint, rightPoint;
-            double homLeftX, homLeftY, homLeftW, homRightX, homRightY, 
-                    homRightW;
-            double value0, value1, value2, value3, value4, value5, value6, 
-                    value7, value8, rowNorm;
+            Point2D leftPoint;
+            Point2D rightPoint;
+            double homLeftX;
+            double homLeftY;
+            double homLeftW;
+            double homRightX;
+            double homRightY;
+            double homRightW;
+            double value0;
+            double value1;
+            double value2;
+            double value3;
+            double value4;
+            double value5;
+            double value6;
+            double value7;
+            double value8;
+            double rowNorm;
             for (int i = 0; i < nPoints; i++) {
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
@@ -339,7 +352,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 throw new FundamentalMatrixEstimatorException();
             }
             
-            Matrix V = decomposer.getV();
+            Matrix v = decomposer.getV();
             
             //The last two column vectors of V contain the "base" matrices
             //to be used for the retrieval of the true fundamental matrix, since
@@ -349,28 +362,28 @@ public class SevenPointsFundamentalMatrixEstimator extends
             Matrix fundMatrix1 = new Matrix(
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-            fundMatrix1.setElementAt(0, 0, V.getElementAt(0, 8));
-            fundMatrix1.setElementAt(0, 1, V.getElementAt(1, 8));
-            fundMatrix1.setElementAt(0, 2, V.getElementAt(2, 8));
-            fundMatrix1.setElementAt(1, 0, V.getElementAt(3, 8));
-            fundMatrix1.setElementAt(1, 1, V.getElementAt(4, 8));
-            fundMatrix1.setElementAt(1, 2, V.getElementAt(5, 8));
-            fundMatrix1.setElementAt(2, 0, V.getElementAt(6, 8));
-            fundMatrix1.setElementAt(2, 1, V.getElementAt(7, 8));
-            fundMatrix1.setElementAt(2, 2, V.getElementAt(8, 8));
+            fundMatrix1.setElementAt(0, 0, v.getElementAt(0, 8));
+            fundMatrix1.setElementAt(0, 1, v.getElementAt(1, 8));
+            fundMatrix1.setElementAt(0, 2, v.getElementAt(2, 8));
+            fundMatrix1.setElementAt(1, 0, v.getElementAt(3, 8));
+            fundMatrix1.setElementAt(1, 1, v.getElementAt(4, 8));
+            fundMatrix1.setElementAt(1, 2, v.getElementAt(5, 8));
+            fundMatrix1.setElementAt(2, 0, v.getElementAt(6, 8));
+            fundMatrix1.setElementAt(2, 1, v.getElementAt(7, 8));
+            fundMatrix1.setElementAt(2, 2, v.getElementAt(8, 8));
 
             Matrix fundMatrix2 = new Matrix(
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-            fundMatrix2.setElementAt(0, 0, V.getElementAt(0, 7));
-            fundMatrix2.setElementAt(0, 1, V.getElementAt(1, 7));
-            fundMatrix2.setElementAt(0, 2, V.getElementAt(2, 7));
-            fundMatrix2.setElementAt(1, 0, V.getElementAt(3, 7));
-            fundMatrix2.setElementAt(1, 1, V.getElementAt(4, 7));
-            fundMatrix2.setElementAt(1, 2, V.getElementAt(5, 7));
-            fundMatrix2.setElementAt(2, 0, V.getElementAt(6, 7));
-            fundMatrix2.setElementAt(2, 1, V.getElementAt(7, 7));
-            fundMatrix2.setElementAt(2, 2, V.getElementAt(8, 7));
+            fundMatrix2.setElementAt(0, 0, v.getElementAt(0, 7));
+            fundMatrix2.setElementAt(0, 1, v.getElementAt(1, 7));
+            fundMatrix2.setElementAt(0, 2, v.getElementAt(2, 7));
+            fundMatrix2.setElementAt(1, 0, v.getElementAt(3, 7));
+            fundMatrix2.setElementAt(1, 1, v.getElementAt(4, 7));
+            fundMatrix2.setElementAt(1, 2, v.getElementAt(5, 7));
+            fundMatrix2.setElementAt(2, 0, v.getElementAt(6, 7));
+            fundMatrix2.setElementAt(2, 1, v.getElementAt(7, 7));
+            fundMatrix2.setElementAt(2, 2, v.getElementAt(8, 7));
             
             if (mNormalizePoints && leftNormalization != null) {
                 //denormalize linear combination of fundamental matrices
@@ -380,7 +393,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 Matrix leftTransformationMatrix = leftNormalization.asMatrix();
                 
                 //compute fundMatrix1 = transposedRightTransformationMatrix *
-                //fundMatrix1 * leftTransformationMatrix;
+                //fundMatrix1 * leftTransformationMatrix
                 fundMatrix1.multiply(leftTransformationMatrix);
                 fundMatrix1 = transposedRightTransformationMatrix.
                         multiplyAndReturnNew(fundMatrix1);
@@ -391,7 +404,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 fundMatrix1.multiplyByScalar(1.0 / norm);
                 
                 //compute fundMatrix2 = transposedRightTransformationMatrix *
-                //fundMatrix2 * leftTransformationMatrix;
+                //fundMatrix2 * leftTransformationMatrix
                 fundMatrix2.multiply(leftTransformationMatrix);
                 transposedRightTransformationMatrix.multiply(fundMatrix2);
                 fundMatrix2 = transposedRightTransformationMatrix;
@@ -417,7 +430,10 @@ public class SevenPointsFundamentalMatrixEstimator extends
             //This produces a third degree polynomial as follows:
 
             //coefficients of polynomial: a*x^3 + b*x^2 + c*x + d
-            double aPoly = 0.0, bPoly = 0.0, cPoly = 0.0, dPoly = 0.0;
+            double aPoly = 0.0;
+            double bPoly = 0.0;
+            double cPoly = 0.0;
+            double dPoly = 0.0;
             double[] params = new double[4];
             
             computeParams(fundMatrix1.getElementAt(0, 0), 
@@ -508,11 +524,16 @@ public class SevenPointsFundamentalMatrixEstimator extends
             params[2] = bPoly;
             params[3] = aPoly;
             
-            double beta1 = 0.0, beta2 = 0.0, beta3 = 0.0;
-            boolean beta1Available = false, beta2Available= false,
-                    beta3Available = false;
+            double beta1 = 0.0;
+            double beta2 = 0.0;
+            double beta3 = 0.0;
+            boolean beta1Available = false;
+            boolean beta2Available= false;
+            boolean beta3Available = false;
             Complex[] roots;
-            Complex root1, root2, root3;
+            Complex root1;
+            Complex root2;
+            Complex root3;
             
             if (ThirdDegreePolynomialRootsEstimator.isThirdDegree(params)) {
                 //solve third degree polynomial
@@ -583,7 +604,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
             //F = b * F1 + (1 - b) * F2 which has rank 2 using all available 
             //solutions
             Matrix fundMatrix;
-            FundamentalMatrix F;
+            FundamentalMatrix f;
             result.clear(); //clear previous values
             if (beta1Available) {
                 fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta1).
@@ -593,8 +614,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
                     throw new FundamentalMatrixEstimatorException();
                 }
                 
-                F = new FundamentalMatrix(fundMatrix);
-                result.add(F);
+                f = new FundamentalMatrix(fundMatrix);
+                result.add(f);
             }
             if (beta2Available) {
                 fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta2).
@@ -604,8 +625,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
                     throw new FundamentalMatrixEstimatorException();
                 }
                 
-                F = new FundamentalMatrix(fundMatrix);
-                result.add(F);                
+                f = new FundamentalMatrix(fundMatrix);
+                result.add(f);
             }
             if (beta3Available) {
                 fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta3).
@@ -615,8 +636,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
                     throw new FundamentalMatrixEstimatorException();
                 }
                 
-                F = new FundamentalMatrix(fundMatrix);
-                result.add(F);                
+                f = new FundamentalMatrix(fundMatrix);
+                result.add(f);
             }
             
             if (result.isEmpty()) {
@@ -700,20 +721,20 @@ public class SevenPointsFundamentalMatrixEstimator extends
         int rank = decomposer.getRank();
         if (rank > FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
             //rank needs to be reduced
-            Matrix U = decomposer.getU();
-            Matrix W = decomposer.getW();
-            Matrix V = decomposer.getV();
+            Matrix u = decomposer.getU();
+            Matrix w = decomposer.getW();
+            Matrix v = decomposer.getV();
                 
             //transpose V
-            V.transpose();
+            v.transpose();
 
             //set last singular value to zero to enforce rank 2
-            W.setElementAt(2, 2, 0.0);
+            w.setElementAt(2, 2, 0.0);
                 
             //compute matrix = U * W * V'
-            W.multiply(V);
-            U.multiply(W);
-            matrix.copyFrom(U);
+            w.multiply(v);
+            u.multiply(w);
+            matrix.copyFrom(u);
             return false;
         } else {
             //if rank is 2, rank is ok, otherwise rank is lower than fundamental 

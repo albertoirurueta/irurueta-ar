@@ -120,8 +120,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -142,8 +141,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -161,7 +159,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         this(fundMatrixEstimatorMethod);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -183,8 +181,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, listener);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -206,7 +203,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         this(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -231,8 +228,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, List<Point2D> leftPoints, 
             List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         mThreshold = DEFAULT_THRESHOLD;
         mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
@@ -265,7 +261,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints);
     }
@@ -281,8 +277,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(List<Point2D> leftPoints,
             List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, 
                 rightPoints, listener);
     }
@@ -294,8 +289,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than required size (i.e. 7 matched pair of points).
      */
-    public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores);
     }
     
@@ -309,8 +303,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * smaller than required size (i.e. 7 matched pair of points).
      */
     public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores,
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, 
                 listener);
     }
@@ -325,8 +318,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * scores do not have the same length or their length is less than 7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores,
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, 
                 leftPoints, rightPoints);
     }
@@ -344,8 +336,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores,
             List<Point2D> leftPoints, List<Point2D> rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, 
                 leftPoints, rightPoints, listener);
     }
@@ -371,8 +362,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -404,8 +394,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -648,8 +637,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than 7 points.
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < getMinRequiredPoints()) {
             throw new IllegalArgumentException();
         }
