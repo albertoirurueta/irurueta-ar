@@ -15,14 +15,12 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import com.irurueta.geometry.estimators.GeometryEstimatorException;
-
 /**
  * Thrown when IAC estimation fails.
  */
 @SuppressWarnings("WeakerAccess")
-public class ImageOfAbsoluteConicEstimatorException extends 
-        GeometryEstimatorException {
+public class ImageOfAbsoluteConicEstimatorException extends
+        CalibrationEstimatorException {
     
     /**
      * Constructor.

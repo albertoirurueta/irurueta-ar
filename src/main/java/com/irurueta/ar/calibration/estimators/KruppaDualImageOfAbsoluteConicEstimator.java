@@ -296,7 +296,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * close to zero, as it might produce numerical instabilities.
      */
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -873,67 +873,67 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             double v32 = v.getElementAt(2, 1);
             
             //build Kruppa equations
-            double A = u12*u11;
-            double B = u22*u21;
-            double C = Math.pow(x0,2.0)*u12*u11 + x0*y0*u22*u11 + x0*u32*u11 + 
-                    x0*y0*u12*u21 + Math.pow(y0,2.0)*u22*u21 + y0*u32*u21 + 
-                    x0*u12*u31 + y0*u22*u31 + u32*u31;
-            double D = Math.pow(sigma2,2.0)*v12*v12;
-            double E = Math.pow(sigma2,2.0)*v22*v22;
-            double F = Math.pow(sigma2*x0,2.0)*v12*v12 + 
-                    Math.pow(sigma2,2.0)*x0*y0*v22*v12 + 
-                    Math.pow(sigma2,2.0)*x0*v32*v12 + 
-                    Math.pow(sigma2,2.0)*x0*y0*v12*v22 + 
-                    Math.pow(sigma2*y0,2)*v22*v22 + 
-                    Math.pow(sigma2,2.0)*y0*v32*v22 + 
-                    Math.pow(sigma2,2.0)*x0*v12*v32 + 
-                    Math.pow(sigma2,2.0)*y0*v22*v32 + 
-                    Math.pow(sigma2,2.0)*v32*v32;
-            double G = u11*u11;
-            double H = u21*u21;
-            double I = Math.pow(x0,2.0)*u11*u11 + x0*y0*u21*u11 + x0*u31*u11 + 
-                    x0*y0*u11*u21 + Math.pow(y0,2.0)*u21*u21 + y0*u31*u21 + 
-                    x0*u11*u31 + y0*u21*u31 + u31*u31;
-            double J = sigma1*sigma2*v12*v11;
-            double K = sigma1*sigma2*v22*v21;
-            double L = sigma1*sigma2*Math.pow(x0,2.0)*v12*v11 + 
-                    sigma1*sigma2*x0*y0*v22*v11 + sigma1*sigma2*x0*v32*v11 + 
-                    sigma1*sigma2*x0*y0*v12*v21 + 
-                    sigma1*sigma2*Math.pow(y0,2.0)*v22*v21 + 
-                    sigma1*sigma2*y0*v32*v21 + sigma1*sigma2*x0*v12*v31 + 
-                    sigma1*sigma2*y0*v22*v31 + sigma1*sigma2*v32*v31;
-            double M = Math.pow(sigma1,2.0)*v11*v11;
-            double N = Math.pow(sigma1,2.0)*v21*v21;
-            double O = Math.pow(sigma1*x0,2.0)*v11*v11 + 
-                    Math.pow(sigma1,2.0)*x0*y0*v21*v11 + 
-                    Math.pow(sigma1,2.0)*x0*v31*v11 + 
-                    Math.pow(sigma1,2.0)*x0*y0*v11*v21 + 
-                    Math.pow(sigma1*y0,2.0)*v21*v21 + 
-                    Math.pow(sigma1,2.0)*y0*v31*v21 + 
-                    Math.pow(sigma1,2.0)*x0*v11*v31 + 
-                    Math.pow(sigma1,2.0)*y0*v21*v31 + 
-                    Math.pow(sigma1,2.0)*v31*v31;
-            double P = u12*u12;
-            double Q = u22*u22;
-            double R = Math.pow(x0,2.0)*u12*u12 + x0*y0*u22*u12 + x0*u32*u12 + 
-                    x0*y0*u12*u22 + Math.pow(y0,2.0)*u22*u22 + y0*u32*u22 + 
-                    x0*u12*u32 + y0*u22*u32 + u32*u32;
+            double polyA = u12*u11;
+            double polyB = u22*u21;
+            double polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
+                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
+                    x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
+            double polyD = Math.pow(sigma2, 2.0) * v12 * v12;
+            double polyE = Math.pow(sigma2, 2.0) * v22 * v22;
+            double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
+                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
+                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
+                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
+                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
+                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
+                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
+                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
+                    Math.pow(sigma2, 2.0) * v32 * v32;
+            double polyG = u11 * u11;
+            double polyH = u21 * u21;
+            double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
+                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
+                    x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
+            double polyJ = sigma1 * sigma2 * v12 * v11;
+            double polyK = sigma1 * sigma2 * v22 * v21;
+            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
+                    sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
+                    sigma1 * sigma2 * x0 * y0 * v12 * v21 +
+                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
+                    sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
+                    sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;
+            double polyN = Math.pow(sigma1, 2.0) * v21 * v21;
+            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
+                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
+                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
+                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
+                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
+                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
+                    Math.pow(sigma1, 2.0) * v31 * v31;
+            double polyP = u12*u12;
+            double polyQ = u22*u22;
+            double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
+                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
+                    x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
 
             //try to solve any of Kruppa's equations
             Complex[] roots;
             try {
-                Polynomial poly3 = buildPolynomial3(A, B, C, D, E, F, G, H, I, 
-                        J, K, L);
+                Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+                        polyJ, polyK, polyL);
                 roots = poly3.getRoots();
             } catch (NumericalException e3) {
                 try {
                     //if solution for poly3 fails, try with 4th polynomial
-                    Polynomial poly4 = buildPolynomial4(D, E, F, G, H,
-                            I, M, N, O, P, Q, R);
+                    Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
+                            polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
                     roots = poly4.getRoots();
                 } catch (NumericalException e4) {
-                    Polynomial poly5 = buildPolynomial5(A, B, C,
-                            J, K, L, M, N, O, P, Q, R);
+                    Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,
+                            polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
                     roots = poly5.getRoots();
                 }
             }
@@ -981,10 +981,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                 throw new KruppaDualImageOfAbsoluteConicEstimatorException();
             }
             
-        } catch (KruppaDualImageOfAbsoluteConicEstimatorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new KruppaDualImageOfAbsoluteConicEstimatorException(e);
+        } catch (KruppaDualImageOfAbsoluteConicEstimatorException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new KruppaDualImageOfAbsoluteConicEstimatorException(ex);
         }                
     }
     

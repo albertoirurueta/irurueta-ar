@@ -15,14 +15,12 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import com.irurueta.geometry.estimators.GeometryEstimatorException;
-
 /**
  * Thrown when camera estimation fails.
  */
 @SuppressWarnings("WeakerAccess")
-public class SingleHomographyPinholeCameraEstimatorException extends 
-        GeometryEstimatorException {
+public class SingleHomographyPinholeCameraEstimatorException extends
+        CalibrationEstimatorException {
     
     /**
      * Constructor.

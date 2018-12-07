@@ -172,7 +172,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     /**
      * Constructor.
      */
-    public ImageOfAbsoluteConicRobustEstimator(){
+    public ImageOfAbsoluteConicRobustEstimator() {
         mProgressDelta = DEFAULT_PROGRESS_DELTA;
         mConfidence = DEFAULT_CONFIDENCE;
         mMaxIterations = DEFAULT_MAX_ITERATIONS;
@@ -185,7 +185,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * estimation starts, ends or its progress significantly changes.
      */
     public ImageOfAbsoluteConicRobustEstimator(
-            ImageOfAbsoluteConicRobustEstimatorListener listener){
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         this();
         mListener = listener;
     }
@@ -199,8 +199,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * for default settings. Hence, at least 1 homography must be provided.
      */
     public ImageOfAbsoluteConicRobustEstimator(
-            List<Transformation2D> homographies) 
-            throws IllegalArgumentException{
+            List<Transformation2D> homographies) {
         this();
         internalSetHomographies(homographies);
     }
@@ -217,8 +216,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public ImageOfAbsoluteConicRobustEstimator(
             List<Transformation2D> homographies, 
-            ImageOfAbsoluteConicRobustEstimatorListener listener)
-            throws IllegalArgumentException{
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         this(listener);
         internalSetHomographies(homographies);
     }
@@ -232,7 +230,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated.
      */
-    public boolean isZeroSkewness(){
+    public boolean isZeroSkewness() {
         return mIACEstimator.isZeroSkewness();
     }
     
@@ -246,8 +244,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * otherwise camera skewness is estimated.
      * @throws LockedException if estimator is locked.
      */
-    public void setZeroSkewness(boolean zeroSkewness) throws LockedException{
-        if(isLocked()) throw new LockedException();
+    public void setZeroSkewness(boolean zeroSkewness) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         
         mIACEstimator.setZeroSkewness(zeroSkewness);
     }
@@ -261,7 +261,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return true if principal point is assumed to be at origin of 
      * coordinates, false if principal point must be estimated.
      */
-    public boolean isPrincipalPointAtOrigin(){
+    public boolean isPrincipalPointAtOrigin() {
         return mIACEstimator.isPrincipalPointAtOrigin();
     }
     
@@ -276,8 +276,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setPrincipalPointAtOrigin(boolean principalPointAtOrigin)
-            throws LockedException{
-        if(isLocked()) throw new LockedException();
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         
         mIACEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);
     }
@@ -293,7 +295,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * otherwise it is ignored.
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
-    public boolean isFocalDistanceAspectRatioKnown(){
+    public boolean isFocalDistanceAspectRatioKnown() {
         return mIACEstimator.isFocalDistanceAspectRatioKnown();
     }
     
@@ -311,8 +313,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setFocalDistanceAspectRatioKnown(
-            boolean focalDistanceAspectRatioKnown) throws LockedException{
-        if(isLocked()) throw new LockedException();
+            boolean focalDistanceAspectRatioKnown) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         
         mIACEstimator.setFocalDistanceAspectRatioKnown(
                 focalDistanceAspectRatioKnown);
@@ -336,7 +340,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * physical world they go upwards).
      * @return aspect ratio of focal distances.
      */    
-    public double getFocalDistanceAspectRatio(){
+    public double getFocalDistanceAspectRatio() {
         return mIACEstimator.getFocalDistanceAspectRatio();
     }
     
@@ -362,8 +366,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * close to zero, as it might produce numerical instabilities.
      */    
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException{
-        if(isLocked()) throw new LockedException();
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         
         mIACEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);
     }
@@ -373,7 +379,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * estimation starts, ends or its progress significantly changes.
      * @return listener to be notified of events.
      */
-    public ImageOfAbsoluteConicRobustEstimatorListener getListener(){
+    public ImageOfAbsoluteConicRobustEstimatorListener getListener() {
         return mListener;
     }
     
@@ -385,8 +391,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public void setListener(
             ImageOfAbsoluteConicRobustEstimatorListener listener) 
-            throws LockedException{
-        if(isLocked()) throw new LockedException();
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         mListener = listener;
     }
     
@@ -395,7 +403,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * retrieval.
      * @return true if available, false otherwise.
      */
-    public boolean isListenerAvailable(){
+    public boolean isListenerAvailable() {
         return mListener != null;
     }
     
@@ -404,7 +412,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * computed.
      * @return true if locked, false otherwise.
      */
-    public boolean isLocked(){
+    public boolean isLocked() {
         return mLocked;
     }
     
@@ -414,7 +422,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return amount of progress variation before notifying a progress change
      * during estimation.
      */
-    public float getProgressDelta(){
+    public float getProgressDelta() {
         return mProgressDelta;
     }
     
@@ -428,12 +436,15 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException{
-        if(isLocked()) throw new LockedException();
-        if(progressDelta < MIN_PROGRESS_DELTA ||
-                progressDelta > MAX_PROGRESS_DELTA)
+    @SuppressWarnings("Duplicates")
+    public void setProgressDelta(float progressDelta) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (progressDelta < MIN_PROGRESS_DELTA ||
+                progressDelta > MAX_PROGRESS_DELTA) {
             throw new IllegalArgumentException();
+        }
         mProgressDelta = progressDelta;
     }
     
@@ -444,7 +455,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * be close to 1.0, but not exactly 1.0.
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
-    public double getConfidence(){
+    public double getConfidence() {
         return mConfidence;
     }
     
@@ -459,11 +470,14 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimator
      * is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException{
-        if(isLocked()) throw new LockedException();
-        if(confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE)
+    @SuppressWarnings("Duplicates")
+    public void setConfidence(double confidence) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE) {
             throw new IllegalArgumentException();
+        }
         mConfidence = confidence;
     }
     
@@ -486,10 +500,13 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException{
-        if(isLocked()) throw new LockedException();
-        if(maxIterations < MIN_ITERATIONS) throw new IllegalArgumentException();
+    public void setMaxIterations(int maxIterations) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (maxIterations < MIN_ITERATIONS) {
+            throw new IllegalArgumentException();
+        }
         mMaxIterations = maxIterations;
     }
     
@@ -509,8 +526,10 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * not contain enough elements to estimate the DIAC using current settings.
      */
     public void setHomographies(List<Transformation2D> homographies)
-            throws LockedException, IllegalArgumentException{
-        if(isLocked()) throw new LockedException();
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         internalSetHomographies(homographies);
     }
     
@@ -566,8 +585,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than minimum required number of homographies.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException{}
+    public void setQualityScores(double[] qualityScores) throws LockedException { }
     
     /**
      * Estimates Image of Absolute Conic (IAC).
@@ -596,8 +614,8 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return an instance of an image of absolute conic robust estimator.
      */
     public static ImageOfAbsoluteConicRobustEstimator create(
-            RobustEstimatorMethod method){
-        switch(method){
+            RobustEstimatorMethod method) {
+        switch (method) {
             case LMedS:
                 return new LMedSImageOfAbsoluteConicRobustEstimator();
             case MSAC:
@@ -625,8 +643,8 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      */
     public static ImageOfAbsoluteConicRobustEstimator create(
             List<Transformation2D> homographies, double[] qualityScores, 
-            RobustEstimatorMethod method) throws IllegalArgumentException{
-        switch(method){
+            RobustEstimatorMethod method) {
+        switch (method) {
             case LMedS:
                 return new LMedSImageOfAbsoluteConicRobustEstimator(
                         homographies);
@@ -657,9 +675,8 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * short.
      */
     public static ImageOfAbsoluteConicRobustEstimator create(
-            List<Transformation2D> homographies, RobustEstimatorMethod method)
-            throws IllegalArgumentException{
-        switch(method){
+            List<Transformation2D> homographies, RobustEstimatorMethod method) {
+        switch (method) {
             case LMedS:
                 return new LMedSImageOfAbsoluteConicRobustEstimator(
                         homographies);
@@ -684,7 +701,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * method.
      * @return an instance of an image of absolute conic robust estimator.
      */
-    public static ImageOfAbsoluteConicRobustEstimator create(){
+    public static ImageOfAbsoluteConicRobustEstimator create() {
         return create(DEFAULT_ROBUST_METHOD);
     }
     
@@ -698,8 +715,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * quality scores don't have the same size or size is too short.
      */
     public static ImageOfAbsoluteConicRobustEstimator create(
-            List<Transformation2D> homographies, double[] qualityScores)
-            throws IllegalArgumentException{
+            List<Transformation2D> homographies, double[] qualityScores) {
         return create(homographies, qualityScores, DEFAULT_ROBUST_METHOD);
     }
     
@@ -712,8 +728,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * is too short.
      */
     public static ImageOfAbsoluteConicRobustEstimator create(
-            List<Transformation2D> homographies) 
-            throws IllegalArgumentException{
+            List<Transformation2D> homographies) {
         return create(homographies, DEFAULT_ROBUST_METHOD);
     }
         
@@ -729,29 +744,35 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @return residual.
      */
     protected double residual(ImageOfAbsoluteConic iac, 
-            Transformation2D homography){
+            Transformation2D homography) {
         
         iac.normalize();
-        if(homography instanceof ProjectiveTransformation2D){
+        if (homography instanceof ProjectiveTransformation2D) {
             ((ProjectiveTransformation2D)homography).normalize();
         }
         
-        try{
-            if(mIACMatrix == null) mIACMatrix = iac.asMatrix();
-            else iac.asMatrix(mIACMatrix);
+        try {
+            if (mIACMatrix == null) {
+                mIACMatrix = iac.asMatrix();
+            } else {
+                iac.asMatrix(mIACMatrix);
+            }
             
-            if(mHomMatrix == null) mHomMatrix = homography.asMatrix();
-            else homography.asMatrix(mHomMatrix);
+            if (mHomMatrix == null) {
+                mHomMatrix = homography.asMatrix();
+            } else {
+                homography.asMatrix(mHomMatrix);
+            }
             
-            if(mSubMatrixLeft == null){
+            if (mSubMatrixLeft == null) {
                 mSubMatrixLeft = new double[
                         ProjectiveTransformation2D.HOM_COORDS];
             }
-            if(mSubMatrixRight == null){
+            if (mSubMatrixRight == null) {
                 mSubMatrixRight = new Matrix(
                         ProjectiveTransformation2D.HOM_COORDS, 1);
             }
-            if(mMult1 == null){
+            if (mMult1 == null) {
                 mMult1 = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 1);
             }
             
@@ -808,7 +829,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
             double error2 = Math.abs(error2a - error2b);
             
             return 0.5 * (error1 + error2);
-        }catch(AlgebraException e){
+        } catch (AlgebraException e) {
             return Double.MAX_VALUE;
         }
     }
@@ -820,11 +841,11 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws IllegalArgumentException if provided list of homographies is null
      * or too small.
      */
-    private void internalSetHomographies(List<Transformation2D> homographies)
-            throws IllegalArgumentException{
-        if(homographies == null || 
-                homographies.size() < getMinNumberOfRequiredHomographies())
+    private void internalSetHomographies(List<Transformation2D> homographies) {
+        if (homographies == null ||
+                homographies.size() < getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
+        }
         
         mHomographies = homographies;
     }    

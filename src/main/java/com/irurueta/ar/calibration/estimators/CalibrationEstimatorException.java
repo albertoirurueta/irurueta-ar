@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,42 +15,43 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
+import com.irurueta.ar.calibration.CalibrationException;
+
 /**
- * Thrown when radial distortion estimation fails.
+ * Base class for calibration estimators.
  */
 @SuppressWarnings("WeakerAccess")
-public class RadialDistortionEstimatorException extends
-        CalibrationEstimatorException {
-    
+public class CalibrationEstimatorException extends CalibrationException {
+
     /**
      * Constructor.
      */
-    public RadialDistortionEstimatorException() {
+    public CalibrationEstimatorException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
      * @param message Message indicating the cause of the exception.
      */
-    public RadialDistortionEstimatorException(String message) {
+    public CalibrationEstimatorException(String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
      * @param message Message describing the cause of the exception.
      * @param cause Instance containing the cause of the exception.
      */
-    public RadialDistortionEstimatorException(String message, Throwable cause) {
+    public CalibrationEstimatorException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
      * @param cause Instance containing the cause of the exception.
      */
-    public RadialDistortionEstimatorException(Throwable cause) {
+    public CalibrationEstimatorException(Throwable cause) {
         super(cause);
-    }    
+    }
 }

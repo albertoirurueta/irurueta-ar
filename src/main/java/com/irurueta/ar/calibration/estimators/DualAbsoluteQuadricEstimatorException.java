@@ -15,14 +15,12 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import com.irurueta.geometry.estimators.GeometryEstimatorException;
-
 /**
  * Thrown when DAQ estimation fails.
  */
 @SuppressWarnings("WeakerAccess")
-public class DualAbsoluteQuadricEstimatorException extends 
-        GeometryEstimatorException {
+public class DualAbsoluteQuadricEstimatorException extends
+        CalibrationEstimatorException {
     
     /**
      * Constructor.

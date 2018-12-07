@@ -15,14 +15,12 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import com.irurueta.geometry.estimators.GeometryEstimatorException;
-
 /**
  * Thrown when DIAC estimation fails.
  */
 @SuppressWarnings("WeakerAccess")
-public class KruppaDualImageOfAbsoluteConicEstimatorException extends 
-        GeometryEstimatorException {
+public class KruppaDualImageOfAbsoluteConicEstimatorException extends
+        CalibrationEstimatorException {
     
     /**
      * Constructor.

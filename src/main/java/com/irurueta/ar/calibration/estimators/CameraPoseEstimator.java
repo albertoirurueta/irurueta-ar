@@ -48,12 +48,7 @@ public class CameraPoseEstimator {
      * Estimated camera.
      */
     private PinholeCamera mCamera;
-    
-    /**
-     * Constructor.
-     */
-    public CameraPoseEstimator() { }
-    
+
     /**
      * Estimates camera posed based on provided intrinsic parameters and
      * 2D homography.
@@ -115,8 +110,7 @@ public class CameraPoseEstimator {
         
         //inverse of intrinsic parameters matrix
 
-        //what follows next is equivalent to Utils.inverse(
-        //intrinsic.getInternalMatrix());
+        //what follows next is equivalent to Utils.inverse(intrinsic.getInternalMatrix())
         Matrix intrinsicInvMatrix = intrinsic.getInverseInternalMatrix();
                 
         if(homography instanceof ProjectiveTransformation2D){
@@ -169,13 +163,13 @@ public class CameraPoseEstimator {
         SingularValueDecomposer decomposer = 
                 new SingularValueDecomposer(rot);
         decomposer.decompose();
-        Matrix U = decomposer.getU();
-        Matrix V = decomposer.getV();
-        V.transpose();
+        Matrix u = decomposer.getU();
+        Matrix v = decomposer.getV();
+        v.transpose();
 
         //U and V are orthonormal, hence U*V' is also orthonormal and can be
         //considered a rotation (up to sign)
-        U.multiply(V, rot);
+        u.multiply(v, rot);
         
         //we need to ensure that rotation has determinant equal to 1, otherwise
         //we change sign

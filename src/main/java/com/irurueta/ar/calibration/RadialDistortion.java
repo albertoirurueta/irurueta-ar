@@ -19,6 +19,8 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.ar.calibration.estimators.LMSERadialDistortionEstimator;
+import com.irurueta.ar.calibration.estimators.RadialDistortionEstimatorException;
+import com.irurueta.geometry.GeometryException;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
@@ -138,7 +140,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param kParams radial distortion parameters of any length.
      * @throws IllegalArgumentException if radial distortion parameters is null.
      */
-    public RadialDistortion(double[] kParams) throws IllegalArgumentException {
+    public RadialDistortion(double[] kParams) {
         if (kParams == null) {
             throw new IllegalArgumentException();
         }
@@ -146,7 +148,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
             setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, 
                 DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }        
     
     /**
@@ -161,7 +165,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
             setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, 
                 DEFAULT_SKEW);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -171,13 +177,14 @@ public class RadialDistortion extends Distortion implements Serializable {
      * at the origin of coordinates (0, 0), which is the typical value.
      * @throws IllegalArgumentException if radial distortion parameters is null.
      */
-    public RadialDistortion(double[] kParams, Point2D center)
-            throws IllegalArgumentException {
+    public RadialDistortion(double[] kParams, Point2D center) {
         this(kParams);
         try {
             setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, 
                 DEFAULT_SKEW);        
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -215,8 +222,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public RadialDistortion(double[] kParams, Point2D center,
             double horizontalFocalLength, double verticalFocalLength,
-            double skew) throws RadialDistortionException, 
-            IllegalArgumentException {
+            double skew) throws RadialDistortionException {
         this(kParams);
         setIntrinsic(center, horizontalFocalLength, verticalFocalLength,
                 skew);
@@ -274,7 +280,7 @@ public class RadialDistortion extends Distortion implements Serializable {
         
             mKParams = distortion.mKParams;
             mCenter = distortion.mCenter;
-        } catch (Exception e) {
+        } catch (GeometryException | RadialDistortionEstimatorException e) {
             throw new RadialDistortionException(e);
         }
     }
@@ -295,7 +301,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
             setIntrinsic(center, mHorizontalFocalLength, mVerticalFocalLength, 
                 mSkew);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -354,7 +362,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         try {
             setIntrinsic(mCenter, mHorizontalFocalLength, mVerticalFocalLength, 
                 skew);
-        } catch (RadialDistortionException ignore) { }
+        } catch (RadialDistortionException ignore) {
+            //never happens
+        }
     }
     
     /**
@@ -407,18 +417,18 @@ public class RadialDistortion extends Distortion implements Serializable {
                 mKinv = new Matrix(3, 3);
             }
         
-            Matrix K = new Matrix(3, 3); //initially matrix is zero
+            Matrix k = new Matrix(3, 3); //initially matrix is zero
             
-            K.setElementAt(0, 0, horizontalFocalLength);
-            K.setElementAt(1, 1, verticalFocalLength);
-            K.setElementAt(0, 1, skew);
+            k.setElementAt(0, 0, horizontalFocalLength);
+            k.setElementAt(1, 1, verticalFocalLength);
+            k.setElementAt(0, 1, skew);
             if (mCenter != null) {
-                K.setElementAt(0, 2, mCenter.getInhomX());
-                K.setElementAt(1, 2, mCenter.getInhomY());
+                k.setElementAt(0, 2, mCenter.getInhomX());
+                k.setElementAt(1, 2, mCenter.getInhomY());
             } //if center is not provided, values are zero
-            K.setElementAt(2, 2, 1.0);
+            k.setElementAt(2, 2, 1.0);
             
-            Utils.inverse(K, mKinv);
+            Utils.inverse(k, mKinv);
         } catch (AlgebraException e) {
             throw new RadialDistortionException(e);
         }
@@ -525,7 +535,8 @@ public class RadialDistortion extends Distortion implements Serializable {
         double uInhomX = uHomX / uHomW;
         double uInhomY = uHomY / uHomW;
         
-        double centerX = 0.0, centerY = 0.0;
+        double centerX = 0.0;
+        double centerY = 0.0;
         if (mCenter != null) {
             centerX = mCenter.getInhomX();
             centerY = mCenter.getInhomY();

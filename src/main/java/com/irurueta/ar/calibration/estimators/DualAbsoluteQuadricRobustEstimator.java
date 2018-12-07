@@ -155,8 +155,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws IllegalArgumentException if not enough cameras are provided
      * for default settings. Hence, at least 2 cameras must be provided.
      */
-    public DualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras) 
-            throws IllegalArgumentException {
+    public DualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras) {
         this();
         internalSetCameras(cameras);
     }
@@ -173,8 +172,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
 
      */
     public DualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(listener);
         internalSetCameras(cameras);
     }
@@ -324,7 +322,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * close to zero, as it might produce numerical instabilities.
      */
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -405,7 +403,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setDeterminantThreshold(double determinantThreshold) 
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -473,8 +471,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -507,8 +504,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimator
      * is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    public void setConfidence(double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -537,8 +533,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -564,8 +559,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws IllegalArgumentException if list is null.
      * @throws LockedException if estimator is locked.
      */
-    public final void setCameras(List<PinholeCamera> cameras) 
-            throws IllegalArgumentException, LockedException {
+    public final void setCameras(List<PinholeCamera> cameras) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -645,8 +639,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than minimum required number of cameras.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException { }
+    public void setQualityScores(double[] qualityScores) throws LockedException { }
     
     /**
      * Estimates the Dual Absolute Quadric using provided cameras.
@@ -703,7 +696,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      */
     public static DualAbsoluteQuadricRobustEstimator create(
             List<PinholeCamera> cameras, double[] qualityScores,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case MSAC:
                 return new MSACDualAbsoluteQuadricRobustEstimator(cameras);
@@ -732,8 +725,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * short.
      */
     public static DualAbsoluteQuadricRobustEstimator create(
-            List<PinholeCamera> cameras, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, RobustEstimatorMethod method) {
         switch (method) {
             case MSAC:
                 return new MSACDualAbsoluteQuadricRobustEstimator(cameras);
@@ -767,8 +759,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * scores don't have the same size or size is too short.
      */
     public static DualAbsoluteQuadricRobustEstimator create(
-            List<PinholeCamera> cameras, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, double[] qualityScores) {
         return create(cameras, qualityScores, DEFAULT_ROBUST_METHOD);
     }
     
@@ -781,7 +772,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * short.
      */
     public static DualAbsoluteQuadricRobustEstimator create(
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         return create(cameras, DEFAULT_ROBUST_METHOD);
     }
     
@@ -1017,8 +1008,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * @throws IllegalArgumentException if provided list of cameras is null
      * or too small.
      */
-    private void internalSetCameras(List<PinholeCamera> cameras) 
-            throws IllegalArgumentException {
+    private void internalSetCameras(List<PinholeCamera> cameras) {
         if(cameras == null || 
                 cameras.size() < getMinNumberOfRequiredCameras()) {
             throw new IllegalArgumentException();

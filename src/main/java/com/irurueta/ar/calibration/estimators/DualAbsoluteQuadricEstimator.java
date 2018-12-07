@@ -222,8 +222,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws IllegalArgumentException if list of cameras is null or invalid
      * for default constraints.
      */
-    public DualAbsoluteQuadricEstimator(List<PinholeCamera> cameras) 
-            throws IllegalArgumentException {
+    public DualAbsoluteQuadricEstimator(List<PinholeCamera> cameras) {
         this();
         try {
             setCameras(cameras);
@@ -240,8 +239,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * for default contraints.
      */
     public DualAbsoluteQuadricEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricEstimatorListener listener) {
         this(cameras);
         mListener = listener;
     }
@@ -390,7 +388,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * close to zero, as it might produce numerical instabilities.
      */
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -474,7 +472,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setDeterminantThreshold(double determinantThreshold) 
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -528,8 +526,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws IllegalArgumentException if list is null.
      * @throws LockedException if estimator is locked.
      */
-    public final void setCameras(List<PinholeCamera> cameras) 
-            throws IllegalArgumentException, LockedException {
+    public final void setCameras(List<PinholeCamera> cameras) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -683,7 +680,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * for default constraints.
      */
     public static DualAbsoluteQuadricEstimator create(
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         return create(cameras, DEFAULT_ESTIMATOR_TYPE);
     }
     
@@ -700,8 +697,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      */
     public static DualAbsoluteQuadricEstimator create(
             List<PinholeCamera> cameras, 
-            DualAbsoluteQuadricEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricEstimatorListener listener) {
         return create(cameras, listener, DEFAULT_ESTIMATOR_TYPE);
     }
     
@@ -750,8 +746,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * for default constraints.
      */
     public static DualAbsoluteQuadricEstimator create(
-            List<PinholeCamera> cameras, DualAbsoluteQuadricEstimatorType type)
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, DualAbsoluteQuadricEstimatorType type) {
         switch (type) {
             case WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
                 return new WeightedDualAbsoluteQuadricEstimator(cameras);
@@ -776,8 +771,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     public static DualAbsoluteQuadricEstimator create(
             List<PinholeCamera> cameras, 
             DualAbsoluteQuadricEstimatorListener listener,
-            DualAbsoluteQuadricEstimatorType type) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricEstimatorType type) {
         switch (type) {
             case WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
                 return new WeightedDualAbsoluteQuadricEstimator(cameras, 
@@ -1007,7 +1001,8 @@ public abstract class DualAbsoluteQuadricEstimator {
             if (roots != null) {
                 //pick best solution (closest real root) = evaluation closest to 
                 //zero
-                double polyEval, bestPolyEval = Double.MAX_VALUE;
+                double polyEval;
+                double bestPolyEval = Double.MAX_VALUE;
                 for (Complex root : roots) {
                     double real = root.getReal();
                     polyEval = Math.abs(poly.evaluate(real));
@@ -1036,7 +1031,8 @@ public abstract class DualAbsoluteQuadricEstimator {
                     throw new DualAbsoluteQuadricEstimatorException();
                 }
                 
-                double polyEval, bestPolyEval = Double.MAX_VALUE;
+                double polyEval;
+                double bestPolyEval = Double.MAX_VALUE;
                 for (double extremum : extrema) {
                     polyEval = Math.abs(poly.evaluate(extremum));
                     if (polyEval < bestPolyEval) {

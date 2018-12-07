@@ -186,8 +186,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if not enough homographies are provided
      * for default settings. Hence, at least 1 homography must be provided.
      */
-    public ImageOfAbsoluteConicEstimator(List<Transformation2D> homographies)
-            throws IllegalArgumentException {
+    public ImageOfAbsoluteConicEstimator(List<Transformation2D> homographies) {
         this();
         internalSetHomographies(homographies);
     }
@@ -203,8 +202,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * for default settings. Hence, at least 1 homography must be provided.
      */
     public ImageOfAbsoluteConicEstimator(List<Transformation2D> homographies,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicEstimatorListener listener) {
         this(listener);
         internalSetHomographies(homographies);
     }
@@ -353,8 +351,9 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if focal distance aspect ratio is too 
      * close to zero, as it might produce numerical instabilities.
      */
+    @SuppressWarnings("Duplicates")
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -413,7 +412,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * contain enough elements to estimate the IAC using current settings.
      */
     public void setHomographies(List<Transformation2D> homographies)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -515,8 +514,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * for default IAC estimation constraints.
      */
     public static ImageOfAbsoluteConicEstimator create(
-            List<Transformation2D> homographies) 
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies) {
         return create(homographies, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -534,8 +532,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */    
     public static ImageOfAbsoluteConicEstimator create(
             List<Transformation2D> homographies,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicEstimatorListener listener) {
         return create(homographies, listener, DEFAULT_ESTIMATOR_TYPE);
     }
     
@@ -589,8 +586,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */            
     public static ImageOfAbsoluteConicEstimator create(
             List<Transformation2D> homographies, 
-            ImageOfAbsoluteConicEstimatorType type) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicEstimatorType type) {
         switch (type) {
             case WEIGHTED_IAC_ESTIMATOR:
                 double[] weights = new double[homographies.size()];
@@ -619,8 +615,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
     public static ImageOfAbsoluteConicEstimator create(
             List<Transformation2D> homographies,
             ImageOfAbsoluteConicEstimatorListener listener,
-            ImageOfAbsoluteConicEstimatorType type) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicEstimatorType type) {
         switch (type) {
             case WEIGHTED_IAC_ESTIMATOR:
                 double[] weights = new double[homographies.size()];
@@ -642,8 +637,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * contain enough elements to estimate the DIAC using current settings.
      */
     protected final void internalSetHomographies(
-            List<Transformation2D> homographies)
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies) {
         if (homographies == null ||
                 homographies.size() < getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
