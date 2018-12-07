@@ -61,64 +61,63 @@ public class PositionPredictor {
     public static void predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double ax, double ay, double az,
             double dt, InhomogeneousPoint3D result, Matrix jacobianR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L66" title="All 4 branches covered.">        if(jacobianR != null &amp;&amp; (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
-<span class="fc" id="L68">            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L65" title="All 4 branches covered.">        if(jacobianR != null &amp;&amp; (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
+<span class="fc" id="L67">            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);</span>
         }
-<span class="fc bfc" id="L70" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
-<span class="fc" id="L72">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L69" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L71">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt speed must be 3x3&quot;);
         }
-<span class="fc bfc" id="L75" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
-<span class="fc" id="L77">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L74" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L76">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt acceleration must be 3x3&quot;);
         }
         
-<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (jacobianR != null) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (jacobianR != null) {</span>
             //set to the identity
-<span class="fc" id="L83">            jacobianR.initialize(0.0);</span>
-<span class="fc" id="L84">            jacobianR.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L85">            jacobianR.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L86">            jacobianR.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L82">            jacobianR.initialize(0.0);</span>
+<span class="fc" id="L83">            jacobianR.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L84">            jacobianR.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L85">            jacobianR.setElementAt(2, 2, 1.0);</span>
         }
-<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (jacobianV != null) {</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (jacobianV != null) {</span>
             //identity multiplied by dt
-<span class="fc" id="L90">            jacobianV.initialize(0.0);</span>
-<span class="fc" id="L91">            jacobianV.setElementAt(0, 0, dt);</span>
-<span class="fc" id="L92">            jacobianV.setElementAt(1, 1, dt);</span>
-<span class="fc" id="L93">            jacobianV.setElementAt(2, 2, dt);</span>
+<span class="fc" id="L89">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L90">            jacobianV.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L91">            jacobianV.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L92">            jacobianV.setElementAt(2, 2, dt);</span>
         }
         
         
-<span class="pc bpc" id="L97" title="1 of 6 branches missed.">        if(ax == 0.0 &amp;&amp; ay == 0.0 &amp;&amp; az == 0.0) {</span>
-<span class="fc" id="L98">            result.setCoordinates(</span>
-<span class="fc" id="L99">                    r.getInhomX() + vx * dt, </span>
-<span class="fc" id="L100">                    r.getInhomY() + vy * dt, </span>
-<span class="fc" id="L101">                    r.getInhomZ() + vz * dt);</span>
+<span class="pc bpc" id="L96" title="1 of 6 branches missed.">        if(ax == 0.0 &amp;&amp; ay == 0.0 &amp;&amp; az == 0.0) {</span>
+<span class="fc" id="L97">            result.setCoordinates(</span>
+<span class="fc" id="L98">                    r.getInhomX() + vx * dt, </span>
+<span class="fc" id="L99">                    r.getInhomY() + vy * dt, </span>
+<span class="fc" id="L100">                    r.getInhomZ() + vz * dt);</span>
             
-<span class="fc bfc" id="L103" title="All 2 branches covered.">            if(jacobianA != null) {</span>
-<span class="fc" id="L104">                jacobianA.initialize(0.0);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if(jacobianA != null) {</span>
+<span class="fc" id="L103">                jacobianA.initialize(0.0);</span>
             }
         } else {
-<span class="fc" id="L107">            result.setCoordinates(</span>
-<span class="fc" id="L108">                    r.getInhomX() + vx * dt + 0.5 * ax * dt * dt, </span>
-<span class="fc" id="L109">                    r.getInhomY() + vy * dt + 0.5 * ay * dt * dt, </span>
-<span class="fc" id="L110">                    r.getInhomZ() + vz * dt + 0.5 * az * dt * dt);</span>
+<span class="fc" id="L106">            result.setCoordinates(</span>
+<span class="fc" id="L107">                    r.getInhomX() + vx * dt + 0.5 * ax * dt * dt, </span>
+<span class="fc" id="L108">                    r.getInhomY() + vy * dt + 0.5 * ay * dt * dt, </span>
+<span class="fc" id="L109">                    r.getInhomZ() + vz * dt + 0.5 * az * dt * dt);</span>
             
-<span class="fc bfc" id="L112" title="All 2 branches covered.">            if(jacobianA != null) {</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">            if(jacobianA != null) {</span>
                 //identity multiplied by 0.5*dt^2
-<span class="fc" id="L114">                double value = 0.5 * dt * dt;</span>
-<span class="fc" id="L115">                jacobianA.initialize(0.0);</span>
-<span class="fc" id="L116">                jacobianA.setElementAt(0, 0, value);</span>
-<span class="fc" id="L117">                jacobianA.setElementAt(1, 1, value);</span>
-<span class="fc" id="L118">                jacobianA.setElementAt(2, 2, value);</span>
+<span class="fc" id="L113">                double value = 0.5 * dt * dt;</span>
+<span class="fc" id="L114">                jacobianA.initialize(0.0);</span>
+<span class="fc" id="L115">                jacobianA.setElementAt(0, 0, value);</span>
+<span class="fc" id="L116">                jacobianA.setElementAt(1, 1, value);</span>
+<span class="fc" id="L117">                jacobianA.setElementAt(2, 2, value);</span>
             }
         }
-<span class="fc" id="L121">    }</span>
+<span class="fc" id="L120">    }</span>
     
     /**
      * Predicts the updated position.
@@ -136,8 +135,8 @@ public class PositionPredictor {
     public static void predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double ax, double ay, double az,
             double dt, InhomogeneousPoint3D result) {
-<span class="fc" id="L139">        predict(r, vx, vy, vz, ax, ay, az, dt, result, null, null, null);</span>
-<span class="fc" id="L140">    }</span>
+<span class="fc" id="L138">        predict(r, vx, vy, vz, ax, ay, az, dt, result, null, null, null);</span>
+<span class="fc" id="L139">    }</span>
     
     /**
      * Predicts the updated position.
@@ -157,13 +156,14 @@ public class PositionPredictor {
      */
     public static void predict(InhomogeneousPoint3D r, double[] v, 
             double[] a, double dt, InhomogeneousPoint3D result, 
-            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L162" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L163">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+            //v must have length 3
+<span class="fc" id="L162">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
-<span class="fc" id="L166">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
+            //a must have length 3
+<span class="fc" id="L166">            throw new IllegalArgumentException();</span>
         }
 <span class="fc" id="L168">        predict(r, v[0], v[1], v[2], a[0], a[1], a[2], dt, result,</span>
                 jacobianR, jacobianV, jacobianA);
@@ -203,7 +203,7 @@ public class PositionPredictor {
     public static void predict(InhomogeneousPoint3D r,
             double vx, double vy, double vz, double dt, 
             InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianV, 
-            Matrix jacobianA) throws IllegalArgumentException {
+            Matrix jacobianA) {
 <span class="fc" id="L207">        predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt, result, jacobianR, jacobianV, </span>
                 jacobianA);
 <span class="fc" id="L209">    }</span>
@@ -240,14 +240,13 @@ public class PositionPredictor {
      */
     public static void predict(InhomogeneousPoint3D r,
             double[] v, double dt, InhomogeneousPoint3D result, 
-            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L245" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L246">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+            Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L245">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
         }
-<span class="fc" id="L248">        predict(r, v[0], v[1], v[2], dt, result, jacobianR, jacobianV, </span>
+<span class="fc" id="L247">        predict(r, v[0], v[1], v[2], dt, result, jacobianR, jacobianV, </span>
                 jacobianA);
-<span class="fc" id="L250">    }</span>
+<span class="fc" id="L249">    }</span>
     
     /**
      * Predicts the updated position assuming no acceleration.
@@ -261,10 +260,9 @@ public class PositionPredictor {
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
     public static void predict(InhomogeneousPoint3D r,
-            double[] v, double dt, InhomogeneousPoint3D result) 
-            throws IllegalArgumentException {
-<span class="fc" id="L266">        predict(r, v, dt, result, null, null, null);</span>
-<span class="fc" id="L267">    }</span>
+            double[] v, double dt, InhomogeneousPoint3D result) {
+<span class="fc" id="L264">        predict(r, v, dt, result, null, null, null);</span>
+<span class="fc" id="L265">    }</span>
     
     /**
      * Predicts the updated position 
@@ -286,12 +284,11 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double ax, double ay, double az, 
-            double dt, Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc" id="L291">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L292">        predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV, </span>
+            double dt, Matrix jacobianR, Matrix jacobianV, Matrix jacobianA) {
+<span class="fc" id="L288">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L289">        predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV, </span>
                 jacobianA);
-<span class="fc" id="L294">        return result;</span>
+<span class="fc" id="L291">        return result;</span>
     }
     
     /**
@@ -310,9 +307,9 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double ax, double ay, double az, 
             double dt) {
-<span class="fc" id="L313">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L314">        predict(r, vx, vy, vz, ax, ay, az, dt, result);</span>
-<span class="fc" id="L315">        return result;</span>
+<span class="fc" id="L310">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L311">        predict(r, vx, vy, vz, ax, ay, az, dt, result);</span>
+<span class="fc" id="L312">        return result;</span>
     }
     
     /**
@@ -333,11 +330,10 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double[] v, double[] a, double dt, Matrix jacobianR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc" id="L338">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L339">        predict(r, v, a, dt, result, jacobianR, jacobianV, jacobianA);</span>
-<span class="fc" id="L340">        return result;</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc" id="L334">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L335">        predict(r, v, a, dt, result, jacobianR, jacobianV, jacobianA);</span>
+<span class="fc" id="L336">        return result;</span>
     }
     
     /**
@@ -353,9 +349,9 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double[] v, double[] a, double dt) {
-<span class="fc" id="L356">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L357">        predict(r, v, a, dt, result);</span>
-<span class="fc" id="L358">        return result;</span>
+<span class="fc" id="L352">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L353">        predict(r, v, a, dt, result);</span>
+<span class="fc" id="L354">        return result;</span>
     }
     
     /**
@@ -375,11 +371,10 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double dt, Matrix jacobianR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc" id="L380">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L381">        predict(r, vx, vy, vz, dt, result, jacobianR, jacobianV, jacobianA);</span>
-<span class="fc" id="L382">        return result;</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc" id="L375">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L376">        predict(r, vx, vy, vz, dt, result, jacobianR, jacobianV, jacobianA);</span>
+<span class="fc" id="L377">        return result;</span>
     }
     
     /**
@@ -394,9 +389,9 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double vx, double vy, double vz, double dt) {
-<span class="fc" id="L397">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L398">        predict(r, vx, vy, vz, dt, result);</span>
-<span class="fc" id="L399">        return result;</span>
+<span class="fc" id="L392">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L393">        predict(r, vx, vy, vz, dt, result);</span>
+<span class="fc" id="L394">        return result;</span>
     }
     
     /**
@@ -415,10 +410,10 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r, 
             double[] v, double dt, Matrix jacobianR, Matrix jacobianV, 
-            Matrix jacobianA) throws IllegalArgumentException {
-<span class="fc" id="L419">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L420">        predict(r, v, dt, result, jacobianR, jacobianV, jacobianA);</span>
-<span class="fc" id="L421">        return result;</span>
+            Matrix jacobianA) {
+<span class="fc" id="L414">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L415">        predict(r, v, dt, result, jacobianR, jacobianV, jacobianA);</span>
+<span class="fc" id="L416">        return result;</span>
     }
     
     /**
@@ -432,10 +427,10 @@ public class PositionPredictor {
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;rpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
     public static InhomogeneousPoint3D predict(InhomogeneousPoint3D r,
-            double[] v, double dt) throws IllegalArgumentException {
-<span class="fc" id="L436">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L437">        predict(r, v, dt, result);</span>
-<span class="fc" id="L438">        return result;</span>
+            double[] v, double dt) {
+<span class="fc" id="L431">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L432">        predict(r, v, dt, result);</span>
+<span class="fc" id="L433">        return result;</span>
     }
        
     /**
@@ -464,74 +459,73 @@ public class PositionPredictor {
             double drx, double dry, double drz, double vx, double vy, double vz,
             double ax, double ay, double az, double dt, 
             InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianDR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L469" title="All 4 branches covered.">        if(jacobianR != null &amp;&amp; (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L470" title="1 of 2 branches missed.">                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
-<span class="fc" id="L471">            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L463" title="All 4 branches covered.">        if(jacobianR != null &amp;&amp; (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L464" title="1 of 2 branches missed.">                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
+<span class="fc" id="L465">            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);</span>
         }
-<span class="fc bfc" id="L473" title="All 4 branches covered.">        if(jacobianDR != null &amp;&amp; (jacobianDR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L474" title="1 of 2 branches missed.">                jacobianDR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
-<span class="fc" id="L475">            throw new IllegalArgumentException(&quot;jacobian wrt dr must be 3x3&quot;);</span>
+<span class="fc bfc" id="L467" title="All 4 branches covered.">        if(jacobianDR != null &amp;&amp; (jacobianDR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L468" title="1 of 2 branches missed.">                jacobianDR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {</span>
+<span class="fc" id="L469">            throw new IllegalArgumentException(&quot;jacobian wrt dr must be 3x3&quot;);</span>
         }
-<span class="fc bfc" id="L477" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L478" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
-<span class="fc" id="L479">            throw new IllegalArgumentException(&quot;jacobian wrt speed must be 3x3&quot;);</span>
+<span class="fc bfc" id="L471" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L472" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L473">            throw new IllegalArgumentException(&quot;jacobian wrt speed must be 3x3&quot;);</span>
         }
-<span class="fc bfc" id="L481" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
-<span class="pc bpc" id="L482" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
-<span class="fc" id="L483">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L475" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L476" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L477">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt acceleration must be 3x3&quot;);
         }
         
-<span class="fc bfc" id="L487" title="All 2 branches covered.">        if(jacobianR != null) {</span>
+<span class="fc bfc" id="L481" title="All 2 branches covered.">        if(jacobianR != null) {</span>
             //set to identity
-<span class="fc" id="L489">            jacobianR.initialize(0.0);</span>
-<span class="fc" id="L490">            jacobianR.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L491">            jacobianR.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L492">            jacobianR.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L483">            jacobianR.initialize(0.0);</span>
+<span class="fc" id="L484">            jacobianR.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L485">            jacobianR.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L486">            jacobianR.setElementAt(2, 2, 1.0);</span>
         }
-<span class="fc bfc" id="L494" title="All 2 branches covered.">        if(jacobianDR != null) {</span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">        if(jacobianDR != null) {</span>
             //set to identity
-<span class="fc" id="L496">            jacobianDR.initialize(0.0);</span>
-<span class="fc" id="L497">            jacobianDR.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L498">            jacobianDR.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L499">            jacobianDR.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L490">            jacobianDR.initialize(0.0);</span>
+<span class="fc" id="L491">            jacobianDR.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L492">            jacobianDR.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L493">            jacobianDR.setElementAt(2, 2, 1.0);</span>
         }
-<span class="fc bfc" id="L501" title="All 2 branches covered.">        if(jacobianV != null) {</span>
+<span class="fc bfc" id="L495" title="All 2 branches covered.">        if(jacobianV != null) {</span>
             //identity multiplied by dt
-<span class="fc" id="L503">            jacobianV.initialize(0.0);</span>
-<span class="fc" id="L504">            jacobianV.setElementAt(0, 0, dt);</span>
-<span class="fc" id="L505">            jacobianV.setElementAt(1, 1, dt);</span>
-<span class="fc" id="L506">            jacobianV.setElementAt(2, 2, dt);</span>
+<span class="fc" id="L497">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L498">            jacobianV.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L499">            jacobianV.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L500">            jacobianV.setElementAt(2, 2, dt);</span>
         }
         
         
-<span class="pc bpc" id="L510" title="2 of 6 branches missed.">        if(ax == 0.0 &amp;&amp; ay == 0.0 &amp;&amp; az == 0.0) {</span>
-<span class="fc" id="L511">            result.setCoordinates(</span>
-<span class="fc" id="L512">                    r.getInhomX() + drx + vx * dt, </span>
-<span class="fc" id="L513">                    r.getInhomY() + dry + vy * dt, </span>
-<span class="fc" id="L514">                    r.getInhomZ() + drz + vz * dt);</span>
+<span class="pc bpc" id="L504" title="2 of 6 branches missed.">        if(ax == 0.0 &amp;&amp; ay == 0.0 &amp;&amp; az == 0.0) {</span>
+<span class="fc" id="L505">            result.setCoordinates(</span>
+<span class="fc" id="L506">                    r.getInhomX() + drx + vx * dt, </span>
+<span class="fc" id="L507">                    r.getInhomY() + dry + vy * dt, </span>
+<span class="fc" id="L508">                    r.getInhomZ() + drz + vz * dt);</span>
             
-<span class="pc bpc" id="L516" title="1 of 2 branches missed.">            if(jacobianA != null) {</span>
-<span class="nc" id="L517">                jacobianA.initialize(0.0);</span>
+<span class="pc bpc" id="L510" title="1 of 2 branches missed.">            if(jacobianA != null) {</span>
+<span class="nc" id="L511">                jacobianA.initialize(0.0);</span>
             }
         } else {
-<span class="fc" id="L520">            result.setCoordinates(</span>
-<span class="fc" id="L521">                    r.getInhomX() + drx + vx * dt + 0.5 * ax * dt * dt, </span>
-<span class="fc" id="L522">                    r.getInhomY() + dry + vy * dt + 0.5 * ay * dt * dt, </span>
-<span class="fc" id="L523">                    r.getInhomZ() + drz + vz * dt + 0.5 * az * dt * dt);</span>
+<span class="fc" id="L514">            result.setCoordinates(</span>
+<span class="fc" id="L515">                    r.getInhomX() + drx + vx * dt + 0.5 * ax * dt * dt, </span>
+<span class="fc" id="L516">                    r.getInhomY() + dry + vy * dt + 0.5 * ay * dt * dt, </span>
+<span class="fc" id="L517">                    r.getInhomZ() + drz + vz * dt + 0.5 * az * dt * dt);</span>
             
-<span class="fc bfc" id="L525" title="All 2 branches covered.">            if(jacobianA != null) {</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">            if(jacobianA != null) {</span>
                 //identity multiplied by 0.5*dt^2
-<span class="fc" id="L527">                double value = 0.5 * dt * dt;</span>
-<span class="fc" id="L528">                jacobianA.initialize(0.0);</span>
-<span class="fc" id="L529">                jacobianA.setElementAt(0, 0, value);</span>
-<span class="fc" id="L530">                jacobianA.setElementAt(1, 1, value);</span>
-<span class="fc" id="L531">                jacobianA.setElementAt(2, 2, value);</span>
+<span class="fc" id="L521">                double value = 0.5 * dt * dt;</span>
+<span class="fc" id="L522">                jacobianA.initialize(0.0);</span>
+<span class="fc" id="L523">                jacobianA.setElementAt(0, 0, value);</span>
+<span class="fc" id="L524">                jacobianA.setElementAt(1, 1, value);</span>
+<span class="fc" id="L525">                jacobianA.setElementAt(2, 2, value);</span>
             }
         }        
-<span class="fc" id="L534">    }</span>
+<span class="fc" id="L528">    }</span>
     
     /**
      * Predicts the updated position by using provided position variation,
@@ -553,9 +547,9 @@ public class PositionPredictor {
             double drx, double dry, double drz, double vx, double vy, double vz, 
             double ax, double ay, double az, double dt, 
             InhomogeneousPoint3D result) {
-<span class="fc" id="L556">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, </span>
+<span class="fc" id="L550">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, </span>
                 dt, result, null, null, null, null);
-<span class="fc" id="L558">    }</span>
+<span class="fc" id="L552">    }</span>
     
     /**
      * Predicts the updated position by using provided position variation, 
@@ -578,21 +572,20 @@ public class PositionPredictor {
     public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
             double[] dr, double[] v, double[] a, double dt, 
             InhomogeneousPoint3D result, Matrix jacobianR, Matrix jacobianDR, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L583" title="All 2 branches covered.">        if(dr.length != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {</span>
-<span class="fc" id="L584">            throw new IllegalArgumentException(&quot;dr must have length 3&quot;);</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L576" title="All 2 branches covered.">        if(dr.length != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {</span>
+<span class="fc" id="L577">            throw new IllegalArgumentException(&quot;dr must have length 3&quot;);</span>
         }
-<span class="fc bfc" id="L586" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L587">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+<span class="fc bfc" id="L579" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L580">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
         }
-<span class="fc bfc" id="L589" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
-<span class="fc" id="L590">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+<span class="fc bfc" id="L582" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L583">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
         }
-<span class="fc" id="L592">        predictWithPositionAdjustment(r, dr[0], dr[1], dr[2], </span>
+<span class="fc" id="L585">        predictWithPositionAdjustment(r, dr[0], dr[1], dr[2], </span>
                 v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianR, 
                 jacobianDR, jacobianV, jacobianA);
-<span class="fc" id="L595">    }</span>
+<span class="fc" id="L588">    }</span>
     
     /**
      * Predicts the updated position.
@@ -608,10 +601,10 @@ public class PositionPredictor {
      */
     public static void predictWithPositionAdjustment(InhomogeneousPoint3D r, 
             double[] dr, double[] v, double[] a, double dt, 
-            InhomogeneousPoint3D result) throws IllegalArgumentException {
-<span class="fc" id="L612">        predictWithPositionAdjustment(r, dr, v, a, dt, result, null, null, null,</span>
+            InhomogeneousPoint3D result) {
+<span class="fc" id="L605">        predictWithPositionAdjustment(r, dr, v, a, dt, result, null, null, null,</span>
                 null);
-<span class="fc" id="L614">    }</span>
+<span class="fc" id="L607">    }</span>
     
     /**
      * Predicts the updated position by using provided position variation, 
@@ -639,12 +632,12 @@ public class PositionPredictor {
             InhomogeneousPoint3D r, double drx, double dry, double drz,
             double vx, double vy, double vz, double ax, double ay, double az,
             double dt, Matrix jacobianR, Matrix jacobianDR, Matrix jacobianV,
-            Matrix jacobianA) throws IllegalArgumentException {
-<span class="fc" id="L643">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L644">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, </span>
+            Matrix jacobianA) {
+<span class="fc" id="L636">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L637">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, </span>
                 ay, az, dt, result, jacobianR, jacobianDR, jacobianV, 
                 jacobianA);
-<span class="fc" id="L647">        return result;</span>
+<span class="fc" id="L640">        return result;</span>
     }
     
     /**
@@ -667,10 +660,10 @@ public class PositionPredictor {
             InhomogeneousPoint3D r, double drx, double dry, double drz,
             double vx, double vy, double vz, double ax, double ay, double az,
             double dt) {
-<span class="fc" id="L670">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L671">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, </span>
+<span class="fc" id="L663">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L664">        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, </span>
                 ax, ay, az, dt, result);
-<span class="fc" id="L673">        return result;</span>
+<span class="fc" id="L666">        return result;</span>
     }
     
     /**
@@ -694,11 +687,11 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predictWithPositionAdjustment(
             InhomogeneousPoint3D r, double[] dr, double[] v, double[] a,
             double dt, Matrix jacobianR, Matrix jacobianDR, Matrix jacobianV,
-            Matrix jacobianA) throws IllegalArgumentException {
-<span class="fc" id="L698">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L699">        predictWithPositionAdjustment(r, dr, v, a, dt, result, </span>
+            Matrix jacobianA) {
+<span class="fc" id="L691">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L692">        predictWithPositionAdjustment(r, dr, v, a, dt, result, </span>
                 jacobianR, jacobianDR, jacobianV, jacobianA);
-<span class="fc" id="L701">        return result;</span>
+<span class="fc" id="L694">        return result;</span>
     }
     
     /**
@@ -715,9 +708,9 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predictWithPositionAdjustment(
             InhomogeneousPoint3D r, double[] dr, double[] v, double[] a, 
             double dt) {
-<span class="fc" id="L718">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
-<span class="fc" id="L719">        predictWithPositionAdjustment(r, dr, v, a, dt, result);</span>
-<span class="fc" id="L720">        return result;</span>
+<span class="fc" id="L711">        InhomogeneousPoint3D result = new InhomogeneousPoint3D();</span>
+<span class="fc" id="L712">        predictWithPositionAdjustment(r, dr, v, a, dt, result);</span>
+<span class="fc" id="L713">        return result;</span>
     }        
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

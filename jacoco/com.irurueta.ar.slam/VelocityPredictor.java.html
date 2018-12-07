@@ -57,41 +57,40 @@ public class VelocityPredictor {
      */
     public static void predict(double vx, double vy, double vz, 
             double ax, double ay, double az, double dt, double[] result, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        if(result.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L63">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if(result.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L62">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc bfc" id="L65" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != SPEED_COMPONENTS ||</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
-<span class="fc" id="L67">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L64" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != SPEED_COMPONENTS ||</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L66">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt velocity must be 3x3&quot;);
         }
-<span class="fc bfc" id="L70" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != SPEED_COMPONENTS ||</span>
-<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
-<span class="fc" id="L72">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L69" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != SPEED_COMPONENTS ||</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L71">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt acceleration must be 3x3&quot;);
         }
         
-<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (jacobianV != null) {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (jacobianV != null) {</span>
             //set to the identity
-<span class="fc" id="L78">            jacobianV.initialize(0.0);</span>
-<span class="fc" id="L79">            jacobianV.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L80">            jacobianV.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L81">            jacobianV.setElementAt(2, 2, 1.0);            </span>
+<span class="fc" id="L77">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L78">            jacobianV.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L79">            jacobianV.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L80">            jacobianV.setElementAt(2, 2, 1.0);            </span>
         }
         
-<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (jacobianA != null) {</span>
-<span class="fc" id="L85">            jacobianA.initialize(0.0);</span>
-<span class="fc" id="L86">            jacobianA.setElementAt(0, 0, dt);</span>
-<span class="fc" id="L87">            jacobianA.setElementAt(1, 1, dt);</span>
-<span class="fc" id="L88">            jacobianA.setElementAt(2, 2, dt);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (jacobianA != null) {</span>
+<span class="fc" id="L84">            jacobianA.initialize(0.0);</span>
+<span class="fc" id="L85">            jacobianA.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L86">            jacobianA.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L87">            jacobianA.setElementAt(2, 2, dt);</span>
         }
         
-<span class="fc" id="L91">        result[0] = vx + ax * dt;</span>
-<span class="fc" id="L92">        result[1] = vy + ay * dt;</span>
-<span class="fc" id="L93">        result[2] = vz + az * dt;</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L90">        result[0] = vx + ax * dt;</span>
+<span class="fc" id="L91">        result[1] = vy + ay * dt;</span>
+<span class="fc" id="L92">        result[2] = vz + az * dt;</span>
+<span class="fc" id="L93">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -107,10 +106,9 @@ public class VelocityPredictor {
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
     public static void predict(double vx, double vy, double vz,
-            double ax, double ay, double az, double dt, double[] result)
-            throws IllegalArgumentException {
-<span class="fc" id="L112">        predict(vx, vy, vz, ax, ay, az, dt, result, null, null);</span>
-<span class="fc" id="L113">    }</span>
+            double ax, double ay, double az, double dt, double[] result) {
+<span class="fc" id="L110">        predict(vx, vy, vz, ax, ay, az, dt, result, null, null);</span>
+<span class="fc" id="L111">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -127,17 +125,16 @@ public class VelocityPredictor {
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
     public static void predict(double[] v, double[] a, double dt, 
-            double[] result, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L132" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L133">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+            double[] result, Matrix jacobianV, Matrix jacobianA) {
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L130">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
         }
-<span class="fc bfc" id="L135" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
-<span class="fc" id="L136">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L133">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
         }
-<span class="fc" id="L138">        predict(v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianV, </span>
+<span class="fc" id="L135">        predict(v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianV, </span>
                 jacobianA);
-<span class="fc" id="L140">    }</span>
+<span class="fc" id="L137">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -151,9 +148,9 @@ public class VelocityPredictor {
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
     public static void predict(double[] v, double[] a, double dt,
-            double[] result) throws IllegalArgumentException {
-<span class="fc" id="L155">        predict(v, a, dt, result, null, null);</span>
-<span class="fc" id="L156">    }</span>
+            double[] result) {
+<span class="fc" id="L152">        predict(v, a, dt, result, null, null);</span>
+<span class="fc" id="L153">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -173,10 +170,10 @@ public class VelocityPredictor {
      */
     public static double[] predict(double vx, double vy, double vz,
             double ax, double ay, double az, double dt, Matrix jacobianV, 
-            Matrix jacobianA) throws IllegalArgumentException {
-<span class="fc" id="L177">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L178">        predict(vx, vy, vz, ax, ay, az, dt, result, jacobianV, jacobianA);</span>
-<span class="fc" id="L179">        return result;</span>
+            Matrix jacobianA) {
+<span class="fc" id="L174">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L175">        predict(vx, vy, vz, ax, ay, az, dt, result, jacobianV, jacobianA);</span>
+<span class="fc" id="L176">        return result;</span>
     }
     
     /**
@@ -193,9 +190,9 @@ public class VelocityPredictor {
      */
     public static double[] predict(double vx, double vy, double vz,
             double ax, double ay, double az, double dt) {
-<span class="fc" id="L196">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L197">        predict(vx, vy, vz, ax, ay, az, dt, result);</span>
-<span class="fc" id="L198">        return result;</span>
+<span class="fc" id="L193">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L194">        predict(vx, vy, vz, ax, ay, az, dt, result);</span>
+<span class="fc" id="L195">        return result;</span>
     }
     
     /**
@@ -213,11 +210,10 @@ public class VelocityPredictor {
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
     public static double[] predict(double[] v, double[] a, double dt,
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc" id="L218">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L219">        predict(v, a, dt, result, jacobianV, jacobianA);</span>
-<span class="fc" id="L220">        return result;</span>
+            Matrix jacobianV, Matrix jacobianA) {
+<span class="fc" id="L214">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L215">        predict(v, a, dt, result, jacobianV, jacobianA);</span>
+<span class="fc" id="L216">        return result;</span>
     }
     
     /**
@@ -231,11 +227,10 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if a or v do not have length 3.
      * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
      */
-    public static double[] predict(double[] v, double[] a, double dt) 
-            throws IllegalArgumentException {
-<span class="fc" id="L236">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L237">        predict(v, a, dt, result);</span>
-<span class="fc" id="L238">        return result;</span>
+    public static double[] predict(double[] v, double[] a, double dt) {
+<span class="fc" id="L231">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L232">        predict(v, a, dt, result);</span>
+<span class="fc" id="L233">        return result;</span>
     }        
     
     /**
@@ -261,52 +256,51 @@ public class VelocityPredictor {
     public static void predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz,
             double ax, double ay, double az, double dt, double[] result,
-            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L266" title="All 2 branches covered.">        if(result.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L267">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA) {
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        if(result.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L261">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
         }
-<span class="fc bfc" id="L269" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != SPEED_COMPONENTS ||</span>
-<span class="pc bpc" id="L270" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
-<span class="fc" id="L271">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L263" title="All 4 branches covered.">        if(jacobianV != null &amp;&amp; (jacobianV.getRows() != SPEED_COMPONENTS ||</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">                jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L265">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt velocity must be 3x3&quot;);
         }
-<span class="fc bfc" id="L274" title="All 4 branches covered.">        if(jacobianDV != null &amp;&amp; (jacobianDV.getRows() != SPEED_COMPONENTS ||</span>
-<span class="pc bpc" id="L275" title="1 of 2 branches missed.">                jacobianDV.getColumns() != SPEED_COMPONENTS)) {</span>
-<span class="fc" id="L276">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L268" title="All 4 branches covered.">        if(jacobianDV != null &amp;&amp; (jacobianDV.getRows() != SPEED_COMPONENTS ||</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">                jacobianDV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L270">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt velocity variation must be 3x3&quot;);
         }
-<span class="fc bfc" id="L279" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != SPEED_COMPONENTS ||</span>
-<span class="pc bpc" id="L280" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
-<span class="fc" id="L281">            throw new IllegalArgumentException(</span>
+<span class="fc bfc" id="L273" title="All 4 branches covered.">        if(jacobianA != null &amp;&amp; (jacobianA.getRows() != SPEED_COMPONENTS ||</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L275">            throw new IllegalArgumentException(</span>
                     &quot;jacobian wrt acceleration must be 3x3&quot;);
         }
         
-<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (jacobianV != null) {</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (jacobianV != null) {</span>
             //set to the identity
-<span class="fc" id="L287">            jacobianV.initialize(0.0);</span>
-<span class="fc" id="L288">            jacobianV.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L289">            jacobianV.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L290">            jacobianV.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L281">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L282">            jacobianV.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L283">            jacobianV.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L284">            jacobianV.setElementAt(2, 2, 1.0);</span>
         }
-<span class="fc bfc" id="L292" title="All 2 branches covered.">        if (jacobianDV != null) {</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (jacobianDV != null) {</span>
             //set to the identity
-<span class="fc" id="L294">            jacobianDV.initialize(0.0);</span>
-<span class="fc" id="L295">            jacobianDV.setElementAt(0, 0, 1.0);</span>
-<span class="fc" id="L296">            jacobianDV.setElementAt(1, 1, 1.0);</span>
-<span class="fc" id="L297">            jacobianDV.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L288">            jacobianDV.initialize(0.0);</span>
+<span class="fc" id="L289">            jacobianDV.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L290">            jacobianDV.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L291">            jacobianDV.setElementAt(2, 2, 1.0);</span>
         }
-<span class="fc bfc" id="L299" title="All 2 branches covered.">        if (jacobianA != null) {</span>
-<span class="fc" id="L300">            jacobianA.initialize(0.0);</span>
-<span class="fc" id="L301">            jacobianA.setElementAt(0, 0, dt);</span>
-<span class="fc" id="L302">            jacobianA.setElementAt(1, 1, dt);</span>
-<span class="fc" id="L303">            jacobianA.setElementAt(2, 2, dt);            </span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">        if (jacobianA != null) {</span>
+<span class="fc" id="L294">            jacobianA.initialize(0.0);</span>
+<span class="fc" id="L295">            jacobianA.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L296">            jacobianA.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L297">            jacobianA.setElementAt(2, 2, dt);            </span>
         }
         
-<span class="fc" id="L306">        result[0] = vx + dvx + ax * dt;</span>
-<span class="fc" id="L307">        result[1] = vy + dvy + ay * dt;</span>
-<span class="fc" id="L308">        result[2] = vz + dvz + az * dt;</span>
-<span class="fc" id="L309">    }</span>
+<span class="fc" id="L300">        result[0] = vx + dvx + ax * dt;</span>
+<span class="fc" id="L301">        result[1] = vy + dvy + ay * dt;</span>
+<span class="fc" id="L302">        result[2] = vz + dvz + az * dt;</span>
+<span class="fc" id="L303">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -326,11 +320,10 @@ public class VelocityPredictor {
      */
     public static void predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz,
-            double ax, double ay, double az, double dt, double[] result)
-            throws IllegalArgumentException {
-<span class="fc" id="L331">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,</span>
+            double ax, double ay, double az, double dt, double[] result) {
+<span class="fc" id="L324">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,</span>
                 az, dt, result, null, null, null);
-<span class="fc" id="L333">    }</span>
+<span class="fc" id="L326">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -351,21 +344,20 @@ public class VelocityPredictor {
      */
     public static void predictWithVelocityAdjustment(double[] v,
             double[] dv, double[] a, double dt, double[] result, 
-            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L356" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L357">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA) {
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if(v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L349">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
         }
-<span class="fc bfc" id="L359" title="All 2 branches covered.">        if(dv.length != SPEED_COMPONENTS) {</span>
-<span class="fc" id="L360">            throw new IllegalArgumentException(&quot;dv must have length 3&quot;);</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if(dv.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L352">            throw new IllegalArgumentException(&quot;dv must have length 3&quot;);</span>
         }        
-<span class="fc bfc" id="L362" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
-<span class="fc" id="L363">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        if(a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L355">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
         }        
-<span class="fc" id="L365">        predictWithVelocityAdjustment(v[0], v[1], v[2], dv[0], dv[1], </span>
+<span class="fc" id="L357">        predictWithVelocityAdjustment(v[0], v[1], v[2], dv[0], dv[1], </span>
                 dv[2], a[0], a[1], a[2], dt, result, jacobianV, jacobianDV, 
                 jacobianA);
-<span class="fc" id="L368">    }</span>
+<span class="fc" id="L360">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -382,10 +374,9 @@ public class VelocityPredictor {
      * 3.
      */
     public static void predictWithVelocityAdjustment(double[] v,
-            double[] dv, double[] a, double dt, double[] result) 
-            throws IllegalArgumentException {
-<span class="fc" id="L387">        predictWithVelocityAdjustment(v, dv, a, dt, result, null, null, null);</span>
-<span class="fc" id="L388">    }</span>
+            double[] dv, double[] a, double dt, double[] result) {
+<span class="fc" id="L378">        predictWithVelocityAdjustment(v, dv, a, dt, result, null, null, null);</span>
+<span class="fc" id="L379">    }</span>
     
     /**
      * Predicts the updated velocity.
@@ -409,12 +400,11 @@ public class VelocityPredictor {
     public static double[] predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz, double ax,
             double ay, double az, double dt, Matrix jacobianV, 
-            Matrix jacobianDV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc" id="L414">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L415">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, </span>
+            Matrix jacobianDV, Matrix jacobianA) {
+<span class="fc" id="L404">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L405">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, </span>
                 az, dt, result, jacobianV, jacobianDV, jacobianA);
-<span class="fc" id="L417">        return result;</span>
+<span class="fc" id="L407">        return result;</span>
     }
     
     /**
@@ -434,10 +424,10 @@ public class VelocityPredictor {
     public static double[] predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz, double ax,
             double ay, double az, double dt) {
-<span class="fc" id="L437">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L438">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,</span>
+<span class="fc" id="L427">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L428">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,</span>
                 az, dt, result);
-<span class="fc" id="L440">        return result;</span>
+<span class="fc" id="L430">        return result;</span>
     }
     
     /**
@@ -458,12 +448,11 @@ public class VelocityPredictor {
      */
     public static double[] predictWithVelocityAdjustment(double[] v, 
             double[] dv, double[] a, double dt, Matrix jacobianV, 
-            Matrix jacobianDV, Matrix jacobianA) 
-            throws IllegalArgumentException {
-<span class="fc" id="L463">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L464">        predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV,</span>
+            Matrix jacobianDV, Matrix jacobianA) {
+<span class="fc" id="L452">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L453">        predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV,</span>
                 jacobianDV, jacobianA);
-<span class="fc" id="L466">        return result;</span>
+<span class="fc" id="L455">        return result;</span>
     }
     
     /**
@@ -479,11 +468,10 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if v, dv or a do not have length 3.
      */
     public static double[] predictWithVelocityAdjustment(double[] v, 
-            double[] dv, double[] a, double dt) 
-            throws IllegalArgumentException {
-<span class="fc" id="L484">        double[] result = new double[SPEED_COMPONENTS];</span>
-<span class="fc" id="L485">        predictWithVelocityAdjustment(v, dv, a, dt, result);</span>
-<span class="fc" id="L486">        return result;        </span>
+            double[] dv, double[] a, double dt) {
+<span class="fc" id="L472">        double[] result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L473">        predictWithVelocityAdjustment(v, dv, a, dt, result);</span>
+<span class="fc" id="L474">        return result;        </span>
     }
     
 }
