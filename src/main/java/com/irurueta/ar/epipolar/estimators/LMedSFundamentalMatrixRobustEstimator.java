@@ -248,6 +248,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * (i.e. numerical instability, no solution available, etc).
      */        
     @Override
+    @SuppressWarnings("Duplicates")
     public FundamentalMatrix estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
         if (isLocked()) {
@@ -278,6 +279,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             }
 
             @Override
+            @SuppressWarnings("Duplicates")
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List<FundamentalMatrix> solutions) {
                 
@@ -293,6 +295,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             }
 
             @Override
+            @SuppressWarnings("Duplicates")
             public double computeResidual(FundamentalMatrix currentEstimation, 
                     int i) {
                 Point2D leftPoint = mLeftPoints.get(i);

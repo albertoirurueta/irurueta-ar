@@ -809,8 +809,7 @@ public abstract class FundamentalMatrixRobustEstimator {
                         ((SevenPointsFundamentalMatrixEstimator)
                                 mFundMatrixEstimator).estimateAll();
                 solutions.addAll(matrices);
-            } else if (mFundMatrixEstimator.getMethod() ==
-                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+            } else {
                 solutions.add(mFundMatrixEstimator.estimate());
             }
         } catch (GeometryException e) {
