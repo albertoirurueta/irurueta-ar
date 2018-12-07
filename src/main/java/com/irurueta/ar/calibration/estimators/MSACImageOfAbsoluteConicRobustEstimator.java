@@ -86,8 +86,7 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      * for default settings. Hence, at least 1 homography must be provided.
      */
     public MSACImageOfAbsoluteConicRobustEstimator(
-            List<Transformation2D> homographies) 
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies) {
         super(homographies);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -104,8 +103,7 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      */
     public MSACImageOfAbsoluteConicRobustEstimator(
             List<Transformation2D> homographies, 
-            ImageOfAbsoluteConicRobustEstimatorListener listener)
-            throws IllegalArgumentException { 
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(homographies, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -134,8 +132,7 @@ public class MSACImageOfAbsoluteConicRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

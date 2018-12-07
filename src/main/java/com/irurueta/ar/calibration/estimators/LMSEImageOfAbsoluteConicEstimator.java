@@ -84,8 +84,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      * for default IAC estimation constraints.
      */
     public LMSEImageOfAbsoluteConicEstimator(
-            List<Transformation2D> homographies)
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies) {
         super(homographies);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
@@ -102,8 +101,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      */
     public LMSEImageOfAbsoluteConicEstimator(
             List<Transformation2D> homographies,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicEstimatorListener listener) {
         super(homographies, listener);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
@@ -232,7 +230,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
             for (Transformation2D homography : mHomographies) {
                 //convert homography into projective so it can be normalized
                 homography.asMatrix(h);
@@ -389,7 +393,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
             for (Transformation2D homography : mHomographies) {
                 //convert homography into projective so it can be normalized
                 homography.asMatrix(h);
@@ -540,7 +550,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
             for (Transformation2D homography : mHomographies) {
                 //convert homography into projective so it can be normalized
                 homography.asMatrix(h);
@@ -683,7 +699,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
             for (Transformation2D homography : mHomographies) {
                 //convert homography into projective so it can be normalized
                 homography.asMatrix(h);
@@ -819,7 +841,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
             for (Transformation2D homography : mHomographies) {
                 //convert homography into projective so it can be normalized
                 homography.asMatrix(h);
@@ -929,7 +957,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             //                      [B  C   E]
             //                      [D  E   F]
             //Since skewness is zero b12 = B = 0.0
-            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            
+            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);
         } catch(AlgebraException e) {
             throw new ImageOfAbsoluteConicEstimatorException(e);
         }
@@ -952,12 +980,18 @@ public class LMSEImageOfAbsoluteConicEstimator extends
         try {
             double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
             
-            double b11, b33;
+            double b11;
+            double b33;
             
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
-            double h11, h12, h21, h22, h31, h32;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
 
             if (!isLMSESolutionAllowed()) {
                 //NO LMSE

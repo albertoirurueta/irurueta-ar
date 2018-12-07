@@ -85,7 +85,7 @@ public class MSACRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public MSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -102,8 +102,7 @@ public class MSACRadialDistortionRobustEstimator extends
      */
     public MSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -120,8 +119,7 @@ public class MSACRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public MSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -141,8 +139,7 @@ public class MSACRadialDistortionRobustEstimator extends
      */
     public MSACRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }    
@@ -170,8 +167,7 @@ public class MSACRadialDistortionRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException, 
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

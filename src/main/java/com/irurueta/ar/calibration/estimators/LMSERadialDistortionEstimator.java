@@ -81,7 +81,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * the same size.
      */
     public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
@@ -99,8 +99,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     
     public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
             List<Point2D> undistortedPoints, 
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
@@ -140,8 +139,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * the same size.
      */
     public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints, Point2D distortionCenter)
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
     }
    
@@ -160,8 +158,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      */ 
     public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
     }
         
@@ -227,7 +224,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 numRows = 2 * getMinNumberOfMatchedPoints();
             }
             
-            Matrix A = new Matrix(numRows, mNumKParams);
+            Matrix aMatrix = new Matrix(numRows, mNumKParams);
             double[] b = new double[numRows];
             
             
@@ -235,23 +232,33 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
             Iterator<Point2D> iteratorUndistorted = 
                     mUndistortedPoints.iterator();
             
-            Point2D distorted, undistorted;
+            Point2D distorted;
+            Point2D undistorted;
             int counter = 0;
             
             //undistorted normalized homogeneous coordinates
-            double uNormHomX, uNormHomY, uNormHomW; 
+            double uNormHomX;
+            double uNormHomY;
+            double uNormHomW;
             //undistorted normalized inhomogeneous coordinates
-            double uNormInhomX, uNormInhomY;
+            double uNormInhomX;
+            double uNormInhomY;
             //undistorted denormalized homogeneous coordinates
-            double uDenormHomX, uDenormHomY, uDenormHomW; 
+            double uDenormHomX;
+            double uDenormHomY;
+            double uDenormHomW;
             //undistorted denormalized inhomogeneous coordinates
-            double uDenormInhomX, uDenormInhomY;
+            double uDenormInhomX;
+            double uDenormInhomY;
             //distorted inhomogeneous coordinates
-            double dInhomX, dInhomY;
-            double rowNormX, rowNormY;
+            double dInhomX;
+            double dInhomY;
+            double rowNormX;
+            double rowNormY;
             
             //radial distortion center
-            double centerX = 0.0, centerY = 0.0;
+            double centerX = 0.0;
+            double centerY = 0.0;
             if (mDistortionCenter != null) {
                 centerX = mDistortionCenter.getInhomX();
                 centerY = mDistortionCenter.getInhomY();
@@ -260,7 +267,8 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
             //radial distance of undistorted normalized (calibration independent) 
             //coordinates
             double r2; 
-            double a, value;
+            double a;
+            double value;
             
             while (iteratorDistorted.hasNext() && iteratorUndistorted.hasNext()) {
                 distorted = iteratorDistorted.next();
@@ -304,13 +312,13 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                     
                     //x coordinates
                     value = (uDenormInhomX - centerX) * a;
-                    A.setElementAt(2 * counter, i, value);
+                    aMatrix.setElementAt(2 * counter, i, value);
                     
                     rowNormX += Math.pow(value, 2.0);
                     
                     //y coordinates
                     value = (uDenormInhomY - centerY) * a;
-                    A.setElementAt(2 * counter + 1, i, value);
+                    aMatrix.setElementAt(2 * counter + 1, i, value);
                     
                     rowNormY += Math.pow(value, 2.0);
                 }
@@ -329,10 +337,10 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 
                 //normalize rows to increase accuracy
                 for (int i = 0; i < mNumKParams; i++) {
-                    A.setElementAt(2 * counter, i, 
-                            A.getElementAt(2 * counter, i) / rowNormX);
-                    A.setElementAt(2 * counter + 1, i, 
-                            A.getElementAt(2 * counter + 1, i) / rowNormY);
+                    aMatrix.setElementAt(2 * counter, i,
+                            aMatrix.getElementAt(2 * counter, i) / rowNormX);
+                    aMatrix.setElementAt(2 * counter + 1, i,
+                            aMatrix.getElementAt(2 * counter + 1, i) / rowNormY);
                 }
                 
                 b[2 * counter] /= rowNormX;
@@ -345,7 +353,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 }
             }
             
-            double[] params = Utils.solve(A, b);
+            double[] params = Utils.solve(aMatrix, b);
             
             RadialDistortion distortion = 
                     new RadialDistortion(params, mDistortionCenter, 

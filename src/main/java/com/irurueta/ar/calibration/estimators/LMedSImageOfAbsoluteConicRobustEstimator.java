@@ -97,8 +97,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * for default settings. Hence, at least 1 homography must be provided.
      */
     public LMedSImageOfAbsoluteConicRobustEstimator(
-            List<Transformation2D> homographies) 
-            throws IllegalArgumentException {
+            List<Transformation2D> homographies) {
         super(homographies);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -115,8 +114,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      */
     public LMedSImageOfAbsoluteConicRobustEstimator(
             List<Transformation2D> homographies, 
-            ImageOfAbsoluteConicRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(homographies, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -164,8 +162,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

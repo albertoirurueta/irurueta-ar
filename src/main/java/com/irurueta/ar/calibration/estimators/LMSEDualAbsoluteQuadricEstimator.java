@@ -79,8 +79,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @throws IllegalArgumentException if list of cameras is null or invalid
      * for default constraints.
      */
-    public LMSEDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras) 
-            throws IllegalArgumentException {
+    public LMSEDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras) {
         super(cameras);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
@@ -95,8 +94,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * for default constraints.
      */
     public LMSEDualAbsoluteQuadricEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricEstimatorListener listener) {
         super(cameras, listener);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }

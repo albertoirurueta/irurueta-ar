@@ -104,7 +104,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public LMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -121,8 +121,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      */
     public LMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -139,8 +138,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public LMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -160,8 +158,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      */
     public LMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }    
@@ -209,8 +206,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

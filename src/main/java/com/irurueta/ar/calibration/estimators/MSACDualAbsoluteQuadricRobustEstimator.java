@@ -80,8 +80,7 @@ public class MSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if not enough cameras are provided for
      * dfault settings. Hence, at least 2 cameras must be provided.
      */
-    public MSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras)
-            throws IllegalArgumentException {
+    public MSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras) {
         super(cameras);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -96,8 +95,7 @@ public class MSACDualAbsoluteQuadricRobustEstimator extends
      * dfault settings. Hence, at least 2 cameras must be provided.
      */
     public MSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -124,8 +122,7 @@ public class MSACDualAbsoluteQuadricRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

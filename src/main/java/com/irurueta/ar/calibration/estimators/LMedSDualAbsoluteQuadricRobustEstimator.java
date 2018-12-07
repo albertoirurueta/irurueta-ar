@@ -94,7 +94,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * for default settings. Hence, at least 2 cameras must be provided.
      */
     public LMedSDualAbsoluteQuadricRobustEstimator(
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(cameras);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -109,8 +109,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * for default settings. Hence, at least 2 cameras must be provided.
      */
     public LMedSDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -158,8 +157,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
