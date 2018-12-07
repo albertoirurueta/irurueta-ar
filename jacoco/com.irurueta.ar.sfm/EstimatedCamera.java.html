@@ -23,7 +23,7 @@ import java.io.Serializable;
 /**
  * Contains data of estimated camera.
  */
-public class EstimatedCamera implements Serializable {
+<span class="fc" id="L26">public class EstimatedCamera implements Serializable {</span>
     
     /**
      * Default quality score value.
@@ -60,17 +60,12 @@ public class EstimatedCamera implements Serializable {
     private Matrix mCovariance;
     
     /**
-     * Constructor.
-     */
-<span class="fc" id="L65">    public EstimatedCamera() { }</span>
-    
-    /**
      * Gets id to identify this instance. This is useful in case that this data
      * is stored in some sort of database and must be set externally.
      * @return id to identify this instance.
      */
     public String getId() {
-<span class="fc" id="L73">        return mId;</span>
+<span class="fc" id="L68">        return mId;</span>
     }
     
     /**
@@ -79,15 +74,15 @@ public class EstimatedCamera implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(String id) {
-<span class="fc" id="L82">        mId = id;</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L77">        mId = id;</span>
+<span class="fc" id="L78">    }</span>
 
     /**
      * Gets id of view for which camera has been estimated.
      * @return id of view for which camera has been estimated.
      */
     public int getViewId() {
-<span class="fc" id="L90">        return mViewId;</span>
+<span class="fc" id="L85">        return mViewId;</span>
     }
 
     /**
@@ -95,15 +90,15 @@ public class EstimatedCamera implements Serializable {
      * @param viewId id of view for which camera has been estimated.
      */
     public void setViewId(int viewId) {
-<span class="fc" id="L98">        mViewId = viewId;</span>
-<span class="fc" id="L99">    }</span>
+<span class="fc" id="L93">        mViewId = viewId;</span>
+<span class="fc" id="L94">    }</span>
     
     /**
      * Gets estimated camera.
      * @return estimated camera.
      */
     public PinholeCamera getCamera() {
-<span class="fc" id="L106">        return mCamera;</span>
+<span class="fc" id="L101">        return mCamera;</span>
     }
     
     /**
@@ -111,8 +106,8 @@ public class EstimatedCamera implements Serializable {
      * @param camera estimated camera.
      */
     public void setCamera(PinholeCamera camera) {
-<span class="fc" id="L114">        mCamera = camera;</span>
-<span class="fc" id="L115">    }</span>
+<span class="fc" id="L109">        mCamera = camera;</span>
+<span class="fc" id="L110">    }</span>
     
     /**
      * Gets quality score of estimated camera. The larger the value, the better 
@@ -123,7 +118,7 @@ public class EstimatedCamera implements Serializable {
      * @return quality score of estimated camera.
      */
     public double getQualityScore() {
-<span class="fc" id="L126">        return mQualityScore;</span>
+<span class="fc" id="L121">        return mQualityScore;</span>
     }
     
     /**
@@ -135,8 +130,8 @@ public class EstimatedCamera implements Serializable {
      * @param qualityScore quality score of estimated camera.
      */
     public void setQualityScore(double qualityScore) {
-<span class="fc" id="L138">        mQualityScore = qualityScore;</span>
-<span class="fc" id="L139">    }</span>
+<span class="fc" id="L133">        mQualityScore = qualityScore;</span>
+<span class="fc" id="L134">    }</span>
     
     /**
      * Gets covariance of estimated camera. This can be computed during camera
@@ -144,7 +139,7 @@ public class EstimatedCamera implements Serializable {
      * @return covariance of estimated camera.
      */
     public Matrix getCovariance() {
-<span class="fc" id="L147">        return mCovariance;</span>
+<span class="fc" id="L142">        return mCovariance;</span>
     }
     
     /**
@@ -153,7 +148,7 @@ public class EstimatedCamera implements Serializable {
      * @param covariance covariance of estimated camera.
      */
     public void setCovariance(Matrix covariance) {
-<span class="fc" id="L156">        mCovariance = covariance;</span>
-<span class="fc" id="L157">    }    </span>
+<span class="fc" id="L151">        mCovariance = covariance;</span>
+<span class="fc" id="L152">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

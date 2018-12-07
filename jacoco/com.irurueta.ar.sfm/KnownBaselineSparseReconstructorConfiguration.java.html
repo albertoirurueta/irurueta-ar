@@ -23,7 +23,7 @@ import java.io.Serializable;
  * initial baseline (separation between initial cameras) is known.
  */
 @SuppressWarnings(&quot;WeakerAccess&quot;)
-public class KnownBaselineSparseReconstructorConfiguration extends
+<span class="fc" id="L26">public class KnownBaselineSparseReconstructorConfiguration extends</span>
         BaseSparseReconstructorConfiguration&lt;KnownBaselineSparseReconstructorConfiguration&gt;
         implements Serializable {
 
@@ -42,17 +42,12 @@ public class KnownBaselineSparseReconstructorConfiguration extends
 <span class="fc" id="L42">    private double mBaseline = DEFAULT_BASELINE;</span>
 
     /**
-     * Constructor.
-     */
-<span class="fc" id="L47">    public KnownBaselineSparseReconstructorConfiguration() { }</span>
-
-    /**
      * Creates an instance of a multiple view sparse reconstructor configuration with
      * known camera baseline.
      * @return configuration instance.
      */
     public static KnownBaselineSparseReconstructorConfiguration make() {
-<span class="fc" id="L55">        return new KnownBaselineSparseReconstructorConfiguration();</span>
+<span class="fc" id="L50">        return new KnownBaselineSparseReconstructorConfiguration();</span>
     }
 
     /**
@@ -62,7 +57,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return camera baseline.
      */
     public double getBaseline() {
-<span class="fc" id="L65">        return mBaseline;</span>
+<span class="fc" id="L60">        return mBaseline;</span>
     }
 
     /**
@@ -73,8 +68,8 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return this instance so that methods can be easily chained.
      */
     public KnownBaselineSparseReconstructorConfiguration setBaseline(double baseline) {
-<span class="fc" id="L76">        mBaseline = baseline;</span>
-<span class="fc" id="L77">        return this;</span>
+<span class="fc" id="L71">        mBaseline = baseline;</span>
+<span class="fc" id="L72">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

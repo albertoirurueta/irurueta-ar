@@ -43,10 +43,9 @@ public class KnownBaselineSparseReconstructor extends
      */
     public KnownBaselineSparseReconstructor(
             KnownBaselineSparseReconstructorConfiguration configuration,
-            KnownBaselineSparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L48">        super(configuration, listener);</span>
-<span class="fc" id="L49">    }</span>
+            KnownBaselineSparseReconstructorListener listener) {
+<span class="fc" id="L47">        super(configuration, listener);</span>
+<span class="fc" id="L48">    }</span>
 
     /**
      * Constructor with default configuration.
@@ -54,10 +53,9 @@ public class KnownBaselineSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public KnownBaselineSparseReconstructor(
-            KnownBaselineSparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L59">        this(new KnownBaselineSparseReconstructorConfiguration(), listener);</span>
-<span class="fc" id="L60">    }</span>
+            KnownBaselineSparseReconstructorListener listener) {
+<span class="fc" id="L57">        this(new KnownBaselineSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L58">    }</span>
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
@@ -68,92 +66,92 @@ public class KnownBaselineSparseReconstructor extends
     @Override
     protected boolean postProcessOne(boolean isInitialPairOfViews) {
         try {
-<span class="fc" id="L71">            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();</span>
-<span class="fc" id="L72">            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L69">            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L70">            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();</span>
 
-<span class="fc" id="L74">            metricCamera1.decompose();</span>
-<span class="fc" id="L75">            metricCamera2.decompose();</span>
+<span class="fc" id="L72">            metricCamera1.decompose();</span>
+<span class="fc" id="L73">            metricCamera2.decompose();</span>
 
             double scale;
-<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (isInitialPairOfViews) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (isInitialPairOfViews) {</span>
                 //reconstruction succeeded, so we update scale of cameras and
                 //reconstructed points
-<span class="fc" id="L81">                double baseline = mConfiguration.getBaseline();</span>
+<span class="fc" id="L79">                double baseline = mConfiguration.getBaseline();</span>
 
-<span class="fc" id="L83">                Point3D center1 = metricCamera1.getCameraCenter();</span>
-<span class="fc" id="L84">                Point3D center2 = metricCamera2.getCameraCenter();</span>
+<span class="fc" id="L81">                Point3D center1 = metricCamera1.getCameraCenter();</span>
+<span class="fc" id="L82">                Point3D center2 = metricCamera2.getCameraCenter();</span>
 
-<span class="fc" id="L86">                double estimatedBaseline = center1.distanceTo(center2);</span>
+<span class="fc" id="L84">                double estimatedBaseline = center1.distanceTo(center2);</span>
 
-<span class="fc" id="L88">                scale = mCurrentScale = baseline / estimatedBaseline;</span>
-<span class="fc" id="L89">            } else {</span>
-<span class="fc" id="L90">                scale = mCurrentScale;</span>
+<span class="fc" id="L86">                scale = mCurrentScale = baseline / estimatedBaseline;</span>
+<span class="fc" id="L87">            } else {</span>
+<span class="fc" id="L88">                scale = mCurrentScale;</span>
             }
 
-<span class="fc" id="L93">            double sqrScale = scale * scale;</span>
+<span class="fc" id="L91">            double sqrScale = scale * scale;</span>
 
-<span class="fc" id="L95">            MetricTransformation3D scaleTransformation =</span>
+<span class="fc" id="L93">            MetricTransformation3D scaleTransformation =</span>
                     new MetricTransformation3D(scale);
 
             //update scale of cameras
-<span class="fc" id="L99">            PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);</span>
-<span class="fc" id="L100">            PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);</span>
+<span class="fc" id="L97">            PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);</span>
+<span class="fc" id="L98">            PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);</span>
 
-<span class="fc" id="L102">            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();</span>
-<span class="fc" id="L103">            mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);</span>
-<span class="fc" id="L104">            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());</span>
-<span class="fc" id="L105">            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());</span>
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {</span>
-<span class="nc" id="L107">                mPreviousEuclideanEstimatedCamera.setCovariance(</span>
-<span class="nc" id="L108">                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="fc" id="L100">            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L101">            mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);</span>
+<span class="fc" id="L102">            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L103">            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L105">                mPreviousEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L106">                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
             }
 
-<span class="fc" id="L111">            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();</span>
-<span class="fc" id="L112">            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);</span>
-<span class="fc" id="L113">            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());</span>
-<span class="fc" id="L114">            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());</span>
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {</span>
-<span class="nc" id="L116">                mCurrentEuclideanEstimatedCamera.setCovariance(</span>
-<span class="nc" id="L117">                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="fc" id="L109">            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L110">            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);</span>
+<span class="fc" id="L111">            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L112">            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L114">                mCurrentEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L115">                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
             }
 
             //update scale of reconstructed points
-<span class="fc" id="L121">            int numPoints = mActiveMetricReconstructedPoints.size();</span>
-<span class="fc" id="L122">            List&lt;Point3D&gt; metricReconstructedPoints3D = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L123" title="All 2 branches covered.">            for (ReconstructedPoint3D activeMetricReconstructedPoint : mActiveMetricReconstructedPoints) {</span>
-<span class="fc" id="L124">                metricReconstructedPoints3D.add(activeMetricReconstructedPoint.</span>
-<span class="fc" id="L125">                        getPoint());</span>
-<span class="fc" id="L126">            }</span>
+<span class="fc" id="L119">            int numPoints = mActiveMetricReconstructedPoints.size();</span>
+<span class="fc" id="L120">            List&lt;Point3D&gt; metricReconstructedPoints3D = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            for (ReconstructedPoint3D activeMetricReconstructedPoint : mActiveMetricReconstructedPoints) {</span>
+<span class="fc" id="L122">                metricReconstructedPoints3D.add(activeMetricReconstructedPoint.</span>
+<span class="fc" id="L123">                        getPoint());</span>
+<span class="fc" id="L124">            }</span>
 
-<span class="fc" id="L128">            List&lt;Point3D&gt; euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(</span>
+<span class="fc" id="L126">            List&lt;Point3D&gt; euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(</span>
                     metricReconstructedPoints3D);
 
             //set scaled points into result
-<span class="fc" id="L132">            mActiveEuclideanReconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L130">            mActiveEuclideanReconstructedPoints = new ArrayList&lt;&gt;();</span>
             ReconstructedPoint3D euclideanPoint;
             ReconstructedPoint3D metricPoint;
-<span class="fc bfc" id="L135" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
-<span class="fc" id="L136">                metricPoint = mActiveMetricReconstructedPoints.get(i);</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L134">                metricPoint = mActiveMetricReconstructedPoints.get(i);</span>
 
-<span class="fc" id="L138">                euclideanPoint = new ReconstructedPoint3D();</span>
-<span class="fc" id="L139">                euclideanPoint.setId(metricPoint.getId());</span>
-<span class="fc" id="L140">                euclideanPoint.setPoint(euclideanReconstructedPoints3D.get(i));</span>
-<span class="fc" id="L141">                euclideanPoint.setInlier(metricPoint.isInlier());</span>
-<span class="fc" id="L142">                euclideanPoint.setQualityScore(metricPoint.getQualityScore());</span>
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                if (metricPoint.getCovariance() != null) {</span>
-<span class="nc" id="L144">                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="fc" id="L136">                euclideanPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L137">                euclideanPoint.setId(metricPoint.getId());</span>
+<span class="fc" id="L138">                euclideanPoint.setPoint(euclideanReconstructedPoints3D.get(i));</span>
+<span class="fc" id="L139">                euclideanPoint.setInlier(metricPoint.isInlier());</span>
+<span class="fc" id="L140">                euclideanPoint.setQualityScore(metricPoint.getQualityScore());</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">                if (metricPoint.getCovariance() != null) {</span>
+<span class="nc" id="L142">                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
                 }
-<span class="fc" id="L146">                euclideanPoint.setColorData(metricPoint.getColorData());</span>
+<span class="fc" id="L144">                euclideanPoint.setColorData(metricPoint.getColorData());</span>
 
-<span class="fc" id="L148">                mActiveEuclideanReconstructedPoints.add(euclideanPoint);</span>
+<span class="fc" id="L146">                mActiveEuclideanReconstructedPoints.add(euclideanPoint);</span>
             }
 
-<span class="fc" id="L151">            return true;</span>
-<span class="nc" id="L152">        } catch (Exception e) {</span>
-<span class="nc" id="L153">            mFailed = true;</span>
-<span class="nc" id="L154">            mListener.onFail(this);</span>
+<span class="fc" id="L149">            return true;</span>
+<span class="nc" id="L150">        } catch (Exception e) {</span>
+<span class="nc" id="L151">            mFailed = true;</span>
+<span class="nc" id="L152">            mListener.onFail(this);</span>
 
-<span class="nc" id="L156">            return false;</span>
+<span class="nc" id="L154">            return false;</span>
         }
     }
 }

@@ -780,9 +780,9 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L780">                        mCurrentViewId = mViewCount;</span>
                     }
 
-<span class="fc" id="L783">                } catch (Exception e) {</span>
+<span class="nc" id="L783">                } catch (Exception e) {</span>
                     //camera estimation failed
-<span class="fc" id="L785">                    samplesRejected = true;</span>
+<span class="nc" id="L785">                    samplesRejected = true;</span>
 <span class="fc" id="L786">                }</span>
 
 <span class="fc bfc" id="L788" title="All 2 branches covered.">            } else if (mConfiguration.getUseUPnPForAdditionalCamerasEstimation()) {</span>
@@ -983,7 +983,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L983">                }</span>
             }
 
-<span class="fc bfc" id="L986" title="All 2 branches covered.">            if (!samplesRejected) {</span>
+<span class="pc bpc" id="L986" title="1 of 2 branches missed.">            if (!samplesRejected) {</span>
 <span class="fc" id="L987">                mPreviousMetricEstimatedCamera = mCurrentMetricEstimatedCamera;</span>
 
 <span class="fc" id="L989">                mCurrentMetricEstimatedCamera = new EstimatedCamera();</span>
@@ -1026,8 +1026,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
         }
 
         //noinspection unchecked
-<span class="fc" id="L1029">        mListener.onSamplesRejected((R) this, mViewCount, mPreviousViewTrackedSamples, mCurrentViewTrackedSamples);</span>
-<span class="fc" id="L1030">        return false;</span>
+<span class="nc" id="L1029">        mListener.onSamplesRejected((R) this, mViewCount, mPreviousViewTrackedSamples, mCurrentViewTrackedSamples);</span>
+<span class="nc" id="L1030">        return false;</span>
     }
 
     /**
@@ -2014,13 +2014,13 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
                         triangulatedPoint);
 <span class="fc" id="L2015">                boolean front2 = camera2.isPointInFrontOfCamera(</span>
                         triangulatedPoint);
-<span class="pc bpc" id="L2017" title="1 of 4 branches missed.">                boolean inlier = front1 &amp;&amp; front2;</span>
+<span class="fc bfc" id="L2017" title="All 4 branches covered.">                boolean inlier = front1 &amp;&amp; front2;</span>
 <span class="fc" id="L2018">                reconstructedPoint.setInlier(inlier);</span>
 
 <span class="fc" id="L2020">                mActiveMetricReconstructedPoints.add(reconstructedPoint);</span>
 
-<span class="pc bpc" id="L2022" title="1 of 2 branches missed.">                if (inlier) {</span>
-<span class="nc" id="L2023">                    mMatches.get(i).setReconstructedPoint(reconstructedPoint);</span>
+<span class="fc bfc" id="L2022" title="All 2 branches covered.">                if (inlier) {</span>
+<span class="fc" id="L2023">                    mMatches.get(i).setReconstructedPoint(reconstructedPoint);</span>
                 }
             }
 
