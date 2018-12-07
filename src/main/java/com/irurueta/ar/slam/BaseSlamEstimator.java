@@ -344,8 +344,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @param result array where position coordinates will be stored.
      * @throws IllegalArgumentException if the array does not have length 3.
      */
-    public void getStatePosition(double[] result) 
-            throws IllegalArgumentException {
+    public void getStatePosition(double[] result) {
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -399,8 +398,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @param result array where linear velocity of the device will be stored.
      * @throws IllegalArgumentException if result array does not have length 3.
      */
-    public void getStateVelocity(double[] result) 
-            throws IllegalArgumentException {
+    public void getStateVelocity(double[] result) {
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -453,8 +451,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * be stored.
      * @throws IllegalArgumentException if array does not have length 3.
      */
-    public void getStateAcceleration(double[] result) 
-            throws IllegalArgumentException {
+    public void getStateAcceleration(double[] result) {
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -514,8 +511,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 4.
      */
-    public void getStateQuaternionArray(double[] result) 
-            throws IllegalArgumentException {
+    public void getStateQuaternionArray(double[] result) {
         if (result.length != Quaternion.N_PARAMS) {
             throw new IllegalArgumentException("result must have length 4");
         }
@@ -587,8 +583,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getStateAngularSpeed(double[] result) 
-            throws IllegalArgumentException {
+    public void getStateAngularSpeed(double[] result) {
         if(result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -747,8 +742,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getAccumulatedAccelerationSample(double[] result)
-            throws IllegalArgumentException {
+    public void getAccumulatedAccelerationSample(double[] result) {
         if(result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -809,8 +803,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getAccumulatedAngularSpeedSample(double[] result)
-            throws IllegalArgumentException {
+    public void getAccumulatedAngularSpeedSample(double[] result) {
         if(result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -875,8 +868,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data) 
-            throws IllegalArgumentException {
+    public void updateAccelerometerSample(long timestamp, float[] data) {
         if(data.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException(
                     "acceleration must have length 3");
@@ -938,8 +930,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data) 
-            throws IllegalArgumentException {
+    public void updateGyroscopeSample(long timestamp, float[] data) {
         if(data.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException(
                     "angular speed must have length 3");
@@ -970,8 +961,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * 3x3.
      */
     public void correctWithPositionMeasure(double positionX, double positionY, 
-            double positionZ, Matrix positionCovariance) 
-            throws IllegalArgumentException {        
+            double positionZ, Matrix positionCovariance) {
         setPositionCovarianceMatrix(positionCovariance);
         correctWithPositionMeasure(positionX, positionY, positionZ);
     }
@@ -988,7 +978,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * 3x3 or if provided position array does not have length 3.
      */
     public void correctWithPositionMeasure(double[] position, 
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         if(position.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("position must have length 3");
         }
@@ -1007,7 +997,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * 3x3.
      */
     public void correctWithPositionMeasure(Point3D position, 
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         correctWithPositionMeasure(position.getInhomX(), position.getInhomY(),
                 position.getInhomZ(), positionCovariance);
     }
@@ -1021,8 +1011,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided covariance matrix is not 
      * 3x3.
      */
-    public abstract void setPositionCovarianceMatrix(Matrix positionCovariance)
-            throws IllegalArgumentException;    
+    public abstract void setPositionCovarianceMatrix(Matrix positionCovariance);
         
     /**
      * Gets current covariance matrix of position measures determining current
@@ -1049,8 +1038,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void correctWithPositionMeasure(double[] position) 
-            throws IllegalArgumentException {
+    public void correctWithPositionMeasure(double[] position) {
         correctWithPositionMeasure(position, null);
     }
     

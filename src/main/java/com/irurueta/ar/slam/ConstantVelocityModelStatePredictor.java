@@ -113,26 +113,30 @@ public class ConstantVelocityModelStatePredictor {
      * @see <a href="https://github.com/joansola/slamtb">constVel.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(double[] x, double[] u, double dt, 
-            double[] result, Matrix jacobianX, Matrix jacobianU)
-            throws IllegalArgumentException {
+            double[] result, Matrix jacobianX, Matrix jacobianU) {
         if(x.length != STATE_COMPONENTS) {
-            throw new IllegalArgumentException("x must have length 13");
+            //x must have length 13
+            throw new IllegalArgumentException();
         }
         if(u.length != CONTROL_COMPONENTS) {
-            throw new IllegalArgumentException("u must have length 6");
+            //u must have length 6
+            throw new IllegalArgumentException();
         }
         if(result.length != STATE_COMPONENTS) {
-            throw new IllegalArgumentException("result must have length 13");
+            //result must have length 13
+            throw new IllegalArgumentException();
         }
         if(jacobianX != null && 
                 (jacobianX.getRows() != STATE_COMPONENTS ||
                 jacobianX.getColumns() != STATE_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt x must be 13x13");
+            //jacobian wrt x must be 13x13
+            throw new IllegalArgumentException();
         }
         if(jacobianU != null && 
                 (jacobianU.getRows() != STATE_COMPONENTS ||
                 jacobianU.getColumns() != CONTROL_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt u must be 13x6");
+            //jacobian wrt u must be 13x6
+            throw new IllegalArgumentException();
         }
         
         //position
@@ -163,24 +167,24 @@ public class ConstantVelocityModelStatePredictor {
         
         try {
             //update position
-            Matrix Rr = null, Rv = null;
+            Matrix rr = null, rv = null;
             if(jacobianX != null) {
-                Rr = new Matrix(
+                rr = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                Rv = new Matrix(
+                rv = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         SPEED_COMPONENTS);
             }
-            PositionPredictor.predict(r, vx, vy, vz, dt, r, Rr, Rv, null);
+            PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
             
             //update orientation
-            Matrix Qq = null, Qw = null;
+            Matrix qq = null, qw = null;
             if(jacobianX != null) {
-                Qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
-                Qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);                
+                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
             }
-            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, Qq, Qw);
+            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
             
             //apply control signals
             vx += uvx;
@@ -216,17 +220,17 @@ public class ConstantVelocityModelStatePredictor {
                 //[0    0   eye 0]
                 //[0    0   0   eye]                
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, Rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
                
-                jacobianX.setSubmatrix(3, 3, 6, 6, Qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
                
-                jacobianX.setSubmatrix(0, 7, 2, 9, Rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
                
                 for(int i = 7; i < STATE_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
                
-                jacobianX.setSubmatrix(3, 10, 6, 12, Qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
             }
             
             if (jacobianU != null) {
@@ -260,7 +264,7 @@ public class ConstantVelocityModelStatePredictor {
      * @see <a href="https://github.com/joansola/slamtb">constVel.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(double[] x, double[] u, double dt, 
-            double[] result) throws IllegalArgumentException {
+            double[] result) {
         predict(x, u, dt, result, null, null);
     }
     
@@ -286,8 +290,7 @@ public class ConstantVelocityModelStatePredictor {
      * @see <a href="https://github.com/joansola/slamtb">constVel.m at https://github.com/joansola/slamtb</a>
      */
     public static double[] predict(double[] x, double[] u, double dt, 
-            Matrix jacobianX, Matrix jacobianU) 
-            throws IllegalArgumentException {
+            Matrix jacobianX, Matrix jacobianU) {
         double[] result = new double[STATE_COMPONENTS];
         predict(x, u, dt, result, jacobianX, jacobianU);
         return result;
@@ -312,8 +315,7 @@ public class ConstantVelocityModelStatePredictor {
      * jacobians do not have proper size.
      * @see <a href="https://github.com/joansola/slamtb">constVel.m at https://github.com/joansola/slamtb</a>
      */
-    public static double[] predict(double[] x, double[] u, double dt) 
-            throws IllegalArgumentException {
+    public static double[] predict(double[] x, double[] u, double dt) {
         double[] result = new double[STATE_COMPONENTS];
         predict(x, u, dt, result);
         return result;
@@ -343,8 +345,7 @@ public class ConstantVelocityModelStatePredictor {
      */
     public static void predictWithPositionAdjustment(
             double[] x, double[] u, double dt, double[] result, 
-            Matrix jacobianX, Matrix jacobianU) 
-            throws IllegalArgumentException {
+            Matrix jacobianX, Matrix jacobianU) {
         if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("x must have length 13");
         }
@@ -396,25 +397,27 @@ public class ConstantVelocityModelStatePredictor {
         
         try {
             //update position
-            Matrix Rr = null, Rv = null;
+            Matrix rr = null;
+            Matrix rv = null;
             if(jacobianX != null) {
-                Rr = new Matrix(
+                rr = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                Rv = new Matrix(
+                rv = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         SPEED_COMPONENTS);
             }
             PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, 
-                    vx, vy, vz, 0.0, 0.0, 0.0, dt, r, Rr, null, Rv, null);
+                    vx, vy, vz, 0.0, 0.0, 0.0, dt, r, rr, null, rv, null);
             
             //update orientation
-            Matrix Qq = null, Qw = null;
+            Matrix qq = null;
+            Matrix qw = null;
             if(jacobianX != null) {
-                Qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
-                Qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);                
+                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
             }
-            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, Qq, Qw);
+            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
             
             //apply control signals
             vx += uvx;
@@ -450,17 +453,17 @@ public class ConstantVelocityModelStatePredictor {
                 //[0    0   eye 0]
                 //[0    0   0   eye]                
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, Rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
                
-                jacobianX.setSubmatrix(3, 3, 6, 6, Qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
                
-                jacobianX.setSubmatrix(0, 7, 2, 9, Rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
                
                 for(int i = 7; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
                
-                jacobianX.setSubmatrix(3, 10, 6, 12, Qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
             }
             
             if (jacobianU != null) {
@@ -498,8 +501,7 @@ public class ConstantVelocityModelStatePredictor {
      * or result array do not have proper size.
      */
     public static void predictWithPositionAdjustment(
-            double[] x, double[] u, double dt, double[] result) 
-            throws IllegalArgumentException {
+            double[] x, double[] u, double dt, double[] result) {
         predictWithPositionAdjustment(x, u, dt, result, null, null);
     }
     
@@ -525,8 +527,7 @@ public class ConstantVelocityModelStatePredictor {
      * or jacobians do not have proper size.
      */
     public static double[] predictWithPositionAdjustment(double[] x, 
-                double[] u, double dt, Matrix jacobianX, Matrix jacobianU)
-                throws IllegalArgumentException {
+                double[] u, double dt, Matrix jacobianX, Matrix jacobianU) {
         double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAdjustment(x, u, dt, result, jacobianX, 
                 jacobianU);
@@ -553,7 +554,7 @@ public class ConstantVelocityModelStatePredictor {
      * have proper size.
      */
     public static double[] predictWithPositionAdjustment(double[] x, 
-                double[] u, double dt) throws IllegalArgumentException {
+                double[] u, double dt) {
         double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAdjustment(x, u, dt, result);
         return result;
@@ -585,7 +586,7 @@ public class ConstantVelocityModelStatePredictor {
      */
     public static void predictWithRotationAdjustment(double[] x, 
             double[] u, double dt, double[] result, Matrix jacobianX, 
-            Matrix jacobianU) throws IllegalArgumentException {
+            Matrix jacobianU) {
         if(x.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("x must have length 13");
         }
@@ -637,28 +638,31 @@ public class ConstantVelocityModelStatePredictor {
         
         try {
             //update position
-            Matrix Rr = null, Rv = null;
+            Matrix rr = null;
+            Matrix rv = null;
             if(jacobianX != null) {
-                Rr = new Matrix(
+                rr = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                Rv = new Matrix(
+                rv = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         SPEED_COMPONENTS);
             }
-            PositionPredictor.predict(r, vx, vy, vz, dt, r, Rr, Rv, null);
+            PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
 
             //update orientation
-            Matrix Qq = null, Qdq = null, Qw = null;
+            Matrix qq = null;
+            Matrix qdq = null;
+            Matrix qw = null;
             if(jacobianX != null) {
-                Qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);                
-                Qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);                
+                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
             }
             if(jacobianU != null) {
-                Qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
             }
             q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, 
-                    wx, wy, wz, dt, Qq, Qdq, Qw);
+                    wx, wy, wz, dt, qq, qdq, qw);
             
             //apply control signals
             vx += uvx;
@@ -694,24 +698,24 @@ public class ConstantVelocityModelStatePredictor {
                 //[0    0   eye 0]
                 //[0    0   0   eye]                
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, Rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
                
-                jacobianX.setSubmatrix(3, 3, 6, 6, Qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
                
-                jacobianX.setSubmatrix(0, 7, 2, 9, Rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
                
                 for(int i = 7; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
                
-                jacobianX.setSubmatrix(3, 10, 6, 12, Qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
             }
             
             if (jacobianU != null) {
                 jacobianU.initialize(0.0);
                 
                 //variation of rotation
-                jacobianU.setSubmatrix(3, 0, 6, 3, Qdq);
+                jacobianU.setSubmatrix(3, 0, 6, 3, qdq);
                 
                 //variation of linear and angular speed
                 for(int i = 7, j = Quaternion.N_PARAMS; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
@@ -745,8 +749,7 @@ public class ConstantVelocityModelStatePredictor {
      * result do not have proper length.
      */
     public static void predictWithRotationAdjustment(double[] x, 
-            double[] u, double dt, double[] result) 
-            throws IllegalArgumentException {
+            double[] u, double dt, double[] result) {
         predictWithRotationAdjustment(x, u, dt, result, null, null);
     }
     
@@ -774,8 +777,7 @@ public class ConstantVelocityModelStatePredictor {
      * or jacobians do not have proper size.
      */
     public static double[] predictWithRotationAdjustment(double[] x, 
-                double[] u, double dt, Matrix jacobianX, Matrix jacobianU)
-                throws IllegalArgumentException {
+                double[] u, double dt, Matrix jacobianX, Matrix jacobianU) {
         double[] result = new double[
                 STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithRotationAdjustment(x, u, dt, result, jacobianX, jacobianU);
@@ -804,7 +806,7 @@ public class ConstantVelocityModelStatePredictor {
      * do not have proper size.
      */
     public static double[] predictWithRotationAdjustment(double[] x, 
-                double[] u, double dt) throws IllegalArgumentException {
+                double[] u, double dt) {
         double[] result = new double[
                 STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithRotationAdjustment(x, u, dt, result);
@@ -838,7 +840,7 @@ public class ConstantVelocityModelStatePredictor {
      */
     public static void predictWithPositionAndRotationAdjustment(double[] x, 
             double[] u, double dt, double[] result, Matrix jacobianX, 
-            Matrix jacobianU) throws IllegalArgumentException {
+            Matrix jacobianU) {
         if(x.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("x must have length 13");
         }
@@ -893,29 +895,32 @@ public class ConstantVelocityModelStatePredictor {
         
         try {
             //update position
-            Matrix Rr = null, Rv = null;
+            Matrix rr = null;
+            Matrix rv = null;
             if(jacobianX != null) {
-                Rr = new Matrix(
+                rr = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                Rv = new Matrix(
+                rv = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         SPEED_COMPONENTS);
             }
             PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, 
-                    vx, vy, vz, 0.0, 0.0, 0.0, dt, r, Rr, null, Rv, null);
+                    vx, vy, vz, 0.0, 0.0, 0.0, dt, r, rr, null, rv, null);
 
             //update orientation
-            Matrix Qq = null, Qdq = null, Qw = null;
+            Matrix qq = null;
+            Matrix qdq = null;
+            Matrix qw = null;
             if(jacobianX != null) {
-                Qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);                
-                Qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);                
+                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
             }
             if(jacobianU != null) {
-                Qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
             }
             q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, 
-                    wx, wy, wz, dt, Qq, Qdq, Qw);
+                    wx, wy, wz, dt, qq, qdq, qw);
             
             //apply control signals
             vx += uvx;
@@ -951,17 +956,17 @@ public class ConstantVelocityModelStatePredictor {
                 //[0    0   eye 0]
                 //[0    0   0   eye]                
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, Rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
                
-                jacobianX.setSubmatrix(3, 3, 6, 6, Qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
                
-                jacobianX.setSubmatrix(0, 7, 2, 9, Rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
                
                 for(int i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
                
-                jacobianX.setSubmatrix(3, 10, 6, 12, Qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
             }
             
             if (jacobianU != null) {
@@ -972,7 +977,7 @@ public class ConstantVelocityModelStatePredictor {
                 }
                 
                 //variation of rotation
-                jacobianU.setSubmatrix(3, 3, 6, 6, Qdq);
+                jacobianU.setSubmatrix(3, 3, 6, 6, qdq);
                 
                 //variation of linear and angular speed
                 for(int i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
@@ -1007,8 +1012,7 @@ public class ConstantVelocityModelStatePredictor {
      * result or jacobians do not have proper size.
      */
     public static void predictWithPositionAndRotationAdjustment(
-                    double[] x, double[] u, double dt, double[] result)
-                    throws IllegalArgumentException {
+                    double[] x, double[] u, double dt, double[] result) {
         predictWithPositionAndRotationAdjustment(x, u, dt, result, null, null);
     }
     
@@ -1037,8 +1041,7 @@ public class ConstantVelocityModelStatePredictor {
      * or jacobians do not have proper size.
      */
     public static double[] predictWithPositionAndRotationAdjustment(double[] x, 
-            double[] u, double dt, Matrix jacobianX, Matrix jacobianU) 
-            throws IllegalArgumentException {
+            double[] u, double dt, Matrix jacobianX, Matrix jacobianU) {
         double[] result = new double[
                 STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAndRotationAdjustment(x, u, dt, result, jacobianX, 
@@ -1069,8 +1072,7 @@ public class ConstantVelocityModelStatePredictor {
      * result do not have proper size.
      */
     public static double[] predictWithPositionAndRotationAdjustment(
-                    double[] x, double[] u, double dt) 
-                    throws IllegalArgumentException {
+                    double[] x, double[] u, double dt) {
         double[] result = new double[
                 STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAndRotationAdjustment(x, u, dt, result);
