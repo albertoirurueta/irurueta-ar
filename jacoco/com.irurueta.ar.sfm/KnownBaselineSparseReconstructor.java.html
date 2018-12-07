@@ -112,9 +112,9 @@ public class KnownBaselineSparseReconstructor extends
 <span class="fc" id="L112">            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);</span>
 <span class="fc" id="L113">            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());</span>
 <span class="fc" id="L114">            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {</span>
-<span class="fc" id="L116">                mCurrentEuclideanEstimatedCamera.setCovariance(</span>
-<span class="fc" id="L117">                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L116">                mCurrentEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L117">                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
             }
 
             //update scale of reconstructed points

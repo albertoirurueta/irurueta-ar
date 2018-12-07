@@ -103,13 +103,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * for default constraints during IAC estimation.
      */
     public WeightedImageOfAbsoluteConicEstimator(
-            List&lt;Transformation2D&gt; homographies, double[] weights)
-            throws IllegalArgumentException {
-<span class="fc" id="L108">        super();</span>
-<span class="fc" id="L109">        internalSetHomographiesAndWeights(homographies, weights);</span>
-<span class="fc" id="L110">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
-<span class="fc" id="L111">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
-<span class="fc" id="L112">    }</span>
+            List&lt;Transformation2D&gt; homographies, double[] weights) {
+<span class="fc" id="L107">        super();</span>
+<span class="fc" id="L108">        internalSetHomographiesAndWeights(homographies, weights);</span>
+<span class="fc" id="L109">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
+<span class="fc" id="L110">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L111">    }</span>
     
     /**
      * Constructor.
@@ -126,13 +125,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      */
     public WeightedImageOfAbsoluteConicEstimator(
             List&lt;Transformation2D&gt; homographies, double[] weights,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L131">        super(listener);</span>
-<span class="fc" id="L132">        internalSetHomographiesAndWeights(homographies, weights);</span>
-<span class="fc" id="L133">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
-<span class="fc" id="L134">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
-<span class="fc" id="L135">    }</span>
+            ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L129">        super(listener);</span>
+<span class="fc" id="L130">        internalSetHomographiesAndWeights(homographies, weights);</span>
+<span class="fc" id="L131">        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;</span>
+<span class="fc" id="L132">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L133">    }</span>
     
     /**
      * Sets list of homographies to estimate IAC.
@@ -142,9 +140,8 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException always thrown in this implementation.
      */
     @Override
-    public void setHomographies(List&lt;Transformation2D&gt; homographies)
-            throws IllegalArgumentException {
-<span class="fc" id="L147">        throw new IllegalArgumentException();        </span>
+    public void setHomographies(List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L144">        throw new IllegalArgumentException();        </span>
     }
     
     /**
@@ -159,12 +156,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * for default constraints during IAC estimation.
      */
     public void setHomographiesAndWeights(List&lt;Transformation2D&gt; homographies,
-            double[] weights) throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L164">            throw new LockedException();</span>
+            double[] weights) throws LockedException {
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L161">            throw new LockedException();</span>
         }
-<span class="fc" id="L166">        internalSetHomographiesAndWeights(homographies, weights);</span>
-<span class="fc" id="L167">    }</span>
+<span class="fc" id="L163">        internalSetHomographiesAndWeights(homographies, weights);</span>
+<span class="fc" id="L164">    }</span>
     
     /**
      * Returns array containing a weight amount for each homography.
@@ -173,7 +170,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return array containing weights for each correspondence.
      */
     public double[] getWeights() {
-<span class="fc" id="L176">        return mWeights;</span>
+<span class="fc" id="L173">        return mWeights;</span>
     }
     
     /**
@@ -182,7 +179,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return true if weights are available, false otherwise.
      */
     public boolean areWeightsAvailable() {
-<span class="fc bfc" id="L185" title="All 2 branches covered.">        return mWeights != null;</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        return mWeights != null;</span>
     }
     
     /**
@@ -191,7 +188,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return maximum number of homographies to be weighted.
      */
     public int getMaxHomographies() {
-<span class="fc" id="L194">        return mMaxHomographies;</span>
+<span class="fc" id="L191">        return mMaxHomographies;</span>
     }
     
     /**
@@ -205,17 +202,16 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * minimum allowed number of homographies.
      * @throws LockedException if this instance is locked.
      */
-    public void setMaxHomographies(int maxHomographies) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L211">            throw new LockedException();</span>
+    public void setMaxHomographies(int maxHomographies) throws LockedException {
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L207">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (maxHomographies &lt; getMinNumberOfRequiredHomographies()) {</span>
-<span class="fc" id="L214">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (maxHomographies &lt; getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L210">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L217">        mMaxHomographies = maxHomographies;</span>
-<span class="fc" id="L218">    }</span>
+<span class="fc" id="L213">        mMaxHomographies = maxHomographies;</span>
+<span class="fc" id="L214">    }</span>
     
     /**
      * Indicates if weights are sorted by so that largest weighted homographies
@@ -223,7 +219,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return true if weights are sorted, false otherwise.
      */
     public boolean isSortWeightsEnabled() {
-<span class="fc" id="L226">        return mSortWeights;</span>
+<span class="fc" id="L222">        return mSortWeights;</span>
     }
     
     /**
@@ -234,12 +230,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      */
     public void setSortWeightsEnabled(boolean sortWeights)
             throws LockedException {
-<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L238">            throw new LockedException();</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L234">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L241">        mSortWeights = sortWeights;</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L237">        mSortWeights = sortWeights;</span>
+<span class="fc" id="L238">    }</span>
     
     /**
      * Indicates if this estimator is ready to start the estimation.
@@ -249,8 +245,8 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      */
     @Override
     public boolean isReady() {
-<span class="pc bpc" id="L252" title="1 of 4 branches missed.">        return super.isReady() &amp;&amp; areWeightsAvailable() &amp;&amp;</span>
-<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                mHomographies.size() == mWeights.length;</span>
+<span class="pc bpc" id="L248" title="1 of 4 branches missed.">        return super.isReady() &amp;&amp; areWeightsAvailable() &amp;&amp;</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                mHomographies.size() == mWeights.length;</span>
     }
     
     /**
@@ -271,45 +267,45 @@ public class WeightedImageOfAbsoluteConicEstimator extends
     @Override
     public ImageOfAbsoluteConic estimate() throws LockedException, 
             NotReadyException, ImageOfAbsoluteConicEstimatorException {
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L275">            throw new LockedException();</span>
+<span class="pc bpc" id="L270" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L271">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L277" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L278">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L274">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L282">            mLocked = true;</span>
-<span class="fc bfc" id="L283" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L284">                mListener.onEstimateStart(this);</span>
+<span class="fc" id="L278">            mLocked = true;</span>
+<span class="fc bfc" id="L279" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L280">                mListener.onEstimateStart(this);</span>
             }
             
             ImageOfAbsoluteConic iac;
-<span class="fc bfc" id="L288" title="All 4 branches covered.">            if (mZeroSkewness &amp;&amp; mPrincipalPointAtOrigin) {</span>
-<span class="fc bfc" id="L289" title="All 2 branches covered.">                if (mFocalDistanceAspectRatioKnown) {</span>
-<span class="fc" id="L290">                    iac = estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio();</span>
+<span class="fc bfc" id="L284" title="All 4 branches covered.">            if (mZeroSkewness &amp;&amp; mPrincipalPointAtOrigin) {</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">                if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L286">                    iac = estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio();</span>
                 } else {
-<span class="fc" id="L292">                    iac = estimateZeroSkewnessAndPrincipalPointAtOrigin();</span>
+<span class="fc" id="L288">                    iac = estimateZeroSkewnessAndPrincipalPointAtOrigin();</span>
                 }
-<span class="fc bfc" id="L294" title="All 2 branches covered.">            } else if (mZeroSkewness) { //&amp;&amp; !mPrincipalPointAtOrigin</span>
-<span class="fc bfc" id="L295" title="All 2 branches covered.">                if (mFocalDistanceAspectRatioKnown) {</span>
-<span class="fc" id="L296">                    iac = estimateZeroSkewnessAndKnownFocalDistanceAspectRatio();</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">            } else if (mZeroSkewness) { //&amp;&amp; !mPrincipalPointAtOrigin</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">                if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L292">                    iac = estimateZeroSkewnessAndKnownFocalDistanceAspectRatio();</span>
                 } else {
-<span class="fc" id="L298">                    iac = estimateZeroSkewness();</span>
+<span class="fc" id="L294">                    iac = estimateZeroSkewness();</span>
                 }
-<span class="fc bfc" id="L300" title="All 2 branches covered.">            } else if (mPrincipalPointAtOrigin){ //&amp;&amp; !mZeroSkewness</span>
-<span class="fc" id="L301">                iac = estimatePrincipalPointAtOrigin();</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">            } else if (mPrincipalPointAtOrigin){ //&amp;&amp; !mZeroSkewness</span>
+<span class="fc" id="L297">                iac = estimatePrincipalPointAtOrigin();</span>
             } else {
-<span class="fc" id="L303">                iac = estimateNoConstraints();</span>
+<span class="fc" id="L299">                iac = estimateNoConstraints();</span>
             }
             
-<span class="fc bfc" id="L306" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L307">                mListener.onEstimateEnd(this);</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L303">                mListener.onEstimateEnd(this);</span>
             }
             
-<span class="fc" id="L310">            return iac;</span>
+<span class="fc" id="L306">            return iac;</span>
         } finally {
-<span class="fc" id="L312">            mLocked = false;</span>
+<span class="fc" id="L308">            mLocked = false;</span>
         }
     }        
 
@@ -319,7 +315,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      */
     @Override
     public ImageOfAbsoluteConicEstimatorType getType() {
-<span class="fc" id="L322">        return ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR;</span>
+<span class="fc" id="L318">        return ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR;</span>
     }
     
     /**
@@ -333,15 +329,14 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * contain enough elements to estimate the IAC using current settings.
      */
     private void internalSetHomographiesAndWeights(
-            List&lt;Transformation2D&gt; homographies, double[] weights) 
-            throws IllegalArgumentException {
-<span class="pc bpc" id="L338" title="1 of 4 branches missed.">        if (weights == null || homographies == null || </span>
-<span class="fc bfc" id="L339" title="All 2 branches covered.">                weights.length != homographies.size()) {</span>
-<span class="fc" id="L340">            throw new IllegalArgumentException();</span>
+            List&lt;Transformation2D&gt; homographies, double[] weights) {
+<span class="pc bpc" id="L333" title="1 of 4 branches missed.">        if (weights == null || homographies == null || </span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">                weights.length != homographies.size()) {</span>
+<span class="fc" id="L335">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L342">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L343">        mWeights = weights;</span>
-<span class="fc" id="L344">    }</span>
+<span class="fc" id="L337">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L338">        mWeights = weights;</span>
+<span class="fc" id="L339">    }</span>
     
     /**
      * Estimates Image of Absolute Conic (IAC) without contraints.
@@ -355,147 +350,156 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
         
         try {
-<span class="fc" id="L358">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L353">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxHomographies);
-<span class="fc" id="L360">            boolean[] selected = selection.getSelected();</span>
-<span class="fc" id="L361">            int nHomographies = selection.getNumSelected();</span>
+<span class="fc" id="L355">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L356">            int nHomographies = selection.getNumSelected();</span>
 
-<span class="fc" id="L363">            Matrix a = new Matrix(2 * nHomographies, 6);</span>
+<span class="fc" id="L358">            Matrix a = new Matrix(2 * nHomographies, 6);</span>
             
-<span class="fc" id="L365">            int index = 0, counter = 0;</span>
-<span class="fc" id="L366">            ProjectiveTransformation2D t = null;</span>
-<span class="fc" id="L367">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+<span class="fc" id="L360">            int index = 0;</span>
+<span class="fc" id="L361">            int counter = 0;</span>
+<span class="fc" id="L362">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L363">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
-<span class="fc bfc" id="L371" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
+<span class="fc bfc" id="L375" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
                 
-<span class="pc bpc" id="L373" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L374">                    weight = mWeights[index];</span>
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L378">                    weight = mWeights[index];</span>
                     
                     //convert homography into projective so it can be normalized
-<span class="fc" id="L377">                    homography.asMatrix(h);</span>
-<span class="fc bfc" id="L378" title="All 2 branches covered.">                    if (t == null) {</span>
-<span class="fc" id="L379">                        t = new ProjectiveTransformation2D(h);</span>
+<span class="fc" id="L381">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L383">                        t = new ProjectiveTransformation2D(h);</span>
                     } else {
-<span class="fc" id="L381">                        t.setT(h);</span>
+<span class="fc" id="L385">                        t.setT(h);</span>
                     }
 
                     //normalize
-<span class="fc" id="L385">                    t.normalize();</span>
+<span class="fc" id="L389">                    t.normalize();</span>
 
                     //obtain elements of projective transformation matrix
                     //there is no need to retrieve internal matrix h, as we already
                     //hold a reference
-<span class="fc" id="L390">                    h11 = h.getElementAt(0, 0);</span>
-<span class="fc" id="L391">                    h12 = h.getElementAt(0, 1);</span>
+<span class="fc" id="L394">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L395">                    h12 = h.getElementAt(0, 1);</span>
 
-<span class="fc" id="L393">                    h21 = h.getElementAt(1, 0);</span>
-<span class="fc" id="L394">                    h22 = h.getElementAt(1, 1);</span>
+<span class="fc" id="L397">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L398">                    h22 = h.getElementAt(1, 1);</span>
 
-<span class="fc" id="L396">                    h31 = h.getElementAt(2, 0);</span>
-<span class="fc" id="L397">                    h32 = h.getElementAt(2, 1);</span>
+<span class="fc" id="L400">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L401">                    h32 = h.getElementAt(2, 1);</span>
 
                     //fill first equation
-<span class="fc" id="L400">                    a.setElementAt(counter, 0, h11 * h12);</span>
-<span class="fc" id="L401">                    a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</span>
-<span class="fc" id="L402">                    a.setElementAt(counter, 2, h21 * h22);</span>
-<span class="fc" id="L403">                    a.setElementAt(counter, 3, h11 * h32 + h31 * h12);</span>
-<span class="fc" id="L404">                    a.setElementAt(counter, 4, h21 * h32 + h31 * h22);</span>
-<span class="fc" id="L405">                    a.setElementAt(counter, 5, h31 * h32);</span>
+<span class="fc" id="L404">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L405">                    a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</span>
+<span class="fc" id="L406">                    a.setElementAt(counter, 2, h21 * h22);</span>
+<span class="fc" id="L407">                    a.setElementAt(counter, 3, h11 * h32 + h31 * h12);</span>
+<span class="fc" id="L408">                    a.setElementAt(counter, 4, h21 * h32 + h31 * h22);</span>
+<span class="fc" id="L409">                    a.setElementAt(counter, 5, h31 * h32);</span>
 
                     //normalize row 
-<span class="fc" id="L408">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L409">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L410">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L411">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L412">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
-<span class="fc" id="L413">                            Math.pow(a.getElementAt(counter, 4), 2.0) +</span>
-<span class="fc" id="L414">                            Math.pow(a.getElementAt(counter, 5), 2.0));</span>
-<span class="fc" id="L415">                    factor = weight / rowNorm ;</span>
+<span class="fc" id="L412">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L413">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L414">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L415">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L416">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L417">                            Math.pow(a.getElementAt(counter, 4), 2.0) +</span>
+<span class="fc" id="L418">                            Math.pow(a.getElementAt(counter, 5), 2.0));</span>
+<span class="fc" id="L419">                    factor = weight / rowNorm ;</span>
 
-<span class="fc" id="L417">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * </span>
+<span class="fc" id="L421">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * </span>
                             factor);
-<span class="fc" id="L419">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L423">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L421">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L425">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L423">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L427">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
-<span class="fc" id="L425">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+<span class="fc" id="L429">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
                             factor);
-<span class="fc" id="L427">                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *</span>
+<span class="fc" id="L431">                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *</span>
                             factor);
 
-<span class="fc" id="L430">                    counter++;</span>
+<span class="fc" id="L434">                    counter++;</span>
 
                     //fill second equation
-<span class="fc" id="L433">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
-<span class="fc" id="L434">                    a.setElementAt(counter, 1, 2.0 * (h11 * h21 - h12 * h22));</span>
-<span class="fc" id="L435">                    a.setElementAt(counter, 2, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
-<span class="fc" id="L436">                    a.setElementAt(counter, 3, 2.0 * (h11 * h31 - h12 * h32));</span>
-<span class="fc" id="L437">                    a.setElementAt(counter, 4, 2.0 * (h21 * h31 - h22 * h32));</span>
-<span class="fc" id="L438">                    a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+<span class="fc" id="L437">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L438">                    a.setElementAt(counter, 1, 2.0 * (h11 * h21 - h12 * h22));</span>
+<span class="fc" id="L439">                    a.setElementAt(counter, 2, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L440">                    a.setElementAt(counter, 3, 2.0 * (h11 * h31 - h12 * h32));</span>
+<span class="fc" id="L441">                    a.setElementAt(counter, 4, 2.0 * (h21 * h31 - h22 * h32));</span>
+<span class="fc" id="L442">                    a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
 
                     //normalize row
-<span class="fc" id="L441">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L442">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L443">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L444">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L445">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
-<span class="fc" id="L446">                            Math.pow(a.getElementAt(counter, 4), 2.0) +</span>
-<span class="fc" id="L447">                            Math.pow(a.getElementAt(counter, 5), 2.0));</span>
-<span class="fc" id="L448">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L445">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L446">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L447">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L448">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L449">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L450">                            Math.pow(a.getElementAt(counter, 4), 2.0) +</span>
+<span class="fc" id="L451">                            Math.pow(a.getElementAt(counter, 5), 2.0));</span>
+<span class="fc" id="L452">                    factor = weight / rowNorm;</span>
 
-<span class="fc" id="L450">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L454">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L452">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L456">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L454">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L458">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L456">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L460">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
-<span class="fc" id="L458">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+<span class="fc" id="L462">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
                             factor);
-<span class="fc" id="L460">                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *</span>
+<span class="fc" id="L464">                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *</span>
                             factor);
 
-<span class="fc" id="L463">                    counter++;</span>
+<span class="fc" id="L467">                    counter++;</span>
                 }
                 
-<span class="fc" id="L466">                index++;</span>
-<span class="fc" id="L467">            }</span>
+<span class="fc" id="L470">                index++;</span>
+<span class="fc" id="L471">            }</span>
             
-<span class="fc" id="L469">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L470">            decomposer.decompose();</span>
+<span class="fc" id="L473">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L474">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L472" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L476" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //homographies constitute a degenerate camera movement.
                 //A linear combination of possible IAC's exist (i.e. solution is
                 //not unique up to scale)
-<span class="nc" id="L476">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+<span class="nc" id="L480">                throw new ImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L479">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L483">            Matrix v = decomposer.getV();</span>
             
             //use last column of V as IAC vector
             
             //the last column of V contains IAC matrix (B), which is symmetric
             //and positive definite, ordered as follows: B11, B12, B22, B13, 
             //B23, B33
-<span class="fc" id="L486">            double b11 = v.getElementAt(0, 5);</span>
-<span class="fc" id="L487">            double b12 = v.getElementAt(1, 5);</span>
-<span class="fc" id="L488">            double b22 = v.getElementAt(2, 5);</span>
-<span class="fc" id="L489">            double b13 = v.getElementAt(3, 5);</span>
-<span class="fc" id="L490">            double b23 = v.getElementAt(4, 5);</span>
-<span class="fc" id="L491">            double b33 = v.getElementAt(5, 5);</span>
+<span class="fc" id="L490">            double b11 = v.getElementAt(0, 5);</span>
+<span class="fc" id="L491">            double b12 = v.getElementAt(1, 5);</span>
+<span class="fc" id="L492">            double b22 = v.getElementAt(2, 5);</span>
+<span class="fc" id="L493">            double b13 = v.getElementAt(3, 5);</span>
+<span class="fc" id="L494">            double b23 = v.getElementAt(4, 5);</span>
+<span class="fc" id="L495">            double b33 = v.getElementAt(5, 5);</span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
-<span class="fc" id="L496">            return new ImageOfAbsoluteConic(b11, b12, b22, b13, b23, b33);            </span>
-<span class="nc" id="L497">        } catch (AlgebraException | SortingException e) {</span>
-<span class="nc" id="L498">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L500">            return new ImageOfAbsoluteConic(b11, b12, b22, b13, b23, b33);            </span>
+<span class="nc" id="L501">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L502">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
         }
     }
         
@@ -510,140 +514,149 @@ public class WeightedImageOfAbsoluteConicEstimator extends
     private ImageOfAbsoluteConic estimateZeroSkewness() 
             throws ImageOfAbsoluteConicEstimatorException {
         try {
-<span class="fc" id="L513">            int nHomographies = mHomographies.size();</span>
+<span class="fc" id="L517">            int nHomographies = mHomographies.size();</span>
             
-<span class="fc" id="L515">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L519">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxHomographies);
-<span class="fc" id="L517">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L521">            boolean[] selected = selection.getSelected();</span>
 
-<span class="fc" id="L519">            Matrix a = new Matrix(2 * nHomographies, 5);</span>
+<span class="fc" id="L523">            Matrix a = new Matrix(2 * nHomographies, 5);</span>
             
-<span class="fc" id="L521">            int index = 0, counter = 0;</span>
-<span class="fc" id="L522">            ProjectiveTransformation2D t = null;</span>
-<span class="fc" id="L523">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+<span class="fc" id="L525">            int index = 0;</span>
+<span class="fc" id="L526">            int counter = 0;</span>
+<span class="fc" id="L527">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L528">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
-<span class="fc bfc" id="L527" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies){</span>
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
+<span class="fc bfc" id="L540" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies){</span>
                 
-<span class="pc bpc" id="L529" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L530">                    weight = mWeights[index];</span>
+<span class="pc bpc" id="L542" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L543">                    weight = mWeights[index];</span>
                     
                     //convert homography into projective so it can be normalized
-<span class="fc" id="L533">                    homography.asMatrix(h);</span>
-<span class="fc bfc" id="L534" title="All 2 branches covered.">                    if (t == null) {</span>
-<span class="fc" id="L535">                        t = new ProjectiveTransformation2D(h);</span>
+<span class="fc" id="L546">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L547" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L548">                        t = new ProjectiveTransformation2D(h);</span>
                     } else {
-<span class="fc" id="L537">                        t.setT(h);</span>
+<span class="fc" id="L550">                        t.setT(h);</span>
                     }
                 
                     //normalize
-<span class="fc" id="L541">                    t.normalize();</span>
+<span class="fc" id="L554">                    t.normalize();</span>
                 
                     //obtain elements of projective transformation matrix
                     //there is no need to retrieve internal matrix h, as we already
                     //hold a reference
-<span class="fc" id="L546">                    h11 = h.getElementAt(0, 0);</span>
-<span class="fc" id="L547">                    h12 = h.getElementAt(0, 1);</span>
+<span class="fc" id="L559">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L560">                    h12 = h.getElementAt(0, 1);</span>
                 
-<span class="fc" id="L549">                    h21 = h.getElementAt(1, 0);</span>
-<span class="fc" id="L550">                    h22 = h.getElementAt(1, 1);</span>
+<span class="fc" id="L562">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L563">                    h22 = h.getElementAt(1, 1);</span>
                 
-<span class="fc" id="L552">                    h31 = h.getElementAt(2, 0);</span>
-<span class="fc" id="L553">                    h32 = h.getElementAt(2, 1);</span>
+<span class="fc" id="L565">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L566">                    h32 = h.getElementAt(2, 1);</span>
                 
                     //fill first equation
-<span class="fc" id="L556">                    a.setElementAt(counter, 0, h11 * h12);</span>
-<span class="fc" id="L557">                    a.setElementAt(counter, 1, h21 * h22);</span>
-<span class="fc" id="L558">                    a.setElementAt(counter, 2, h11 * h32 + h31 * h12);</span>
-<span class="fc" id="L559">                    a.setElementAt(counter, 3, h21 * h32 + h31 * h22);</span>
-<span class="fc" id="L560">                    a.setElementAt(counter, 4, h31 * h32);</span>
+<span class="fc" id="L569">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L570">                    a.setElementAt(counter, 1, h21 * h22);</span>
+<span class="fc" id="L571">                    a.setElementAt(counter, 2, h11 * h32 + h31 * h12);</span>
+<span class="fc" id="L572">                    a.setElementAt(counter, 3, h21 * h32 + h31 * h22);</span>
+<span class="fc" id="L573">                    a.setElementAt(counter, 4, h31 * h32);</span>
                 
                     //normalize row 
-<span class="fc" id="L563">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L564">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L565">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L566">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L567">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
-<span class="fc" id="L568">                            Math.pow(a.getElementAt(counter, 4), 2.0));</span>
-<span class="fc" id="L569">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L576">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L577">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L578">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L579">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L580">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L581">                            Math.pow(a.getElementAt(counter, 4), 2.0));</span>
+<span class="fc" id="L582">                    factor = weight / rowNorm;</span>
                 
-<span class="fc" id="L571">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L584">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L573">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L586">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L575">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L588">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L577">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L590">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
-<span class="fc" id="L579">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+<span class="fc" id="L592">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
                             factor);
 
-<span class="fc" id="L582">                    counter++;</span>
+<span class="fc" id="L595">                    counter++;</span>
                                 
                     //fill second equation
-<span class="fc" id="L585">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
-<span class="fc" id="L586">                    a.setElementAt(counter, 1, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
-<span class="fc" id="L587">                    a.setElementAt(counter, 2, 2.0 * (h11 * h31 - h12 * h32));</span>
-<span class="fc" id="L588">                    a.setElementAt(counter, 3, 2.0 * (h21 * h31 - h22 * h32));</span>
-<span class="fc" id="L589">                    a.setElementAt(counter, 4, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+<span class="fc" id="L598">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L599">                    a.setElementAt(counter, 1, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L600">                    a.setElementAt(counter, 2, 2.0 * (h11 * h31 - h12 * h32));</span>
+<span class="fc" id="L601">                    a.setElementAt(counter, 3, 2.0 * (h21 * h31 - h22 * h32));</span>
+<span class="fc" id="L602">                    a.setElementAt(counter, 4, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
                 
                     //normalize row
-<span class="fc" id="L592">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L593">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L594">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L595">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L596">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
-<span class="fc" id="L597">                            Math.pow(a.getElementAt(counter, 4), 2.0));</span>
-<span class="fc" id="L598">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L605">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L606">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L607">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L608">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L609">                            Math.pow(a.getElementAt(counter, 3), 2.0) +</span>
+<span class="fc" id="L610">                            Math.pow(a.getElementAt(counter, 4), 2.0));</span>
+<span class="fc" id="L611">                    factor = weight / rowNorm;</span>
 
-<span class="fc" id="L600">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L613">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L602">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L615">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L604">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L617">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L606">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L619">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
-<span class="fc" id="L608">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
+<span class="fc" id="L621">                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *</span>
                             factor);
                 
-<span class="fc" id="L611">                    counter++;</span>
+<span class="fc" id="L624">                    counter++;</span>
                 }
                 
-<span class="fc" id="L614">                index++;</span>
-<span class="fc" id="L615">            }                                </span>
+<span class="fc" id="L627">                index++;</span>
+<span class="fc" id="L628">            }                                </span>
             
-<span class="fc" id="L617">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L618">            decomposer.decompose();</span>
+<span class="fc" id="L630">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L631">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L620" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L633" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //homographies constitute a degenerate camera movement.
                 //A linear combination of possible IAC's exist (i.e. solution is
                 //not unique up to scale)
-<span class="nc" id="L624">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+<span class="nc" id="L637">                throw new ImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L627">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L640">            Matrix v = decomposer.getV();</span>
             
             //use last column of V as IAC vector
             
             //the last column of V contains IAC matrix (B), which is symmetric
             //and positive definite, ordered as follows: B11, B12, B22, B13, 
             //B23, B33
-<span class="fc" id="L634">            double b11 = v.getElementAt(0, 4);</span>
-<span class="fc" id="L635">            double b22 = v.getElementAt(1, 4);</span>
-<span class="fc" id="L636">            double b13 = v.getElementAt(2, 4);</span>
-<span class="fc" id="L637">            double b23 = v.getElementAt(3, 4);</span>
-<span class="fc" id="L638">            double b33 = v.getElementAt(4, 4);</span>
+<span class="fc" id="L647">            double b11 = v.getElementAt(0, 4);</span>
+<span class="fc" id="L648">            double b22 = v.getElementAt(1, 4);</span>
+<span class="fc" id="L649">            double b13 = v.getElementAt(2, 4);</span>
+<span class="fc" id="L650">            double b23 = v.getElementAt(3, 4);</span>
+<span class="fc" id="L651">            double b33 = v.getElementAt(4, 4);</span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
             //Since skewness is zero b12 = B = 0.0
-<span class="fc" id="L644">            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            </span>
-<span class="nc" id="L645">        } catch (AlgebraException | SortingException e) {</span>
-<span class="nc" id="L646">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L657">            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            </span>
+<span class="nc" id="L658">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L659">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
         }
     }
     
@@ -660,132 +673,141 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
         
         try {
-<span class="fc" id="L663">            int nHomographies = mHomographies.size();</span>
+<span class="fc" id="L676">            int nHomographies = mHomographies.size();</span>
             
-<span class="fc" id="L665">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L678">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxHomographies);
-<span class="fc" id="L667">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L680">            boolean[] selected = selection.getSelected();</span>
 
-<span class="fc" id="L669">            Matrix a = new Matrix(2 * nHomographies, 4);</span>
+<span class="fc" id="L682">            Matrix a = new Matrix(2 * nHomographies, 4);</span>
             
-<span class="fc" id="L671">            int index = 0, counter = 0;</span>
-<span class="fc" id="L672">            ProjectiveTransformation2D t = null;</span>
-<span class="fc" id="L673">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+<span class="fc" id="L684">            int index = 0;</span>
+<span class="fc" id="L685">            int counter = 0;</span>
+<span class="fc" id="L686">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L687">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
-<span class="fc bfc" id="L677" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
+<span class="fc bfc" id="L699" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
                 
-<span class="pc bpc" id="L679" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L680">                    weight = mWeights[index];</span>
+<span class="pc bpc" id="L701" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L702">                    weight = mWeights[index];</span>
                     
                     //convert homography into projective so it can be normalized
-<span class="fc" id="L683">                    homography.asMatrix(h);</span>
-<span class="fc bfc" id="L684" title="All 2 branches covered.">                    if (t == null) {</span>
-<span class="fc" id="L685">                        t = new ProjectiveTransformation2D(h);</span>
+<span class="fc" id="L705">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L706" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L707">                        t = new ProjectiveTransformation2D(h);</span>
                     } else {
-<span class="fc" id="L687">                        t.setT(h);</span>
+<span class="fc" id="L709">                        t.setT(h);</span>
                     }
                 
                     //normalize
-<span class="fc" id="L691">                    t.normalize();</span>
+<span class="fc" id="L713">                    t.normalize();</span>
                 
                     //obtain elements of projective transformation matrix
                     //there is no need to retrieve internal matrix h, as we already
                     //hold a reference
-<span class="fc" id="L696">                    h11 = h.getElementAt(0, 0);</span>
-<span class="fc" id="L697">                    h12 = h.getElementAt(0, 1);</span>
+<span class="fc" id="L718">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L719">                    h12 = h.getElementAt(0, 1);</span>
                 
-<span class="fc" id="L699">                    h21 = h.getElementAt(1, 0);</span>
-<span class="fc" id="L700">                    h22 = h.getElementAt(1, 1);</span>
+<span class="fc" id="L721">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L722">                    h22 = h.getElementAt(1, 1);</span>
                 
-<span class="fc" id="L702">                    h31 = h.getElementAt(2, 0);</span>
-<span class="fc" id="L703">                    h32 = h.getElementAt(2, 1);</span>
+<span class="fc" id="L724">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L725">                    h32 = h.getElementAt(2, 1);</span>
                                 
                     //fill first equation
-<span class="fc" id="L706">                    a.setElementAt(counter, 0, h11 * h12);</span>
-<span class="fc" id="L707">                    a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</span>
-<span class="fc" id="L708">                    a.setElementAt(counter, 2, h21 * h22);</span>
-<span class="fc" id="L709">                    a.setElementAt(counter, 3, h31 * h32);</span>
+<span class="fc" id="L728">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L729">                    a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</span>
+<span class="fc" id="L730">                    a.setElementAt(counter, 2, h21 * h22);</span>
+<span class="fc" id="L731">                    a.setElementAt(counter, 3, h31 * h32);</span>
                 
                     //normalize row 
-<span class="fc" id="L712">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L713">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L714">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L715">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L716">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
-<span class="fc" id="L717">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L734">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L735">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L736">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L737">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L738">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L739">                    factor = weight / rowNorm;</span>
                 
-<span class="fc" id="L719">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L741">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L721">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L743">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L723">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L745">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L725">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L747">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
 
-<span class="fc" id="L728">                    counter++;</span>
+<span class="fc" id="L750">                    counter++;</span>
                                                 
                     //fill second equation
-<span class="fc" id="L731">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
-<span class="fc" id="L732">                    a.setElementAt(counter, 1, 2.0 * (h11 * h21 - h12 * h22));</span>
-<span class="fc" id="L733">                    a.setElementAt(counter, 2, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
-<span class="fc" id="L734">                    a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+<span class="fc" id="L753">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L754">                    a.setElementAt(counter, 1, 2.0 * (h11 * h21 - h12 * h22));</span>
+<span class="fc" id="L755">                    a.setElementAt(counter, 2, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L756">                    a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
                 
                     //normalize row
-<span class="fc" id="L737">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L738">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L739">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L740">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L741">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
-<span class="fc" id="L742">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L759">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L760">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L761">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L762">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L763">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L764">                    factor = weight / rowNorm;</span>
 
-<span class="fc" id="L744">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L766">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L746">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L768">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L748">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L770">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L750">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L772">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
                 
-<span class="fc" id="L753">                    counter++;   </span>
+<span class="fc" id="L775">                    counter++;   </span>
                 }
                 
-<span class="fc" id="L756">                index++;</span>
-<span class="fc" id="L757">            }</span>
+<span class="fc" id="L778">                index++;</span>
+<span class="fc" id="L779">            }</span>
             
-<span class="fc" id="L759">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L760">            decomposer.decompose();</span>
+<span class="fc" id="L781">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L782">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L762" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L784" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //homographies constitute a degenerate camera movement.
                 //A linear combination of possible IAC's exist (i.e. solution is
                 //not unique up to scale)
-<span class="nc" id="L766">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+<span class="nc" id="L788">                throw new ImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L769">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L791">            Matrix v = decomposer.getV();</span>
             
             //use last column of V as IAC vector
             
             //the last column of V contains IAC matrix (B), which is symmetric
             //and positive definite, ordered as follows: B11, B12, B22, B13, 
             //B23, B33
-<span class="fc" id="L776">            double b11 = v.getElementAt(0, 3);</span>
-<span class="fc" id="L777">            double b12 = v.getElementAt(1, 3);</span>
-<span class="fc" id="L778">            double b22 = v.getElementAt(2, 3);</span>
-<span class="fc" id="L779">            double b33 = v.getElementAt(3, 3);</span>
+<span class="fc" id="L798">            double b11 = v.getElementAt(0, 3);</span>
+<span class="fc" id="L799">            double b12 = v.getElementAt(1, 3);</span>
+<span class="fc" id="L800">            double b22 = v.getElementAt(2, 3);</span>
+<span class="fc" id="L801">            double b33 = v.getElementAt(3, 3);</span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
             //Since principal point is at origin of coordinates 
             //b13 = D = 0.0, b23 = E = 0.0
-<span class="fc" id="L786">            return new ImageOfAbsoluteConic(b11, b12, b22, 0.0, 0.0, b33);</span>
-<span class="nc" id="L787">        } catch (AlgebraException | SortingException e) {</span>
-<span class="nc" id="L788">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L808">            return new ImageOfAbsoluteConic(b11, b12, b22, 0.0, 0.0, b33);</span>
+<span class="nc" id="L809">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L810">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
         }
     }
     
@@ -802,123 +824,123 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-<span class="fc" id="L805">            int nHomographies = mHomographies.size();</span>
+<span class="fc" id="L827">            int nHomographies = mHomographies.size();</span>
 
-<span class="fc" id="L807">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L829">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxHomographies);
-<span class="fc" id="L809">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L831">            boolean[] selected = selection.getSelected();</span>
             
-<span class="fc" id="L811">            Matrix a = new Matrix(2 * nHomographies, 3);</span>
+<span class="fc" id="L833">            Matrix a = new Matrix(2 * nHomographies, 3);</span>
             
-<span class="fc" id="L813">            int index = 0, counter = 0;</span>
-<span class="fc" id="L814">            ProjectiveTransformation2D t = null;</span>
-<span class="fc" id="L815">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+<span class="fc" id="L835">            int index = 0, counter = 0;</span>
+<span class="fc" id="L836">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L837">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
             double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
-<span class="fc bfc" id="L819" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+<span class="fc bfc" id="L841" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
                 
-<span class="pc bpc" id="L821" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L822">                    weight = mWeights[index];</span>
+<span class="pc bpc" id="L843" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L844">                    weight = mWeights[index];</span>
                     
                     //convert homography into projective so it can be normalized
-<span class="fc" id="L825">                    homography.asMatrix(h);</span>
-<span class="fc bfc" id="L826" title="All 2 branches covered.">                    if (t == null) {</span>
-<span class="fc" id="L827">                        t = new ProjectiveTransformation2D(h);</span>
+<span class="fc" id="L847">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L848" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L849">                        t = new ProjectiveTransformation2D(h);</span>
                     } else {
-<span class="fc" id="L829">                        t.setT(h);</span>
+<span class="fc" id="L851">                        t.setT(h);</span>
                     }
                 
                     //normalize
-<span class="fc" id="L833">                    t.normalize();</span>
+<span class="fc" id="L855">                    t.normalize();</span>
                 
                     //obtain elements of projective transformation matrix
                     //there is no need to retrieve internal matrix h, as we already
                     //hold a reference
-<span class="fc" id="L838">                    h11 = h.getElementAt(0, 0);</span>
-<span class="fc" id="L839">                    h12 = h.getElementAt(0, 1);</span>
+<span class="fc" id="L860">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L861">                    h12 = h.getElementAt(0, 1);</span>
                 
-<span class="fc" id="L841">                    h21 = h.getElementAt(1, 0);</span>
-<span class="fc" id="L842">                    h22 = h.getElementAt(1, 1);</span>
+<span class="fc" id="L863">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L864">                    h22 = h.getElementAt(1, 1);</span>
                 
-<span class="fc" id="L844">                    h31 = h.getElementAt(2, 0);</span>
-<span class="fc" id="L845">                    h32 = h.getElementAt(2, 1);</span>
+<span class="fc" id="L866">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L867">                    h32 = h.getElementAt(2, 1);</span>
                                 
                     //fill first equation
-<span class="fc" id="L848">                    a.setElementAt(counter, 0, h11 * h12);</span>
-<span class="fc" id="L849">                    a.setElementAt(counter, 1, h21 * h22);</span>
-<span class="fc" id="L850">                    a.setElementAt(counter, 2, h31 * h32);</span>
+<span class="fc" id="L870">                    a.setElementAt(counter, 0, h11 * h12);</span>
+<span class="fc" id="L871">                    a.setElementAt(counter, 1, h21 * h22);</span>
+<span class="fc" id="L872">                    a.setElementAt(counter, 2, h31 * h32);</span>
                 
                     //normalize row 
-<span class="fc" id="L853">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L854">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L855">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L856">                            Math.pow(a.getElementAt(counter, 2), 2.0));</span>
-<span class="fc" id="L857">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L875">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L876">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L877">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L878">                            Math.pow(a.getElementAt(counter, 2), 2.0));</span>
+<span class="fc" id="L879">                    factor = weight / rowNorm;</span>
                 
-<span class="fc" id="L859">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L881">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L861">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L883">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L863">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L885">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
 
-<span class="fc" id="L866">                    counter++;</span>
+<span class="fc" id="L888">                    counter++;</span>
                                                 
                     //fill second equation
-<span class="fc" id="L869">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
-<span class="fc" id="L870">                    a.setElementAt(counter, 1, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
-<span class="fc" id="L871">                    a.setElementAt(counter, 2, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+<span class="fc" id="L891">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0));</span>
+<span class="fc" id="L892">                    a.setElementAt(counter, 1, Math.pow(h21, 2.0) - Math.pow(h22, 2.0));</span>
+<span class="fc" id="L893">                    a.setElementAt(counter, 2, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
                 
                     //normalize row
-<span class="fc" id="L874">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L875">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L876">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L877">                            Math.pow(a.getElementAt(counter, 2), 2.0));</span>
-<span class="fc" id="L878">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L896">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L897">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L898">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L899">                            Math.pow(a.getElementAt(counter, 2), 2.0));</span>
+<span class="fc" id="L900">                    factor = weight / rowNorm;</span>
 
-<span class="fc" id="L880">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L902">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L882">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L904">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L884">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L906">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
                 
-<span class="fc" id="L887">                    counter++;                   </span>
+<span class="fc" id="L909">                    counter++;                   </span>
                 }
                 
-<span class="fc" id="L890">                index++;</span>
-<span class="fc" id="L891">            }</span>
+<span class="fc" id="L912">                index++;</span>
+<span class="fc" id="L913">            }</span>
             
-<span class="fc" id="L893">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L894">            decomposer.decompose();</span>
+<span class="fc" id="L915">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L916">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L896" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L918" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //homographies constitute a degenerate camera movement.
                 //A linear combination of possible IAC's exist (i.e. solution is
                 //not unique up to scale)
-<span class="nc" id="L900">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+<span class="nc" id="L922">                throw new ImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L903">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L925">            Matrix v = decomposer.getV();</span>
             
             //use last column of V as IAC vector
             
             //the last column of V contains IAC matrix (B), which is symmetric
             //and positive definite, ordered as follows: B11, B12, B22, B13, 
             //B23, B33
-<span class="fc" id="L910">            double b11 = v.getElementAt(0, 2);</span>
-<span class="fc" id="L911">            double b22 = v.getElementAt(1, 2);</span>
-<span class="fc" id="L912">            double b33 = v.getElementAt(2, 2);</span>
+<span class="fc" id="L932">            double b11 = v.getElementAt(0, 2);</span>
+<span class="fc" id="L933">            double b22 = v.getElementAt(1, 2);</span>
+<span class="fc" id="L934">            double b33 = v.getElementAt(2, 2);</span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
             //Since principal point is at origin of coordinates 
             //b12 = B = 0, b13 = D = 0.0, b23 = E = 0.0
-<span class="fc" id="L919">            return new ImageOfAbsoluteConic(b11, 0.0, b22, 0.0, 0.0, b33);</span>
-<span class="nc" id="L920">        } catch (AlgebraException | SortingException e) {</span>
-<span class="nc" id="L921">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L941">            return new ImageOfAbsoluteConic(b11, 0.0, b22, 0.0, 0.0, b33);</span>
+<span class="nc" id="L942">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L943">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
         }
     }        
     
@@ -934,136 +956,136 @@ public class WeightedImageOfAbsoluteConicEstimator extends
     private ImageOfAbsoluteConic estimateZeroSkewnessAndKnownFocalDistanceAspectRatio() 
             throws ImageOfAbsoluteConicEstimatorException {
         try {
-<span class="fc" id="L937">            int nHomographies = mHomographies.size();</span>
+<span class="fc" id="L959">            int nHomographies = mHomographies.size();</span>
             
-<span class="fc" id="L939">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L961">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxHomographies);
-<span class="fc" id="L941">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L963">            boolean[] selected = selection.getSelected();</span>
 
-<span class="fc" id="L943">            Matrix a = new Matrix(2 * nHomographies, 4);</span>
-<span class="fc" id="L944">            double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);</span>
+<span class="fc" id="L965">            Matrix a = new Matrix(2 * nHomographies, 4);</span>
+<span class="fc" id="L966">            double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);</span>
             
-<span class="fc" id="L946">            int index = 0, counter = 0;</span>
-<span class="fc" id="L947">            ProjectiveTransformation2D t = null;</span>
-<span class="fc" id="L948">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+<span class="fc" id="L968">            int index = 0, counter = 0;</span>
+<span class="fc" id="L969">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L970">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
             double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
-<span class="fc bfc" id="L952" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+<span class="fc bfc" id="L974" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
                 
-<span class="pc bpc" id="L954" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L955">                    weight = mWeights[index];</span>
+<span class="pc bpc" id="L976" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L977">                    weight = mWeights[index];</span>
                     
                     //convert homography into projective so it can be normalized
-<span class="fc" id="L958">                    homography.asMatrix(h);</span>
-<span class="fc bfc" id="L959" title="All 2 branches covered.">                    if (t == null) {</span>
-<span class="fc" id="L960">                        t = new ProjectiveTransformation2D(h);</span>
+<span class="fc" id="L980">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L981" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L982">                        t = new ProjectiveTransformation2D(h);</span>
                     } else {
-<span class="fc" id="L962">                        t.setT(h);</span>
+<span class="fc" id="L984">                        t.setT(h);</span>
                     }
                 
                     //normalize
-<span class="fc" id="L966">                    t.normalize();</span>
+<span class="fc" id="L988">                    t.normalize();</span>
                 
                     //obtain elements of projective transformation matrix
                     //there is no need to retrieve internal matrix h, as we already
                     //hold a reference
-<span class="fc" id="L971">                    h11 = h.getElementAt(0, 0);</span>
-<span class="fc" id="L972">                    h12 = h.getElementAt(0, 1);</span>
+<span class="fc" id="L993">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L994">                    h12 = h.getElementAt(0, 1);</span>
                 
-<span class="fc" id="L974">                    h21 = h.getElementAt(1, 0);</span>
-<span class="fc" id="L975">                    h22 = h.getElementAt(1, 1);</span>
+<span class="fc" id="L996">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L997">                    h22 = h.getElementAt(1, 1);</span>
                 
-<span class="fc" id="L977">                    h31 = h.getElementAt(2, 0);</span>
-<span class="fc" id="L978">                    h32 = h.getElementAt(2, 1);</span>
+<span class="fc" id="L999">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L1000">                    h32 = h.getElementAt(2, 1);</span>
                 
                     //fill first equation
-<span class="fc" id="L981">                    a.setElementAt(counter, 0, h11 * h12 + </span>
+<span class="fc" id="L1003">                    a.setElementAt(counter, 0, h11 * h12 + </span>
                             h21 * h22 / sqrAspectRatio);
-<span class="fc" id="L983">                    a.setElementAt(counter, 1, h11 * h32 + h31 * h12);</span>
-<span class="fc" id="L984">                    a.setElementAt(counter, 2, h21 * h32 + h31 * h22);</span>
-<span class="fc" id="L985">                    a.setElementAt(counter, 3, h31 * h32);</span>
+<span class="fc" id="L1005">                    a.setElementAt(counter, 1, h11 * h32 + h31 * h12);</span>
+<span class="fc" id="L1006">                    a.setElementAt(counter, 2, h21 * h32 + h31 * h22);</span>
+<span class="fc" id="L1007">                    a.setElementAt(counter, 3, h31 * h32);</span>
                 
                     //normalize row 
-<span class="fc" id="L988">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L989">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L990">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L991">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L992">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
-<span class="fc" id="L993">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L1010">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1011">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1012">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L1013">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L1014">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L1015">                    factor = weight / rowNorm;</span>
                 
-<span class="fc" id="L995">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L1017">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L997">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L1019">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L999">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L1021">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L1001">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L1023">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
 
-<span class="fc" id="L1004">                    counter++;</span>
+<span class="fc" id="L1026">                    counter++;</span>
                                 
                     //fill second equation
-<span class="fc" id="L1007">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +</span>
-<span class="fc" id="L1008">                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0))/ sqrAspectRatio);</span>
-<span class="fc" id="L1009">                    a.setElementAt(counter, 1, 2.0 * (h11 * h31 - h12 * h32));</span>
-<span class="fc" id="L1010">                    a.setElementAt(counter, 2, 2.0 * (h21 * h31 - h22 * h32));</span>
-<span class="fc" id="L1011">                    a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+<span class="fc" id="L1029">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +</span>
+<span class="fc" id="L1030">                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0))/ sqrAspectRatio);</span>
+<span class="fc" id="L1031">                    a.setElementAt(counter, 1, 2.0 * (h11 * h31 - h12 * h32));</span>
+<span class="fc" id="L1032">                    a.setElementAt(counter, 2, 2.0 * (h21 * h31 - h22 * h32));</span>
+<span class="fc" id="L1033">                    a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
                 
                     //normalize row
-<span class="fc" id="L1014">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L1015">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L1016">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
-<span class="fc" id="L1017">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
-<span class="fc" id="L1018">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
-<span class="fc" id="L1019">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L1036">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1037">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1038">                            Math.pow(a.getElementAt(counter, 1), 2.0) +</span>
+<span class="fc" id="L1039">                            Math.pow(a.getElementAt(counter, 2), 2.0) +</span>
+<span class="fc" id="L1040">                            Math.pow(a.getElementAt(counter, 3), 2.0));</span>
+<span class="fc" id="L1041">                    factor = weight / rowNorm;</span>
 
-<span class="fc" id="L1021">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L1043">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L1023">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L1045">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
-<span class="fc" id="L1025">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
+<span class="fc" id="L1047">                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *</span>
                             factor);
-<span class="fc" id="L1027">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
+<span class="fc" id="L1049">                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *</span>
                             factor);
                 
-<span class="fc" id="L1030">                    counter++;</span>
+<span class="fc" id="L1052">                    counter++;</span>
                 }
                 
-<span class="fc" id="L1033">                index++;</span>
-<span class="fc" id="L1034">            }                                </span>
+<span class="fc" id="L1055">                index++;</span>
+<span class="fc" id="L1056">            }                                </span>
             
-<span class="fc" id="L1036">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L1037">            decomposer.decompose();</span>
+<span class="fc" id="L1058">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L1059">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L1039" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L1061" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //homographies constitute a degenerate camera movement.
                 //A linear combination of possible IAC's exist (i.e. solution is
                 //not unique up to scale)
-<span class="nc" id="L1043">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+<span class="nc" id="L1065">                throw new ImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L1046">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L1068">            Matrix v = decomposer.getV();</span>
             
             //use last column of V as IAC vector
             
             //the last column of V contains IAC matrix (B), which is symmetric
             //and positive definite, ordered as follows: B11, B12, B22, B13, 
             //B23, B33
-<span class="fc" id="L1053">            double b11 = v.getElementAt(0, 3);</span>
-<span class="fc" id="L1054">            double b13 = v.getElementAt(1, 3);</span>
-<span class="fc" id="L1055">            double b23 = v.getElementAt(2, 3);</span>
-<span class="fc" id="L1056">            double b33 = v.getElementAt(3, 3);</span>
+<span class="fc" id="L1075">            double b11 = v.getElementAt(0, 3);</span>
+<span class="fc" id="L1076">            double b13 = v.getElementAt(1, 3);</span>
+<span class="fc" id="L1077">            double b23 = v.getElementAt(2, 3);</span>
+<span class="fc" id="L1078">            double b33 = v.getElementAt(3, 3);</span>
             
-<span class="fc" id="L1058">            double b22 = b11 / sqrAspectRatio;            </span>
+<span class="fc" id="L1080">            double b22 = b11 / sqrAspectRatio;            </span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
             //Since skewness is zero b12 = B = 0.0
-<span class="fc" id="L1064">            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            </span>
-<span class="nc" id="L1065">        }catch(AlgebraException | SortingException e) {</span>
-<span class="nc" id="L1066">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L1086">            return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            </span>
+<span class="nc" id="L1087">        }catch(AlgebraException | SortingException e) {</span>
+<span class="nc" id="L1088">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
         }
     }
     
@@ -1081,120 +1103,120 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-<span class="fc" id="L1084">            int nHomographies = mHomographies.size();</span>
+<span class="fc" id="L1106">            int nHomographies = mHomographies.size();</span>
 
-<span class="fc" id="L1086">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L1108">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxHomographies);
-<span class="fc" id="L1088">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L1110">            boolean[] selected = selection.getSelected();</span>
             
-<span class="fc" id="L1090">            Matrix a = new Matrix(2 * nHomographies, 2);</span>
+<span class="fc" id="L1112">            Matrix a = new Matrix(2 * nHomographies, 2);</span>
             
-<span class="fc" id="L1092">            double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);</span>
+<span class="fc" id="L1114">            double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);</span>
             
-<span class="fc" id="L1094">            int index = 0, counter = 0;</span>
-<span class="fc" id="L1095">            ProjectiveTransformation2D t = null;</span>
-<span class="fc" id="L1096">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
+<span class="fc" id="L1116">            int index = 0, counter = 0;</span>
+<span class="fc" id="L1117">            ProjectiveTransformation2D t = null;</span>
+<span class="fc" id="L1118">            Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, </span>
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
             double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
-<span class="fc bfc" id="L1100" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
+<span class="fc bfc" id="L1122" title="All 2 branches covered.">            for (Transformation2D homography : mHomographies) {</span>
                 
-<span class="pc bpc" id="L1102" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L1103">                    weight = mWeights[index];</span>
+<span class="pc bpc" id="L1124" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L1125">                    weight = mWeights[index];</span>
                     
                     //convert homography into projective so it can be normalized
-<span class="fc" id="L1106">                    homography.asMatrix(h);</span>
-<span class="fc bfc" id="L1107" title="All 2 branches covered.">                    if (t == null) {</span>
-<span class="fc" id="L1108">                        t = new ProjectiveTransformation2D(h);</span>
+<span class="fc" id="L1128">                    homography.asMatrix(h);</span>
+<span class="fc bfc" id="L1129" title="All 2 branches covered.">                    if (t == null) {</span>
+<span class="fc" id="L1130">                        t = new ProjectiveTransformation2D(h);</span>
                     } else {
-<span class="fc" id="L1110">                        t.setT(h);</span>
+<span class="fc" id="L1132">                        t.setT(h);</span>
                     }
                 
                     //normalize
-<span class="fc" id="L1114">                    t.normalize();</span>
+<span class="fc" id="L1136">                    t.normalize();</span>
                 
                     //obtain elements of projective transformation matrix
                     //there is no need to retrieve internal matrix h, as we already
                     //hold a reference
-<span class="fc" id="L1119">                    h11 = h.getElementAt(0, 0);</span>
-<span class="fc" id="L1120">                    h12 = h.getElementAt(0, 1);</span>
+<span class="fc" id="L1141">                    h11 = h.getElementAt(0, 0);</span>
+<span class="fc" id="L1142">                    h12 = h.getElementAt(0, 1);</span>
                 
-<span class="fc" id="L1122">                    h21 = h.getElementAt(1, 0);</span>
-<span class="fc" id="L1123">                    h22 = h.getElementAt(1, 1);</span>
+<span class="fc" id="L1144">                    h21 = h.getElementAt(1, 0);</span>
+<span class="fc" id="L1145">                    h22 = h.getElementAt(1, 1);</span>
                 
-<span class="fc" id="L1125">                    h31 = h.getElementAt(2, 0);</span>
-<span class="fc" id="L1126">                    h32 = h.getElementAt(2, 1);</span>
+<span class="fc" id="L1147">                    h31 = h.getElementAt(2, 0);</span>
+<span class="fc" id="L1148">                    h32 = h.getElementAt(2, 1);</span>
                                 
                     //fill first equation
-<span class="fc" id="L1129">                    a.setElementAt(counter, 0, h11 * h12 + </span>
+<span class="fc" id="L1151">                    a.setElementAt(counter, 0, h11 * h12 + </span>
                             h21 * h22 / sqrAspectRatio);
-<span class="fc" id="L1131">                    a.setElementAt(counter, 1, h31 * h32);</span>
+<span class="fc" id="L1153">                    a.setElementAt(counter, 1, h31 * h32);</span>
                 
                     //normalize row 
-<span class="fc" id="L1134">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L1135">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L1136">                            Math.pow(a.getElementAt(counter, 1), 2.0));</span>
-<span class="fc" id="L1137">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L1156">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1157">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1158">                            Math.pow(a.getElementAt(counter, 1), 2.0));</span>
+<span class="fc" id="L1159">                    factor = weight / rowNorm;</span>
                 
-<span class="fc" id="L1139">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L1161">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L1141">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L1163">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
 
-<span class="fc" id="L1144">                    counter++;</span>
+<span class="fc" id="L1166">                    counter++;</span>
                                                 
                     //fill second equation
-<span class="fc" id="L1147">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +</span>
-<span class="fc" id="L1148">                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);</span>
-<span class="fc" id="L1149">                    a.setElementAt(counter, 1, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
+<span class="fc" id="L1169">                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +</span>
+<span class="fc" id="L1170">                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);</span>
+<span class="fc" id="L1171">                    a.setElementAt(counter, 1, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));</span>
                 
                     //normalize row
-<span class="fc" id="L1152">                    rowNorm = Math.sqrt(</span>
-<span class="fc" id="L1153">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
-<span class="fc" id="L1154">                            Math.pow(a.getElementAt(counter, 1), 2.0));</span>
-<span class="fc" id="L1155">                    factor = weight / rowNorm;</span>
+<span class="fc" id="L1174">                    rowNorm = Math.sqrt(</span>
+<span class="fc" id="L1175">                            Math.pow(a.getElementAt(counter, 0), 2.0) +</span>
+<span class="fc" id="L1176">                            Math.pow(a.getElementAt(counter, 1), 2.0));</span>
+<span class="fc" id="L1177">                    factor = weight / rowNorm;</span>
 
-<span class="fc" id="L1157">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
+<span class="fc" id="L1179">                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *</span>
                             factor);
-<span class="fc" id="L1159">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
+<span class="fc" id="L1181">                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *</span>
                             factor);
                 
-<span class="fc" id="L1162">                    counter++;                   </span>
+<span class="fc" id="L1184">                    counter++;                   </span>
                 }
                 
-<span class="fc" id="L1165">                index++;</span>
-<span class="fc" id="L1166">            }</span>
+<span class="fc" id="L1187">                index++;</span>
+<span class="fc" id="L1188">            }</span>
             
-<span class="fc" id="L1168">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L1169">            decomposer.decompose();</span>
+<span class="fc" id="L1190">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L1191">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L1171" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L1193" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //homographies constitute a degenerate camera movement.
                 //A linear combination of possible IAC's exist (i.e. solution is
                 //not unique up to scale)
-<span class="nc" id="L1175">                throw new ImageOfAbsoluteConicEstimatorException();</span>
+<span class="nc" id="L1197">                throw new ImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L1178">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L1200">            Matrix v = decomposer.getV();</span>
             
             //use last column of V as IAC vector
             
             //the last column of V contains IAC matrix (B), which is symmetric
             //and positive definite, ordered as follows: B11, B12, B22, B13, 
             //B23, B33
-<span class="fc" id="L1185">            double b11 = v.getElementAt(0, 1);</span>
-<span class="fc" id="L1186">            double b33 = v.getElementAt(1, 1);</span>
+<span class="fc" id="L1207">            double b11 = v.getElementAt(0, 1);</span>
+<span class="fc" id="L1208">            double b33 = v.getElementAt(1, 1);</span>
             
-<span class="fc" id="L1188">            double b22 = b11 / sqrAspectRatio;</span>
+<span class="fc" id="L1210">            double b22 = b11 / sqrAspectRatio;</span>
             
             //A conic is defined as [A  B   D]
             //                      [B  C   E]
             //                      [D  E   F]
             //Since principal point is at origin of coordinates 
             //b12 = B = 0, b13 = D = 0.0, b23 = E = 0.0
-<span class="fc" id="L1195">            return new ImageOfAbsoluteConic(b11, 0.0, b22, 0.0, 0.0, b33);</span>
-<span class="nc" id="L1196">        } catch (AlgebraException | SortingException e) {</span>
-<span class="nc" id="L1197">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
+<span class="fc" id="L1217">            return new ImageOfAbsoluteConic(b11, 0.0, b22, 0.0, 0.0, b33);</span>
+<span class="nc" id="L1218">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L1219">            throw new ImageOfAbsoluteConicEstimatorException(e);</span>
         }
     }
 }
