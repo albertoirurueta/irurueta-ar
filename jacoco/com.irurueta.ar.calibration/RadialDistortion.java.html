@@ -636,17 +636,18 @@ public class RadialDistortion extends Distortion implements Serializable {
 <span class="fc" id="L636">        double dInhomX = dHomX / dHomW;</span>
 <span class="fc" id="L637">        double dInhomY = dHomY / dHomW;</span>
         
-<span class="fc" id="L639">        double centerX = 0.0, centerY = 0.0;</span>
-<span class="pc bpc" id="L640" title="1 of 2 branches missed.">        if (mCenter != null) {</span>
-<span class="fc" id="L641">            centerX = mCenter.getInhomX();</span>
-<span class="fc" id="L642">            centerY = mCenter.getInhomY();</span>
+<span class="fc" id="L639">        double centerX = 0.0;</span>
+<span class="fc" id="L640">        double centerY = 0.0;</span>
+<span class="pc bpc" id="L641" title="1 of 2 branches missed.">        if (mCenter != null) {</span>
+<span class="fc" id="L642">            centerX = mCenter.getInhomX();</span>
+<span class="fc" id="L643">            centerY = mCenter.getInhomY();</span>
         }
         
-<span class="fc" id="L645">        uInhomX = (dInhomX + centerX * sum) / (1.0 + sum);</span>
-<span class="fc" id="L646">        uInhomY = (dInhomY + centerY * sum) / (1.0 + sum);</span>
+<span class="fc" id="L646">        uInhomX = (dInhomX + centerX * sum) / (1.0 + sum);</span>
+<span class="fc" id="L647">        uInhomY = (dInhomY + centerY * sum) / (1.0 + sum);</span>
         
-<span class="fc" id="L648">        undistortedPoint.setInhomogeneousCoordinates(uInhomX, uInhomY);        </span>
-<span class="fc" id="L649">    }</span>
+<span class="fc" id="L649">        undistortedPoint.setInhomogeneousCoordinates(uInhomX, uInhomY);        </span>
+<span class="fc" id="L650">    }</span>
     
     /**
      * Indicates whether this instance can distort points.
@@ -656,7 +657,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public boolean canDistort() {
-<span class="fc" id="L659">        return true;</span>
+<span class="fc" id="L660">        return true;</span>
     }
     
     /**
@@ -666,7 +667,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public boolean canUndistort() {
-<span class="fc" id="L669">        return true;</span>
+<span class="fc" id="L670">        return true;</span>
     }
     
     
@@ -676,7 +677,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public DistortionKind getKind() {
-<span class="fc" id="L679">        return DistortionKind.BROWN_RADIAL_DISTORTION;</span>
+<span class="fc" id="L680">        return DistortionKind.BROWN_RADIAL_DISTORTION;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

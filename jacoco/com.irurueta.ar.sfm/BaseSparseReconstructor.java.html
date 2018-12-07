@@ -567,7 +567,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L567">                    mListener.onFundamentalMatrixEstimated((R) this,</span>
                             mCurrentEstimatedFundamentalMatrix);
 
-<span class="fc bfc" id="L570" title="All 2 branches covered.">                    if (estimateInitialCamerasAndPoints()) {</span>
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">                    if (estimateInitialCamerasAndPoints()) {</span>
                         //cameras and points have been estimated
                         //noinspection unchecked
 <span class="fc" id="L573">                        mListener.onMetricCameraEstimated((R) this,</span>
@@ -595,10 +595,10 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
                         }
                     } else {
                         //initial cameras failed
-<span class="fc" id="L598">                        mFailed = true;</span>
+<span class="nc" id="L598">                        mFailed = true;</span>
                         //noinspection unchecked
-<span class="fc" id="L600">                        mListener.onFail((R) this);</span>
-<span class="fc" id="L601">                        return false;</span>
+<span class="nc" id="L600">                        mListener.onFail((R) this);</span>
+<span class="nc" id="L601">                        return false;</span>
                     }
                 } else {
                     //estimation of fundamental matrix failed
@@ -780,9 +780,9 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L780">                        mCurrentViewId = mViewCount;</span>
                     }
 
-<span class="nc" id="L783">                } catch (Exception e) {</span>
+<span class="fc" id="L783">                } catch (Exception e) {</span>
                     //camera estimation failed
-<span class="nc" id="L785">                    samplesRejected = true;</span>
+<span class="fc" id="L785">                    samplesRejected = true;</span>
 <span class="fc" id="L786">                }</span>
 
 <span class="fc bfc" id="L788" title="All 2 branches covered.">            } else if (mConfiguration.getUseUPnPForAdditionalCamerasEstimation()) {</span>
@@ -979,7 +979,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L979">                }</span>
             }
 
-<span class="pc bpc" id="L982" title="1 of 2 branches missed.">            if (!samplesRejected) {</span>
+<span class="fc bfc" id="L982" title="All 2 branches covered.">            if (!samplesRejected) {</span>
 <span class="fc" id="L983">                mPreviousMetricEstimatedCamera = mCurrentMetricEstimatedCamera;</span>
 
 <span class="fc" id="L985">                mCurrentMetricEstimatedCamera = new EstimatedCamera();</span>
@@ -1022,8 +1022,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
         }
 
         //noinspection unchecked
-<span class="nc" id="L1025">        mListener.onSamplesRejected((R) this, mViewCount, mPreviousViewTrackedSamples, mCurrentViewTrackedSamples);</span>
-<span class="nc" id="L1026">        return false;</span>
+<span class="fc" id="L1025">        mListener.onSamplesRejected((R) this, mViewCount, mPreviousViewTrackedSamples, mCurrentViewTrackedSamples);</span>
+<span class="fc" id="L1026">        return false;</span>
     }
 
     /**
@@ -2090,8 +2090,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
             }
 
 <span class="fc" id="L2092">            return true;</span>
-<span class="fc" id="L2093">        } catch (Exception e) {</span>
-<span class="fc" id="L2094">            return false;</span>
+<span class="nc" id="L2093">        } catch (Exception e) {</span>
+<span class="nc" id="L2094">            return false;</span>
         }
     }
 

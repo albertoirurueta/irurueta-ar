@@ -4601,7 +4601,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L239">239</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L333">333</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L342">342</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>                a = new Matrix(mSingularityEnforced ? 8 : 12, 
@@ -4609,9 +4609,18 @@ com.irurueta:irurueta-ar
             }
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter = 0;
             int minReqEqs = getMinRequiredEquations();
             for (PinholeCamera camera : mCameras) {
@@ -6759,7 +6768,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACRadialDistortionRobustEstimator.html#L222">222</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L420">420</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L411">411</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L371">371</a></td></tr>
@@ -7009,7 +7018,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACRadialDistortionRobustEstimator.html#L224">224</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L422">422</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L413">413</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L373">373</a></td></tr>
@@ -8468,7 +8477,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACRadialDistortionRobustEstimator.html#L231">231</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L429">429</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L420">420</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L380">380</a></td></tr>
@@ -8573,10 +8582,10 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L239">239</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L333">333</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L342">342</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L419">419</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L437">437</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>                a = new Matrix(mSingularityEnforced ? 8 : 12, 
@@ -8584,9 +8593,18 @@ com.irurueta:irurueta-ar
             }
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter = 0;
             int minReqEqs = getMinRequiredEquations();
             for (PinholeCamera camera : mCameras) {
@@ -8842,7 +8860,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.html#L156">156</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L273">273</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L266">266</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L156">156</a></td></tr>
@@ -10856,7 +10874,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L313">313</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L282">282</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L275">275</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L165">165</a></td></tr>
@@ -11072,7 +11090,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L315">315</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L284">284</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L277">277</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L167">167</a></td></tr>
@@ -12291,13 +12309,13 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L252">252</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L261">261</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L345">345</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L363">363</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L432">432</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEDualAbsoluteQuadricEstimator.html#L459">459</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedDualAbsoluteQuadricEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedDualAbsoluteQuadricEstimator.html#L424">424</a></td></tr>
@@ -12410,239 +12428,40 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L174">174</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L182">182</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>        this(cameras, listener);
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Returns threshold to determine whether cameras are inliers or not when
-     * testing possible estimation solutions.
-     * The threshold refers to the amount of error a possible solution has.
-     * @return threshold to determine whether cameras are inliers or not when
-     * testing possible estimation solutions.
-     */
-    public double getThreshold() {
-        return mThreshold;
-    }
-    
-    /**
-     * Sets threshold to determine whether cameras are inliers or not when 
-     * testing possible estimation solutions.
-     * The threshold refers to the amount of error a possible solution has.
-     * @param threshold threshold to determine whether cameras are inliers or
-     * not when testing possible estimation solutions.
-     * @throws IllegalArgumentException if provided value is equal or less than
-     * zero.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progres.
-     */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (threshold &lt;= MIN_THRESHOLD) {
-            throw new IllegalArgumentException();
-        }
-        mThreshold = threshold;        
-    }
-    
-    /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled camera.
-     * @return quality scores corresponding to each camera.
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the smapled camera.
-     * @param qualityScores quality scores corresponding to each camera.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is 
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L278">278</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L200">200</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>        this(distortedPoints, undistortedPoints, distortionCenter, listener);
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Returns threshold to be used to keep the algorithm iterating in case that 
-     * best estimated threshold using median of residuals is not small enough. 
-     * Once a solution is found that generates a threshold below this value, the 
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close 
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
-     * iterate for a long time trying to find the best solution when indeed 
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
-     * @return stop threshold to stop the algorithm prematurely when a certain
-     * accuracy has been reached.
-     */
-    public double getStopThreshold() {
-        return mStopThreshold;
-    }
-    
-    /**
-     * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough. 
-     * Once a solution is found that generates a threshold below this value, the 
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close 
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
-     * iterate for a long time trying to find the best solution when indeed 
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
-     * @param stopThreshold stop threshold to stop the algorithm prematurely 
-     * when a certain accuracy has been reached.
-     * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {
-            throw new IllegalArgumentException();
-        }
-        
-        mStopThreshold = stopThreshold;
-    }
-    
-    /**
-     * Returns quality scores corresponding to each provided point.
-     * The larger the score value the betther the quality of the sampled point.
-     * @return quality scores corresponding to each point.
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided point.
-     * The larger the score value the better the quality of the sampled point.
-     * @param qualityScores quality scores corresponding to each point.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is 
-     * smaller than MINIMUM_SIZE (i.e. 3 samples).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }    
-    
-    /**
-     * Indicates if eatimator is ready to start the radial distortion 
-     * estimation.
-     * This is true when input data (i.e. 2D points and quality scores) are 
-     * provided and a minimum of 2 points are available.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; 
-                mQualityScores.length == mDistortedPoints.size();</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L174">174</a></td></tr>
-<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L185">185</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L182">182</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
-<pre>        this(cameras, listener);
+<pre>        this(homographies, listener);
         internalSetQualityScores(qualityScores);
     }
     
     /**
-     * Returns threshold to determine whether cameras are inliers or not when
-     * testing possible estimation solutions.
-     * The threshold refers to the amount of error a possible solution has.
-     * @return threshold to determine whether cameras are inliers or not when
-     * testing possible estimation solutions.
+     * Returns threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the orthonormality assumption of rotation matrices.
+     * @return threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
      */
     public double getThreshold() {
         return mThreshold;
     }
     
     /**
-     * Sets threshold to determine whether cameras are inliers or not when 
+     * Sets threshold to determine whether homographies are iliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error a possible solution has.
-     * @param threshold threshold to determine whether cameras are inliers or
-     * not when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the orthonormality assumption of rotation matrices.
+     * @param threshold threshold to determine whether homographies are inliers 
+     * or not when testing possible estimation solutions.
      * @throws IllegalArgumentException if provided value is equal or less than
      * zero.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progres.
+     * @throws LockedException if robust estimator is locked because an
+     * estimation is already in progress.
      */
     public void setThreshold(double threshold) throws IllegalArgumentException,
             LockedException {
@@ -12652,13 +12471,14 @@ com.irurueta:irurueta-ar
         if (threshold &lt;= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;        
+        mThreshold = threshold;
     }
     
     /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled camera.
-     * @return quality scores corresponding to each camera.
+     * Returns quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sampled 
+     * homography
+     * @return quality scores corresponding to each homography.
      */
     @Override
     public double[] getQualityScores() {
@@ -12666,13 +12486,14 @@ com.irurueta:irurueta-ar
     }
     
     /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the smapled camera.
-     * @param qualityScores quality scores corresponding to each camera.
+     * Sets quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sampled
+     * homography
+     * @param qualityScores quality scores corresponding to each homography
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is 
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than minimum required number of homographies (i.e. 1 homography)
      */
     @Override
     public void setQualityScores(double[] qualityScores) throws LockedException,
@@ -12684,27 +12505,27 @@ com.irurueta:irurueta-ar
     }
     
     /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
+     * Indicates if estimator is ready to start the IAC estimation.
+     * This is true when input data (i.e. homographies) is provided and list
+     * contains at least the minimum number of required homographies, and
+     * also quality scores are provided.
      * @return true if estimator is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
         return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
+                mQualityScores.length == mHomographies.size();</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L432">432</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L399">399</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>        mLastAccelerationX = mStateAccelerationX;
         mLastAccelerationY = mStateAccelerationY;
@@ -12765,70 +12586,9 @@ com.irurueta:irurueta-ar
                 stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);                
         if(mStateOrientation != null) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L516">516</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L429">429</a></td></tr>
-<tr class="a"><td colspan='2'>
-<div>
-<pre>                            PROMedSRadialDistortionRobustEstimator.this, 
-                            progress);
-                }
-            }
-            
-            @Override
-            public double[] getQualityScores() {
-                return mQualityScores;
-            }                             
-        });
-        
-        try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            return innerEstimator.estimate();            
-        } catch (com.irurueta.numerical.LockedException e) {
-            throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
-            throw new NotReadyException(e);
-        } finally {
-            mLocked = false;
-        }
-    }
-
-    /**
-     * Returns method being used for robust estimation
-     * @return method being used for robust estimation
-     */    
-    @Override
-    public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROMedS;
-    }   
-    
-    /**
-     * Sets quality scores corresponding to each provided point.
-     * This method is used internally and does not check whether instance is
-     * locked or not.
-     * @param qualityScores quality scores to be set.
-     * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than MINIMUM_SIZE.
-     */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
-        if (qualityScores.length &lt; MIN_NUMBER_OF_POINTS) {</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="b">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L359">359</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L376">376</a></td></tr>
@@ -12837,7 +12597,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L390">390</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
-<pre>                            PROSACDualAbsoluteQuadricRobustEstimator.this, 
+<pre>                            PROSACImageOfAbsoluteConicRobustEstimator.this, 
                             progress);
                 }
             }
@@ -12860,29 +12620,30 @@ com.irurueta:irurueta-ar
             throw new NotReadyException(e);
         } finally {
             mLocked = false;
-        }        
+        }
     }
 
     /**
-     * Returns method being used for robust estimation.
-     * @return method being used for robust estimation.
-     */
+     * Returns method being used for robust estimation
+     * @return method being used for robust estimation
+     */    
     @Override
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.PROSAC;
     }   
     
     /**
-     * Sets quality scores corresponding to each camera.
+     * Sets quality scores corresponding to each homography.
      * This method is used internally and does not check whether instance is
-     * locked or not.
-     * @param qualityScores quality scores to be set.
+     * locked or not
+     * @param qualityScores quality scores to be set
      * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than the minimum number of required cameras for current settings.
+     * smaller than the minimum number of required homographies for current
+     * settings.
      */
     private void internalSetQualityScores(double[] qualityScores)
             throws IllegalArgumentException {
-        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</pre></div></td></tr></table>
+        if (qualityScores.length &lt; mIACEstimator.getMinNumberOfRequiredHomographies()) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>
@@ -13125,7 +12886,10 @@ com.irurueta:irurueta-ar
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L507">507</a></td></tr>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
@@ -13174,19 +12938,76 @@ com.irurueta:irurueta-ar
     private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L352">352</a></td></tr>
 <tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L465">465</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>                            PROSACDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+            }
+            
+            @Override
+            public double[] getQualityScores() {
+                return mQualityScores;
+            }            
+        });
+        
+        try {
+            mLocked = true;
+            innerEstimator.setConfidence(mConfidence);
+            innerEstimator.setMaxIterations(mMaxIterations);
+            innerEstimator.setProgressDelta(mProgressDelta);
+            return innerEstimator.estimate();
+        } catch (com.irurueta.numerical.LockedException e) {
+            throw new LockedException(e);
+        } catch (com.irurueta.numerical.NotReadyException e) {
+            throw new NotReadyException(e);
+        } finally {
+            mLocked = false;
+        }        
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+        return RobustEstimatorMethod.PROSAC;
+    }   
+    
+    /**
+     * Sets quality scores corresponding to each camera.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required cameras for current settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores) {
+        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1425">1425</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2025">2025</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2025">2025</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2124">2124</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            PinholeCameraIntrinsicParameters intrinsic2) {
         FundamentalMatrix fundamentalMatrix =
@@ -13212,16 +13033,16 @@ com.irurueta:irurueta-ar
 
         try {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1027">1027</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1027">1027</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1123">1123</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    private boolean estimateInitialCamerasAndPointsDIAC() {
         FundamentalMatrix fundamentalMatrix = 
@@ -13247,16 +13068,16 @@ com.irurueta:irurueta-ar
 
         try {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L281">281</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L258">258</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>        return new AbsoluteOrientationConstantVelocityModelSlamCalibrator();
     }
@@ -13299,15 +13120,18 @@ com.irurueta:irurueta-ar
             return;
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L184">184</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L191">191</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L271">271</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>        this(cameras, listener);
@@ -13399,6 +13223,92 @@ com.irurueta:irurueta-ar
     /**
      * Indicates if estimator is ready to start the DAQ estimation.
      * This is true when input data (i.e. cameras) is provided and list contains
+     * at least the minimum number of required cameras, and also quality scores
+     * are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
+                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L169">169</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L252">252</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>        this(cameras, listener);
+        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Returns threshold to determine whether cameras are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @return threshold to determine whether cameras are inliers or not when
+     * testing possible estimation solutions.
+     */
+    public double getThreshold() {
+        return mThreshold;
+    }
+    
+    /**
+     * Sets threshold to determine whether cameras are inliers or not when 
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @param threshold threshold to determine whether cameras are inliers or
+     * not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progres.
+     */
+    public void setThreshold(double threshold) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (threshold &lt;= MIN_THRESHOLD) {
+            throw new IllegalArgumentException();
+        }
+        mThreshold = threshold;        
+    }
+    
+    /**
+     * Returns quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled camera.
+     * @return quality scores corresponding to each camera.
+     */
+    @Override
+    public double[] getQualityScores() {
+        return mQualityScores;
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the smapled camera.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is 
+     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Indicates if estimator is ready to start the DAQ estimation.
+     * This is true when input data (i.e. cameras) is provided and contains
      * at least the minimum number of required cameras, and also quality scores
      * are provided.
      * @return true if estimator is ready, false otherwise.
@@ -13683,8 +13593,99 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L279">279</a></td></tr>
+<td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L186">186</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.html#L350">350</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L183">183</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Returns threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the orthonormality assumption of rotation matrices.
+     * @return threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     */
+    public double getThreshold() {
+        return mThreshold;
+    }
+    
+    /**
+     * Sets threshold to determine whether homographies are iliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the orthonormality assumption of rotation matrices.
+     * @param threshold threshold to determine whether homographies are inliers 
+     * or not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an
+     * estimation is already in progress.
+     */
+    public void setThreshold(double threshold) throws IllegalArgumentException,
+            LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (threshold &lt;= MIN_THRESHOLD) {
+            throw new IllegalArgumentException();
+        }
+        mThreshold = threshold;
+    }
+    
+    /**
+     * Returns quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sampled 
+     * homography
+     * @return quality scores corresponding to each homography.
+     */
+    @Override
+    public double[] getQualityScores() {
+        return mQualityScores;
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided homography.
+     * The larger the score value the better the quality of the sampled
+     * homography
+     * @param qualityScores quality scores corresponding to each homography
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than minimum required number of homographies (i.e. 1 homography)
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException,
+            IllegalArgumentException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Indicates if estimator is ready to start the IAC estimation.
+     * This is true when input data (i.e. homographies) is provided and list
+     * contains at least the minimum number of required homographies, and
+     * also quality scores are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
+                mQualityScores.length == mHomographies.size();</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/epipolar/estimators/PROMedSFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROMedSFundamentalMatrixRobustEstimator.html#L367">367</a></td></tr>
@@ -13693,8 +13694,9 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L201">201</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
-<pre>        internalSetQualityScores(qualityScores);
+<pre>        super.setPoints(leftPoints, rightPoints);
     }
+    
     
     /**
      * Returns threshold to be used to keep the algorithm iterating in case that 
@@ -13750,11 +13752,12 @@ com.irurueta:irurueta-ar
         
         mStopThreshold = stopThreshold;
     }
-    
+
     /**
-     * Returns quality scores corresponding to each provided point.
-     * The larger the score value the betther the quality of the sampled point.
-     * @return quality scores corresponding to each point.
+     * Returns quality scores corresponding to each provided pair of points.
+     * The larger the score value the better the quality of the sampled matched 
+     * pair of points.
+     * @return quality scores corresponding to each pair of points.
      */
     @Override
     public double[] getQualityScores() {
@@ -13762,9 +13765,10 @@ com.irurueta:irurueta-ar
     }
     
     /**
-     * Sets quality scores corresponding to each provided point.
-     * The larger the score value the better the quality of the sampled point.
-     * @param qualityScores quality scores corresponding to each point.
+     * Sets quality scores corresponding to each provided pair of points.
+     * The larger the score value the better the quality of the sampled matched 
+     * pair of points.
+     * @param qualityScores quality scores corresponding to each pair of points.
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      * @throws IllegalArgumentException if provided quality scores length is 
@@ -13780,109 +13784,18 @@ com.irurueta:irurueta-ar
     }    
     
     /**
-     * Indicates if eatimator is ready to start the radial distortion 
-     * estimation.
-     * This is true when input data (i.e. 2D points and quality scores) are 
-     * provided and a minimum of 2 points are available.
+     * Returns value indicating whether required data has been provided so that
+     * fundamental matrix estimation can start.
+     * This is true when input data (i.e. 7 pairs of matched 2D points and their
+     * quality scores) are provided.
+     * If true, estimator is ready to compute a fundamental matrix, otherwise
+     * more data needs to be provided.
      * @return true if estimator is ready, false otherwise.
-     */
+     */    
     @Override
     public boolean isReady() {
         return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; 
-                mQualityScores.length == mDistortedPoints.size();</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="b">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L175">175</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L186">186</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.html#L350">350</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L183">183</a></td></tr>
-<tr class="a"><td colspan='2'>
-<div>
-<pre>        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Returns threshold to determine whether cameras are inliers or not when
-     * testing possible estimation solutions.
-     * The threshold refers to the amount of error a possible solution has.
-     * @return threshold to determine whether cameras are inliers or not when
-     * testing possible estimation solutions.
-     */
-    public double getThreshold() {
-        return mThreshold;
-    }
-    
-    /**
-     * Sets threshold to determine whether cameras are inliers or not when 
-     * testing possible estimation solutions.
-     * The threshold refers to the amount of error a possible solution has.
-     * @param threshold threshold to determine whether cameras are inliers or
-     * not when testing possible estimation solutions.
-     * @throws IllegalArgumentException if provided value is equal or less than
-     * zero.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progres.
-     */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (threshold &lt;= MIN_THRESHOLD) {
-            throw new IllegalArgumentException();
-        }
-        mThreshold = threshold;        
-    }
-    
-    /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled camera.
-     * @return quality scores corresponding to each camera.
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the smapled camera.
-     * @param qualityScores quality scores corresponding to each camera.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is 
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
+                mQualityScores.length == mLeftPoints.size();</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -14396,7 +14309,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L516">516</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L507">507</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L429">429</a></td></tr>
@@ -14453,7 +14366,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L359">359</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L352">352</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L376">376</a></td></tr>
@@ -14508,7 +14421,7 @@ com.irurueta:irurueta-ar
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than the minimum number of required cameras for current settings.
      */
-    private void internalSetQualityScores(double[] qualityScores)</pre></div></td></tr></table>
+    private void internalSetQualityScores(double[] qualityScores) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -14833,6 +14746,154 @@ com.irurueta:irurueta-ar
                 
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12);</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L239">239</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L203">203</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>    }
+    
+    /**
+     * Returns quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled
+     * camera.
+     * @return quality scores corresponding to each camera. 
+     */
+    @Override
+    public double[] getQualityScores() {
+        return mQualityScores;
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled
+     * camera.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @throws LockedException if robust estimator is locked because an
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Indicates if estimator is ready to start the DAQ estimation.
+     * This is true when input data (i.e. cameras) is provided and list contains
+     * at least the minimum number of required cameras, and also quality scores
+     * are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
+                mQualityScores.length == mCameras.size();
+    }
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException if robust estimator is locked.
+     * @throws NotReadyException if no valid input data has already been 
+     * provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public DualAbsoluteQuadric estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (!isReady()) {
+            throw new NotReadyException();
+        }</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L327">327</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L287">287</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>    }
+    
+    /**
+     * Returns quality scores corresponding to each provided point.
+     * The larger the score value the betther the quality of the sampled point.
+     * @return quality scores corresponding to each point.
+     */
+    @Override
+    public double[] getQualityScores() {
+        return mQualityScores;
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sampled point.
+     * @param qualityScores quality scores corresponding to each point.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is 
+     * smaller than MINIMUM_SIZE (i.e. 3 samples).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetQualityScores(qualityScores);
+    }    
+    
+    /**
+     * Indicates if eatimator is ready to start the radial distortion 
+     * estimation.
+     * This is true when input data (i.e. 2D points and quality scores) are 
+     * provided and a minimum of 2 points are available.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; 
+                mQualityScores.length == mDistortedPoints.size();
+    }     
+    
+    /**
+     * Estimates a radial distortion using a robust estimator and
+     * the best set of matched 2D points found using the robust estimator.
+     * @return a radial distortion.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws NotReadyException if provided input data is not enough to start
+     * the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public RadialDistortion estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (!isReady()) {
+            throw new NotReadyException();
+        }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>
@@ -15751,10 +15812,10 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L516">516</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L507">507</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L359">359</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L352">352</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L376">376</a></td></tr>
