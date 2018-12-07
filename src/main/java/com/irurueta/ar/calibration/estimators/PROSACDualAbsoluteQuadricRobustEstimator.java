@@ -86,8 +86,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if not enough cameras are provided for 
      * default settings. Hence, at least 2 cameras must be provided.
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras)
-            throws IllegalArgumentException {
+    public PROSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras) {
         super(cameras);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -102,8 +101,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * default settings. Hence, at least 2 cameras must be provided.
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras,
-            DualAbsoluteQuadricRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -116,8 +114,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * smaller than required number of cameras for default settings (i.e. 2 
      * cameras).
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -133,8 +130,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * cameras).
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(double[] qualityScores,
-            DualAbsoluteQuadricRobustEstimatorListener listener)
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -150,7 +146,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * have the same size.
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras, 
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         this(cameras);
         internalSetQualityScores(qualityScores);
     }
@@ -169,8 +165,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(List<PinholeCamera> cameras,
             double[] qualityScores, 
-            DualAbsoluteQuadricRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(cameras, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -197,8 +192,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progres.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -228,8 +222,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * smaller than minimum required number of cameras (i.e. 2 cameras).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -399,8 +392,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than the minimum number of required cameras for current settings.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < mDAQEstimator.getMinNumberOfRequiredCameras()) {
             throw new IllegalArgumentException();
         }

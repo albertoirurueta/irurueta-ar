@@ -110,7 +110,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints) throws IllegalArgumentException {
+            List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -127,8 +127,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -145,8 +144,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -166,8 +164,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }    
@@ -178,8 +175,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than required size (i.e. 2 points).
      */
-    public PROMedSRadialDistortionRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROMedSRadialDistortionRobustEstimator(double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -193,7 +189,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * smaller than required size (i.e. 2 points).
      */
     public PROMedSRadialDistortionRobustEstimator(double[] qualityScores,
-            RadialDistortionRobustEstimatorListener listener) throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -209,8 +205,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * MIN_NUMBER_OF_POINTS (i.e. 2 points).
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
-            List<Point2D> undistortedPoints, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<Point2D> undistortedPoints, double[] qualityScores) {
         this(distortedPoints, undistortedPoints);
         internalSetQualityScores(qualityScores);
     }
@@ -229,8 +224,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, double[] qualityScores,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -250,7 +244,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      */
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, double[] qualityScores, 
-            Point2D distortionCenter) throws IllegalArgumentException {
+            Point2D distortionCenter) {
         this(distortedPoints, undistortedPoints, distortionCenter);
         internalSetQualityScores(qualityScores);
     }
@@ -273,8 +267,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
     public PROMedSRadialDistortionRobustEstimator(List<Point2D> distortedPoints,
             List<Point2D> undistortedPoints, double[] qualityScores, 
             Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, distortionCenter, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -322,8 +315,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -354,8 +346,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -556,8 +547,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MINIMUM_SIZE.
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < MIN_NUMBER_OF_POINTS) {
             throw new IllegalArgumentException();
         }

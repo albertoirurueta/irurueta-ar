@@ -992,23 +992,23 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
      * solve x value, which is the squared value of horizontal focal length.
      * This method is only used when aspect ratio is known.
-     * @param A internal value from Kruppa's equations.
-     * @param B internal value from Kruppa's equations.
-     * @param C internal value from Kruppa's equations.
-     * @param D internal value from Kruppa's equations.
-     * @param E internal value from Kruppa's equations.
-     * @param F internal value from Kruppa's equations.
-     * @param G internal value from Kruppa's equations.
-     * @param H internal value from Kruppa's equations.
-     * @param I internal value from Kruppa's equations.
-     * @param J internal value from Kruppa's equations.
-     * @param K internal value from Kruppa's equations.
-     * @param L internal value from Kruppa's equations.
+     * @param a internal value from Kruppa's equations.
+     * @param b internal value from Kruppa's equations.
+     * @param c internal value from Kruppa's equations.
+     * @param d internal value from Kruppa's equations.
+     * @param e internal value from Kruppa's equations.
+     * @param f internal value from Kruppa's equations.
+     * @param g internal value from Kruppa's equations.
+     * @param h internal value from Kruppa's equations.
+     * @param i internal value from Kruppa's equations.
+     * @param j internal value from Kruppa's equations.
+     * @param k internal value from Kruppa's equations.
+     * @param l internal value from Kruppa's equations.
      * @return a polynomial.
      */
-    private Polynomial buildPolynomial3(double A, double B, double C, double D,
-            double E, double F, double G, double H, double I, double J, 
-            double K, double L) {
+    private Polynomial buildPolynomial3(double a, double b, double c, double d,
+            double e, double f, double g, double h, double i, double j,
+            double k, double l) {
         
         //x^2*((-A*D - G*J) + r^4*(-B*E - H*K) + r^2*(-A*E - B*D - G*K - H*J)) + 
         //x*((-A*F - D*C - G*L - J*I) + r^2*(-B*F - E*C - H*L - K*I)) + 
@@ -1016,76 +1016,76 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         double r = mFocalDistanceAspectRatio;
         double r2 = r*r;
         double r4 = r2*r2;
-        return new Polynomial(-F*C -L*I, 
-                (-A*F - D*C - G*L - J*I) + r2*(-B*F - E*C - H*L - K*I), 
-                ((-A*D - G*J) + r4*(-B*E - H*K) + r2*(-A*E - B*D - G*K - H*J)));
+        return new Polynomial(-f*c -l*i,
+                (-a*f - d*c - g*l - j*i) + r2*(-b*f - e*c - h*l - k*i),
+                ((-a*d - g*j) + r4*(-b*e - h*k) + r2*(-a*e - b*d - g*k - h*j)));
     }
 
     /**
      * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
      * solve x value, which is the squared value of horizontal focal length.
      * This method is only used when aspect ratio is known.
-     * @param D internal value from Kruppa's equations.
-     * @param E internal value from Kruppa's equations.
-     * @param F internal value from Kruppa's equations.
-     * @param G internal value from Kruppa's equations.
-     * @param H internal value from Kruppa's equations.
-     * @param I internal value from Kruppa's equations.
-     * @param M internal value from Kruppa's equations.
-     * @param N internal value from Kruppa's equations.
-     * @param O internal value from Kruppa's equations.
-     * @param P internal value from Kruppa's equations.
-     * @param Q internal value from Kruppa's equations.
-     * @param R internal value from Kruppa's equations.
+     * @param d internal value from Kruppa's equations.
+     * @param e internal value from Kruppa's equations.
+     * @param f internal value from Kruppa's equations.
+     * @param g internal value from Kruppa's equations.
+     * @param h internal value from Kruppa's equations.
+     * @param i internal value from Kruppa's equations.
+     * @param m internal value from Kruppa's equations.
+     * @param n internal value from Kruppa's equations.
+     * @param o internal value from Kruppa's equations.
+     * @param p internal value from Kruppa's equations.
+     * @param q internal value from Kruppa's equations.
+     * @param r internal value from Kruppa's equations.
      * @return a polynomial.
      */
-    private Polynomial buildPolynomial4(double D,
-            double E, double F, double G, double H, double I,
-            double M, double N, double O, double P,
-            double Q, double R) {
+    private Polynomial buildPolynomial4(double d,
+            double e, double f, double g, double h, double i,
+            double m, double n, double o, double p,
+            double q, double r) {
         
         //x^2*((G*M - P*D) + r^4*(H*N - Q*E) + r^2*(G*N + H*M - P*E - Q*D)) + 
         //x*((G*O + M*I - P*F - D*R) + r^2*(H*O + N*I - Q*F - E*R)) + 
         //(O*I - F*R) = 0
-        double r = mFocalDistanceAspectRatio;
-        double r2 = r*r;
+        double r1 = mFocalDistanceAspectRatio;
+        double r2 = r1*r1;
         double r4 = r2*r2;
-        return new Polynomial(O*I - F*R, 
-                (G*O + M*I - P*F - D*R) + r2*(H*O + N*I - Q*F - E*R),
-                (G*M - P*D) + r4*(H*N - Q*E) + r2*(G*N + H*M - P*E - Q*D));
+        return new Polynomial(o*i - f*r,
+                (g*o + m*i - p*f - d*r) + r2*(h*o + n*i - q*f - e*r),
+                (g*m - p*d) + r4*(h*n - q*e) + r2*(g*n + h*m - p*e - q*d));
     }
 
     /**
      * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
      * solve x value, which is the squared value of horizontal focal length.
      * This method is only used when aspect ratio is known.
-     * @param A internal value from Kruppa's equations.
-     * @param B internal value from Kruppa's equations.
-     * @param C internal value from Kruppa's equations.
-     * @param J internal value from Kruppa's equations.
-     * @param K internal value from Kruppa's equations.
-     * @param L internal value from Kruppa's equations.
-     * @param M internal value from Kruppa's equations.
-     * @param N internal value from Kruppa's equations.
-     * @param O internal value from Kruppa's equations.
-     * @param P internal value from Kruppa's equations.
-     * @param Q internal value from Kruppa's equations.
-     * @param R internal value from Kruppa's equations.
+     * @param a internal value from Kruppa's equations.
+     * @param b internal value from Kruppa's equations.
+     * @param c internal value from Kruppa's equations.
+     * @param j internal value from Kruppa's equations.
+     * @param k internal value from Kruppa's equations.
+     * @param l internal value from Kruppa's equations.
+     * @param m internal value from Kruppa's equations.
+     * @param n internal value from Kruppa's equations.
+     * @param o internal value from Kruppa's equations.
+     * @param p internal value from Kruppa's equations.
+     * @param q internal value from Kruppa's equations.
+     * @param r internal value from Kruppa's equations.
      * @return a polynomial.
      */
-    private Polynomial buildPolynomial5(double A, double B, double C, double J,
-            double K, double L, double M, double N, double O, double P, 
-            double Q, double R) {
+    private Polynomial buildPolynomial5(double a, double b, double c, double j,
+            double k, double l, double m, double n, double o, double p,
+            double q, double r) {
         
         //x^2*((P*J + A*M) + r^4*(Q*K + B*N) + r^2*(P*K + Q*J + A*N + B*M)) + 
         //x*((P*L + J*R + A*O + M*C) + r^2*(Q*L + K*R + B*O + N*C)) + 
         //(L*R + O*C) = 0
-        double r = mFocalDistanceAspectRatio;
-        double r2 = r*r;
+        double r1 = mFocalDistanceAspectRatio;
+        double r2 = r1*r1;
         double r4 = r2*r2;
-        return new Polynomial(L*R + O*C, 
-                (P*L + J*R + A*O + M*C) + r2*(Q*L + K*R + B*O + N*C),
-                (P*J + A*M) + r4*(Q*K + B*N) + r2*(P*K + Q*J + A*N + B*M));
+        return new Polynomial(l*r + o*c,
+                (p*l + j*r + a*o + m*c) + r2*(q*l + k*r + b*o + n*c),
+                (p*j + a*m) + r4*(q*k + b*n) + r2*(p*k + q*j + a*n + b*m));
     }
     
 }

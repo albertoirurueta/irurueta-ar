@@ -241,9 +241,18 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             }
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter = 0;
             int minReqEqs = getMinRequiredEquations();
             for (PinholeCamera camera : mCameras) {
@@ -334,9 +343,18 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             }
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter = 0;
             int minReqEqs = getMinRequiredEquations();
             for (PinholeCamera camera : mCameras) {
@@ -421,9 +439,18 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             }
             
             Matrix cameraMatrix;
-            double p11, p12, p13, p14;
-            double p21, p22, p23, p24;
-            double p31, p32, p33, p34;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
             int eqCounter = 0;
             int minReqEqs = getMinRequiredEquations();
             for (PinholeCamera camera : mCameras) {

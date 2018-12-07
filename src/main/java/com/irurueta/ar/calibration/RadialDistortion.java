@@ -636,7 +636,8 @@ public class RadialDistortion extends Distortion implements Serializable {
         double dInhomX = dHomX / dHomW;
         double dInhomY = dHomY / dHomW;
         
-        double centerX = 0.0, centerY = 0.0;
+        double centerX = 0.0;
+        double centerY = 0.0;
         if (mCenter != null) {
             centerX = mCenter.getInhomX();
             centerY = mCenter.getInhomY();
