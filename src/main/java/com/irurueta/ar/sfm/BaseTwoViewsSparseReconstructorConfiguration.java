@@ -146,7 +146,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * cameras are being estimated using either Dual Image of Absolute Conic
      * (DIAC), Dual Absolute Quadric (DAQ) or essential matrix methods.
      */
-    public static CorrectorType DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE =
+    public static final CorrectorType DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE =
             CorrectorType.SAMPSON_CORRECTOR;
     
     /**

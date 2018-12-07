@@ -39,8 +39,7 @@ public class ConstantVelocityModelSlamTwoViewsSparseReconstructor extends
      */
     public ConstantVelocityModelSlamTwoViewsSparseReconstructor(
             ConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration configuration,
-            ConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            ConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
     
@@ -50,8 +49,7 @@ public class ConstantVelocityModelSlamTwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public ConstantVelocityModelSlamTwoViewsSparseReconstructor(
-            ConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+            ConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
         this(new ConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(), 
                 listener);
     }
