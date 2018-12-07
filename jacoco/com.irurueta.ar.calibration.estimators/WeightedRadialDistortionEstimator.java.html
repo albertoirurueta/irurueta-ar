@@ -100,13 +100,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
      */
     public WeightedRadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints, double[] weights) 
-            throws IllegalArgumentException {
-<span class="fc" id="L105">        super();</span>
-<span class="fc" id="L106">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
-<span class="fc" id="L107">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
-<span class="fc" id="L108">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
-<span class="fc" id="L109">    }</span>
+            List&lt;Point2D&gt; undistortedPoints, double[] weights) {
+<span class="fc" id="L104">        super();</span>
+<span class="fc" id="L105">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L106">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L107">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
+<span class="fc" id="L108">    }</span>
    
     /**
      * Constructor.
@@ -125,13 +124,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     
     public WeightedRadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
             List&lt;Point2D&gt; undistortedPoints, double[] weights,
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="nc" id="L130">        super(listener);</span>
-<span class="nc" id="L131">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
-<span class="nc" id="L132">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
-<span class="nc" id="L133">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
-<span class="nc" id="L134">    }</span>
+            RadialDistortionEstimatorListener listener) {
+<span class="nc" id="L128">        super(listener);</span>
+<span class="nc" id="L129">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="nc" id="L130">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="nc" id="L131">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
+<span class="nc" id="L132">    }</span>
 
     /**
      * Constructor with distortion center.
@@ -140,10 +138,10 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * the origin of coordinates (0,0).
      */
     public WeightedRadialDistortionEstimator(Point2D distortionCenter) {
-<span class="fc" id="L143">        super(distortionCenter);</span>
-<span class="fc" id="L144">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
-<span class="fc" id="L145">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
-<span class="fc" id="L146">    }</span>
+<span class="fc" id="L141">        super(distortionCenter);</span>
+<span class="fc" id="L142">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L143">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
+<span class="fc" id="L144">    }</span>
     
     /**
      * Constructor with listener and distortion center.
@@ -155,10 +153,10 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */
     public WeightedRadialDistortionEstimator(Point2D distortionCenter,
             RadialDistortionEstimatorListener listener) {
-<span class="fc" id="L158">        super(distortionCenter, listener);</span>
-<span class="fc" id="L159">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
-<span class="fc" id="L160">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
-<span class="fc" id="L161">    }</span>
+<span class="fc" id="L156">        super(distortionCenter, listener);</span>
+<span class="fc" id="L157">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L158">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
+<span class="fc" id="L159">    }</span>
     
     /**
      * Constructor with points and distortion center.
@@ -176,13 +174,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
      */
     public WeightedRadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints, double[] weights, Point2D distortionCenter) 
-            throws IllegalArgumentException {
-<span class="fc" id="L181">        super(distortionCenter);</span>
-<span class="fc" id="L182">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
-<span class="fc" id="L183">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
-<span class="fc" id="L184">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
-<span class="fc" id="L185">    }</span>
+            List&lt;Point2D&gt; undistortedPoints, double[] weights, Point2D distortionCenter) {
+<span class="fc" id="L178">        super(distortionCenter);</span>
+<span class="fc" id="L179">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L180">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L181">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
+<span class="fc" id="L182">    }</span>
    
     /**
      * Constructor.
@@ -204,13 +201,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     public WeightedRadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints, 
             List&lt;Point2D&gt; undistortedPoints, double[] weights, 
             Point2D distortionCenter, 
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L209">        super(distortionCenter, listener);</span>
-<span class="fc" id="L210">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
-<span class="fc" id="L211">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
-<span class="fc" id="L212">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
-<span class="fc" id="L213">    }</span>
+            RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L205">        super(distortionCenter, listener);</span>
+<span class="fc" id="L206">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L207">        mMaxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L208">        mSortWeights = DEFAULT_SORT_WEIGHTS;        </span>
+<span class="fc" id="L209">    }</span>
     
     /**
      * Sets lists of corresponding distorted and undistorted points.
@@ -228,13 +224,13 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */
     public void setPointsAndWeights(List&lt;Point2D&gt; distortedPoints, 
             List&lt;Point2D&gt; undistortedPoints, double[] weights) 
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L233">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L229">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L236">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
-<span class="fc" id="L237">    }       </span>
+<span class="fc" id="L232">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L233">    }       </span>
     
     /**
      * Indicates if lists of corresponding distorted and undistorted points are
@@ -251,14 +247,14 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */
     public boolean areValidPointsAndWeights(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, double[] weights){
-<span class="pc bpc" id="L254" title="1 of 6 branches missed.">        if (distortedPoints == null || undistortedPoints == null ||</span>
+<span class="pc bpc" id="L250" title="1 of 6 branches missed.">        if (distortedPoints == null || undistortedPoints == null ||</span>
                 weights == null) {
-<span class="fc" id="L256">            return false;</span>
+<span class="fc" id="L252">            return false;</span>
         }
         
-<span class="fc bfc" id="L259" title="All 2 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp;</span>
-<span class="fc bfc" id="L260" title="All 2 branches covered.">                distortedPoints.size() == weights.length &amp;&amp;</span>
-<span class="pc bpc" id="L261" title="1 of 2 branches missed.">                distortedPoints.size() &gt;= getMinNumberOfMatchedPoints();</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp;</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">                distortedPoints.size() == weights.length &amp;&amp;</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">                distortedPoints.size() &gt;= getMinNumberOfMatchedPoints();</span>
     }    
     
     /**
@@ -268,7 +264,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return array containing weights for each correspondence.
      */
     public double[] getWeights() {
-<span class="fc" id="L271">        return mWeights;</span>
+<span class="fc" id="L267">        return mWeights;</span>
     }
     
     /**
@@ -277,7 +273,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return true if weights are available, false otherwise.
      */
     public boolean areWeightsAvailable() {
-<span class="fc bfc" id="L280" title="All 2 branches covered.">        return mWeights != null;</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        return mWeights != null;</span>
     }    
     
     /**
@@ -286,7 +282,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return maximum number of points to be weighted.
      */
     public int getMaxPoints() {
-<span class="fc" id="L289">        return mMaxPoints;</span>
+<span class="fc" id="L285">        return mMaxPoints;</span>
     }
     
     /**
@@ -297,17 +293,16 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * minimum allowed number of point correspondences.
      * @throws LockedException if this instance is locked.
      */
-    public void setMaxPoints(int maxPoints) throws IllegalArgumentException,
-            LockedException {
-<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L303">            throw new LockedException();</span>
+    public void setMaxPoints(int maxPoints) throws LockedException {
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L298">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L305" title="All 2 branches covered.">        if (maxPoints &lt; getMinNumberOfMatchedPoints()) {</span>
-<span class="fc" id="L306">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (maxPoints &lt; getMinNumberOfMatchedPoints()) {</span>
+<span class="fc" id="L301">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L309">        mMaxPoints = maxPoints;</span>
-<span class="fc" id="L310">    }</span>
+<span class="fc" id="L304">        mMaxPoints = maxPoints;</span>
+<span class="fc" id="L305">    }</span>
     
     /**
      * Indicates if weights are sorted by so that largest weighted
@@ -315,7 +310,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return true if weights are sorted, false otherwise.
      */
     public boolean isSortWeightsEnabled() {
-<span class="fc" id="L318">        return mSortWeights;</span>
+<span class="fc" id="L313">        return mSortWeights;</span>
     }
     
     /**
@@ -326,12 +321,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */
     public void setSortWeightsEnabled(boolean sortWeights) 
             throws LockedException {
-<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L330">            throw new LockedException();</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L325">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L333">        mSortWeights = sortWeights;</span>
-<span class="fc" id="L334">    }</span>
+<span class="fc" id="L328">        mSortWeights = sortWeights;</span>
+<span class="fc" id="L329">    }</span>
     
     /**
      * Indicates if this estimator is ready to start the estimation.
@@ -340,7 +335,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */
     @Override
     public boolean isReady() {
-<span class="pc bpc" id="L343" title="1 of 4 branches missed.">        return arePointsAvailable() &amp;&amp; areWeightsAvailable();</span>
+<span class="pc bpc" id="L338" title="1 of 4 branches missed.">        return arePointsAvailable() &amp;&amp; areWeightsAvailable();</span>
     }    
     
     /**
@@ -354,160 +349,173 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     @Override
     public RadialDistortion estimate() throws LockedException, 
             NotReadyException, RadialDistortionEstimatorException {
-<span class="pc bpc" id="L357" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L358">            throw new LockedException();</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L353">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L361">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L356">            throw new NotReadyException();</span>
         }
         
         try {
-<span class="fc" id="L365">            mLocked = true;</span>
-<span class="pc bpc" id="L366" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L367">                mListener.onEstimateStart(this);</span>
+<span class="fc" id="L360">            mLocked = true;</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L362">                mListener.onEstimateStart(this);</span>
             }
             
-<span class="fc" id="L370">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L365">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxPoints);
-<span class="fc" id="L372">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L367">            boolean[] selected = selection.getSelected();</span>
             
-<span class="fc" id="L374">            int nPoints = mDistortedPoints.size();</span>
+<span class="fc" id="L369">            int nPoints = mDistortedPoints.size();</span>
             
-<span class="fc" id="L376">            Matrix A = new Matrix(2 * nPoints, mNumKParams);</span>
-<span class="fc" id="L377">            double[] b = new double[2 * nPoints];</span>
+<span class="fc" id="L371">            Matrix aMatrix = new Matrix(2 * nPoints, mNumKParams);</span>
+<span class="fc" id="L372">            double[] b = new double[2 * nPoints];</span>
             
-<span class="fc" id="L379">            Iterator&lt;Point2D&gt; iteratorDistorted = mDistortedPoints.iterator();</span>
-<span class="fc" id="L380">            Iterator&lt;Point2D&gt; iteratorUndistorted = </span>
-<span class="fc" id="L381">                    mUndistortedPoints.iterator();</span>
+<span class="fc" id="L374">            Iterator&lt;Point2D&gt; iteratorDistorted = mDistortedPoints.iterator();</span>
+<span class="fc" id="L375">            Iterator&lt;Point2D&gt; iteratorUndistorted = </span>
+<span class="fc" id="L376">                    mUndistortedPoints.iterator();</span>
             
-            Point2D distorted, undistorted;
-<span class="fc" id="L384">            int index = 0, counter = 0;</span>
+            Point2D distorted;
+            Point2D undistorted;
+<span class="fc" id="L380">            int index = 0;</span>
+<span class="fc" id="L381">            int counter = 0;</span>
             
             //undistorted normalized homogeneous coordinates
-            double uNormHomX, uNormHomY, uNormHomW; 
+            double uNormHomX;
+            double uNormHomY;
+            double uNormHomW;
             //undistorted normalized inhomogeneous coordinates
-            double uNormInhomX, uNormInhomY;
+            double uNormInhomX;
+            double uNormInhomY;
             //undistorted denormalized homogeneous coordinates
-            double uDenormHomX, uDenormHomY, uDenormHomW; 
+            double uDenormHomX;
+            double uDenormHomY;
+            double uDenormHomW;
             //undistorted denormalized inhomogeneous coordinates
-            double uDenormInhomX, uDenormInhomY;
+            double uDenormInhomX;
+            double uDenormInhomY;
             //distorted inhomogeneous coordinates
-            double dInhomX, dInhomY;
-            double rowNormX, rowNormY;
+            double dInhomX;
+            double dInhomY;
+            double rowNormX;
+            double rowNormY;
             
             //radial distortion center
-<span class="fc" id="L399">            double centerX = 0.0, centerY = 0.0;</span>
-<span class="pc bpc" id="L400" title="1 of 2 branches missed.">            if (mDistortionCenter != null) {</span>
-<span class="fc" id="L401">                centerX = mDistortionCenter.getInhomX();</span>
-<span class="fc" id="L402">                centerY = mDistortionCenter.getInhomY();</span>
+<span class="fc" id="L404">            double centerX = 0.0;</span>
+<span class="fc" id="L405">            double centerY = 0.0;</span>
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">            if (mDistortionCenter != null) {</span>
+<span class="fc" id="L407">                centerX = mDistortionCenter.getInhomX();</span>
+<span class="fc" id="L408">                centerY = mDistortionCenter.getInhomY();</span>
             }
             
             //radial distance of undistorted normalized (calibration independent) 
             //coordinates
             double r2; 
-            double a, value, weight;
+            double a;
+            double value;
+            double weight;
             
             
-<span class="pc bpc" id="L411" title="1 of 4 branches missed.">            while (iteratorDistorted.hasNext() &amp;&amp; iteratorUndistorted.hasNext()) {</span>
-<span class="fc" id="L412">                distorted = iteratorDistorted.next();</span>
-<span class="fc" id="L413">                undistorted = iteratorUndistorted.next();                </span>
+<span class="pc bpc" id="L419" title="1 of 4 branches missed.">            while (iteratorDistorted.hasNext() &amp;&amp; iteratorUndistorted.hasNext()) {</span>
+<span class="fc" id="L420">                distorted = iteratorDistorted.next();</span>
+<span class="fc" id="L421">                undistorted = iteratorUndistorted.next();                </span>
                 
-<span class="pc bpc" id="L415" title="1 of 2 branches missed.">                if (selected[index]) {</span>
-<span class="fc" id="L416">                    undistorted.normalize();                    </span>
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L424">                    undistorted.normalize();                    </span>
                     
-<span class="fc" id="L418">                    weight = mWeights[index];</span>
+<span class="fc" id="L426">                    weight = mWeights[index];</span>
                     
-<span class="fc" id="L420">                    uDenormHomX = undistorted.getHomX();</span>
-<span class="fc" id="L421">                    uDenormHomY = undistorted.getHomY();</span>
-<span class="fc" id="L422">                    uDenormHomW = undistorted.getHomW();</span>
+<span class="fc" id="L428">                    uDenormHomX = undistorted.getHomX();</span>
+<span class="fc" id="L429">                    uDenormHomY = undistorted.getHomY();</span>
+<span class="fc" id="L430">                    uDenormHomW = undistorted.getHomW();</span>
                 
-<span class="fc" id="L424">                    uDenormInhomX = uDenormHomX / uDenormHomW;</span>
-<span class="fc" id="L425">                    uDenormInhomY = uDenormHomY / uDenormHomW;</span>
+<span class="fc" id="L432">                    uDenormInhomX = uDenormHomX / uDenormHomW;</span>
+<span class="fc" id="L433">                    uDenormInhomY = uDenormHomY / uDenormHomW;</span>
                 
                     //multiply intrinsic parameters by undistorted point
-<span class="fc" id="L428">                    uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +</span>
-<span class="fc" id="L429">                            mKinv.getElementAt(0, 1) * uDenormHomY +</span>
-<span class="fc" id="L430">                            mKinv.getElementAt(0, 2) * uDenormHomW;</span>
-<span class="fc" id="L431">                    uNormHomY = mKinv.getElementAt(1, 0) * uDenormHomX +</span>
-<span class="fc" id="L432">                            mKinv.getElementAt(1, 1) * uDenormHomY +</span>
-<span class="fc" id="L433">                            mKinv.getElementAt(1, 2) * uDenormHomW;</span>
-<span class="fc" id="L434">                    uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +</span>
-<span class="fc" id="L435">                            mKinv.getElementAt(2, 1) * uDenormHomY +</span>
-<span class="fc" id="L436">                            mKinv.getElementAt(2, 2) * uDenormHomW;</span>
+<span class="fc" id="L436">                    uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +</span>
+<span class="fc" id="L437">                            mKinv.getElementAt(0, 1) * uDenormHomY +</span>
+<span class="fc" id="L438">                            mKinv.getElementAt(0, 2) * uDenormHomW;</span>
+<span class="fc" id="L439">                    uNormHomY = mKinv.getElementAt(1, 0) * uDenormHomX +</span>
+<span class="fc" id="L440">                            mKinv.getElementAt(1, 1) * uDenormHomY +</span>
+<span class="fc" id="L441">                            mKinv.getElementAt(1, 2) * uDenormHomW;</span>
+<span class="fc" id="L442">                    uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +</span>
+<span class="fc" id="L443">                            mKinv.getElementAt(2, 1) * uDenormHomY +</span>
+<span class="fc" id="L444">                            mKinv.getElementAt(2, 2) * uDenormHomW;</span>
                 
-<span class="fc" id="L438">                    uNormInhomX = uNormHomX / uNormHomW;</span>
-<span class="fc" id="L439">                    uNormInhomY = uNormHomY / uNormHomW;</span>
+<span class="fc" id="L446">                    uNormInhomX = uNormHomX / uNormHomW;</span>
+<span class="fc" id="L447">                    uNormInhomY = uNormHomY / uNormHomW;</span>
                 
-<span class="fc" id="L441">                    r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
+<span class="fc" id="L449">                    r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
                 
-<span class="fc" id="L443">                    dInhomX = distorted.getInhomX();</span>
-<span class="fc" id="L444">                    dInhomY = distorted.getInhomY();</span>
+<span class="fc" id="L451">                    dInhomX = distorted.getInhomX();</span>
+<span class="fc" id="L452">                    dInhomY = distorted.getInhomY();</span>
                     
-<span class="fc" id="L446">                    a = 1.0;</span>
-<span class="fc" id="L447">                    rowNormX = rowNormY = 0.0;</span>
-<span class="fc bfc" id="L448" title="All 2 branches covered.">                    for (int i = 0; i &lt; mNumKParams; i++) {</span>
-<span class="fc" id="L449">                        a *= r2;</span>
+<span class="fc" id="L454">                    a = 1.0;</span>
+<span class="fc" id="L455">                    rowNormX = rowNormY = 0.0;</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">                    for (int i = 0; i &lt; mNumKParams; i++) {</span>
+<span class="fc" id="L457">                        a *= r2;</span>
                         
                         //x and y coordinates generate linear dependent equations, for 
                         //that reason we need more than one point
                     
                         //x coordinates
-<span class="fc" id="L455">                        value = (uDenormInhomX - centerX) * a * weight;</span>
-<span class="fc" id="L456">                        A.setElementAt(counter * 2, i, value);</span>
+<span class="fc" id="L463">                        value = (uDenormInhomX - centerX) * a * weight;</span>
+<span class="fc" id="L464">                        aMatrix.setElementAt(counter * 2, i, value);</span>
                     
-<span class="fc" id="L458">                        rowNormX += Math.pow(value, 2.0);</span>
+<span class="fc" id="L466">                        rowNormX += Math.pow(value, 2.0);</span>
                     
                         //y coordinates
-<span class="fc" id="L461">                        value = (uDenormInhomY - centerY) * a * weight;</span>
-<span class="fc" id="L462">                        A.setElementAt(counter * 2 + 1, i, value);</span>
+<span class="fc" id="L469">                        value = (uDenormInhomY - centerY) * a * weight;</span>
+<span class="fc" id="L470">                        aMatrix.setElementAt(counter * 2 + 1, i, value);</span>
                     
-<span class="fc" id="L464">                        rowNormY += Math.pow(value, 2.0);                        </span>
+<span class="fc" id="L472">                        rowNormY += Math.pow(value, 2.0);                        </span>
                     }
                     
                     //x coordinates
-<span class="fc" id="L468">                    value = (dInhomX - uDenormInhomX) * weight;</span>
-<span class="fc" id="L469">                    b[counter * 2] = value;</span>
+<span class="fc" id="L476">                    value = (dInhomX - uDenormInhomX) * weight;</span>
+<span class="fc" id="L477">                    b[counter * 2] = value;</span>
                 
-<span class="fc" id="L471">                    rowNormX += Math.pow(value, 2.0);</span>
+<span class="fc" id="L479">                    rowNormX += Math.pow(value, 2.0);</span>
                 
                     //y coordinates
-<span class="fc" id="L474">                    value = (dInhomY - uDenormInhomY) * weight;</span>
-<span class="fc" id="L475">                    b[counter * 2 + 1] = value;</span>
+<span class="fc" id="L482">                    value = (dInhomY - uDenormInhomY) * weight;</span>
+<span class="fc" id="L483">                    b[counter * 2 + 1] = value;</span>
                 
-<span class="fc" id="L477">                    rowNormY += Math.pow(value, 2.0);</span>
+<span class="fc" id="L485">                    rowNormY += Math.pow(value, 2.0);</span>
                     
                     //normalize rows to increase accuracy
-<span class="fc bfc" id="L480" title="All 2 branches covered.">                    for (int i = 0; i &lt; mNumKParams; i++) {</span>
-<span class="fc" id="L481">                        A.setElementAt(counter * 2, i, </span>
-<span class="fc" id="L482">                                A.getElementAt(counter * 2, i) / rowNormX);</span>
-<span class="fc" id="L483">                        A.setElementAt(counter * 2 + 1, i, </span>
-<span class="fc" id="L484">                                A.getElementAt(counter * 2 + 1, i) / rowNormY);</span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">                    for (int i = 0; i &lt; mNumKParams; i++) {</span>
+<span class="fc" id="L489">                        aMatrix.setElementAt(counter * 2, i,</span>
+<span class="fc" id="L490">                                aMatrix.getElementAt(counter * 2, i) / rowNormX);</span>
+<span class="fc" id="L491">                        aMatrix.setElementAt(counter * 2 + 1, i,</span>
+<span class="fc" id="L492">                                aMatrix.getElementAt(counter * 2 + 1, i) / rowNormY);</span>
                     }
                 
-<span class="fc" id="L487">                    b[counter * 2] /= rowNormX;</span>
-<span class="fc" id="L488">                    b[counter * 2 +1] /= rowNormY;</span>
+<span class="fc" id="L495">                    b[counter * 2] /= rowNormX;</span>
+<span class="fc" id="L496">                    b[counter * 2 +1] /= rowNormY;</span>
                                 
-<span class="fc" id="L490">                    counter++;                                                            </span>
+<span class="fc" id="L498">                    counter++;                                                            </span>
                 }
 
-<span class="fc" id="L493">                index++;</span>
+<span class="fc" id="L501">                index++;</span>
             }
             
-<span class="fc" id="L496">            double[] params = Utils.solve(A, b);</span>
+<span class="fc" id="L504">            double[] params = Utils.solve(aMatrix, b);</span>
             
-<span class="fc" id="L498">            RadialDistortion distortion = </span>
+<span class="fc" id="L506">            RadialDistortion distortion = </span>
                     new RadialDistortion(params, mDistortionCenter,
                     mHorizontalFocalLength, mVerticalFocalLength, mSkew);
             
-<span class="pc bpc" id="L502" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L503">                mListener.onEstimateEnd(this);</span>
+<span class="pc bpc" id="L510" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L511">                mListener.onEstimateEnd(this);</span>
             }
             
-<span class="fc" id="L506">            return distortion;</span>
-<span class="nc" id="L507">        } catch (AlgebraException | SortingException | RadialDistortionException e) {</span>
-<span class="nc" id="L508">            throw new RadialDistortionEstimatorException(e);</span>
+<span class="fc" id="L514">            return distortion;</span>
+<span class="nc" id="L515">        } catch (AlgebraException | SortingException | RadialDistortionException e) {</span>
+<span class="nc" id="L516">            throw new RadialDistortionEstimatorException(e);</span>
         } finally {
-<span class="fc" id="L510">            mLocked = false;</span>
+<span class="fc" id="L518">            mLocked = false;</span>
         }
     }    
     
@@ -517,7 +525,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */    
     @Override
     public RadialDistortionEstimatorType getType() {
-<span class="fc" id="L520">        return RadialDistortionEstimatorType.</span>
+<span class="fc" id="L528">        return RadialDistortionEstimatorType.</span>
                 WEIGHTED_RADIAL_DISTORTION_ESTIMATOR;
     }  
             
@@ -536,21 +544,20 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * correspondences.
      */
     private void internalSetPointsAndWeights(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints, double[] weights) 
-            throws IllegalArgumentException {
+            List&lt;Point2D&gt; undistortedPoints, double[] weights) {
         
-<span class="pc bpc" id="L542" title="1 of 6 branches missed.">        if (distortedPoints == null || undistortedPoints == null ||</span>
+<span class="pc bpc" id="L549" title="1 of 6 branches missed.">        if (distortedPoints == null || undistortedPoints == null ||</span>
                 weights == null) {
-<span class="fc" id="L544">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L551">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc bfc" id="L547" title="All 2 branches covered.">        if (!areValidPointsAndWeights(distortedPoints, undistortedPoints, weights)) {</span>
-<span class="fc" id="L548">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L554" title="All 2 branches covered.">        if (!areValidPointsAndWeights(distortedPoints, undistortedPoints, weights)) {</span>
+<span class="fc" id="L555">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L551">        mDistortedPoints = distortedPoints;</span>
-<span class="fc" id="L552">        mUndistortedPoints = undistortedPoints;        </span>
-<span class="fc" id="L553">        mWeights = weights;</span>
-<span class="fc" id="L554">    }        </span>
+<span class="fc" id="L558">        mDistortedPoints = distortedPoints;</span>
+<span class="fc" id="L559">        mUndistortedPoints = undistortedPoints;        </span>
+<span class="fc" id="L560">        mWeights = weights;</span>
+<span class="fc" id="L561">    }        </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

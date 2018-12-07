@@ -271,8 +271,8 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                         fundamentalMatrix);
             
 <span class="fc" id="L273">                double finalTotalResidual = totalResidual(fundamentalMatrix);</span>
-<span class="pc bpc" id="L274" title="1 of 2 branches missed.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;</span>
-<span class="pc bpc" id="L275" title="2 of 4 branches missed.">                if (iterErrorDecreased || !errorDecreased) {</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;</span>
+<span class="fc bfc" id="L275" title="All 4 branches covered.">                if (iterErrorDecreased || !errorDecreased) {</span>
 <span class="fc" id="L276">                    errorDecreased = true;</span>
                     //update final result
 <span class="fc" id="L278">                    result.setInhomogeneousCoordinates(params[0], params[1]);</span>
@@ -283,7 +283,7 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                     }                    
                 }
 <span class="fc" id="L285">                numIter++;</span>
-<span class="pc bpc" id="L286" title="3 of 4 branches missed.">            } while (iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);</span>
+<span class="fc bfc" id="L286" title="All 4 branches covered.">            } while (iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);</span>
             
 <span class="pc bpc" id="L288" title="1 of 2 branches missed.">            if (mListener != null) {</span>
                 //noinspection all

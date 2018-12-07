@@ -111,11 +111,11 @@ public class AlgebraicFundamentalMatrixComparator extends
 <span class="fc" id="L111">            mGroundTruthFundamentalMatrix.normalize();</span>
 <span class="fc" id="L112">            mOtherFundamentalMatrix.normalize();</span>
             
-<span class="fc" id="L114">            Matrix F1 = mGroundTruthFundamentalMatrix.getInternalMatrix();</span>
-<span class="fc" id="L115">            Matrix F2 = mOtherFundamentalMatrix.getInternalMatrix();</span>
+<span class="fc" id="L114">            Matrix f1 = mGroundTruthFundamentalMatrix.getInternalMatrix();</span>
+<span class="fc" id="L115">            Matrix f2 = mOtherFundamentalMatrix.getInternalMatrix();</span>
                             
-<span class="fc" id="L117">            Matrix diff = F1.subtractAndReturnNew(F2);</span>
-<span class="fc" id="L118">            Matrix sum = F1.addAndReturnNew(F2);</span>
+<span class="fc" id="L117">            Matrix diff = f1.subtractAndReturnNew(f2);</span>
+<span class="fc" id="L118">            Matrix sum = f1.addAndReturnNew(f2);</span>
             
 <span class="fc" id="L120">            double normDiff = Utils.normF(diff);</span>
 <span class="fc" id="L121">            double normSum = Utils.normF(sum);</span>

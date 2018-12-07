@@ -234,10 +234,10 @@ public class GoldStandardCorrector extends Corrector {
 <span class="fc" id="L234">                GoldStandardSingleCorrector.correct(leftPoint, rightPoint, </span>
                     mFundamentalMatrix, leftCorrectedPoint, 
                     rightCorrectedPoint);
-<span class="nc" id="L237">            } catch (CorrectionException e) {</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (mFallbackToSampsonEnabled) {</span>
+<span class="fc" id="L237">            } catch (CorrectionException e) {</span>
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                if (mFallbackToSampsonEnabled) {</span>
                     //try using Sampson method instead
-<span class="nc" id="L240">                    SampsonSingleCorrector.correct(leftPoint, rightPoint, </span>
+<span class="fc" id="L240">                    SampsonSingleCorrector.correct(leftPoint, rightPoint, </span>
                             mFundamentalMatrix, leftCorrectedPoint, 
                             rightCorrectedPoint);
                 } else {

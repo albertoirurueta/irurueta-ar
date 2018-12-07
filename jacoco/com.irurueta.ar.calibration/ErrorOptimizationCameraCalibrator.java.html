@@ -538,7 +538,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
 <span class="fc" id="L538">        int totalPoints = 0;</span>
 <span class="fc" id="L539">        int totalHomographies = 0;</span>
 <span class="fc bfc" id="L540" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L541" title="All 2 branches covered.">            if (sample.getHomography() != null) {</span>
+<span class="pc bpc" id="L541" title="1 of 2 branches missed.">            if (sample.getHomography() != null) {</span>
 <span class="fc" id="L542">                totalPoints += sample.getSampledMarkers().size();</span>
 <span class="fc" id="L543">                totalHomographies++;</span>
             }
@@ -560,10 +560,10 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
 <span class="fc" id="L560">            int pointCounter = 0;</span>
 <span class="fc" id="L561">            int sampleCounter = 0;</span>
 <span class="fc bfc" id="L562" title="All 2 branches covered.">            for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L563" title="All 2 branches covered.">                if (sample.getHomography() == null) {</span>
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">                if (sample.getHomography() == null) {</span>
                     //homography computation failed, so we cannot compute camera
                     //pose for this sample
-<span class="fc" id="L566">                    continue;</span>
+<span class="nc" id="L566">                    continue;</span>
                 }
 <span class="fc" id="L568">                sample.computeCameraPose(mIntrinsic);</span>
             
@@ -963,8 +963,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
 
         //parameters for each sample (camera rotation and translation)
 <span class="fc bfc" id="L965" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L966" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
-<span class="fc" id="L967">                continue;</span>
+<span class="pc bpc" id="L966" title="1 of 2 branches missed.">            if (sample.getHomography() == null) {</span>
+<span class="nc" id="L967">                continue;</span>
             }
             
             //4 rotation parameters
@@ -1064,8 +1064,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         
         //sample parameters
 <span class="fc bfc" id="L1066" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L1067" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
-<span class="fc" id="L1068">                continue;</span>
+<span class="pc bpc" id="L1067" title="1 of 2 branches missed.">            if (sample.getHomography() == null) {</span>
+<span class="nc" id="L1068">                continue;</span>
             }
             
             //4 rotation parameters
@@ -1131,8 +1131,8 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
 <span class="fc" id="L1131">        double avgError = 0.0;</span>
 <span class="fc bfc" id="L1132" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
 <span class="fc" id="L1133">            camera = sample.getCamera();</span>
-<span class="fc bfc" id="L1134" title="All 2 branches covered.">            if (camera == null) {</span>
-<span class="fc" id="L1135">                continue;</span>
+<span class="pc bpc" id="L1134" title="1 of 2 branches missed.">            if (camera == null) {</span>
+<span class="nc" id="L1135">                continue;</span>
             }
             
             List&lt;Point2D&gt; idealPatternMarkers;
