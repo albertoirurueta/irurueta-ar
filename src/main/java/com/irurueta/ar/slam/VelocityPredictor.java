@@ -57,8 +57,7 @@ public class VelocityPredictor {
      */
     public static void predict(double vx, double vy, double vz, 
             double ax, double ay, double az, double dt, double[] result, 
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         if(result.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -107,8 +106,7 @@ public class VelocityPredictor {
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(double vx, double vy, double vz,
-            double ax, double ay, double az, double dt, double[] result)
-            throws IllegalArgumentException {
+            double ax, double ay, double az, double dt, double[] result) {
         predict(vx, vy, vz, ax, ay, az, dt, result, null, null);
     }
     
@@ -127,8 +125,7 @@ public class VelocityPredictor {
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(double[] v, double[] a, double dt, 
-            double[] result, Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            double[] result, Matrix jacobianV, Matrix jacobianA) {
         if(v.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("v must have length 3");
         }
@@ -151,7 +148,7 @@ public class VelocityPredictor {
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(double[] v, double[] a, double dt,
-            double[] result) throws IllegalArgumentException {
+            double[] result) {
         predict(v, a, dt, result, null, null);
     }
     
@@ -173,7 +170,7 @@ public class VelocityPredictor {
      */
     public static double[] predict(double vx, double vy, double vz,
             double ax, double ay, double az, double dt, Matrix jacobianV, 
-            Matrix jacobianA) throws IllegalArgumentException {
+            Matrix jacobianA) {
         double[] result = new double[SPEED_COMPONENTS];
         predict(vx, vy, vz, ax, ay, az, dt, result, jacobianV, jacobianA);
         return result;
@@ -213,8 +210,7 @@ public class VelocityPredictor {
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static double[] predict(double[] v, double[] a, double dt,
-            Matrix jacobianV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianA) {
         double[] result = new double[SPEED_COMPONENTS];
         predict(v, a, dt, result, jacobianV, jacobianA);
         return result;
@@ -231,8 +227,7 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if a or v do not have length 3.
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static double[] predict(double[] v, double[] a, double dt) 
-            throws IllegalArgumentException {
+    public static double[] predict(double[] v, double[] a, double dt) {
         double[] result = new double[SPEED_COMPONENTS];
         predict(v, a, dt, result);
         return result;
@@ -261,8 +256,7 @@ public class VelocityPredictor {
     public static void predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz,
             double ax, double ay, double az, double dt, double[] result,
-            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA)
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA) {
         if(result.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -326,8 +320,7 @@ public class VelocityPredictor {
      */
     public static void predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz,
-            double ax, double ay, double az, double dt, double[] result)
-            throws IllegalArgumentException {
+            double ax, double ay, double az, double dt, double[] result) {
         predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,
                 az, dt, result, null, null, null);
     }
@@ -351,8 +344,7 @@ public class VelocityPredictor {
      */
     public static void predictWithVelocityAdjustment(double[] v,
             double[] dv, double[] a, double dt, double[] result, 
-            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA)
-            throws IllegalArgumentException {
+            Matrix jacobianV, Matrix jacobianDV, Matrix jacobianA) {
         if(v.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("v must have length 3");
         }
@@ -382,8 +374,7 @@ public class VelocityPredictor {
      * 3.
      */
     public static void predictWithVelocityAdjustment(double[] v,
-            double[] dv, double[] a, double dt, double[] result) 
-            throws IllegalArgumentException {
+            double[] dv, double[] a, double dt, double[] result) {
         predictWithVelocityAdjustment(v, dv, a, dt, result, null, null, null);
     }
     
@@ -409,8 +400,7 @@ public class VelocityPredictor {
     public static double[] predictWithVelocityAdjustment(double vx, 
             double vy, double vz, double dvx, double dvy, double dvz, double ax,
             double ay, double az, double dt, Matrix jacobianV, 
-            Matrix jacobianDV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianDV, Matrix jacobianA) {
         double[] result = new double[SPEED_COMPONENTS];
         predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, 
                 az, dt, result, jacobianV, jacobianDV, jacobianA);
@@ -458,8 +448,7 @@ public class VelocityPredictor {
      */
     public static double[] predictWithVelocityAdjustment(double[] v, 
             double[] dv, double[] a, double dt, Matrix jacobianV, 
-            Matrix jacobianDV, Matrix jacobianA) 
-            throws IllegalArgumentException {
+            Matrix jacobianDV, Matrix jacobianA) {
         double[] result = new double[SPEED_COMPONENTS];
         predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV,
                 jacobianDV, jacobianA);
@@ -479,8 +468,7 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if v, dv or a do not have length 3.
      */
     public static double[] predictWithVelocityAdjustment(double[] v, 
-            double[] dv, double[] a, double dt) 
-            throws IllegalArgumentException {
+            double[] dv, double[] a, double dt) {
         double[] result = new double[SPEED_COMPONENTS];
         predictWithVelocityAdjustment(v, dv, a, dt, result);
         return result;        
