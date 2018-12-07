@@ -124,8 +124,7 @@ public abstract class Corrector {
      * @throws IllegalArgumentException if provided lists of points don't have
      * the same size.
      */
-    public Corrector(List<Point2D> leftPoints, List<Point2D> rightPoints)
-            throws IllegalArgumentException {
+    public Corrector(List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -139,8 +138,7 @@ public abstract class Corrector {
      * the same size.
      */
     public Corrector(List<Point2D> leftPoints, List<Point2D> rightPoints,
-            FundamentalMatrix fundamentalMatrix) 
-            throws IllegalArgumentException {
+            FundamentalMatrix fundamentalMatrix) {
         this();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
         internalSetFundamentalMatrix(fundamentalMatrix);
@@ -175,7 +173,7 @@ public abstract class Corrector {
      * the same size.
      */
     public Corrector(List<Point2D> leftPoints, List<Point2D> rightPoints,
-            CorrectorListener listener) throws IllegalArgumentException {
+            CorrectorListener listener) {
         this(leftPoints, rightPoints);
         mListener = listener;
     }
@@ -190,8 +188,7 @@ public abstract class Corrector {
      * the same size.
      */
     public Corrector(List<Point2D> leftPoints, List<Point2D> rightPoints,
-            FundamentalMatrix fundamentalMatrix, CorrectorListener listener) 
-            throws IllegalArgumentException {
+            FundamentalMatrix fundamentalMatrix, CorrectorListener listener) {
         this(leftPoints, rightPoints, fundamentalMatrix);
         mListener = listener;
     }
@@ -242,8 +239,7 @@ public abstract class Corrector {
      * @throws LockedException if instance is locked doing computations.
      */
     public void setLeftAndRightPoints(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException, 
-            LockedException {
+            List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -262,7 +258,7 @@ public abstract class Corrector {
      */
     public void setPointsAndFundamentalMatrix(List<Point2D> leftPoints,
             List<Point2D> rightPoints, FundamentalMatrix fundamentalMatrix)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -315,8 +311,8 @@ public abstract class Corrector {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    @SuppressWarnings("Duplicates")
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -639,7 +635,7 @@ public abstract class Corrector {
      * the same size.
      */
     private void internalSetLeftAndRightPoints(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         if (!areValidPoints(leftPoints, rightPoints)) {
             throw new IllegalArgumentException();
         }

@@ -66,7 +66,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public EssentialMatrix(Matrix internalMatrix, 
             double singularValuesThreshold) 
-            throws InvalidEssentialMatrixException, IllegalArgumentException {
+            throws InvalidEssentialMatrixException {
         super();
         setInternalMatrix(internalMatrix, singularValuesThreshold);
     }
@@ -94,7 +94,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public EssentialMatrix(PinholeCamera leftCamera, PinholeCamera rightCamera,
             double singularValuesThreshold) 
-            throws InvalidPairOfCamerasException, IllegalArgumentException {
+            throws InvalidPairOfCamerasException {
         super();
         setFromPairOfCameras(leftCamera, rightCamera, singularValuesThreshold);
     }
@@ -126,8 +126,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public EssentialMatrix(Rotation3D rotation, Point2D translation, 
             double singularValuesThreshold) 
-            throws InvalidRotationAndTranslationException, 
-            IllegalArgumentException {
+            throws InvalidRotationAndTranslationException {
         super();
         setFromRotationAndTranslation(rotation, translation, 
                 singularValuesThreshold);
@@ -162,8 +161,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public EssentialMatrix(Rotation3D rotation, Point3D cameraCenter, 
             double singularValuesThreshold)
-            throws InvalidRotationAndTranslationException, 
-            IllegalArgumentException {
+            throws InvalidRotationAndTranslationException {
         setFromRotationAndCameraCenter(rotation, cameraCenter, 
                 singularValuesThreshold);
     }
@@ -223,8 +221,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * to provided threshold.
      */
     public final void setInternalMatrix(Matrix internalMatrix, 
-            double singularValuesThreshold) throws IllegalArgumentException,
-            InvalidEssentialMatrixException {
+            double singularValuesThreshold)
+            throws InvalidEssentialMatrixException {
         if (!isValidInternalMatrix(internalMatrix, singularValuesThreshold)) {
             throw new InvalidEssentialMatrixException();
         }
@@ -261,7 +259,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException if provided threshold is negative.
      */
     public static boolean isValidInternalMatrix(Matrix internalMatrix, 
-            double singularValuesThreshold) throws IllegalArgumentException {
+            double singularValuesThreshold) {
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
@@ -316,9 +314,10 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * valid epipolar geometry (i.e. they are set in a degenerate configuration).
      * @throws IllegalArgumentException if provided threshold is negative.
      */
+    @SuppressWarnings("Duplicates")
     public final void setFromPairOfCameras(PinholeCamera leftCamera,
             PinholeCamera rightCamera, double singularValuesThreshold)
-            throws InvalidPairOfCamerasException, IllegalArgumentException {
+            throws InvalidPairOfCamerasException {
         
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
@@ -450,8 +449,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public final void setFromRotationAndTranslation(Rotation3D rotation,
             Point2D translation, double singularValuesThreshold)
-            throws InvalidRotationAndTranslationException, 
-            IllegalArgumentException {
+            throws InvalidRotationAndTranslationException {
         
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
@@ -506,7 +504,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public final void setFromRotationAndCameraCenter(Rotation3D rotation, 
             Point3D cameraCenter, double singularValuesThreshold) throws 
-            InvalidRotationAndTranslationException, IllegalArgumentException {
+            InvalidRotationAndTranslationException {
         
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();

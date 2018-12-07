@@ -274,8 +274,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * @throws IllegalArgumentException if minimum value is larger or equal
      * than maximum one.
      */
-    public void setMinMaxX(double minX, double maxX) throws LockedException,
-            IllegalArgumentException {
+    public void setMinMaxX(double minX, double maxX) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -341,8 +340,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * @throws LockedException if this instance is locked.
      * @throws IllegalArgumentException if provided value is less than 1.
      */
-    public void setNSamples(int nSamples) throws LockedException, 
-            IllegalArgumentException {
+    public void setNSamples(int nSamples) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -397,8 +395,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      */
     public void setMinMaxHorizontalDisparityFactor(
             double minHorizontalDisparityFactor, 
-            double maxHorizontalDisparityFactor) throws LockedException, 
-            IllegalArgumentException {
+            double maxHorizontalDisparityFactor) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -454,8 +451,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      */
     public void setMinMaxVerticalDisparityFactor(
             double minVerticalDisparityFactor, 
-            double maxVerticalDisparityFactor) throws LockedException, 
-            IllegalArgumentException {
+            double maxVerticalDisparityFactor) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -486,7 +482,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * @throws IllegalArgumentException if provided value is less than 1.0.
      */
     public void setMaxIterationsFactor(double maxIterationsFactor) 
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -516,8 +512,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * greater than 1.
      * @throws LockedException if this estimator is locked.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -566,8 +561,12 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
             double maxVerticalDisparity = mMaxVerticalDisparityFactor *
                     (mMaxY - mMinY);
             
-            double d1, d1prime, d2, d2prime;
-            double inhomX, inhomY;
+            double d1;
+            double d1prime;
+            double d2;
+            double d2prime;
+            double inhomX;
+            double inhomY;
             boolean repeat;
             int counter;
             Point2D m1 = Point2D.create(
@@ -582,7 +581,8 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
             double avgDist = 0.0;
             int maxIterations = (int)(((double)mNSamples) * mMaxIterationsFactor);
             int currentIter = 0;            
-            float progress, previousProgress = 0.0f;
+            float progress;
+            float previousProgress = 0.0f;
             for (int i = 0; i < mNSamples; i++) {
                 repeat = true;
                 counter = 0;
@@ -602,7 +602,8 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                     //check that epipolar line lies within retinal plane size
                     //taking into account the following equation
                     //x*l2.getA() + y*l2.getB() + l2.getC() = 0
-                    double yMinX, yMaxX;
+                    double yMinX;
+                    double yMaxX;
                     if (Math.abs(l2real.getB()) > Double.MIN_VALUE) {
                         //for x = mMinX
                         yMinX = -(mMinX * l2real.getA() + l2real.getC()) /
@@ -695,7 +696,8 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                     //check that epipolar line lies within retinal plane size
                     //taking into account the following equation
                     //x*l2.getA() + y*l2.getB() + l2.getC() = 0
-                    double yMinX, yMaxX;
+                    double yMinX;
+                    double yMaxX;
                     if (Math.abs(l2est.getB()) > Double.MIN_VALUE) {
                         //for x = mMinX
                         yMinX = -(mMinX * l2est.getA() + l2est.getC()) /
@@ -776,11 +778,10 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                 
                 progress = (float)currentIter / (float)maxIterations;
                 
-                if (mListener != null) {
-                    if (progress - previousProgress > mProgressDelta) {
-                        previousProgress = progress;
-                        mListener.onCompareProgressChange(this, progress);
-                    }
+                if (mListener != null &&
+                        progress - previousProgress > mProgressDelta) {
+                    previousProgress = progress;
+                    mListener.onCompareProgressChange(this, progress);
                 }
             }
             

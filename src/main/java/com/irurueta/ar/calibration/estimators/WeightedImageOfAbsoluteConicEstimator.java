@@ -832,12 +832,21 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             
             Matrix a = new Matrix(2 * nHomographies, 3);
             
-            int index = 0, counter = 0;
+            int index = 0;
+            int counter = 0;
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
             for (Transformation2D homography : mHomographies) {
                 
                 if (selected[index]) {
@@ -965,12 +974,21 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             Matrix a = new Matrix(2 * nHomographies, 4);
             double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
             
-            int index = 0, counter = 0;
+            int index = 0;
+            int counter = 0;
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
             for (Transformation2D homography : mHomographies) {
                 
                 if (selected[index]) {
@@ -1113,12 +1131,21 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             
             double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
             
-            int index = 0, counter = 0;
+            int index = 0;
+            int counter = 0;
             ProjectiveTransformation2D t = null;
             Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 
                     ProjectiveTransformation2D.HOM_COORDS);
             //elements ij of homography (last column is not required)
-            double h11, h12, h21, h22, h31, h32, rowNorm, weight, factor;
+            double h11;
+            double h12;
+            double h21;
+            double h22;
+            double h31;
+            double h32;
+            double rowNorm;
+            double weight;
+            double factor;
             for (Transformation2D homography : mHomographies) {
                 
                 if (selected[index]) {

@@ -791,7 +791,7 @@ public abstract class FundamentalMatrixRobustEstimator {
     }
     
     /**
-     * Estiamtes a fundamental matrix using a non robust method and provided
+     * Estimates a fundamental matrix using a non robust method and provided
      * subset of matched points and stores the solution in provided array of 
      * solutions.
      * @param solutions list where solutions will be stored.
@@ -803,16 +803,15 @@ public abstract class FundamentalMatrixRobustEstimator {
         try {
             mFundMatrixEstimator.setPoints(subsetLeftPoints, 
                     subsetRightPoints);
-            switch (mFundMatrixEstimator.getMethod()) {
-                case SEVEN_POINTS_ALGORITHM:
-                    List<FundamentalMatrix> matrices = 
-                            ((SevenPointsFundamentalMatrixEstimator)
-                            mFundMatrixEstimator).estimateAll();
-                    solutions.addAll(matrices);
-                    break;
-                default:
-                    solutions.add(mFundMatrixEstimator.estimate());
-                    break;
+            if (mFundMatrixEstimator.getMethod() ==
+                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+                List<FundamentalMatrix> matrices =
+                        ((SevenPointsFundamentalMatrixEstimator)
+                                mFundMatrixEstimator).estimateAll();
+                solutions.addAll(matrices);
+            } else if (mFundMatrixEstimator.getMethod() ==
+                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+                solutions.add(mFundMatrixEstimator.estimate());
             }
         } catch (GeometryException e) {
             //if anything fails, no solution is added
