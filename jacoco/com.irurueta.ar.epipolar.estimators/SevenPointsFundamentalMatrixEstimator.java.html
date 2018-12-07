@@ -99,7 +99,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * have the same length.
      */
     public SevenPointsFundamentalMatrixEstimator(List&lt;Point2D&gt; leftPoints, 
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; rightPoints) {
 <span class="fc" id="L103">        super(leftPoints, rightPoints);</span>
 <span class="fc" id="L104">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
 <span class="fc" id="L105">        mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;</span>
@@ -233,8 +233,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
 <span class="fc" id="L233">        int nPoints = mLeftPoints.size();</span>
                 
         try {
-<span class="fc" id="L236">            ProjectiveTransformation2D leftNormalization = null, </span>
-<span class="fc" id="L237">                    rightNormalization = null; </span>
+<span class="fc" id="L236">            ProjectiveTransformation2D leftNormalization = null;</span>
+<span class="fc" id="L237">            ProjectiveTransformation2D rightNormalization = null;</span>
             List&lt;Point2D&gt; leftPoints, rightPoints;
 <span class="fc bfc" id="L239" title="All 2 branches covered.">            if (mNormalizePoints) {</span>
                 //normalize points on left view
@@ -270,64 +270,77 @@ public class SevenPointsFundamentalMatrixEstimator extends
 <span class="fc" id="L270">                a = new Matrix(MIN_REQUIRED_POINTS, 9);</span>
             }
             
-            Point2D leftPoint, rightPoint;
-            double homLeftX, homLeftY, homLeftW, homRightX, homRightY, 
-                    homRightW;
-            double value0, value1, value2, value3, value4, value5, value6, 
-                    value7, value8, rowNorm;
-<span class="fc bfc" id="L278" title="All 2 branches covered.">            for (int i = 0; i &lt; nPoints; i++) {</span>
-<span class="fc" id="L279">                leftPoint = leftPoints.get(i);</span>
-<span class="fc" id="L280">                rightPoint = rightPoints.get(i);</span>
+            Point2D leftPoint;
+            Point2D rightPoint;
+            double homLeftX;
+            double homLeftY;
+            double homLeftW;
+            double homRightX;
+            double homRightY;
+            double homRightW;
+            double value0;
+            double value1;
+            double value2;
+            double value3;
+            double value4;
+            double value5;
+            double value6;
+            double value7;
+            double value8;
+            double rowNorm;
+<span class="fc bfc" id="L291" title="All 2 branches covered.">            for (int i = 0; i &lt; nPoints; i++) {</span>
+<span class="fc" id="L292">                leftPoint = leftPoints.get(i);</span>
+<span class="fc" id="L293">                rightPoint = rightPoints.get(i);</span>
                 
                 //normalize points to increase accuracy
-<span class="fc" id="L283">                leftPoint.normalize();</span>
-<span class="fc" id="L284">                rightPoint.normalize();</span>
+<span class="fc" id="L296">                leftPoint.normalize();</span>
+<span class="fc" id="L297">                rightPoint.normalize();</span>
                                 
-<span class="fc" id="L286">                homLeftX = leftPoint.getHomX();</span>
-<span class="fc" id="L287">                homLeftY = leftPoint.getHomY();</span>
-<span class="fc" id="L288">                homLeftW = leftPoint.getHomW();</span>
+<span class="fc" id="L299">                homLeftX = leftPoint.getHomX();</span>
+<span class="fc" id="L300">                homLeftY = leftPoint.getHomY();</span>
+<span class="fc" id="L301">                homLeftW = leftPoint.getHomW();</span>
                 
-<span class="fc" id="L290">                homRightX = rightPoint.getHomX();</span>
-<span class="fc" id="L291">                homRightY = rightPoint.getHomY();</span>
-<span class="fc" id="L292">                homRightW = rightPoint.getHomW();</span>
+<span class="fc" id="L303">                homRightX = rightPoint.getHomX();</span>
+<span class="fc" id="L304">                homRightY = rightPoint.getHomY();</span>
+<span class="fc" id="L305">                homRightW = rightPoint.getHomW();</span>
                 
                 //set a row values
-<span class="fc" id="L295">                value0 = homLeftX * homRightX;</span>
-<span class="fc" id="L296">                value1 = homLeftY * homRightX;</span>
-<span class="fc" id="L297">                value2 = homLeftW * homRightX;</span>
+<span class="fc" id="L308">                value0 = homLeftX * homRightX;</span>
+<span class="fc" id="L309">                value1 = homLeftY * homRightX;</span>
+<span class="fc" id="L310">                value2 = homLeftW * homRightX;</span>
 			
-<span class="fc" id="L299">                value3 = homLeftX * homRightY;</span>
-<span class="fc" id="L300">                value4 = homLeftY * homRightY;</span>
-<span class="fc" id="L301">                value5 = homLeftW * homRightY;</span>
+<span class="fc" id="L312">                value3 = homLeftX * homRightY;</span>
+<span class="fc" id="L313">                value4 = homLeftY * homRightY;</span>
+<span class="fc" id="L314">                value5 = homLeftW * homRightY;</span>
 			
-<span class="fc" id="L303">                value6 = homLeftX * homRightW;</span>
-<span class="fc" id="L304">                value7 = homLeftY * homRightW;</span>
-<span class="fc" id="L305">                value8 = homLeftW * homRightW;</span>
+<span class="fc" id="L316">                value6 = homLeftX * homRightW;</span>
+<span class="fc" id="L317">                value7 = homLeftY * homRightW;</span>
+<span class="fc" id="L318">                value8 = homLeftW * homRightW;</span>
                 
                 //normalize row to increase accuracy
-<span class="fc" id="L308">                rowNorm = Math.sqrt(Math.pow(value0, 2.0) +</span>
-<span class="fc" id="L309">                        Math.pow(value1, 2.0) + Math.pow(value2, 2.0) +</span>
-<span class="fc" id="L310">                        Math.pow(value3, 2.0) + Math.pow(value4, 2.0) +</span>
-<span class="fc" id="L311">                        Math.pow(value5, 2.0) + Math.pow(value6, 2.0) +</span>
-<span class="fc" id="L312">                        Math.pow(value7, 2.0) + Math.pow(value8, 2.0));</span>
+<span class="fc" id="L321">                rowNorm = Math.sqrt(Math.pow(value0, 2.0) +</span>
+<span class="fc" id="L322">                        Math.pow(value1, 2.0) + Math.pow(value2, 2.0) +</span>
+<span class="fc" id="L323">                        Math.pow(value3, 2.0) + Math.pow(value4, 2.0) +</span>
+<span class="fc" id="L324">                        Math.pow(value5, 2.0) + Math.pow(value6, 2.0) +</span>
+<span class="fc" id="L325">                        Math.pow(value7, 2.0) + Math.pow(value8, 2.0));</span>
                 
-<span class="fc" id="L314">                a.setElementAt(i, 0, value0 / rowNorm);</span>
-<span class="fc" id="L315">                a.setElementAt(i, 1, value1 / rowNorm);</span>
-<span class="fc" id="L316">                a.setElementAt(i, 2, value2 / rowNorm);</span>
-<span class="fc" id="L317">                a.setElementAt(i, 3, value3 / rowNorm);</span>
-<span class="fc" id="L318">                a.setElementAt(i, 4, value4 / rowNorm);</span>
-<span class="fc" id="L319">                a.setElementAt(i, 5, value5 / rowNorm);</span>
-<span class="fc" id="L320">                a.setElementAt(i, 6, value6 / rowNorm);</span>
-<span class="fc" id="L321">                a.setElementAt(i, 7, value7 / rowNorm);</span>
-<span class="fc" id="L322">                a.setElementAt(i, 8, value8 / rowNorm);</span>
+<span class="fc" id="L327">                a.setElementAt(i, 0, value0 / rowNorm);</span>
+<span class="fc" id="L328">                a.setElementAt(i, 1, value1 / rowNorm);</span>
+<span class="fc" id="L329">                a.setElementAt(i, 2, value2 / rowNorm);</span>
+<span class="fc" id="L330">                a.setElementAt(i, 3, value3 / rowNorm);</span>
+<span class="fc" id="L331">                a.setElementAt(i, 4, value4 / rowNorm);</span>
+<span class="fc" id="L332">                a.setElementAt(i, 5, value5 / rowNorm);</span>
+<span class="fc" id="L333">                a.setElementAt(i, 6, value6 / rowNorm);</span>
+<span class="fc" id="L334">                a.setElementAt(i, 7, value7 / rowNorm);</span>
+<span class="fc" id="L335">                a.setElementAt(i, 8, value8 / rowNorm);</span>
 
-<span class="fc bfc" id="L324" title="All 4 branches covered.">                if(!isLMSESolutionAllowed() &amp;&amp; i == (MIN_REQUIRED_POINTS - 1))</span>
-<span class="fc" id="L325">                    break;</span>
+<span class="fc bfc" id="L337" title="All 4 branches covered.">                if(!isLMSESolutionAllowed() &amp;&amp; i == (MIN_REQUIRED_POINTS - 1))</span>
+<span class="fc" id="L338">                    break;</span>
             }
             
-<span class="fc" id="L328">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L341">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
             
-<span class="fc" id="L330">            decomposer.decompose();</span>
+<span class="fc" id="L343">            decomposer.decompose();</span>
             
             //having 7 points for 9 variables means that rank can be as high as
             //7, and nullity must be 2, so that the final fundamental matrix
@@ -335,71 +348,71 @@ public class SevenPointsFundamentalMatrixEstimator extends
             //If nullity is bigger than 2, then geometry is degenerate, usually
             //due to colinearities or coplanarities on projected image points.
             //In this case we throw an exception
-<span class="fc bfc" id="L338" title="All 2 branches covered.">            if (decomposer.getNullity() &gt; 2) {</span>
-<span class="fc" id="L339">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">            if (decomposer.getNullity() &gt; 2) {</span>
+<span class="fc" id="L352">                throw new FundamentalMatrixEstimatorException();</span>
             }
             
-<span class="fc" id="L342">            Matrix V = decomposer.getV();</span>
+<span class="fc" id="L355">            Matrix v = decomposer.getV();</span>
             
             //The last two column vectors of V contain the &quot;base&quot; matrices
             //to be used for the retrieval of the true fundamental matrix, since
             //the fundamental matrix we are looking for will be a linear 
             //combination of such matrices after reshaping the vectors into 3x3 
             //matrices
-<span class="fc" id="L349">            Matrix fundMatrix1 = new Matrix(</span>
+<span class="fc" id="L362">            Matrix fundMatrix1 = new Matrix(</span>
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-<span class="fc" id="L352">            fundMatrix1.setElementAt(0, 0, V.getElementAt(0, 8));</span>
-<span class="fc" id="L353">            fundMatrix1.setElementAt(0, 1, V.getElementAt(1, 8));</span>
-<span class="fc" id="L354">            fundMatrix1.setElementAt(0, 2, V.getElementAt(2, 8));</span>
-<span class="fc" id="L355">            fundMatrix1.setElementAt(1, 0, V.getElementAt(3, 8));</span>
-<span class="fc" id="L356">            fundMatrix1.setElementAt(1, 1, V.getElementAt(4, 8));</span>
-<span class="fc" id="L357">            fundMatrix1.setElementAt(1, 2, V.getElementAt(5, 8));</span>
-<span class="fc" id="L358">            fundMatrix1.setElementAt(2, 0, V.getElementAt(6, 8));</span>
-<span class="fc" id="L359">            fundMatrix1.setElementAt(2, 1, V.getElementAt(7, 8));</span>
-<span class="fc" id="L360">            fundMatrix1.setElementAt(2, 2, V.getElementAt(8, 8));</span>
+<span class="fc" id="L365">            fundMatrix1.setElementAt(0, 0, v.getElementAt(0, 8));</span>
+<span class="fc" id="L366">            fundMatrix1.setElementAt(0, 1, v.getElementAt(1, 8));</span>
+<span class="fc" id="L367">            fundMatrix1.setElementAt(0, 2, v.getElementAt(2, 8));</span>
+<span class="fc" id="L368">            fundMatrix1.setElementAt(1, 0, v.getElementAt(3, 8));</span>
+<span class="fc" id="L369">            fundMatrix1.setElementAt(1, 1, v.getElementAt(4, 8));</span>
+<span class="fc" id="L370">            fundMatrix1.setElementAt(1, 2, v.getElementAt(5, 8));</span>
+<span class="fc" id="L371">            fundMatrix1.setElementAt(2, 0, v.getElementAt(6, 8));</span>
+<span class="fc" id="L372">            fundMatrix1.setElementAt(2, 1, v.getElementAt(7, 8));</span>
+<span class="fc" id="L373">            fundMatrix1.setElementAt(2, 2, v.getElementAt(8, 8));</span>
 
-<span class="fc" id="L362">            Matrix fundMatrix2 = new Matrix(</span>
+<span class="fc" id="L375">            Matrix fundMatrix2 = new Matrix(</span>
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-<span class="fc" id="L365">            fundMatrix2.setElementAt(0, 0, V.getElementAt(0, 7));</span>
-<span class="fc" id="L366">            fundMatrix2.setElementAt(0, 1, V.getElementAt(1, 7));</span>
-<span class="fc" id="L367">            fundMatrix2.setElementAt(0, 2, V.getElementAt(2, 7));</span>
-<span class="fc" id="L368">            fundMatrix2.setElementAt(1, 0, V.getElementAt(3, 7));</span>
-<span class="fc" id="L369">            fundMatrix2.setElementAt(1, 1, V.getElementAt(4, 7));</span>
-<span class="fc" id="L370">            fundMatrix2.setElementAt(1, 2, V.getElementAt(5, 7));</span>
-<span class="fc" id="L371">            fundMatrix2.setElementAt(2, 0, V.getElementAt(6, 7));</span>
-<span class="fc" id="L372">            fundMatrix2.setElementAt(2, 1, V.getElementAt(7, 7));</span>
-<span class="fc" id="L373">            fundMatrix2.setElementAt(2, 2, V.getElementAt(8, 7));</span>
+<span class="fc" id="L378">            fundMatrix2.setElementAt(0, 0, v.getElementAt(0, 7));</span>
+<span class="fc" id="L379">            fundMatrix2.setElementAt(0, 1, v.getElementAt(1, 7));</span>
+<span class="fc" id="L380">            fundMatrix2.setElementAt(0, 2, v.getElementAt(2, 7));</span>
+<span class="fc" id="L381">            fundMatrix2.setElementAt(1, 0, v.getElementAt(3, 7));</span>
+<span class="fc" id="L382">            fundMatrix2.setElementAt(1, 1, v.getElementAt(4, 7));</span>
+<span class="fc" id="L383">            fundMatrix2.setElementAt(1, 2, v.getElementAt(5, 7));</span>
+<span class="fc" id="L384">            fundMatrix2.setElementAt(2, 0, v.getElementAt(6, 7));</span>
+<span class="fc" id="L385">            fundMatrix2.setElementAt(2, 1, v.getElementAt(7, 7));</span>
+<span class="fc" id="L386">            fundMatrix2.setElementAt(2, 2, v.getElementAt(8, 7));</span>
             
-<span class="pc bpc" id="L375" title="1 of 4 branches missed.">            if (mNormalizePoints &amp;&amp; leftNormalization != null) {</span>
+<span class="pc bpc" id="L388" title="1 of 4 branches missed.">            if (mNormalizePoints &amp;&amp; leftNormalization != null) {</span>
                 //denormalize linear combination of fundamental matrices
                 //fundMatrix1 and fundMatrix2
-<span class="fc" id="L378">                Matrix transposedRightTransformationMatrix =</span>
-<span class="fc" id="L379">                        rightNormalization.asMatrix().transposeAndReturnNew();</span>
-<span class="fc" id="L380">                Matrix leftTransformationMatrix = leftNormalization.asMatrix();</span>
+<span class="fc" id="L391">                Matrix transposedRightTransformationMatrix =</span>
+<span class="fc" id="L392">                        rightNormalization.asMatrix().transposeAndReturnNew();</span>
+<span class="fc" id="L393">                Matrix leftTransformationMatrix = leftNormalization.asMatrix();</span>
                 
                 //compute fundMatrix1 = transposedRightTransformationMatrix *
-                //fundMatrix1 * leftTransformationMatrix;
-<span class="fc" id="L384">                fundMatrix1.multiply(leftTransformationMatrix);</span>
-<span class="fc" id="L385">                fundMatrix1 = transposedRightTransformationMatrix.</span>
-<span class="fc" id="L386">                        multiplyAndReturnNew(fundMatrix1);</span>
+                //fundMatrix1 * leftTransformationMatrix
+<span class="fc" id="L397">                fundMatrix1.multiply(leftTransformationMatrix);</span>
+<span class="fc" id="L398">                fundMatrix1 = transposedRightTransformationMatrix.</span>
+<span class="fc" id="L399">                        multiplyAndReturnNew(fundMatrix1);</span>
                 
                 //normalize by frobenius norm to increase accuracy after point
                 //denormalization
-<span class="fc" id="L390">                double norm = Utils.normF(fundMatrix1);</span>
-<span class="fc" id="L391">                fundMatrix1.multiplyByScalar(1.0 / norm);</span>
+<span class="fc" id="L403">                double norm = Utils.normF(fundMatrix1);</span>
+<span class="fc" id="L404">                fundMatrix1.multiplyByScalar(1.0 / norm);</span>
                 
                 //compute fundMatrix2 = transposedRightTransformationMatrix *
-                //fundMatrix2 * leftTransformationMatrix;
-<span class="fc" id="L395">                fundMatrix2.multiply(leftTransformationMatrix);</span>
-<span class="fc" id="L396">                transposedRightTransformationMatrix.multiply(fundMatrix2);</span>
-<span class="fc" id="L397">                fundMatrix2 = transposedRightTransformationMatrix;</span>
+                //fundMatrix2 * leftTransformationMatrix
+<span class="fc" id="L408">                fundMatrix2.multiply(leftTransformationMatrix);</span>
+<span class="fc" id="L409">                transposedRightTransformationMatrix.multiply(fundMatrix2);</span>
+<span class="fc" id="L410">                fundMatrix2 = transposedRightTransformationMatrix;</span>
 
                 //normalize by frobenius norm to increase accuracy after point
                 //denormalization
-<span class="fc" id="L401">                norm = Utils.normF(fundMatrix2);</span>
-<span class="fc" id="L402">                fundMatrix2.multiplyByScalar(1.0 / norm);                </span>
+<span class="fc" id="L414">                norm = Utils.normF(fundMatrix2);</span>
+<span class="fc" id="L415">                fundMatrix2.multiplyByScalar(1.0 / norm);                </span>
             }
             
             //because fundMatrix1, and fundMatrix2 have been obtained as 
@@ -417,224 +430,232 @@ public class SevenPointsFundamentalMatrixEstimator extends
             //This produces a third degree polynomial as follows:
 
             //coefficients of polynomial: a*x^3 + b*x^2 + c*x + d
-<span class="fc" id="L420">            double aPoly = 0.0, bPoly = 0.0, cPoly = 0.0, dPoly = 0.0;</span>
-<span class="fc" id="L421">            double[] params = new double[4];</span>
+<span class="fc" id="L433">            double aPoly = 0.0;</span>
+<span class="fc" id="L434">            double bPoly = 0.0;</span>
+<span class="fc" id="L435">            double cPoly = 0.0;</span>
+<span class="fc" id="L436">            double dPoly = 0.0;</span>
+<span class="fc" id="L437">            double[] params = new double[4];</span>
             
-<span class="fc" id="L423">            computeParams(fundMatrix1.getElementAt(0, 0), </span>
-<span class="fc" id="L424">                    fundMatrix2.getElementAt(0, 0),</span>
-<span class="fc" id="L425">                    fundMatrix1.getElementAt(1, 1), </span>
-<span class="fc" id="L426">                    fundMatrix2.getElementAt(1, 1),</span>
-<span class="fc" id="L427">                    fundMatrix1.getElementAt(2, 2), </span>
-<span class="fc" id="L428">                    fundMatrix2.getElementAt(2, 2), params);</span>
+<span class="fc" id="L439">            computeParams(fundMatrix1.getElementAt(0, 0), </span>
+<span class="fc" id="L440">                    fundMatrix2.getElementAt(0, 0),</span>
+<span class="fc" id="L441">                    fundMatrix1.getElementAt(1, 1), </span>
+<span class="fc" id="L442">                    fundMatrix2.getElementAt(1, 1),</span>
+<span class="fc" id="L443">                    fundMatrix1.getElementAt(2, 2), </span>
+<span class="fc" id="L444">                    fundMatrix2.getElementAt(2, 2), params);</span>
             
-<span class="fc" id="L430">            aPoly += params[0];</span>
-<span class="fc" id="L431">            bPoly += params[1];</span>
-<span class="fc" id="L432">            cPoly += params[2];</span>
-<span class="fc" id="L433">            dPoly += params[3];</span>
+<span class="fc" id="L446">            aPoly += params[0];</span>
+<span class="fc" id="L447">            bPoly += params[1];</span>
+<span class="fc" id="L448">            cPoly += params[2];</span>
+<span class="fc" id="L449">            dPoly += params[3];</span>
             
-<span class="fc" id="L435">            computeParams(fundMatrix1.getElementAt(2, 1), </span>
-<span class="fc" id="L436">                    fundMatrix2.getElementAt(2, 1),</span>
-<span class="fc" id="L437">                    fundMatrix1.getElementAt(1, 0),</span>
-<span class="fc" id="L438">                    fundMatrix2.getElementAt(1, 0),</span>
-<span class="fc" id="L439">                    fundMatrix1.getElementAt(0, 2),</span>
-<span class="fc" id="L440">                    fundMatrix2.getElementAt(0, 2), params);</span>
+<span class="fc" id="L451">            computeParams(fundMatrix1.getElementAt(2, 1), </span>
+<span class="fc" id="L452">                    fundMatrix2.getElementAt(2, 1),</span>
+<span class="fc" id="L453">                    fundMatrix1.getElementAt(1, 0),</span>
+<span class="fc" id="L454">                    fundMatrix2.getElementAt(1, 0),</span>
+<span class="fc" id="L455">                    fundMatrix1.getElementAt(0, 2),</span>
+<span class="fc" id="L456">                    fundMatrix2.getElementAt(0, 2), params);</span>
 
-<span class="fc" id="L442">            aPoly += params[0];</span>
-<span class="fc" id="L443">            bPoly += params[1];</span>
-<span class="fc" id="L444">            cPoly += params[2];</span>
-<span class="fc" id="L445">            dPoly += params[3];</span>
+<span class="fc" id="L458">            aPoly += params[0];</span>
+<span class="fc" id="L459">            bPoly += params[1];</span>
+<span class="fc" id="L460">            cPoly += params[2];</span>
+<span class="fc" id="L461">            dPoly += params[3];</span>
             
-<span class="fc" id="L447">            computeParams(fundMatrix1.getElementAt(2, 0),</span>
-<span class="fc" id="L448">                    fundMatrix2.getElementAt(2, 0),</span>
-<span class="fc" id="L449">                    fundMatrix1.getElementAt(0, 1),</span>
-<span class="fc" id="L450">                    fundMatrix2.getElementAt(0, 1),</span>
-<span class="fc" id="L451">                    fundMatrix1.getElementAt(1, 2),</span>
-<span class="fc" id="L452">                    fundMatrix2.getElementAt(1, 2), params);</span>
+<span class="fc" id="L463">            computeParams(fundMatrix1.getElementAt(2, 0),</span>
+<span class="fc" id="L464">                    fundMatrix2.getElementAt(2, 0),</span>
+<span class="fc" id="L465">                    fundMatrix1.getElementAt(0, 1),</span>
+<span class="fc" id="L466">                    fundMatrix2.getElementAt(0, 1),</span>
+<span class="fc" id="L467">                    fundMatrix1.getElementAt(1, 2),</span>
+<span class="fc" id="L468">                    fundMatrix2.getElementAt(1, 2), params);</span>
             
-<span class="fc" id="L454">            aPoly += params[0];</span>
-<span class="fc" id="L455">            bPoly += params[1];</span>
-<span class="fc" id="L456">            cPoly += params[2];</span>
-<span class="fc" id="L457">            dPoly += params[3];</span>
+<span class="fc" id="L470">            aPoly += params[0];</span>
+<span class="fc" id="L471">            bPoly += params[1];</span>
+<span class="fc" id="L472">            cPoly += params[2];</span>
+<span class="fc" id="L473">            dPoly += params[3];</span>
             
-<span class="fc" id="L459">            computeParams(fundMatrix1.getElementAt(2, 0), </span>
-<span class="fc" id="L460">                    fundMatrix2.getElementAt(2, 0),</span>
-<span class="fc" id="L461">                    fundMatrix1.getElementAt(1, 1),</span>
-<span class="fc" id="L462">                    fundMatrix2.getElementAt(1, 1),</span>
-<span class="fc" id="L463">                    fundMatrix1.getElementAt(0, 2),</span>
-<span class="fc" id="L464">                    fundMatrix2.getElementAt(0, 2), params);</span>
+<span class="fc" id="L475">            computeParams(fundMatrix1.getElementAt(2, 0), </span>
+<span class="fc" id="L476">                    fundMatrix2.getElementAt(2, 0),</span>
+<span class="fc" id="L477">                    fundMatrix1.getElementAt(1, 1),</span>
+<span class="fc" id="L478">                    fundMatrix2.getElementAt(1, 1),</span>
+<span class="fc" id="L479">                    fundMatrix1.getElementAt(0, 2),</span>
+<span class="fc" id="L480">                    fundMatrix2.getElementAt(0, 2), params);</span>
             
-<span class="fc" id="L466">            aPoly -= params[0];</span>
-<span class="fc" id="L467">            bPoly -= params[1];</span>
-<span class="fc" id="L468">            cPoly -= params[2];</span>
-<span class="fc" id="L469">            dPoly -= params[3];</span>
+<span class="fc" id="L482">            aPoly -= params[0];</span>
+<span class="fc" id="L483">            bPoly -= params[1];</span>
+<span class="fc" id="L484">            cPoly -= params[2];</span>
+<span class="fc" id="L485">            dPoly -= params[3];</span>
             
-<span class="fc" id="L471">            computeParams(fundMatrix1.getElementAt(1, 2),</span>
-<span class="fc" id="L472">                    fundMatrix2.getElementAt(1, 2),</span>
-<span class="fc" id="L473">                    fundMatrix1.getElementAt(2, 1),</span>
-<span class="fc" id="L474">                    fundMatrix2.getElementAt(2, 1),</span>
-<span class="fc" id="L475">                    fundMatrix1.getElementAt(0, 0),</span>
-<span class="fc" id="L476">                    fundMatrix2.getElementAt(0, 0), params);</span>
+<span class="fc" id="L487">            computeParams(fundMatrix1.getElementAt(1, 2),</span>
+<span class="fc" id="L488">                    fundMatrix2.getElementAt(1, 2),</span>
+<span class="fc" id="L489">                    fundMatrix1.getElementAt(2, 1),</span>
+<span class="fc" id="L490">                    fundMatrix2.getElementAt(2, 1),</span>
+<span class="fc" id="L491">                    fundMatrix1.getElementAt(0, 0),</span>
+<span class="fc" id="L492">                    fundMatrix2.getElementAt(0, 0), params);</span>
             
-<span class="fc" id="L478">            aPoly -= params[0];</span>
-<span class="fc" id="L479">            bPoly -= params[1];</span>
-<span class="fc" id="L480">            cPoly -= params[2];</span>
-<span class="fc" id="L481">            dPoly -= params[3];</span>
+<span class="fc" id="L494">            aPoly -= params[0];</span>
+<span class="fc" id="L495">            bPoly -= params[1];</span>
+<span class="fc" id="L496">            cPoly -= params[2];</span>
+<span class="fc" id="L497">            dPoly -= params[3];</span>
             
-<span class="fc" id="L483">            computeParams(fundMatrix1.getElementAt(1, 0),</span>
-<span class="fc" id="L484">                    fundMatrix2.getElementAt(1, 0),</span>
-<span class="fc" id="L485">                    fundMatrix1.getElementAt(0, 1),</span>
-<span class="fc" id="L486">                    fundMatrix2.getElementAt(0, 1),</span>
-<span class="fc" id="L487">                    fundMatrix1.getElementAt(2, 2),</span>
-<span class="fc" id="L488">                    fundMatrix2.getElementAt(2, 2), params);</span>
+<span class="fc" id="L499">            computeParams(fundMatrix1.getElementAt(1, 0),</span>
+<span class="fc" id="L500">                    fundMatrix2.getElementAt(1, 0),</span>
+<span class="fc" id="L501">                    fundMatrix1.getElementAt(0, 1),</span>
+<span class="fc" id="L502">                    fundMatrix2.getElementAt(0, 1),</span>
+<span class="fc" id="L503">                    fundMatrix1.getElementAt(2, 2),</span>
+<span class="fc" id="L504">                    fundMatrix2.getElementAt(2, 2), params);</span>
             
-<span class="fc" id="L490">            aPoly -= params[0];</span>
-<span class="fc" id="L491">            bPoly -= params[1];</span>
-<span class="fc" id="L492">            cPoly -= params[2];</span>
-<span class="fc" id="L493">            dPoly -= params[3];</span>
+<span class="fc" id="L506">            aPoly -= params[0];</span>
+<span class="fc" id="L507">            bPoly -= params[1];</span>
+<span class="fc" id="L508">            cPoly -= params[2];</span>
+<span class="fc" id="L509">            dPoly -= params[3];</span>
 
             //normalize polynomial coefficients to increase accuracy
-<span class="fc" id="L496">            double coeffNorm = Math.sqrt(Math.pow(aPoly, 2.0) +</span>
-<span class="fc" id="L497">                    Math.pow(bPoly, 2.0) + Math.pow(cPoly, 2.0) +</span>
-<span class="fc" id="L498">                    Math.pow(dPoly, 2.0));</span>
-<span class="fc" id="L499">            aPoly /= coeffNorm;</span>
-<span class="fc" id="L500">            bPoly /= coeffNorm;</span>
-<span class="fc" id="L501">            cPoly /= coeffNorm;</span>
-<span class="fc" id="L502">            dPoly /= coeffNorm;</span>
+<span class="fc" id="L512">            double coeffNorm = Math.sqrt(Math.pow(aPoly, 2.0) +</span>
+<span class="fc" id="L513">                    Math.pow(bPoly, 2.0) + Math.pow(cPoly, 2.0) +</span>
+<span class="fc" id="L514">                    Math.pow(dPoly, 2.0));</span>
+<span class="fc" id="L515">            aPoly /= coeffNorm;</span>
+<span class="fc" id="L516">            bPoly /= coeffNorm;</span>
+<span class="fc" id="L517">            cPoly /= coeffNorm;</span>
+<span class="fc" id="L518">            dPoly /= coeffNorm;</span>
             
             //store polynomial coefficients into array and find its roots to
             //enforce det(F) = 0. The solution must be unique and real!
-<span class="fc" id="L506">            params[0] = dPoly;</span>
-<span class="fc" id="L507">            params[1] = cPoly;</span>
-<span class="fc" id="L508">            params[2] = bPoly;</span>
-<span class="fc" id="L509">            params[3] = aPoly;</span>
+<span class="fc" id="L522">            params[0] = dPoly;</span>
+<span class="fc" id="L523">            params[1] = cPoly;</span>
+<span class="fc" id="L524">            params[2] = bPoly;</span>
+<span class="fc" id="L525">            params[3] = aPoly;</span>
             
-<span class="fc" id="L511">            double beta1 = 0.0, beta2 = 0.0, beta3 = 0.0;</span>
-<span class="fc" id="L512">            boolean beta1Available = false, beta2Available= false,</span>
-<span class="fc" id="L513">                    beta3Available = false;</span>
+<span class="fc" id="L527">            double beta1 = 0.0;</span>
+<span class="fc" id="L528">            double beta2 = 0.0;</span>
+<span class="fc" id="L529">            double beta3 = 0.0;</span>
+<span class="fc" id="L530">            boolean beta1Available = false;</span>
+<span class="fc" id="L531">            boolean beta2Available= false;</span>
+<span class="fc" id="L532">            boolean beta3Available = false;</span>
             Complex[] roots;
-            Complex root1, root2, root3;
+            Complex root1;
+            Complex root2;
+            Complex root3;
             
-<span class="pc bpc" id="L517" title="1 of 2 branches missed.">            if (ThirdDegreePolynomialRootsEstimator.isThirdDegree(params)) {</span>
+<span class="pc bpc" id="L538" title="1 of 2 branches missed.">            if (ThirdDegreePolynomialRootsEstimator.isThirdDegree(params)) {</span>
                 //solve third degree polynomial
-<span class="fc" id="L519">                ThirdDegreePolynomialRootsEstimator estimator =</span>
+<span class="fc" id="L540">                ThirdDegreePolynomialRootsEstimator estimator =</span>
                         new ThirdDegreePolynomialRootsEstimator(params);
-<span class="fc" id="L521">                estimator.estimate();</span>
-<span class="fc" id="L522">                roots = estimator.getRoots();</span>
-<span class="fc" id="L523">                root1 = roots[0];</span>
-<span class="fc" id="L524">                root2 = roots[1];</span>
-<span class="fc" id="L525">                root3 = roots[2];</span>
+<span class="fc" id="L542">                estimator.estimate();</span>
+<span class="fc" id="L543">                roots = estimator.getRoots();</span>
+<span class="fc" id="L544">                root1 = roots[0];</span>
+<span class="fc" id="L545">                root2 = roots[1];</span>
+<span class="fc" id="L546">                root3 = roots[2];</span>
                                 
-<span class="fc bfc" id="L527" title="All 2 branches covered.">                if (Math.abs(root1.getImaginary()) &lt;= EPS) {</span>
+<span class="fc bfc" id="L548" title="All 2 branches covered.">                if (Math.abs(root1.getImaginary()) &lt;= EPS) {</span>
                     //1st root is real, so we keep it
-<span class="fc" id="L529">                    beta1 = root1.getReal();</span>
-<span class="fc" id="L530">                    beta1Available = true;</span>
+<span class="fc" id="L550">                    beta1 = root1.getReal();</span>
+<span class="fc" id="L551">                    beta1Available = true;</span>
                 }
-<span class="fc bfc" id="L532" title="All 2 branches covered.">                if (Math.abs(root2.getImaginary()) &lt;= EPS) {</span>
+<span class="fc bfc" id="L553" title="All 2 branches covered.">                if (Math.abs(root2.getImaginary()) &lt;= EPS) {</span>
                     //2nd root is real, so we keep it
-<span class="fc" id="L534">                    beta2 = root2.getReal();</span>
-<span class="fc" id="L535">                    beta2Available = true;</span>
+<span class="fc" id="L555">                    beta2 = root2.getReal();</span>
+<span class="fc" id="L556">                    beta2Available = true;</span>
                 }
-<span class="fc bfc" id="L537" title="All 2 branches covered.">                if (Math.abs(root3.getImaginary()) &lt;= EPS) {</span>
+<span class="fc bfc" id="L558" title="All 2 branches covered.">                if (Math.abs(root3.getImaginary()) &lt;= EPS) {</span>
                     //3rd root is real, so we keep it
-<span class="fc" id="L539">                    beta3 = root3.getReal();</span>
-<span class="fc" id="L540">                    beta3Available = true;</span>
+<span class="fc" id="L560">                    beta3 = root3.getReal();</span>
+<span class="fc" id="L561">                    beta3Available = true;</span>
                 }
-<span class="pc bnc" id="L542" title="All 2 branches missed.">            } else if (SecondDegreePolynomialRootsEstimator.isSecondDegree(</span>
+<span class="pc bnc" id="L563" title="All 2 branches missed.">            } else if (SecondDegreePolynomialRootsEstimator.isSecondDegree(</span>
                     params)) {
                 //solve second degree polynomial
-<span class="nc" id="L545">                SecondDegreePolynomialRootsEstimator estimator =</span>
+<span class="nc" id="L566">                SecondDegreePolynomialRootsEstimator estimator =</span>
                         new SecondDegreePolynomialRootsEstimator(params);
-<span class="nc" id="L547">                estimator.estimate();</span>
-<span class="nc" id="L548">                roots = estimator.getRoots();</span>
-<span class="nc" id="L549">                root1 = roots[0];</span>
-<span class="nc" id="L550">                root2 = roots[1];</span>
-<span class="nc bnc" id="L551" title="All 2 branches missed.">                if (Math.abs(root1.getImaginary()) &lt;= EPS) {</span>
+<span class="nc" id="L568">                estimator.estimate();</span>
+<span class="nc" id="L569">                roots = estimator.getRoots();</span>
+<span class="nc" id="L570">                root1 = roots[0];</span>
+<span class="nc" id="L571">                root2 = roots[1];</span>
+<span class="nc bnc" id="L572" title="All 2 branches missed.">                if (Math.abs(root1.getImaginary()) &lt;= EPS) {</span>
                     //1st root is real, so we keep it
-<span class="nc" id="L553">                    beta1 = root1.getReal();</span>
-<span class="nc" id="L554">                    beta1Available = true;</span>
+<span class="nc" id="L574">                    beta1 = root1.getReal();</span>
+<span class="nc" id="L575">                    beta1Available = true;</span>
                 }
-<span class="nc bnc" id="L556" title="All 2 branches missed.">                if (Math.abs(root2.getImaginary()) &lt;= EPS) {</span>
+<span class="nc bnc" id="L577" title="All 2 branches missed.">                if (Math.abs(root2.getImaginary()) &lt;= EPS) {</span>
                     //2nd root is real, so we keep it
-<span class="nc" id="L558">                    beta2 = root2.getReal();</span>
-<span class="nc" id="L559">                    beta2Available = true;</span>
+<span class="nc" id="L579">                    beta2 = root2.getReal();</span>
+<span class="nc" id="L580">                    beta2Available = true;</span>
                 }
-<span class="nc bnc" id="L561" title="All 2 branches missed.">            } else if (FirstDegreePolynomialRootsEstimator.isFirstDegree(</span>
+<span class="nc bnc" id="L582" title="All 2 branches missed.">            } else if (FirstDegreePolynomialRootsEstimator.isFirstDegree(</span>
                     params)) {
                 //solve first degree polynomial
-<span class="nc" id="L564">                FirstDegreePolynomialRootsEstimator estimator =</span>
+<span class="nc" id="L585">                FirstDegreePolynomialRootsEstimator estimator =</span>
                         new FirstDegreePolynomialRootsEstimator(params);
-<span class="nc" id="L566">                estimator.estimate();</span>
-<span class="nc" id="L567">                roots = estimator.getRoots();</span>
-<span class="nc" id="L568">                root1 = roots[0]; //this is the only solution and is real </span>
+<span class="nc" id="L587">                estimator.estimate();</span>
+<span class="nc" id="L588">                roots = estimator.getRoots();</span>
+<span class="nc" id="L589">                root1 = roots[0]; //this is the only solution and is real </span>
                                 //becuase coefficients are real
-<span class="nc" id="L570">                beta1 = root1.getReal();</span>
-<span class="nc" id="L571">                beta1Available = true;</span>
-<span class="nc" id="L572">            } else {</span>
+<span class="nc" id="L591">                beta1 = root1.getReal();</span>
+<span class="nc" id="L592">                beta1Available = true;</span>
+<span class="nc" id="L593">            } else {</span>
                 //invalid polynomial degree
-<span class="nc" id="L574">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="nc" id="L595">                throw new FundamentalMatrixEstimatorException();</span>
             }
             
-<span class="pc bpc" id="L577" title="2 of 6 branches missed.">            if (!beta1Available &amp;&amp; !beta2Available &amp;&amp; !beta3Available) {</span>
+<span class="pc bpc" id="L598" title="2 of 6 branches missed.">            if (!beta1Available &amp;&amp; !beta2Available &amp;&amp; !beta3Available) {</span>
                 //No solution was found
-<span class="nc" id="L579">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="nc" id="L600">                throw new FundamentalMatrixEstimatorException();</span>
             }
             
             //Once the polynomial is solved we compute the linear combination
             //F = b * F1 + (1 - b) * F2 which has rank 2 using all available 
             //solutions
             Matrix fundMatrix;
-            FundamentalMatrix F;
-<span class="fc" id="L587">            result.clear(); //clear previous values</span>
-<span class="fc bfc" id="L588" title="All 2 branches covered.">            if (beta1Available) {</span>
-<span class="fc" id="L589">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta1).</span>
-<span class="fc" id="L590">                        addAndReturnNew(fundMatrix2.</span>
-<span class="fc" id="L591">                                multiplyByScalarAndReturnNew(1.0 - beta1));</span>
-<span class="pc bpc" id="L592" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
-<span class="nc" id="L593">                    throw new FundamentalMatrixEstimatorException();</span>
+            FundamentalMatrix f;
+<span class="fc" id="L608">            result.clear(); //clear previous values</span>
+<span class="fc bfc" id="L609" title="All 2 branches covered.">            if (beta1Available) {</span>
+<span class="fc" id="L610">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta1).</span>
+<span class="fc" id="L611">                        addAndReturnNew(fundMatrix2.</span>
+<span class="fc" id="L612">                                multiplyByScalarAndReturnNew(1.0 - beta1));</span>
+<span class="pc bpc" id="L613" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
+<span class="nc" id="L614">                    throw new FundamentalMatrixEstimatorException();</span>
                 }
                 
-<span class="fc" id="L596">                F = new FundamentalMatrix(fundMatrix);</span>
-<span class="fc" id="L597">                result.add(F);</span>
+<span class="fc" id="L617">                f = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L618">                result.add(f);</span>
             }
-<span class="fc bfc" id="L599" title="All 2 branches covered.">            if (beta2Available) {</span>
-<span class="fc" id="L600">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta2).</span>
-<span class="fc" id="L601">                        addAndReturnNew(fundMatrix2.multiplyByScalarAndReturnNew(</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">            if (beta2Available) {</span>
+<span class="fc" id="L621">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta2).</span>
+<span class="fc" id="L622">                        addAndReturnNew(fundMatrix2.multiplyByScalarAndReturnNew(</span>
                         1.0 - beta2));
-<span class="pc bpc" id="L603" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
-<span class="nc" id="L604">                    throw new FundamentalMatrixEstimatorException();</span>
+<span class="pc bpc" id="L624" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
+<span class="nc" id="L625">                    throw new FundamentalMatrixEstimatorException();</span>
                 }
                 
-<span class="fc" id="L607">                F = new FundamentalMatrix(fundMatrix);</span>
-<span class="fc" id="L608">                result.add(F);                </span>
+<span class="fc" id="L628">                f = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L629">                result.add(f);</span>
             }
-<span class="fc bfc" id="L610" title="All 2 branches covered.">            if (beta3Available) {</span>
-<span class="fc" id="L611">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta3).</span>
-<span class="fc" id="L612">                        addAndReturnNew(fundMatrix2.multiplyByScalarAndReturnNew(</span>
+<span class="fc bfc" id="L631" title="All 2 branches covered.">            if (beta3Available) {</span>
+<span class="fc" id="L632">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta3).</span>
+<span class="fc" id="L633">                        addAndReturnNew(fundMatrix2.multiplyByScalarAndReturnNew(</span>
                         1.0 - beta3));
-<span class="pc bpc" id="L614" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
-<span class="nc" id="L615">                    throw new FundamentalMatrixEstimatorException();</span>
+<span class="pc bpc" id="L635" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
+<span class="nc" id="L636">                    throw new FundamentalMatrixEstimatorException();</span>
                 }
                 
-<span class="fc" id="L618">                F = new FundamentalMatrix(fundMatrix);</span>
-<span class="fc" id="L619">                result.add(F);                </span>
+<span class="fc" id="L639">                f = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L640">                result.add(f);</span>
             }
             
-<span class="pc bpc" id="L622" title="1 of 2 branches missed.">            if (result.isEmpty()) {</span>
+<span class="pc bpc" id="L643" title="1 of 2 branches missed.">            if (result.isEmpty()) {</span>
                 //no valid solution was found
-<span class="nc" id="L624">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="nc" id="L645">                throw new FundamentalMatrixEstimatorException();</span>
             }
                         
-<span class="fc bfc" id="L627" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L628">                mListener.onEstimateEnd(this, result.get(0));</span>
+<span class="fc bfc" id="L648" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L649">                mListener.onEstimateEnd(this, result.get(0));</span>
             }
             
-<span class="nc" id="L631">        } catch (InvalidFundamentalMatrixException | AlgebraException |</span>
+<span class="nc" id="L652">        } catch (InvalidFundamentalMatrixException | AlgebraException |</span>
                 NumericalException | NormalizerException e) {
-<span class="nc" id="L633">            throw new FundamentalMatrixEstimatorException(e);</span>
+<span class="nc" id="L654">            throw new FundamentalMatrixEstimatorException(e);</span>
         } finally {
-<span class="fc" id="L635">            mLocked = false;</span>
+<span class="fc" id="L656">            mLocked = false;</span>
         }        
-<span class="fc" id="L637">    }</span>
+<span class="fc" id="L658">    }</span>
     
     /**
      * Estimates a fundamental matrix using provided lists of matched points on
@@ -654,12 +675,12 @@ public class SevenPointsFundamentalMatrixEstimator extends
     @Override
     public FundamentalMatrix estimate() throws LockedException, 
             NotReadyException, FundamentalMatrixEstimatorException {
-<span class="fc" id="L657">        List&lt;FundamentalMatrix&gt; list = estimateAll();</span>
-<span class="pc bpc" id="L658" title="1 of 2 branches missed.">        if (list.size() &gt; 1) {</span>
-<span class="fc" id="L659">            throw new FundamentalMatrixEstimatorException();</span>
+<span class="fc" id="L678">        List&lt;FundamentalMatrix&gt; list = estimateAll();</span>
+<span class="pc bpc" id="L679" title="1 of 2 branches missed.">        if (list.size() &gt; 1) {</span>
+<span class="fc" id="L680">            throw new FundamentalMatrixEstimatorException();</span>
         }
         
-<span class="nc" id="L662">        return list.get(0);</span>
+<span class="nc" id="L683">        return list.get(0);</span>
     }
 
     /**
@@ -668,7 +689,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      */    
     @Override
     public FundamentalMatrixEstimatorMethod getMethod() {
-<span class="fc" id="L671">        return FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;</span>
+<span class="fc" id="L692">        return FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;</span>
     }    
     
     /**
@@ -679,7 +700,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      */
     @Override
     public int getMinRequiredPoints() {
-<span class="fc" id="L682">        return MIN_REQUIRED_POINTS;</span>
+<span class="fc" id="L703">        return MIN_REQUIRED_POINTS;</span>
     }
         
     /**
@@ -694,32 +715,32 @@ public class SevenPointsFundamentalMatrixEstimator extends
     private boolean enforceRank2(Matrix matrix, 
             SingularValueDecomposer decomposer) throws AlgebraException {
         
-<span class="fc" id="L697">        decomposer.setInputMatrix(matrix);</span>
-<span class="fc" id="L698">        decomposer.decompose();</span>
+<span class="fc" id="L718">        decomposer.setInputMatrix(matrix);</span>
+<span class="fc" id="L719">        decomposer.decompose();</span>
         
-<span class="fc" id="L700">        int rank = decomposer.getRank();</span>
-<span class="pc bpc" id="L701" title="1 of 2 branches missed.">        if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
+<span class="fc" id="L721">        int rank = decomposer.getRank();</span>
+<span class="fc bfc" id="L722" title="All 2 branches covered.">        if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
             //rank needs to be reduced
-<span class="nc" id="L703">            Matrix U = decomposer.getU();</span>
-<span class="nc" id="L704">            Matrix W = decomposer.getW();</span>
-<span class="nc" id="L705">            Matrix V = decomposer.getV();</span>
+<span class="fc" id="L724">            Matrix u = decomposer.getU();</span>
+<span class="fc" id="L725">            Matrix w = decomposer.getW();</span>
+<span class="fc" id="L726">            Matrix v = decomposer.getV();</span>
                 
             //transpose V
-<span class="nc" id="L708">            V.transpose();</span>
+<span class="fc" id="L729">            v.transpose();</span>
 
             //set last singular value to zero to enforce rank 2
-<span class="nc" id="L711">            W.setElementAt(2, 2, 0.0);</span>
+<span class="fc" id="L732">            w.setElementAt(2, 2, 0.0);</span>
                 
             //compute matrix = U * W * V'
-<span class="nc" id="L714">            W.multiply(V);</span>
-<span class="nc" id="L715">            U.multiply(W);</span>
-<span class="nc" id="L716">            matrix.copyFrom(U);</span>
-<span class="nc" id="L717">            return false;</span>
+<span class="fc" id="L735">            w.multiply(v);</span>
+<span class="fc" id="L736">            u.multiply(w);</span>
+<span class="fc" id="L737">            matrix.copyFrom(u);</span>
+<span class="fc" id="L738">            return false;</span>
         } else {
             //if rank is 2, rank is ok, otherwise rank is lower than fundamental 
             //matrix rank (rank 1) and estimation has failed because of 
             //coplanarities
-<span class="pc bpc" id="L722" title="1 of 2 branches missed.">            return rank != FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK;</span>
+<span class="pc bpc" id="L743" title="1 of 2 branches missed.">            return rank != FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK;</span>
         }                
     }
     
@@ -738,19 +759,19 @@ public class SevenPointsFundamentalMatrixEstimator extends
     private void computeParams(double a, double b, double c, double d, double e, 
             double f, double[] out) {
         
-<span class="fc" id="L741">        double ace = a*c*e;</span>
-<span class="fc" id="L742">        double ade = a*d*e;</span>
-<span class="fc" id="L743">        double bce = b*c*e;</span>
-<span class="fc" id="L744">        double bde = b*d*e;</span>
-<span class="fc" id="L745">        double acf = a*c*f;</span>
-<span class="fc" id="L746">        double adf = a*d*f;</span>
-<span class="fc" id="L747">        double bcf = b*c*f;</span>
-<span class="fc" id="L748">        double bdf = b*d*f;</span>
+<span class="fc" id="L762">        double ace = a*c*e;</span>
+<span class="fc" id="L763">        double ade = a*d*e;</span>
+<span class="fc" id="L764">        double bce = b*c*e;</span>
+<span class="fc" id="L765">        double bde = b*d*e;</span>
+<span class="fc" id="L766">        double acf = a*c*f;</span>
+<span class="fc" id="L767">        double adf = a*d*f;</span>
+<span class="fc" id="L768">        double bcf = b*c*f;</span>
+<span class="fc" id="L769">        double bdf = b*d*f;</span>
         
-<span class="fc" id="L750">        out[0] = ace - ade - bce + bde - acf + adf + bcf - bdf;</span>
-<span class="fc" id="L751">        out[1] = ade + bce - 2.0*bde + acf - 2.0*adf - 2.0*bcf + 3.0*bdf;</span>
-<span class="fc" id="L752">        out[2] = bde + adf + bcf -3.0*bdf;</span>
-<span class="fc" id="L753">        out[3] = bdf;        </span>
-<span class="fc" id="L754">    }</span>
+<span class="fc" id="L771">        out[0] = ace - ade - bce + bde - acf + adf + bcf - bdf;</span>
+<span class="fc" id="L772">        out[1] = ade + bce - 2.0*bde + acf - 2.0*adf - 2.0*bcf + 3.0*bdf;</span>
+<span class="fc" id="L773">        out[2] = bde + adf + bcf -3.0*bdf;</span>
+<span class="fc" id="L774">        out[3] = bdf;        </span>
+<span class="fc" id="L775">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

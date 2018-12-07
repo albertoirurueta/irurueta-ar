@@ -518,17 +518,17 @@ public class FundamentalMatrix implements Serializable {
         try {
 <span class="fc" id="L519">            decomposer.decompose();</span>
 
-<span class="fc" id="L521">            Matrix U = decomposer.getU();</span>
-<span class="fc" id="L522">            Matrix V = decomposer.getV();</span>
+<span class="fc" id="L521">            Matrix u = decomposer.getU();</span>
+<span class="fc" id="L522">            Matrix v = decomposer.getV();</span>
 <span class="fc" id="L523">            double[] array = new double[</span>
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH];
 
             //left epipole is the last column of V (right null-space)        
-<span class="fc" id="L527">            V.getSubmatrixAsArray(0, 2, 2, 2, array);</span>
+<span class="fc" id="L527">            v.getSubmatrixAsArray(0, 2, 2, 2, array);</span>
 <span class="fc" id="L528">            mLeftEpipole = new HomogeneousPoint2D(array);</span>
 
             //right epipole is the last column of U (left null-space)
-<span class="fc" id="L531">            U.getSubmatrixAsArray(0, 2, 2, 2, array);</span>
+<span class="fc" id="L531">            u.getSubmatrixAsArray(0, 2, 2, 2, array);</span>
 <span class="fc" id="L532">            mRightEpipole = new HomogeneousPoint2D(array);</span>
 <span class="nc" id="L533">        } catch (AlgebraException e) {</span>
 <span class="nc" id="L534">            throw new InvalidFundamentalMatrixException(e);</span>
@@ -632,8 +632,10 @@ public class FundamentalMatrix implements Serializable {
 <span class="fc" id="L632">            leftCamera.setInternalMatrix(leftCameraMatrix);</span>
 <span class="fc" id="L633">            rightCamera.setInternalMatrix(rightCameraMatrix);</span>
             
-<span class="pc" id="L635">        } catch (NotAvailableException | WrongSizeException ignore) { }</span>
-<span class="fc" id="L636">    }</span>
+<span class="nc" id="L635">        } catch (NotAvailableException | WrongSizeException ignore) {</span>
+            //never happens
+<span class="fc" id="L637">        }</span>
+<span class="fc" id="L638">    }</span>
     
     /**
      * Generates a pair of cameras in any arbitrary projective space which
@@ -656,8 +658,8 @@ public class FundamentalMatrix implements Serializable {
     public void generateCamerasInArbitraryProjectiveSpace(
             PinholeCamera leftCamera, PinholeCamera rightCamera) 
             throws InvalidFundamentalMatrixException, NotReadyException {
-<span class="fc" id="L659">        generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera, </span>
+<span class="fc" id="L661">        generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera, </span>
                 0.0, 0.0, 0.0, 1.0);
-<span class="fc" id="L661">    }</span>
+<span class="fc" id="L663">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

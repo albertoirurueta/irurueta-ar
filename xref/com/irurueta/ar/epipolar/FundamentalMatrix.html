@@ -526,17 +526,17 @@
 <a class="jxr_linenumber" name="L518" href="#L518">518</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L519" href="#L519">519</a>             decomposer.decompose();
 <a class="jxr_linenumber" name="L520" href="#L520">520</a> 
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>             Matrix U = decomposer.getU();
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>             Matrix V = decomposer.getV();
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>             Matrix u = decomposer.getU();
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>             Matrix v = decomposer.getV();
 <a class="jxr_linenumber" name="L523" href="#L523">523</a>             <strong class="jxr_keyword">double</strong>[] array = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[
 <a class="jxr_linenumber" name="L524" href="#L524">524</a>                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH];
 <a class="jxr_linenumber" name="L525" href="#L525">525</a> 
 <a class="jxr_linenumber" name="L526" href="#L526">526</a>             <em class="jxr_comment">//left epipole is the last column of V (right null-space)        </em>
-<a class="jxr_linenumber" name="L527" href="#L527">527</a>             V.getSubmatrixAsArray(0, 2, 2, 2, array);
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>             v.getSubmatrixAsArray(0, 2, 2, 2, array);
 <a class="jxr_linenumber" name="L528" href="#L528">528</a>             mLeftEpipole = <strong class="jxr_keyword">new</strong> HomogeneousPoint2D(array);
 <a class="jxr_linenumber" name="L529" href="#L529">529</a> 
 <a class="jxr_linenumber" name="L530" href="#L530">530</a>             <em class="jxr_comment">//right epipole is the last column of U (left null-space)</em>
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>             U.getSubmatrixAsArray(0, 2, 2, 2, array);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             u.getSubmatrixAsArray(0, 2, 2, 2, array);
 <a class="jxr_linenumber" name="L532" href="#L532">532</a>             mRightEpipole = <strong class="jxr_keyword">new</strong> HomogeneousPoint2D(array);
 <a class="jxr_linenumber" name="L533" href="#L533">533</a>         } <strong class="jxr_keyword">catch</strong> (AlgebraException e) {
 <a class="jxr_linenumber" name="L534" href="#L534">534</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/InvalidFundamentalMatrixException.html">InvalidFundamentalMatrixException</a>(e);
@@ -640,34 +640,36 @@
 <a class="jxr_linenumber" name="L632" href="#L632">632</a>             leftCamera.setInternalMatrix(leftCameraMatrix);
 <a class="jxr_linenumber" name="L633" href="#L633">633</a>             rightCamera.setInternalMatrix(rightCameraMatrix);
 <a class="jxr_linenumber" name="L634" href="#L634">634</a>             
-<a class="jxr_linenumber" name="L635" href="#L635">635</a>         } <strong class="jxr_keyword">catch</strong> (NotAvailableException | WrongSizeException ignore) { }
-<a class="jxr_linenumber" name="L636" href="#L636">636</a>     }
-<a class="jxr_linenumber" name="L637" href="#L637">637</a>     
-<a class="jxr_linenumber" name="L638" href="#L638">638</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L639" href="#L639">639</a> <em class="jxr_javadoccomment">     * Generates a pair of cameras in any arbitrary projective space which</em>
-<a class="jxr_linenumber" name="L640" href="#L640">640</a> <em class="jxr_javadoccomment">     * produce this fundamental matrix.</em>
-<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">     * This method can be used to obtain a pair of cameras related by this</em>
-<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">     * fundamental matrix in order to initialize geometry and get an initial set</em>
-<a class="jxr_linenumber" name="L643" href="#L643">643</a> <em class="jxr_javadoccomment">     * of cameras.</em>
-<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">     * However, because cameras are in any arbitrary projective space, they need</em>
-<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * to be transformed into a metric space using a Dual Absolute Quadric </em>
-<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * estimator.</em>
-<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     * This method assumes that the reference plane is the plane at infinity and</em>
-<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     * that scale factor is one.</em>
-<a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">     * @param leftCamera instance where left camera will be stored.</em>
-<a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">     * @param rightCamera instance where right camera will be stored.</em>
-<a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">     * @throws InvalidFundamentalMatrixException if internal matrix is </em>
-<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">     * numerically unstable and epipoles couldn't be computed.</em>
-<a class="jxr_linenumber" name="L653" href="#L653">653</a> <em class="jxr_javadoccomment">     * @throws NotReadyException if an internal matrix has not yet been </em>
-<a class="jxr_linenumber" name="L654" href="#L654">654</a> <em class="jxr_javadoccomment">     * provided.</em>
-<a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L656" href="#L656">656</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> generateCamerasInArbitraryProjectiveSpace(
-<a class="jxr_linenumber" name="L657" href="#L657">657</a>             PinholeCamera leftCamera, PinholeCamera rightCamera) 
-<a class="jxr_linenumber" name="L658" href="#L658">658</a>             <strong class="jxr_keyword">throws</strong> InvalidFundamentalMatrixException, NotReadyException {
-<a class="jxr_linenumber" name="L659" href="#L659">659</a>         generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera, 
-<a class="jxr_linenumber" name="L660" href="#L660">660</a>                 0.0, 0.0, 0.0, 1.0);
-<a class="jxr_linenumber" name="L661" href="#L661">661</a>     }
-<a class="jxr_linenumber" name="L662" href="#L662">662</a> }
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>         } <strong class="jxr_keyword">catch</strong> (NotAvailableException | WrongSizeException ignore) {
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>             <em class="jxr_comment">//never happens</em>
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>         }
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>     }
+<a class="jxr_linenumber" name="L639" href="#L639">639</a>     
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">     * Generates a pair of cameras in any arbitrary projective space which</em>
+<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">     * produce this fundamental matrix.</em>
+<a class="jxr_linenumber" name="L643" href="#L643">643</a> <em class="jxr_javadoccomment">     * This method can be used to obtain a pair of cameras related by this</em>
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">     * fundamental matrix in order to initialize geometry and get an initial set</em>
+<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * of cameras.</em>
+<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * However, because cameras are in any arbitrary projective space, they need</em>
+<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     * to be transformed into a metric space using a Dual Absolute Quadric </em>
+<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     * estimator.</em>
+<a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">     * This method assumes that the reference plane is the plane at infinity and</em>
+<a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">     * that scale factor is one.</em>
+<a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">     * @param leftCamera instance where left camera will be stored.</em>
+<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">     * @param rightCamera instance where right camera will be stored.</em>
+<a class="jxr_linenumber" name="L653" href="#L653">653</a> <em class="jxr_javadoccomment">     * @throws InvalidFundamentalMatrixException if internal matrix is </em>
+<a class="jxr_linenumber" name="L654" href="#L654">654</a> <em class="jxr_javadoccomment">     * numerically unstable and epipoles couldn't be computed.</em>
+<a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">     * @throws NotReadyException if an internal matrix has not yet been </em>
+<a class="jxr_linenumber" name="L656" href="#L656">656</a> <em class="jxr_javadoccomment">     * provided.</em>
+<a class="jxr_linenumber" name="L657" href="#L657">657</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> generateCamerasInArbitraryProjectiveSpace(
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>             PinholeCamera leftCamera, PinholeCamera rightCamera) 
+<a class="jxr_linenumber" name="L660" href="#L660">660</a>             <strong class="jxr_keyword">throws</strong> InvalidFundamentalMatrixException, NotReadyException {
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>         generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera, 
+<a class="jxr_linenumber" name="L662" href="#L662">662</a>                 0.0, 0.0, 0.0, 1.0);
+<a class="jxr_linenumber" name="L663" href="#L663">663</a>     }
+<a class="jxr_linenumber" name="L664" href="#L664">664</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

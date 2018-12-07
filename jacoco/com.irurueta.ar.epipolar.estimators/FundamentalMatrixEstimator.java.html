@@ -69,7 +69,7 @@ public abstract class FundamentalMatrixEstimator {
      * have the same length.
      */
     public FundamentalMatrixEstimator(List&lt;Point2D&gt; leftPoints, 
-<span class="fc" id="L72">            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {</span>
+<span class="fc" id="L72">            List&lt;Point2D&gt; rightPoints) {</span>
 <span class="fc" id="L73">        internalSetPoints(leftPoints, rightPoints);</span>
 <span class="fc" id="L74">    }</span>
     
@@ -98,7 +98,7 @@ public abstract class FundamentalMatrixEstimator {
      * right views do not have the same length.
      */
     public void setPoints(List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
 <span class="fc bfc" id="L102" title="All 2 branches covered.">        if (isLocked()) {</span>
 <span class="fc" id="L103">            throw new LockedException();</span>
         }
@@ -208,18 +208,17 @@ public abstract class FundamentalMatrixEstimator {
      * have the same length.
      */
     public static FundamentalMatrixEstimator create(List&lt;Point2D&gt; leftPoints,
-            List&lt;Point2D&gt; rightPoints, FundamentalMatrixEstimatorMethod method)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L213" title="All 3 branches covered.">        switch (method) {</span>
+            List&lt;Point2D&gt; rightPoints, FundamentalMatrixEstimatorMethod method) {
+<span class="fc bfc" id="L212" title="All 3 branches covered.">        switch (method) {</span>
             case AFFINE_ALGORITHM:
-<span class="fc" id="L215">                return new AffineFundamentalMatrixEstimator(leftPoints, </span>
+<span class="fc" id="L214">                return new AffineFundamentalMatrixEstimator(leftPoints, </span>
                         rightPoints);
             case EIGHT_POINTS_ALGORITHM:
-<span class="fc" id="L218">                return new EightPointsFundamentalMatrixEstimator(leftPoints, </span>
+<span class="fc" id="L217">                return new EightPointsFundamentalMatrixEstimator(leftPoints, </span>
                         rightPoints);
             case SEVEN_POINTS_ALGORITHM:
             default:
-<span class="fc" id="L222">                return new SevenPointsFundamentalMatrixEstimator(leftPoints, </span>
+<span class="fc" id="L221">                return new SevenPointsFundamentalMatrixEstimator(leftPoints, </span>
                         rightPoints);
         }
     }
@@ -230,7 +229,7 @@ public abstract class FundamentalMatrixEstimator {
      * @return an instance of a fundamental matrix estimator.
      */
     public static FundamentalMatrixEstimator create() {
-<span class="fc" id="L233">        return create(DEFAULT_METHOD);</span>
+<span class="fc" id="L232">        return create(DEFAULT_METHOD);</span>
     }
     
     /**
@@ -243,8 +242,8 @@ public abstract class FundamentalMatrixEstimator {
      * have the same length.
      */
     public static FundamentalMatrixEstimator create(List&lt;Point2D&gt; leftPoints,
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L247">        return create(leftPoints, rightPoints, DEFAULT_METHOD);</span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L246">        return create(leftPoints, rightPoints, DEFAULT_METHOD);</span>
     }
     
     /**
@@ -256,13 +255,13 @@ public abstract class FundamentalMatrixEstimator {
      * the same size.
      */
     private void internalSetPoints(List&lt;Point2D&gt; leftPoints, 
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc bfc" id="L260" title="All 2 branches covered.">        if (leftPoints.size() != rightPoints.size()) {</span>
-<span class="fc" id="L261">            throw new IllegalArgumentException();</span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L260">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L264">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L265">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L266">    }</span>
+<span class="fc" id="L263">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L264">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L265">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

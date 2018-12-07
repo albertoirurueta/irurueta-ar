@@ -254,124 +254,125 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
 <span class="fc" id="L254">            double b = transformedFundInternalMatrix.getElementAt(1, 2);</span>
 <span class="fc" id="L255">            double c = transformedFundInternalMatrix.getElementAt(2, 1);</span>
 <span class="fc" id="L256">            double d = transformedFundInternalMatrix.getElementAt(2, 2);</span>
-            double f1, f2;
-<span class="fc bfc" id="L258" title="All 2 branches covered.">            if (Math.abs(b) &gt; Math.abs(d)) {</span>
-<span class="fc" id="L259">                f1 = -transformedFundInternalMatrix.getElementAt(1, 0) / b;</span>
+            double f1;
+            double f2;
+<span class="fc bfc" id="L259" title="All 2 branches covered.">            if (Math.abs(b) &gt; Math.abs(d)) {</span>
+<span class="fc" id="L260">                f1 = -transformedFundInternalMatrix.getElementAt(1, 0) / b;</span>
             } else {
-<span class="fc" id="L261">                f1 = -transformedFundInternalMatrix.getElementAt(2, 0) / d;</span>
+<span class="fc" id="L262">                f1 = -transformedFundInternalMatrix.getElementAt(2, 0) / d;</span>
             }
-<span class="fc bfc" id="L263" title="All 2 branches covered.">            if (Math.abs(c) &gt; Math.abs(d)) {</span>
-<span class="fc" id="L264">                f2 = -transformedFundInternalMatrix.getElementAt(0, 1) / c;</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">            if (Math.abs(c) &gt; Math.abs(d)) {</span>
+<span class="fc" id="L265">                f2 = -transformedFundInternalMatrix.getElementAt(0, 1) / c;</span>
             } else {
-<span class="fc" id="L266">                f2 = -transformedFundInternalMatrix.getElementAt(0, 2) / d;</span>
+<span class="fc" id="L267">                f2 = -transformedFundInternalMatrix.getElementAt(0, 2) / d;</span>
             }       
             
             //Hence the polynomial of degree 6 to solve corresponding to the derivative of s(t) is:
             //g(t) = A*t^6 + B*t^5 + C*t^4 + D*t^3 + E*t^2 + F*t + G
             //where:
-<span class="fc" id="L272">            double A = -(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 4.0);</span>
-<span class="fc" id="L273">            double B = Math.pow((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0)), 2.0) -</span>
-<span class="fc" id="L274">                    ((Math.pow(a, 2)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c)*Math.pow(f1, 4.0);</span>
-<span class="fc" id="L275">            double C = (4.0*(Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0))*(a*b + c*d*Math.pow(f2, 2.0)) -</span>
-<span class="fc" id="L276">                    (2.0*(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 2.0) + (a*b*d - Math.pow(b, 2.0)*c)*d*Math.pow(f1, 4.0)));</span>
-<span class="fc" id="L277">            double D = 2.0*((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) +</span>
-<span class="fc" id="L278">                    2.0*Math.pow(a*b + c*d*Math.pow(f2, 2.0), 2.0) -</span>
-<span class="fc" id="L279">                    ((Math.pow(a, 2.0)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c)*Math.pow(f1, 2.0));</span>
-<span class="fc" id="L280">            double E = (4.0*(a*b + c*d*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) - </span>
-<span class="fc" id="L281">                    ((Math.pow(a, 2.0)*d - a*b*c)*c + 2.0*(a*b*d - Math.pow(b, 2.0)*c)*d*Math.pow(f1, 2.0)));</span>
-<span class="fc" id="L282">            double F = (Math.pow(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0), 2.0) -</span>
-<span class="fc" id="L283">                    ((Math.pow(a, 2.0)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c));</span>
-<span class="fc" id="L284">            double G = -(a*b*d - Math.pow(b, 2.0)*c)*d;</span>
+<span class="fc" id="L273">            double realA = -(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 4.0);</span>
+<span class="fc" id="L274">            double realB = Math.pow((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0)), 2.0) -</span>
+<span class="fc" id="L275">                    ((Math.pow(a, 2)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c)*Math.pow(f1, 4.0);</span>
+<span class="fc" id="L276">            double realC = (4.0*(Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0))*(a*b + c*d*Math.pow(f2, 2.0)) -</span>
+<span class="fc" id="L277">                    (2.0*(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 2.0) + (a*b*d - Math.pow(b, 2.0)*c)*d*Math.pow(f1, 4.0)));</span>
+<span class="fc" id="L278">            double realD = 2.0*((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) +</span>
+<span class="fc" id="L279">                    2.0*Math.pow(a*b + c*d*Math.pow(f2, 2.0), 2.0) -</span>
+<span class="fc" id="L280">                    ((Math.pow(a, 2.0)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c)*Math.pow(f1, 2.0));</span>
+<span class="fc" id="L281">            double realE = (4.0*(a*b + c*d*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) -</span>
+<span class="fc" id="L282">                    ((Math.pow(a, 2.0)*d - a*b*c)*c + 2.0*(a*b*d - Math.pow(b, 2.0)*c)*d*Math.pow(f1, 2.0)));</span>
+<span class="fc" id="L283">            double realF = (Math.pow(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0), 2.0) -</span>
+<span class="fc" id="L284">                    ((Math.pow(a, 2.0)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c));</span>
+<span class="fc" id="L285">            double realG = -(a*b*d - Math.pow(b, 2.0)*c)*d;</span>
             
-<span class="fc" id="L286">            Complex complexA = new Complex(A);</span>
-<span class="fc" id="L287">            Complex complexB = new Complex(B);</span>
-<span class="fc" id="L288">            Complex complexC = new Complex(C);</span>
-<span class="fc" id="L289">            Complex complexD = new Complex(D);</span>
-<span class="fc" id="L290">            Complex complexE = new Complex(E);</span>
-<span class="fc" id="L291">            Complex complexF = new Complex(F);</span>
-<span class="fc" id="L292">            Complex complexG = new Complex(G);</span>
-<span class="fc" id="L293">            Complex [] polyParams = new Complex[]{ complexG, complexF, complexE, </span>
+<span class="fc" id="L287">            Complex complexA = new Complex(realA);</span>
+<span class="fc" id="L288">            Complex complexB = new Complex(realB);</span>
+<span class="fc" id="L289">            Complex complexC = new Complex(realC);</span>
+<span class="fc" id="L290">            Complex complexD = new Complex(realD);</span>
+<span class="fc" id="L291">            Complex complexE = new Complex(realE);</span>
+<span class="fc" id="L292">            Complex complexF = new Complex(realF);</span>
+<span class="fc" id="L293">            Complex complexG = new Complex(realG);</span>
+<span class="fc" id="L294">            Complex [] polyParams = new Complex[]{ complexG, complexF, complexE, </span>
                 complexD, complexC, complexB, complexA };
-<span class="fc" id="L295">            LaguerrePolynomialRootsEstimator rootEstimator = </span>
+<span class="fc" id="L296">            LaguerrePolynomialRootsEstimator rootEstimator = </span>
                     new LaguerrePolynomialRootsEstimator(polyParams);
-<span class="fc" id="L297">            rootEstimator.estimate();</span>
-<span class="fc" id="L298">            Complex[] roots = rootEstimator.getRoots();</span>
+<span class="fc" id="L298">            rootEstimator.estimate();</span>
+<span class="fc" id="L299">            Complex[] roots = rootEstimator.getRoots();</span>
             
             //evaluate polynomial s(t) on each root of its derivative to obtain
             //the global minima (we discard non real roots)
-<span class="fc" id="L302">            double minimum = Double.MAX_VALUE;</span>
+<span class="fc" id="L303">            double minimum = Double.MAX_VALUE;</span>
             double value;
-<span class="fc" id="L304">            Complex bestRoot = null;</span>
-<span class="fc bfc" id="L305" title="All 2 branches covered.">            for (Complex root : roots) {</span>
+<span class="fc" id="L305">            Complex bestRoot = null;</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">            for (Complex root : roots) {</span>
                 //skip solutions having an imaginary part
-<span class="fc bfc" id="L307" title="All 2 branches covered.">                if (Math.abs(root.getImaginary()) &gt; EPS) {</span>
-<span class="fc" id="L308">                    continue;</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">                if (Math.abs(root.getImaginary()) &gt; EPS) {</span>
+<span class="fc" id="L309">                    continue;</span>
                 }
                 
-<span class="fc" id="L311">                value = s(root.getReal(), a, b, c, d, f1, f2);</span>
-<span class="fc bfc" id="L312" title="All 2 branches covered.">                if (value &lt; minimum) {</span>
-<span class="fc" id="L313">                    minimum = value;</span>
-<span class="fc" id="L314">                    bestRoot = root;</span>
+<span class="fc" id="L312">                value = s(root.getReal(), a, b, c, d, f1, f2);</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">                if (value &lt; minimum) {</span>
+<span class="fc" id="L314">                    minimum = value;</span>
+<span class="fc" id="L315">                    bestRoot = root;</span>
                 }
             }
             
-<span class="pc bpc" id="L318" title="1 of 2 branches missed.">            if (bestRoot == null) {</span>
-<span class="nc" id="L319">                throw new CorrectionException();</span>
+<span class="pc bpc" id="L319" title="1 of 2 branches missed.">            if (bestRoot == null) {</span>
+<span class="nc" id="L320">                throw new CorrectionException();</span>
             }
             
-<span class="fc" id="L322">            double tmin = bestRoot.getReal();</span>
+<span class="fc" id="L323">            double tmin = bestRoot.getReal();</span>
             
             //and so, the transformed left point is (-tmin^2*f1, tmin, 1 + (tmin*f1)^2)
-<span class="fc" id="L325">            Point2D transformedLeftPoint = new HomogeneousPoint2D(</span>
-<span class="fc" id="L326">                    -Math.pow(tmin,2.0)*f1, tmin, 1.0 + Math.pow(tmin*f1, 2.0));</span>
+<span class="fc" id="L326">            Point2D transformedLeftPoint = new HomogeneousPoint2D(</span>
+<span class="fc" id="L327">                    -Math.pow(tmin,2.0)*f1, tmin, 1.0 + Math.pow(tmin*f1, 2.0));</span>
             //and the right point is (f2*(c*tmin+d)^2, -(a*tmin+b)*(c*tmin+d), (a*t+b)^2 + f2^2*(c*t+d)^2)
-<span class="fc" id="L328">            Point2D transformedRightPoint = new HomogeneousPoint2D(</span>
-<span class="fc" id="L329">                    f2*Math.pow(c*tmin + d, 2.0), </span>
+<span class="fc" id="L329">            Point2D transformedRightPoint = new HomogeneousPoint2D(</span>
+<span class="fc" id="L330">                    f2*Math.pow(c*tmin + d, 2.0), </span>
                     -(a*tmin + b)*(c*tmin + d),
-<span class="fc" id="L331">                    Math.pow(a*tmin + b, 2.0) + Math.pow(f2, 2.0)*Math.pow(c*tmin + d, 2.0));</span>
+<span class="fc" id="L332">                    Math.pow(a*tmin + b, 2.0) + Math.pow(f2, 2.0)*Math.pow(c*tmin + d, 2.0));</span>
             
             //undo translation and rotation transformations
             //correctedLeftPoint = T1^-1*R1'*transformedLeftPoint
             //correctedRightPoint = T2^-1*R2'*transformedRightPoint
             
             //inverse left transformation
-<span class="fc" id="L338">            invLeftTranslationMatrix = Matrix.identity(</span>
+<span class="fc" id="L339">            invLeftTranslationMatrix = Matrix.identity(</span>
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH, 
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             //add terms to obtain inverse transformation
-<span class="fc" id="L342">            invLeftTranslationMatrix.setElementAt(0, 2, leftPoint.getInhomX());</span>
-<span class="fc" id="L343">            invLeftTranslationMatrix.setElementAt(1, 2, leftPoint.getInhomY());</span>
+<span class="fc" id="L343">            invLeftTranslationMatrix.setElementAt(0, 2, leftPoint.getInhomX());</span>
+<span class="fc" id="L344">            invLeftTranslationMatrix.setElementAt(1, 2, leftPoint.getInhomY());</span>
         
             //inverse right translation transformation
-<span class="fc" id="L346">            Matrix invRightTranslationMatrix = Matrix.identity(</span>
+<span class="fc" id="L347">            Matrix invRightTranslationMatrix = Matrix.identity(</span>
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH, 
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             //add terms to obtain inverse transformation
-<span class="fc" id="L350">            invRightTranslationMatrix.setElementAt(0, 2, rightPoint.getInhomX());</span>
-<span class="fc" id="L351">            invRightTranslationMatrix.setElementAt(1, 2, rightPoint.getInhomY());            </span>
+<span class="fc" id="L351">            invRightTranslationMatrix.setElementAt(0, 2, rightPoint.getInhomX());</span>
+<span class="fc" id="L352">            invRightTranslationMatrix.setElementAt(1, 2, rightPoint.getInhomY());            </span>
             
-<span class="fc" id="L353">            invLeftTranslationMatrix.multiply(invLeftRotationMatrix);</span>
-<span class="fc" id="L354">            Matrix invLeftTransformationMatrix = invLeftTranslationMatrix;</span>
-<span class="fc" id="L355">            invRightTranslationMatrix.multiply(invRightRotationMatrix);</span>
+<span class="fc" id="L354">            invLeftTranslationMatrix.multiply(invLeftRotationMatrix);</span>
+<span class="fc" id="L355">            Matrix invLeftTransformationMatrix = invLeftTranslationMatrix;</span>
+<span class="fc" id="L356">            invRightTranslationMatrix.multiply(invRightRotationMatrix);</span>
             //noinspection all
-<span class="fc" id="L357">            Matrix invRightTransformationMatrix = invRightTranslationMatrix;</span>
+<span class="fc" id="L358">            Matrix invRightTransformationMatrix = invRightTranslationMatrix;</span>
             
-<span class="fc" id="L359">            ProjectiveTransformation2D invLeftTransformation = </span>
+<span class="fc" id="L360">            ProjectiveTransformation2D invLeftTransformation = </span>
                     new ProjectiveTransformation2D(
                     invLeftTransformationMatrix);
-<span class="fc" id="L362">            ProjectiveTransformation2D invRightTransformation =</span>
+<span class="fc" id="L363">            ProjectiveTransformation2D invRightTransformation =</span>
                     new ProjectiveTransformation2D(
                     invRightTransformationMatrix);
             
-<span class="fc" id="L366">            invLeftTransformation.transform(transformedLeftPoint, </span>
+<span class="fc" id="L367">            invLeftTransformation.transform(transformedLeftPoint, </span>
                     correctedLeftPoint);
-<span class="fc" id="L368">            invRightTransformation.transform(transformedRightPoint, </span>
+<span class="fc" id="L369">            invRightTransformation.transform(transformedRightPoint, </span>
                     correctedRightPoint);
             
-<span class="fc" id="L371">        } catch (AlgebraException | GeometryException | NumericalException e) {</span>
-<span class="fc" id="L372">            throw new CorrectionException(e);</span>
-<span class="fc" id="L373">        }</span>
-<span class="fc" id="L374">    }</span>
+<span class="fc" id="L372">        } catch (AlgebraException | GeometryException | NumericalException e) {</span>
+<span class="fc" id="L373">            throw new CorrectionException(e);</span>
+<span class="fc" id="L374">        }</span>
+<span class="fc" id="L375">    }</span>
     
     /**
      * Evaluates polynomial to be minimized in order to find best corrected 
@@ -387,9 +388,9 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
      */
     private static double s(double t, double a, double b, double c, double d, 
             double f1, double f2) {
-<span class="fc" id="L390">        return Math.pow(t, 2.0) / (1 + Math.pow(t*f1,2.0)) + </span>
-<span class="fc" id="L391">                Math.pow(c*t + d, 2.0) / (Math.pow(a*t + b, 2.0) + </span>
-<span class="fc" id="L392">                Math.pow(f2, 2.0)*Math.pow(c*t+d, 2.0));</span>
+<span class="fc" id="L391">        return Math.pow(t, 2.0) / (1 + Math.pow(t*f1,2.0)) + </span>
+<span class="fc" id="L392">                Math.pow(c*t + d, 2.0) / (Math.pow(a*t + b, 2.0) + </span>
+<span class="fc" id="L393">                Math.pow(f2, 2.0)*Math.pow(c*t+d, 2.0));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

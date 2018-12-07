@@ -83,7 +83,7 @@ public class AffineFundamentalMatrixEstimator extends
      * have the same length.
      */
     public AffineFundamentalMatrixEstimator(List&lt;Point2D&gt; leftPoints,
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; rightPoints) {
 <span class="fc" id="L87">        super(leftPoints, rightPoints);</span>
 <span class="fc" id="L88">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
 <span class="fc" id="L89">        mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;        </span>
@@ -190,173 +190,184 @@ public class AffineFundamentalMatrixEstimator extends
 <span class="fc" id="L190">        int nPoints = mLeftPoints.size();</span>
                 
         try {
-<span class="fc" id="L193">            ProjectiveTransformation2D leftNormalization = null,</span>
-<span class="fc" id="L194">                    rightNormalization = null;</span>
-            List&lt;Point2D&gt; leftPoints, rightPoints;
-<span class="fc bfc" id="L196" title="All 2 branches covered.">            if (mNormalizePoints) {</span>
+<span class="fc" id="L193">            ProjectiveTransformation2D leftNormalization = null;</span>
+<span class="fc" id="L194">            ProjectiveTransformation2D rightNormalization = null;</span>
+            List&lt;Point2D&gt; leftPoints;
+            List&lt;Point2D&gt; rightPoints;
+<span class="fc bfc" id="L197" title="All 2 branches covered.">            if (mNormalizePoints) {</span>
                 //normalize points on left view
-<span class="fc" id="L198">                Point2DNormalizer normalizer = new Point2DNormalizer(</span>
+<span class="fc" id="L199">                Point2DNormalizer normalizer = new Point2DNormalizer(</span>
                         mLeftPoints);
-<span class="fc" id="L200">                normalizer.compute();                </span>
+<span class="fc" id="L201">                normalizer.compute();                </span>
                 
-<span class="fc" id="L202">                leftNormalization = normalizer.getTransformation();</span>
+<span class="fc" id="L203">                leftNormalization = normalizer.getTransformation();</span>
                 
                 //normalize points on right view
-<span class="fc" id="L205">                normalizer.setPoints(mRightPoints);</span>
-<span class="fc" id="L206">                normalizer.compute();</span>
+<span class="fc" id="L206">                normalizer.setPoints(mRightPoints);</span>
+<span class="fc" id="L207">                normalizer.compute();</span>
                 
-<span class="fc" id="L208">                rightNormalization = normalizer.getTransformation();</span>
+<span class="fc" id="L209">                rightNormalization = normalizer.getTransformation();</span>
                 
                 //normalize to increase accuracy
-<span class="fc" id="L211">                leftNormalization.normalize();</span>
-<span class="fc" id="L212">                rightNormalization.normalize();</span>
+<span class="fc" id="L212">                leftNormalization.normalize();</span>
+<span class="fc" id="L213">                rightNormalization.normalize();</span>
                 
-<span class="fc" id="L214">                leftPoints = leftNormalization.transformPointsAndReturnNew(</span>
+<span class="fc" id="L215">                leftPoints = leftNormalization.transformPointsAndReturnNew(</span>
                         mLeftPoints);
-<span class="fc" id="L216">                rightPoints = rightNormalization.transformPointsAndReturnNew(</span>
+<span class="fc" id="L217">                rightPoints = rightNormalization.transformPointsAndReturnNew(</span>
                         mRightPoints);
-<span class="fc" id="L218">            } else {</span>
-<span class="fc" id="L219">                leftPoints = mLeftPoints;</span>
-<span class="fc" id="L220">                rightPoints = mRightPoints;</span>
+<span class="fc" id="L219">            } else {</span>
+<span class="fc" id="L220">                leftPoints = mLeftPoints;</span>
+<span class="fc" id="L221">                rightPoints = mRightPoints;</span>
             }
             
             Matrix a;
-<span class="fc bfc" id="L224" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
-<span class="fc" id="L225">                a = new Matrix(nPoints, 5);</span>
+<span class="fc bfc" id="L225" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+<span class="fc" id="L226">                a = new Matrix(nPoints, 5);</span>
             } else {
-<span class="fc" id="L227">                a = new Matrix(MIN_REQUIRED_POINTS, 5);</span>
+<span class="fc" id="L228">                a = new Matrix(MIN_REQUIRED_POINTS, 5);</span>
             }
             
-            Point2D leftPoint, rightPoint;
-            double homLeftX, homLeftY, homLeftW, homRightX, homRightY, 
-                    homRightW;
-            double value0, value1, value2, value3, value4, rowNorm;
-<span class="fc bfc" id="L234" title="All 2 branches covered.">            for (int i = 0; i &lt; nPoints; i++) {</span>
-<span class="fc" id="L235">                leftPoint = leftPoints.get(i);</span>
-<span class="fc" id="L236">                rightPoint = rightPoints.get(i);</span>
+            Point2D leftPoint;
+            Point2D rightPoint;
+            double homLeftX;
+            double homLeftY;
+            double homLeftW;
+            double homRightX;
+            double homRightY;
+            double homRightW;
+            double value0;
+            double value1;
+            double value2;
+            double value3;
+            double value4;
+            double rowNorm;
+<span class="fc bfc" id="L245" title="All 2 branches covered.">            for (int i = 0; i &lt; nPoints; i++) {</span>
+<span class="fc" id="L246">                leftPoint = leftPoints.get(i);</span>
+<span class="fc" id="L247">                rightPoint = rightPoints.get(i);</span>
                 
                 //normalize points to increase accuracy
-<span class="fc" id="L239">                leftPoint.normalize();</span>
-<span class="fc" id="L240">                rightPoint.normalize();</span>
+<span class="fc" id="L250">                leftPoint.normalize();</span>
+<span class="fc" id="L251">                rightPoint.normalize();</span>
                 
-<span class="fc" id="L242">                homLeftX = leftPoint.getHomX();</span>
-<span class="fc" id="L243">                homLeftY = leftPoint.getHomY();</span>
-<span class="fc" id="L244">                homLeftW = leftPoint.getHomW();</span>
+<span class="fc" id="L253">                homLeftX = leftPoint.getHomX();</span>
+<span class="fc" id="L254">                homLeftY = leftPoint.getHomY();</span>
+<span class="fc" id="L255">                homLeftW = leftPoint.getHomW();</span>
                 
-<span class="fc" id="L246">                homRightX = rightPoint.getHomX();</span>
-<span class="fc" id="L247">                homRightY = rightPoint.getHomY();</span>
-<span class="fc" id="L248">                homRightW = rightPoint.getHomW();</span>
+<span class="fc" id="L257">                homRightX = rightPoint.getHomX();</span>
+<span class="fc" id="L258">                homRightY = rightPoint.getHomY();</span>
+<span class="fc" id="L259">                homRightW = rightPoint.getHomW();</span>
                 
                 //set a row values
-<span class="fc" id="L251">                value0 = homLeftW * homRightX; //homLeftX * homRightX;</span>
-<span class="fc" id="L252">                value1 = homLeftW * homRightY; //homLeftY * homRightX;</span>
-<span class="fc" id="L253">                value2 = homLeftX * homRightW;</span>
-<span class="fc" id="L254">                value3 = homLeftY * homRightW;</span>
-<span class="fc" id="L255">                value4 = homLeftW * homRightW;</span>
+<span class="fc" id="L262">                value0 = homLeftW * homRightX; //homLeftX * homRightX</span>
+<span class="fc" id="L263">                value1 = homLeftW * homRightY; //homLeftY * homRightX</span>
+<span class="fc" id="L264">                value2 = homLeftX * homRightW;</span>
+<span class="fc" id="L265">                value3 = homLeftY * homRightW;</span>
+<span class="fc" id="L266">                value4 = homLeftW * homRightW;</span>
                                 
                 //normalize row to increase accuracy
-<span class="fc" id="L258">                rowNorm = Math.sqrt(Math.pow(value0, 2.0) +</span>
-<span class="fc" id="L259">                        Math.pow(value1, 2.0) + Math.pow(value2, 2.0) +</span>
-<span class="fc" id="L260">                        Math.pow(value3, 2.0) + Math.pow(value4, 2.0));</span>
+<span class="fc" id="L269">                rowNorm = Math.sqrt(Math.pow(value0, 2.0) +</span>
+<span class="fc" id="L270">                        Math.pow(value1, 2.0) + Math.pow(value2, 2.0) +</span>
+<span class="fc" id="L271">                        Math.pow(value3, 2.0) + Math.pow(value4, 2.0));</span>
                 
-<span class="fc" id="L262">                a.setElementAt(i, 0, value0 / rowNorm);</span>
-<span class="fc" id="L263">                a.setElementAt(i, 1, value1 / rowNorm);</span>
-<span class="fc" id="L264">                a.setElementAt(i, 2, value2 / rowNorm);</span>
-<span class="fc" id="L265">                a.setElementAt(i, 3, value3 / rowNorm);</span>
-<span class="fc" id="L266">                a.setElementAt(i, 4, value4 / rowNorm);                   </span>
+<span class="fc" id="L273">                a.setElementAt(i, 0, value0 / rowNorm);</span>
+<span class="fc" id="L274">                a.setElementAt(i, 1, value1 / rowNorm);</span>
+<span class="fc" id="L275">                a.setElementAt(i, 2, value2 / rowNorm);</span>
+<span class="fc" id="L276">                a.setElementAt(i, 3, value3 / rowNorm);</span>
+<span class="fc" id="L277">                a.setElementAt(i, 4, value4 / rowNorm);                   </span>
 
-<span class="fc bfc" id="L268" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; </span>
+<span class="fc bfc" id="L279" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; </span>
                         i == (MIN_REQUIRED_POINTS - 1)) {
-<span class="fc" id="L270">                    break;</span>
+<span class="fc" id="L281">                    break;</span>
                 }
             }
             
-<span class="fc" id="L274">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L285">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
             
-<span class="fc" id="L276">            decomposer.decompose();</span>
+<span class="fc" id="L287">            decomposer.decompose();</span>
             
             //if nullity of provided a matrix is not of dimension 1 (number of
             //dimensions of null-spance), then epipolar geometry is degenerate
             //because there is more than one possible solution (up to scale).
             //This is typically due to clinearities or coplanarities on 
             //projected 2D points. In this case we throw an exception
-<span class="pc bpc" id="L283" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
-<span class="nc" id="L284">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="nc" id="L295">                throw new FundamentalMatrixEstimatorException();</span>
             }
             
-<span class="fc" id="L287">            Matrix V = decomposer.getV();</span>
+<span class="fc" id="L298">            Matrix v = decomposer.getV();</span>
             
             //The fundamental matrix is contained in vector form on the last
             //column of V, we reshape such vector into a 3x3 matrix
-<span class="fc" id="L291">            Matrix fundMatrix = new Matrix(</span>
+<span class="fc" id="L302">            Matrix fundMatrix = new Matrix(</span>
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-<span class="fc" id="L294">            fundMatrix.setElementAt(0, 2, V.getElementAt(0, 4));</span>
-<span class="fc" id="L295">            fundMatrix.setElementAt(1, 2, V.getElementAt(1, 4));</span>
-<span class="fc" id="L296">            fundMatrix.setElementAt(2, 0, V.getElementAt(2, 4));</span>
-<span class="fc" id="L297">            fundMatrix.setElementAt(2, 1, V.getElementAt(3, 4));</span>
-<span class="fc" id="L298">            fundMatrix.setElementAt(2, 2, V.getElementAt(4, 4));</span>
+<span class="fc" id="L305">            fundMatrix.setElementAt(0, 2, v.getElementAt(0, 4));</span>
+<span class="fc" id="L306">            fundMatrix.setElementAt(1, 2, v.getElementAt(1, 4));</span>
+<span class="fc" id="L307">            fundMatrix.setElementAt(2, 0, v.getElementAt(2, 4));</span>
+<span class="fc" id="L308">            fundMatrix.setElementAt(2, 1, v.getElementAt(3, 4));</span>
+<span class="fc" id="L309">            fundMatrix.setElementAt(2, 2, v.getElementAt(4, 4));</span>
             
-<span class="pc bpc" id="L300" title="1 of 4 branches missed.">            if (mNormalizePoints &amp;&amp; leftNormalization != null) {</span>
+<span class="pc bpc" id="L311" title="1 of 4 branches missed.">            if (mNormalizePoints &amp;&amp; leftNormalization != null) {</span>
                 //denormalize fundMatrix
-<span class="fc" id="L302">                Matrix transposedRightTransformationMatrix =</span>
-<span class="fc" id="L303">                        rightNormalization.asMatrix().transposeAndReturnNew();</span>
-<span class="fc" id="L304">                Matrix leftTransformationMatrix = leftNormalization.asMatrix();</span>
+<span class="fc" id="L313">                Matrix transposedRightTransformationMatrix =</span>
+<span class="fc" id="L314">                        rightNormalization.asMatrix().transposeAndReturnNew();</span>
+<span class="fc" id="L315">                Matrix leftTransformationMatrix = leftNormalization.asMatrix();</span>
                 
                 //compute fundMatrix = transposedRightTransformationMatrix *
-                //fundMatrix * leftTransformationMatrix;
-<span class="fc" id="L308">                fundMatrix.multiply(leftTransformationMatrix);</span>
-<span class="fc" id="L309">                transposedRightTransformationMatrix.multiply(fundMatrix);</span>
-<span class="fc" id="L310">                fundMatrix = transposedRightTransformationMatrix;</span>
+                //fundMatrix * leftTransformationMatrix
+<span class="fc" id="L319">                fundMatrix.multiply(leftTransformationMatrix);</span>
+<span class="fc" id="L320">                transposedRightTransformationMatrix.multiply(fundMatrix);</span>
+<span class="fc" id="L321">                fundMatrix = transposedRightTransformationMatrix;</span>
                 
                 //normalize by frobenius norm to increase accuracy after point
                 //denormalization
-<span class="fc" id="L314">                double norm = Utils.normF(fundMatrix);</span>
-<span class="fc" id="L315">                fundMatrix.multiplyByScalar(1.0 / norm);</span>
+<span class="fc" id="L325">                double norm = Utils.normF(fundMatrix);</span>
+<span class="fc" id="L326">                fundMatrix.multiplyByScalar(1.0 / norm);</span>
             }
             
             //enforce rank 2
-<span class="fc" id="L319">            decomposer.setInputMatrix(fundMatrix);</span>
+<span class="fc" id="L330">            decomposer.setInputMatrix(fundMatrix);</span>
             
-<span class="fc" id="L321">            decomposer.decompose();</span>
+<span class="fc" id="L332">            decomposer.decompose();</span>
             
             //if rank is not already correct, then we enforce it
-<span class="fc" id="L324">            int rank = decomposer.getRank();</span>
-<span class="pc bpc" id="L325" title="1 of 2 branches missed.">            if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
+<span class="fc" id="L335">            int rank = decomposer.getRank();</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">            if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
                 //rank needs to be reduced
-<span class="nc" id="L327">                Matrix U = decomposer.getU();</span>
-<span class="nc" id="L328">                Matrix W = decomposer.getW();</span>
-<span class="nc" id="L329">                V = decomposer.getV();</span>
+<span class="nc" id="L338">                Matrix u = decomposer.getU();</span>
+<span class="nc" id="L339">                Matrix w = decomposer.getW();</span>
+<span class="nc" id="L340">                v = decomposer.getV();</span>
                 
                 //transpose V
-<span class="nc" id="L332">                V.transpose();</span>
-<span class="nc" id="L333">                Matrix transV = V;</span>
+<span class="nc" id="L343">                v.transpose();</span>
+<span class="nc" id="L344">                Matrix transV = v;</span>
                 
                 //set last singular value to zero to enforce rank 2
-<span class="nc" id="L336">                W.setElementAt(2, 2, 0.0);</span>
+<span class="nc" id="L347">                w.setElementAt(2, 2, 0.0);</span>
                 
                 //compute fundMatrix = U * W * V'
-<span class="nc" id="L339">                W.multiply(transV);</span>
-<span class="nc" id="L340">                U.multiply(W);</span>
-<span class="nc" id="L341">                fundMatrix = U;</span>
-<span class="pc bpc" id="L342" title="1 of 2 branches missed.">            } else if (rank &lt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
+<span class="nc" id="L350">                w.multiply(transV);</span>
+<span class="nc" id="L351">                u.multiply(w);</span>
+<span class="nc" id="L352">                fundMatrix = u;</span>
+<span class="pc bpc" id="L353" title="1 of 2 branches missed.">            } else if (rank &lt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
                 //rank is 1, which is lower than required fundamental matrix 
                 //rank (rank 2)
-<span class="nc" id="L345">                throw new FundamentalMatrixEstimatorException();</span>
+<span class="nc" id="L356">                throw new FundamentalMatrixEstimatorException();</span>
             }
             
-<span class="fc" id="L348">            FundamentalMatrix result = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L359">            FundamentalMatrix result = new FundamentalMatrix(fundMatrix);</span>
             
-<span class="fc bfc" id="L350" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L351">                mListener.onEstimateEnd(this, result);</span>
+<span class="fc bfc" id="L361" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L362">                mListener.onEstimateEnd(this, result);</span>
             }
             
-<span class="fc" id="L354">            return result;</span>
+<span class="fc" id="L365">            return result;</span>
 
-<span class="nc" id="L356">        } catch (InvalidFundamentalMatrixException | AlgebraException | NormalizerException e) {</span>
-<span class="nc" id="L357">            throw new FundamentalMatrixEstimatorException(e);</span>
+<span class="nc" id="L367">        } catch (InvalidFundamentalMatrixException | AlgebraException | NormalizerException e) {</span>
+<span class="nc" id="L368">            throw new FundamentalMatrixEstimatorException(e);</span>
         } finally {
-<span class="fc" id="L359">            mLocked = false;</span>
+<span class="fc" id="L370">            mLocked = false;</span>
         }
     }
 
@@ -366,7 +377,7 @@ public class AffineFundamentalMatrixEstimator extends
      */        
     @Override
     public FundamentalMatrixEstimatorMethod getMethod() {
-<span class="fc" id="L369">        return FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM;</span>
+<span class="fc" id="L380">        return FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM;</span>
     }
 
     /**
@@ -377,7 +388,7 @@ public class AffineFundamentalMatrixEstimator extends
      */    
     @Override
     public int getMinRequiredPoints() {
-<span class="fc" id="L380">        return MIN_REQUIRED_POINTS;</span>
+<span class="fc" id="L391">        return MIN_REQUIRED_POINTS;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -120,13 +120,12 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L125">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
-<span class="fc" id="L126">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L127">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L128">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L129">    }</span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L124">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="fc" id="L125">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L126">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L127">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L128">    }</span>
     
     /**
      * Constructor.
@@ -142,13 +141,12 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L147">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
-<span class="fc" id="L148">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L149">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L150">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L151">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L145">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="fc" id="L146">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L147">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L148">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Constructor.
@@ -161,13 +159,13 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            double[] qualityScores) throws IllegalArgumentException {
-<span class="fc" id="L165">        this(fundMatrixEstimatorMethod);</span>
-<span class="fc" id="L166">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L167">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L168">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L169">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L170">    }</span>
+            double[] qualityScores) {
+<span class="fc" id="L163">        this(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L164">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L165">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L166">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L167">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L168">    }</span>
     
     /**
      * Constructor.
@@ -183,14 +181,13 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L188">        this(fundMatrixEstimatorMethod, listener);</span>
-<span class="fc" id="L189">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L190">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L191">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L192">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L193">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L185">        this(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L186">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L187">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L188">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L189">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L190">    }</span>
     
     /**
      * Constructor.
@@ -206,13 +203,13 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, List&lt;Point2D&gt; leftPoints, 
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L210">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
-<span class="fc" id="L211">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L212">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L213">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L214">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L215">    }</span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L207">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="fc" id="L208">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L209">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L210">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L211">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L212">    }</span>
     
     /**
      * Constructor.
@@ -231,21 +228,20 @@ public class PROSACFundamentalMatrixRobustEstimator extends
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L236">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
-<span class="fc" id="L237">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L238">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L239">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L240">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L241">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L232">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="fc" id="L233">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L234">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L235">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L236">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L237">    }</span>
 
     /**
      * Constructor.
      */
     public PROSACFundamentalMatrixRobustEstimator() {
-<span class="fc" id="L247">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
-<span class="fc" id="L248">    }</span>
+<span class="fc" id="L243">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="fc" id="L244">    }</span>
     
     /**
      * Constructor.
@@ -254,8 +250,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixRobustEstimatorListener listener) {
-<span class="fc" id="L257">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
-<span class="fc" id="L258">    }</span>
+<span class="fc" id="L253">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
+<span class="fc" id="L254">    }</span>
     
     /**
      * Constructor.
@@ -265,10 +261,10 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints,
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L269">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L265">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints);
-<span class="fc" id="L271">    }</span>
+<span class="fc" id="L267">    }</span>
     
     /**
      * Constructor.
@@ -281,11 +277,10 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints,
             List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L286">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L281">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints, listener);
-<span class="fc" id="L288">    }</span>
+<span class="fc" id="L283">    }</span>
 
     /**
      * Constructor.
@@ -294,10 +289,9 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than required size (i.e. 7 matched pair of points).
      */
-    public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
-<span class="fc" id="L299">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores);</span>
-<span class="fc" id="L300">    }</span>
+    public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores) {
+<span class="fc" id="L293">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores);</span>
+<span class="fc" id="L294">    }</span>
     
     /**
      * Constructor.
@@ -309,11 +303,10 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * smaller than required size (i.e. 7 matched pair of points).
      */
     public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores,
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L314">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L307">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
                 listener);
-<span class="fc" id="L316">    }</span>
+<span class="fc" id="L309">    }</span>
     
     /**
      * Constructor.
@@ -325,11 +318,10 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * scores do not have the same length or their length is less than 7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores,
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L330">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L322">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
                 leftPoints, rightPoints);
-<span class="fc" id="L332">    }</span>
+<span class="fc" id="L324">    }</span>
     
     /**
      * Constructor.
@@ -344,11 +336,10 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public PROSACFundamentalMatrixRobustEstimator(double[] qualityScores,
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L349">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L340">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
                 leftPoints, rightPoints, listener);
-<span class="fc" id="L351">    }</span>
+<span class="fc" id="L342">    }</span>
     
     /**
      * Returns threshold to determine whether matched pairs of points are 
@@ -359,7 +350,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * inliers or not.
      */
     public double getThreshold() {
-<span class="fc" id="L362">        return mThreshold;</span>
+<span class="fc" id="L353">        return mThreshold;</span>
     }
     
     /**
@@ -371,16 +362,15 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
-<span class="fc bfc" id="L376" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L377">            throw new LockedException();</span>
+    public void setThreshold(double threshold) throws LockedException {
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L367">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L379" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="fc" id="L380">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L369" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L370">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L382">        mThreshold = threshold;</span>
-<span class="fc" id="L383">    }</span>
+<span class="fc" id="L372">        mThreshold = threshold;</span>
+<span class="fc" id="L373">    }</span>
 
     /**
      * Returns quality scores corresponding to each provided pair of points.
@@ -390,7 +380,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-<span class="fc" id="L393">        return mQualityScores;</span>
+<span class="fc" id="L383">        return mQualityScores;</span>
     }
     
     /**
@@ -404,13 +394,12 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L409" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L410">            throw new LockedException();</span>
+    public void setQualityScores(double[] qualityScores) throws LockedException {
+<span class="fc bfc" id="L398" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L399">            throw new LockedException();</span>
         }
-<span class="fc" id="L412">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L413">    }    </span>
+<span class="fc" id="L401">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L402">    }    </span>
     
     /**
      * Returns value indicating whether required data has been provided so that
@@ -423,8 +412,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */    
     @Override
     public boolean isReady() {
-<span class="fc bfc" id="L426" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; </span>
-<span class="pc bpc" id="L427" title="1 of 2 branches missed.">                mQualityScores.length == mLeftPoints.size();</span>
+<span class="fc bfc" id="L415" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; </span>
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">                mQualityScores.length == mLeftPoints.size();</span>
     }     
     
     /**
@@ -433,7 +422,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-<span class="fc" id="L436">        return mComputeAndKeepInliers;</span>
+<span class="fc" id="L425">        return mComputeAndKeepInliers;</span>
     }
     
     /**
@@ -444,11 +433,11 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers) 
             throws LockedException {
-<span class="pc bpc" id="L447" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L448">            throw new LockedException();</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L437">            throw new LockedException();</span>
         }
-<span class="fc" id="L450">        mComputeAndKeepInliers = computeAndKeepInliers;</span>
-<span class="fc" id="L451">    }</span>
+<span class="fc" id="L439">        mComputeAndKeepInliers = computeAndKeepInliers;</span>
+<span class="fc" id="L440">    }</span>
     
     /**
      * Indicates whether residuals must be computed and kept.
@@ -456,7 +445,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResidualsEnabled() {
-<span class="fc" id="L459">        return mComputeAndKeepResiduals;</span>
+<span class="fc" id="L448">        return mComputeAndKeepResiduals;</span>
     }
     
     /**
@@ -467,11 +456,11 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     public void setComputeAndKeepResidualsEnabled(
             boolean computeAndKeepResiduals) throws LockedException {
-<span class="pc bpc" id="L470" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L471">            throw new LockedException();</span>
+<span class="pc bpc" id="L459" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L460">            throw new LockedException();</span>
         }
-<span class="fc" id="L473">        mComputeAndKeepResiduals = computeAndKeepResiduals;</span>
-<span class="fc" id="L474">    }</span>
+<span class="fc" id="L462">        mComputeAndKeepResiduals = computeAndKeepResiduals;</span>
+<span class="fc" id="L463">    }</span>
     
     /**
      * Estimates a radial distortion using a robust estimator and
@@ -487,131 +476,131 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     @Override
     public FundamentalMatrix estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L490" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L491">            throw new LockedException();</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L480">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L493" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L494">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L483">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L497">        PROSACRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
+<span class="fc" id="L486">        PROSACRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
                 new PROSACRobustEstimator&lt;&gt;(
-<span class="fc" id="L499">                new PROSACRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
+<span class="fc" id="L488">                new PROSACRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
                                 
             //subset of left points
-<span class="fc" id="L502">            private List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L491">            private List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
             
             //subset of right points
-<span class="fc" id="L505">            private List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L494">            private List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
 
             @Override
             public double getThreshold() {
-<span class="fc" id="L509">                return mThreshold;</span>
+<span class="fc" id="L498">                return mThreshold;</span>
             }
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L514">                return mLeftPoints.size();</span>
+<span class="fc" id="L503">                return mLeftPoints.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L519">                return getMinRequiredPoints();</span>
+<span class="fc" id="L508">                return getMinRequiredPoints();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;FundamentalMatrix&gt; solutions) {
                 
-<span class="fc" id="L526">                mSubsetLeftPoints.clear();</span>
-<span class="fc" id="L527">                mSubsetRightPoints.clear();</span>
-<span class="fc bfc" id="L528" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L529">                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
-<span class="fc" id="L530">                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
+<span class="fc" id="L515">                mSubsetLeftPoints.clear();</span>
+<span class="fc" id="L516">                mSubsetRightPoints.clear();</span>
+<span class="fc bfc" id="L517" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L518">                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
+<span class="fc" id="L519">                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
                 }
                 
-<span class="fc" id="L533">                nonRobustEstimate(solutions, mSubsetLeftPoints, </span>
+<span class="fc" id="L522">                nonRobustEstimate(solutions, mSubsetLeftPoints, </span>
                         mSubsetRightPoints);
-<span class="fc" id="L535">            }</span>
+<span class="fc" id="L524">            }</span>
 
             @Override
             public double computeResidual(FundamentalMatrix currentEstimation, 
                     int i) {
-<span class="fc" id="L540">                Point2D leftPoint = mLeftPoints.get(i);</span>
-<span class="fc" id="L541">                Point2D rightPoint = mRightPoints.get(i);</span>
-<span class="fc" id="L542">                return residual(currentEstimation, leftPoint, rightPoint);</span>
+<span class="fc" id="L529">                Point2D leftPoint = mLeftPoints.get(i);</span>
+<span class="fc" id="L530">                Point2D rightPoint = mRightPoints.get(i);</span>
+<span class="fc" id="L531">                return residual(currentEstimation, leftPoint, rightPoint);</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L547">                return PROSACFundamentalMatrixRobustEstimator.this.isReady();</span>
+<span class="fc" id="L536">                return PROSACFundamentalMatrixRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
-<span class="fc bfc" id="L553" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L554">                    mListener.onEstimateStart(</span>
+<span class="fc bfc" id="L542" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L543">                    mListener.onEstimateStart(</span>
                             PROSACFundamentalMatrixRobustEstimator.this);
                 }
-<span class="fc" id="L557">            }</span>
+<span class="fc" id="L546">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
-<span class="fc bfc" id="L562" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L563">                    mListener.onEstimateEnd(</span>
+<span class="fc bfc" id="L551" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L552">                    mListener.onEstimateEnd(</span>
                             PROSACFundamentalMatrixRobustEstimator.this);
                 }
-<span class="fc" id="L566">            }</span>
+<span class="fc" id="L555">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     int iteration) {
-<span class="fc bfc" id="L572" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L573">                    mListener.onEstimateNextIteration(</span>
+<span class="fc bfc" id="L561" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L562">                    mListener.onEstimateNextIteration(</span>
                             PROSACFundamentalMatrixRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L577">            }</span>
+<span class="fc" id="L566">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     float progress) {
-<span class="fc bfc" id="L583" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L584">                    mListener.onEstimateProgressChange(</span>
+<span class="fc bfc" id="L572" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L573">                    mListener.onEstimateProgressChange(</span>
                             PROSACFundamentalMatrixRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L588">            }</span>
+<span class="fc" id="L577">            }</span>
             
             @Override
             public double[] getQualityScores() {
-<span class="fc" id="L592">                return mQualityScores;</span>
+<span class="fc" id="L581">                return mQualityScores;</span>
             }                                         
         });
         
         try {
-<span class="fc" id="L597">            mLocked = true;</span>
-<span class="fc" id="L598">            mInliersData = null;</span>
-<span class="pc bpc" id="L599" title="1 of 4 branches missed.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="fc" id="L586">            mLocked = true;</span>
+<span class="fc" id="L587">            mInliersData = null;</span>
+<span class="pc bpc" id="L588" title="1 of 4 branches missed.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
                     mComputeAndKeepInliers || mRefineResult);
-<span class="pc bpc" id="L601" title="1 of 4 branches missed.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="pc bpc" id="L590" title="1 of 4 branches missed.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
                     mComputeAndKeepResiduals || mRefineResult);
-<span class="fc" id="L603">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L604">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L605">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L606">            FundamentalMatrix result = innerEstimator.estimate();</span>
-<span class="fc" id="L607">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L608">            return attemptRefine(result);</span>
-<span class="nc" id="L609">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L610">            throw new LockedException(e);</span>
-<span class="nc" id="L611">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L612">            throw new NotReadyException(e);</span>
+<span class="fc" id="L592">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L593">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L594">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L595">            FundamentalMatrix result = innerEstimator.estimate();</span>
+<span class="fc" id="L596">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L597">            return attemptRefine(result);</span>
+<span class="nc" id="L598">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L599">            throw new LockedException(e);</span>
+<span class="nc" id="L600">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L601">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L614">            mLocked = false;</span>
+<span class="fc" id="L603">            mLocked = false;</span>
         }
     }
 
@@ -621,7 +610,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */        
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L624">        return RobustEstimatorMethod.PROSAC;</span>
+<span class="fc" id="L613">        return RobustEstimatorMethod.PROSAC;</span>
     }    
     
     /**
@@ -636,7 +625,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      */
     @Override
     protected double getRefinementStandardDeviation() {
-<span class="fc" id="L639">        return mThreshold;</span>
+<span class="fc" id="L628">        return mThreshold;</span>
     }
     
     /**
@@ -648,13 +637,12 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than 7 points.
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L653" title="All 2 branches covered.">        if (qualityScores.length &lt; getMinRequiredPoints()) {</span>
-<span class="fc" id="L654">            throw new IllegalArgumentException();</span>
+    private void internalSetQualityScores(double[] qualityScores) {
+<span class="fc bfc" id="L641" title="All 2 branches covered.">        if (qualityScores.length &lt; getMinRequiredPoints()) {</span>
+<span class="fc" id="L642">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L657">        mQualityScores = qualityScores;        </span>
-<span class="fc" id="L658">    }     </span>
+<span class="fc" id="L645">        mQualityScores = qualityScores;        </span>
+<span class="fc" id="L646">    }     </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

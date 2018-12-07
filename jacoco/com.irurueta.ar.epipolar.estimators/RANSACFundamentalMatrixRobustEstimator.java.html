@@ -114,13 +114,12 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public RANSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L119">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
-<span class="fc" id="L120">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L121">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L122">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L123">    }</span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L118">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="fc" id="L119">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L120">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L121">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L122">    }</span>
     
     /**
      * Constructor.
@@ -136,20 +135,19 @@ public class RANSACFundamentalMatrixRobustEstimator extends
     public RANSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L141">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
-<span class="fc" id="L142">        mThreshold = DEFAULT_THRESHOLD;</span>
-<span class="fc" id="L143">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
-<span class="fc" id="L144">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
-<span class="fc" id="L145">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L139">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="fc" id="L140">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L141">        mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;</span>
+<span class="fc" id="L142">        mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;        </span>
+<span class="fc" id="L143">    }</span>
     
     /**
      * Constructor.
      */
     public RANSACFundamentalMatrixRobustEstimator() {
-<span class="fc" id="L151">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
-<span class="fc" id="L152">    }</span>
+<span class="fc" id="L149">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="fc" id="L150">    }</span>
     
     /**
      * Constructor.
@@ -158,8 +156,8 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public RANSACFundamentalMatrixRobustEstimator(
             FundamentalMatrixRobustEstimatorListener listener) {
-<span class="fc" id="L161">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L159">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
+<span class="fc" id="L160">    }</span>
     
     /**
      * Constructor.
@@ -169,10 +167,10 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 7 points.
      */
     public RANSACFundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints,
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L173">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L171">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints);
-<span class="fc" id="L175">    }</span>
+<span class="fc" id="L173">    }</span>
     
     /**
      * Constructor.
@@ -185,11 +183,10 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public RANSACFundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints,
             List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L190">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L187">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints, listener);
-<span class="fc" id="L192">    }    </span>
+<span class="fc" id="L189">    }    </span>
     
     /**
      * Returns threshold to determine whether matched pairs of points are 
@@ -200,7 +197,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * inliers or not.
      */
     public double getThreshold() {
-<span class="fc" id="L203">        return mThreshold;</span>
+<span class="fc" id="L200">        return mThreshold;</span>
     }
     
     /**
@@ -212,16 +209,15 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
-<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L218">            throw new LockedException();</span>
+    public void setThreshold(double threshold) throws LockedException {
+<span class="fc bfc" id="L213" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L214">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="fc" id="L221">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L217">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L223">        mThreshold = threshold;</span>
-<span class="fc" id="L224">    }</span>
+<span class="fc" id="L219">        mThreshold = threshold;</span>
+<span class="fc" id="L220">    }</span>
 
     /**
      * Indicates whether inliers must be computed and kept.
@@ -229,7 +225,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-<span class="nc" id="L232">        return mComputeAndKeepInliers;</span>
+<span class="nc" id="L228">        return mComputeAndKeepInliers;</span>
     }
     
     /**
@@ -240,11 +236,11 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers) 
             throws LockedException {
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L244">            throw new LockedException();</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L240">            throw new LockedException();</span>
         }
-<span class="fc" id="L246">        mComputeAndKeepInliers = computeAndKeepInliers;</span>
-<span class="fc" id="L247">    }</span>
+<span class="fc" id="L242">        mComputeAndKeepInliers = computeAndKeepInliers;</span>
+<span class="fc" id="L243">    }</span>
     
     /**
      * Indicates whether residuals must be computed and kept.
@@ -252,7 +248,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResidualsEnabled() {
-<span class="nc" id="L255">        return mComputeAndKeepResiduals;</span>
+<span class="nc" id="L251">        return mComputeAndKeepResiduals;</span>
     }
     
     /**
@@ -263,11 +259,11 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     public void setComputeAndKeepResidualsEnabled(
             boolean computeAndKeepResiduals) throws LockedException {
-<span class="pc bpc" id="L266" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L267">            throw new LockedException();</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L263">            throw new LockedException();</span>
         }
-<span class="fc" id="L269">        mComputeAndKeepResiduals = computeAndKeepResiduals;</span>
-<span class="fc" id="L270">    }</span>
+<span class="fc" id="L265">        mComputeAndKeepResiduals = computeAndKeepResiduals;</span>
+<span class="fc" id="L266">    }</span>
     
     /**
      * Estimates a radial distortion using a robust estimator and
@@ -283,126 +279,126 @@ public class RANSACFundamentalMatrixRobustEstimator extends
     @Override
     public FundamentalMatrix estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L287">            throw new LockedException();</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L283">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L290">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L286">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L293">        RANSACRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
+<span class="fc" id="L289">        RANSACRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
                 new RANSACRobustEstimator&lt;&gt;(
-<span class="fc" id="L295">                new RANSACRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
+<span class="fc" id="L291">                new RANSACRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
                     
             //subset of left points
-<span class="fc" id="L298">            private List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L294">            private List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
             
             //subset of right points
-<span class="fc" id="L301">            private List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L297">            private List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
 
             @Override
             public double getThreshold() {
-<span class="fc" id="L305">                return mThreshold;</span>
+<span class="fc" id="L301">                return mThreshold;</span>
             }
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L310">                return mLeftPoints.size();</span>
+<span class="fc" id="L306">                return mLeftPoints.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L315">                return getMinRequiredPoints();</span>
+<span class="fc" id="L311">                return getMinRequiredPoints();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;FundamentalMatrix&gt; solutions) {
                 
-<span class="fc" id="L322">                mSubsetLeftPoints.clear();</span>
-<span class="fc" id="L323">                mSubsetRightPoints.clear();</span>
-<span class="fc bfc" id="L324" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L325">                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
-<span class="fc" id="L326">                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
+<span class="fc" id="L318">                mSubsetLeftPoints.clear();</span>
+<span class="fc" id="L319">                mSubsetRightPoints.clear();</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L321">                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
+<span class="fc" id="L322">                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
                 }
 
-<span class="fc" id="L329">                nonRobustEstimate(solutions, mSubsetLeftPoints, </span>
+<span class="fc" id="L325">                nonRobustEstimate(solutions, mSubsetLeftPoints, </span>
                         mSubsetRightPoints);
-<span class="fc" id="L331">            }</span>
+<span class="fc" id="L327">            }</span>
 
             @Override
             public double computeResidual(FundamentalMatrix currentEstimation, 
                     int i) {
-<span class="fc" id="L336">                Point2D leftPoint = mLeftPoints.get(i);</span>
-<span class="fc" id="L337">                Point2D rightPoint = mRightPoints.get(i);</span>
-<span class="fc" id="L338">                return residual(currentEstimation, leftPoint, rightPoint);</span>
+<span class="fc" id="L332">                Point2D leftPoint = mLeftPoints.get(i);</span>
+<span class="fc" id="L333">                Point2D rightPoint = mRightPoints.get(i);</span>
+<span class="fc" id="L334">                return residual(currentEstimation, leftPoint, rightPoint);</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L343">                return RANSACFundamentalMatrixRobustEstimator.this.isReady();</span>
+<span class="fc" id="L339">                return RANSACFundamentalMatrixRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
-<span class="fc bfc" id="L349" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L350">                    mListener.onEstimateStart(</span>
+<span class="fc bfc" id="L345" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L346">                    mListener.onEstimateStart(</span>
                             RANSACFundamentalMatrixRobustEstimator.this);
                 }
-<span class="fc" id="L353">            }</span>
+<span class="fc" id="L349">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
-<span class="fc bfc" id="L358" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L359">                    mListener.onEstimateEnd(</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L355">                    mListener.onEstimateEnd(</span>
                             RANSACFundamentalMatrixRobustEstimator.this);
                 }
-<span class="fc" id="L362">            }</span>
+<span class="fc" id="L358">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     int iteration) {
-<span class="fc bfc" id="L368" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L369">                    mListener.onEstimateNextIteration(</span>
+<span class="fc bfc" id="L364" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L365">                    mListener.onEstimateNextIteration(</span>
                             RANSACFundamentalMatrixRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L373">            }</span>
+<span class="fc" id="L369">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     float progress) {
-<span class="fc bfc" id="L379" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L380">                    mListener.onEstimateProgressChange(</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">                if (mListener != null) {</span>
+<span class="fc" id="L376">                    mListener.onEstimateProgressChange(</span>
                             RANSACFundamentalMatrixRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L384">            }</span>
+<span class="fc" id="L380">            }</span>
         });
         
         try {
-<span class="fc" id="L388">            mLocked = true;</span>
-<span class="fc" id="L389">            mInliersData = null;</span>
-<span class="pc bpc" id="L390" title="3 of 4 branches missed.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="fc" id="L384">            mLocked = true;</span>
+<span class="fc" id="L385">            mInliersData = null;</span>
+<span class="pc bpc" id="L386" title="3 of 4 branches missed.">            innerEstimator.setComputeAndKeepInliersEnabled(</span>
                     mComputeAndKeepInliers || mRefineResult);
-<span class="pc bpc" id="L392" title="3 of 4 branches missed.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="pc bpc" id="L388" title="3 of 4 branches missed.">            innerEstimator.setComputeAndKeepResidualsEnabled(</span>
                     mComputeAndKeepResiduals || mRefineResult);            
-<span class="fc" id="L394">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L395">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L396">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L397">            FundamentalMatrix result = innerEstimator.estimate();</span>
-<span class="fc" id="L398">            mInliersData = innerEstimator.getInliersData();            </span>
-<span class="fc" id="L399">            return attemptRefine(result);</span>
-<span class="nc" id="L400">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L401">            throw new LockedException(e);</span>
-<span class="nc" id="L402">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L403">            throw new NotReadyException(e);</span>
+<span class="fc" id="L390">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L391">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L392">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L393">            FundamentalMatrix result = innerEstimator.estimate();</span>
+<span class="fc" id="L394">            mInliersData = innerEstimator.getInliersData();            </span>
+<span class="fc" id="L395">            return attemptRefine(result);</span>
+<span class="nc" id="L396">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L397">            throw new LockedException(e);</span>
+<span class="nc" id="L398">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L399">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L405">            mLocked = false;</span>
+<span class="fc" id="L401">            mLocked = false;</span>
         }
     }
 
@@ -412,7 +408,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */        
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L415">        return RobustEstimatorMethod.RANSAC;</span>
+<span class="fc" id="L411">        return RobustEstimatorMethod.RANSAC;</span>
     }
     
     /**
@@ -427,7 +423,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
      */
     @Override
     protected double getRefinementStandardDeviation() {
-<span class="fc" id="L430">        return mThreshold;</span>
+<span class="fc" id="L426">        return mThreshold;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

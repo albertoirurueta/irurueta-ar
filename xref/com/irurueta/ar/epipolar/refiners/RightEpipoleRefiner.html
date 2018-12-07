@@ -265,21 +265,22 @@
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>         <strong class="jxr_keyword">double</strong> result = 0.0;
 <a class="jxr_linenumber" name="L258" href="#L258">258</a>         
 <a class="jxr_linenumber" name="L259" href="#L259">259</a>         <strong class="jxr_keyword">int</strong> nSamples = mInliers.length();
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>         Point2D leftPoint, rightPoint;
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; nSamples; i++) {
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>             <strong class="jxr_keyword">if</strong> (mInliers.get(i)) {
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>                 <em class="jxr_comment">//sample is inlier</em>
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>                 leftPoint = mSamples1.get(i);
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>                 rightPoint = mSamples2.get(i);
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>                 leftPoint.normalize();
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>                 rightPoint.normalize();
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>                 result += residual(fundamentalMatrix, leftPoint, rightPoint);
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>             }
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>         }        
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>         
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>     }        
-<a class="jxr_linenumber" name="L274" href="#L274">274</a> }
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>         Point2D leftPoint;
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>         Point2D rightPoint;
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; nSamples; i++) {
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>             <strong class="jxr_keyword">if</strong> (mInliers.get(i)) {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>                 <em class="jxr_comment">//sample is inlier</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>                 leftPoint = mSamples1.get(i);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                 rightPoint = mSamples2.get(i);
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                 leftPoint.normalize();
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>                 rightPoint.normalize();
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>                 result += residual(fundamentalMatrix, leftPoint, rightPoint);
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>             }
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>         }        
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>     }        
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

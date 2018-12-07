@@ -257,19 +257,20 @@ public abstract class RightEpipoleRefiner extends
 <span class="fc" id="L257">        double result = 0.0;</span>
         
 <span class="fc" id="L259">        int nSamples = mInliers.length();</span>
-        Point2D leftPoint, rightPoint;
-<span class="fc bfc" id="L261" title="All 2 branches covered.">        for (int i = 0; i &lt; nSamples; i++) {</span>
-<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (mInliers.get(i)) {</span>
+        Point2D leftPoint;
+        Point2D rightPoint;
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        for (int i = 0; i &lt; nSamples; i++) {</span>
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">            if (mInliers.get(i)) {</span>
                 //sample is inlier
-<span class="fc" id="L264">                leftPoint = mSamples1.get(i);</span>
-<span class="fc" id="L265">                rightPoint = mSamples2.get(i);</span>
-<span class="fc" id="L266">                leftPoint.normalize();</span>
-<span class="fc" id="L267">                rightPoint.normalize();</span>
-<span class="fc" id="L268">                result += residual(fundamentalMatrix, leftPoint, rightPoint);</span>
+<span class="fc" id="L265">                leftPoint = mSamples1.get(i);</span>
+<span class="fc" id="L266">                rightPoint = mSamples2.get(i);</span>
+<span class="fc" id="L267">                leftPoint.normalize();</span>
+<span class="fc" id="L268">                rightPoint.normalize();</span>
+<span class="fc" id="L269">                result += residual(fundamentalMatrix, leftPoint, rightPoint);</span>
             }
         }        
         
-<span class="fc" id="L272">        return result;</span>
+<span class="fc" id="L273">        return result;</span>
     }        
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

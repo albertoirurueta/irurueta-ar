@@ -225,11 +225,10 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public FundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L230">        this(fundMatrixEstimatorMethod);</span>
-<span class="fc" id="L231">        internalSetPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L232">    }</span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L229">        this(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L230">        internalSetPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Constructor with matched 2D points.
@@ -245,18 +244,17 @@ public abstract class FundamentalMatrixRobustEstimator {
     public FundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L250">        this(fundMatrixEstimatorMethod, listener);</span>
-<span class="fc" id="L251">        internalSetPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L252">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L248">        this(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L249">        internalSetPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L250">    }</span>
 
     /**
      * Constructor.
      */
     public FundamentalMatrixRobustEstimator() {
-<span class="nc" id="L258">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
-<span class="nc" id="L259">    }</span>
+<span class="nc" id="L256">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="nc" id="L257">    }</span>
     
     /**
      * Constructor.
@@ -265,8 +263,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public FundamentalMatrixRobustEstimator(
             FundamentalMatrixRobustEstimatorListener listener) {
-<span class="nc" id="L268">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
-<span class="nc" id="L269">    }</span>
+<span class="nc" id="L266">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
+<span class="nc" id="L267">    }</span>
     
     /**
      * Constructor with matched 2D points.
@@ -276,11 +274,10 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the same length or their length is less than 7 points.
      */
     public FundamentalMatrixRobustEstimator(
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="nc" id="L281">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="nc" id="L278">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints);
-<span class="nc" id="L283">    }</span>
+<span class="nc" id="L280">    }</span>
 
     /**
      * Constructor with matched 2D points.
@@ -293,11 +290,10 @@ public abstract class FundamentalMatrixRobustEstimator {
      */    
     public FundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="nc" id="L298">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="nc" id="L294">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints, listener);
-<span class="nc" id="L300">    }</span>
+<span class="nc" id="L296">    }</span>
     
     /**
      * Returns non-robust method to estimate a fundamental matrix.
@@ -305,7 +301,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public FundamentalMatrixEstimatorMethod 
         getNonRobustFundamentalMatrixEstimatorMethod() {
-<span class="fc" id="L308">        return mFundMatrixEstimator.getMethod();</span>
+<span class="fc" id="L304">        return mFundMatrixEstimator.getMethod();</span>
     }
         
     /**
@@ -315,23 +311,23 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public void setNonRobustFundamentalMatrixEstimatorMethod(
             FundamentalMatrixEstimatorMethod method) throws LockedException {
-<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L319">            throw new LockedException();</span>
+<span class="fc bfc" id="L314" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L315">            throw new LockedException();</span>
         }
         
-<span class="fc bfc" id="L322" title="All 2 branches covered.">        if (method != getNonRobustFundamentalMatrixEstimatorMethod()) {</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        if (method != getNonRobustFundamentalMatrixEstimatorMethod()) {</span>
             //if method changes, recreate internal non-robust fundamental matrix
             //estimator
-<span class="fc" id="L325">            mFundMatrixEstimator = FundamentalMatrixEstimator.create(method);</span>
+<span class="fc" id="L321">            mFundMatrixEstimator = FundamentalMatrixEstimator.create(method);</span>
         }
-<span class="fc" id="L327">    }</span>
+<span class="fc" id="L323">    }</span>
         
     /**
      * Returns matched 2D points on left view.
      * @return 2D points on left view.
      */
     public List&lt;Point2D&gt; getLeftPoints() {
-<span class="fc" id="L334">        return mLeftPoints;</span>
+<span class="fc" id="L330">        return mLeftPoints;</span>
     }
     
     /**
@@ -339,7 +335,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return 2D points on right view.
      */
     public List&lt;Point2D&gt; getRightPoints() {
-<span class="fc" id="L342">        return mRightPoints;</span>
+<span class="fc" id="L338">        return mRightPoints;</span>
     }
  
     /**
@@ -352,13 +348,13 @@ public abstract class FundamentalMatrixRobustEstimator {
      * points.
      */
     public void setPoints(List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L356" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L357">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L353">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L360">        internalSetPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L361">    }</span>
+<span class="fc" id="L356">        internalSetPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L357">    }</span>
     
     /**
      * Returns reference to listener to be notified of events such as when
@@ -366,7 +362,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return listener to be notified of events.
      */
     public FundamentalMatrixRobustEstimatorListener getListener() {
-<span class="fc" id="L369">        return mListener;</span>
+<span class="fc" id="L365">        return mListener;</span>
     }
     
     /**
@@ -377,11 +373,11 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public void setListener(FundamentalMatrixRobustEstimatorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L380" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L381">            throw new LockedException();</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L377">            throw new LockedException();</span>
         }
-<span class="fc" id="L383">        mListener = listener;</span>
-<span class="fc" id="L384">    }</span>
+<span class="fc" id="L379">        mListener = listener;</span>
+<span class="fc" id="L380">    }</span>
     
     /**
      * Indicates whether listener has been provided and is available for 
@@ -389,7 +385,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable() {
-<span class="fc bfc" id="L392" title="All 2 branches covered.">        return mListener != null;</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        return mListener != null;</span>
     }
     
     /**
@@ -398,7 +394,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return true if estimator is locked, false otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L401">        return mLocked;</span>
+<span class="fc" id="L397">        return mLocked;</span>
     }
     
     /**
@@ -408,7 +404,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * during estimation.
      */
     public float getProgressDelta() {
-<span class="fc" id="L411">        return mProgressDelta;</span>
+<span class="fc" id="L407">        return mProgressDelta;</span>
     }
     
     /**
@@ -422,16 +418,16 @@ public abstract class FundamentalMatrixRobustEstimator {
      * is being computed.
      */
     public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L426" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L427">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L422" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L423">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L429" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
+<span class="fc bfc" id="L425" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
                 progressDelta &gt; MAX_PROGRESS_DELTA) {
-<span class="fc" id="L431">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L427">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L433">        mProgressDelta = progressDelta;</span>
-<span class="fc" id="L434">    }</span>
+<span class="fc" id="L429">        mProgressDelta = progressDelta;</span>
+<span class="fc" id="L430">    }</span>
     
     /**
      * Returns amount of confidence expressed as a value between 0.0 and 1.0
@@ -441,7 +437,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-<span class="fc" id="L444">        return mConfidence;</span>
+<span class="fc" id="L440">        return mConfidence;</span>
     }
     
     /**
@@ -456,15 +452,15 @@ public abstract class FundamentalMatrixRobustEstimator {
      * is being computed.
      */
     public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L460" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L461">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L456" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L457">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L463" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
-<span class="fc" id="L464">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L459" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
+<span class="fc" id="L460">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L466">        mConfidence = confidence;</span>
-<span class="fc" id="L467">    }</span>
+<span class="fc" id="L462">        mConfidence = confidence;</span>
+<span class="fc" id="L463">    }</span>
     
     /**
      * Returns maximum allowed number of iterations. If maximum allowed number
@@ -473,7 +469,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-<span class="fc" id="L476">        return mMaxIterations;</span>
+<span class="fc" id="L472">        return mMaxIterations;</span>
     }
     
     /**
@@ -486,22 +482,22 @@ public abstract class FundamentalMatrixRobustEstimator {
      * is being computed.
      */
     public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L490" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L491">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L486" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L487">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L493" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
-<span class="fc" id="L494">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L489" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L490">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L496">        mMaxIterations = maxIterations;</span>
-<span class="fc" id="L497">    }</span>
+<span class="fc" id="L492">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L493">    }</span>
     
     /**
      * Gets data related to inliers found after estimation.
      * @return data related to inliers found after estimation.
      */
     public InliersData getInliersData() {
-<span class="fc" id="L504">        return mInliersData;</span>
+<span class="fc" id="L500">        return mInliersData;</span>
     }  
     
     /**
@@ -513,7 +509,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * robust estimator without further refining.
      */
     public boolean isResultRefined() {
-<span class="fc" id="L516">        return mRefineResult;</span>
+<span class="fc" id="L512">        return mRefineResult;</span>
     }
     
     /**
@@ -524,11 +520,11 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setResultRefined(boolean refineResult) throws LockedException {
-<span class="fc bfc" id="L527" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L528">            throw new LockedException();</span>
+<span class="fc bfc" id="L523" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L524">            throw new LockedException();</span>
         }
-<span class="fc" id="L530">        mRefineResult = refineResult;</span>
-<span class="fc" id="L531">    }</span>
+<span class="fc" id="L526">        mRefineResult = refineResult;</span>
+<span class="fc" id="L527">    }</span>
     
     /**
      * Indicates whether covariance must be kept after refining result.
@@ -537,7 +533,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * otherwise.
      */
     public boolean isCovarianceKept() {
-<span class="fc" id="L540">        return mKeepCovariance;</span>
+<span class="fc" id="L536">        return mKeepCovariance;</span>
     }
     
     /**
@@ -549,11 +545,11 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public void setCovarianceKept(boolean keepCovariance) 
             throws LockedException {
-<span class="fc bfc" id="L552" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L553">            throw new LockedException();</span>
+<span class="fc bfc" id="L548" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L549">            throw new LockedException();</span>
         }
-<span class="fc" id="L555">        mKeepCovariance = keepCovariance;</span>
-<span class="fc" id="L556">    }</span>
+<span class="fc" id="L551">        mKeepCovariance = keepCovariance;</span>
+<span class="fc" id="L552">    }</span>
     
     /**
      * Returns minimum number of matched pair of points required to start
@@ -562,7 +558,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the estimation.
      */
     public int getMinRequiredPoints() {
-<span class="fc" id="L565">        return mFundMatrixEstimator.getMinRequiredPoints();</span>
+<span class="fc" id="L561">        return mFundMatrixEstimator.getMinRequiredPoints();</span>
     }
     
     /**
@@ -573,9 +569,9 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="pc bpc" id="L576" title="1 of 4 branches missed.">        return mLeftPoints != null &amp;&amp; mRightPoints != null &amp;&amp;</span>
-<span class="pc bpc" id="L577" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size() &amp;&amp;</span>
-<span class="pc bpc" id="L578" title="1 of 2 branches missed.">                mLeftPoints.size() &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+<span class="pc bpc" id="L572" title="1 of 4 branches missed.">        return mLeftPoints != null &amp;&amp; mRightPoints != null &amp;&amp;</span>
+<span class="pc bpc" id="L573" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size() &amp;&amp;</span>
+<span class="pc bpc" id="L574" title="1 of 2 branches missed.">                mLeftPoints.size() &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
     }
     
     /**
@@ -587,7 +583,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return quality scores corresponding to each pair of matched points.
      */
     public double[] getQualityScores() {
-<span class="fc" id="L590">        return null;</span>
+<span class="fc" id="L586">        return null;</span>
     }
     
     /**
@@ -603,8 +599,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than minimum required number of homographies.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-<span class="fc" id="L607">            IllegalArgumentException { }</span>
+<span class="fc" id="L602">    public void setQualityScores(double[] qualityScores) throws LockedException { }</span>
     
     /**
      * Gets estimated covariance of estimated fundamental matrix if available.
@@ -613,7 +608,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return estimated covariance or null.
      */
     public Matrix getCovariance() {
-<span class="fc" id="L616">        return mCovariance;</span>
+<span class="fc" id="L611">        return mCovariance;</span>
     }
     
     /**
@@ -643,18 +638,18 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     public static FundamentalMatrixRobustEstimator create(
             RobustEstimatorMethod method) {
-<span class="fc bfc" id="L646" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L641" title="All 5 branches covered.">        switch (method) {</span>
             case LMedS:
-<span class="fc" id="L648">                return new LMedSFundamentalMatrixRobustEstimator();</span>
+<span class="fc" id="L643">                return new LMedSFundamentalMatrixRobustEstimator();</span>
             case MSAC:
-<span class="fc" id="L650">                return new MSACFundamentalMatrixRobustEstimator();</span>
+<span class="fc" id="L645">                return new MSACFundamentalMatrixRobustEstimator();</span>
             case PROSAC:
-<span class="fc" id="L652">                return new PROSACFundamentalMatrixRobustEstimator();</span>
+<span class="fc" id="L647">                return new PROSACFundamentalMatrixRobustEstimator();</span>
             case PROMedS:
-<span class="fc" id="L654">                return new PROMedSFundamentalMatrixRobustEstimator();</span>
+<span class="fc" id="L649">                return new PROMedSFundamentalMatrixRobustEstimator();</span>
             case RANSAC:
             default:
-<span class="fc" id="L657">                return new RANSACFundamentalMatrixRobustEstimator();</span>
+<span class="fc" id="L652">                return new RANSACFundamentalMatrixRobustEstimator();</span>
         }
     }
     
@@ -671,23 +666,23 @@ public abstract class FundamentalMatrixRobustEstimator {
      */    
     public static FundamentalMatrixRobustEstimator create(
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            RobustEstimatorMethod method) throws IllegalArgumentException {
-<span class="fc bfc" id="L675" title="All 5 branches covered.">        switch (method) {</span>
+            RobustEstimatorMethod method) {
+<span class="fc bfc" id="L670" title="All 5 branches covered.">        switch (method) {</span>
             case LMedS:
-<span class="fc" id="L677">                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L672">                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
             case MSAC:
-<span class="fc" id="L680">                return new MSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L675">                return new MSACFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
             case PROSAC:
-<span class="fc" id="L683">                return new PROSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L678">                return new PROSACFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
             case PROMedS:
-<span class="fc" id="L686">                return new PROMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L681">                return new PROMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
             case RANSAC:
             default:
-<span class="fc" id="L690">                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L685">                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
         }
     }
@@ -707,24 +702,23 @@ public abstract class FundamentalMatrixRobustEstimator {
      */        
     public static FundamentalMatrixRobustEstimator create(
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            double[] qualityScores, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L712" title="All 5 branches covered.">        switch (method) {</span>
+            double[] qualityScores, RobustEstimatorMethod method) {
+<span class="fc bfc" id="L706" title="All 5 branches covered.">        switch (method) {</span>
             case LMedS:
-<span class="fc" id="L714">                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L708">                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
             case MSAC:
-<span class="fc" id="L717">                return new MSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L711">                return new MSACFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
             case PROSAC:
-<span class="fc" id="L720">                return new PROSACFundamentalMatrixRobustEstimator(qualityScores,</span>
+<span class="fc" id="L714">                return new PROSACFundamentalMatrixRobustEstimator(qualityScores,</span>
                         leftPoints, rightPoints);
             case PROMedS:
-<span class="fc" id="L723">                return new PROMedSFundamentalMatrixRobustEstimator(</span>
+<span class="fc" id="L717">                return new PROMedSFundamentalMatrixRobustEstimator(</span>
                         qualityScores, leftPoints, rightPoints);
             case RANSAC:
             default:
-<span class="fc" id="L727">                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+<span class="fc" id="L721">                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,</span>
                         rightPoints);
         }
     }
@@ -734,7 +728,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return an instance of a fundamental matrix robust estimator.
      */    
     public static FundamentalMatrixRobustEstimator create() {
-<span class="fc" id="L737">        return create(DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L731">        return create(DEFAULT_ROBUST_METHOD);</span>
     }
     
     /**
@@ -747,9 +741,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the same length or their length is less than 7 points.
      */        
     public static FundamentalMatrixRobustEstimator create(
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L752">        return create(leftPoints, rightPoints, DEFAULT_ROBUST_METHOD);</span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L745">        return create(leftPoints, rightPoints, DEFAULT_ROBUST_METHOD);</span>
     }
     
     /**
@@ -765,8 +758,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      */            
     public static FundamentalMatrixRobustEstimator create(
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            double[] qualityScores) throws IllegalArgumentException {
-<span class="fc" id="L769">        return create(leftPoints, rightPoints, qualityScores, </span>
+            double[] qualityScores) {
+<span class="fc" id="L762">        return create(leftPoints, rightPoints, qualityScores, </span>
                 DEFAULT_ROBUST_METHOD);
     }
         
@@ -781,19 +774,19 @@ public abstract class FundamentalMatrixRobustEstimator {
     protected double residual(FundamentalMatrix fundamentalMatrix,
             Point2D leftPoint, Point2D rightPoint) {
         try {
-<span class="fc" id="L784">            leftPoint.normalize();</span>
-<span class="fc" id="L785">            rightPoint.normalize();</span>
-<span class="fc" id="L786">            fundamentalMatrix.normalize();</span>
-<span class="fc" id="L787">            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);</span>
-<span class="fc" id="L788">            double leftDistance = Math.abs(mTestLine.signedDistance(</span>
+<span class="fc" id="L777">            leftPoint.normalize();</span>
+<span class="fc" id="L778">            rightPoint.normalize();</span>
+<span class="fc" id="L779">            fundamentalMatrix.normalize();</span>
+<span class="fc" id="L780">            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);</span>
+<span class="fc" id="L781">            double leftDistance = Math.abs(mTestLine.signedDistance(</span>
                     leftPoint));
-<span class="fc" id="L790">            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);</span>
-<span class="fc" id="L791">            double rightDistance = Math.abs(mTestLine.signedDistance(</span>
+<span class="fc" id="L783">            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);</span>
+<span class="fc" id="L784">            double rightDistance = Math.abs(mTestLine.signedDistance(</span>
                     rightPoint));
             //return average distance as an error residual
-<span class="fc" id="L794">            return 0.5 * (leftDistance + rightDistance);</span>
-<span class="nc" id="L795">        } catch (NotReadyException e) {</span>
-<span class="nc" id="L796">            return Double.MAX_VALUE;</span>
+<span class="fc" id="L787">            return 0.5 * (leftDistance + rightDistance);</span>
+<span class="nc" id="L788">        } catch (NotReadyException e) {</span>
+<span class="nc" id="L789">            return Double.MAX_VALUE;</span>
         }
     }
     
@@ -808,23 +801,23 @@ public abstract class FundamentalMatrixRobustEstimator {
     protected void nonRobustEstimate(List&lt;FundamentalMatrix&gt; solutions, 
             List&lt;Point2D&gt; subsetLeftPoints, List&lt;Point2D&gt; subsetRightPoints) {
         try {
-<span class="fc" id="L811">            mFundMatrixEstimator.setPoints(subsetLeftPoints, </span>
+<span class="fc" id="L804">            mFundMatrixEstimator.setPoints(subsetLeftPoints, </span>
                     subsetRightPoints);
-<span class="fc bfc" id="L813" title="All 2 branches covered.">            switch (mFundMatrixEstimator.getMethod()) {</span>
+<span class="fc bfc" id="L806" title="All 2 branches covered.">            switch (mFundMatrixEstimator.getMethod()) {</span>
                 case SEVEN_POINTS_ALGORITHM:
-<span class="fc" id="L815">                    List&lt;FundamentalMatrix&gt; matrices = </span>
+<span class="fc" id="L808">                    List&lt;FundamentalMatrix&gt; matrices = </span>
                             ((SevenPointsFundamentalMatrixEstimator)
-<span class="fc" id="L817">                            mFundMatrixEstimator).estimateAll();</span>
-<span class="fc" id="L818">                    solutions.addAll(matrices);</span>
-<span class="fc" id="L819">                    break;</span>
+<span class="fc" id="L810">                            mFundMatrixEstimator).estimateAll();</span>
+<span class="fc" id="L811">                    solutions.addAll(matrices);</span>
+<span class="fc" id="L812">                    break;</span>
                 default:
-<span class="fc" id="L821">                    solutions.add(mFundMatrixEstimator.estimate());</span>
+<span class="fc" id="L814">                    solutions.add(mFundMatrixEstimator.estimate());</span>
                     break;
             }
-<span class="fc" id="L824">        } catch (GeometryException e) {</span>
+<span class="fc" id="L817">        } catch (GeometryException e) {</span>
             //if anything fails, no solution is added
-<span class="fc" id="L826">        }        </span>
-<span class="fc" id="L827">    }</span>
+<span class="fc" id="L819">        }        </span>
+<span class="fc" id="L820">    }</span>
     
     /**
      * Attempts to refine provided solution if refinement is requested.
@@ -839,29 +832,29 @@ public abstract class FundamentalMatrixRobustEstimator {
      */
     protected FundamentalMatrix attemptRefine(
             FundamentalMatrix fundamentalMatrix) {
-<span class="fc bfc" id="L842" title="All 2 branches covered.">        if (mRefineResult) {</span>
-<span class="fc" id="L843">            FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner(</span>
-<span class="fc" id="L844">                    fundamentalMatrix, mKeepCovariance, getInliersData(), </span>
+<span class="fc bfc" id="L835" title="All 2 branches covered.">        if (mRefineResult) {</span>
+<span class="fc" id="L836">            FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner(</span>
+<span class="fc" id="L837">                    fundamentalMatrix, mKeepCovariance, getInliersData(), </span>
                     mLeftPoints, mRightPoints, 
-<span class="fc" id="L846">                    getRefinementStandardDeviation());</span>
+<span class="fc" id="L839">                    getRefinementStandardDeviation());</span>
             
             try {
-<span class="fc" id="L849">                FundamentalMatrix result = new FundamentalMatrix();</span>
-<span class="fc" id="L850">                boolean improved = refiner.refine(result);</span>
+<span class="fc" id="L842">                FundamentalMatrix result = new FundamentalMatrix();</span>
+<span class="fc" id="L843">                boolean improved = refiner.refine(result);</span>
                 
-<span class="fc bfc" id="L852" title="All 2 branches covered.">                if (mKeepCovariance) {</span>
+<span class="fc bfc" id="L845" title="All 2 branches covered.">                if (mKeepCovariance) {</span>
                     //keep covariance
-<span class="fc" id="L854">                    mCovariance = refiner.getCovariance();</span>
+<span class="fc" id="L847">                    mCovariance = refiner.getCovariance();</span>
                 }
                 
-<span class="fc bfc" id="L857" title="All 2 branches covered.">                return improved ? result : fundamentalMatrix;</span>
-<span class="fc" id="L858">            } catch (Exception e) {</span>
+<span class="fc bfc" id="L850" title="All 2 branches covered.">                return improved ? result : fundamentalMatrix;</span>
+<span class="fc" id="L851">            } catch (Exception e) {</span>
                 //refinement failed, so we return input value
-<span class="fc" id="L860">                return fundamentalMatrix;</span>
+<span class="fc" id="L853">                return fundamentalMatrix;</span>
             }
 
         } else {
-<span class="fc" id="L864">            return fundamentalMatrix;</span>
+<span class="fc" id="L857">            return fundamentalMatrix;</span>
         }
     }
     
@@ -886,16 +879,16 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the same size.
      */
     private void internalSetPoints(List&lt;Point2D&gt; leftPoints, 
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc bfc" id="L890" title="All 2 branches covered.">        if (leftPoints.size() != rightPoints.size()) {</span>
-<span class="fc" id="L891">            throw new IllegalArgumentException();</span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc bfc" id="L883" title="All 2 branches covered.">        if (leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L884">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L893" title="All 2 branches covered.">        if (leftPoints.size() &lt; getMinRequiredPoints()) {</span>
-<span class="fc" id="L894">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L886" title="All 2 branches covered.">        if (leftPoints.size() &lt; getMinRequiredPoints()) {</span>
+<span class="fc" id="L887">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L897">        mLeftPoints = leftPoints;</span>
-<span class="fc" id="L898">        mRightPoints = rightPoints;</span>
-<span class="fc" id="L899">    }    </span>
+<span class="fc" id="L890">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L891">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L892">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

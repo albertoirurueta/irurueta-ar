@@ -608,160 +608,162 @@
 <a class="jxr_linenumber" name="L600" href="#L600">600</a> <em class="jxr_javadoccomment">     * @return a fundamental matrix.</em>
 <a class="jxr_linenumber" name="L601" href="#L601">601</a> <em class="jxr_javadoccomment">     * @throws EpipolarException if something fails.</em>
 <a class="jxr_linenumber" name="L602" href="#L602">602</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/epipolar/FundamentalMatrix.html">FundamentalMatrix</a> toFundamentalMatrix(
-<a class="jxr_linenumber" name="L604" href="#L604">604</a>             PinholeCameraIntrinsicParameters leftIntrinsicParameters,
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>             PinholeCameraIntrinsicParameters rightIntrinsicParameters) 
-<a class="jxr_linenumber" name="L606" href="#L606">606</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../com/irurueta/ar/epipolar/EpipolarException.html">EpipolarException</a> {
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L608" href="#L608">608</a>             normalize();
-<a class="jxr_linenumber" name="L609" href="#L609">609</a>         
-<a class="jxr_linenumber" name="L610" href="#L610">610</a>             Matrix essentialMatrix = getInternalMatrix();
-<a class="jxr_linenumber" name="L611" href="#L611">611</a>         
-<a class="jxr_linenumber" name="L612" href="#L612">612</a>             Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
-<a class="jxr_linenumber" name="L613" href="#L613">613</a>             Matrix invK1 = Utils.inverse(k1);
-<a class="jxr_linenumber" name="L614" href="#L614">614</a>             <strong class="jxr_keyword">double</strong> normInvK1 = Utils.normF(invK1);
-<a class="jxr_linenumber" name="L615" href="#L615">615</a>             invK1.multiplyByScalar(1.0 / normInvK1);
-<a class="jxr_linenumber" name="L616" href="#L616">616</a>         
-<a class="jxr_linenumber" name="L617" href="#L617">617</a>             Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
-<a class="jxr_linenumber" name="L618" href="#L618">618</a>             Matrix invK2 = Utils.inverse(k2);
-<a class="jxr_linenumber" name="L619" href="#L619">619</a>             <strong class="jxr_keyword">double</strong> normInvK2 = Utils.normF(invK2);
-<a class="jxr_linenumber" name="L620" href="#L620">620</a>             invK2.multiplyByScalar(1.0 / normInvK2);
-<a class="jxr_linenumber" name="L621" href="#L621">621</a>             invK2.transpose();
-<a class="jxr_linenumber" name="L622" href="#L622">622</a>             <em class="jxr_comment">//noinspection all</em>
-<a class="jxr_linenumber" name="L623" href="#L623">623</a>             Matrix transInvK2 = invK2;
-<a class="jxr_linenumber" name="L624" href="#L624">624</a>             
-<a class="jxr_linenumber" name="L625" href="#L625">625</a>             essentialMatrix.multiply(invK1);
-<a class="jxr_linenumber" name="L626" href="#L626">626</a>             transInvK2.multiply(essentialMatrix);
-<a class="jxr_linenumber" name="L627" href="#L627">627</a>             <em class="jxr_comment">//noinspection all</em>
-<a class="jxr_linenumber" name="L628" href="#L628">628</a>             Matrix fundMatrix = transInvK2;
-<a class="jxr_linenumber" name="L629" href="#L629">629</a>             
-<a class="jxr_linenumber" name="L630" href="#L630">630</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/FundamentalMatrix.html">FundamentalMatrix</a>(fundMatrix);
-<a class="jxr_linenumber" name="L631" href="#L631">631</a>             
-<a class="jxr_linenumber" name="L632" href="#L632">632</a>         } <strong class="jxr_keyword">catch</strong>(Exception e) {
-<a class="jxr_linenumber" name="L633" href="#L633">633</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/EpipolarException.html">EpipolarException</a>(e);
-<a class="jxr_linenumber" name="L634" href="#L634">634</a>         }
-<a class="jxr_linenumber" name="L635" href="#L635">635</a>     }
-<a class="jxr_linenumber" name="L636" href="#L636">636</a>     
-<a class="jxr_linenumber" name="L637" href="#L637">637</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L638" href="#L638">638</a> <em class="jxr_javadoccomment">     * Computes all possible camera rotations and translations that can generate</em>
-<a class="jxr_linenumber" name="L639" href="#L639">639</a> <em class="jxr_javadoccomment">     * this essential matrix.</em>
-<a class="jxr_linenumber" name="L640" href="#L640">640</a> <em class="jxr_javadoccomment">     * @throws InvalidEssentialMatrixException if essential matrix contains</em>
-<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">     * numerically unstable values.</em>
-<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L643" href="#L643">643</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> computePossibleRotationAndTranslations() 
-<a class="jxr_linenumber" name="L644" href="#L644">644</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../com/irurueta/ar/epipolar/InvalidEssentialMatrixException.html">InvalidEssentialMatrixException</a> {
-<a class="jxr_linenumber" name="L645" href="#L645">645</a>         
-<a class="jxr_linenumber" name="L646" href="#L646">646</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L647" href="#L647">647</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(
-<a class="jxr_linenumber" name="L648" href="#L648">648</a>                     mInternalMatrix);
-<a class="jxr_linenumber" name="L649" href="#L649">649</a> 
-<a class="jxr_linenumber" name="L650" href="#L650">650</a>             decomposer.decompose();
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>     @SuppressWarnings(<span class="jxr_string">"Duplicates"</span>)
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/epipolar/FundamentalMatrix.html">FundamentalMatrix</a> toFundamentalMatrix(
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>             PinholeCameraIntrinsicParameters leftIntrinsicParameters,
+<a class="jxr_linenumber" name="L606" href="#L606">606</a>             PinholeCameraIntrinsicParameters rightIntrinsicParameters) 
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../com/irurueta/ar/epipolar/EpipolarException.html">EpipolarException</a> {
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>             normalize();
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>         
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>             Matrix essentialMatrix = getInternalMatrix();
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>         
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>             Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>             Matrix invK1 = Utils.inverse(k1);
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>             <strong class="jxr_keyword">double</strong> normInvK1 = Utils.normF(invK1);
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>             invK1.multiplyByScalar(1.0 / normInvK1);
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>             Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>             Matrix invK2 = Utils.inverse(k2);
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>             <strong class="jxr_keyword">double</strong> normInvK2 = Utils.normF(invK2);
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>             invK2.multiplyByScalar(1.0 / normInvK2);
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>             invK2.transpose();
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>             <em class="jxr_comment">//noinspection all</em>
+<a class="jxr_linenumber" name="L624" href="#L624">624</a>             Matrix transInvK2 = invK2;
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>             
+<a class="jxr_linenumber" name="L626" href="#L626">626</a>             essentialMatrix.multiply(invK1);
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>             transInvK2.multiply(essentialMatrix);
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>             <em class="jxr_comment">//noinspection all</em>
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>             Matrix fundMatrix = transInvK2;
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>             
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/FundamentalMatrix.html">FundamentalMatrix</a>(fundMatrix);
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>             
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>         } <strong class="jxr_keyword">catch</strong>(AlgebraException | GeometryException e) {
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/EpipolarException.html">EpipolarException</a>(e);
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>         }
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>     }
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>     
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L639" href="#L639">639</a> <em class="jxr_javadoccomment">     * Computes all possible camera rotations and translations that can generate</em>
+<a class="jxr_linenumber" name="L640" href="#L640">640</a> <em class="jxr_javadoccomment">     * this essential matrix.</em>
+<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">     * @throws InvalidEssentialMatrixException if essential matrix contains</em>
+<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">     * numerically unstable values.</em>
+<a class="jxr_linenumber" name="L643" href="#L643">643</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L644" href="#L644">644</a>     @SuppressWarnings(<span class="jxr_string">"Duplicates"</span>)
+<a class="jxr_linenumber" name="L645" href="#L645">645</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> computePossibleRotationAndTranslations() 
+<a class="jxr_linenumber" name="L646" href="#L646">646</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../com/irurueta/ar/epipolar/InvalidEssentialMatrixException.html">InvalidEssentialMatrixException</a> {
+<a class="jxr_linenumber" name="L647" href="#L647">647</a>         
+<a class="jxr_linenumber" name="L648" href="#L648">648</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>                     mInternalMatrix);
 <a class="jxr_linenumber" name="L651" href="#L651">651</a> 
-<a class="jxr_linenumber" name="L652" href="#L652">652</a>             Matrix U = decomposer.getU();
-<a class="jxr_linenumber" name="L653" href="#L653">653</a>             Matrix V = decomposer.getV();
-<a class="jxr_linenumber" name="L654" href="#L654">654</a> 
-<a class="jxr_linenumber" name="L655" href="#L655">655</a>             V.transpose();
-<a class="jxr_linenumber" name="L656" href="#L656">656</a>             <em class="jxr_comment">//noinspection all</em>
-<a class="jxr_linenumber" name="L657" href="#L657">657</a>             Matrix transV = V;
-<a class="jxr_linenumber" name="L658" href="#L658">658</a> 
-<a class="jxr_linenumber" name="L659" href="#L659">659</a>             mTranslation1 = <strong class="jxr_keyword">new</strong> HomogeneousPoint2D(U.getElementAt(0, 2),
-<a class="jxr_linenumber" name="L660" href="#L660">660</a>                 U.getElementAt(1, 2), U.getElementAt(2, 2));
-<a class="jxr_linenumber" name="L661" href="#L661">661</a>             mTranslation2 = <strong class="jxr_keyword">new</strong> HomogeneousPoint2D(-U.getElementAt(0, 2),
-<a class="jxr_linenumber" name="L662" href="#L662">662</a>                 -U.getElementAt(1, 2), -U.getElementAt(2, 2));
-<a class="jxr_linenumber" name="L663" href="#L663">663</a> 
-<a class="jxr_linenumber" name="L664" href="#L664">664</a>             <em class="jxr_comment">//W is a skew-symmetric matrix that can be used to obtain two possible</em>
-<a class="jxr_linenumber" name="L665" href="#L665">665</a>             <em class="jxr_comment">//rotations</em>
-<a class="jxr_linenumber" name="L666" href="#L666">666</a>             Matrix W = <strong class="jxr_keyword">new</strong> Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
-<a class="jxr_linenumber" name="L667" href="#L667">667</a>             W.setElementAt(0, 1, -1.0);
-<a class="jxr_linenumber" name="L668" href="#L668">668</a>             W.setElementAt(1, 0, 1.0);
-<a class="jxr_linenumber" name="L669" href="#L669">669</a>             W.setElementAt(2, 2, 1.0);
-<a class="jxr_linenumber" name="L670" href="#L670">670</a>             
-<a class="jxr_linenumber" name="L671" href="#L671">671</a>             Matrix transW = W.transposeAndReturnNew();
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>             decomposer.decompose();
+<a class="jxr_linenumber" name="L653" href="#L653">653</a> 
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>             Matrix u = decomposer.getU();
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>             Matrix v = decomposer.getV();
+<a class="jxr_linenumber" name="L656" href="#L656">656</a> 
+<a class="jxr_linenumber" name="L657" href="#L657">657</a>             v.transpose();
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>             <em class="jxr_comment">//noinspection all</em>
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>             Matrix transV = v;
+<a class="jxr_linenumber" name="L660" href="#L660">660</a> 
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>             mTranslation1 = <strong class="jxr_keyword">new</strong> HomogeneousPoint2D(u.getElementAt(0, 2),
+<a class="jxr_linenumber" name="L662" href="#L662">662</a>                 u.getElementAt(1, 2), u.getElementAt(2, 2));
+<a class="jxr_linenumber" name="L663" href="#L663">663</a>             mTranslation2 = <strong class="jxr_keyword">new</strong> HomogeneousPoint2D(-u.getElementAt(0, 2),
+<a class="jxr_linenumber" name="L664" href="#L664">664</a>                 -u.getElementAt(1, 2), -u.getElementAt(2, 2));
+<a class="jxr_linenumber" name="L665" href="#L665">665</a> 
+<a class="jxr_linenumber" name="L666" href="#L666">666</a>             <em class="jxr_comment">//W is a skew-symmetric matrix that can be used to obtain two possible</em>
+<a class="jxr_linenumber" name="L667" href="#L667">667</a>             <em class="jxr_comment">//rotations</em>
+<a class="jxr_linenumber" name="L668" href="#L668">668</a>             Matrix w = <strong class="jxr_keyword">new</strong> Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
+<a class="jxr_linenumber" name="L669" href="#L669">669</a>             w.setElementAt(0, 1, -1.0);
+<a class="jxr_linenumber" name="L670" href="#L670">670</a>             w.setElementAt(1, 0, 1.0);
+<a class="jxr_linenumber" name="L671" href="#L671">671</a>             w.setElementAt(2, 2, 1.0);
 <a class="jxr_linenumber" name="L672" href="#L672">672</a>             
-<a class="jxr_linenumber" name="L673" href="#L673">673</a>             <em class="jxr_comment">//R1 = U * W * V'</em>
-<a class="jxr_linenumber" name="L674" href="#L674">674</a>             W.multiply(transV);
-<a class="jxr_linenumber" name="L675" href="#L675">675</a>             Matrix rotationMatrix1 = U.multiplyAndReturnNew(W);
-<a class="jxr_linenumber" name="L676" href="#L676">676</a>             
-<a class="jxr_linenumber" name="L677" href="#L677">677</a>             <em class="jxr_comment">//R2 = U * W' * V'</em>
-<a class="jxr_linenumber" name="L678" href="#L678">678</a>             transW.multiply(transV);
-<a class="jxr_linenumber" name="L679" href="#L679">679</a>             Matrix rotationMatrix2 = U.multiplyAndReturnNew(transW);
-<a class="jxr_linenumber" name="L680" href="#L680">680</a>             
-<a class="jxr_linenumber" name="L681" href="#L681">681</a>             mRotation1 = <strong class="jxr_keyword">new</strong> MatrixRotation3D(rotationMatrix1);
-<a class="jxr_linenumber" name="L682" href="#L682">682</a>             mRotation2 = <strong class="jxr_keyword">new</strong> MatrixRotation3D(rotationMatrix2);
-<a class="jxr_linenumber" name="L683" href="#L683">683</a>             
-<a class="jxr_linenumber" name="L684" href="#L684">684</a>             mPossibleRotationsAndTranslationsAvailable = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L685" href="#L685">685</a>         } <strong class="jxr_keyword">catch</strong>(AlgebraException | InvalidRotationMatrixException e) {
-<a class="jxr_linenumber" name="L686" href="#L686">686</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/InvalidEssentialMatrixException.html">InvalidEssentialMatrixException</a>(e);
-<a class="jxr_linenumber" name="L687" href="#L687">687</a>         }
-<a class="jxr_linenumber" name="L688" href="#L688">688</a>     }
-<a class="jxr_linenumber" name="L689" href="#L689">689</a>     
-<a class="jxr_linenumber" name="L690" href="#L690">690</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L691" href="#L691">691</a> <em class="jxr_javadoccomment">     * Indicates whether possible camera rotations and translations that can </em>
-<a class="jxr_linenumber" name="L692" href="#L692">692</a> <em class="jxr_javadoccomment">     * generate this essential matrix have already been computed or not.</em>
-<a class="jxr_linenumber" name="L693" href="#L693">693</a> <em class="jxr_javadoccomment">     * @return true if possible camera rotations and translations have been</em>
-<a class="jxr_linenumber" name="L694" href="#L694">694</a> <em class="jxr_javadoccomment">     * computed, false otherwise.</em>
-<a class="jxr_linenumber" name="L695" href="#L695">695</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L696" href="#L696">696</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> arePossibleRotationsAndTranslationsAvailable() {
-<a class="jxr_linenumber" name="L697" href="#L697">697</a>         <strong class="jxr_keyword">return</strong> mPossibleRotationsAndTranslationsAvailable;
-<a class="jxr_linenumber" name="L698" href="#L698">698</a>     }
-<a class="jxr_linenumber" name="L699" href="#L699">699</a>     
-<a class="jxr_linenumber" name="L700" href="#L700">700</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L701" href="#L701">701</a> <em class="jxr_javadoccomment">     * Gets first possible rotation that can generate this essential matrix.</em>
-<a class="jxr_linenumber" name="L702" href="#L702">702</a> <em class="jxr_javadoccomment">     * @return first possible rotation.</em>
-<a class="jxr_linenumber" name="L703" href="#L703">703</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible rotation has not yet been</em>
-<a class="jxr_linenumber" name="L704" href="#L704">704</a> <em class="jxr_javadoccomment">     * computed.</em>
-<a class="jxr_linenumber" name="L705" href="#L705">705</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L706" href="#L706">706</a>     <strong class="jxr_keyword">public</strong> Rotation3D getFirstPossibleRotation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
-<a class="jxr_linenumber" name="L707" href="#L707">707</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
-<a class="jxr_linenumber" name="L708" href="#L708">708</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
-<a class="jxr_linenumber" name="L709" href="#L709">709</a>         }
-<a class="jxr_linenumber" name="L710" href="#L710">710</a>                     
-<a class="jxr_linenumber" name="L711" href="#L711">711</a>         <strong class="jxr_keyword">return</strong> mRotation1;
-<a class="jxr_linenumber" name="L712" href="#L712">712</a>     }
-<a class="jxr_linenumber" name="L713" href="#L713">713</a>     
-<a class="jxr_linenumber" name="L714" href="#L714">714</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L715" href="#L715">715</a> <em class="jxr_javadoccomment">     * Gets second possible rotation that can generate this essential matrix.</em>
-<a class="jxr_linenumber" name="L716" href="#L716">716</a> <em class="jxr_javadoccomment">     * @return second possible rotation.</em>
-<a class="jxr_linenumber" name="L717" href="#L717">717</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible rotation has not yet been</em>
-<a class="jxr_linenumber" name="L718" href="#L718">718</a> <em class="jxr_javadoccomment">     * computed.</em>
-<a class="jxr_linenumber" name="L719" href="#L719">719</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L720" href="#L720">720</a>     <strong class="jxr_keyword">public</strong> Rotation3D getSecondPossibleRotation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
-<a class="jxr_linenumber" name="L721" href="#L721">721</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
-<a class="jxr_linenumber" name="L722" href="#L722">722</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
-<a class="jxr_linenumber" name="L723" href="#L723">723</a>         }
-<a class="jxr_linenumber" name="L724" href="#L724">724</a>         
-<a class="jxr_linenumber" name="L725" href="#L725">725</a>         <strong class="jxr_keyword">return</strong> mRotation2;
-<a class="jxr_linenumber" name="L726" href="#L726">726</a>     }
-<a class="jxr_linenumber" name="L727" href="#L727">727</a>     
-<a class="jxr_linenumber" name="L728" href="#L728">728</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L729" href="#L729">729</a> <em class="jxr_javadoccomment">     * Gets first possible translation that can generate this essential matrix.</em>
-<a class="jxr_linenumber" name="L730" href="#L730">730</a> <em class="jxr_javadoccomment">     * @return first possible translation.</em>
-<a class="jxr_linenumber" name="L731" href="#L731">731</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible translation has not yet been</em>
-<a class="jxr_linenumber" name="L732" href="#L732">732</a> <em class="jxr_javadoccomment">     * computed.</em>
-<a class="jxr_linenumber" name="L733" href="#L733">733</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L734" href="#L734">734</a>     <strong class="jxr_keyword">public</strong> Point2D getFirstPossibleTranslation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
-<a class="jxr_linenumber" name="L735" href="#L735">735</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
-<a class="jxr_linenumber" name="L736" href="#L736">736</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
-<a class="jxr_linenumber" name="L737" href="#L737">737</a>         }
-<a class="jxr_linenumber" name="L738" href="#L738">738</a>         
-<a class="jxr_linenumber" name="L739" href="#L739">739</a>         <strong class="jxr_keyword">return</strong> mTranslation1;
-<a class="jxr_linenumber" name="L740" href="#L740">740</a>     }
-<a class="jxr_linenumber" name="L741" href="#L741">741</a>     
-<a class="jxr_linenumber" name="L742" href="#L742">742</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L743" href="#L743">743</a> <em class="jxr_javadoccomment">     * Gets second possible translation that can generate this essential matrix.</em>
-<a class="jxr_linenumber" name="L744" href="#L744">744</a> <em class="jxr_javadoccomment">     * @return second possible translation.</em>
-<a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible translation has not yet been</em>
-<a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">     * computed.</em>
-<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L748" href="#L748">748</a>     <strong class="jxr_keyword">public</strong> Point2D getSecondPossibleTranslation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
-<a class="jxr_linenumber" name="L749" href="#L749">749</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
-<a class="jxr_linenumber" name="L750" href="#L750">750</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
-<a class="jxr_linenumber" name="L751" href="#L751">751</a>         }
-<a class="jxr_linenumber" name="L752" href="#L752">752</a>         
-<a class="jxr_linenumber" name="L753" href="#L753">753</a>         <strong class="jxr_keyword">return</strong> mTranslation2;
-<a class="jxr_linenumber" name="L754" href="#L754">754</a>     }  
-<a class="jxr_linenumber" name="L755" href="#L755">755</a>     
-<a class="jxr_linenumber" name="L756" href="#L756">756</a> }
+<a class="jxr_linenumber" name="L673" href="#L673">673</a>             Matrix transW = w.transposeAndReturnNew();
+<a class="jxr_linenumber" name="L674" href="#L674">674</a>             
+<a class="jxr_linenumber" name="L675" href="#L675">675</a>             <em class="jxr_comment">//R1 = U * W * V'</em>
+<a class="jxr_linenumber" name="L676" href="#L676">676</a>             w.multiply(transV);
+<a class="jxr_linenumber" name="L677" href="#L677">677</a>             Matrix rotationMatrix1 = u.multiplyAndReturnNew(w);
+<a class="jxr_linenumber" name="L678" href="#L678">678</a>             
+<a class="jxr_linenumber" name="L679" href="#L679">679</a>             <em class="jxr_comment">//R2 = U * W' * V'</em>
+<a class="jxr_linenumber" name="L680" href="#L680">680</a>             transW.multiply(transV);
+<a class="jxr_linenumber" name="L681" href="#L681">681</a>             Matrix rotationMatrix2 = u.multiplyAndReturnNew(transW);
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>             
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>             mRotation1 = <strong class="jxr_keyword">new</strong> MatrixRotation3D(rotationMatrix1);
+<a class="jxr_linenumber" name="L684" href="#L684">684</a>             mRotation2 = <strong class="jxr_keyword">new</strong> MatrixRotation3D(rotationMatrix2);
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>             
+<a class="jxr_linenumber" name="L686" href="#L686">686</a>             mPossibleRotationsAndTranslationsAvailable = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L687" href="#L687">687</a>         } <strong class="jxr_keyword">catch</strong>(AlgebraException | InvalidRotationMatrixException e) {
+<a class="jxr_linenumber" name="L688" href="#L688">688</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/epipolar/InvalidEssentialMatrixException.html">InvalidEssentialMatrixException</a>(e);
+<a class="jxr_linenumber" name="L689" href="#L689">689</a>         }
+<a class="jxr_linenumber" name="L690" href="#L690">690</a>     }
+<a class="jxr_linenumber" name="L691" href="#L691">691</a>     
+<a class="jxr_linenumber" name="L692" href="#L692">692</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L693" href="#L693">693</a> <em class="jxr_javadoccomment">     * Indicates whether possible camera rotations and translations that can </em>
+<a class="jxr_linenumber" name="L694" href="#L694">694</a> <em class="jxr_javadoccomment">     * generate this essential matrix have already been computed or not.</em>
+<a class="jxr_linenumber" name="L695" href="#L695">695</a> <em class="jxr_javadoccomment">     * @return true if possible camera rotations and translations have been</em>
+<a class="jxr_linenumber" name="L696" href="#L696">696</a> <em class="jxr_javadoccomment">     * computed, false otherwise.</em>
+<a class="jxr_linenumber" name="L697" href="#L697">697</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L698" href="#L698">698</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> arePossibleRotationsAndTranslationsAvailable() {
+<a class="jxr_linenumber" name="L699" href="#L699">699</a>         <strong class="jxr_keyword">return</strong> mPossibleRotationsAndTranslationsAvailable;
+<a class="jxr_linenumber" name="L700" href="#L700">700</a>     }
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>     
+<a class="jxr_linenumber" name="L702" href="#L702">702</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L703" href="#L703">703</a> <em class="jxr_javadoccomment">     * Gets first possible rotation that can generate this essential matrix.</em>
+<a class="jxr_linenumber" name="L704" href="#L704">704</a> <em class="jxr_javadoccomment">     * @return first possible rotation.</em>
+<a class="jxr_linenumber" name="L705" href="#L705">705</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible rotation has not yet been</em>
+<a class="jxr_linenumber" name="L706" href="#L706">706</a> <em class="jxr_javadoccomment">     * computed.</em>
+<a class="jxr_linenumber" name="L707" href="#L707">707</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L708" href="#L708">708</a>     <strong class="jxr_keyword">public</strong> Rotation3D getFirstPossibleRotation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
+<a class="jxr_linenumber" name="L709" href="#L709">709</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
+<a class="jxr_linenumber" name="L710" href="#L710">710</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
+<a class="jxr_linenumber" name="L711" href="#L711">711</a>         }
+<a class="jxr_linenumber" name="L712" href="#L712">712</a>                     
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>         <strong class="jxr_keyword">return</strong> mRotation1;
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>     }
+<a class="jxr_linenumber" name="L715" href="#L715">715</a>     
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L717" href="#L717">717</a> <em class="jxr_javadoccomment">     * Gets second possible rotation that can generate this essential matrix.</em>
+<a class="jxr_linenumber" name="L718" href="#L718">718</a> <em class="jxr_javadoccomment">     * @return second possible rotation.</em>
+<a class="jxr_linenumber" name="L719" href="#L719">719</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible rotation has not yet been</em>
+<a class="jxr_linenumber" name="L720" href="#L720">720</a> <em class="jxr_javadoccomment">     * computed.</em>
+<a class="jxr_linenumber" name="L721" href="#L721">721</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>     <strong class="jxr_keyword">public</strong> Rotation3D getSecondPossibleRotation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
+<a class="jxr_linenumber" name="L723" href="#L723">723</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
+<a class="jxr_linenumber" name="L725" href="#L725">725</a>         }
+<a class="jxr_linenumber" name="L726" href="#L726">726</a>         
+<a class="jxr_linenumber" name="L727" href="#L727">727</a>         <strong class="jxr_keyword">return</strong> mRotation2;
+<a class="jxr_linenumber" name="L728" href="#L728">728</a>     }
+<a class="jxr_linenumber" name="L729" href="#L729">729</a>     
+<a class="jxr_linenumber" name="L730" href="#L730">730</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L731" href="#L731">731</a> <em class="jxr_javadoccomment">     * Gets first possible translation that can generate this essential matrix.</em>
+<a class="jxr_linenumber" name="L732" href="#L732">732</a> <em class="jxr_javadoccomment">     * @return first possible translation.</em>
+<a class="jxr_linenumber" name="L733" href="#L733">733</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible translation has not yet been</em>
+<a class="jxr_linenumber" name="L734" href="#L734">734</a> <em class="jxr_javadoccomment">     * computed.</em>
+<a class="jxr_linenumber" name="L735" href="#L735">735</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L736" href="#L736">736</a>     <strong class="jxr_keyword">public</strong> Point2D getFirstPossibleTranslation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
+<a class="jxr_linenumber" name="L738" href="#L738">738</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
+<a class="jxr_linenumber" name="L739" href="#L739">739</a>         }
+<a class="jxr_linenumber" name="L740" href="#L740">740</a>         
+<a class="jxr_linenumber" name="L741" href="#L741">741</a>         <strong class="jxr_keyword">return</strong> mTranslation1;
+<a class="jxr_linenumber" name="L742" href="#L742">742</a>     }
+<a class="jxr_linenumber" name="L743" href="#L743">743</a>     
+<a class="jxr_linenumber" name="L744" href="#L744">744</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">     * Gets second possible translation that can generate this essential matrix.</em>
+<a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">     * @return second possible translation.</em>
+<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">     * @throws NotAvailableException if possible translation has not yet been</em>
+<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">     * computed.</em>
+<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L750" href="#L750">750</a>     <strong class="jxr_keyword">public</strong> Point2D getSecondPossibleTranslation() <strong class="jxr_keyword">throws</strong> NotAvailableException {
+<a class="jxr_linenumber" name="L751" href="#L751">751</a>         <strong class="jxr_keyword">if</strong> (!arePossibleRotationsAndTranslationsAvailable()) {
+<a class="jxr_linenumber" name="L752" href="#L752">752</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NotAvailableException();
+<a class="jxr_linenumber" name="L753" href="#L753">753</a>         }
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>         
+<a class="jxr_linenumber" name="L755" href="#L755">755</a>         <strong class="jxr_keyword">return</strong> mTranslation2;
+<a class="jxr_linenumber" name="L756" href="#L756">756</a>     }  
+<a class="jxr_linenumber" name="L757" href="#L757">757</a>     
+<a class="jxr_linenumber" name="L758" href="#L758">758</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

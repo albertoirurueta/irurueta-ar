@@ -122,15 +122,14 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L127">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
-<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        if (leftPoints.size() &lt; </span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L126">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        if (leftPoints.size() &lt; </span>
                 EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
-<span class="nc" id="L130">            throw new IllegalArgumentException();</span>
+<span class="nc" id="L129">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L132">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L131">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L132">    }</span>
     
     /**
      * Constructor.
@@ -146,15 +145,14 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L151">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
-<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (leftPoints.size() &lt; </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L149">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (leftPoints.size() &lt; </span>
                 EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
-<span class="nc" id="L154">            throw new IllegalArgumentException();        </span>
+<span class="nc" id="L152">            throw new IllegalArgumentException();        </span>
         }
-<span class="fc" id="L156">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L154">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L155">    }</span>
 
     /**
      * Constructor.
@@ -167,10 +165,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, 
-            double[] qualityScores) throws IllegalArgumentException {
-<span class="fc" id="L171">        this(fundMatrixEstimatorMethod);</span>
-<span class="fc" id="L172">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L173">    }</span>
+            double[] qualityScores) {
+<span class="fc" id="L169">        this(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L170">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L171">    }</span>
     
     /**
      * Constructor.
@@ -186,11 +184,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores,
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L191">        this(fundMatrixEstimatorMethod, listener);</span>
-<span class="fc" id="L192">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L193">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L188">        this(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L189">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L190">    }</span>
     
     /**
      * Constructor.
@@ -206,10 +203,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             double[] qualityScores, List&lt;Point2D&gt; leftPoints, 
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L210">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
-<span class="fc" id="L211">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L212">    }</span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L207">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="fc" id="L208">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L209">    }</span>
     
     /**
      * Constructor.
@@ -228,18 +225,17 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, 
             double[] qualityScores, List&lt;Point2D&gt; leftPoints, 
             List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L233">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
-<span class="fc" id="L234">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L235">    }</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L229">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="fc" id="L230">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L231">    }</span>
 
     /**
      * Constructor.
      */
     public PROMedSFundamentalMatrixRobustEstimator() {
-<span class="fc" id="L241">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
-<span class="fc" id="L242">    }</span>
+<span class="fc" id="L237">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="fc" id="L238">    }</span>
     
     /**
      * Constructor.
@@ -248,8 +244,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             FundamentalMatrixRobustEstimatorListener listener) {
-<span class="fc" id="L251">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
-<span class="fc" id="L252">    }</span>
+<span class="fc" id="L247">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
+<span class="fc" id="L248">    }</span>
     
     /**
      * Constructor.
@@ -259,10 +255,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * the same length or their length is less than 8 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints,
-            List&lt;Point2D&gt; rightPoints) throws IllegalArgumentException {
-<span class="fc" id="L263">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L259">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints);
-<span class="fc" id="L265">    }</span>
+<span class="fc" id="L261">    }</span>
     
     /**
      * Constructor.
@@ -275,11 +271,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(List&lt;Point2D&gt; leftPoints,
             List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L280">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L275">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, </span>
                 rightPoints, listener);
-<span class="fc" id="L282">    }</span>
+<span class="fc" id="L277">    }</span>
 
     /**
      * Constructor.
@@ -288,11 +283,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than required size (i.e. 7 matched pair of points).
      */
-    public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores)
-            throws IllegalArgumentException {
-<span class="fc" id="L293">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, </span>
+    public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores) {
+<span class="fc" id="L287">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, </span>
                 qualityScores);
-<span class="fc" id="L295">    }</span>
+<span class="fc" id="L289">    }</span>
     
     /**
      * Constructor.
@@ -304,11 +298,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * smaller than required size (i.e. 7 matched pair of points).
      */
     public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores,
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L309">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,</span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L302">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,</span>
                 listener);
-<span class="fc" id="L311">    }</span>
+<span class="fc" id="L304">    }</span>
     
     /**
      * Constructor.
@@ -320,11 +313,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * scores do not have the same length or their length is less than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores,
-            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) 
-            throws IllegalArgumentException {
-<span class="fc" id="L325">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
+            List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L317">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
                 leftPoints, rightPoints);
-<span class="fc" id="L327">    }</span>
+<span class="fc" id="L319">    }</span>
     
     /**
      * Constructor.
@@ -339,11 +331,10 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(double[] qualityScores,
             List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints, 
-            FundamentalMatrixRobustEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L344">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
+            FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L335">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, </span>
                 leftPoints, rightPoints, listener);
-<span class="fc" id="L346">    }</span>
+<span class="fc" id="L337">    }</span>
     
     /**
      * Sets matched 2D points on both left and right views.
@@ -356,16 +347,16 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public void setPoints(List&lt;Point2D&gt; leftPoints, List&lt;Point2D&gt; rightPoints)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L360" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L361">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L352">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L363" title="All 2 branches covered.">        if (leftPoints.size() &lt; </span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">        if (leftPoints.size() &lt; </span>
                 EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
-<span class="fc" id="L365">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L356">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L367">        super.setPoints(leftPoints, rightPoints);</span>
-<span class="fc" id="L368">    }</span>
+<span class="fc" id="L358">        super.setPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L359">    }</span>
     
     
     /**
@@ -387,7 +378,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-<span class="fc" id="L390">        return mStopThreshold;</span>
+<span class="fc" id="L381">        return mStopThreshold;</span>
     }
     
     /**
@@ -411,17 +402,16 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L416" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L417">            throw new LockedException();</span>
+    public void setStopThreshold(double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L406" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L407">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L419" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
-<span class="fc" id="L420">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L410">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L423">        mStopThreshold = stopThreshold;</span>
-<span class="fc" id="L424">    }</span>
+<span class="fc" id="L413">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L414">    }</span>
 
     /**
      * Returns quality scores corresponding to each provided pair of points.
@@ -431,7 +421,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-<span class="fc" id="L434">        return mQualityScores;</span>
+<span class="fc" id="L424">        return mQualityScores;</span>
     }
     
     /**
@@ -445,13 +435,12 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-<span class="fc bfc" id="L450" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L451">            throw new LockedException();</span>
+    public void setQualityScores(double[] qualityScores) throws LockedException {
+<span class="fc bfc" id="L439" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L440">            throw new LockedException();</span>
         }
-<span class="fc" id="L453">        internalSetQualityScores(qualityScores);</span>
-<span class="fc" id="L454">    }    </span>
+<span class="fc" id="L442">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L443">    }    </span>
     
     /**
      * Returns value indicating whether required data has been provided so that
@@ -464,8 +453,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */    
     @Override
     public boolean isReady() {
-<span class="fc bfc" id="L467" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; </span>
-<span class="pc bpc" id="L468" title="1 of 2 branches missed.">                mQualityScores.length == mLeftPoints.size();</span>
+<span class="fc bfc" id="L456" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; </span>
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">                mQualityScores.length == mLeftPoints.size();</span>
     }     
     
     /**
@@ -482,127 +471,127 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
     @Override
     public FundamentalMatrix estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L485" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L486">            throw new LockedException();</span>
+<span class="fc bfc" id="L474" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L475">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L488" title="All 2 branches covered.">        if (!isReady()) {</span>
-<span class="fc" id="L489">            throw new NotReadyException();</span>
+<span class="fc bfc" id="L477" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L478">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L492">        PROMedSRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
+<span class="fc" id="L481">        PROMedSRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
                 new PROMedSRobustEstimator&lt;&gt;(
-<span class="fc" id="L494">                new PROMedSRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
+<span class="fc" id="L483">                new PROMedSRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
                     
             //subset of left points
-<span class="fc" id="L497">            private List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L486">            private List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
             
             //subset of right points
-<span class="fc" id="L500">            private List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L489">            private List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
             
             @Override
             public double getThreshold() {
-<span class="fc" id="L504">                return mStopThreshold;</span>
+<span class="fc" id="L493">                return mStopThreshold;</span>
             }
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L509">                return mLeftPoints.size();</span>
+<span class="fc" id="L498">                return mLeftPoints.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L514">                return getMinRequiredPoints();</span>
+<span class="fc" id="L503">                return getMinRequiredPoints();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;FundamentalMatrix&gt; solutions) {
                 
-<span class="fc" id="L521">                mSubsetLeftPoints.clear();</span>
-<span class="fc" id="L522">                mSubsetRightPoints.clear();</span>
-<span class="fc bfc" id="L523" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L524">                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
-<span class="fc" id="L525">                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
+<span class="fc" id="L510">                mSubsetLeftPoints.clear();</span>
+<span class="fc" id="L511">                mSubsetRightPoints.clear();</span>
+<span class="fc bfc" id="L512" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L513">                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
+<span class="fc" id="L514">                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
                 }
                 
-<span class="fc" id="L528">                nonRobustEstimate(solutions, mSubsetLeftPoints, </span>
+<span class="fc" id="L517">                nonRobustEstimate(solutions, mSubsetLeftPoints, </span>
                         mSubsetRightPoints);
-<span class="fc" id="L530">            }</span>
+<span class="fc" id="L519">            }</span>
 
             @Override
             public double computeResidual(FundamentalMatrix currentEstimation, 
                     int i) {
-<span class="fc" id="L535">                Point2D leftPoint = mLeftPoints.get(i);</span>
-<span class="fc" id="L536">                Point2D rightPoint = mRightPoints.get(i);</span>
-<span class="fc" id="L537">                return residual(currentEstimation, leftPoint, rightPoint);</span>
+<span class="fc" id="L524">                Point2D leftPoint = mLeftPoints.get(i);</span>
+<span class="fc" id="L525">                Point2D rightPoint = mRightPoints.get(i);</span>
+<span class="fc" id="L526">                return residual(currentEstimation, leftPoint, rightPoint);</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L542">                return PROMedSFundamentalMatrixRobustEstimator.this.isReady();</span>
+<span class="fc" id="L531">                return PROMedSFundamentalMatrixRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
-<span class="pc bpc" id="L548" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L549">                    mListener.onEstimateStart(</span>
+<span class="pc bpc" id="L537" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L538">                    mListener.onEstimateStart(</span>
                             PROMedSFundamentalMatrixRobustEstimator.this);
                 }
-<span class="fc" id="L552">            }</span>
+<span class="fc" id="L541">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
-<span class="pc bpc" id="L557" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L558">                    mListener.onEstimateEnd(</span>
+<span class="pc bpc" id="L546" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L547">                    mListener.onEstimateEnd(</span>
                             PROMedSFundamentalMatrixRobustEstimator.this);
                 }
-<span class="fc" id="L561">            }</span>
+<span class="fc" id="L550">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     int iteration) {
-<span class="pc bpc" id="L567" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L568">                    mListener.onEstimateNextIteration(</span>
+<span class="pc bpc" id="L556" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L557">                    mListener.onEstimateNextIteration(</span>
                             PROMedSFundamentalMatrixRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L572">            }</span>
+<span class="fc" id="L561">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;FundamentalMatrix&gt; estimator, 
                     float progress) {
-<span class="nc bnc" id="L578" title="All 2 branches missed.">                if (mListener != null) {</span>
-<span class="nc" id="L579">                    mListener.onEstimateProgressChange(</span>
+<span class="nc bnc" id="L567" title="All 2 branches missed.">                if (mListener != null) {</span>
+<span class="nc" id="L568">                    mListener.onEstimateProgressChange(</span>
                             PROMedSFundamentalMatrixRobustEstimator.this, 
                             progress);
                 }
-<span class="nc" id="L583">            }</span>
+<span class="nc" id="L572">            }</span>
             
             @Override
             public double[] getQualityScores() {
-<span class="fc" id="L587">                return mQualityScores;</span>
+<span class="fc" id="L576">                return mQualityScores;</span>
             }                                         
         });
         
         try {
-<span class="fc" id="L592">            mLocked = true;</span>
-<span class="fc" id="L593">            mInliersData = null;</span>
-<span class="fc" id="L594">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L595">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L596">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L597">            FundamentalMatrix result = innerEstimator.estimate();</span>
-<span class="fc" id="L598">            mInliersData = innerEstimator.getInliersData();</span>
-<span class="fc" id="L599">            return attemptRefine(result);</span>
-<span class="nc" id="L600">        } catch (com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L601">            throw new LockedException(e);</span>
-<span class="nc" id="L602">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L603">            throw new NotReadyException(e);</span>
+<span class="fc" id="L581">            mLocked = true;</span>
+<span class="fc" id="L582">            mInliersData = null;</span>
+<span class="fc" id="L583">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L584">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L585">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L586">            FundamentalMatrix result = innerEstimator.estimate();</span>
+<span class="fc" id="L587">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L588">            return attemptRefine(result);</span>
+<span class="nc" id="L589">        } catch (com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L590">            throw new LockedException(e);</span>
+<span class="nc" id="L591">        } catch (com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L592">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L605">            mLocked = false;</span>
+<span class="fc" id="L594">            mLocked = false;</span>
         }
     }
 
@@ -612,7 +601,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */        
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L615">        return RobustEstimatorMethod.PROMedS;</span>
+<span class="fc" id="L604">        return RobustEstimatorMethod.PROMedS;</span>
     }  
     
     /**
@@ -627,9 +616,9 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     protected double getRefinementStandardDeviation() {
-<span class="fc" id="L630">        PROMedSRobustEstimator.PROMedSInliersData inliersData =</span>
-<span class="fc" id="L631">                (PROMedSRobustEstimator.PROMedSInliersData)getInliersData();</span>
-<span class="fc" id="L632">        return inliersData.getEstimatedThreshold();</span>
+<span class="fc" id="L619">        PROMedSRobustEstimator.PROMedSInliersData inliersData =</span>
+<span class="fc" id="L620">                (PROMedSRobustEstimator.PROMedSInliersData)getInliersData();</span>
+<span class="fc" id="L621">        return inliersData.getEstimatedThreshold();</span>
     }    
     
     /**
@@ -641,13 +630,12 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than 8 points.
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L646" title="All 2 branches covered.">        if (qualityScores.length &lt; getMinRequiredPoints()) {</span>
-<span class="fc" id="L647">            throw new IllegalArgumentException();</span>
+    private void internalSetQualityScores(double[] qualityScores) {
+<span class="fc bfc" id="L634" title="All 2 branches covered.">        if (qualityScores.length &lt; getMinRequiredPoints()) {</span>
+<span class="fc" id="L635">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L650">        mQualityScores = qualityScores;        </span>
-<span class="fc" id="L651">    }         </span>
+<span class="fc" id="L638">        mQualityScores = qualityScores;        </span>
+<span class="fc" id="L639">    }         </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
