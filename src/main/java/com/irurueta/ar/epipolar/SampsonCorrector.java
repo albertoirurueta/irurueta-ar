@@ -65,8 +65,7 @@ public class SampsonCorrector extends Corrector {
      * @throws IllegalArgumentException if provided lists of points don't have
      * the same size.
      */
-    public SampsonCorrector(List<Point2D> leftPoints, List<Point2D> rightPoints)
-            throws IllegalArgumentException {
+    public SampsonCorrector(List<Point2D> leftPoints, List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
     }
     
@@ -79,8 +78,7 @@ public class SampsonCorrector extends Corrector {
      * the same size.
      */
     public SampsonCorrector(List<Point2D> leftPoints, List<Point2D> rightPoints,
-            FundamentalMatrix fundamentalMatrix) 
-            throws IllegalArgumentException {
+            FundamentalMatrix fundamentalMatrix) {
         super(leftPoints, rightPoints, fundamentalMatrix);
     }
     
@@ -111,7 +109,7 @@ public class SampsonCorrector extends Corrector {
      * the same size.
      */
     public SampsonCorrector(List<Point2D> leftPoints, List<Point2D> rightPoints,
-            CorrectorListener listener) throws IllegalArgumentException {
+            CorrectorListener listener) {
         super(leftPoints, rightPoints, listener);
     }
     
@@ -125,8 +123,7 @@ public class SampsonCorrector extends Corrector {
      * the same size.
      */
     public SampsonCorrector(List<Point2D> leftPoints, List<Point2D> rightPoints,
-            FundamentalMatrix fundamentalMatrix, CorrectorListener listener)
-            throws IllegalArgumentException {
+            FundamentalMatrix fundamentalMatrix, CorrectorListener listener) {
         super(leftPoints, rightPoints, fundamentalMatrix, listener);
     }
     
@@ -137,6 +134,7 @@ public class SampsonCorrector extends Corrector {
      * @throws LockedException if this instance is locked doing computations.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     public void correct() throws NotReadyException, LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -155,12 +153,16 @@ public class SampsonCorrector extends Corrector {
         Line2D leftEpipolarLine = new Line2D();
         Line2D rightEpipolarLine = new Line2D();
         
-        Point2D leftPoint, rightPoint, leftCorrectedPoint, rightCorrectedPoint;
+        Point2D leftPoint;
+        Point2D rightPoint;
+        Point2D leftCorrectedPoint;
+        Point2D rightCorrectedPoint;
         mLeftCorrectedPoints = new ArrayList<>();
         mRightCorrectedPoints = new ArrayList<>();
         
         int size = mLeftPoints.size();
-        float progress, previousProgress = 0.0f;
+        float progress;
+        float previousProgress = 0.0f;
         for (int i = 0; i < size; i++) {
             leftPoint = mLeftPoints.get(i);
             rightPoint = mRightPoints.get(i);

@@ -254,7 +254,8 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             double b = transformedFundInternalMatrix.getElementAt(1, 2);
             double c = transformedFundInternalMatrix.getElementAt(2, 1);
             double d = transformedFundInternalMatrix.getElementAt(2, 2);
-            double f1, f2;
+            double f1;
+            double f2;
             if (Math.abs(b) > Math.abs(d)) {
                 f1 = -transformedFundInternalMatrix.getElementAt(1, 0) / b;
             } else {
@@ -269,27 +270,27 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             //Hence the polynomial of degree 6 to solve corresponding to the derivative of s(t) is:
             //g(t) = A*t^6 + B*t^5 + C*t^4 + D*t^3 + E*t^2 + F*t + G
             //where:
-            double A = -(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 4.0);
-            double B = Math.pow((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0)), 2.0) -
+            double realA = -(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 4.0);
+            double realB = Math.pow((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0)), 2.0) -
                     ((Math.pow(a, 2)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c)*Math.pow(f1, 4.0);
-            double C = (4.0*(Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0))*(a*b + c*d*Math.pow(f2, 2.0)) -
+            double realC = (4.0*(Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0))*(a*b + c*d*Math.pow(f2, 2.0)) -
                     (2.0*(Math.pow(a, 2.0)*d - a*b*c)*c*Math.pow(f1, 2.0) + (a*b*d - Math.pow(b, 2.0)*c)*d*Math.pow(f1, 4.0)));
-            double D = 2.0*((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) +
+            double realD = 2.0*((Math.pow(a, 2.0) + Math.pow(c, 2.0)*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) +
                     2.0*Math.pow(a*b + c*d*Math.pow(f2, 2.0), 2.0) -
                     ((Math.pow(a, 2.0)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c)*Math.pow(f1, 2.0));
-            double E = (4.0*(a*b + c*d*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) - 
+            double realE = (4.0*(a*b + c*d*Math.pow(f2, 2.0))*(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0)) -
                     ((Math.pow(a, 2.0)*d - a*b*c)*c + 2.0*(a*b*d - Math.pow(b, 2.0)*c)*d*Math.pow(f1, 2.0)));
-            double F = (Math.pow(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0), 2.0) -
+            double realF = (Math.pow(Math.pow(b, 2.0) + Math.pow(d, 2.0)*Math.pow(f2, 2.0), 2.0) -
                     ((Math.pow(a, 2.0)*d - a*b*c)*d + (a*b*d - Math.pow(b, 2.0)*c)*c));
-            double G = -(a*b*d - Math.pow(b, 2.0)*c)*d;
+            double realG = -(a*b*d - Math.pow(b, 2.0)*c)*d;
             
-            Complex complexA = new Complex(A);
-            Complex complexB = new Complex(B);
-            Complex complexC = new Complex(C);
-            Complex complexD = new Complex(D);
-            Complex complexE = new Complex(E);
-            Complex complexF = new Complex(F);
-            Complex complexG = new Complex(G);
+            Complex complexA = new Complex(realA);
+            Complex complexB = new Complex(realB);
+            Complex complexC = new Complex(realC);
+            Complex complexD = new Complex(realD);
+            Complex complexE = new Complex(realE);
+            Complex complexF = new Complex(realF);
+            Complex complexG = new Complex(realG);
             Complex [] polyParams = new Complex[]{ complexG, complexF, complexE, 
                 complexD, complexC, complexB, complexA };
             LaguerrePolynomialRootsEstimator rootEstimator = 

@@ -600,6 +600,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @return a fundamental matrix.
      * @throws EpipolarException if something fails.
      */
+    @SuppressWarnings("Duplicates")
     public FundamentalMatrix toFundamentalMatrix(
             PinholeCameraIntrinsicParameters leftIntrinsicParameters,
             PinholeCameraIntrinsicParameters rightIntrinsicParameters) 
@@ -629,7 +630,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             
             return new FundamentalMatrix(fundMatrix);
             
-        } catch(Exception e) {
+        } catch(AlgebraException | GeometryException e) {
             throw new EpipolarException(e);
         }
     }
@@ -640,6 +641,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws InvalidEssentialMatrixException if essential matrix contains
      * numerically unstable values.
      */
+    @SuppressWarnings("Duplicates")
     public void computePossibleRotationAndTranslations() 
             throws InvalidEssentialMatrixException {
         
@@ -649,34 +651,34 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
 
             decomposer.decompose();
 
-            Matrix U = decomposer.getU();
-            Matrix V = decomposer.getV();
+            Matrix u = decomposer.getU();
+            Matrix v = decomposer.getV();
 
-            V.transpose();
+            v.transpose();
             //noinspection all
-            Matrix transV = V;
+            Matrix transV = v;
 
-            mTranslation1 = new HomogeneousPoint2D(U.getElementAt(0, 2),
-                U.getElementAt(1, 2), U.getElementAt(2, 2));
-            mTranslation2 = new HomogeneousPoint2D(-U.getElementAt(0, 2),
-                -U.getElementAt(1, 2), -U.getElementAt(2, 2));
+            mTranslation1 = new HomogeneousPoint2D(u.getElementAt(0, 2),
+                u.getElementAt(1, 2), u.getElementAt(2, 2));
+            mTranslation2 = new HomogeneousPoint2D(-u.getElementAt(0, 2),
+                -u.getElementAt(1, 2), -u.getElementAt(2, 2));
 
             //W is a skew-symmetric matrix that can be used to obtain two possible
             //rotations
-            Matrix W = new Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
-            W.setElementAt(0, 1, -1.0);
-            W.setElementAt(1, 0, 1.0);
-            W.setElementAt(2, 2, 1.0);
+            Matrix w = new Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
+            w.setElementAt(0, 1, -1.0);
+            w.setElementAt(1, 0, 1.0);
+            w.setElementAt(2, 2, 1.0);
             
-            Matrix transW = W.transposeAndReturnNew();
+            Matrix transW = w.transposeAndReturnNew();
             
             //R1 = U * W * V'
-            W.multiply(transV);
-            Matrix rotationMatrix1 = U.multiplyAndReturnNew(W);
+            w.multiply(transV);
+            Matrix rotationMatrix1 = u.multiplyAndReturnNew(w);
             
             //R2 = U * W' * V'
             transW.multiply(transV);
-            Matrix rotationMatrix2 = U.multiplyAndReturnNew(transW);
+            Matrix rotationMatrix2 = u.multiplyAndReturnNew(transW);
             
             mRotation1 = new MatrixRotation3D(rotationMatrix1);
             mRotation2 = new MatrixRotation3D(rotationMatrix2);

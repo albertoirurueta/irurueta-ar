@@ -83,7 +83,7 @@ public class AffineFundamentalMatrixEstimator extends
      * have the same length.
      */
     public AffineFundamentalMatrixEstimator(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
         mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;        
@@ -190,9 +190,10 @@ public class AffineFundamentalMatrixEstimator extends
         int nPoints = mLeftPoints.size();
                 
         try {
-            ProjectiveTransformation2D leftNormalization = null,
-                    rightNormalization = null;
-            List<Point2D> leftPoints, rightPoints;
+            ProjectiveTransformation2D leftNormalization = null;
+            ProjectiveTransformation2D rightNormalization = null;
+            List<Point2D> leftPoints;
+            List<Point2D> rightPoints;
             if (mNormalizePoints) {
                 //normalize points on left view
                 Point2DNormalizer normalizer = new Point2DNormalizer(
@@ -227,10 +228,20 @@ public class AffineFundamentalMatrixEstimator extends
                 a = new Matrix(MIN_REQUIRED_POINTS, 5);
             }
             
-            Point2D leftPoint, rightPoint;
-            double homLeftX, homLeftY, homLeftW, homRightX, homRightY, 
-                    homRightW;
-            double value0, value1, value2, value3, value4, rowNorm;
+            Point2D leftPoint;
+            Point2D rightPoint;
+            double homLeftX;
+            double homLeftY;
+            double homLeftW;
+            double homRightX;
+            double homRightY;
+            double homRightW;
+            double value0;
+            double value1;
+            double value2;
+            double value3;
+            double value4;
+            double rowNorm;
             for (int i = 0; i < nPoints; i++) {
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
@@ -248,8 +259,8 @@ public class AffineFundamentalMatrixEstimator extends
                 homRightW = rightPoint.getHomW();
                 
                 //set a row values
-                value0 = homLeftW * homRightX; //homLeftX * homRightX;
-                value1 = homLeftW * homRightY; //homLeftY * homRightX;
+                value0 = homLeftW * homRightX; //homLeftX * homRightX
+                value1 = homLeftW * homRightY; //homLeftY * homRightX
                 value2 = homLeftX * homRightW;
                 value3 = homLeftY * homRightW;
                 value4 = homLeftW * homRightW;
@@ -284,18 +295,18 @@ public class AffineFundamentalMatrixEstimator extends
                 throw new FundamentalMatrixEstimatorException();
             }
             
-            Matrix V = decomposer.getV();
+            Matrix v = decomposer.getV();
             
             //The fundamental matrix is contained in vector form on the last
             //column of V, we reshape such vector into a 3x3 matrix
             Matrix fundMatrix = new Matrix(
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
-            fundMatrix.setElementAt(0, 2, V.getElementAt(0, 4));
-            fundMatrix.setElementAt(1, 2, V.getElementAt(1, 4));
-            fundMatrix.setElementAt(2, 0, V.getElementAt(2, 4));
-            fundMatrix.setElementAt(2, 1, V.getElementAt(3, 4));
-            fundMatrix.setElementAt(2, 2, V.getElementAt(4, 4));
+            fundMatrix.setElementAt(0, 2, v.getElementAt(0, 4));
+            fundMatrix.setElementAt(1, 2, v.getElementAt(1, 4));
+            fundMatrix.setElementAt(2, 0, v.getElementAt(2, 4));
+            fundMatrix.setElementAt(2, 1, v.getElementAt(3, 4));
+            fundMatrix.setElementAt(2, 2, v.getElementAt(4, 4));
             
             if (mNormalizePoints && leftNormalization != null) {
                 //denormalize fundMatrix
@@ -304,7 +315,7 @@ public class AffineFundamentalMatrixEstimator extends
                 Matrix leftTransformationMatrix = leftNormalization.asMatrix();
                 
                 //compute fundMatrix = transposedRightTransformationMatrix *
-                //fundMatrix * leftTransformationMatrix;
+                //fundMatrix * leftTransformationMatrix
                 fundMatrix.multiply(leftTransformationMatrix);
                 transposedRightTransformationMatrix.multiply(fundMatrix);
                 fundMatrix = transposedRightTransformationMatrix;
@@ -324,21 +335,21 @@ public class AffineFundamentalMatrixEstimator extends
             int rank = decomposer.getRank();
             if (rank > FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
                 //rank needs to be reduced
-                Matrix U = decomposer.getU();
-                Matrix W = decomposer.getW();
-                V = decomposer.getV();
+                Matrix u = decomposer.getU();
+                Matrix w = decomposer.getW();
+                v = decomposer.getV();
                 
                 //transpose V
-                V.transpose();
-                Matrix transV = V;
+                v.transpose();
+                Matrix transV = v;
                 
                 //set last singular value to zero to enforce rank 2
-                W.setElementAt(2, 2, 0.0);
+                w.setElementAt(2, 2, 0.0);
                 
                 //compute fundMatrix = U * W * V'
-                W.multiply(transV);
-                U.multiply(W);
-                fundMatrix = U;
+                w.multiply(transV);
+                u.multiply(w);
+                fundMatrix = u;
             } else if (rank < FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
                 //rank is 1, which is lower than required fundamental matrix 
                 //rank (rank 2)

@@ -80,7 +80,7 @@ public class GoldStandardCorrector extends Corrector {
      * the same size.
      */
     public GoldStandardCorrector(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
         mFallbackToSampsonEnabled = DEFAULT_FALLBACK_TO_SAMPSON_ENABLED;
     }
@@ -94,8 +94,7 @@ public class GoldStandardCorrector extends Corrector {
      * the same size.
      */
     public GoldStandardCorrector(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints, FundamentalMatrix fundamentalMatrix) 
-            throws IllegalArgumentException {
+            List<Point2D> rightPoints, FundamentalMatrix fundamentalMatrix) {
         super(leftPoints, rightPoints, fundamentalMatrix);
         mFallbackToSampsonEnabled = DEFAULT_FALLBACK_TO_SAMPSON_ENABLED;
     }
@@ -129,8 +128,7 @@ public class GoldStandardCorrector extends Corrector {
      * the same size.
      */
     public GoldStandardCorrector(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints, CorrectorListener listener) 
-            throws IllegalArgumentException {
+            List<Point2D> rightPoints, CorrectorListener listener) {
         super(leftPoints, rightPoints, listener);
         mFallbackToSampsonEnabled = DEFAULT_FALLBACK_TO_SAMPSON_ENABLED;
     }
@@ -146,7 +144,7 @@ public class GoldStandardCorrector extends Corrector {
      */
     public GoldStandardCorrector(List<Point2D> leftPoints, 
             List<Point2D> rightPoints, FundamentalMatrix fundamentalMatrix, 
-            CorrectorListener listener) throws IllegalArgumentException {
+            CorrectorListener listener) {
         super(leftPoints, rightPoints, fundamentalMatrix, listener);
         mFallbackToSampsonEnabled = DEFAULT_FALLBACK_TO_SAMPSON_ENABLED;
     }
@@ -212,12 +210,16 @@ public class GoldStandardCorrector extends Corrector {
             mListener.onCorrectStart(this);
         }
         
-        Point2D leftPoint, rightPoint, leftCorrectedPoint, rightCorrectedPoint;
+        Point2D leftPoint;
+        Point2D rightPoint;
+        Point2D leftCorrectedPoint;
+        Point2D rightCorrectedPoint;
         mLeftCorrectedPoints = new ArrayList<>();
         mRightCorrectedPoints = new ArrayList<>();
         
         int size = mLeftPoints.size();
-        float progress, previousProgress = 0.0f;
+        float progress;
+        float previousProgress = 0.0f;
         for (int i = 0; i < size; i++) {
             leftPoint = mLeftPoints.get(i);
             rightPoint = mRightPoints.get(i);

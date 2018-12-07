@@ -518,17 +518,17 @@ public class FundamentalMatrix implements Serializable {
         try {
             decomposer.decompose();
 
-            Matrix U = decomposer.getU();
-            Matrix V = decomposer.getV();
+            Matrix u = decomposer.getU();
+            Matrix v = decomposer.getV();
             double[] array = new double[
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH];
 
             //left epipole is the last column of V (right null-space)        
-            V.getSubmatrixAsArray(0, 2, 2, 2, array);
+            v.getSubmatrixAsArray(0, 2, 2, 2, array);
             mLeftEpipole = new HomogeneousPoint2D(array);
 
             //right epipole is the last column of U (left null-space)
-            U.getSubmatrixAsArray(0, 2, 2, 2, array);
+            u.getSubmatrixAsArray(0, 2, 2, 2, array);
             mRightEpipole = new HomogeneousPoint2D(array);
         } catch (AlgebraException e) {
             throw new InvalidFundamentalMatrixException(e);
@@ -632,7 +632,9 @@ public class FundamentalMatrix implements Serializable {
             leftCamera.setInternalMatrix(leftCameraMatrix);
             rightCamera.setInternalMatrix(rightCameraMatrix);
             
-        } catch (NotAvailableException | WrongSizeException ignore) { }
+        } catch (NotAvailableException | WrongSizeException ignore) {
+            //never happens
+        }
     }
     
     /**
