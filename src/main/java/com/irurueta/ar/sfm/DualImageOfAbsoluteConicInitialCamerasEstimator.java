@@ -141,8 +141,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * size.
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         super();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -157,7 +156,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super(fundamentalMatrix);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }    
@@ -192,8 +191,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             List<Point2D> leftPoints, List<Point2D> rightPoints,
-            InitialCamerasEstimatorListener listener) 
-            throws IllegalArgumentException {
+            InitialCamerasEstimatorListener listener) {
         super(listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -209,8 +207,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, List<Point2D> leftPoints, 
-            List<Point2D> rightPoints, InitialCamerasEstimatorListener listener)
-            throws IllegalArgumentException {
+            List<Point2D> rightPoints, InitialCamerasEstimatorListener listener) {
         super(fundamentalMatrix, listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }    
@@ -446,8 +443,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * size.
      */
     public void setLeftAndRightPoints(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws LockedException, 
-            IllegalArgumentException {
+            List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -584,8 +580,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             double principalPointY, List<Point2D> leftPoints, 
             List<Point2D> rightPoints, PinholeCamera leftCamera, 
             PinholeCamera rightCamera) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, 
                 principalPointX, principalPointY, leftPoints, rightPoints, 
@@ -638,8 +633,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             double principalPointY, List<Point2D> leftPoints, 
             List<Point2D> rightPoints, CorrectorType correctorType, 
             PinholeCamera leftCamera, PinholeCamera rightCamera) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, 
                 principalPointX, principalPointY, leftPoints, rightPoints, 
@@ -693,8 +687,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             List<Point2D> rightPoints, PinholeCamera leftCamera, 
             PinholeCamera rightCamera, List<Point3D> triangulatedPoints, 
             BitSet validTriangulatedPoints) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
                 principalPointX, principalPointY, leftPoints, rightPoints, 
@@ -753,8 +746,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             List<Point2D> rightPoints, CorrectorType correctorType, 
             PinholeCamera leftCamera, PinholeCamera rightCamera, 
             List<Point3D> triangulatedPoints, BitSet validTriangulatedPoints) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, 
                 principalPointX, principalPointY,
@@ -809,8 +801,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             double principalPointY, double aspectRatio,
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             PinholeCamera leftCamera, PinholeCamera rightCamera) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, 
                 principalPointX, principalPointY, aspectRatio, leftPoints, 
@@ -867,8 +858,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             CorrectorType correctorType, PinholeCamera leftCamera, 
             PinholeCamera rightCamera) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, 
                 principalPointX, principalPointY, aspectRatio, leftPoints, 
@@ -926,8 +916,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             PinholeCamera leftCamera, PinholeCamera rightCamera, 
             List<Point3D> triangulatedPoints, BitSet validTriangulatedPoints) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
                 principalPointX, principalPointY, aspectRatio, leftPoints, 
@@ -989,8 +978,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             CorrectorType correctorType, PinholeCamera leftCamera, 
             PinholeCamera rightCamera, List<Point3D> triangulatedPoints, 
             BitSet validTriangulatedPoints) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         try {
             KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
@@ -1029,7 +1017,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * size.
      */
     private void internalSetLeftAndRightPoints(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         if (leftPoints == null || rightPoints == null || 
                 leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();

@@ -83,11 +83,6 @@ public class EstimatedFundamentalMatrix implements Serializable {
     private List<Sample2D> mRightSamples;
         
     /**
-     * Constructor.
-     */
-    public EstimatedFundamentalMatrix() { }
-    
-    /**
      * Gets id to identify this instance. This is useful in case that this data 
      * is stored in some sort of database and must be set externally.
      * @return id to identify this instance.

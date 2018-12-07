@@ -60,11 +60,6 @@ public class EstimatedCamera implements Serializable {
     private Matrix mCovariance;
     
     /**
-     * Constructor.
-     */
-    public EstimatedCamera() { }
-    
-    /**
      * Gets id to identify this instance. This is useful in case that this data
      * is stored in some sort of database and must be set externally.
      * @return id to identify this instance.

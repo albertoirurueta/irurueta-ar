@@ -158,7 +158,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * size.
      */
     public EssentialMatrixInitialCamerasEstimator(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -173,7 +173,7 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public EssentialMatrixInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         super(fundamentalMatrix);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }    
@@ -192,8 +192,7 @@ public class EssentialMatrixInitialCamerasEstimator
     public EssentialMatrixInitialCamerasEstimator(
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic, 
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this(leftIntrinsic, rightIntrinsic);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -214,8 +213,7 @@ public class EssentialMatrixInitialCamerasEstimator
             FundamentalMatrix fundamentalMatrix, 
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic, 
-            List<Point2D> leftPoints, List<Point2D> rightPoints) 
-            throws IllegalArgumentException {
+            List<Point2D> leftPoints, List<Point2D> rightPoints) {
         this(fundamentalMatrix, leftIntrinsic, rightIntrinsic);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -285,8 +283,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param listener listener to handle events raised by this instance.
      */
     public EssentialMatrixInitialCamerasEstimator(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints, InitialCamerasEstimatorListener listener)
-            throws IllegalArgumentException {
+            List<Point2D> rightPoints, InitialCamerasEstimatorListener listener) {
         super(listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -302,8 +299,7 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public EssentialMatrixInitialCamerasEstimator(
             FundamentalMatrix fundamentalMatrix, List<Point2D> leftPoints, 
-            List<Point2D> rightPoints, InitialCamerasEstimatorListener listener)
-            throws IllegalArgumentException {
+            List<Point2D> rightPoints, InitialCamerasEstimatorListener listener) {
         super(fundamentalMatrix, listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }    
@@ -324,8 +320,7 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic, 
             List<Point2D> leftPoints, List<Point2D> rightPoints,
-            InitialCamerasEstimatorListener listener) 
-            throws IllegalArgumentException {
+            InitialCamerasEstimatorListener listener) {
         this(leftIntrinsic, rightIntrinsic, listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -348,8 +343,7 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters leftIntrinsic,
             PinholeCameraIntrinsicParameters rightIntrinsic, 
             List<Point2D> leftPoints, List<Point2D> rightPoints,
-            InitialCamerasEstimatorListener listener) 
-            throws IllegalArgumentException {
+            InitialCamerasEstimatorListener listener) {
         this(fundamentalMatrix, leftIntrinsic, rightIntrinsic, listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }    
@@ -569,8 +563,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * size.
      */
     public void setLeftAndRightPoints(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws LockedException, 
-            IllegalArgumentException {
+            List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -700,8 +693,7 @@ public class EssentialMatrixInitialCamerasEstimator
             PinholeCameraIntrinsicParameters rightIntrinsic,
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             PinholeCamera leftCamera, PinholeCamera rightCamera) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         return generateInitialMetricCamerasFromEssentialMatrix(
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints,
                 rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
@@ -747,8 +739,7 @@ public class EssentialMatrixInitialCamerasEstimator
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             CorrectorType correctorType, PinholeCamera leftCamera, 
             PinholeCamera rightCamera) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         return generateInitialMetricCamerasFromEssentialMatrix(
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, 
                 rightPoints, correctorType, leftCamera, rightCamera, null, 
@@ -795,8 +786,7 @@ public class EssentialMatrixInitialCamerasEstimator
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             PinholeCamera leftCamera, PinholeCamera rightCamera, 
             List<Point3D> triangulatedPoints, BitSet validTriangulatedPoints) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         return generateInitialMetricCamerasFromEssentialMatrix(
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints,
@@ -848,17 +838,19 @@ public class EssentialMatrixInitialCamerasEstimator
             CorrectorType correctorType, PinholeCamera leftCamera, 
             PinholeCamera rightCamera, List<Point3D> triangulatedPoints,
             BitSet validTriangulatedPoints) 
-            throws InitialCamerasEstimationFailedException, 
-            IllegalArgumentException {
+            throws InitialCamerasEstimationFailedException {
         
         if (leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException(
                     "left and right points must have the same size");
         }
         
-        List<Point2D> correctedLeftPoints, correctedRightPoints;
-        Rotation3D rotation1, rotation2;
-        Point2D translation1, translation2;
+        List<Point2D> correctedLeftPoints;
+        List<Point2D> correctedRightPoints;
+        Rotation3D rotation1;
+        Rotation3D rotation2;
+        Point2D translation1;
+        Point2D translation2;
         try {
             EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix, 
                 leftIntrinsic, rightIntrinsic);
@@ -1041,7 +1033,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * size.
      */
     private void internalSetLeftAndRightPoints(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         if (leftPoints == null || rightPoints == null || 
                 leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();
@@ -1199,7 +1191,8 @@ public class EssentialMatrixInitialCamerasEstimator
         List<Point2D> points = new ArrayList<>();
         List<PinholeCamera> cameras = new ArrayList<>();
         Point3D triangulatedPoint;
-        boolean frontLeft, frontRight;
+        boolean frontLeft;
+        boolean frontRight;
         for (int i = 0; i < numPoints; i++) {
             leftPoint = leftPoints.get(i);
             rightPoint = rightPoints.get(i);

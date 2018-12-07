@@ -43,8 +43,7 @@ public class KnownBaselineSparseReconstructor extends
      */
     public KnownBaselineSparseReconstructor(
             KnownBaselineSparseReconstructorConfiguration configuration,
-            KnownBaselineSparseReconstructorListener listener)
-            throws NullPointerException {
+            KnownBaselineSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -54,8 +53,7 @@ public class KnownBaselineSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public KnownBaselineSparseReconstructor(
-            KnownBaselineSparseReconstructorListener listener)
-            throws NullPointerException {
+            KnownBaselineSparseReconstructorListener listener) {
         this(new KnownBaselineSparseReconstructorConfiguration(), listener);
     }
 

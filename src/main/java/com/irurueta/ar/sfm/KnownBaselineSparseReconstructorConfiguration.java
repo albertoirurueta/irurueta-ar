@@ -42,11 +42,6 @@ public class KnownBaselineSparseReconstructorConfiguration extends
     private double mBaseline = DEFAULT_BASELINE;
 
     /**
-     * Constructor.
-     */
-    public KnownBaselineSparseReconstructorConfiguration() { }
-
-    /**
      * Creates an instance of a multiple view sparse reconstructor configuration with
      * known camera baseline.
      * @return configuration instance.
