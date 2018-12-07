@@ -627,7 +627,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                     
                     //if epipolar line does not intersect second image, we need
                     //to repeat with a different sample
-<span class="pc bpc" id="L630" title="8 of 16 branches missed.">                    repeat = (((yMinX &lt; mMinY) &amp;&amp; (yMaxX &lt; mMinY)) || ((yMinX &gt; mMaxY) &amp;&amp;</span>
+<span class="pc bpc" id="L630" title="4 of 16 branches missed.">                    repeat = (((yMinX &lt; mMinY) &amp;&amp; (yMaxX &lt; mMinY)) || ((yMinX &gt; mMaxY) &amp;&amp;</span>
                         (yMaxX &gt; mMaxY)) || ((xMinY &lt; mMinX) &amp;&amp; (xMaxY &lt; mMinX)) ||
                         ((xMinY &gt; mMaxX) &amp;&amp; (xMaxY &gt; mMaxX)));
 <span class="fc" id="L633">                    counter++;</span>
@@ -653,7 +653,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                 
                 //if point lies outside retinal plane limits, try setting random
                 //vertical component within provided disparity
-<span class="pc bpc" id="L656" title="1 of 4 branches missed.">                if ((inhomY &lt; mMinY) || (inhomY &gt; mMaxY)) {</span>
+<span class="fc bfc" id="L656" title="All 4 branches covered.">                if ((inhomY &lt; mMinY) || (inhomY &gt; mMaxY)) {</span>
 <span class="fc" id="L657">                    inhomY = m1.getInhomY() + randomizer.nextDouble(</span>
                             minVerticalDisparity, maxVerticalDisparity);
 <span class="fc" id="L659">                    inhomX = -(inhomY * l2real.getB() + l2real.getC()) /</span>
@@ -720,7 +720,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                     
                     //if epipolar line does not intersect second image, we need
                     //to repeat with a different sample
-<span class="pc bpc" id="L723" title="8 of 16 branches missed.">                    repeat = (((yMinX &lt; mMinY) &amp;&amp; (yMaxX &lt; mMinY)) || ((yMinX &gt; mMaxY) &amp;&amp;</span>
+<span class="pc bpc" id="L723" title="4 of 16 branches missed.">                    repeat = (((yMinX &lt; mMinY) &amp;&amp; (yMaxX &lt; mMinY)) || ((yMinX &gt; mMaxY) &amp;&amp;</span>
                         (yMaxX &gt; mMaxY)) || ((xMinY &lt; mMinX) &amp;&amp; (xMaxY &lt; mMinX)) ||
                     ((xMinY &gt; mMaxX) &amp;&amp; (xMaxY &gt; mMaxX)));
 <span class="fc" id="L726">                    counter++;</span>

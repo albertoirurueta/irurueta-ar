@@ -307,8 +307,8 @@ public class LMSEDualAbsoluteQuadricEstimator extends
 <span class="fc" id="L307">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
 <span class="fc" id="L308">            enforceRank3IfNeeded(decomposer, result);</span>
             
-<span class="nc" id="L310">        } catch (AlgebraException | NumericalException e) {</span>
-<span class="nc" id="L311">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="fc" id="L310">        } catch (AlgebraException | NumericalException e) {</span>
+<span class="fc" id="L311">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
 <span class="fc" id="L312">        }</span>
 <span class="fc" id="L313">    }</span>
     

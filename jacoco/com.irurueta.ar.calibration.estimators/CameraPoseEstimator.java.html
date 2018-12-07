@@ -32,7 +32,7 @@ import com.irurueta.geometry.*;
  * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical 
  * Report. MSR-TR-98-71. December 2, 1998
  */
-public class CameraPoseEstimator {
+<span class="fc" id="L35">public class CameraPoseEstimator {</span>
     
     /**
      * Estimated camera rotation.
@@ -48,12 +48,7 @@ public class CameraPoseEstimator {
      * Estimated camera.
      */
     private PinholeCamera mCamera;
-    
-    /**
-     * Constructor.
-     */
-<span class="fc" id="L55">    public CameraPoseEstimator() { }</span>
-    
+
     /**
      * Estimates camera posed based on provided intrinsic parameters and
      * 2D homography.
@@ -65,18 +60,18 @@ public class CameraPoseEstimator {
     public void estimate(PinholeCameraIntrinsicParameters intrinsic,
             Transformation2D homography) throws AlgebraException, 
             GeometryException {
-<span class="fc" id="L68">        mRotation = new MatrixRotation3D();</span>
-<span class="fc" id="L69">        mCameraCenter = Point3D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
-<span class="fc" id="L70">        mCamera = new PinholeCamera();</span>
-<span class="fc" id="L71">        estimate(intrinsic, homography, mRotation, mCameraCenter, mCamera);</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L63">        mRotation = new MatrixRotation3D();</span>
+<span class="fc" id="L64">        mCameraCenter = Point3D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L65">        mCamera = new PinholeCamera();</span>
+<span class="fc" id="L66">        estimate(intrinsic, homography, mRotation, mCameraCenter, mCamera);</span>
+<span class="fc" id="L67">    }</span>
     
     /**
      * Returns estimated camera rotation.
      * @return estimated camera rotation.
      */
     public Rotation3D getRotation() {
-<span class="fc" id="L79">        return mRotation;</span>
+<span class="fc" id="L74">        return mRotation;</span>
     }
     
     /**
@@ -84,7 +79,7 @@ public class CameraPoseEstimator {
      * @return estimated camera center.
      */
     public Point3D getCameraCenter() {
-<span class="fc" id="L87">        return mCameraCenter;</span>
+<span class="fc" id="L82">        return mCameraCenter;</span>
     }
     
     /**
@@ -92,7 +87,7 @@ public class CameraPoseEstimator {
      * @return estimated camera.
      */
     public PinholeCamera getCamera() {
-<span class="fc" id="L95">        return mCamera;</span>
+<span class="fc" id="L90">        return mCamera;</span>
     }
             
     /**
@@ -115,50 +110,49 @@ public class CameraPoseEstimator {
         
         //inverse of intrinsic parameters matrix
 
-        //what follows next is equivalent to Utils.inverse(
-        //intrinsic.getInternalMatrix());
-<span class="fc" id="L120">        Matrix intrinsicInvMatrix = intrinsic.getInverseInternalMatrix();</span>
+        //what follows next is equivalent to Utils.inverse(intrinsic.getInternalMatrix())
+<span class="fc" id="L114">        Matrix intrinsicInvMatrix = intrinsic.getInverseInternalMatrix();</span>
                 
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if(homography instanceof ProjectiveTransformation2D){</span>
-<span class="fc" id="L123">            ((ProjectiveTransformation2D)homography).normalize();</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if(homography instanceof ProjectiveTransformation2D){</span>
+<span class="fc" id="L117">            ((ProjectiveTransformation2D)homography).normalize();</span>
         }
-<span class="fc" id="L125">        Matrix homographyMatrix = homography.asMatrix();</span>
+<span class="fc" id="L119">        Matrix homographyMatrix = homography.asMatrix();</span>
 
-<span class="fc" id="L127">        Matrix h1 = homographyMatrix.getSubmatrix(0, 0, 2, 0);</span>
-<span class="fc" id="L128">        Matrix h2 = homographyMatrix.getSubmatrix(0, 1, 2, 1);</span>
-<span class="fc" id="L129">        Matrix h3 = homographyMatrix.getSubmatrix(0, 2, 2, 2);</span>
+<span class="fc" id="L121">        Matrix h1 = homographyMatrix.getSubmatrix(0, 0, 2, 0);</span>
+<span class="fc" id="L122">        Matrix h2 = homographyMatrix.getSubmatrix(0, 1, 2, 1);</span>
+<span class="fc" id="L123">        Matrix h3 = homographyMatrix.getSubmatrix(0, 2, 2, 2);</span>
 
-<span class="fc" id="L131">        Matrix matR1 = intrinsicInvMatrix.multiplyAndReturnNew(h1);</span>
-<span class="fc" id="L132">        Matrix matR2 = intrinsicInvMatrix.multiplyAndReturnNew(h2);</span>
-<span class="fc" id="L133">        Matrix matT = intrinsicInvMatrix.multiplyAndReturnNew(h3);</span>
+<span class="fc" id="L125">        Matrix matR1 = intrinsicInvMatrix.multiplyAndReturnNew(h1);</span>
+<span class="fc" id="L126">        Matrix matR2 = intrinsicInvMatrix.multiplyAndReturnNew(h2);</span>
+<span class="fc" id="L127">        Matrix matT = intrinsicInvMatrix.multiplyAndReturnNew(h3);</span>
 
         //because rotation matrices are orthonormal, we find norm of 1st or
         //2nd column (both should be equal, except for rounding errors) 
         //to normalize columns 1 and 2.
         //Because norms might not be equal, we use average or norms of matR1 and 
         //matR2
-<span class="fc" id="L140">        double norm1 = Utils.normF(matR1);</span>
-<span class="fc" id="L141">        double norm2 = Utils.normF(matR2);</span>
-<span class="fc" id="L142">        double invNorm = 2.0/(norm1 + norm2);</span>
-<span class="fc" id="L143">        matR1.multiplyByScalar(invNorm);</span>
-<span class="fc" id="L144">        matR2.multiplyByScalar(invNorm);</span>
+<span class="fc" id="L134">        double norm1 = Utils.normF(matR1);</span>
+<span class="fc" id="L135">        double norm2 = Utils.normF(matR2);</span>
+<span class="fc" id="L136">        double invNorm = 2.0/(norm1 + norm2);</span>
+<span class="fc" id="L137">        matR1.multiplyByScalar(invNorm);</span>
+<span class="fc" id="L138">        matR2.multiplyByScalar(invNorm);</span>
 
         //also normalize translation term, since pinhole camera is defined
         //up to scale
-<span class="fc" id="L148">        matT.multiplyByScalar(invNorm);</span>
+<span class="fc" id="L142">        matT.multiplyByScalar(invNorm);</span>
 
-<span class="fc" id="L150">        double[] r1 = matR1.getBuffer();</span>
-<span class="fc" id="L151">        double[] r2 = matR2.getBuffer();</span>
+<span class="fc" id="L144">        double[] r1 = matR1.getBuffer();</span>
+<span class="fc" id="L145">        double[] r2 = matR2.getBuffer();</span>
 
         //3rd column of rotation must be orthogonal to 1st and 2nd columns and
         //also have norm 1, because rotations are orthonormal
-<span class="fc" id="L155">        double[] r3 = Utils.crossProduct(r1, r2);</span>
-<span class="fc" id="L156">        ArrayUtils.normalize(r3);</span>
+<span class="fc" id="L149">        double[] r3 = Utils.crossProduct(r1, r2);</span>
+<span class="fc" id="L150">        ArrayUtils.normalize(r3);</span>
         
-<span class="fc" id="L158">        Matrix rot = new Matrix(3, 3);</span>
-<span class="fc" id="L159">        rot.setSubmatrix(0, 0, 2, 0, r1);</span>
-<span class="fc" id="L160">        rot.setSubmatrix(0, 1, 2, 1, r2);</span>
-<span class="fc" id="L161">        rot.setSubmatrix(0, 2, 2, 2, r3);</span>
+<span class="fc" id="L152">        Matrix rot = new Matrix(3, 3);</span>
+<span class="fc" id="L153">        rot.setSubmatrix(0, 0, 2, 0, r1);</span>
+<span class="fc" id="L154">        rot.setSubmatrix(0, 1, 2, 1, r2);</span>
+<span class="fc" id="L155">        rot.setSubmatrix(0, 2, 2, 2, r3);</span>
 
         //because of noise in data during the estimation of both the homography
         //and the intrinsic parameters, it might happen that r1 and r2 are not 
@@ -166,43 +160,43 @@ public class CameraPoseEstimator {
         //the closest orthonormal matrix to ensure that it is a valid rotation
         //matrix. This is done by obtaining the SVD decomposition and setting
         //all singular values to one, so that R = U*S*V' = U*V', S = I
-<span class="fc" id="L169">        SingularValueDecomposer decomposer = </span>
+<span class="fc" id="L163">        SingularValueDecomposer decomposer = </span>
                 new SingularValueDecomposer(rot);
-<span class="fc" id="L171">        decomposer.decompose();</span>
-<span class="fc" id="L172">        Matrix U = decomposer.getU();</span>
-<span class="fc" id="L173">        Matrix V = decomposer.getV();</span>
-<span class="fc" id="L174">        V.transpose();</span>
+<span class="fc" id="L165">        decomposer.decompose();</span>
+<span class="fc" id="L166">        Matrix u = decomposer.getU();</span>
+<span class="fc" id="L167">        Matrix v = decomposer.getV();</span>
+<span class="fc" id="L168">        v.transpose();</span>
 
         //U and V are orthonormal, hence U*V' is also orthonormal and can be
         //considered a rotation (up to sign)
-<span class="fc" id="L178">        U.multiply(V, rot);</span>
+<span class="fc" id="L172">        u.multiply(v, rot);</span>
         
         //we need to ensure that rotation has determinant equal to 1, otherwise
         //we change sign
-<span class="fc" id="L182">        double det = Utils.det(rot);</span>
-<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (det &lt; 0.0) {</span>
-<span class="fc" id="L184">            rot.multiplyByScalar(-1.0);</span>
+<span class="fc" id="L176">        double det = Utils.det(rot);</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (det &lt; 0.0) {</span>
+<span class="fc" id="L178">            rot.multiplyByScalar(-1.0);</span>
         }
 
-<span class="fc" id="L187">        estimatedRotation.fromMatrix(rot);</span>
+<span class="fc" id="L181">        estimatedRotation.fromMatrix(rot);</span>
 
         //camera center
 
         //t = K^-1*h3 = -R*C --&gt; C=-R^-1*t=-R'*t
         //p4 = -K*R*C = K*t = K*K^-1*h3 = h3 --&gt; C= -(K*R)^-1*h3
-<span class="fc" id="L193">        Matrix invRot = rot.transposeAndReturnNew();</span>
-<span class="fc" id="L194">        invRot.multiply(matT);</span>
-<span class="fc" id="L195">        invRot.multiplyByScalar(-1.0);</span>
+<span class="fc" id="L187">        Matrix invRot = rot.transposeAndReturnNew();</span>
+<span class="fc" id="L188">        invRot.multiply(matT);</span>
+<span class="fc" id="L189">        invRot.multiplyByScalar(-1.0);</span>
 
-<span class="fc" id="L197">        double[] centerBuffer = invRot.getBuffer();</span>
-<span class="fc" id="L198">        estimatedCameraCenter.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L191">        double[] centerBuffer = invRot.getBuffer();</span>
+<span class="fc" id="L192">        estimatedCameraCenter.setInhomogeneousCoordinates(</span>
                 centerBuffer[0], centerBuffer[1], centerBuffer[2]);
         
         //check that origin of coordinates (which is typically one of the
         //pattern points) is located in front of the camera, otherwise
         //fix camera        
-<span class="fc" id="L204">        estimatedCamera.setIntrinsicAndExtrinsicParameters(intrinsic, </span>
+<span class="fc" id="L198">        estimatedCamera.setIntrinsicAndExtrinsicParameters(intrinsic, </span>
                 estimatedRotation, estimatedCameraCenter);        
-<span class="fc" id="L206">    }    </span>
+<span class="fc" id="L200">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

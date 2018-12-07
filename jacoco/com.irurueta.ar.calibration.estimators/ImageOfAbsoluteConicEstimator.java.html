@@ -186,11 +186,10 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if not enough homographies are provided
      * for default settings. Hence, at least 1 homography must be provided.
      */
-    public ImageOfAbsoluteConicEstimator(List&lt;Transformation2D&gt; homographies)
-            throws IllegalArgumentException {
-<span class="fc" id="L191">        this();</span>
-<span class="fc" id="L192">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L193">    }</span>
+    public ImageOfAbsoluteConicEstimator(List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L190">        this();</span>
+<span class="fc" id="L191">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L192">    }</span>
     
     /**
      * Constructor.
@@ -203,11 +202,10 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * for default settings. Hence, at least 1 homography must be provided.
      */
     public ImageOfAbsoluteConicEstimator(List&lt;Transformation2D&gt; homographies,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L208">        this(listener);</span>
-<span class="fc" id="L209">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L210">    }</span>
+            ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L206">        this(listener);</span>
+<span class="fc" id="L207">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L208">    }</span>
     
     /**
      * Returns boolean indicating whether camera skewness is assumed to be zero
@@ -219,7 +217,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * skewness is estimated.
      */
     public boolean isZeroSkewness() {
-<span class="fc" id="L222">        return mZeroSkewness;</span>
+<span class="fc" id="L220">        return mZeroSkewness;</span>
     }
     
     /**
@@ -233,12 +231,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setZeroSkewness(boolean zeroSkewness) throws LockedException {
-<span class="fc bfc" id="L236" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L237">            throw new LockedException();</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L235">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L240">        mZeroSkewness = zeroSkewness;</span>
-<span class="fc" id="L241">    }</span>
+<span class="fc" id="L238">        mZeroSkewness = zeroSkewness;</span>
+<span class="fc" id="L239">    }</span>
 
     /**
      * Returns boolean indicating whether principal point is assumed to be at
@@ -250,7 +248,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * coordinates, false if principal point must be estimated.
      */
     public boolean isPrincipalPointAtOrigin() {
-<span class="fc" id="L253">        return mPrincipalPointAtOrigin;</span>
+<span class="fc" id="L251">        return mPrincipalPointAtOrigin;</span>
     }
     
     /**
@@ -265,12 +263,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */
     public void setPrincipalPointAtOrigin(boolean principalPointAtOrigin)
             throws LockedException {
-<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L269">            throw new LockedException();</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L267">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L272">        mPrincipalPointAtOrigin = principalPointAtOrigin;</span>
-<span class="fc" id="L273">    }</span>
+<span class="fc" id="L270">        mPrincipalPointAtOrigin = principalPointAtOrigin;</span>
+<span class="fc" id="L271">    }</span>
     
     /**
      * Returns boolean indicating whether aspect ratio of focal distances (i.e.
@@ -284,7 +282,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
     public boolean isFocalDistanceAspectRatioKnown() {
-<span class="fc" id="L287">        return mFocalDistanceAspectRatioKnown;</span>
+<span class="fc" id="L285">        return mFocalDistanceAspectRatioKnown;</span>
     }
     
     /**
@@ -302,12 +300,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */
     public void setFocalDistanceAspectRatioKnown(
             boolean focalDistanceAspectRatioKnown) throws LockedException {
-<span class="pc bpc" id="L305" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L306">            throw new LockedException();</span>
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L304">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L309">        mFocalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;</span>
-<span class="fc" id="L310">    }</span>
+<span class="fc" id="L307">        mFocalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;</span>
+<span class="fc" id="L308">    }</span>
     
     /**
      * Returns aspect ratio of focal distances (i.e. vertical focal distance
@@ -328,7 +326,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return aspect ratio of focal distances.
      */
     public double getFocalDistanceAspectRatio() {
-<span class="fc" id="L331">        return mFocalDistanceAspectRatio;</span>
+<span class="fc" id="L329">        return mFocalDistanceAspectRatio;</span>
     }
     
     /**
@@ -353,17 +351,18 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if focal distance aspect ratio is too 
      * close to zero, as it might produce numerical instabilities.
      */
+    @SuppressWarnings(&quot;Duplicates&quot;)
     public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
-            throws LockedException, IllegalArgumentException {
-<span class="pc bpc" id="L358" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L359">            throw new LockedException();</span>
+            throws LockedException {
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L358">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L361" title="All 2 branches covered.">        if (Math.abs(focalDistanceAspectRatio) &lt; MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {</span>
-<span class="fc" id="L362">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">        if (Math.abs(focalDistanceAspectRatio) &lt; MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {</span>
+<span class="fc" id="L361">            throw new IllegalArgumentException();</span>
         }
 
-<span class="fc" id="L365">        mFocalDistanceAspectRatio = focalDistanceAspectRatio;</span>
-<span class="fc" id="L366">    }    </span>
+<span class="fc" id="L364">        mFocalDistanceAspectRatio = focalDistanceAspectRatio;</span>
+<span class="fc" id="L365">    }    </span>
     
     /**
      * Indicates whether this instance is locked.
@@ -371,7 +370,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L374">        return mLocked;</span>
+<span class="fc" id="L373">        return mLocked;</span>
     }
 
     /**
@@ -380,7 +379,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return listener to be notified of events.
      */
     public ImageOfAbsoluteConicEstimatorListener getListener() {
-<span class="fc" id="L383">        return mListener;</span>
+<span class="fc" id="L382">        return mListener;</span>
     }
     
     /**
@@ -391,18 +390,18 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */
     public void setListener(ImageOfAbsoluteConicEstimatorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L394" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L395">            throw new LockedException();</span>
+<span class="fc bfc" id="L393" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L394">            throw new LockedException();</span>
         }
-<span class="fc" id="L397">        mListener = listener;</span>
-<span class="fc" id="L398">    }</span>
+<span class="fc" id="L396">        mListener = listener;</span>
+<span class="fc" id="L397">    }</span>
     
     /**
      * Gets list of homographies to estimate IAC.
      * @return list of homographies to estimate IAC.
      */
     public List&lt;Transformation2D&gt; getHomographies() {
-<span class="fc" id="L405">        return mHomographies;</span>
+<span class="fc" id="L404">        return mHomographies;</span>
     }
     
     /**
@@ -413,12 +412,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * contain enough elements to estimate the IAC using current settings.
      */
     public void setHomographies(List&lt;Transformation2D&gt; homographies)
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L417" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L418">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L416" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L417">            throw new LockedException();</span>
         }
-<span class="fc" id="L420">        internalSetHomographies(homographies);</span>
-<span class="fc" id="L421">    }</span>
+<span class="fc" id="L419">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L420">    }</span>
     
     /**
      * Returns minimum number of required homographies needed to estimate the
@@ -435,18 +434,18 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * IAC
      */
     public int getMinNumberOfRequiredHomographies() {        
-<span class="fc" id="L438">        int numEquations = MIN_REQUIRED_EQUATIONS;</span>
-<span class="fc bfc" id="L439" title="All 2 branches covered.">        if (mZeroSkewness) {</span>
-<span class="fc bfc" id="L440" title="All 2 branches covered.">            if (mFocalDistanceAspectRatioKnown) {</span>
-<span class="fc" id="L441">                numEquations--;</span>
+<span class="fc" id="L437">        int numEquations = MIN_REQUIRED_EQUATIONS;</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        if (mZeroSkewness) {</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">            if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L440">                numEquations--;</span>
             }
-<span class="fc" id="L443">            numEquations--;</span>
+<span class="fc" id="L442">            numEquations--;</span>
         }
-<span class="fc bfc" id="L445" title="All 2 branches covered.">        if (mPrincipalPointAtOrigin) {</span>
-<span class="fc" id="L446">            numEquations -= 2;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (mPrincipalPointAtOrigin) {</span>
+<span class="fc" id="L445">            numEquations -= 2;</span>
         }
         
-<span class="fc" id="L449">        return (numEquations / 2) + (numEquations % 2);</span>
+<span class="fc" id="L448">        return (numEquations / 2) + (numEquations % 2);</span>
     }
     
     /**
@@ -457,8 +456,8 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="fc bfc" id="L460" title="All 2 branches covered.">        return mHomographies != null &amp;&amp; </span>
-<span class="pc bpc" id="L461" title="1 of 2 branches missed.">                mHomographies.size() &gt;= getMinNumberOfRequiredHomographies();</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">        return mHomographies != null &amp;&amp; </span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">                mHomographies.size() &gt;= getMinNumberOfRequiredHomographies();</span>
     }
     
     /**
@@ -490,7 +489,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return an instance of an IAC estimator.
      */
     public static ImageOfAbsoluteConicEstimator create() {
-<span class="fc" id="L493">        return create(DEFAULT_ESTIMATOR_TYPE);</span>
+<span class="fc" id="L492">        return create(DEFAULT_ESTIMATOR_TYPE);</span>
     }
     
     /**
@@ -502,7 +501,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */
     public static ImageOfAbsoluteConicEstimator create(
             ImageOfAbsoluteConicEstimatorListener listener) {
-<span class="fc" id="L505">        return create(listener, DEFAULT_ESTIMATOR_TYPE);</span>
+<span class="fc" id="L504">        return create(listener, DEFAULT_ESTIMATOR_TYPE);</span>
     }
     
     /**
@@ -515,9 +514,8 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * for default IAC estimation constraints.
      */
     public static ImageOfAbsoluteConicEstimator create(
-            List&lt;Transformation2D&gt; homographies) 
-            throws IllegalArgumentException {
-<span class="fc" id="L520">        return create(homographies, DEFAULT_ESTIMATOR_TYPE);</span>
+            List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L518">        return create(homographies, DEFAULT_ESTIMATOR_TYPE);</span>
     }
 
     /**
@@ -534,9 +532,8 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */    
     public static ImageOfAbsoluteConicEstimator create(
             List&lt;Transformation2D&gt; homographies,
-            ImageOfAbsoluteConicEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L539">        return create(homographies, listener, DEFAULT_ESTIMATOR_TYPE);</span>
+            ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L536">        return create(homographies, listener, DEFAULT_ESTIMATOR_TYPE);</span>
     }
     
     
@@ -547,12 +544,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */
     public static ImageOfAbsoluteConicEstimator create(
             ImageOfAbsoluteConicEstimatorType type) {
-<span class="fc bfc" id="L550" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L547" title="All 2 branches covered.">        switch (type) {</span>
             case WEIGHTED_IAC_ESTIMATOR:
-<span class="fc" id="L552">                return new WeightedImageOfAbsoluteConicEstimator();</span>
+<span class="fc" id="L549">                return new WeightedImageOfAbsoluteConicEstimator();</span>
             case LMSE_IAC_ESTIMATOR:
             default:
-<span class="fc" id="L555">                return new LMSEImageOfAbsoluteConicEstimator();</span>
+<span class="fc" id="L552">                return new LMSEImageOfAbsoluteConicEstimator();</span>
         }
     }
     
@@ -567,12 +564,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
     public static ImageOfAbsoluteConicEstimator create(
             ImageOfAbsoluteConicEstimatorListener listener, 
             ImageOfAbsoluteConicEstimatorType type) {
-<span class="fc bfc" id="L570" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L567" title="All 2 branches covered.">        switch (type) {</span>
             case WEIGHTED_IAC_ESTIMATOR:
-<span class="fc" id="L572">                return new WeightedImageOfAbsoluteConicEstimator(listener);</span>
+<span class="fc" id="L569">                return new WeightedImageOfAbsoluteConicEstimator(listener);</span>
             case LMSE_IAC_ESTIMATOR:
             default:
-<span class="fc" id="L575">                return new LMSEImageOfAbsoluteConicEstimator(listener);</span>
+<span class="fc" id="L572">                return new LMSEImageOfAbsoluteConicEstimator(listener);</span>
         }
     }
     
@@ -589,17 +586,16 @@ public abstract class ImageOfAbsoluteConicEstimator {
      */            
     public static ImageOfAbsoluteConicEstimator create(
             List&lt;Transformation2D&gt; homographies, 
-            ImageOfAbsoluteConicEstimatorType type) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L594" title="All 2 branches covered.">        switch (type) {</span>
+            ImageOfAbsoluteConicEstimatorType type) {
+<span class="fc bfc" id="L590" title="All 2 branches covered.">        switch (type) {</span>
             case WEIGHTED_IAC_ESTIMATOR:
-<span class="fc" id="L596">                double[] weights = new double[homographies.size()];</span>
-<span class="fc" id="L597">                Arrays.fill(weights, 1.0);</span>
-<span class="fc" id="L598">                return new WeightedImageOfAbsoluteConicEstimator(homographies, </span>
+<span class="fc" id="L592">                double[] weights = new double[homographies.size()];</span>
+<span class="fc" id="L593">                Arrays.fill(weights, 1.0);</span>
+<span class="fc" id="L594">                return new WeightedImageOfAbsoluteConicEstimator(homographies, </span>
                         weights);
             case LMSE_IAC_ESTIMATOR:
             default:
-<span class="fc" id="L602">                return new LMSEImageOfAbsoluteConicEstimator(homographies);</span>
+<span class="fc" id="L598">                return new LMSEImageOfAbsoluteConicEstimator(homographies);</span>
         }
     }
     
@@ -619,17 +615,16 @@ public abstract class ImageOfAbsoluteConicEstimator {
     public static ImageOfAbsoluteConicEstimator create(
             List&lt;Transformation2D&gt; homographies,
             ImageOfAbsoluteConicEstimatorListener listener,
-            ImageOfAbsoluteConicEstimatorType type) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L624" title="All 2 branches covered.">        switch (type) {</span>
+            ImageOfAbsoluteConicEstimatorType type) {
+<span class="fc bfc" id="L619" title="All 2 branches covered.">        switch (type) {</span>
             case WEIGHTED_IAC_ESTIMATOR:
-<span class="fc" id="L626">                double[] weights = new double[homographies.size()];</span>
-<span class="fc" id="L627">                Arrays.fill(weights, 1.0);</span>
-<span class="fc" id="L628">                return new WeightedImageOfAbsoluteConicEstimator(homographies, </span>
+<span class="fc" id="L621">                double[] weights = new double[homographies.size()];</span>
+<span class="fc" id="L622">                Arrays.fill(weights, 1.0);</span>
+<span class="fc" id="L623">                return new WeightedImageOfAbsoluteConicEstimator(homographies, </span>
                         weights, listener);
             case LMSE_IAC_ESTIMATOR:
             default:
-<span class="fc" id="L632">                return new LMSEImageOfAbsoluteConicEstimator(homographies, </span>
+<span class="fc" id="L627">                return new LMSEImageOfAbsoluteConicEstimator(homographies, </span>
                         listener);
         }
     }
@@ -642,13 +637,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * contain enough elements to estimate the DIAC using current settings.
      */
     protected final void internalSetHomographies(
-            List&lt;Transformation2D&gt; homographies)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L647" title="All 2 branches covered.">        if (homographies == null ||</span>
-<span class="fc bfc" id="L648" title="All 2 branches covered.">                homographies.size() &lt; getMinNumberOfRequiredHomographies()) {</span>
-<span class="fc" id="L649">            throw new IllegalArgumentException();</span>
+            List&lt;Transformation2D&gt; homographies) {
+<span class="fc bfc" id="L641" title="All 2 branches covered.">        if (homographies == null ||</span>
+<span class="fc bfc" id="L642" title="All 2 branches covered.">                homographies.size() &lt; getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L643">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L651">        mHomographies = homographies;</span>
-<span class="fc" id="L652">    }</span>
+<span class="fc" id="L645">        mHomographies = homographies;</span>
+<span class="fc" id="L646">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
