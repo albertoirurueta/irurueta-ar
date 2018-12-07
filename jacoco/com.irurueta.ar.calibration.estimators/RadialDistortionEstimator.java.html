@@ -124,23 +124,27 @@ public abstract class RadialDistortionEstimator {
         try {
 <span class="fc" id="L125">            setInternalIntrinsic(null, DEFAULT_FOCAL_LENGTH, </span>
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-<span class="pc" id="L127">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L128">    }</span>
+<span class="nc" id="L127">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L129">        }</span>
+<span class="fc" id="L130">    }</span>
     
     /**
      * Constructor with listener.
      * @param listener listener to be notified of events such as when estimation
      * starts, ends or estimation progress changes.
      */
-<span class="fc" id="L135">    public RadialDistortionEstimator(RadialDistortionEstimatorListener listener) {</span>
-<span class="fc" id="L136">        mLocked = false;</span>
-<span class="fc" id="L137">        mListener = listener;</span>
-<span class="fc" id="L138">        mNumKParams = DEFAULT_NUM_K_PARAMS;</span>
+<span class="fc" id="L137">    public RadialDistortionEstimator(RadialDistortionEstimatorListener listener) {</span>
+<span class="fc" id="L138">        mLocked = false;</span>
+<span class="fc" id="L139">        mListener = listener;</span>
+<span class="fc" id="L140">        mNumKParams = DEFAULT_NUM_K_PARAMS;</span>
         try {
-<span class="fc" id="L140">            setInternalIntrinsic(null, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L142">            setInternalIntrinsic(null, DEFAULT_FOCAL_LENGTH, </span>
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);        
-<span class="pc" id="L142">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L143">    }</span>
+<span class="nc" id="L144">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L146">        }</span>
+<span class="fc" id="L147">    }</span>
     
     /**
      * Constructor.
@@ -151,10 +155,10 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */
     public RadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints,
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
-<span class="fc" id="L155">        this();</span>
-<span class="fc" id="L156">        internalSetPoints(distortedPoints, undistortedPoints);</span>
-<span class="fc" id="L157">    }</span>
+            List&lt;Point2D&gt; undistortedPoints) {
+<span class="fc" id="L159">        this();</span>
+<span class="fc" id="L160">        internalSetPoints(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L161">    }</span>
     
     /**
      * Constructor.
@@ -168,11 +172,10 @@ public abstract class RadialDistortionEstimator {
      */
     public RadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, 
-            RadialDistortionEstimatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L173">        this(listener);</span>
-<span class="fc" id="L174">        internalSetPoints(distortedPoints, undistortedPoints);</span>
-<span class="fc" id="L175">    }</span>
+            RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L176">        this(listener);</span>
+<span class="fc" id="L177">        internalSetPoints(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L178">    }</span>
     
     /**
      * Constructor with distortion center.
@@ -180,15 +183,17 @@ public abstract class RadialDistortionEstimator {
      * principal point of an estimated camera. If not set it is assumed to be at
      * the origin of coordinates (0,0).
      */
-<span class="fc" id="L183">    public RadialDistortionEstimator(Point2D distortionCenter) {</span>
-<span class="fc" id="L184">        mLocked = false;</span>
-<span class="fc" id="L185">        mListener = null;</span>
-<span class="fc" id="L186">        mNumKParams = DEFAULT_NUM_K_PARAMS;</span>
+<span class="fc" id="L186">    public RadialDistortionEstimator(Point2D distortionCenter) {</span>
+<span class="fc" id="L187">        mLocked = false;</span>
+<span class="fc" id="L188">        mListener = null;</span>
+<span class="fc" id="L189">        mNumKParams = DEFAULT_NUM_K_PARAMS;</span>
         try {
-<span class="fc" id="L188">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L191">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-<span class="pc" id="L190">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L191">    }</span>
+<span class="nc" id="L193">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L195">        }</span>
+<span class="fc" id="L196">    }</span>
     
     /**
      * Constructor with listener and distortion center.
@@ -200,12 +205,14 @@ public abstract class RadialDistortionEstimator {
      */    
     public RadialDistortionEstimator(Point2D distortionCenter,
             RadialDistortionEstimatorListener listener) {
-<span class="fc" id="L203">        this(listener);</span>
+<span class="fc" id="L208">        this(listener);</span>
         try {
-<span class="fc" id="L205">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L210">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-<span class="pc" id="L207">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L208">    }</span>
+<span class="nc" id="L212">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L214">        }</span>
+<span class="fc" id="L215">    }</span>
     
     /**
      * Constructor with points and distortion center.
@@ -219,14 +226,15 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */    
     public RadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints,
-            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter)
-            throws IllegalArgumentException {
-<span class="fc" id="L224">        this(distortedPoints, undistortedPoints);</span>
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) {
+<span class="fc" id="L230">        this(distortedPoints, undistortedPoints);</span>
         try {
-<span class="fc" id="L226">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L232">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
-<span class="pc" id="L228">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L229">    }</span>
+<span class="nc" id="L234">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L236">        }</span>
+<span class="fc" id="L237">    }</span>
     
     /**
      * Constructor.
@@ -243,14 +251,15 @@ public abstract class RadialDistortionEstimator {
      */ 
     public RadialDistortionEstimator(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter,
-            RadialDistortionEstimatorListener listener)
-            throws IllegalArgumentException {
-<span class="fc" id="L248">        this(distortedPoints, undistortedPoints, listener);</span>
+            RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L255">        this(distortedPoints, undistortedPoints, listener);</span>
         try {
-<span class="fc" id="L250">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
+<span class="fc" id="L257">            setInternalIntrinsic(distortionCenter, DEFAULT_FOCAL_LENGTH, </span>
                     DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);        
-<span class="pc" id="L252">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L253">    }</span>
+<span class="nc" id="L259">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L261">        }</span>
+<span class="fc" id="L262">    }</span>
     
     /**
      * Returns listener to be notified of events such as when estimation starts,
@@ -258,7 +267,7 @@ public abstract class RadialDistortionEstimator {
      * @return listener to be notified of events.
      */
     public RadialDistortionEstimatorListener getListener() {
-<span class="fc" id="L261">        return mListener;</span>
+<span class="fc" id="L270">        return mListener;</span>
     }
     
     /**
@@ -269,11 +278,11 @@ public abstract class RadialDistortionEstimator {
      */
     public void setListener(RadialDistortionEstimatorListener listener)
             throws LockedException {
-<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L273">            throw new LockedException();</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L282">            throw new LockedException();</span>
         }
-<span class="nc" id="L275">        mListener = listener;</span>
-<span class="nc" id="L276">    }</span>
+<span class="nc" id="L284">        mListener = listener;</span>
+<span class="nc" id="L285">    }</span>
     
     /**
      * Indicates whether this instance is locked.
@@ -281,7 +290,7 @@ public abstract class RadialDistortionEstimator {
      * otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L284">        return mLocked;</span>
+<span class="fc" id="L293">        return mLocked;</span>
     }
     
     /**
@@ -294,14 +303,13 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */
     public void setPoints(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints) throws LockedException, 
-            IllegalArgumentException {
-<span class="fc bfc" id="L299" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L300">            throw new LockedException();</span>
+            List&lt;Point2D&gt; undistortedPoints) throws LockedException {
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L308">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L303">        internalSetPoints(distortedPoints, undistortedPoints);</span>
-<span class="fc" id="L304">    }</span>
+<span class="fc" id="L311">        internalSetPoints(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L312">    }</span>
     
     /**
      * Returns list of distorted points. Distorted points are obtained after
@@ -309,7 +317,7 @@ public abstract class RadialDistortionEstimator {
      * @return list of distorted points.
      */
     public List&lt;Point2D&gt; getDistortedPoints() {
-<span class="fc" id="L312">        return mDistortedPoints;</span>
+<span class="fc" id="L320">        return mDistortedPoints;</span>
     }
     
     /**
@@ -317,7 +325,7 @@ public abstract class RadialDistortionEstimator {
      * @return list of undistorted points.
      */
     public List&lt;Point2D&gt; getUndistortedPoints() {
-<span class="fc" id="L320">        return mUndistortedPoints;</span>
+<span class="fc" id="L328">        return mUndistortedPoints;</span>
     }
     
     /**
@@ -327,7 +335,7 @@ public abstract class RadialDistortionEstimator {
      * @return distortion center or null.
      */
     public Point2D getDistortionCenter() {
-<span class="fc" id="L330">        return mDistortionCenter;</span>
+<span class="fc" id="L338">        return mDistortionCenter;</span>
     }
     
     /**
@@ -340,22 +348,24 @@ public abstract class RadialDistortionEstimator {
      */
     public void setDistortionCenter(Point2D distortionCenter) 
             throws LockedException {
-<span class="fc bfc" id="L343" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L344">            throw new LockedException();</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L352">            throw new LockedException();</span>
         }
         
         try {
-<span class="fc" id="L348">            setInternalIntrinsic(distortionCenter, mHorizontalFocalLength, </span>
+<span class="fc" id="L356">            setInternalIntrinsic(distortionCenter, mHorizontalFocalLength, </span>
                     mVerticalFocalLength, mSkew);
-<span class="pc" id="L350">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L351">    }    </span>
+<span class="nc" id="L358">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L360">        }</span>
+<span class="fc" id="L361">    }    </span>
     
     /**
      * Returns horizontal focal length expressed in pixels.
      * @return horizontal focal length expressed in pixels.
      */
     public double getHorizontalFocalLength() {
-<span class="fc" id="L358">        return mHorizontalFocalLength;</span>
+<span class="fc" id="L368">        return mHorizontalFocalLength;</span>
     }
     
     /**
@@ -367,20 +377,20 @@ public abstract class RadialDistortionEstimator {
      */
     public void setHorizontalFocalLength(double horizontalFocalLength)
             throws LockedException, RadialDistortionException {
-<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L371">            throw new LockedException();</span>
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L381">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L374">        setInternalIntrinsic(mDistortionCenter, horizontalFocalLength, </span>
+<span class="fc" id="L384">        setInternalIntrinsic(mDistortionCenter, horizontalFocalLength, </span>
                 mVerticalFocalLength, mSkew);
-<span class="fc" id="L376">    }</span>
+<span class="fc" id="L386">    }</span>
     
     /**
      * Returns vertical focal length expressed in pixels.
      * @return vertical focal length expressed in pixels.
      */
     public double getVerticalFocalLength() {
-<span class="fc" id="L383">        return mVerticalFocalLength;</span>
+<span class="fc" id="L393">        return mVerticalFocalLength;</span>
     }
     
     /**
@@ -392,20 +402,20 @@ public abstract class RadialDistortionEstimator {
      */
     public void setVerticalFocalLength(double verticalFocalLength)
             throws LockedException, RadialDistortionException {
-<span class="pc bpc" id="L395" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L396">            throw new LockedException();</span>
+<span class="pc bpc" id="L405" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L406">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L399">        setInternalIntrinsic(mDistortionCenter, mHorizontalFocalLength, </span>
+<span class="fc" id="L409">        setInternalIntrinsic(mDistortionCenter, mHorizontalFocalLength, </span>
                 verticalFocalLength, mSkew);
-<span class="fc" id="L401">    }</span>
+<span class="fc" id="L411">    }</span>
     
     /**
      * Returns skew expressed in pixels.
      * @return skew expressed in pixels.
      */
     public double getSkew() {
-<span class="fc" id="L408">        return mSkew;</span>
+<span class="fc" id="L418">        return mSkew;</span>
     }
     
     /**
@@ -414,15 +424,17 @@ public abstract class RadialDistortionEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setSkew(double skew) throws LockedException {
-<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L418">            throw new LockedException();</span>
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L428">            throw new LockedException();</span>
         }
         
         try {
-<span class="fc" id="L422">            setInternalIntrinsic(mDistortionCenter, mHorizontalFocalLength, </span>
+<span class="fc" id="L432">            setInternalIntrinsic(mDistortionCenter, mHorizontalFocalLength, </span>
                     mVerticalFocalLength, skew);
-<span class="pc" id="L424">        } catch (RadialDistortionException ignore) { }</span>
-<span class="fc" id="L425">    }</span>
+<span class="nc" id="L434">        } catch (RadialDistortionException ignore) {</span>
+            //never happens
+<span class="fc" id="L436">        }</span>
+<span class="fc" id="L437">    }</span>
     
     /**
      * Sets intrinsic parameters.
@@ -437,23 +449,23 @@ public abstract class RadialDistortionEstimator {
     public final void setIntrinsic(Point2D distortionCenter,
             double horizontalFocalLength, double verticalFocalLength,
             double skew) throws LockedException, RadialDistortionException {
-<span class="pc bpc" id="L440" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L441">            throw new LockedException();</span>
+<span class="pc bpc" id="L452" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L453">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L444">        setInternalIntrinsic(distortionCenter, horizontalFocalLength,</span>
+<span class="fc" id="L456">        setInternalIntrinsic(distortionCenter, horizontalFocalLength,</span>
                 verticalFocalLength, skew);
-<span class="fc" id="L446">    }</span>
+<span class="fc" id="L458">    }</span>
     
     /**
      * Returns pinhole camera intrinsic parameters associated to this estimator.
      * @return pinhole camera intrinsic parameters associated to this estimator.
      */
     public PinholeCameraIntrinsicParameters getIntrinsic() {
-<span class="fc" id="L453">        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength, </span>
+<span class="fc" id="L465">        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength, </span>
                 mVerticalFocalLength, 
-<span class="fc bfc" id="L455" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomX() : 0.0, </span>
-<span class="fc bfc" id="L456" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomY() : 0.0,</span>
+<span class="fc bfc" id="L467" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomX() : 0.0, </span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomY() : 0.0,</span>
                 mSkew);
     }
     
@@ -467,20 +479,20 @@ public abstract class RadialDistortionEstimator {
      */
     public void setIntrinsic(PinholeCameraIntrinsicParameters intrinsic) 
             throws LockedException, RadialDistortionException {
-<span class="fc" id="L470">        setIntrinsic(new InhomogeneousPoint2D(</span>
-<span class="fc" id="L471">                intrinsic.getHorizontalPrincipalPoint(),</span>
-<span class="fc" id="L472">                intrinsic.getVerticalPrincipalPoint()), </span>
-<span class="fc" id="L473">                intrinsic.getHorizontalFocalLength(),</span>
-<span class="fc" id="L474">                intrinsic.getVerticalFocalLength(),</span>
-<span class="fc" id="L475">                intrinsic.getSkewness());</span>
-<span class="fc" id="L476">    }</span>
+<span class="fc" id="L482">        setIntrinsic(new InhomogeneousPoint2D(</span>
+<span class="fc" id="L483">                intrinsic.getHorizontalPrincipalPoint(),</span>
+<span class="fc" id="L484">                intrinsic.getVerticalPrincipalPoint()), </span>
+<span class="fc" id="L485">                intrinsic.getHorizontalFocalLength(),</span>
+<span class="fc" id="L486">                intrinsic.getVerticalFocalLength(),</span>
+<span class="fc" id="L487">                intrinsic.getSkewness());</span>
+<span class="fc" id="L488">    }</span>
         
     /**
      * Returns number of radial distortion parameters to estimate.
      * @return number of radial distortion parameters to estimate.
      */
     public int getNumKParams() {
-<span class="fc" id="L483">        return mNumKParams;</span>
+<span class="fc" id="L495">        return mNumKParams;</span>
     }
     
     /**
@@ -489,17 +501,16 @@ public abstract class RadialDistortionEstimator {
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if number of parameters is less than 1.
      */
-    public void setNumKParams(int numKParams) throws LockedException, 
-            IllegalArgumentException {
-<span class="pc bpc" id="L494" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L495">            throw new LockedException();</span>
+    public void setNumKParams(int numKParams) throws LockedException {
+<span class="pc bpc" id="L505" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L506">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L497" title="All 2 branches covered.">        if (numKParams &lt; MIN_K_PARAMS) {</span>
-<span class="fc" id="L498">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">        if (numKParams &lt; MIN_K_PARAMS) {</span>
+<span class="fc" id="L509">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L501">        mNumKParams = numKParams;</span>
-<span class="fc" id="L502">    }</span>
+<span class="fc" id="L512">        mNumKParams = numKParams;</span>
+<span class="fc" id="L513">    }</span>
 
     /**
      * Returns minimum number of required matched points to compute the radial
@@ -511,7 +522,7 @@ public abstract class RadialDistortionEstimator {
      * distortion.
      */
     public int getMinNumberOfMatchedPoints() {
-<span class="fc" id="L514">        return mNumKParams;</span>
+<span class="fc" id="L525">        return mNumKParams;</span>
     }
     
     /**
@@ -526,11 +537,11 @@ public abstract class RadialDistortionEstimator {
      */
     public boolean areValidPoints(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints) {
-<span class="fc bfc" id="L529" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
-<span class="fc" id="L530">            return false;</span>
+<span class="fc bfc" id="L540" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
+<span class="fc" id="L541">            return false;</span>
         }
-<span class="fc bfc" id="L532" title="All 2 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp;</span>
-<span class="fc bfc" id="L533" title="All 2 branches covered.">                distortedPoints.size() &gt;= getMinNumberOfMatchedPoints();</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp;</span>
+<span class="fc bfc" id="L544" title="All 2 branches covered.">                distortedPoints.size() &gt;= getMinNumberOfMatchedPoints();</span>
     }
     
     /**
@@ -539,7 +550,7 @@ public abstract class RadialDistortionEstimator {
      * @return true if available, false otherwise.
      */
     public boolean arePointsAvailable() {
-<span class="pc bpc" id="L542" title="1 of 4 branches missed.">        return mDistortedPoints != null &amp;&amp; mUndistortedPoints != null;</span>
+<span class="pc bpc" id="L553" title="1 of 4 branches missed.">        return mDistortedPoints != null &amp;&amp; mUndistortedPoints != null;</span>
     }    
     
     /**
@@ -549,8 +560,8 @@ public abstract class RadialDistortionEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="fc bfc" id="L552" title="All 2 branches covered.">        return arePointsAvailable() &amp;&amp; </span>
-<span class="pc bpc" id="L553" title="1 of 2 branches missed.">                areValidPoints(mDistortedPoints, mUndistortedPoints);</span>
+<span class="fc bfc" id="L563" title="All 2 branches covered.">        return arePointsAvailable() &amp;&amp; </span>
+<span class="pc bpc" id="L564" title="1 of 2 branches missed.">                areValidPoints(mDistortedPoints, mUndistortedPoints);</span>
     }
     
     /**
@@ -576,7 +587,7 @@ public abstract class RadialDistortionEstimator {
      * @return an instance of a radial distortion estimator.
      */
     public static RadialDistortionEstimator create() {
-<span class="fc" id="L579">        return create(DEFAULT_ESTIMATOR_TYPE);</span>
+<span class="fc" id="L590">        return create(DEFAULT_ESTIMATOR_TYPE);</span>
     }
     
     /**
@@ -587,12 +598,12 @@ public abstract class RadialDistortionEstimator {
      */
     public static RadialDistortionEstimator create(
             RadialDistortionEstimatorType type) {
-<span class="fc bfc" id="L590" title="All 2 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L601" title="All 2 branches covered.">        switch (type) {</span>
             case WEIGHTED_RADIAL_DISTORTION_ESTIMATOR:     
-<span class="fc" id="L592">                return new WeightedRadialDistortionEstimator();</span>
+<span class="fc" id="L603">                return new WeightedRadialDistortionEstimator();</span>
             case LMSE_RADIAL_DISTORTION_ESTIMATOR:
             default:
-<span class="fc" id="L595">                return new LMSERadialDistortionEstimator();</span>
+<span class="fc" id="L606">                return new LMSERadialDistortionEstimator();</span>
         }
     }
     
@@ -609,32 +620,32 @@ public abstract class RadialDistortionEstimator {
     private void setInternalIntrinsic(Point2D distortionCenter, 
             double horizontalFocalLength, double verticalFocalLength, 
             double skew) throws RadialDistortionException {
-<span class="fc" id="L612">        mDistortionCenter = distortionCenter;</span>
-<span class="fc" id="L613">        mHorizontalFocalLength = horizontalFocalLength;</span>
-<span class="fc" id="L614">        mVerticalFocalLength = verticalFocalLength;</span>
-<span class="fc" id="L615">        mSkew = skew;</span>
+<span class="fc" id="L623">        mDistortionCenter = distortionCenter;</span>
+<span class="fc" id="L624">        mHorizontalFocalLength = horizontalFocalLength;</span>
+<span class="fc" id="L625">        mVerticalFocalLength = verticalFocalLength;</span>
+<span class="fc" id="L626">        mSkew = skew;</span>
         
         try {
-<span class="fc bfc" id="L618" title="All 2 branches covered.">            if (mKinv == null) {</span>
-<span class="fc" id="L619">                mKinv = new Matrix(3, 3);</span>
+<span class="fc bfc" id="L629" title="All 2 branches covered.">            if (mKinv == null) {</span>
+<span class="fc" id="L630">                mKinv = new Matrix(3, 3);</span>
             }
             
-<span class="fc" id="L622">            Matrix K = new Matrix(3, 3); //initially matrix is zero</span>
+<span class="fc" id="L633">            Matrix k = new Matrix(3, 3); //initially matrix is zero</span>
             
-<span class="fc" id="L624">            K.setElementAt(0, 0, horizontalFocalLength);</span>
-<span class="fc" id="L625">            K.setElementAt(1, 1, verticalFocalLength);</span>
-<span class="fc" id="L626">            K.setElementAt(0, 1, skew);</span>
-<span class="fc bfc" id="L627" title="All 2 branches covered.">            if (mDistortionCenter != null) {</span>
-<span class="fc" id="L628">                K.setElementAt(0, 2, mDistortionCenter.getInhomX());</span>
-<span class="fc" id="L629">                K.setElementAt(1, 2, mDistortionCenter.getInhomY());</span>
+<span class="fc" id="L635">            k.setElementAt(0, 0, horizontalFocalLength);</span>
+<span class="fc" id="L636">            k.setElementAt(1, 1, verticalFocalLength);</span>
+<span class="fc" id="L637">            k.setElementAt(0, 1, skew);</span>
+<span class="fc bfc" id="L638" title="All 2 branches covered.">            if (mDistortionCenter != null) {</span>
+<span class="fc" id="L639">                k.setElementAt(0, 2, mDistortionCenter.getInhomX());</span>
+<span class="fc" id="L640">                k.setElementAt(1, 2, mDistortionCenter.getInhomY());</span>
             } //if center is not provided, values are zero
-<span class="fc" id="L631">            K.setElementAt(2, 2, 1.0);</span>
+<span class="fc" id="L642">            k.setElementAt(2, 2, 1.0);</span>
             
-<span class="fc" id="L633">            Utils.inverse(K, mKinv);</span>
-<span class="fc" id="L634">        } catch (AlgebraException e) {</span>
-<span class="fc" id="L635">            throw new RadialDistortionException(e);</span>
-<span class="fc" id="L636">        }</span>
-<span class="fc" id="L637">    }</span>
+<span class="fc" id="L644">            Utils.inverse(k, mKinv);</span>
+<span class="fc" id="L645">        } catch (AlgebraException e) {</span>
+<span class="fc" id="L646">            throw new RadialDistortionException(e);</span>
+<span class="fc" id="L647">        }</span>
+<span class="fc" id="L648">    }</span>
     
     /**
      * Sets list of corresponding distorted and undistorted points.
@@ -646,19 +657,19 @@ public abstract class RadialDistortionEstimator {
      * the same size.
      */
     private void internalSetPoints(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; undistortedPoints) {
 
-<span class="fc bfc" id="L651" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
-<span class="fc" id="L652">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L662" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
+<span class="fc" id="L663">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc bfc" id="L655" title="All 2 branches covered.">        if (!areValidPoints(distortedPoints, undistortedPoints)) {</span>
-<span class="fc" id="L656">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L666" title="All 2 branches covered.">        if (!areValidPoints(distortedPoints, undistortedPoints)) {</span>
+<span class="fc" id="L667">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L659">        mDistortedPoints = distortedPoints;</span>
-<span class="fc" id="L660">        mUndistortedPoints = undistortedPoints;</span>
-<span class="fc" id="L661">    }</span>
+<span class="fc" id="L670">        mDistortedPoints = distortedPoints;</span>
+<span class="fc" id="L671">        mUndistortedPoints = undistortedPoints;</span>
+<span class="fc" id="L672">    }</span>
     
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

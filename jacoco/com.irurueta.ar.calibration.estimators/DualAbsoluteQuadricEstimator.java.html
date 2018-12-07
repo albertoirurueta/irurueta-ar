@@ -998,7 +998,7 @@ public abstract class DualAbsoluteQuadricEstimator {
             
 <span class="fc" id="L999">            Complex[] roots = poly.getRoots();</span>
 
-<span class="fc bfc" id="L1001" title="All 2 branches covered.">            if (roots != null) {</span>
+<span class="pc bpc" id="L1001" title="1 of 2 branches missed.">            if (roots != null) {</span>
                 //pick best solution (closest real root) = evaluation closest to 
                 //zero
                 double polyEval;
@@ -1025,10 +1025,10 @@ public abstract class DualAbsoluteQuadricEstimator {
                 //if no roots could be found, it might be due to numerical
                 //inaccuracies, so we find minimum or maximum of polynomial
                 //which evaluates closest to zero
-<span class="fc" id="L1028">                double[] extrema = poly.getExtrema();</span>
-<span class="pc bpc" id="L1029" title="1 of 2 branches missed.">                if (extrema == null) {</span>
+<span class="nc" id="L1028">                double[] extrema = poly.getExtrema();</span>
+<span class="nc bnc" id="L1029" title="All 2 branches missed.">                if (extrema == null) {</span>
                     //polynomial has no extrema, which means it is degenerate
-<span class="fc" id="L1031">                    throw new DualAbsoluteQuadricEstimatorException();</span>
+<span class="nc" id="L1031">                    throw new DualAbsoluteQuadricEstimatorException();</span>
                 }
                 
                 double polyEval;

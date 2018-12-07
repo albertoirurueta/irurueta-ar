@@ -122,16 +122,15 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L128">            throw new LockedException();</span>
+    public void setThreshold(double threshold) throws LockedException {
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L127">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
-<span class="nc" id="L131">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="nc" id="L130">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L133">        mThreshold = threshold;</span>
-<span class="fc" id="L134">    }</span>
+<span class="fc" id="L132">        mThreshold = threshold;</span>
+<span class="fc" id="L133">    }</span>
 
     /**
      * Estimates the Dual Absolute Quadric using provided cameras.
@@ -145,119 +144,119 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
     @Override
     public DualAbsoluteQuadric estimate() throws LockedException, 
             NotReadyException, RobustEstimatorException {
-<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L149">            throw new LockedException();</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L148">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L152">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L151">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L155">        RANSACRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
+<span class="fc" id="L154">        RANSACRobustEstimator&lt;DualAbsoluteQuadric&gt; innerEstimator =</span>
                 new RANSACRobustEstimator&lt;&gt;(
-<span class="fc" id="L157">                new RANSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;(){</span>
+<span class="fc" id="L156">                new RANSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;(){</span>
             
             //subset of cameras picked on each iteration
-<span class="fc" id="L160">            private List&lt;PinholeCamera&gt; mSubsetCameras =</span>
+<span class="fc" id="L159">            private List&lt;PinholeCamera&gt; mSubsetCameras =</span>
                     new ArrayList&lt;&gt;();
             
             @Override
             public double getThreshold() {
-<span class="fc" id="L165">                return mThreshold;</span>
+<span class="fc" id="L164">                return mThreshold;</span>
             }
 
             @Override
             public int getTotalSamples() {
-<span class="fc" id="L170">                return mCameras.size();</span>
+<span class="fc" id="L169">                return mCameras.size();</span>
             }
 
             @Override
             public int getSubsetSize() {
-<span class="fc" id="L175">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
+<span class="fc" id="L174">                return mDAQEstimator.getMinNumberOfRequiredCameras();</span>
             }
 
             @Override
             public void estimatePreliminarSolutions(int[] samplesIndices, 
                     List&lt;DualAbsoluteQuadric&gt; solutions) {
-<span class="fc" id="L181">                mSubsetCameras.clear();</span>
-<span class="fc bfc" id="L182" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
-<span class="fc" id="L183">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
+<span class="fc" id="L180">                mSubsetCameras.clear();</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">                for (int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L182">                    mSubsetCameras.add(mCameras.get(samplesIndex));</span>
                 }
                 
                 try {
-<span class="fc" id="L187">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
-<span class="fc" id="L188">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
+<span class="fc" id="L186">                    mDAQEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L187">                    mDAQEstimator.setCameras(mSubsetCameras);</span>
                     
-<span class="fc" id="L190">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
-<span class="fc" id="L191">                    solutions.add(daq);</span>
-<span class="nc" id="L192">                } catch (Exception e) {</span>
+<span class="fc" id="L189">                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();</span>
+<span class="fc" id="L190">                    solutions.add(daq);</span>
+<span class="nc" id="L191">                } catch (Exception e) {</span>
                     //if anything fails, no solution is added
-<span class="fc" id="L194">                }</span>
-<span class="fc" id="L195">            }</span>
+<span class="fc" id="L193">                }</span>
+<span class="fc" id="L194">            }</span>
 
             @Override
             public double computeResidual(
                     DualAbsoluteQuadric currentEstimation, int i) {
-<span class="fc" id="L200">                return residual(currentEstimation, mCameras.get(i));</span>
+<span class="fc" id="L199">                return residual(currentEstimation, mCameras.get(i));</span>
             }
 
             @Override
             public boolean isReady() {
-<span class="fc" id="L205">                return RANSACDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
+<span class="fc" id="L204">                return RANSACDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
             }
 
             @Override
             public void onEstimateStart(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
-<span class="pc bpc" id="L211" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L212">                    mListener.onEstimateStart(</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L211">                    mListener.onEstimateStart(</span>
                             RANSACDualAbsoluteQuadricRobustEstimator.this);
                 }
-<span class="fc" id="L215">            }</span>
+<span class="fc" id="L214">            }</span>
 
             @Override
             public void onEstimateEnd(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
-<span class="pc bpc" id="L220" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L221">                    mListener.onEstimateEnd(</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L220">                    mListener.onEstimateEnd(</span>
                             RANSACDualAbsoluteQuadricRobustEstimator.this);
                 }
-<span class="fc" id="L224">            }</span>
+<span class="fc" id="L223">            }</span>
 
             @Override
             public void onEstimateNextIteration(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
                     int iteration) {
-<span class="pc bpc" id="L230" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L231">                    mListener.onEstimateNextIteration(</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L230">                    mListener.onEstimateNextIteration(</span>
                             RANSACDualAbsoluteQuadricRobustEstimator.this, 
                             iteration);
                 }
-<span class="fc" id="L235">            }</span>
+<span class="fc" id="L234">            }</span>
 
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, 
                     float progress) {
-<span class="pc bpc" id="L241" title="1 of 2 branches missed.">                if (mListener != null) {</span>
-<span class="fc" id="L242">                    mListener.onEstimateProgressChange(</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="fc" id="L241">                    mListener.onEstimateProgressChange(</span>
                             RANSACDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
                 }
-<span class="fc" id="L246">            }</span>
+<span class="fc" id="L245">            }</span>
         });
         
         try {
-<span class="fc" id="L250">            mLocked = true;</span>
-<span class="fc" id="L251">            innerEstimator.setConfidence(mConfidence);</span>
-<span class="fc" id="L252">            innerEstimator.setMaxIterations(mMaxIterations);</span>
-<span class="fc" id="L253">            innerEstimator.setProgressDelta(mProgressDelta);</span>
-<span class="fc" id="L254">            return innerEstimator.estimate();</span>
-<span class="nc" id="L255">        } catch(com.irurueta.numerical.LockedException e) {</span>
-<span class="nc" id="L256">            throw new LockedException(e);</span>
-<span class="nc" id="L257">        } catch(com.irurueta.numerical.NotReadyException e) {</span>
-<span class="nc" id="L258">            throw new NotReadyException(e);</span>
+<span class="fc" id="L249">            mLocked = true;</span>
+<span class="fc" id="L250">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L251">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L252">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L253">            return innerEstimator.estimate();</span>
+<span class="nc" id="L254">        } catch(com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L255">            throw new LockedException(e);</span>
+<span class="nc" id="L256">        } catch(com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L257">            throw new NotReadyException(e);</span>
         } finally {
-<span class="fc" id="L260">            mLocked = false;</span>
+<span class="fc" id="L259">            mLocked = false;</span>
         }
     }
 
@@ -267,7 +266,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-<span class="fc" id="L270">        return RobustEstimatorMethod.RANSAC;</span>
+<span class="fc" id="L269">        return RobustEstimatorMethod.RANSAC;</span>
     }         
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

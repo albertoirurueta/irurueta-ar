@@ -628,9 +628,9 @@ public class SevenPointsFundamentalMatrixEstimator extends
 <span class="fc" id="L628">                mListener.onEstimateEnd(this, result.get(0));</span>
             }
             
-<span class="nc" id="L631">        } catch (InvalidFundamentalMatrixException | AlgebraException |</span>
+<span class="fc" id="L631">        } catch (InvalidFundamentalMatrixException | AlgebraException |</span>
                 NumericalException | NormalizerException e) {
-<span class="nc" id="L633">            throw new FundamentalMatrixEstimatorException(e);</span>
+<span class="fc" id="L633">            throw new FundamentalMatrixEstimatorException(e);</span>
         } finally {
 <span class="fc" id="L635">            mLocked = false;</span>
         }        

@@ -278,7 +278,7 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                     }                    
                 }
 <span class="fc" id="L280">                numIter++;</span>
-<span class="fc bfc" id="L281" title="All 4 branches covered.">            } while(iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);                </span>
+<span class="pc bpc" id="L281" title="1 of 4 branches missed.">            } while(iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);                </span>
             
 <span class="fc bfc" id="L283" title="All 2 branches covered.">            if (mListener != null) {</span>
 <span class="fc" id="L284">                mListener.onRefineEnd(this, mInitialEstimation, result,</span>

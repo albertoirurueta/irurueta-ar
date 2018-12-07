@@ -385,8 +385,8 @@ public class PROSACRobustSinglePoint3DTriangulator extends
             @Override
             public void onEstimateProgressChange(
                     RobustEstimator&lt;Point3D&gt; estimator, float progress) {
-<span class="fc bfc" id="L388" title="All 2 branches covered.">                if (mListener != null) {</span>
-<span class="fc" id="L389">                    mListener.onTriangulateProgressChange(</span>
+<span class="pc bpc" id="L388" title="1 of 2 branches missed.">                if (mListener != null) {</span>
+<span class="nc" id="L389">                    mListener.onTriangulateProgressChange(</span>
                             PROSACRobustSinglePoint3DTriangulator.this, 
                             progress);
                 }

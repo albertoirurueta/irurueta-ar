@@ -210,7 +210,7 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public RadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; undistortedPoints) {
 <span class="fc" id="L214">        this();</span>
 <span class="fc" id="L215">        internalSetPoints(distortedPoints, undistortedPoints);</span>
 <span class="fc" id="L216">    }</span>
@@ -227,7 +227,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public RadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, 
-            RadialDistortionRobustEstimatorListener listener) throws IllegalArgumentException {
+            RadialDistortionRobustEstimatorListener listener) {
 <span class="fc" id="L231">        this(listener);</span>
 <span class="fc" id="L232">        internalSetPoints(distortedPoints, undistortedPoints);</span>
 <span class="fc" id="L233">    }</span>
@@ -244,11 +244,10 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     public RadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
-            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) 
-            throws IllegalArgumentException {
-<span class="fc" id="L249">        this(distortedPoints, undistortedPoints);</span>
-<span class="fc" id="L250">        mDistortionCenter = distortionCenter;</span>
-<span class="fc" id="L251">    }</span>
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter) {
+<span class="fc" id="L248">        this(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L249">        mDistortionCenter = distortionCenter;</span>
+<span class="fc" id="L250">    }</span>
     
     /**
      * Constructor.
@@ -265,10 +264,10 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public RadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter,
-            RadialDistortionRobustEstimatorListener listener) throws IllegalArgumentException {
-<span class="fc" id="L269">        this(distortedPoints, undistortedPoints, listener);</span>
-<span class="fc" id="L270">        mDistortionCenter = distortionCenter;</span>
-<span class="fc" id="L271">    }</span>
+            RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L268">        this(distortedPoints, undistortedPoints, listener);</span>
+<span class="fc" id="L269">        mDistortionCenter = distortionCenter;</span>
+<span class="fc" id="L270">    }</span>
     
     /**
      * Returns reference to listener to be notified of events such as when
@@ -276,7 +275,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return listener to be notified of events.
      */
     public RadialDistortionRobustEstimatorListener getListener() {
-<span class="fc" id="L279">        return mListener;</span>
+<span class="fc" id="L278">        return mListener;</span>
     }
     
     /**
@@ -287,11 +286,11 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public void setListener(RadialDistortionRobustEstimatorListener listener) 
             throws LockedException {
-<span class="fc bfc" id="L290" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L291">            throw new LockedException();</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L290">            throw new LockedException();</span>
         }
-<span class="fc" id="L293">        mListener = listener;</span>
-<span class="fc" id="L294">    }</span>
+<span class="fc" id="L292">        mListener = listener;</span>
+<span class="fc" id="L293">    }</span>
     
     /**
      * Indicates whether listener has been provided and is available for
@@ -299,7 +298,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable() {
-<span class="fc bfc" id="L302" title="All 2 branches covered.">        return mListener != null;</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        return mListener != null;</span>
     }
     
     /**
@@ -307,7 +306,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if locked, false otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L310">        return mLocked;</span>
+<span class="fc" id="L309">        return mLocked;</span>
     }
     
     /**
@@ -317,7 +316,7 @@ public abstract class RadialDistortionRobustEstimator {
      * during estimation.
      */
     public float getProgressDelta() {
-<span class="fc" id="L320">        return mProgressDelta;</span>
+<span class="fc" id="L319">        return mProgressDelta;</span>
     }
     
     /**
@@ -330,17 +329,17 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setProgressDelta(float progressDelta) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L335" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L336">            throw new LockedException();</span>
+    @SuppressWarnings(&quot;Duplicates&quot;)
+    public void setProgressDelta(float progressDelta) throws LockedException {
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L335">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L338" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
+<span class="fc bfc" id="L337" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
                 progressDelta &gt; MAX_PROGRESS_DELTA) {
-<span class="fc" id="L340">            throw new IllegalArgumentException();</span>
+<span class="fc" id="L339">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L342">        mProgressDelta = progressDelta;</span>
-<span class="fc" id="L343">    }</span>
+<span class="fc" id="L341">        mProgressDelta = progressDelta;</span>
+<span class="fc" id="L342">    }</span>
     
     /**
      * Returns amount of confidence expressed as a value between 0.0 and 1.0
@@ -350,7 +349,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-<span class="fc" id="L353">        return mConfidence;</span>
+<span class="fc" id="L352">        return mConfidence;</span>
     }
     
     /**
@@ -364,16 +363,16 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimator 
      * is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L369" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L370">            throw new LockedException();</span>
+    @SuppressWarnings(&quot;Duplicates&quot;)
+    public void setConfidence(double confidence) throws LockedException {
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L369">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L372" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
-<span class="fc" id="L373">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L371" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
+<span class="fc" id="L372">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L375">        mConfidence = confidence;</span>
-<span class="fc" id="L376">    }</span>
+<span class="fc" id="L374">        mConfidence = confidence;</span>
+<span class="fc" id="L375">    }</span>
     
     /**
      * Returns maximum allowed number of iterations. If maximum allowed number
@@ -382,7 +381,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-<span class="fc" id="L385">        return mMaxIterations;</span>
+<span class="fc" id="L384">        return mMaxIterations;</span>
     }
     
     /**
@@ -394,16 +393,15 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L399" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L400">            throw new LockedException();</span>
+    public void setMaxIterations(int maxIterations) throws LockedException {
+<span class="fc bfc" id="L397" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L398">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L402" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
-<span class="fc" id="L403">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L400" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L401">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L405">        mMaxIterations = maxIterations;</span>
-<span class="fc" id="L406">    }    </span>
+<span class="fc" id="L403">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L404">    }    </span>
     
     /**
      * Sets list of corresponding distorted and undistorted points.
@@ -415,14 +413,13 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size.
      */
     public void setPoints(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints) throws LockedException, 
-            IllegalArgumentException {
-<span class="fc bfc" id="L420" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L421">            throw new LockedException();</span>
+            List&lt;Point2D&gt; undistortedPoints) throws LockedException {
+<span class="fc bfc" id="L417" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L418">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L424">        internalSetPoints(distortedPoints, undistortedPoints);</span>
-<span class="fc" id="L425">    }</span>
+<span class="fc" id="L421">        internalSetPoints(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L422">    }</span>
     
     /**
      * Returns list of distorted points. Distorted points are obtained after
@@ -430,7 +427,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return list of distorted points.
      */
     public List&lt;Point2D&gt; getDistortedPoints() {
-<span class="fc" id="L433">        return mDistortedPoints;</span>
+<span class="fc" id="L430">        return mDistortedPoints;</span>
     }
     
     /**
@@ -438,7 +435,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return list of undistorted points.
      */
     public List&lt;Point2D&gt; getUndistortedPoints() {
-<span class="fc" id="L441">        return mUndistortedPoints;</span>
+<span class="fc" id="L438">        return mUndistortedPoints;</span>
     }
     
     /**
@@ -448,7 +445,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return distortion center or null.
      */
     public Point2D getDistortionCenter() {
-<span class="fc" id="L451">        return mDistortionCenter;</span>
+<span class="fc" id="L448">        return mDistortionCenter;</span>
     }
         
     /**
@@ -461,19 +458,19 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public void setDistortionCenter(Point2D distortionCenter) 
             throws LockedException {
-<span class="fc bfc" id="L464" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L465">            throw new LockedException();</span>
+<span class="fc bfc" id="L461" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L462">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L468">        mDistortionCenter = distortionCenter;</span>
-<span class="fc" id="L469">    }    </span>
+<span class="fc" id="L465">        mDistortionCenter = distortionCenter;</span>
+<span class="fc" id="L466">    }    </span>
     
     /**
      * Returns horizontal focal length expressed in pixels.
      * @return horizontal focal length expressed in pixels.
      */
     public double getHorizontalFocalLength() {
-<span class="fc" id="L476">        return mHorizontalFocalLength;</span>
+<span class="fc" id="L473">        return mHorizontalFocalLength;</span>
     }
     
     /**
@@ -483,19 +480,19 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public void setHorizontalFocalLength(double horizontalFocalLength)
             throws LockedException {
-<span class="pc bpc" id="L486" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L487">            throw new LockedException();</span>
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L484">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L490">        mHorizontalFocalLength = horizontalFocalLength;</span>
-<span class="fc" id="L491">    }</span>
+<span class="fc" id="L487">        mHorizontalFocalLength = horizontalFocalLength;</span>
+<span class="fc" id="L488">    }</span>
     
     /**
      * Returns vertical focal length expressed in pixels.
      * @return vertical focal length expressed in pixels.
      */
     public double getVerticalFocalLength() {
-<span class="fc" id="L498">        return mVerticalFocalLength;</span>
+<span class="fc" id="L495">        return mVerticalFocalLength;</span>
     }
     
     /**
@@ -505,19 +502,19 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public void setVerticalFocalLength(double verticalFocalLength)
             throws LockedException {
-<span class="pc bpc" id="L508" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L509">            throw new LockedException();</span>
+<span class="pc bpc" id="L505" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L506">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L512">        mVerticalFocalLength = verticalFocalLength;</span>
-<span class="fc" id="L513">    }</span>
+<span class="fc" id="L509">        mVerticalFocalLength = verticalFocalLength;</span>
+<span class="fc" id="L510">    }</span>
     
     /**
      * Returns skew expressed in pixels.
      * @return skew expressed in pixels.
      */
     public double getSkew(){
-<span class="fc" id="L520">        return mSkew;</span>
+<span class="fc" id="L517">        return mSkew;</span>
     }
     
     /**
@@ -526,22 +523,22 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setSkew(double skew) throws LockedException {
-<span class="pc bpc" id="L529" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L530">            throw new LockedException();</span>
+<span class="pc bpc" id="L526" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L527">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L533">        mSkew = skew;</span>
-<span class="fc" id="L534">    }</span>
+<span class="fc" id="L530">        mSkew = skew;</span>
+<span class="fc" id="L531">    }</span>
     
     /**
      * Returns pinhole camera intrinsic parameters associated to this estimator.
      * @return pinhole camera intrinsic parameters associated to this estimator.
      */
     public PinholeCameraIntrinsicParameters getIntrinsic() {
-<span class="fc" id="L541">        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength,</span>
+<span class="fc" id="L538">        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength,</span>
                 mVerticalFocalLength, 
-<span class="fc bfc" id="L543" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomX() : 0.0, </span>
-<span class="fc bfc" id="L544" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomY() : 0.0,</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomX() : 0.0, </span>
+<span class="fc bfc" id="L541" title="All 2 branches covered.">                mDistortionCenter != null ? mDistortionCenter.getInhomY() : 0.0,</span>
                 mSkew);
     }
     
@@ -553,13 +550,13 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public void setIntrinsic(PinholeCameraIntrinsicParameters intrinsic)
             throws LockedException {
-<span class="fc" id="L556">        setIntrinsic(</span>
-<span class="fc" id="L557">                new InhomogeneousPoint2D(intrinsic.getHorizontalPrincipalPoint(),</span>
-<span class="fc" id="L558">                intrinsic.getVerticalPrincipalPoint()), </span>
-<span class="fc" id="L559">                intrinsic.getHorizontalFocalLength(),</span>
-<span class="fc" id="L560">                intrinsic.getVerticalFocalLength(),</span>
-<span class="fc" id="L561">                intrinsic.getSkewness());</span>
-<span class="fc" id="L562">    }</span>
+<span class="fc" id="L553">        setIntrinsic(</span>
+<span class="fc" id="L554">                new InhomogeneousPoint2D(intrinsic.getHorizontalPrincipalPoint(),</span>
+<span class="fc" id="L555">                intrinsic.getVerticalPrincipalPoint()), </span>
+<span class="fc" id="L556">                intrinsic.getHorizontalFocalLength(),</span>
+<span class="fc" id="L557">                intrinsic.getVerticalFocalLength(),</span>
+<span class="fc" id="L558">                intrinsic.getSkewness());</span>
+<span class="fc" id="L559">    }</span>
     
     /**
      * Sets intrinsic parameters for this estimator.
@@ -572,22 +569,22 @@ public abstract class RadialDistortionRobustEstimator {
     public void setIntrinsic(Point2D distortionCenter, 
             double horizontalFocalLength, double verticalFocalLength,
             double skew) throws LockedException {
-<span class="pc bpc" id="L575" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L576">            throw new LockedException();</span>
+<span class="pc bpc" id="L572" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L573">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L579">        mDistortionCenter = distortionCenter;</span>
-<span class="fc" id="L580">        mHorizontalFocalLength = horizontalFocalLength;</span>
-<span class="fc" id="L581">        mVerticalFocalLength = verticalFocalLength;</span>
-<span class="fc" id="L582">        mSkew = skew;</span>
-<span class="fc" id="L583">    }</span>
+<span class="fc" id="L576">        mDistortionCenter = distortionCenter;</span>
+<span class="fc" id="L577">        mHorizontalFocalLength = horizontalFocalLength;</span>
+<span class="fc" id="L578">        mVerticalFocalLength = verticalFocalLength;</span>
+<span class="fc" id="L579">        mSkew = skew;</span>
+<span class="fc" id="L580">    }</span>
     
     /**
      * Returns number of radial distortion parameters to estimate.
      * @return number of radial distortion parameters to estimate.
      */
     public int getNumKParams() {
-<span class="fc" id="L590">        return mNumKParams;</span>
+<span class="fc" id="L587">        return mNumKParams;</span>
     }
     
     /**
@@ -596,17 +593,16 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if number of parameters is less than 1.
      */
-    public void setNumKParams(int numKParams) throws LockedException, 
-            IllegalArgumentException {
-<span class="pc bpc" id="L601" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L602">            throw new LockedException();</span>
+    public void setNumKParams(int numKParams) throws LockedException {
+<span class="pc bpc" id="L597" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L598">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L604" title="1 of 2 branches missed.">        if (numKParams &lt; MIN_K_PARAMS) {</span>
-<span class="nc" id="L605">            throw new IllegalArgumentException();</span>
+<span class="pc bpc" id="L600" title="1 of 2 branches missed.">        if (numKParams &lt; MIN_K_PARAMS) {</span>
+<span class="nc" id="L601">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L608">        mNumKParams = numKParams;</span>
-<span class="fc" id="L609">    }    </span>
+<span class="fc" id="L604">        mNumKParams = numKParams;</span>
+<span class="fc" id="L605">    }    </span>
     
     /**
      * Indicates if lists of corresponding points have already been provided and
@@ -614,7 +610,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean arePointsAvailable() {
-<span class="pc bpc" id="L617" title="1 of 4 branches missed.">        return mDistortedPoints != null &amp;&amp; mUndistortedPoints != null;</span>
+<span class="pc bpc" id="L613" title="1 of 4 branches missed.">        return mDistortedPoints != null &amp;&amp; mUndistortedPoints != null;</span>
     }    
     
     /**
@@ -624,8 +620,8 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="fc bfc" id="L627" title="All 2 branches covered.">        return arePointsAvailable() &amp;&amp; </span>
-<span class="fc bfc" id="L628" title="All 2 branches covered.">                areValidPoints(mDistortedPoints, mUndistortedPoints);</span>
+<span class="fc bfc" id="L623" title="All 2 branches covered.">        return arePointsAvailable() &amp;&amp; </span>
+<span class="fc bfc" id="L624" title="All 2 branches covered.">                areValidPoints(mDistortedPoints, mUndistortedPoints);</span>
     }    
     
     /**
@@ -636,7 +632,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return quality scores corresponding to each point.
      */
     public double[] getQualityScores() {
-<span class="fc" id="L639">        return null;</span>
+<span class="fc" id="L635">        return null;</span>
     }
     
     /**
@@ -650,8 +646,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-<span class="fc" id="L654">            IllegalArgumentException { }</span>
+<span class="fc" id="L649">    public void setQualityScores(double[] qualityScores) throws LockedException { }</span>
 
     /**
      * Estimates a radial distortion using a robust estimator and
@@ -681,18 +676,18 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             RobustEstimatorMethod method) {
-<span class="fc bfc" id="L684" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L679" title="All 5 branches covered.">        switch (method) {</span>
             case LMedS:
-<span class="fc" id="L686">                return new LMedSRadialDistortionRobustEstimator();</span>
+<span class="fc" id="L681">                return new LMedSRadialDistortionRobustEstimator();</span>
             case MSAC:
-<span class="fc" id="L688">                return new MSACRadialDistortionRobustEstimator();</span>
+<span class="fc" id="L683">                return new MSACRadialDistortionRobustEstimator();</span>
             case PROSAC:
-<span class="fc" id="L690">                return new PROSACRadialDistortionRobustEstimator();</span>
+<span class="fc" id="L685">                return new PROSACRadialDistortionRobustEstimator();</span>
             case PROMedS:
-<span class="fc" id="L692">                return new PROMedSRadialDistortionRobustEstimator();</span>
+<span class="fc" id="L687">                return new PROMedSRadialDistortionRobustEstimator();</span>
             case RANSAC:
             default:
-<span class="fc" id="L695">                return new RANSACRadialDistortionRobustEstimator();</span>
+<span class="fc" id="L690">                return new RANSACRadialDistortionRobustEstimator();</span>
         }
     }
     
@@ -716,25 +711,25 @@ public abstract class RadialDistortionRobustEstimator {
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints, 
             double[] qualityScores, Point2D distortionCenter, 
-            RobustEstimatorMethod method) throws IllegalArgumentException {
-<span class="fc bfc" id="L720" title="All 5 branches covered.">        switch (method) {</span>
+            RobustEstimatorMethod method) {
+<span class="fc bfc" id="L715" title="All 5 branches covered.">        switch (method) {</span>
             case LMedS:
-<span class="fc" id="L722">                return new LMedSRadialDistortionRobustEstimator(distortedPoints,</span>
+<span class="fc" id="L717">                return new LMedSRadialDistortionRobustEstimator(distortedPoints,</span>
                         undistortedPoints, distortionCenter);
             case MSAC:
-<span class="fc" id="L725">                return new MSACRadialDistortionRobustEstimator(distortedPoints,</span>
+<span class="fc" id="L720">                return new MSACRadialDistortionRobustEstimator(distortedPoints,</span>
                         undistortedPoints, distortionCenter);
             case PROSAC:
-<span class="fc" id="L728">                return new PROSACRadialDistortionRobustEstimator(</span>
+<span class="fc" id="L723">                return new PROSACRadialDistortionRobustEstimator(</span>
                         distortedPoints, undistortedPoints, qualityScores, 
                         distortionCenter);
             case PROMedS:
-<span class="fc" id="L732">                return new PROMedSRadialDistortionRobustEstimator(</span>
+<span class="fc" id="L727">                return new PROMedSRadialDistortionRobustEstimator(</span>
                         distortedPoints, undistortedPoints, qualityScores, 
                         distortionCenter);                
             case RANSAC:
             default:
-<span class="fc" id="L737">                return new RANSACRadialDistortionRobustEstimator(</span>
+<span class="fc" id="L732">                return new RANSACRadialDistortionRobustEstimator(</span>
                         distortedPoints, undistortedPoints, distortionCenter);
         }
     }
@@ -757,24 +752,23 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints, 
-            Point2D distortionCenter, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L762" title="All 5 branches covered.">        switch (method) {</span>
+            Point2D distortionCenter, RobustEstimatorMethod method) {
+<span class="fc bfc" id="L756" title="All 5 branches covered.">        switch (method) {</span>
             case LMedS:
-<span class="fc" id="L764">                return new LMedSRadialDistortionRobustEstimator(distortedPoints,</span>
+<span class="fc" id="L758">                return new LMedSRadialDistortionRobustEstimator(distortedPoints,</span>
                         undistortedPoints, distortionCenter);
             case MSAC:
-<span class="fc" id="L767">                return new MSACRadialDistortionRobustEstimator(distortedPoints,</span>
+<span class="fc" id="L761">                return new MSACRadialDistortionRobustEstimator(distortedPoints,</span>
                         undistortedPoints, distortionCenter);
             case PROSAC:
-<span class="fc" id="L770">                return new PROSACRadialDistortionRobustEstimator(</span>
+<span class="fc" id="L764">                return new PROSACRadialDistortionRobustEstimator(</span>
                         distortedPoints, undistortedPoints, distortionCenter);
             case PROMedS:
-<span class="fc" id="L773">                return new PROMedSRadialDistortionRobustEstimator(</span>
+<span class="fc" id="L767">                return new PROMedSRadialDistortionRobustEstimator(</span>
                         distortedPoints, undistortedPoints, distortionCenter);                
             case RANSAC:
             default:
-<span class="fc" id="L777">                return new RANSACRadialDistortionRobustEstimator(</span>
+<span class="fc" id="L771">                return new RANSACRadialDistortionRobustEstimator(</span>
                         distortedPoints, undistortedPoints, distortionCenter);
         }
     }
@@ -795,9 +789,8 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints,
-            double[] qualityScores, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
-<span class="fc" id="L800">        return create(distortedPoints, undistortedPoints, qualityScores, null, </span>
+            double[] qualityScores, RobustEstimatorMethod method) {
+<span class="fc" id="L793">        return create(distortedPoints, undistortedPoints, qualityScores, null, </span>
                 method);
     }
 
@@ -816,8 +809,8 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints,
-            RobustEstimatorMethod method) throws IllegalArgumentException{
-<span class="fc" id="L820">        return create(distortedPoints, undistortedPoints, (Point2D)null, </span>
+            RobustEstimatorMethod method) {
+<span class="fc" id="L813">        return create(distortedPoints, undistortedPoints, (Point2D)null, </span>
                 method);
     }
     
@@ -826,7 +819,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return an instance of a radial distortion robust estimator.
      */
     public static RadialDistortionRobustEstimator create() {
-<span class="fc" id="L829">        return create(DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L822">        return create(DEFAULT_ROBUST_METHOD);</span>
     }
     
     
@@ -844,8 +837,8 @@ public abstract class RadialDistortionRobustEstimator {
      */    
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints,
-            double[] qualityScores) throws IllegalArgumentException {
-<span class="fc" id="L848">        return create(distortedPoints, undistortedPoints, qualityScores,</span>
+            double[] qualityScores) {
+<span class="fc" id="L841">        return create(distortedPoints, undistortedPoints, qualityScores,</span>
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -861,9 +854,8 @@ public abstract class RadialDistortionRobustEstimator {
      * the same size.
      */    
     public static RadialDistortionRobustEstimator create(
-            List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints)
-            throws IllegalArgumentException {
-<span class="fc" id="L866">        return create(distortedPoints, undistortedPoints, </span>
+            List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints) {
+<span class="fc" id="L858">        return create(distortedPoints, undistortedPoints, </span>
                 DEFAULT_ROBUST_METHOD);
     }
     
@@ -885,9 +877,8 @@ public abstract class RadialDistortionRobustEstimator {
      */    
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints,
-            double[] qualityScores, Point2D distortionCenter) 
-            throws IllegalArgumentException {
-<span class="fc" id="L890">        return create(distortedPoints, undistortedPoints, qualityScores, </span>
+            double[] qualityScores, Point2D distortionCenter) {
+<span class="fc" id="L881">        return create(distortedPoints, undistortedPoints, qualityScores, </span>
                 distortionCenter, DEFAULT_ROBUST_METHOD);
     }
     
@@ -908,8 +899,8 @@ public abstract class RadialDistortionRobustEstimator {
      */    
     public static RadialDistortionRobustEstimator create(
             List&lt;Point2D&gt; distortedPoints, List&lt;Point2D&gt; undistortedPoints,
-            Point2D distortionCenter) throws IllegalArgumentException {
-<span class="fc" id="L912">        return create(distortedPoints, undistortedPoints, distortionCenter,</span>
+            Point2D distortionCenter) {
+<span class="fc" id="L903">        return create(distortedPoints, undistortedPoints, distortionCenter,</span>
                 DEFAULT_ROBUST_METHOD);
     }
     
@@ -925,11 +916,11 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static boolean areValidPoints(List&lt;Point2D&gt; distortedPoints,
             List&lt;Point2D&gt; undistortedPoints) {
-<span class="fc bfc" id="L928" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
-<span class="fc" id="L929">            return false;</span>
+<span class="fc bfc" id="L919" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
+<span class="fc" id="L920">            return false;</span>
         }
-<span class="fc bfc" id="L931" title="All 2 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp;</span>
-<span class="fc bfc" id="L932" title="All 2 branches covered.">                distortedPoints.size() &gt;= MIN_NUMBER_OF_POINTS;</span>
+<span class="fc bfc" id="L922" title="All 2 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp;</span>
+<span class="fc bfc" id="L923" title="All 2 branches covered.">                distortedPoints.size() &gt;= MIN_NUMBER_OF_POINTS;</span>
     }    
     
     /**
@@ -941,19 +932,20 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have 
      * the same size.
      */
+    @SuppressWarnings(&quot;Duplicates&quot;)
     private void internalSetPoints(List&lt;Point2D&gt; distortedPoints, 
-            List&lt;Point2D&gt; undistortedPoints) throws IllegalArgumentException {
+            List&lt;Point2D&gt; undistortedPoints) {
 
-<span class="fc bfc" id="L947" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
-<span class="fc" id="L948">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L939" title="All 4 branches covered.">        if (distortedPoints == null || undistortedPoints == null) {</span>
+<span class="fc" id="L940">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc bfc" id="L951" title="All 2 branches covered.">        if (!areValidPoints(distortedPoints, undistortedPoints)) {</span>
-<span class="fc" id="L952">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">        if (!areValidPoints(distortedPoints, undistortedPoints)) {</span>
+<span class="fc" id="L944">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L955">        mDistortedPoints = distortedPoints;</span>
-<span class="fc" id="L956">        mUndistortedPoints = undistortedPoints;</span>
-<span class="fc" id="L957">    }    </span>
+<span class="fc" id="L947">        mDistortedPoints = distortedPoints;</span>
+<span class="fc" id="L948">        mUndistortedPoints = undistortedPoints;</span>
+<span class="fc" id="L949">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

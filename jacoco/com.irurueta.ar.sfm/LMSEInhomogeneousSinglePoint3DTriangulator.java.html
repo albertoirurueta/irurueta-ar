@@ -185,7 +185,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulator extends
 <span class="fc" id="L185">            Plane principalPlane = new Plane();</span>
 <span class="fc" id="L186">            int row = 0;</span>
             double rowNorm;
-<span class="fc bfc" id="L188" title="All 2 branches covered.">            for (int i = 0; i &lt; numViews; i++) {</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">            for (int i = 0; i &lt; numViews; i++) {</span>
 <span class="fc" id="L189">                point = points2D.get(i);</span>
 <span class="fc" id="L190">                camera = cameras.get(i);</span>
                 
@@ -251,7 +251,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulator extends
 <span class="fc" id="L251">                a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
 <span class="fc" id="L252">                b[row] /= rowNorm;</span>
                 
-<span class="pc bpc" id="L254" title="2 of 4 branches missed.">                if(!mAllowLMSESolution &amp;&amp; i == MIN_REQUIRED_VIEWS) break;</span>
+<span class="pc bpc" id="L254" title="1 of 4 branches missed.">                if(!mAllowLMSESolution &amp;&amp; i == MIN_REQUIRED_VIEWS) break;</span>
             }
             
             //make SVD to find solution of A * M = b

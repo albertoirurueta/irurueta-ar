@@ -3087,7 +3087,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACRadialDistortionRobustEstimator.html#L203">203</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L361">361</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L352">352</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>                new MSACRobustEstimatorListener&lt;RadialDistortion&gt;() {
@@ -6762,7 +6762,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L420">420</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L380">380</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L371">371</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            }
@@ -7012,7 +7012,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L422">422</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L382">382</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L373">373</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            @Override
@@ -7122,6 +7122,143 @@ com.irurueta:irurueta-ar
             List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();
             cameras.add(camera1);
             cameras.add(camera2);</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/ImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/ImageOfAbsoluteConicRobustEstimator.html#L393">393</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.html#L287">287</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>            ImageOfAbsoluteConicRobustEstimatorListener listener) 
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mListener = listener;
+    }
+    
+    /**
+     * Indicates whether listener has been provided and is available for
+     * retrieval.
+     * @return true if available, false otherwise.
+     */
+    public boolean isListenerAvailable() {
+        return mListener != null;
+    }
+    
+    /**
+     * Indicates if this instance is locked because estimation is being 
+     * computed.
+     * @return true if locked, false otherwise.
+     */
+    public boolean isLocked() {
+        return mLocked;
+    }
+    
+    /**
+     * Returns amount of progress variation before notifying a progress change
+     * during estimation.
+     * @return amount of progress variation before notifying a progress change
+     * during estimation.
+     */
+    public float getProgressDelta() {
+        return mProgressDelta;
+    }
+    
+    /**
+     * Sets amount of progress variation before notifying a progress change 
+     * during estimation.
+     * @param progressDelta amount of progress variation before notifying a
+     * progress change during estimation.
+     * @throws IllegalArgumentException if progress delta is less than zero or
+     * greater than 1.
+     * @throws LockedException if this estimator is locked because an estimation
+     * is being computed.
+     */
+    @SuppressWarnings(&quot;Duplicates&quot;)
+    public void setProgressDelta(float progressDelta) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (progressDelta &lt; MIN_PROGRESS_DELTA ||
+                progressDelta &gt; MAX_PROGRESS_DELTA) {
+            throw new IllegalArgumentException();
+        }
+        mProgressDelta = progressDelta;
+    }
+    
+    /**
+     * Returns amount of confidence expressed as a value between 0.0 and 1.0
+     * (which is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     * @return amount of confidence as a value between 0.0 and 1.0.
+     */
+    public double getConfidence() {
+        return mConfidence;
+    }
+    
+    /**
+     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which
+     * is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     * @param confidence confidence to be set as a value between 0.0 and 1.0.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and
+     * 1.0.
+     * @throws LockedException if this estimator is locked because an estimator
+     * is being computed.
+     */
+    @SuppressWarnings(&quot;Duplicates&quot;)
+    public void setConfidence(double confidence) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {
+            throw new IllegalArgumentException();
+        }
+        mConfidence = confidence;
+    }
+    
+    /**
+     * Returns maximum allowed number of iterations. If maximum allowed number
+     * of iterations is achieved without converging to a result when calling
+     * estimate(), a RobustEstimatorException will be raised.
+     * @return maximum allowed number of iterations.
+     */
+    public int getMaxIterations(){
+        return mMaxIterations;
+    }
+    
+    /**
+     * Sets maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     * @param maxIterations maximum allowed number of iterations to be set.
+     * @throws IllegalArgumentException if provided value is less than 1.
+     * @throws LockedException if this estimator is locked because an estimation
+     * is being computed.
+     */
+    public void setMaxIterations(int maxIterations) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (maxIterations &lt; MIN_ITERATIONS) {
+            throw new IllegalArgumentException();
+        }
+        mMaxIterations = maxIterations;
+    }
+    
+    /**
+     * Gets list of homographies to estimate IAC.
+     * @return list of homographies to estimate IAC.
+     */
+    public List&lt;Transformation2D&gt; getHomographies(){</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -7408,148 +7545,6 @@ com.irurueta:irurueta-ar
 
         //linear acceleration
         mStateAccelerationX = mAccumulatedAccelerationSampleX;</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="b">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.html#L288">288</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.html#L378">378</a></td></tr>
-<tr class="a"><td colspan='2'>
-<div>
-<pre>    public void setListener(RadialDistortionRobustEstimatorListener listener) 
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        mListener = listener;
-    }
-    
-    /**
-     * Indicates whether listener has been provided and is available for
-     * retrieval.
-     * @return true if available, false otherwise.
-     */
-    public boolean isListenerAvailable() {
-        return mListener != null;
-    }
-    
-    /**
-     * Indicates if this instance is locked because estimation is being computed.
-     * @return true if locked, false otherwise.
-     */
-    public boolean isLocked() {
-        return mLocked;
-    }
-    
-    /**
-     * Returns amount of progress variation before notifying a progress change
-     * during estimation.
-     * @return amount of progress variation before notifying a progress change
-     * during estimation.
-     */
-    public float getProgressDelta() {
-        return mProgressDelta;
-    }
-    
-    /**
-     * Sets amount of progress variation before notifying a progress change
-     * during estimation.
-     * @param progressDelta amount of progress variation before notifying a
-     * progress change during estimation.
-     * @throws IllegalArgumentException if progress delta is less than zero or
-     * greater than 1.
-     * @throws LockedException if this estimator is locked because an estimation
-     * is being computed.
-     */
-    public void setProgressDelta(float progressDelta) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (progressDelta &lt; MIN_PROGRESS_DELTA ||
-                progressDelta &gt; MAX_PROGRESS_DELTA) {
-            throw new IllegalArgumentException();
-        }
-        mProgressDelta = progressDelta;
-    }
-    
-    /**
-     * Returns amount of confidence expressed as a value between 0.0 and 1.0
-     * (which is equivalent to 100%). The amount of confidence indicates the
-     * probability that the estimated result is correct. Usually this value will
-     * be close to 1.0, but not exactly 1.0.
-     * @return amount of confidence as a value between 0.0 and 1.0.
-     */
-    public double getConfidence() {
-        return mConfidence;
-    }
-    
-    /**
-     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which
-     * is equivalent to 100%). The amount of confidence indicates the 
-     * probability that the estimated result is correct. Usually this value will
-     * be close to 1.0, but not exactly 1.0.
-     * @param confidence confidence to be set as a value between 0.0 and 1.0.
-     * @throws IllegalArgumentException if provided value is not between 0.0 and 
-     * 1.0.
-     * @throws LockedException if this estimator is locked because an estimator 
-     * is being computed.
-     */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {
-            throw new IllegalArgumentException();
-        }
-        mConfidence = confidence;
-    }
-    
-    /**
-     * Returns maximum allowed number of iterations. If maximum allowed number
-     * of iterations is achieved without converging to a result when calling 
-     * estimate(), a RobustEstimatorException will be raised.
-     * @return maximum allowed number of iterations.
-     */
-    public int getMaxIterations() {
-        return mMaxIterations;
-    }
-    
-    /**
-     * Sets maximum allowed number of iterations. When the maximum number of
-     * iterations is exceeded, result will not be available, however an 
-     * approximate result will be available for retrieval
-     * @param maxIterations maximum allowed number of iterations to be set.
-     * @throws IllegalArgumentException if provided value is less than 1.
-     * @throws LockedException if this estimator is locked because an estimation
-     * is being computed.
-     */
-    public void setMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (maxIterations &lt; MIN_ITERATIONS) {
-            throw new IllegalArgumentException();
-        }
-        mMaxIterations = maxIterations;
-    }    
-    
-    /**
-     * Sets list of corresponding distorted and undistorted points.
-     * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
-     * @param undistortedPoints list of undistorted points.
-     * @throws LockedException if estimator is locked.
-     * @throws IllegalArgumentException if provided lists of points don't have 
-     * the same size.
-     */
-    public void setPoints(List&lt;Point2D&gt; distortedPoints, </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -8476,10 +8471,10 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L429">429</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L389">389</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L380">380</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/RANSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACRadialDistortionRobustEstimator.html#L235">235</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACRadialDistortionRobustEstimator.html#L231">231</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;
@@ -8850,7 +8845,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L273">273</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L157">157</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L156">156</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>                new MSACRobustEstimatorListener&lt;DualAbsoluteQuadric&gt;() {
@@ -8914,7 +8909,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L289">289</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L169">169</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L166">166</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>                new MSACRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;() {
@@ -9278,133 +9273,6 @@ com.irurueta:irurueta-ar
                 //in case we want an exact solution (up to scale) when LMSE is
                 //disabled, we stop after 2 equations
                 if (!isLMSESolutionAllowed() &amp;&amp; (counter &gt;= MIN_REQUIRED_EQUATIONS - 2)) {</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="b">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.html#L303">303</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/RobustSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/RobustSinglePoint3DTriangulator.html#L269">269</a></td></tr>
-<tr class="a"><td colspan='2'>
-<div>
-<pre>    }
-    
-    /**
-     * Indicates if this instance is locked because estimation is being computed.
-     * @return true if locked, false otherwise.
-     */
-    public boolean isLocked() {
-        return mLocked;
-    }
-    
-    /**
-     * Returns amount of progress variation before notifying a progress change
-     * during estimation.
-     * @return amount of progress variation before notifying a progress change
-     * during estimation.
-     */
-    public float getProgressDelta() {
-        return mProgressDelta;
-    }
-    
-    /**
-     * Sets amount of progress variation before notifying a progress change
-     * during estimation.
-     * @param progressDelta amount of progress variation before notifying a
-     * progress change during estimation.
-     * @throws IllegalArgumentException if progress delta is less than zero or
-     * greater than 1.
-     * @throws LockedException if this estimator is locked because an estimation
-     * is being computed.
-     */
-    public void setProgressDelta(float progressDelta) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (progressDelta &lt; MIN_PROGRESS_DELTA ||
-                progressDelta &gt; MAX_PROGRESS_DELTA) {
-            throw new IllegalArgumentException();
-        }
-        mProgressDelta = progressDelta;
-    }
-    
-    /**
-     * Returns amount of confidence expressed as a value between 0.0 and 1.0
-     * (which is equivalent to 100%). The amount of confidence indicates the
-     * probability that the estimated result is correct. Usually this value will
-     * be close to 1.0, but not exactly 1.0.
-     * @return amount of confidence as a value between 0.0 and 1.0.
-     */
-    public double getConfidence() {
-        return mConfidence;
-    }
-    
-    /**
-     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which
-     * is equivalent to 100%). The amount of confidence indicates the 
-     * probability that the estimated result is correct. Usually this value will
-     * be close to 1.0, but not exactly 1.0.
-     * @param confidence confidence to be set as a value between 0.0 and 1.0.
-     * @throws IllegalArgumentException if provided value is not between 0.0 and 
-     * 1.0.
-     * @throws LockedException if this estimator is locked because an estimator 
-     * is being computed.
-     */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {
-            throw new IllegalArgumentException();
-        }
-        mConfidence = confidence;
-    }
-    
-    /**
-     * Returns maximum allowed number of iterations. If maximum allowed number
-     * of iterations is achieved without converging to a result when calling 
-     * estimate(), a RobustEstimatorException will be raised.
-     * @return maximum allowed number of iterations.
-     */
-    public int getMaxIterations() {
-        return mMaxIterations;
-    }
-    
-    /**
-     * Sets maximum allowed number of iterations. When the maximum number of
-     * iterations is exceeded, result will not be available, however an 
-     * approximate result will be available for retrieval
-     * @param maxIterations maximum allowed number of iterations to be set.
-     * @throws IllegalArgumentException if provided value is less than 1.
-     * @throws LockedException if this estimator is locked because an estimation
-     * is being computed.
-     */
-    public void setMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (maxIterations &lt; MIN_ITERATIONS) {
-            throw new IllegalArgumentException();
-        }
-        mMaxIterations = maxIterations;
-    }    
-    
-    /**
-     * Sets list of corresponding distorted and undistorted points.
-     * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
-     * @param undistortedPoints list of undistorted points.
-     * @throws LockedException if estimator is locked.
-     * @throws IllegalArgumentException if provided lists of points don't have 
-     * the same size.
-     */
-    public void setPoints(List&lt;Point2D&gt; distortedPoints, </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -10985,13 +10853,13 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.html#L165">165</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L320">320</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L313">313</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L282">282</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L166">166</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L165">165</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            }
@@ -11043,13 +10911,13 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACImageOfAbsoluteConicRobustEstimator.html#L176">176</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L329">329</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L321">321</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L298">298</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L178">178</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L175">175</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            }
@@ -11201,13 +11069,13 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.html#L167">167</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L322">322</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L315">315</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L284">284</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L168">168</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L167">167</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            @Override
@@ -11260,13 +11128,13 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACImageOfAbsoluteConicRobustEstimator.html#L178">178</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L331">331</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L323">323</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L300">300</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L180">180</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L177">177</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            @Override
@@ -12542,117 +12410,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L189">189</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L200">200</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>        this(cameras, listener);
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the PROMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed 
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
-     * @return stop threshold to stop the algorithm prematurely when a certain
-     * accuracy has been reached.
-     */
-    public double getStopThreshold() {
-        return mStopThreshold;
-    }
-    
-    /**
-     * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the PROMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been 
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
-     * when a certain accuracy has been reached.
-     * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {
-            throw new IllegalArgumentException();
-        }
-        mStopThreshold = stopThreshold;
-    }
-    
-    /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @return quality scores corresponding to each camera. 
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @param qualityScores quality scores corresponding to each camera.
-     * @throws LockedException if robust estimator is locked because an
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and list contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L174">174</a></td></tr>
 <tr class="a">
@@ -12741,12 +12498,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L189">189</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L197">197</a></td></tr>
-<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L278">278</a></td></tr>
 <tr class="a">
@@ -12754,19 +12505,19 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L200">200</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
-<pre>        this(cameras, listener);
+<pre>        this(distortedPoints, undistortedPoints, distortionCenter, listener);
         internalSetQualityScores(qualityScores);
     }
     
     /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
+     * Returns threshold to be used to keep the algorithm iterating in case that 
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
      * algorithm will stop.
-     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
      * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
      * iterate for a long time trying to find the best solution when indeed 
      * there is no need to do that if a reasonable threshold has already been
      * reached.
@@ -12782,20 +12533,20 @@ com.irurueta:irurueta-ar
     
     /**
      * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
      * algorithm will stop.
-     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
      * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been 
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
      * reached.
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     * @param stopThreshold stop threshold to stop the algorithm prematurely 
      * when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if robust estimator is locked because an 
@@ -12809,14 +12560,14 @@ com.irurueta:irurueta-ar
         if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
+        
         mStopThreshold = stopThreshold;
     }
     
     /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @return quality scores corresponding to each camera. 
+     * Returns quality scores corresponding to each provided point.
+     * The larger the score value the betther the quality of the sampled point.
+     * @return quality scores corresponding to each point.
      */
     @Override
     public double[] getQualityScores() {
@@ -12824,14 +12575,13 @@ com.irurueta:irurueta-ar
     }
     
     /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @param qualityScores quality scores corresponding to each camera.
-     * @throws LockedException if robust estimator is locked because an
+     * Sets quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sampled point.
+     * @param qualityScores quality scores corresponding to each point.
+     * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     * @throws IllegalArgumentException if provided quality scores length is 
+     * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
     public void setQualityScores(double[] qualityScores) throws LockedException,
@@ -12840,19 +12590,19 @@ com.irurueta:irurueta-ar
             throw new LockedException();
         }
         internalSetQualityScores(qualityScores);
-    }
+    }    
     
     /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and list contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
+     * Indicates if eatimator is ready to start the radial distortion 
+     * estimation.
+     * This is true when input data (i.e. 2D points and quality scores) are 
+     * provided and a minimum of 2 points are available.
      * @return true if estimator is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; 
+                mQualityScores.length == mDistortedPoints.size();</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>
@@ -12864,12 +12614,9 @@ com.irurueta:irurueta-ar
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L185">185</a></td></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L259">259</a></td></tr>
-<tr class="a">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L182">182</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        this(cameras, listener);
         internalSetQualityScores(qualityScores);
@@ -12948,16 +12695,16 @@ com.irurueta:irurueta-ar
         return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
                 mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L432">432</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L399">399</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        mLastAccelerationX = mStateAccelerationX;
         mLastAccelerationY = mStateAccelerationY;
@@ -13018,24 +12765,18 @@ com.irurueta:irurueta-ar
                 stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);                
         if(mStateOrientation != null) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L397">397</a></td></tr>
 <tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L407">407</a></td></tr>
-<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L516">516</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L429">429</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
-<pre>                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
+<pre>                            PROMedSRadialDistortionRobustEstimator.this, 
                             progress);
                 }
             }
@@ -13043,7 +12784,7 @@ com.irurueta:irurueta-ar
             @Override
             public double[] getQualityScores() {
                 return mQualityScores;
-            }            
+            }                             
         });
         
         try {
@@ -13051,7 +12792,7 @@ com.irurueta:irurueta-ar
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            return innerEstimator.estimate();
+            return innerEstimator.estimate();            
         } catch (com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (com.irurueta.numerical.NotReadyException e) {
@@ -13062,39 +12803,35 @@ com.irurueta:irurueta-ar
     }
 
     /**
-     * Returns method being used for robust estimation.
-     * @return method being used for robust estimation.
-     */
+     * Returns method being used for robust estimation
+     * @return method being used for robust estimation
+     */    
     @Override
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.PROMedS;
-    }     
+    }   
     
     /**
-     * Sets quality scores corresponding to each camera.
-     * This method is used internally and does not check whether instance is 
+     * Sets quality scores corresponding to each provided point.
+     * This method is used internally and does not check whether instance is
      * locked or not.
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than the minimum number of required homographies for current
-     * settings.
+     * smaller than MINIMUM_SIZE.
      */
-    private void internalSetQualityScores(double[] qualityScores)
+    private void internalSetQualityScores(double[] qualityScores) 
             throws IllegalArgumentException {
-        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</pre></div></td></tr></table>
+        if (qualityScores.length &lt; MIN_NUMBER_OF_POINTS) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L359">359</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L376">376</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L474">474</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L390">390</a></td></tr>
@@ -13383,6 +13120,64 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L390">390</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+            }
+            
+            @Override
+            public double[] getQualityScores() {
+                return mQualityScores;
+            }            
+        });
+        
+        try {
+            mLocked = true;
+            innerEstimator.setConfidence(mConfidence);
+            innerEstimator.setMaxIterations(mMaxIterations);
+            innerEstimator.setProgressDelta(mProgressDelta);
+            return innerEstimator.estimate();
+        } catch (com.irurueta.numerical.LockedException e) {
+            throw new LockedException(e);
+        } catch (com.irurueta.numerical.NotReadyException e) {
+            throw new NotReadyException(e);
+        } finally {
+            mLocked = false;
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+        return RobustEstimatorMethod.PROMedS;
+    }     
+    
+    /**
+     * Sets quality scores corresponding to each camera.
+     * This method is used internally and does not check whether instance is 
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required homographies for current
+     * settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores) {
+        if (qualityScores.length &lt; mDAQEstimator.getMinNumberOfRequiredCameras()) {</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1425">1425</a></td></tr>
 <tr class="a">
@@ -13502,6 +13297,187 @@ com.irurueta:irurueta-ar
             }
             
             return;
+        }</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L184">184</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L191">191</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>        this(cameras, listener);
+        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+        return mStopThreshold;
+    }
+    
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been 
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     * when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setStopThreshold(double stopThreshold) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {
+            throw new IllegalArgumentException();
+        }
+        mStopThreshold = stopThreshold;
+    }
+    
+    /**
+     * Returns quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled
+     * camera.
+     * @return quality scores corresponding to each camera. 
+     */
+    @Override
+    public double[] getQualityScores() {
+        return mQualityScores;
+    }
+    
+    /**
+     * Sets quality scores corresponding to each provided camera.
+     * The larger the score value the better the quality of the sampled
+     * camera.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @throws LockedException if robust estimator is locked because an
+     * estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetQualityScores(qualityScores);
+    }
+    
+    /**
+     * Indicates if estimator is ready to start the DAQ estimation.
+     * This is true when input data (i.e. cameras) is provided and list contains
+     * at least the minimum number of required cameras, and also quality scores
+     * are provided.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
+                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/MSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACRadialDistortionRobustEstimator.html#L140">140</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/RANSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACRadialDistortionRobustEstimator.html#L140">140</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>    public MSACRadialDistortionRobustEstimator(List&lt;Point2D&gt; distortedPoints,
+            List&lt;Point2D&gt; undistortedPoints, Point2D distortionCenter,
+            RadialDistortionRobustEstimatorListener listener) {
+        super(distortedPoints, undistortedPoints, distortionCenter, listener);
+        mThreshold = DEFAULT_THRESHOLD;
+    }    
+
+    /**
+     * Returns threshold to determine whether points are inliers or not when 
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. euclidean distance) a 
+     * possible solution has on projected 2D points.
+     * @return threshold to determine whether points are inliers or not when 
+     * testing possible estimation solutions.
+     */
+    public double getThreshold() {
+        return mThreshold;
+    }
+    
+    /**
+     * Sets threshold to determine whether points are inliers or not when 
+     * testing possible estimation solutions.
+     * Thre threshold refers to the amount of error (i.e. euclidean distance) a
+     * possible solution has on projected 2D points.
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than 
+     * zero.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setThreshold(double threshold) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (threshold &lt;= MIN_THRESHOLD) {
+            throw new IllegalArgumentException();
+        }
+        mThreshold = threshold;
+    }
+    
+    /**
+     * Estimates a radial distortion using a robust estimator and
+     * the best set of matched 2D points found using the robust estimator.
+     * @return a radial distortion.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws NotReadyException if provided input data is not enough to start
+     * the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */    
+    @Override
+    public RadialDistortion estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (!isReady()) {
+            throw new NotReadyException();
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
@@ -13707,12 +13683,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L190">190</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L198">198</a></td></tr>
-<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L279">279</a></td></tr>
 <tr class="a">
@@ -13727,14 +13697,14 @@ com.irurueta:irurueta-ar
     }
     
     /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
+     * Returns threshold to be used to keep the algorithm iterating in case that 
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
      * algorithm will stop.
-     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
      * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
      * iterate for a long time trying to find the best solution when indeed 
      * there is no need to do that if a reasonable threshold has already been
      * reached.
@@ -13750,20 +13720,20 @@ com.irurueta:irurueta-ar
     
     /**
      * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
+     * best estimated threshold using median of residuals is not small enough. 
+     * Once a solution is found that generates a threshold below this value, the 
      * algorithm will stop.
-     * The stop threshold can be used to prevent the PROMedS algorithm iterating
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
      * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been 
+     * For instance, in cases where proportion of outliers is very small (close 
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would 
+     * iterate for a long time trying to find the best solution when indeed 
+     * there is no need to do that if a reasonable threshold has already been
      * reached.
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     * @param stopThreshold stop threshold to stop the algorithm prematurely 
      * when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if robust estimator is locked because an 
@@ -13777,14 +13747,14 @@ com.irurueta:irurueta-ar
         if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
+        
         mStopThreshold = stopThreshold;
     }
     
     /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @return quality scores corresponding to each camera. 
+     * Returns quality scores corresponding to each provided point.
+     * The larger the score value the betther the quality of the sampled point.
+     * @return quality scores corresponding to each point.
      */
     @Override
     public double[] getQualityScores() {
@@ -13792,14 +13762,13 @@ com.irurueta:irurueta-ar
     }
     
     /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @param qualityScores quality scores corresponding to each camera.
-     * @throws LockedException if robust estimator is locked because an
+     * Sets quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sampled point.
+     * @param qualityScores quality scores corresponding to each point.
+     * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
+     * @throws IllegalArgumentException if provided quality scores length is 
+     * smaller than MINIMUM_SIZE (i.e. 3 samples).
      */
     @Override
     public void setQualityScores(double[] qualityScores) throws LockedException,
@@ -13808,19 +13777,19 @@ com.irurueta:irurueta-ar
             throw new LockedException();
         }
         internalSetQualityScores(qualityScores);
-    }
+    }    
     
     /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and list contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
+     * Indicates if eatimator is ready to start the radial distortion 
+     * estimation.
+     * This is true when input data (i.e. 2D points and quality scores) are 
+     * provided and a minimum of 2 points are available.
      * @return true if estimator is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
+        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; 
+                mQualityScores.length == mDistortedPoints.size();</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -13832,15 +13801,12 @@ com.irurueta:irurueta-ar
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L186">186</a></td></tr>
 <tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L260">260</a></td></tr>
-<tr class="b">
 <td>com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.html#L350">350</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L183">183</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        internalSetQualityScores(qualityScores);
     }
@@ -13918,22 +13884,22 @@ com.irurueta:irurueta-ar
         return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
                 mQualityScores.length == mCameras.size();</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L219">219</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L242">242</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L372">372</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L372">372</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L395">395</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                        homX * principalPlane.getD();
                 
@@ -13947,16 +13913,16 @@ com.irurueta:irurueta-ar
                 a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);
                 b[row] /= rowNorm;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/MSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/MSACRobustSinglePoint3DTriangulator.html#L107">107</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/RANSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/RANSACRobustSinglePoint3DTriangulator.html#L107">107</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>    public MSACRobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points,
             List&lt;PinholeCamera&gt; cameras, 
@@ -14023,16 +13989,16 @@ com.irurueta:irurueta-ar
             throw new NotReadyException();
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/AlternatingCameraCalibrator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/AlternatingCameraCalibrator.html#L748">748</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/ErrorOptimizationCameraCalibrator.html#L1176">1176</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>    }
     
@@ -14079,16 +14045,16 @@ com.irurueta:irurueta-ar
         mDistortionMethod = distortionMethod;
     }   </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.html#L593">593</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.html#L384">384</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            }                                         
         });
@@ -14123,16 +14089,16 @@ com.irurueta:irurueta-ar
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.PROSAC;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L853">853</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L1106">1106</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -14161,16 +14127,16 @@ com.irurueta:irurueta-ar
                         h21 * h22 / sqrAspectRatio);
                 a.setElementAt(counter, 1, h11 * h32 + h31 * h12);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L1040">1040</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L958">958</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                    homography.asMatrix(h);
                     if (t == null) {
@@ -14199,16 +14165,16 @@ com.irurueta:irurueta-ar
                             h21 * h22 / sqrAspectRatio);
                     a.setElementAt(counter, 1, h31 * h32);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseAbsoluteOrientationSlamSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseAbsoluteOrientationSlamSparseReconstructor.html#L163">163</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSlamSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamSparseReconstructor.html#L238">238</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            mSlamEstimator.correctWithPositionMeasure(euclideanCamera2.getCameraCenter(),
                     mConfiguration.getCameraPositionCovariance());
@@ -14235,16 +14201,16 @@ com.irurueta:irurueta-ar
                 scale *= scaleVariation;
                 mCurrentScale = scale;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1431">1431</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1129">1129</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        List&lt;Sample2D&gt; samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();
 
@@ -14271,22 +14237,22 @@ com.irurueta:irurueta-ar
             estimator.setCorrectorType(
                     mConfiguration.getPairedCamerasCorrectorType());</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L402">402</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L435">435</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L372">372</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L402">402</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        mLastAngularSpeedX = mStateAngularSpeedX;
         mLastAngularSpeedY = mStateAngularSpeedY;
@@ -14344,16 +14310,16 @@ com.irurueta:irurueta-ar
                 stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);                
         if(mStateOrientation != null) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L631">631</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L572">572</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        mStateOrientation.normalize();
         
@@ -14383,16 +14349,16 @@ com.irurueta:irurueta-ar
     }    
 }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L718">718</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L718">718</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1018">1018</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);
@@ -14419,16 +14385,141 @@ com.irurueta:irurueta-ar
         double wy = x[14];
         double wz = x[15];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L390">390</a></td></tr>
 <tr class="b">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L850">850</a></td></tr>
+<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L516">516</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L429">429</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+            }
+            
+            @Override
+            public double[] getQualityScores() {
+                return mQualityScores;
+            }            
+        });
+        
+        try {
+            mLocked = true;
+            innerEstimator.setConfidence(mConfidence);
+            innerEstimator.setMaxIterations(mMaxIterations);
+            innerEstimator.setProgressDelta(mProgressDelta);
+            return innerEstimator.estimate();
+        } catch (com.irurueta.numerical.LockedException e) {
+            throw new LockedException(e);
+        } catch (com.irurueta.numerical.NotReadyException e) {
+            throw new NotReadyException(e);
+        } finally {
+            mLocked = false;
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+        return RobustEstimatorMethod.PROMedS;
+    }     
+    
+    /**
+     * Sets quality scores corresponding to each camera.
+     * This method is used internally and does not check whether instance is 
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required homographies for current
+     * settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores) {</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L359">359</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L376">376</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L465">465</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L390">390</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>                            PROSACDualAbsoluteQuadricRobustEstimator.this, 
+                            progress);
+                }
+            }
+            
+            @Override
+            public double[] getQualityScores() {
+                return mQualityScores;
+            }            
+        });
+        
+        try {
+            mLocked = true;
+            innerEstimator.setConfidence(mConfidence);
+            innerEstimator.setMaxIterations(mMaxIterations);
+            innerEstimator.setProgressDelta(mProgressDelta);
+            return innerEstimator.estimate();
+        } catch (com.irurueta.numerical.LockedException e) {
+            throw new LockedException(e);
+        } catch (com.irurueta.numerical.NotReadyException e) {
+            throw new NotReadyException(e);
+        } finally {
+            mLocked = false;
+        }        
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+        return RobustEstimatorMethod.PROSAC;
+    }   
+    
+    /**
+     * Sets quality scores corresponding to each camera.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     * smaller than the minimum number of required cameras for current settings.
+     */
+    private void internalSetQualityScores(double[] qualityScores)</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L850">850</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L871">871</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                    a.setElementAt(counter, 2, h31 * h32);
                 
@@ -14448,16 +14539,16 @@ com.irurueta:irurueta-ar
 
                     counter++;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimator.html#L245">245</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/ImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/ImageOfAbsoluteConicEstimator.html#L208">208</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>    }
     
@@ -14583,242 +14674,16 @@ com.irurueta:irurueta-ar
         return mFocalDistanceAspectRatio;
     }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L245">245</a></td></tr>
 <tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L209">209</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    }
-    
-    /**
-     * Returns quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @return quality scores corresponding to each camera. 
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the sampled
-     * camera.
-     * @param qualityScores quality scores corresponding to each camera.
-     * @throws LockedException if robust estimator is locked because an
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than minimum required number of cameras (i.e. 2 cameras).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Indicates if estimator is ready to start the DAQ estimation.
-     * This is true when input data (i.e. cameras) is provided and list contains
-     * at least the minimum number of required cameras, and also quality scores
-     * are provided.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mCameras.size();
-    }
-
-    /**
-     * Estimates the Dual Absolute Quadric using provided cameras.
-     * @return estimated Dual Absolute Quadric (DAQ).
-     * @throws LockedException if robust estimator is locked.
-     * @throws NotReadyException if no valid input data has already been 
-     * provided.
-     * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
-     */    
-    @Override
-    public DualAbsoluteQuadric estimate() throws LockedException, 
-            NotReadyException, RobustEstimatorException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (!isReady()) {
-            throw new NotReadyException();
-        }</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L253">253</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L222">222</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    }
-    
-    /**
-     * Returns quality scores corresponding to each provided homography.
-     * The larger the score value the better the quality of the sampled 
-     * homography
-     * @return quality scores corresponding to each homography.
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided homography.
-     * The larger the score value the better the quality of the sampled
-     * homography.
-     * @param qualityScores quality scores corresponding to each homography.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than minimum required number of homographies (i.e. 1 homography).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }
-    
-    /**
-     * Indicates if estimator is ready to start the IAC estimation.
-     * This is true when input data (i.e. homographies) is provided and list
-     * contains at least the minimum number of required homographies, and
-     * also quality scores are provided.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;
-                mQualityScores.length == mHomographies.size();
-    }
-    
-    /**
-     * Estimates Image of Absolute Conic (IAC)
-     * @return estimated IAC
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress
-     * @throws NotReadyException if provided input data is not enough to start
-     * the estimation
-     * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numberical instability, no solution available, etc)
-     */    
-    @Override
-    public ImageOfAbsoluteConic estimate() throws LockedException, 
-            NotReadyException, RobustEstimatorException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (!isReady()) {
-            throw new NotReadyException();
-        }</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L335">335</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L295">295</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    }
-    
-    /**
-     * Returns quality scores corresponding to each provided point.
-     * The larger the score value the betther the quality of the sampled point.
-     * @return quality scores corresponding to each point.
-     */
-    @Override
-    public double[] getQualityScores() {
-        return mQualityScores;
-    }
-    
-    /**
-     * Sets quality scores corresponding to each provided point.
-     * The larger the score value the better the quality of the sampled point.
-     * @param qualityScores quality scores corresponding to each point.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     * @throws IllegalArgumentException if provided quality scores length is 
-     * smaller than MINIMUM_SIZE (i.e. 3 samples).
-     */
-    @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetQualityScores(qualityScores);
-    }    
-    
-    /**
-     * Indicates if eatimator is ready to start the radial distortion 
-     * estimation.
-     * This is true when input data (i.e. 2D points and quality scores) are 
-     * provided and a minimum of 2 points are available.
-     * @return true if estimator is ready, false otherwise.
-     */
-    @Override
-    public boolean isReady() {
-        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp; 
-                mQualityScores.length == mDistortedPoints.size();
-    }     
-    
-    /**
-     * Estimates a radial distortion using a robust estimator and
-     * the best set of matched 2D points found using the robust estimator.
-     * @return a radial distortion.
-     * @throws LockedException if robust estimator is locked because an 
-     * estimation is already in progress.
-     * @throws NotReadyException if provided input data is not enough to start
-     * the estimation.
-     * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
-     */    
-    @Override
-    public RadialDistortion estimate() throws LockedException, 
-            NotReadyException, RobustEstimatorException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (!isReady()) {
-            throw new NotReadyException();
-        }</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L257">257</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L218">218</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>    }
     
@@ -14886,16 +14751,16 @@ com.irurueta:irurueta-ar
             throw new NotReadyException();
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/epipolar/EpipolarDistanceFundamentalMatrixComparator.java</td>
-<td><a href="./xref/com/irurueta/ar/epipolar/EpipolarDistanceFundamentalMatrixComparator.html#L626">626</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/epipolar/EpipolarDistanceFundamentalMatrixComparator.java</td>
+<td><a href="./xref/com/irurueta/ar/epipolar/EpipolarDistanceFundamentalMatrixComparator.html#L626">626</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/epipolar/EpipolarDistanceFundamentalMatrixComparator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/EpipolarDistanceFundamentalMatrixComparator.html#L719">719</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                            l2real.getA();
                     
@@ -14921,25 +14786,25 @@ com.irurueta:irurueta-ar
                 if (Math.abs(l2real.getB()) &gt; Double.MIN_VALUE) {
                     inhomY = -(inhomX * l2real.getA() + l2real.getC()) /</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L239">239</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L402">402</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L559">559</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L708">708</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L559">559</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L708">708</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L1037">1037</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            double rowNorm;
             for (Transformation2D homography : mHomographies) {
@@ -14969,19 +14834,19 @@ com.irurueta:irurueta-ar
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1258">1258</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1980">1980</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L988">988</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            mMetricReconstructedPoints = new ArrayList&lt;&gt;();
             List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();
@@ -15006,19 +14871,19 @@ com.irurueta:irurueta-ar
                 boolean front2 = camera2.isPointInFrontOfCamera(
                         triangulatedPoint);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.html#L189">189</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L194">194</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L346">346</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                camera.fixCameraSign();
                 
@@ -15045,16 +14910,16 @@ com.irurueta:irurueta-ar
                 a.setElementAt(row, 2, homX * principalPlane.getC() -
                         homW * verticalAxisPlane.getC());</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/PositionPredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/PositionPredictor.html#L68">68</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/PositionPredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/PositionPredictor.html#L68">68</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/PositionPredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/PositionPredictor.html#L475">475</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException(&quot;jacobian wrt r must be 3x3&quot;);
         }
@@ -15078,22 +14943,22 @@ com.irurueta:irurueta-ar
         }
         if (jacobianV != null) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L242">242</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L562">562</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L533">533</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L533">533</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L825">825</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -15121,22 +14986,22 @@ com.irurueta:irurueta-ar
                 a.setElementAt(counter, 0, h11 * h12);
                 a.setElementAt(counter, 1, h11 * h22 + h21 * h12);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L405">405</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L711">711</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L377">377</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L377">377</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L683">683</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -15164,16 +15029,16 @@ com.irurueta:irurueta-ar
                 a.setElementAt(counter, 0, h11 * h12);
                 a.setElementAt(counter, 1, h21 * h22);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L1075">1075</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L1142">1142</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                            rowNorm);
 
@@ -15189,16 +15054,16 @@ com.irurueta:irurueta-ar
                             Math.pow(a.getElementAt(counter, 0), 2.0) +
                             Math.pow(a.getElementAt(counter, 1), 2.0));</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1080">1080</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1080">1080</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1150">1150</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                    mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();
 
@@ -15231,22 +15096,22 @@ com.irurueta:irurueta-ar
             intrinsic1.setVerticalPrincipalPoint(
                     intrinsic1.getVerticalPrincipalPoint() + principalPointY);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1808">1808</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1870">1870</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L818">818</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L818">818</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L880">880</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                    mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();
 
@@ -15279,16 +15144,16 @@ com.irurueta:irurueta-ar
             intrinsic1.setVerticalPrincipalPoint(
                     intrinsic1.getVerticalPrincipalPoint() + principalPointY);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L488">488</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L615">615</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            }
             
@@ -15322,16 +15187,16 @@ com.irurueta:irurueta-ar
             return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);            
         } catch (AlgebraException e) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L736">736</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L736">736</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L756">756</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 2, h31 * h32);
                 
@@ -15350,16 +15215,16 @@ com.irurueta:irurueta-ar
 
                 counter++;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROSACFundamentalMatrixRobustEstimator.html#L428">428</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.html#L224">224</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    }     
     
@@ -15430,28 +15295,28 @@ com.irurueta:irurueta-ar
             throw new NotReadyException();
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1211">1211</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1310">1310</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1430">1430</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1933">1933</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2030">2030</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1933">1933</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2030">2030</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L2129">2129</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            List&lt;Sample2D&gt; samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();
             List&lt;Sample2D&gt; samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();
@@ -15470,19 +15335,19 @@ com.irurueta:irurueta-ar
                 points2.add(point2);
             }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L941">941</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1032">1032</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L941">941</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1032">1032</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L1128">1128</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            List&lt;Sample2D&gt; samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
             List&lt;Sample2D&gt; samples2 = mEstimatedFundamentalMatrix.getRightSamples();
@@ -15501,19 +15366,19 @@ com.irurueta:irurueta-ar
                 points2.add(point2);
             }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L141">141</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L423">423</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L141">141</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L423">423</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1019">1019</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x9&quot;);
         }
@@ -15542,16 +15407,16 @@ com.irurueta:irurueta-ar
         //linear velocity change (control)
         double uvx = u[0];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L363">363</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L363">363</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L857">857</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException(&quot;jacobian wrt u must be 13x9&quot;);
         }
@@ -15577,19 +15442,19 @@ com.irurueta:irurueta-ar
         double dry = u[1];
         double drz = u[2];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L141">141</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L423">423</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L141">141</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L423">423</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L719">719</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x9&quot;);
         }
@@ -15615,19 +15480,91 @@ com.irurueta:irurueta-ar
         double wy = x[14];
         double wz = x[15];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/MSACImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACImageOfAbsoluteConicRobustEstimator.html#L104">104</a></td></tr>
 <tr class="b">
-<td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L821">821</a></td></tr>
+<td>com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L103">103</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>    public MSACImageOfAbsoluteConicRobustEstimator(
+            List&lt;Transformation2D&gt; homographies, 
+            ImageOfAbsoluteConicRobustEstimatorListener listener) {
+        super(homographies, listener);
+        mThreshold = DEFAULT_THRESHOLD;
+    }
+    
+    /**
+     * Returns threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the orthonormality assumption of rotation matrices.
+     * @return threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     */
+    public double getThreshold() {
+        return mThreshold;
+    }
+    
+    /**
+     * Sets threshold to determine whether homographies are iliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the orthonormality assumption of rotation matrices.
+     * @param threshold threshold to determine whether homographies are inliers 
+     * or not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an
+     * estimation is already in progress.
+     */
+    public void setThreshold(double threshold) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (threshold &lt;= MIN_THRESHOLD) {
+            throw new IllegalArgumentException();
+        }
+        mThreshold = threshold;
+    }
+    
+    /**
+     * Estimates Image of Absolute Conic (IAC).
+     * @return estimated IAC.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     * @throws NotReadyException if provided input data is not enough to start
+     * the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numberical instability, no solution available, etc).
+     */    
+    @Override
+    public ImageOfAbsoluteConic estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (!isReady()) {
+            throw new NotReadyException();
+        }</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1013">1013</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L821">821</a></td></tr>
 <tr class="b">
+<td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1013">1013</a></td></tr>
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1522">1522</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
@@ -15667,16 +15604,16 @@ com.irurueta:irurueta-ar
      */
     private boolean estimatePlanarFundamentalMatrix(</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L929">929</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L1033">1033</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                counter++;                
             }
@@ -15712,19 +15649,19 @@ com.irurueta:irurueta-ar
             return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);
         } catch(AlgebraException e) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L821">821</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1522">1522</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1522">1522</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1735">1735</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
@@ -15764,16 +15701,16 @@ com.irurueta:irurueta-ar
      */
     private boolean estimatePlanarFundamentalMatrix(</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L571">571</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L571">571</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L761">761</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
@@ -15803,34 +15740,34 @@ com.irurueta:irurueta-ar
         }
     }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L397">397</a></td></tr>
 <tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L407">407</a></td></tr>
+<td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L390">390</a></td></tr>
 <tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L516">516</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L359">359</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L376">376</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L474">474</a></td></tr>
 <tr class="b">
+<td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L465">465</a></td></tr>
+<tr class="a">
 <td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L429">429</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L390">390</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
@@ -15866,16 +15803,16 @@ com.irurueta:irurueta-ar
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.PROMedS;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L216">216</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L179">179</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>    public BasePairedViewsSparseReconstructor(C configuration,
                                               L listener) throws NullPointerException {
@@ -15960,22 +15897,22 @@ com.irurueta:irurueta-ar
      */
     public EstimatedCamera getCurrentEuclideanEstimatedCamera() {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L178">178</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L465">465</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L759">759</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L465">465</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L759">759</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1064">1064</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        double uwz = u[8];
         
@@ -16001,28 +15938,28 @@ com.irurueta:irurueta-ar
             }
             PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, Rr, Rv, </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L242">242</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L405">405</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L562">562</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L711">711</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L958">958</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L958">958</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L1106">1106</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -16049,28 +15986,28 @@ com.irurueta:irurueta-ar
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L853">853</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L1040">1040</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L377">377</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L533">533</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L683">683</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L533">533</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L683">683</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L825">825</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -16097,16 +16034,16 @@ com.irurueta:irurueta-ar
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12 + </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/epipolar/estimators/MSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/MSACFundamentalMatrixRobustEstimator.html#L310">310</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/epipolar/estimators/PROMedSFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROMedSFundamentalMatrixRobustEstimator.html#L588">588</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            }
         });
@@ -16137,19 +16074,19 @@ com.irurueta:irurueta-ar
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.MSAC;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.html#L197">197</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSlamSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamSparseReconstructor.html#L151">151</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSlamTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamTwoViewsSparseReconstructor.html#L152">152</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    }
 
@@ -16191,22 +16128,22 @@ com.irurueta:irurueta-ar
         });
     }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L414">414</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L447">447</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L568">568</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L447">447</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L568">568</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L597">597</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                            Math.pow(a.getElementAt(counter, 5), 2.0));
                     factor = weight / rowNorm ;
@@ -16222,22 +16159,22 @@ com.irurueta:irurueta-ar
                     a.setElementAt(counter, 4, a.getElementAt(counter, 4) *
                             factor);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L308">308</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L460">460</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L438">438</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L438">438</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L589">589</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
                 
@@ -16249,16 +16186,16 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 3), 2.0) +
                         Math.pow(a.getElementAt(counter, 4), 2.0) +</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L636">636</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L756">756</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                counter++;                
             }
@@ -16293,22 +16230,22 @@ com.irurueta:irurueta-ar
             return new ImageOfAbsoluteConic(b11, b12, b22, 0.0, 0.0, b33);
         } catch (AlgebraException e) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMedSDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMedSDualAbsoluteQuadricRobustEstimator.html#L272">272</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMedSImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMedSImageOfAbsoluteConicRobustEstimator.html#L279">279</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMedSRadialDistortionRobustEstimator.html#L351">351</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/LMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMedSRobustSinglePoint3DTriangulator.html#L312">312</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                            LMedSDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
@@ -16342,16 +16279,16 @@ com.irurueta:irurueta-ar
     }    
 }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L615">615</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L615">615</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html#L962">962</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                        } catch (AlgebraException ex) {
                             valid = false;
@@ -16397,16 +16334,16 @@ com.irurueta:irurueta-ar
      */
     private double getXFromY(double y, double s, double t, double u, double v,</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L270">270</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L438">438</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 5, h31 * h32);
                 
@@ -16419,16 +16356,16 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 4), 2.0) +
                         Math.pow(a.getElementAt(counter, 5), 2.0));</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L308">308</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L405">405</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
                 
@@ -16441,16 +16378,16 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 4), 2.0) +
                         Math.pow(a.getElementAt(counter, 5), 2.0));</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.html#L478">478</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSlamSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamSparseReconstructor.html#L406">406</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            double positionZ = lastPosZ + mSlamEstimator.getStatePositionZ();
             mSlamPosition.setInhomogeneousCoordinates(positionX, positionY, positionZ);
@@ -16474,34 +16411,34 @@ com.irurueta:irurueta-ar
     }
 }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L190">190</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L424">424</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L668">668</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L925">925</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L225">225</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L512">512</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L811">811</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L512">512</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L811">811</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1116">1116</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            wx += uwx;
             wy += uwy;
@@ -16523,16 +16460,83 @@ com.irurueta:irurueta-ar
             
             result[10] = wx;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.html#L98">98</a></td></tr>
 <tr class="a">
+<td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L99">99</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>            DualAbsoluteQuadricRobustEstimatorListener listener) {
+        super(cameras, listener);
+        mThreshold = DEFAULT_THRESHOLD;
+    }
+    
+    /**
+     * Returns threshold to determine whether cameras are inliers or not
+     * when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @return threshold to determine whether cameras are inliers when testing
+     * possible estimation solutions.
+     */
+    public double getThreshold() {
+        return mThreshold;
+    }
+    
+    /**
+     * Sets threshold to determine whether cameras are inliers or not when 
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has.
+     * @param threshold threshold to determine whether cameras are inliers or 
+     * not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     * zero.
+     * @throws LockedException if robust estimator is locked because an 
+     * estimation is already in progress.
+     */
+    public void setThreshold(double threshold) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (threshold &lt;= MIN_THRESHOLD) {
+            throw new IllegalArgumentException();
+        }
+        mThreshold = threshold;
+    }
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException if robust estimator is locked.
+     * @throws NotReadyException if no valid input data has already been 
+     * provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     * (i.e. numerical instability, no solution available, etc).
+     */        
+    @Override
+    public DualAbsoluteQuadric estimate() throws LockedException, 
+            NotReadyException, RobustEstimatorException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (!isReady()) {
+            throw new NotReadyException();
+        }</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L857">857</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L608">608</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    private boolean estimatePlanarFundamentalMatrix(
             List&lt;MatchedSamples&gt; matches, int viewId1, int viewId2) {
@@ -16549,16 +16553,16 @@ com.irurueta:irurueta-ar
         double principalPointX, principalPointY;
         if (mConfiguration.getPairedCamerasEstimatorMethod() ==</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L559">559</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L547">547</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>        mX[12] = state.getElementAtIndex(12);
     }
@@ -16587,16 +16591,16 @@ com.irurueta:irurueta-ar
         mStateQuaternionD = mX[6] = 
                 state.getElementAtIndex(6);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L600">600</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L509">509</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>        mX[15] = state.getElementAtIndex(15);        
     }
@@ -16625,22 +16629,22 @@ com.irurueta:irurueta-ar
         mStateQuaternionD = mX[6] = 
                 state.getElementAtIndex(6);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L279">279</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L317">317</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L440">440</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L317">317</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L440">440</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L468">468</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                        Math.pow(a.getElementAt(counter, 5), 2.0));
                 

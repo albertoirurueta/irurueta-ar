@@ -634,7 +634,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L634">        double[] qualityScores = setUpCameraEstimatorMatches(points3D, points2D);</span>
 <span class="fc" id="L635">        boolean samplesRejected = false;</span>
 
-<span class="fc bfc" id="L637" title="All 2 branches covered.">        if (hasEnoughSamplesForCameraEstimation(points3D, points2D) &amp;&amp;</span>
+<span class="pc bpc" id="L637" title="1 of 2 branches missed.">        if (hasEnoughSamplesForCameraEstimation(points3D, points2D) &amp;&amp;</span>
 <span class="pc bpc" id="L638" title="1 of 2 branches missed.">                hasEnoughMatchesForCameraEstimation(mMatches)) {</span>
             //enough matches available.
 <span class="fc" id="L640">            PinholeCamera currentCamera = null;</span>
@@ -780,9 +780,9 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L780">                        mCurrentViewId = mViewCount;</span>
                     }
 
-<span class="fc" id="L783">                } catch (Exception e) {</span>
+<span class="nc" id="L783">                } catch (Exception e) {</span>
                     //camera estimation failed
-<span class="fc" id="L785">                    samplesRejected = true;</span>
+<span class="nc" id="L785">                    samplesRejected = true;</span>
 <span class="fc" id="L786">                }</span>
 
 <span class="fc bfc" id="L788" title="All 2 branches covered.">            } else if (mConfiguration.getUseUPnPForAdditionalCamerasEstimation()) {</span>
@@ -979,7 +979,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L979">                }</span>
             }
 
-<span class="fc bfc" id="L982" title="All 2 branches covered.">            if (!samplesRejected) {</span>
+<span class="pc bpc" id="L982" title="1 of 2 branches missed.">            if (!samplesRejected) {</span>
 <span class="fc" id="L983">                mPreviousMetricEstimatedCamera = mCurrentMetricEstimatedCamera;</span>
 
 <span class="fc" id="L985">                mCurrentMetricEstimatedCamera = new EstimatedCamera();</span>
@@ -1022,8 +1022,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
         }
 
         //noinspection unchecked
-<span class="fc" id="L1025">        mListener.onSamplesRejected((R) this, mViewCount, mPreviousViewTrackedSamples, mCurrentViewTrackedSamples);</span>
-<span class="fc" id="L1026">        return false;</span>
+<span class="nc" id="L1025">        mListener.onSamplesRejected((R) this, mViewCount, mPreviousViewTrackedSamples, mCurrentViewTrackedSamples);</span>
+<span class="nc" id="L1026">        return false;</span>
     }
 
     /**
@@ -1229,7 +1229,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 
         //pick quality scores
 <span class="fc" id="L1231">        double[] qualityScores = null;</span>
-<span class="pc bpc" id="L1232" title="1 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
+<span class="pc bpc" id="L1232" title="2 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
 <span class="fc" id="L1233">            qualityScores = new double[numMatches];</span>
 <span class="fc" id="L1234">            int j = 0;</span>
 <span class="fc bfc" id="L1235" title="All 2 branches covered.">            for (i = 0; i &lt; positions.length; i++) {</span>
@@ -1301,7 +1301,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
      */
     private boolean hasEnoughSamplesForCameraEstimation(List&lt;Point3D&gt; points3D, List&lt;Point2D&gt; points2D) {
 <span class="pc bpc" id="L1303" title="3 of 6 branches missed.">        return points3D != null &amp;&amp; points2D != null &amp;&amp; points3D.size() == points2D.size() &amp;&amp;</span>
-<span class="fc bfc" id="L1304" title="All 2 branches covered.">                hasEnoughSamplesOrMatchesForCameraEstimation(points3D.size());</span>
+<span class="pc bpc" id="L1304" title="1 of 2 branches missed.">                hasEnoughSamplesOrMatchesForCameraEstimation(points3D.size());</span>
     }
 
     /**
@@ -1328,7 +1328,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
         } else {
             //EPnP, UPnP or DLT is used for additional cameras estimation without fundamental
             //matrix. Only 6 matches are required
-<span class="fc bfc" id="L1331" title="All 2 branches covered.">            return count &gt;= PointCorrespondencePinholeCameraRobustEstimator.MIN_NUMBER_OF_POINT_CORRESPONDENCES;</span>
+<span class="pc bpc" id="L1331" title="1 of 2 branches missed.">            return count &gt;= PointCorrespondencePinholeCameraRobustEstimator.MIN_NUMBER_OF_POINT_CORRESPONDENCES;</span>
         }
     }
 
@@ -1365,7 +1365,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
                 case EIGHT_POINTS_ALGORITHM:
 <span class="nc bnc" id="L1366" title="All 2 branches missed.">                    return count &gt;= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
                 case SEVEN_POINTS_ALGORITHM:
-<span class="pc bfc" id="L1368" title="All 2 branches covered.">                    return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+<span class="pc bpc" id="L1368" title="1 of 2 branches missed.">                    return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
             }
 <span class="nc bnc" id="L1370" title="All 2 branches missed.">        } else if (mConfiguration.isPlanarSceneAllowed()) {</span>
 <span class="nc bnc" id="L1371" title="All 2 branches missed.">            return count &gt;= ProjectiveTransformation2DRobustEstimator.MINIMUM_SIZE;</span>
