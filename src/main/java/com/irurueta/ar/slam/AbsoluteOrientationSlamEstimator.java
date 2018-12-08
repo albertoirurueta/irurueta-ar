@@ -235,8 +235,7 @@ public class AbsoluteOrientationSlamEstimator extends
      * 3x3.
      */
     @Override
-    public void setPositionCovarianceMatrix(Matrix positionCovariance)
-            throws IllegalArgumentException {
+    public void setPositionCovarianceMatrix(Matrix positionCovariance) {
         if(positionCovariance != null) {
             mKalmanFilter.setMeasurementNoiseCov(positionCovariance);        
         }

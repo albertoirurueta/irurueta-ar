@@ -90,8 +90,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public WeightedInhomogeneousSinglePoint3DTriangulator(
-            List<Point2D> points2D, List<PinholeCamera> cameras) 
-            throws IllegalArgumentException {
+            List<Point2D> points2D, List<PinholeCamera> cameras) {
         super(points2D, cameras);
         mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
         mSortWeights = DEFAULT_SORT_WEIGHTS;
@@ -109,7 +108,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      */
     public WeightedInhomogeneousSinglePoint3DTriangulator(
             List<Point2D> points2D, List<PinholeCamera> cameras, 
-            double[] weights) throws IllegalArgumentException {
+            double[] weights) {
         this();
         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
     }
@@ -140,8 +139,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      */
     public WeightedInhomogeneousSinglePoint3DTriangulator(
             List<Point2D> points2D, List<PinholeCamera> cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            SinglePoint3DTriangulatorListener listener) {
         super(points2D, cameras, listener);
         mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
         mSortWeights = DEFAULT_SORT_WEIGHTS;
@@ -161,8 +159,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      */
     public WeightedInhomogeneousSinglePoint3DTriangulator(
             List<Point2D> points2D, List<PinholeCamera> cameras, 
-            double[] weights, SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            double[] weights, SinglePoint3DTriangulatorListener listener) {
         this(listener);
         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
     }    
@@ -192,7 +189,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      */    
     public void setPointsCamerasAndWeights(List<Point2D> points2D,
             List<PinholeCamera> cameras, double[] weights) 
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -249,7 +246,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      * @throws LockedException if this instance is locked.
      */
     public void setMaxCorrespondences(int maxCorrespondences) 
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -309,6 +306,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      * other reason (i.e. degenerate geometry, numerical instabilities, etc).
      */    
     @Override
+    @SuppressWarnings("Duplicates")
     protected void triangulate(List<Point2D> points2D, 
             List<PinholeCamera> cameras, Point3D result) 
             throws Point3DTriangulationException {
@@ -441,9 +439,9 @@ public class WeightedInhomogeneousSinglePoint3DTriangulator extends
      * length or their length is less than 2 views, which is the minimum 
      * required to compute triangulation.
      */
+    @SuppressWarnings("Duplicates")
     private void internalSetPointsCamerasAndWeights(List<Point2D> points2D,
-            List<PinholeCamera> cameras, double[] weights) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, double[] weights) {
         if (!areValidPointsCamerasAndWeights(points2D, cameras, weights)) {
             throw new IllegalArgumentException();
         }

@@ -59,8 +59,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * prediction stage in SLAM estimator.
      * @throws IllegalArgumentException if sample length is less than 1.
      */
-    public AbsoluteOrientationBaseSlamCalibrator(int sampleLength) 
-            throws IllegalArgumentException {
+    public AbsoluteOrientationBaseSlamCalibrator(int sampleLength) {
         super(sampleLength);
         mAccumulatedOrientation = new Quaternion();
     }

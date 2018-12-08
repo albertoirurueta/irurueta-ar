@@ -210,7 +210,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
     /**
      * Listener in charge of handling events raised by instances of this class.
      */
-    protected BaseSlamCalibratorListener mListener;
+    protected transient BaseSlamCalibratorListener mListener;
     
     /**
      * Constructor.
@@ -218,8 +218,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * prediction stage in SLAM estimator.
      * @throws IllegalArgumentException if sample length is less than 1.
      */
-    public BaseSlamCalibrator(int sampleLength) 
-            throws IllegalArgumentException {
+    public BaseSlamCalibrator(int sampleLength) {
         if(sampleLength < MIN_SAMPLE_LENGTH) {
             throw new IllegalArgumentException("length must be greater than 0");
         }
@@ -297,8 +296,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * convergence into account.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setMinNumSamples(int minNumSamples) 
-            throws IllegalArgumentException {
+    public void setMinNumSamples(int minNumSamples) {
         if (minNumSamples < 0) {
             throw new IllegalArgumentException(
                     "minNumSamples must be positive");
@@ -319,8 +317,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * @param maxNumSamples maximum number of samples to take.
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
-    public void setMaxNumSamples(int maxNumSamples) 
-            throws IllegalArgumentException {
+    public void setMaxNumSamples(int maxNumSamples) {
         if (maxNumSamples <= 0) {
             throw new IllegalArgumentException(
                     "maxNumSamples must be positive");
@@ -342,8 +339,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * converged.
      * @throws IllegalArgumentException if threshold is negative.
      */
-    public void setConvergenceThreshold(double convergenceThreshold)
-            throws IllegalArgumentException {
+    public void setConvergenceThreshold(double convergenceThreshold) {
         if (convergenceThreshold < 0.0) {
             throw new IllegalArgumentException(
                     "convergenceThreshold must be positive");
@@ -364,8 +360,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
         try {
             mEstimator = new MeasurementNoiseCovarianceEstimator(
                     mSample.length);
-        }catch(SignalProcessingException e) { /* never thrown */ }        
-        mConverged = mFailed = mFinished = false;
+        }catch(SignalProcessingException e) { /* never thrown */ }
         mSampleCount = 0;
         Arrays.fill(mMeanDiff, 0.0);
         mCovDiff.initialize(0.0);
@@ -510,8 +505,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getAccumulatedAccelerationSample(double[] result)
-            throws IllegalArgumentException {
+    public void getAccumulatedAccelerationSample(double[] result) {
         if(result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -572,8 +566,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void getAccumulatedAngularSpeedSample(double[] result)
-            throws IllegalArgumentException {
+    public void getAccumulatedAngularSpeedSample(double[] result) {
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
@@ -637,8 +630,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data) 
-            throws IllegalArgumentException {
+    public void updateAccelerometerSample(long timestamp, float[] data) {
         if(data.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException(
                     "acceleration must have length 3");
@@ -703,8 +695,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data) 
-            throws IllegalArgumentException {
+    public void updateGyroscopeSample(long timestamp, float[] data) {
         if(data.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException(
                     "angular speed must have length 3");
@@ -760,7 +751,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * Array must have the same length as the control signal.
      * @throws IllegalArgumentException if provided length is invalid.
      */
-    public void getControlMean(double[] result) throws IllegalArgumentException{
+    public void getControlMean(double[] result) {
         double[] src = getControlMean();
         if(result.length != src.length) {
             throw new IllegalArgumentException("wrong legnth");
@@ -851,8 +842,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * valid.
      */
     public MultivariateNormalDist propagateWithControlJacobian(
-            Matrix controlJacobian) throws InvalidCovarianceMatrixException, 
-            IllegalArgumentException {
+            Matrix controlJacobian) throws InvalidCovarianceMatrixException {
         return getCalibrationData().propagateWithControlJacobian(
                 controlJacobian);
     }
@@ -869,7 +859,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      */
     public void propagateWithControlJacobian(final Matrix controlJacobian, 
             MultivariateNormalDist result) 
-            throws InvalidCovarianceMatrixException, IllegalArgumentException {
+            throws InvalidCovarianceMatrixException {
         getCalibrationData().propagateWithControlJacobian(controlJacobian, 
                 result);
     }    

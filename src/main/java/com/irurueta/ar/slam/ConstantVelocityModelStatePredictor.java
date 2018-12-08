@@ -167,7 +167,8 @@ public class ConstantVelocityModelStatePredictor {
         
         try {
             //update position
-            Matrix rr = null, rv = null;
+            Matrix rr = null;
+            Matrix rv = null;
             if(jacobianX != null) {
                 rr = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
@@ -179,7 +180,8 @@ public class ConstantVelocityModelStatePredictor {
             PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
             
             //update orientation
-            Matrix qq = null, qw = null;
+            Matrix qq = null;
+            Matrix qw = null;
             if(jacobianX != null) {
                 qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
                 qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
