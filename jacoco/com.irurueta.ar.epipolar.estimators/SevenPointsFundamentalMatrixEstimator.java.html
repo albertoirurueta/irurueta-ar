@@ -720,23 +720,23 @@ public class SevenPointsFundamentalMatrixEstimator extends
 <span class="fc" id="L720">        decomposer.decompose();</span>
         
 <span class="fc" id="L722">        int rank = decomposer.getRank();</span>
-<span class="fc bfc" id="L723" title="All 2 branches covered.">        if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
+<span class="pc bpc" id="L723" title="1 of 2 branches missed.">        if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
             //rank needs to be reduced
-<span class="fc" id="L725">            Matrix u = decomposer.getU();</span>
-<span class="fc" id="L726">            Matrix w = decomposer.getW();</span>
-<span class="fc" id="L727">            Matrix v = decomposer.getV();</span>
+<span class="nc" id="L725">            Matrix u = decomposer.getU();</span>
+<span class="nc" id="L726">            Matrix w = decomposer.getW();</span>
+<span class="nc" id="L727">            Matrix v = decomposer.getV();</span>
                 
             //transpose V
-<span class="fc" id="L730">            v.transpose();</span>
+<span class="nc" id="L730">            v.transpose();</span>
 
             //set last singular value to zero to enforce rank 2
-<span class="fc" id="L733">            w.setElementAt(2, 2, 0.0);</span>
+<span class="nc" id="L733">            w.setElementAt(2, 2, 0.0);</span>
                 
             //compute matrix = U * W * V'
-<span class="fc" id="L736">            w.multiply(v);</span>
-<span class="fc" id="L737">            u.multiply(w);</span>
-<span class="fc" id="L738">            matrix.copyFrom(u);</span>
-<span class="fc" id="L739">            return false;</span>
+<span class="nc" id="L736">            w.multiply(v);</span>
+<span class="nc" id="L737">            u.multiply(w);</span>
+<span class="nc" id="L738">            matrix.copyFrom(u);</span>
+<span class="nc" id="L739">            return false;</span>
         } else {
             //if rank is 2, rank is ok, otherwise rank is lower than fundamental 
             //matrix rank (rank 1) and estimation has failed because of 
