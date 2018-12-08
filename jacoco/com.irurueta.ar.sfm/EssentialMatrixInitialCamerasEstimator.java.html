@@ -1187,51 +1187,52 @@ public class EssentialMatrixInitialCamerasEstimator
 <span class="fc" id="L1187">                create();</span>
         
 <span class="fc" id="L1189">        int numPoints = leftPoints.size();</span>
-        Point2D leftPoint, rightPoint;
-<span class="fc" id="L1191">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L1192">        List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
+        Point2D leftPoint;
+        Point2D rightPoint;
+<span class="fc" id="L1192">        List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1193">        List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
         Point3D triangulatedPoint;
         boolean frontLeft;
         boolean frontRight;
-<span class="fc bfc" id="L1196" title="All 2 branches covered.">        for (int i = 0; i &lt; numPoints; i++) {</span>
-<span class="fc" id="L1197">            leftPoint = leftPoints.get(i);</span>
-<span class="fc" id="L1198">            rightPoint = rightPoints.get(i);</span>
+<span class="fc bfc" id="L1197" title="All 2 branches covered.">        for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L1198">            leftPoint = leftPoints.get(i);</span>
+<span class="fc" id="L1199">            rightPoint = rightPoints.get(i);</span>
             
-<span class="fc" id="L1200">            points.clear();</span>
-<span class="fc" id="L1201">            points.add(leftPoint);</span>
-<span class="fc" id="L1202">            points.add(rightPoint);</span>
+<span class="fc" id="L1201">            points.clear();</span>
+<span class="fc" id="L1202">            points.add(leftPoint);</span>
+<span class="fc" id="L1203">            points.add(rightPoint);</span>
             
-<span class="fc" id="L1204">            cameras.clear();</span>
-<span class="fc" id="L1205">            cameras.add(estimatedLeftCamera);</span>
-<span class="fc" id="L1206">            cameras.add(estimatedRightCamera);</span>
+<span class="fc" id="L1205">            cameras.clear();</span>
+<span class="fc" id="L1206">            cameras.add(estimatedLeftCamera);</span>
+<span class="fc" id="L1207">            cameras.add(estimatedRightCamera);</span>
             
-<span class="fc" id="L1208">            triangulator.setPointsAndCameras(points, cameras);</span>
-<span class="fc" id="L1209">            triangulatedPoint = triangulator.triangulate();</span>
-<span class="fc bfc" id="L1210" title="All 2 branches covered.">            if (triangulatedPoints != null) {</span>
-<span class="fc" id="L1211">                triangulatedPoints.add(triangulatedPoint);</span>
+<span class="fc" id="L1209">            triangulator.setPointsAndCameras(points, cameras);</span>
+<span class="fc" id="L1210">            triangulatedPoint = triangulator.triangulate();</span>
+<span class="fc bfc" id="L1211" title="All 2 branches covered.">            if (triangulatedPoints != null) {</span>
+<span class="fc" id="L1212">                triangulatedPoints.add(triangulatedPoint);</span>
             }
             
             //check that triangulated point is in front of both cameras
-<span class="fc" id="L1215">            frontLeft = estimatedLeftCamera.isPointInFrontOfCamera(</span>
+<span class="fc" id="L1216">            frontLeft = estimatedLeftCamera.isPointInFrontOfCamera(</span>
                     triangulatedPoint);
-<span class="fc" id="L1217">            frontRight = estimatedRightCamera.isPointInFrontOfCamera(</span>
+<span class="fc" id="L1218">            frontRight = estimatedRightCamera.isPointInFrontOfCamera(</span>
                     triangulatedPoint);
             
-<span class="fc bfc" id="L1220" title="All 4 branches covered.">            if (frontLeft &amp;&amp; frontRight) {</span>
+<span class="fc bfc" id="L1221" title="All 4 branches covered.">            if (frontLeft &amp;&amp; frontRight) {</span>
                 //point is valid because it is in front of both cameras
-<span class="fc bfc" id="L1222" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L1223">                    validTriangulatedPoints.set(i);</span>
+<span class="fc bfc" id="L1223" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L1224">                    validTriangulatedPoints.set(i);</span>
                 }
-<span class="fc" id="L1225">                numValidTriangulatedPoints++;</span>
+<span class="fc" id="L1226">                numValidTriangulatedPoints++;</span>
             } else {
                 //point is not valid
-<span class="fc bfc" id="L1228" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
-<span class="fc" id="L1229">                    validTriangulatedPoints.clear(i);</span>
+<span class="fc bfc" id="L1229" title="All 2 branches covered.">                if (validTriangulatedPoints != null) {</span>
+<span class="fc" id="L1230">                    validTriangulatedPoints.clear(i);</span>
                 }
             }
         }
         
-<span class="fc" id="L1234">        return numValidTriangulatedPoints;</span>
+<span class="fc" id="L1235">        return numValidTriangulatedPoints;</span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -446,180 +446,189 @@
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>     @Test
 <a class="jxr_linenumber" name="L439" href="#L439">439</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testTriangulate() <strong class="jxr_keyword">throws</strong> LockedException, NotReadyException, 
 <a class="jxr_linenumber" name="L440" href="#L440">440</a>             RobustEstimatorException {
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> t = 0; t &lt; TIMES; t++) {
-<a class="jxr_linenumber" name="L442" href="#L442">442</a>             UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L443" href="#L443">443</a> 
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>             <em class="jxr_comment">//obtain number of views</em>
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>             <strong class="jxr_keyword">int</strong> numViews = randomizer.nextInt(MIN_VIEWS, MAX_VIEWS);
-<a class="jxr_linenumber" name="L446" href="#L446">446</a> 
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>             <em class="jxr_comment">//create a random 3D point</em>
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>             Point3D point3D = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE), 
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-<a class="jxr_linenumber" name="L452" href="#L452">452</a> 
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>             GaussianRandomizer errorRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>                     <strong class="jxr_keyword">new</strong> Random(), 0.0, STD_ERROR);
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>             List&lt;Point2D&gt; points2D = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>             List&lt;PinholeCamera&gt; cameras = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>             Point3D previousCameraCenter = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D();
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; numViews; i++) {
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>                 <em class="jxr_comment">//create a random camera</em>
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>                 <strong class="jxr_keyword">double</strong> horizontalFocalLength = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>                 <strong class="jxr_keyword">double</strong> verticalFocalLength = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>                 <strong class="jxr_keyword">double</strong> skewness = randomizer.nextDouble(MIN_SKEWNESS, 
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>                         MAX_SKEWNESS);
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>                 <strong class="jxr_keyword">double</strong> horizontalPrincipalPoint = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>                 <strong class="jxr_keyword">double</strong> verticalPrincipalPoint = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>                 <strong class="jxr_keyword">double</strong> alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>                 <strong class="jxr_keyword">double</strong> betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>                 <strong class="jxr_keyword">double</strong> gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>                 <strong class="jxr_keyword">double</strong> cameraSeparationX = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>                 <strong class="jxr_keyword">double</strong> cameraSeparationY = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>                 <strong class="jxr_keyword">double</strong> cameraSeparationZ = randomizer.nextDouble(
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>                 PinholeCameraIntrinsicParameters intrinsic = 
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>                         <strong class="jxr_keyword">new</strong> PinholeCameraIntrinsicParameters(
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>                         horizontalFocalLength, verticalFocalLength, 
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>                         horizontalPrincipalPoint, verticalPrincipalPoint, 
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>                         skewness);            
-<a class="jxr_linenumber" name="L490" href="#L490">490</a> 
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>                 MatrixRotation3D rotation = <strong class="jxr_keyword">new</strong> MatrixRotation3D(alphaEuler, 
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>                         betaEuler, gammaEuler);
-<a class="jxr_linenumber" name="L493" href="#L493">493</a> 
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>                 Point3D cameraCenter = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>                         previousCameraCenter.getInhomX() + cameraSeparationX,
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>                         previousCameraCenter.getInhomY() + cameraSeparationY,
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
-<a class="jxr_linenumber" name="L498" href="#L498">498</a> 
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>                 PinholeCamera camera = <strong class="jxr_keyword">new</strong> PinholeCamera(intrinsic, rotation, 
-<a class="jxr_linenumber" name="L500" href="#L500">500</a>                         cameraCenter);
-<a class="jxr_linenumber" name="L501" href="#L501">501</a> 
-<a class="jxr_linenumber" name="L502" href="#L502">502</a>                 <em class="jxr_comment">//project 3D point using camera</em>
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>                 Point2D point2D = camera.project(point3D);
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>                 
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>                 <strong class="jxr_keyword">if</strong> (randomizer.nextInt(0, 100) &lt; PERCENTAGE_OUTLIERS) {
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>                     <strong class="jxr_keyword">double</strong> errorX = errorRandomizer.nextDouble();
-<a class="jxr_linenumber" name="L507" href="#L507">507</a>                     <strong class="jxr_keyword">double</strong> errorY = errorRandomizer.nextDouble();
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>                     <strong class="jxr_keyword">double</strong> inhomX = point2D.getInhomX();
-<a class="jxr_linenumber" name="L509" href="#L509">509</a>                     <strong class="jxr_keyword">double</strong> inhomY = point2D.getInhomY();
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>                     
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>                     point2D.setInhomogeneousCoordinates(inhomX + errorX, 
-<a class="jxr_linenumber" name="L512" href="#L512">512</a>                             inhomY + errorY);
-<a class="jxr_linenumber" name="L513" href="#L513">513</a>                 }
-<a class="jxr_linenumber" name="L514" href="#L514">514</a> 
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>                 cameras.add(camera);
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>                 points2D.add(point2D);
-<a class="jxr_linenumber" name="L517" href="#L517">517</a>             }
-<a class="jxr_linenumber" name="L518" href="#L518">518</a> 
-<a class="jxr_linenumber" name="L519" href="#L519">519</a>             <em class="jxr_comment">//create triangulator</em>
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>             MSACRobustSinglePoint3DTriangulator triangulator = 
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>                     <strong class="jxr_keyword">new</strong> MSACRobustSinglePoint3DTriangulator(points2D, cameras, 
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>                     <strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>             triangulator.setThreshold(THRESHOLD);
-<a class="jxr_linenumber" name="L524" href="#L524">524</a>             
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>             <em class="jxr_comment">//check default values</em>
-<a class="jxr_linenumber" name="L526" href="#L526">526</a>             assertTrue(triangulator.isReady());
-<a class="jxr_linenumber" name="L527" href="#L527">527</a>             assertFalse(triangulator.isLocked());
-<a class="jxr_linenumber" name="L528" href="#L528">528</a>             assertEquals(triangulateStart, 0);
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>             assertEquals(triangulateEnd, 0);
-<a class="jxr_linenumber" name="L530" href="#L530">530</a>             assertEquals(triangulateNextIteration, 0);
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>             assertEquals(triangulateProgressChange, 0);
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>             
-<a class="jxr_linenumber" name="L533" href="#L533">533</a>             Point3D triangulated = triangulator.triangulate();
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>             
-<a class="jxr_linenumber" name="L535" href="#L535">535</a>             <em class="jxr_comment">//check correctness</em>
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>             assertTrue(triangulator.isReady());
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>             assertFalse(triangulator.isLocked());
-<a class="jxr_linenumber" name="L538" href="#L538">538</a>             assertEquals(triangulateStart, 1);
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>             assertEquals(triangulateEnd, 1);
-<a class="jxr_linenumber" name="L540" href="#L540">540</a>             assertTrue(triangulateNextIteration &gt; 0);
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>             assertTrue(triangulateProgressChange &gt;= 0);
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>             reset();
-<a class="jxr_linenumber" name="L543" href="#L543">543</a>             
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>             assertEquals(point3D.distanceTo(triangulated), 0.0, ABSOLUTE_ERROR);
-<a class="jxr_linenumber" name="L545" href="#L545">545</a>         }
-<a class="jxr_linenumber" name="L546" href="#L546">546</a>     }
-<a class="jxr_linenumber" name="L547" href="#L547">547</a> 
-<a class="jxr_linenumber" name="L548" href="#L548">548</a>     @Override
-<a class="jxr_linenumber" name="L549" href="#L549">549</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateStart(
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>             RobustSinglePoint3DTriangulator triangulator) {
-<a class="jxr_linenumber" name="L551" href="#L551">551</a>         triangulateStart++;
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
-<a class="jxr_linenumber" name="L553" href="#L553">553</a>     }
-<a class="jxr_linenumber" name="L554" href="#L554">554</a> 
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>     @Override
-<a class="jxr_linenumber" name="L556" href="#L556">556</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateEnd(RobustSinglePoint3DTriangulator triangulator) {
-<a class="jxr_linenumber" name="L557" href="#L557">557</a>         triangulateEnd++;
-<a class="jxr_linenumber" name="L558" href="#L558">558</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
-<a class="jxr_linenumber" name="L559" href="#L559">559</a>     }
-<a class="jxr_linenumber" name="L560" href="#L560">560</a> 
-<a class="jxr_linenumber" name="L561" href="#L561">561</a>     @Override
-<a class="jxr_linenumber" name="L562" href="#L562">562</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateNextIteration(
-<a class="jxr_linenumber" name="L563" href="#L563">563</a>             RobustSinglePoint3DTriangulator triangulator, <strong class="jxr_keyword">int</strong> iteration) {
-<a class="jxr_linenumber" name="L564" href="#L564">564</a>         triangulateNextIteration++;
-<a class="jxr_linenumber" name="L565" href="#L565">565</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
-<a class="jxr_linenumber" name="L566" href="#L566">566</a>     }
-<a class="jxr_linenumber" name="L567" href="#L567">567</a> 
-<a class="jxr_linenumber" name="L568" href="#L568">568</a>     @Override
-<a class="jxr_linenumber" name="L569" href="#L569">569</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateProgressChange(
-<a class="jxr_linenumber" name="L570" href="#L570">570</a>             RobustSinglePoint3DTriangulator triangulator, <strong class="jxr_keyword">float</strong> progress) {
-<a class="jxr_linenumber" name="L571" href="#L571">571</a>         triangulateProgressChange++;
-<a class="jxr_linenumber" name="L572" href="#L572">572</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
-<a class="jxr_linenumber" name="L573" href="#L573">573</a>     }
-<a class="jxr_linenumber" name="L574" href="#L574">574</a> 
-<a class="jxr_linenumber" name="L575" href="#L575">575</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reset() {
-<a class="jxr_linenumber" name="L576" href="#L576">576</a>         triangulateStart = triangulateEnd = triangulateNextIteration =
-<a class="jxr_linenumber" name="L577" href="#L577">577</a>                 triangulateProgressChange = 0;
-<a class="jxr_linenumber" name="L578" href="#L578">578</a>     }
-<a class="jxr_linenumber" name="L579" href="#L579">579</a> 
-<a class="jxr_linenumber" name="L580" href="#L580">580</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkLocked(MSACRobustSinglePoint3DTriangulator triangulator) {
-<a class="jxr_linenumber" name="L581" href="#L581">581</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L582" href="#L582">582</a>             triangulator.setThreshold(0.5);
-<a class="jxr_linenumber" name="L583" href="#L583">583</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L584" href="#L584">584</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
-<a class="jxr_linenumber" name="L585" href="#L585">585</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L586" href="#L586">586</a>             triangulator.setListener(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L587" href="#L587">587</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L588" href="#L588">588</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
-<a class="jxr_linenumber" name="L589" href="#L589">589</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L590" href="#L590">590</a>             triangulator.setProgressDelta(0.5f);
-<a class="jxr_linenumber" name="L591" href="#L591">591</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L592" href="#L592">592</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
-<a class="jxr_linenumber" name="L593" href="#L593">593</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L594" href="#L594">594</a>             triangulator.setConfidence(0.5);
-<a class="jxr_linenumber" name="L595" href="#L595">595</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L596" href="#L596">596</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
-<a class="jxr_linenumber" name="L597" href="#L597">597</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L598" href="#L598">598</a>             triangulator.setMaxIterations(1);
-<a class="jxr_linenumber" name="L599" href="#L599">599</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L600" href="#L600">600</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
-<a class="jxr_linenumber" name="L601" href="#L601">601</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L602" href="#L602">602</a>             triangulator.setPointsAndCameras(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L604" href="#L604">604</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L606" href="#L606">606</a>             triangulator.triangulate();
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L608" href="#L608">608</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) {
-<a class="jxr_linenumber" name="L609" href="#L609">609</a>         } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L610" href="#L610">610</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
-<a class="jxr_linenumber" name="L611" href="#L611">611</a>         }
-<a class="jxr_linenumber" name="L612" href="#L612">612</a>         assertTrue(triangulator.isLocked());                
-<a class="jxr_linenumber" name="L613" href="#L613">613</a>     }
-<a class="jxr_linenumber" name="L614" href="#L614">614</a> }
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>         <strong class="jxr_keyword">int</strong> numValid = 0;
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> t = 0; t &lt; TIMES; t++) {
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>             UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> 
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>             <em class="jxr_comment">//obtain number of views</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>             <strong class="jxr_keyword">int</strong> numViews = randomizer.nextInt(MIN_VIEWS, MAX_VIEWS);
+<a class="jxr_linenumber" name="L447" href="#L447">447</a> 
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>             <em class="jxr_comment">//create a random 3D point</em>
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             Point3D point3D = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE), 
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>             GaussianRandomizer errorRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>                     <strong class="jxr_keyword">new</strong> Random(), 0.0, STD_ERROR);
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>             List&lt;Point2D&gt; points2D = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>             List&lt;PinholeCamera&gt; cameras = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>             Point3D previousCameraCenter = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D();
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; numViews; i++) {
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>                 <em class="jxr_comment">//create a random camera</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>                 <strong class="jxr_keyword">double</strong> horizontalFocalLength = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>                 <strong class="jxr_keyword">double</strong> verticalFocalLength = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>                 <strong class="jxr_keyword">double</strong> skewness = randomizer.nextDouble(MIN_SKEWNESS, 
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>                         MAX_SKEWNESS);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>                 <strong class="jxr_keyword">double</strong> horizontalPrincipalPoint = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>                 <strong class="jxr_keyword">double</strong> verticalPrincipalPoint = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>                 <strong class="jxr_keyword">double</strong> alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>                 <strong class="jxr_keyword">double</strong> betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>                 <strong class="jxr_keyword">double</strong> gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> 
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>                 <strong class="jxr_keyword">double</strong> cameraSeparationX = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>                 <strong class="jxr_keyword">double</strong> cameraSeparationY = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>                 <strong class="jxr_keyword">double</strong> cameraSeparationZ = randomizer.nextDouble(
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> 
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>                 PinholeCameraIntrinsicParameters intrinsic = 
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>                         <strong class="jxr_keyword">new</strong> PinholeCameraIntrinsicParameters(
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>                         horizontalFocalLength, verticalFocalLength, 
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>                         horizontalPrincipalPoint, verticalPrincipalPoint, 
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>                         skewness);            
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> 
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>                 MatrixRotation3D rotation = <strong class="jxr_keyword">new</strong> MatrixRotation3D(alphaEuler, 
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>                         betaEuler, gammaEuler);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> 
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>                 Point3D cameraCenter = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>                         previousCameraCenter.getInhomX() + cameraSeparationX,
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>                         previousCameraCenter.getInhomY() + cameraSeparationY,
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> 
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>                 PinholeCamera camera = <strong class="jxr_keyword">new</strong> PinholeCamera(intrinsic, rotation, 
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>                         cameraCenter);
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> 
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>                 <em class="jxr_comment">//project 3D point using camera</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>                 Point2D point2D = camera.project(point3D);
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>                 
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>                 <strong class="jxr_keyword">if</strong> (randomizer.nextInt(0, 100) &lt; PERCENTAGE_OUTLIERS) {
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>                     <strong class="jxr_keyword">double</strong> errorX = errorRandomizer.nextDouble();
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>                     <strong class="jxr_keyword">double</strong> errorY = errorRandomizer.nextDouble();
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>                     <strong class="jxr_keyword">double</strong> inhomX = point2D.getInhomX();
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>                     <strong class="jxr_keyword">double</strong> inhomY = point2D.getInhomY();
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>                     
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>                     point2D.setInhomogeneousCoordinates(inhomX + errorX, 
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>                             inhomY + errorY);
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>                 }
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> 
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>                 cameras.add(camera);
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>                 points2D.add(point2D);
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>             }
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> 
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>             <em class="jxr_comment">//create triangulator</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>             MSACRobustSinglePoint3DTriangulator triangulator = 
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>                     <strong class="jxr_keyword">new</strong> MSACRobustSinglePoint3DTriangulator(points2D, cameras, 
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>                     <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>             triangulator.setThreshold(THRESHOLD);
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>             
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>             <em class="jxr_comment">//check default values</em>
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>             assertTrue(triangulator.isReady());
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>             assertFalse(triangulator.isLocked());
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>             assertEquals(triangulateStart, 0);
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>             assertEquals(triangulateEnd, 0);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             assertEquals(triangulateNextIteration, 0);
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>             assertEquals(triangulateProgressChange, 0);
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>             
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>             Point3D triangulated = triangulator.triangulate();
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>             
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>             <em class="jxr_comment">//check correctness</em>
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>             assertTrue(triangulator.isReady());
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>             assertFalse(triangulator.isLocked());
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>             assertEquals(triangulateStart, 1);
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>             assertEquals(triangulateEnd, 1);
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>             assertTrue(triangulateNextIteration &gt; 0);
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>             assertTrue(triangulateProgressChange &gt;= 0);
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>             reset();
+<a class="jxr_linenumber" name="L544" href="#L544">544</a> 
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>             <strong class="jxr_keyword">if</strong> (point3D.distanceTo(triangulated) &gt; ABSOLUTE_ERROR) {
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>             }
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>             assertEquals(point3D.distanceTo(triangulated), 0.0, ABSOLUTE_ERROR);
+<a class="jxr_linenumber" name="L549" href="#L549">549</a> 
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>             numValid++;
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>         }
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> 
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>         assertTrue(numValid &gt; 0);
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>     }
+<a class="jxr_linenumber" name="L556" href="#L556">556</a> 
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>     @Override
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateStart(
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>             RobustSinglePoint3DTriangulator triangulator) {
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>         triangulateStart++;
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>     }
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> 
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>     @Override
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateEnd(RobustSinglePoint3DTriangulator triangulator) {
+<a class="jxr_linenumber" name="L566" href="#L566">566</a>         triangulateEnd++;
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>     }
+<a class="jxr_linenumber" name="L569" href="#L569">569</a> 
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>     @Override
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateNextIteration(
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>             RobustSinglePoint3DTriangulator triangulator, <strong class="jxr_keyword">int</strong> iteration) {
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>         triangulateNextIteration++;
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
+<a class="jxr_linenumber" name="L575" href="#L575">575</a>     }
+<a class="jxr_linenumber" name="L576" href="#L576">576</a> 
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>     @Override
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onTriangulateProgressChange(
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>             RobustSinglePoint3DTriangulator triangulator, <strong class="jxr_keyword">float</strong> progress) {
+<a class="jxr_linenumber" name="L580" href="#L580">580</a>         triangulateProgressChange++;
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>         checkLocked((MSACRobustSinglePoint3DTriangulator)triangulator);
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>     }
+<a class="jxr_linenumber" name="L583" href="#L583">583</a> 
+<a class="jxr_linenumber" name="L584" href="#L584">584</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reset() {
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>         triangulateStart = triangulateEnd = triangulateNextIteration =
+<a class="jxr_linenumber" name="L586" href="#L586">586</a>                 triangulateProgressChange = 0;
+<a class="jxr_linenumber" name="L587" href="#L587">587</a>     }
+<a class="jxr_linenumber" name="L588" href="#L588">588</a> 
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkLocked(MSACRobustSinglePoint3DTriangulator triangulator) {
+<a class="jxr_linenumber" name="L590" href="#L590">590</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>             triangulator.setThreshold(0.5);
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L593" href="#L593">593</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>             triangulator.setListener(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L597" href="#L597">597</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>             triangulator.setProgressDelta(0.5f);
+<a class="jxr_linenumber" name="L600" href="#L600">600</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L601" href="#L601">601</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>             triangulator.setConfidence(0.5);
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
+<a class="jxr_linenumber" name="L606" href="#L606">606</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>             triangulator.setMaxIterations(1);
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>             triangulator.setPointsAndCameras(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) { }
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>             triangulator.triangulate();
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         } <strong class="jxr_keyword">catch</strong> (LockedException ignore) {
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>         } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>             fail(<span class="jxr_string">"LockedException expected but not thrown"</span>);
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>         }
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>         assertTrue(triangulator.isLocked());                
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>     }
+<a class="jxr_linenumber" name="L623" href="#L623">623</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

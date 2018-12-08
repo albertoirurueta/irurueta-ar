@@ -446,657 +446,728 @@
 <a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     * @param verticalFocalLength estimated vertical focal length component.</em>
 <a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">     * @param result instance where estimated DIAC will be stored.</em>
 <a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     * @return true if estimated DIAC is valid, false otherwise.</em>
-<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     * @throws AlgebraException if it cannot be determined whether DIAC is valid</em>
-<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * or not due to numerical unstabilities.</em>
-<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> buildDiac(<strong class="jxr_keyword">double</strong> horizontalFocalLength, 
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>             <strong class="jxr_keyword">double</strong> verticalFocalLength, <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> result) 
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>             <strong class="jxr_keyword">throws</strong> AlgebraException {
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>         
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>         PinholeCameraIntrinsicParameters intrinsic = <strong class="jxr_keyword">new</strong> 
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>         PinholeCameraIntrinsicParameters(horizontalFocalLength, 
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>                 verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>         result.setFromPinholeCameraIntrinsicParameters(intrinsic);
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>         
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>         Matrix m = result.asMatrix();
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>         CholeskyDecomposer decomposer = <strong class="jxr_keyword">new</strong> CholeskyDecomposer(m);
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>         decomposer.decompose();
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <strong class="jxr_keyword">return</strong> decomposer.isSPD();
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>     }    
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>     
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     * Estimates the DIAC assuming unknown aspect ratio.</em>
-<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     * @param result instance where estimated DIAC will be stored.</em>
-<a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error</em>
-<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     * occurs during estimation, usually because fundamental matrix corresponds</em>
-<a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">     * to degenerate camera movements, or because of numerical unstabilities.</em>
-<a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> estimateUnknownAspectRatio(<a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> result)
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a> {
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>             <strong class="jxr_keyword">double</strong> x0 = mPrincipalPointX;
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>             <strong class="jxr_keyword">double</strong> y0 = mPrincipalPointY;      
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>         
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>             <em class="jxr_comment">//SVD decompose fundamental matrix</em>
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>             mFundamentalMatrix.normalize();
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>                     mFundamentalMatrix.getInternalMatrix());
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>             decomposer.decompose();
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>             
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>             <strong class="jxr_keyword">double</strong>[] sigmas = decomposer.getSingularValues();
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>             Matrix u = decomposer.getU();
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>             Matrix v = decomposer.getV();
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>             
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>             <strong class="jxr_keyword">double</strong> sigma1 = sigmas[0];
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>             <strong class="jxr_keyword">double</strong> sigma2 = sigmas[1];
-<a class="jxr_linenumber" name="L484" href="#L484">484</a>             
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>             <em class="jxr_comment">//Column u1</em>
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>             <strong class="jxr_keyword">double</strong> u11 = u.getElementAt(0, 0);
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>             <strong class="jxr_keyword">double</strong> u21 = u.getElementAt(1, 0);
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>             <strong class="jxr_keyword">double</strong> u31 = u.getElementAt(2, 0);
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>             
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>             <em class="jxr_comment">//Column u2</em>
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>             <strong class="jxr_keyword">double</strong> u12 = u.getElementAt(0, 1);
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>             <strong class="jxr_keyword">double</strong> u22 = u.getElementAt(1, 1);
-<a class="jxr_linenumber" name="L493" href="#L493">493</a>             <strong class="jxr_keyword">double</strong> u32 = u.getElementAt(2, 1);
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>             
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>             <em class="jxr_comment">//Column v1</em>
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>             <strong class="jxr_keyword">double</strong> v11 = v.getElementAt(0, 0);
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>             <strong class="jxr_keyword">double</strong> v21 = v.getElementAt(1, 0);
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>             <strong class="jxr_keyword">double</strong> v31 = v.getElementAt(2, 0);
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>             
-<a class="jxr_linenumber" name="L500" href="#L500">500</a>             <em class="jxr_comment">//Column v2</em>
-<a class="jxr_linenumber" name="L501" href="#L501">501</a>             <strong class="jxr_keyword">double</strong> v12 = v.getElementAt(0, 1);
-<a class="jxr_linenumber" name="L502" href="#L502">502</a>             <strong class="jxr_keyword">double</strong> v22 = v.getElementAt(1, 1);
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>             <strong class="jxr_keyword">double</strong> v32 = v.getElementAt(2, 1);
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>             
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>             <em class="jxr_comment">//build Kruppa equations</em>
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>             <strong class="jxr_keyword">double</strong> polyA = u12*u11;
-<a class="jxr_linenumber" name="L507" href="#L507">507</a>             <strong class="jxr_keyword">double</strong> polyB = u22*u21;
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>             <strong class="jxr_keyword">double</strong> polyC = Math.pow(x0,2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
-<a class="jxr_linenumber" name="L509" href="#L509">509</a>                     x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>                     x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>             <strong class="jxr_keyword">double</strong> polyD = Math.pow(sigma2, 2.0) * v12 * v12;
-<a class="jxr_linenumber" name="L512" href="#L512">512</a>             <strong class="jxr_keyword">double</strong> polyE = Math.pow(sigma2, 2.0) * v22 * v22;
-<a class="jxr_linenumber" name="L513" href="#L513">513</a>             <strong class="jxr_keyword">double</strong> polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
-<a class="jxr_linenumber" name="L514" href="#L514">514</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>                     Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
-<a class="jxr_linenumber" name="L517" href="#L517">517</a>                     Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
-<a class="jxr_linenumber" name="L518" href="#L518">518</a>                     Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
-<a class="jxr_linenumber" name="L519" href="#L519">519</a>                     Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>                     Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>                     Math.pow(sigma2, 2.0) * v32 * v32;
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>             <strong class="jxr_keyword">double</strong> polyG = u11*u11;
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>             <strong class="jxr_keyword">double</strong> polyH = u21*u21;
-<a class="jxr_linenumber" name="L524" href="#L524">524</a>             <strong class="jxr_keyword">double</strong> polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>                     x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
-<a class="jxr_linenumber" name="L526" href="#L526">526</a>                     x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
-<a class="jxr_linenumber" name="L527" href="#L527">527</a>             <strong class="jxr_keyword">double</strong> polyJ = sigma1 * sigma2 * v12 * v11;
-<a class="jxr_linenumber" name="L528" href="#L528">528</a>             <strong class="jxr_keyword">double</strong> polyK = sigma1 * sigma2 * v22 * v21;
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>             <strong class="jxr_keyword">double</strong> polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
-<a class="jxr_linenumber" name="L530" href="#L530">530</a>                     sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>                     sigma1 * sigma2 * x0 * y0 * v12 * v21 +
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>                     sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
-<a class="jxr_linenumber" name="L533" href="#L533">533</a>                     sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>                     sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
-<a class="jxr_linenumber" name="L535" href="#L535">535</a>             <strong class="jxr_keyword">double</strong> polyM = Math.pow(sigma1, 2.0) * v11 * v11;
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>             <strong class="jxr_keyword">double</strong> polyN = Math.pow(sigma1, 2.0) * v21 * v21;
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>             <strong class="jxr_keyword">double</strong> polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
-<a class="jxr_linenumber" name="L538" href="#L538">538</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>                     Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
-<a class="jxr_linenumber" name="L540" href="#L540">540</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>                     Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>                     Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
-<a class="jxr_linenumber" name="L543" href="#L543">543</a>                     Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>                     Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
-<a class="jxr_linenumber" name="L545" href="#L545">545</a>                     Math.pow(sigma1, 2.0) * v31 * v31;
-<a class="jxr_linenumber" name="L546" href="#L546">546</a>             <strong class="jxr_keyword">double</strong> polyP = u12 * u12;
-<a class="jxr_linenumber" name="L547" href="#L547">547</a>             <strong class="jxr_keyword">double</strong> polyQ = u22 * u22;
-<a class="jxr_linenumber" name="L548" href="#L548">548</a>             <strong class="jxr_keyword">double</strong> polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
-<a class="jxr_linenumber" name="L549" href="#L549">549</a>                     x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
-<a class="jxr_linenumber" name="L551" href="#L551">551</a>             
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>             
-<a class="jxr_linenumber" name="L553" href="#L553">553</a>             <strong class="jxr_keyword">double</strong> polyS = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
-<a class="jxr_linenumber" name="L554" href="#L554">554</a>                     (polyH * polyN - polyQ * polyE) - (polyQ * polyK + polyB * polyN));
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>             <strong class="jxr_keyword">double</strong> polyT = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
-<a class="jxr_linenumber" name="L556" href="#L556">556</a>                     (polyG * polyN + polyH * polyM - polyP * polyE - polyQ * polyD) -
-<a class="jxr_linenumber" name="L557" href="#L557">557</a>                     (polyP * polyK + polyQ * polyJ + polyA * polyN + polyB * polyM));
-<a class="jxr_linenumber" name="L558" href="#L558">558</a>             <strong class="jxr_keyword">double</strong> polyU = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
-<a class="jxr_linenumber" name="L559" href="#L559">559</a>                     (polyG * polyO + polyM * polyI - polyP * polyF - polyD * polyR) -
-<a class="jxr_linenumber" name="L560" href="#L560">560</a>                     (polyP * polyL + polyJ * polyR + polyA * polyO + polyM * polyC));
-<a class="jxr_linenumber" name="L561" href="#L561">561</a>             <strong class="jxr_keyword">double</strong> polyV = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
-<a class="jxr_linenumber" name="L562" href="#L562">562</a>                     (polyH * polyO + polyN * polyI - polyQ * polyF - polyE * polyR) -
-<a class="jxr_linenumber" name="L563" href="#L563">563</a>                     (polyQ * polyL + polyK * polyR + polyB * polyO + polyN * polyC));
-<a class="jxr_linenumber" name="L564" href="#L564">564</a>             <strong class="jxr_keyword">double</strong> polyW = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
-<a class="jxr_linenumber" name="L565" href="#L565">565</a>                     (polyO * polyI - polyF * polyR) - (polyL * polyR + polyO * polyC));
-<a class="jxr_linenumber" name="L566" href="#L566">566</a>             
-<a class="jxr_linenumber" name="L567" href="#L567">567</a>             <em class="jxr_comment">//assuming that x = ax^2, y = ay^2 which are the horizontal and</em>
-<a class="jxr_linenumber" name="L568" href="#L568">568</a>             <em class="jxr_comment">//vertical focal lengths, we obtain the following equations</em>
-<a class="jxr_linenumber" name="L569" href="#L569">569</a>             
-<a class="jxr_linenumber" name="L570" href="#L570">570</a>             <em class="jxr_comment">//x = (-y^2*S - y*V - W) / (y*T + U)</em>
-<a class="jxr_linenumber" name="L571" href="#L571">571</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + </em>
-<a class="jxr_linenumber" name="L572" href="#L572">572</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + </em>
-<a class="jxr_linenumber" name="L573" href="#L573">573</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + </em>
-<a class="jxr_linenumber" name="L574" href="#L574">574</a>             <em class="jxr_comment">//y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + </em>
-<a class="jxr_linenumber" name="L575" href="#L575">575</a>             <em class="jxr_comment">//(y*T + U)^2*(- F*C - L*I) = 0</em>
-<a class="jxr_linenumber" name="L576" href="#L576">576</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + </em>
-<a class="jxr_linenumber" name="L577" href="#L577">577</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + </em>
-<a class="jxr_linenumber" name="L578" href="#L578">578</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + </em>
-<a class="jxr_linenumber" name="L579" href="#L579">579</a>             <em class="jxr_comment">//y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0</em>
-<a class="jxr_linenumber" name="L580" href="#L580">580</a>             
-<a class="jxr_linenumber" name="L581" href="#L581">581</a>             <em class="jxr_comment">//where we can solve y using any of the two latter equations, and</em>
-<a class="jxr_linenumber" name="L582" href="#L582">582</a>             <em class="jxr_comment">//then use obtained y to solve x</em>
-<a class="jxr_linenumber" name="L583" href="#L583">583</a>             Complex[] roots;
-<a class="jxr_linenumber" name="L584" href="#L584">584</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L585" href="#L585">585</a>                 Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
-<a class="jxr_linenumber" name="L586" href="#L586">586</a>                         polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
-<a class="jxr_linenumber" name="L587" href="#L587">587</a>                 roots = poly1.getRoots();
-<a class="jxr_linenumber" name="L588" href="#L588">588</a>             } <strong class="jxr_keyword">catch</strong> (NumericalException ex1) {
-<a class="jxr_linenumber" name="L589" href="#L589">589</a>                 <em class="jxr_comment">//if solution for poly1 fails, try with second polynomial</em>
-<a class="jxr_linenumber" name="L590" href="#L590">590</a>                 Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
-<a class="jxr_linenumber" name="L591" href="#L591">591</a>                         polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
-<a class="jxr_linenumber" name="L592" href="#L592">592</a>                 roots = poly2.getRoots();
-<a class="jxr_linenumber" name="L593" href="#L593">593</a>             }
-<a class="jxr_linenumber" name="L594" href="#L594">594</a>             
-<a class="jxr_linenumber" name="L595" href="#L595">595</a>             <em class="jxr_comment">//roots contain possible y values. We use only their real part</em>
-<a class="jxr_linenumber" name="L596" href="#L596">596</a>             <em class="jxr_comment">//and find x = (-y^2*S - y*V - W) / (y*T + U)</em>
-<a class="jxr_linenumber" name="L597" href="#L597">597</a>             
-<a class="jxr_linenumber" name="L598" href="#L598">598</a>             <em class="jxr_comment">//pick the best x, y values that produce a positive definite DIAC</em>
-<a class="jxr_linenumber" name="L599" href="#L599">599</a>             <em class="jxr_comment">//matrix</em>
-<a class="jxr_linenumber" name="L600" href="#L600">600</a>             <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> diac = <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a>(
-<a class="jxr_linenumber" name="L601" href="#L601">601</a>                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-<a class="jxr_linenumber" name="L602" href="#L602">602</a>             <strong class="jxr_keyword">boolean</strong> valid = false;
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>             <strong class="jxr_keyword">if</strong> (roots != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L604" href="#L604">604</a>                 <strong class="jxr_keyword">for</strong> (Complex root : roots) {
-<a class="jxr_linenumber" name="L605" href="#L605">605</a>                     <strong class="jxr_keyword">double</strong> y = root.getReal();
-<a class="jxr_linenumber" name="L606" href="#L606">606</a>                     <strong class="jxr_keyword">double</strong> x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);
-<a class="jxr_linenumber" name="L607" href="#L607">607</a>                     
-<a class="jxr_linenumber" name="L608" href="#L608">608</a>                     <em class="jxr_comment">//build DIAC matrix and check if it is positive definite</em>
-<a class="jxr_linenumber" name="L609" href="#L609">609</a>                     <strong class="jxr_keyword">if</strong> (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {
-<a class="jxr_linenumber" name="L610" href="#L610">610</a>                         <strong class="jxr_keyword">double</strong> horizontalFocalLength = Math.sqrt(x);
-<a class="jxr_linenumber" name="L611" href="#L611">611</a>                         <strong class="jxr_keyword">double</strong> verticalFocalLength = Math.sqrt(y);
-<a class="jxr_linenumber" name="L612" href="#L612">612</a>                         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L613" href="#L613">613</a>                             valid = buildDiac(horizontalFocalLength, 
-<a class="jxr_linenumber" name="L614" href="#L614">614</a>                                 verticalFocalLength, diac);
-<a class="jxr_linenumber" name="L615" href="#L615">615</a>                         } <strong class="jxr_keyword">catch</strong> (AlgebraException ex) {
-<a class="jxr_linenumber" name="L616" href="#L616">616</a>                             valid = false;
-<a class="jxr_linenumber" name="L617" href="#L617">617</a>                         }
-<a class="jxr_linenumber" name="L618" href="#L618">618</a>                     }
-<a class="jxr_linenumber" name="L619" href="#L619">619</a>                     
-<a class="jxr_linenumber" name="L620" href="#L620">620</a>                     <strong class="jxr_keyword">if</strong> (valid) {
-<a class="jxr_linenumber" name="L621" href="#L621">621</a>                         <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L622" href="#L622">622</a>                     }
-<a class="jxr_linenumber" name="L623" href="#L623">623</a>                 }
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> buildDiac(<strong class="jxr_keyword">double</strong> horizontalFocalLength, 
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>             <strong class="jxr_keyword">double</strong> verticalFocalLength, <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> result) {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> 
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>             PinholeCameraIntrinsicParameters intrinsic = <strong class="jxr_keyword">new</strong>
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>                     PinholeCameraIntrinsicParameters(horizontalFocalLength,
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>                     verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             result.setFromPinholeCameraIntrinsicParameters(intrinsic);
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>             Matrix m = result.asMatrix();
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>             CholeskyDecomposer decomposer = <strong class="jxr_keyword">new</strong> CholeskyDecomposer(m);
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>             decomposer.decompose();
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>             <strong class="jxr_keyword">return</strong> decomposer.isSPD();
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         } <strong class="jxr_keyword">catch</strong> (AlgebraException e) {
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>             <em class="jxr_comment">//there are numerical instabilities</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>             <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         }
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>     }    
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>     
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     * Estimates the DIAC assuming unknown aspect ratio.</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     * @param result instance where estimated DIAC will be stored.</em>
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error</em>
+<a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">     * occurs during estimation, usually because fundamental matrix corresponds</em>
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">     * to degenerate camera movements, or because of numerical unstabilities.</em>
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> estimateUnknownAspectRatio(<a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> result)
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a> {
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>             <strong class="jxr_keyword">double</strong> x0 = mPrincipalPointX;
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>             <strong class="jxr_keyword">double</strong> y0 = mPrincipalPointY;      
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>             <em class="jxr_comment">//SVD decompose fundamental matrix</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>             mFundamentalMatrix.normalize();
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>                     mFundamentalMatrix.getInternalMatrix());
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>             decomposer.decompose();
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>             
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>             <strong class="jxr_keyword">double</strong>[] sigmas = decomposer.getSingularValues();
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>             Matrix u = decomposer.getU();
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>             Matrix v = decomposer.getV();
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>             
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>             <strong class="jxr_keyword">double</strong> sigma1 = sigmas[0];
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>             <strong class="jxr_keyword">double</strong> sigma2 = sigmas[1];
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>             
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>             <em class="jxr_comment">//Column u1</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>             <strong class="jxr_keyword">double</strong> u11 = u.getElementAt(0, 0);
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>             <strong class="jxr_keyword">double</strong> u21 = u.getElementAt(1, 0);
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>             <strong class="jxr_keyword">double</strong> u31 = u.getElementAt(2, 0);
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>             
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>             <em class="jxr_comment">//Column u2</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>             <strong class="jxr_keyword">double</strong> u12 = u.getElementAt(0, 1);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>             <strong class="jxr_keyword">double</strong> u22 = u.getElementAt(1, 1);
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>             <strong class="jxr_keyword">double</strong> u32 = u.getElementAt(2, 1);
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>             
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>             <em class="jxr_comment">//Column v1</em>
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>             <strong class="jxr_keyword">double</strong> v11 = v.getElementAt(0, 0);
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>             <strong class="jxr_keyword">double</strong> v21 = v.getElementAt(1, 0);
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>             <strong class="jxr_keyword">double</strong> v31 = v.getElementAt(2, 0);
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>             
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>             <em class="jxr_comment">//Column v2</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>             <strong class="jxr_keyword">double</strong> v12 = v.getElementAt(0, 1);
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>             <strong class="jxr_keyword">double</strong> v22 = v.getElementAt(1, 1);
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>             <strong class="jxr_keyword">double</strong> v32 = v.getElementAt(2, 1);
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>             
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>             <em class="jxr_comment">//build Kruppa equations</em>
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>             <strong class="jxr_keyword">double</strong> polyA = u12*u11;
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>             <strong class="jxr_keyword">double</strong> polyB = u22*u21;
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>             <strong class="jxr_keyword">double</strong> polyC = Math.pow(x0,2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>                     x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>                     x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>             <strong class="jxr_keyword">double</strong> polyD = Math.pow(sigma2, 2.0) * v12 * v12;
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>             <strong class="jxr_keyword">double</strong> polyE = Math.pow(sigma2, 2.0) * v22 * v22;
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>             <strong class="jxr_keyword">double</strong> polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>                     Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>                     Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>                     Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>                     Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>                     Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>                     Math.pow(sigma2, 2.0) * v32 * v32;
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>             <strong class="jxr_keyword">double</strong> polyG = u11*u11;
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>             <strong class="jxr_keyword">double</strong> polyH = u21*u21;
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>             <strong class="jxr_keyword">double</strong> polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>                     x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>                     x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>             <strong class="jxr_keyword">double</strong> polyJ = sigma1 * sigma2 * v12 * v11;
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>             <strong class="jxr_keyword">double</strong> polyK = sigma1 * sigma2 * v22 * v21;
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             <strong class="jxr_keyword">double</strong> polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>                     sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>                     sigma1 * sigma2 * x0 * y0 * v12 * v21 +
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>                     sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>                     sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>                     sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>             <strong class="jxr_keyword">double</strong> polyM = Math.pow(sigma1, 2.0) * v11 * v11;
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>             <strong class="jxr_keyword">double</strong> polyN = Math.pow(sigma1, 2.0) * v21 * v21;
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>             <strong class="jxr_keyword">double</strong> polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>                     Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>                     Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>                     Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>                     Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>                     Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>                     Math.pow(sigma1, 2.0) * v31 * v31;
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>             <strong class="jxr_keyword">double</strong> polyP = u12 * u12;
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>             <strong class="jxr_keyword">double</strong> polyQ = u22 * u22;
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>             <strong class="jxr_keyword">double</strong> polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>                     x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>             
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>             
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>             <strong class="jxr_keyword">double</strong> polyS = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>                     (polyH * polyN - polyQ * polyE) - (polyQ * polyK + polyB * polyN));
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>             <strong class="jxr_keyword">double</strong> polyT = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>                     (polyG * polyN + polyH * polyM - polyP * polyE - polyQ * polyD) -
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>                     (polyP * polyK + polyQ * polyJ + polyA * polyN + polyB * polyM));
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>             <strong class="jxr_keyword">double</strong> polyU = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>                     (polyG * polyO + polyM * polyI - polyP * polyF - polyD * polyR) -
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>                     (polyP * polyL + polyJ * polyR + polyA * polyO + polyM * polyC));
+<a class="jxr_linenumber" name="L563" href="#L563">563</a>             <strong class="jxr_keyword">double</strong> polyV = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>                     (polyH * polyO + polyN * polyI - polyQ * polyF - polyE * polyR) -
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>                     (polyQ * polyL + polyK * polyR + polyB * polyO + polyN * polyC));
+<a class="jxr_linenumber" name="L566" href="#L566">566</a>             <strong class="jxr_keyword">double</strong> polyW = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>                     (polyO * polyI - polyF * polyR) - (polyL * polyR + polyO * polyC));
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>             
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>             <em class="jxr_comment">//assuming that x = ax^2, y = ay^2 which are the horizontal and</em>
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>             <em class="jxr_comment">//vertical focal lengths, we obtain the following equations</em>
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>             
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>             <em class="jxr_comment">//x = (-y^2*S - y*V - W) / (y*T + U)</em>
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + </em>
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + </em>
+<a class="jxr_linenumber" name="L575" href="#L575">575</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + </em>
+<a class="jxr_linenumber" name="L576" href="#L576">576</a>             <em class="jxr_comment">//y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + </em>
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>             <em class="jxr_comment">//(y*T + U)^2*(- F*C - L*I) = 0</em>
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + </em>
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + </em>
+<a class="jxr_linenumber" name="L580" href="#L580">580</a>             <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + </em>
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>             <em class="jxr_comment">//y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0</em>
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>             
+<a class="jxr_linenumber" name="L583" href="#L583">583</a>             <em class="jxr_comment">//where we can solve y using any of the two latter equations, and</em>
+<a class="jxr_linenumber" name="L584" href="#L584">584</a>             <em class="jxr_comment">//then use obtained y to solve x</em>
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>             Complex[] roots = unknownAspectRatioRoots(polyA, polyB, polyC,
+<a class="jxr_linenumber" name="L586" href="#L586">586</a>                     polyD, polyE, polyF, polyG, polyH,
+<a class="jxr_linenumber" name="L587" href="#L587">587</a>                     polyI, polyJ, polyK, polyL, polyM,
+<a class="jxr_linenumber" name="L588" href="#L588">588</a>                     polyN, polyO, polyP, polyQ, polyR,
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>                     polyS, polyT, polyU, polyV, polyW);
+<a class="jxr_linenumber" name="L590" href="#L590">590</a> 
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>             <em class="jxr_comment">//roots contain possible y values. We use only their real part</em>
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>             <em class="jxr_comment">//and find x = (-y^2*S - y*V - W) / (y*T + U)</em>
+<a class="jxr_linenumber" name="L593" href="#L593">593</a>             
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>             <em class="jxr_comment">//pick the best x, y values that produce a positive definite DIAC</em>
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>             <em class="jxr_comment">//matrix</em>
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>             <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> diac = <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a>(
+<a class="jxr_linenumber" name="L597" href="#L597">597</a>                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>             <strong class="jxr_keyword">boolean</strong> valid = false;
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>             <strong class="jxr_keyword">if</strong> (roots != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L600" href="#L600">600</a>                 <strong class="jxr_keyword">for</strong> (Complex root : roots) {
+<a class="jxr_linenumber" name="L601" href="#L601">601</a>                     <strong class="jxr_keyword">double</strong> y = root.getReal();
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>                     <strong class="jxr_keyword">double</strong> x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>                     
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>                     <em class="jxr_comment">//build DIAC matrix and check if it is positive definite</em>
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>                     <strong class="jxr_keyword">if</strong> (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {
+<a class="jxr_linenumber" name="L606" href="#L606">606</a>                         <strong class="jxr_keyword">double</strong> horizontalFocalLength = Math.sqrt(x);
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>                         <strong class="jxr_keyword">double</strong> verticalFocalLength = Math.sqrt(y);
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>                         valid = buildDiac(horizontalFocalLength,
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>                                 verticalFocalLength, diac);
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>                     }
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>                     
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>                     <strong class="jxr_keyword">if</strong> (valid) {
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>                     }
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>                 }
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>             }
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>             
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>             <strong class="jxr_keyword">if</strong> (valid) {
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>                 <em class="jxr_comment">//copy to result</em>
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>                 result.setParameters(diac.getA(), diac.getB(), diac.getC(), 
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>                         diac.getD(), diac.getE(), diac.getF());
 <a class="jxr_linenumber" name="L624" href="#L624">624</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L625" href="#L625">625</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
-<a class="jxr_linenumber" name="L626" href="#L626">626</a>             }
-<a class="jxr_linenumber" name="L627" href="#L627">627</a>             
-<a class="jxr_linenumber" name="L628" href="#L628">628</a>             <strong class="jxr_keyword">if</strong> (valid) {
-<a class="jxr_linenumber" name="L629" href="#L629">629</a>                 <em class="jxr_comment">//copy to result</em>
-<a class="jxr_linenumber" name="L630" href="#L630">630</a>                 result.setParameters(diac.getA(), diac.getB(), diac.getC(), 
-<a class="jxr_linenumber" name="L631" href="#L631">631</a>                         diac.getD(), diac.getE(), diac.getF());
-<a class="jxr_linenumber" name="L632" href="#L632">632</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L633" href="#L633">633</a>                 <em class="jxr_comment">//no valid DIAC could be found</em>
-<a class="jxr_linenumber" name="L634" href="#L634">634</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
-<a class="jxr_linenumber" name="L635" href="#L635">635</a>             }
-<a class="jxr_linenumber" name="L636" href="#L636">636</a>             
-<a class="jxr_linenumber" name="L637" href="#L637">637</a>         } <strong class="jxr_keyword">catch</strong> (KruppaDualImageOfAbsoluteConicEstimatorException ex) {
-<a class="jxr_linenumber" name="L638" href="#L638">638</a>             <strong class="jxr_keyword">throw</strong> ex;
-<a class="jxr_linenumber" name="L639" href="#L639">639</a>         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
-<a class="jxr_linenumber" name="L640" href="#L640">640</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>(ex);
-<a class="jxr_linenumber" name="L641" href="#L641">641</a>         }        
-<a class="jxr_linenumber" name="L642" href="#L642">642</a>     }
-<a class="jxr_linenumber" name="L643" href="#L643">643</a>         
-<a class="jxr_linenumber" name="L644" href="#L644">644</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * Gets x value from current y value.</em>
-<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * X and y values are the squared values of estimated focal lngth </em>
-<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     * components.</em>
-<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     * This method is used internally when aspect ratio is not known.</em>
-<a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">     * @param y y value to obtian x value from.</em>
-<a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">     * @param s internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">     * @param t internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">     * @param u internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L653" href="#L653">653</a> <em class="jxr_javadoccomment">     * @param v internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L654" href="#L654">654</a> <em class="jxr_javadoccomment">     * @param w internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">     * @return x value.</em>
-<a class="jxr_linenumber" name="L656" href="#L656">656</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L657" href="#L657">657</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> getXFromY(<strong class="jxr_keyword">double</strong> y, <strong class="jxr_keyword">double</strong> s, <strong class="jxr_keyword">double</strong> t, <strong class="jxr_keyword">double</strong> u, <strong class="jxr_keyword">double</strong> v,
-<a class="jxr_linenumber" name="L658" href="#L658">658</a>             <strong class="jxr_keyword">double</strong> w) {
-<a class="jxr_linenumber" name="L659" href="#L659">659</a>         <strong class="jxr_keyword">return</strong> (-Math.pow(y, 2.0)*s - y*v - w) / (y*t + u);
-<a class="jxr_linenumber" name="L660" href="#L660">660</a>     }
-<a class="jxr_linenumber" name="L661" href="#L661">661</a>     
-<a class="jxr_linenumber" name="L662" href="#L662">662</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L663" href="#L663">663</a> <em class="jxr_javadoccomment">     * One of Kruppa's equations expressed as a polynomial of degree 4 to solve</em>
-<a class="jxr_linenumber" name="L664" href="#L664">664</a> <em class="jxr_javadoccomment">     * y value, which is the squared value of vertical focal length.</em>
-<a class="jxr_linenumber" name="L665" href="#L665">665</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is unknown.</em>
-<a class="jxr_linenumber" name="L666" href="#L666">666</a> <em class="jxr_javadoccomment">     * @param a internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L667" href="#L667">667</a> <em class="jxr_javadoccomment">     * @param b internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L668" href="#L668">668</a> <em class="jxr_javadoccomment">     * @param c internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L669" href="#L669">669</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L670" href="#L670">670</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L671" href="#L671">671</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L672" href="#L672">672</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L673" href="#L673">673</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L674" href="#L674">674</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L675" href="#L675">675</a> <em class="jxr_javadoccomment">     * @param j internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L676" href="#L676">676</a> <em class="jxr_javadoccomment">     * @param k internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L677" href="#L677">677</a> <em class="jxr_javadoccomment">     * @param l internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L678" href="#L678">678</a> <em class="jxr_javadoccomment">     * @param s internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L679" href="#L679">679</a> <em class="jxr_javadoccomment">     * @param t internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L680" href="#L680">680</a> <em class="jxr_javadoccomment">     * @param u internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L681" href="#L681">681</a> <em class="jxr_javadoccomment">     * @param v internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L682" href="#L682">682</a> <em class="jxr_javadoccomment">     * @param w internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L683" href="#L683">683</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
-<a class="jxr_linenumber" name="L684" href="#L684">684</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L685" href="#L685">685</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial1(<strong class="jxr_keyword">double</strong> a, <strong class="jxr_keyword">double</strong> b, <strong class="jxr_keyword">double</strong> c, <strong class="jxr_keyword">double</strong> d,
-<a class="jxr_linenumber" name="L686" href="#L686">686</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i, <strong class="jxr_keyword">double</strong> j,
-<a class="jxr_linenumber" name="L687" href="#L687">687</a>             <strong class="jxr_keyword">double</strong> k, <strong class="jxr_keyword">double</strong> l, <strong class="jxr_keyword">double</strong> s, <strong class="jxr_keyword">double</strong> t, <strong class="jxr_keyword">double</strong> u, <strong class="jxr_keyword">double</strong> v,
-<a class="jxr_linenumber" name="L688" href="#L688">688</a>             <strong class="jxr_keyword">double</strong> w) {
-<a class="jxr_linenumber" name="L689" href="#L689">689</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + </em>
-<a class="jxr_linenumber" name="L690" href="#L690">690</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + </em>
-<a class="jxr_linenumber" name="L691" href="#L691">691</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + </em>
-<a class="jxr_linenumber" name="L692" href="#L692">692</a>         <em class="jxr_comment">//y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + (y*T + U)^2*(- F*C - L*I) = 0</em>
-<a class="jxr_linenumber" name="L693" href="#L693">693</a>         
-<a class="jxr_linenumber" name="L694" href="#L694">694</a>         Polynomial result = <strong class="jxr_keyword">new</strong> Polynomial(
-<a class="jxr_linenumber" name="L695" href="#L695">695</a>                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
-<a class="jxr_linenumber" name="L696" href="#L696">696</a>         
-<a class="jxr_linenumber" name="L697" href="#L697">697</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2 *(-A*D - G*J)</em>
-<a class="jxr_linenumber" name="L698" href="#L698">698</a>         Polynomial tmp = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
-<a class="jxr_linenumber" name="L699" href="#L699">699</a>         Polynomial tmp2 = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>                 <em class="jxr_comment">//no valid DIAC could be found</em>
+<a class="jxr_linenumber" name="L626" href="#L626">626</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>             }
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>             
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>         } <strong class="jxr_keyword">catch</strong> (KruppaDualImageOfAbsoluteConicEstimatorException ex) {
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>             <strong class="jxr_keyword">throw</strong> ex;
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>(ex);
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>         }        
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>     }
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>         
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L637" href="#L637">637</a> <em class="jxr_javadoccomment">     * Gets x value from current y value.</em>
+<a class="jxr_linenumber" name="L638" href="#L638">638</a> <em class="jxr_javadoccomment">     * X and y values are the squared values of estimated focal lngth </em>
+<a class="jxr_linenumber" name="L639" href="#L639">639</a> <em class="jxr_javadoccomment">     * components.</em>
+<a class="jxr_linenumber" name="L640" href="#L640">640</a> <em class="jxr_javadoccomment">     * This method is used internally when aspect ratio is not known.</em>
+<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">     * @param y y value to obtian x value from.</em>
+<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">     * @param s internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L643" href="#L643">643</a> <em class="jxr_javadoccomment">     * @param t internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">     * @param u internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * @param v internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * @param w internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     * @return x value.</em>
+<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> getXFromY(<strong class="jxr_keyword">double</strong> y, <strong class="jxr_keyword">double</strong> s, <strong class="jxr_keyword">double</strong> t, <strong class="jxr_keyword">double</strong> u, <strong class="jxr_keyword">double</strong> v,
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>             <strong class="jxr_keyword">double</strong> w) {
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>         <strong class="jxr_keyword">return</strong> (-Math.pow(y, 2.0)*s - y*v - w) / (y*t + u);
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>     }
+<a class="jxr_linenumber" name="L653" href="#L653">653</a>     
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">     * One of Kruppa's equations expressed as a polynomial of degree 4 to solve</em>
+<a class="jxr_linenumber" name="L656" href="#L656">656</a> <em class="jxr_javadoccomment">     * y value, which is the squared value of vertical focal length.</em>
+<a class="jxr_linenumber" name="L657" href="#L657">657</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is unknown.</em>
+<a class="jxr_linenumber" name="L658" href="#L658">658</a> <em class="jxr_javadoccomment">     * @param a internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L659" href="#L659">659</a> <em class="jxr_javadoccomment">     * @param b internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L660" href="#L660">660</a> <em class="jxr_javadoccomment">     * @param c internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L661" href="#L661">661</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L662" href="#L662">662</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L663" href="#L663">663</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L664" href="#L664">664</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L665" href="#L665">665</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L666" href="#L666">666</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L667" href="#L667">667</a> <em class="jxr_javadoccomment">     * @param j internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L668" href="#L668">668</a> <em class="jxr_javadoccomment">     * @param k internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L669" href="#L669">669</a> <em class="jxr_javadoccomment">     * @param l internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L670" href="#L670">670</a> <em class="jxr_javadoccomment">     * @param s internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L671" href="#L671">671</a> <em class="jxr_javadoccomment">     * @param t internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L672" href="#L672">672</a> <em class="jxr_javadoccomment">     * @param u internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L673" href="#L673">673</a> <em class="jxr_javadoccomment">     * @param v internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L674" href="#L674">674</a> <em class="jxr_javadoccomment">     * @param w internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L675" href="#L675">675</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
+<a class="jxr_linenumber" name="L676" href="#L676">676</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L677" href="#L677">677</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial1(<strong class="jxr_keyword">double</strong> a, <strong class="jxr_keyword">double</strong> b, <strong class="jxr_keyword">double</strong> c, <strong class="jxr_keyword">double</strong> d,
+<a class="jxr_linenumber" name="L678" href="#L678">678</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i, <strong class="jxr_keyword">double</strong> j,
+<a class="jxr_linenumber" name="L679" href="#L679">679</a>             <strong class="jxr_keyword">double</strong> k, <strong class="jxr_keyword">double</strong> l, <strong class="jxr_keyword">double</strong> s, <strong class="jxr_keyword">double</strong> t, <strong class="jxr_keyword">double</strong> u, <strong class="jxr_keyword">double</strong> v,
+<a class="jxr_linenumber" name="L680" href="#L680">680</a>             <strong class="jxr_keyword">double</strong> w) {
+<a class="jxr_linenumber" name="L681" href="#L681">681</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2 *(-A*D - G*J) + y^2*(y*T + U)^2*(-B*E - H*K) + </em>
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J) + </em>
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + </em>
+<a class="jxr_linenumber" name="L684" href="#L684">684</a>         <em class="jxr_comment">//y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + (y*T + U)^2*(- F*C - L*I) = 0</em>
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>         
+<a class="jxr_linenumber" name="L686" href="#L686">686</a>         Polynomial result = <strong class="jxr_keyword">new</strong> Polynomial(
+<a class="jxr_linenumber" name="L687" href="#L687">687</a>                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
+<a class="jxr_linenumber" name="L688" href="#L688">688</a>         
+<a class="jxr_linenumber" name="L689" href="#L689">689</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2 *(-A*D - G*J)</em>
+<a class="jxr_linenumber" name="L690" href="#L690">690</a>         Polynomial tmp = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
+<a class="jxr_linenumber" name="L691" href="#L691">691</a>         Polynomial tmp2 = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
+<a class="jxr_linenumber" name="L692" href="#L692">692</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L693" href="#L693">693</a>         tmp.multiplyByScalar(-a*d - g*j);
+<a class="jxr_linenumber" name="L694" href="#L694">694</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L695" href="#L695">695</a>         
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>         <em class="jxr_comment">//y^2*(y*T + U)^2*(-B*E - H*K)</em>
+<a class="jxr_linenumber" name="L697" href="#L697">697</a>         tmp.setPolyParams(0.0, 0.0, 1.0);
+<a class="jxr_linenumber" name="L698" href="#L698">698</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L699" href="#L699">699</a>         tmp.multiply(tmp2);
 <a class="jxr_linenumber" name="L700" href="#L700">700</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L701" href="#L701">701</a>         tmp.multiplyByScalar(-a*d - g*j);
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>         tmp.multiplyByScalar(-b*e - h*k);
 <a class="jxr_linenumber" name="L702" href="#L702">702</a>         result.add(tmp);
 <a class="jxr_linenumber" name="L703" href="#L703">703</a>         
-<a class="jxr_linenumber" name="L704" href="#L704">704</a>         <em class="jxr_comment">//y^2*(y*T + U)^2*(-B*E - H*K)</em>
-<a class="jxr_linenumber" name="L705" href="#L705">705</a>         tmp.setPolyParams(0.0, 0.0, 1.0);
+<a class="jxr_linenumber" name="L704" href="#L704">704</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J)</em>
+<a class="jxr_linenumber" name="L705" href="#L705">705</a>         tmp.setPolyParams(-w, -v, -s);
 <a class="jxr_linenumber" name="L706" href="#L706">706</a>         tmp2.setPolyParams(u, t);
 <a class="jxr_linenumber" name="L707" href="#L707">707</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L708" href="#L708">708</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L709" href="#L709">709</a>         tmp.multiplyByScalar(-b*e - h*k);
-<a class="jxr_linenumber" name="L710" href="#L710">710</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L711" href="#L711">711</a>         
-<a class="jxr_linenumber" name="L712" href="#L712">712</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J)</em>
-<a class="jxr_linenumber" name="L713" href="#L713">713</a>         tmp.setPolyParams(-w, -v, -s);
-<a class="jxr_linenumber" name="L714" href="#L714">714</a>         tmp2.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L715" href="#L715">715</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L716" href="#L716">716</a>         tmp2.setPolyParams(0.0, 1);
-<a class="jxr_linenumber" name="L717" href="#L717">717</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L718" href="#L718">718</a>         tmp.multiplyByScalar(-a*e - b*d - g*k - h*j);
-<a class="jxr_linenumber" name="L719" href="#L719">719</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L720" href="#L720">720</a>         
-<a class="jxr_linenumber" name="L721" href="#L721">721</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I)</em>
-<a class="jxr_linenumber" name="L722" href="#L722">722</a>         tmp.setPolyParams(-w, -v, -s);
-<a class="jxr_linenumber" name="L723" href="#L723">723</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L708" href="#L708">708</a>         tmp2.setPolyParams(0.0, 1);
+<a class="jxr_linenumber" name="L709" href="#L709">709</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L710" href="#L710">710</a>         tmp.multiplyByScalar(-a*e - b*d - g*k - h*j);
+<a class="jxr_linenumber" name="L711" href="#L711">711</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L712" href="#L712">712</a>         
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I)</em>
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>         tmp.setPolyParams(-w, -v, -s);
+<a class="jxr_linenumber" name="L715" href="#L715">715</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L717" href="#L717">717</a>         tmp.multiplyByScalar(-a*f - d*c - g*l - j*i);
+<a class="jxr_linenumber" name="L718" href="#L718">718</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L719" href="#L719">719</a>         
+<a class="jxr_linenumber" name="L720" href="#L720">720</a>         <em class="jxr_comment">//y*(y*T + U)^2*(-B*F - E*C - H*L - K*I)</em>
+<a class="jxr_linenumber" name="L721" href="#L721">721</a>         tmp.setPolyParams(0.0, 1.0);
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L723" href="#L723">723</a>         tmp.multiply(tmp2);
 <a class="jxr_linenumber" name="L724" href="#L724">724</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L725" href="#L725">725</a>         tmp.multiplyByScalar(-a*f - d*c - g*l - j*i);
+<a class="jxr_linenumber" name="L725" href="#L725">725</a>         tmp.multiplyByScalar(-b*f - e*c - h*l - k*i);
 <a class="jxr_linenumber" name="L726" href="#L726">726</a>         result.add(tmp);
 <a class="jxr_linenumber" name="L727" href="#L727">727</a>         
-<a class="jxr_linenumber" name="L728" href="#L728">728</a>         <em class="jxr_comment">//y*(y*T + U)^2*(-B*F - E*C - H*L - K*I)</em>
-<a class="jxr_linenumber" name="L729" href="#L729">729</a>         tmp.setPolyParams(0.0, 1.0);
+<a class="jxr_linenumber" name="L728" href="#L728">728</a>         <em class="jxr_comment">//(y*T + U)^2*(- F*C - L*I)</em>
+<a class="jxr_linenumber" name="L729" href="#L729">729</a>         tmp.setPolyParams(u, t);
 <a class="jxr_linenumber" name="L730" href="#L730">730</a>         tmp2.setPolyParams(u, t);
 <a class="jxr_linenumber" name="L731" href="#L731">731</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L732" href="#L732">732</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L733" href="#L733">733</a>         tmp.multiplyByScalar(-b*f - e*c - h*l - k*i);
-<a class="jxr_linenumber" name="L734" href="#L734">734</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L735" href="#L735">735</a>         
-<a class="jxr_linenumber" name="L736" href="#L736">736</a>         <em class="jxr_comment">//(y*T + U)^2*(- F*C - L*I)</em>
-<a class="jxr_linenumber" name="L737" href="#L737">737</a>         tmp.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L738" href="#L738">738</a>         tmp2.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L739" href="#L739">739</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L740" href="#L740">740</a>         tmp.multiplyByScalar(-f*c - l*i);
-<a class="jxr_linenumber" name="L741" href="#L741">741</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L742" href="#L742">742</a>         
-<a class="jxr_linenumber" name="L743" href="#L743">743</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L744" href="#L744">744</a>     }
-<a class="jxr_linenumber" name="L745" href="#L745">745</a>     
-<a class="jxr_linenumber" name="L746" href="#L746">746</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 4 to</em>
-<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">     * solve y value, which is the squared value of vertical focal length.</em>
-<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is unknown.</em>
-<a class="jxr_linenumber" name="L750" href="#L750">750</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L751" href="#L751">751</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L752" href="#L752">752</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L753" href="#L753">753</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L754" href="#L754">754</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L755" href="#L755">755</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L756" href="#L756">756</a> <em class="jxr_javadoccomment">     * @param m internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">     * @param n internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">     * @param o internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">     * @param p internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">     * @param q internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L761" href="#L761">761</a> <em class="jxr_javadoccomment">     * @param r internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L762" href="#L762">762</a> <em class="jxr_javadoccomment">     * @param s internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L763" href="#L763">763</a> <em class="jxr_javadoccomment">     * @param t internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L764" href="#L764">764</a> <em class="jxr_javadoccomment">     * @param u internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L765" href="#L765">765</a> <em class="jxr_javadoccomment">     * @param v internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L766" href="#L766">766</a> <em class="jxr_javadoccomment">     * @param w internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L767" href="#L767">767</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
-<a class="jxr_linenumber" name="L768" href="#L768">768</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L769" href="#L769">769</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial2(<strong class="jxr_keyword">double</strong> d,
-<a class="jxr_linenumber" name="L770" href="#L770">770</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i,
-<a class="jxr_linenumber" name="L771" href="#L771">771</a>             <strong class="jxr_keyword">double</strong> m, <strong class="jxr_keyword">double</strong> n, <strong class="jxr_keyword">double</strong> o, <strong class="jxr_keyword">double</strong> p,
-<a class="jxr_linenumber" name="L772" href="#L772">772</a>             <strong class="jxr_keyword">double</strong> q, <strong class="jxr_keyword">double</strong> r, <strong class="jxr_keyword">double</strong> s, <strong class="jxr_keyword">double</strong> t, <strong class="jxr_keyword">double</strong> u, <strong class="jxr_keyword">double</strong> v,
-<a class="jxr_linenumber" name="L773" href="#L773">773</a>             <strong class="jxr_keyword">double</strong> w) {
-<a class="jxr_linenumber" name="L774" href="#L774">774</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + </em>
-<a class="jxr_linenumber" name="L775" href="#L775">775</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + </em>
-<a class="jxr_linenumber" name="L776" href="#L776">776</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + </em>
-<a class="jxr_linenumber" name="L777" href="#L777">777</a>         <em class="jxr_comment">//y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0</em>
-<a class="jxr_linenumber" name="L778" href="#L778">778</a>         Polynomial result = <strong class="jxr_keyword">new</strong> Polynomial(
-<a class="jxr_linenumber" name="L779" href="#L779">779</a>                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
-<a class="jxr_linenumber" name="L780" href="#L780">780</a>         
-<a class="jxr_linenumber" name="L781" href="#L781">781</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2*(G*M - P*D)</em>
-<a class="jxr_linenumber" name="L782" href="#L782">782</a>         Polynomial tmp = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
-<a class="jxr_linenumber" name="L783" href="#L783">783</a>         Polynomial tmp2 = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
+<a class="jxr_linenumber" name="L732" href="#L732">732</a>         tmp.multiplyByScalar(-f*c - l*i);
+<a class="jxr_linenumber" name="L733" href="#L733">733</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L734" href="#L734">734</a>         
+<a class="jxr_linenumber" name="L735" href="#L735">735</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L736" href="#L736">736</a>     }
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>     
+<a class="jxr_linenumber" name="L738" href="#L738">738</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L739" href="#L739">739</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 4 to</em>
+<a class="jxr_linenumber" name="L740" href="#L740">740</a> <em class="jxr_javadoccomment">     * solve y value, which is the squared value of vertical focal length.</em>
+<a class="jxr_linenumber" name="L741" href="#L741">741</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is unknown.</em>
+<a class="jxr_linenumber" name="L742" href="#L742">742</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L743" href="#L743">743</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L744" href="#L744">744</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">     * @param m internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">     * @param n internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L750" href="#L750">750</a> <em class="jxr_javadoccomment">     * @param o internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L751" href="#L751">751</a> <em class="jxr_javadoccomment">     * @param p internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L752" href="#L752">752</a> <em class="jxr_javadoccomment">     * @param q internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L753" href="#L753">753</a> <em class="jxr_javadoccomment">     * @param r internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L754" href="#L754">754</a> <em class="jxr_javadoccomment">     * @param s internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L755" href="#L755">755</a> <em class="jxr_javadoccomment">     * @param t internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L756" href="#L756">756</a> <em class="jxr_javadoccomment">     * @param u internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">     * @param v internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">     * @param w internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
+<a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L761" href="#L761">761</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial2(<strong class="jxr_keyword">double</strong> d,
+<a class="jxr_linenumber" name="L762" href="#L762">762</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i,
+<a class="jxr_linenumber" name="L763" href="#L763">763</a>             <strong class="jxr_keyword">double</strong> m, <strong class="jxr_keyword">double</strong> n, <strong class="jxr_keyword">double</strong> o, <strong class="jxr_keyword">double</strong> p,
+<a class="jxr_linenumber" name="L764" href="#L764">764</a>             <strong class="jxr_keyword">double</strong> q, <strong class="jxr_keyword">double</strong> r, <strong class="jxr_keyword">double</strong> s, <strong class="jxr_keyword">double</strong> t, <strong class="jxr_keyword">double</strong> u, <strong class="jxr_keyword">double</strong> v,
+<a class="jxr_linenumber" name="L765" href="#L765">765</a>             <strong class="jxr_keyword">double</strong> w) {
+<a class="jxr_linenumber" name="L766" href="#L766">766</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2*(G*M - P*D) + y^2*(y*T + U)^2*(H*N - Q*E) + </em>
+<a class="jxr_linenumber" name="L767" href="#L767">767</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + </em>
+<a class="jxr_linenumber" name="L768" href="#L768">768</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + </em>
+<a class="jxr_linenumber" name="L769" href="#L769">769</a>         <em class="jxr_comment">//y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0</em>
+<a class="jxr_linenumber" name="L770" href="#L770">770</a>         Polynomial result = <strong class="jxr_keyword">new</strong> Polynomial(
+<a class="jxr_linenumber" name="L771" href="#L771">771</a>                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
+<a class="jxr_linenumber" name="L772" href="#L772">772</a>         
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)^2*(G*M - P*D)</em>
+<a class="jxr_linenumber" name="L774" href="#L774">774</a>         Polynomial tmp = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
+<a class="jxr_linenumber" name="L775" href="#L775">775</a>         Polynomial tmp2 = <strong class="jxr_keyword">new</strong> Polynomial(-w, -v, -s);
+<a class="jxr_linenumber" name="L776" href="#L776">776</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L777" href="#L777">777</a>         tmp.multiplyByScalar(g*m - p*d);
+<a class="jxr_linenumber" name="L778" href="#L778">778</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L779" href="#L779">779</a>         
+<a class="jxr_linenumber" name="L780" href="#L780">780</a>         <em class="jxr_comment">//y^2*(y*T + U)^2*(H*N - Q*E)</em>
+<a class="jxr_linenumber" name="L781" href="#L781">781</a>         tmp.setPolyParams(0.0, 0.0, 1.0);
+<a class="jxr_linenumber" name="L782" href="#L782">782</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L783" href="#L783">783</a>         tmp.multiply(tmp2);
 <a class="jxr_linenumber" name="L784" href="#L784">784</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L785" href="#L785">785</a>         tmp.multiplyByScalar(g*m - p*d);
+<a class="jxr_linenumber" name="L785" href="#L785">785</a>         tmp.multiplyByScalar(h*n - q*e);
 <a class="jxr_linenumber" name="L786" href="#L786">786</a>         result.add(tmp);
 <a class="jxr_linenumber" name="L787" href="#L787">787</a>         
-<a class="jxr_linenumber" name="L788" href="#L788">788</a>         <em class="jxr_comment">//y^2*(y*T + U)^2*(H*N - Q*E)</em>
-<a class="jxr_linenumber" name="L789" href="#L789">789</a>         tmp.setPolyParams(0.0, 0.0, 1.0);
+<a class="jxr_linenumber" name="L788" href="#L788">788</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D)</em>
+<a class="jxr_linenumber" name="L789" href="#L789">789</a>         tmp.setPolyParams(-w, -v, -s);
 <a class="jxr_linenumber" name="L790" href="#L790">790</a>         tmp2.setPolyParams(u, t);
 <a class="jxr_linenumber" name="L791" href="#L791">791</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L792" href="#L792">792</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L793" href="#L793">793</a>         tmp.multiplyByScalar(h*n - q*e);
-<a class="jxr_linenumber" name="L794" href="#L794">794</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L795" href="#L795">795</a>         
-<a class="jxr_linenumber" name="L796" href="#L796">796</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D)</em>
-<a class="jxr_linenumber" name="L797" href="#L797">797</a>         tmp.setPolyParams(-w, -v, -s);
-<a class="jxr_linenumber" name="L798" href="#L798">798</a>         tmp2.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L799" href="#L799">799</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L800" href="#L800">800</a>         tmp2.setPolyParams(0.0, 1.0);
-<a class="jxr_linenumber" name="L801" href="#L801">801</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L802" href="#L802">802</a>         tmp.multiplyByScalar(g*n + h*m - p*e - q*d);
-<a class="jxr_linenumber" name="L803" href="#L803">803</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L804" href="#L804">804</a>         
-<a class="jxr_linenumber" name="L805" href="#L805">805</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R)</em>
-<a class="jxr_linenumber" name="L806" href="#L806">806</a>         tmp.setPolyParams(-w, -v, -s);
-<a class="jxr_linenumber" name="L807" href="#L807">807</a>         tmp2.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L808" href="#L808">808</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L809" href="#L809">809</a>         tmp.multiplyByScalar(g*o + m*i - p*f - d*r);
-<a class="jxr_linenumber" name="L810" href="#L810">810</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L811" href="#L811">811</a>         
-<a class="jxr_linenumber" name="L812" href="#L812">812</a>         <em class="jxr_comment">//y*(y*T + U)^2*(H*O + N*I - Q*F - E*R)</em>
-<a class="jxr_linenumber" name="L813" href="#L813">813</a>         tmp.setPolyParams(0.0, 1.0);
-<a class="jxr_linenumber" name="L814" href="#L814">814</a>         tmp2.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L815" href="#L815">815</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L816" href="#L816">816</a>         tmp.multiplyByScalar(h*o + n*i - q*f - e*r);
-<a class="jxr_linenumber" name="L817" href="#L817">817</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L818" href="#L818">818</a>         
-<a class="jxr_linenumber" name="L819" href="#L819">819</a>         <em class="jxr_comment">//(y*T + U)^2*(O*I - F*R)</em>
-<a class="jxr_linenumber" name="L820" href="#L820">820</a>         tmp.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L821" href="#L821">821</a>         tmp2.setPolyParams(u, t);
-<a class="jxr_linenumber" name="L822" href="#L822">822</a>         tmp.multiply(tmp2);
-<a class="jxr_linenumber" name="L823" href="#L823">823</a>         tmp.multiplyByScalar(o*i - f*r);
-<a class="jxr_linenumber" name="L824" href="#L824">824</a>         result.add(tmp);
-<a class="jxr_linenumber" name="L825" href="#L825">825</a>         
-<a class="jxr_linenumber" name="L826" href="#L826">826</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L827" href="#L827">827</a>     }
-<a class="jxr_linenumber" name="L828" href="#L828">828</a>     
-<a class="jxr_linenumber" name="L829" href="#L829">829</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L830" href="#L830">830</a> <em class="jxr_javadoccomment">     * Estimates the DIAC assuming known aspect ratio.</em>
-<a class="jxr_linenumber" name="L831" href="#L831">831</a> <em class="jxr_javadoccomment">     * @param result instance where estimated DIAC will be stored.</em>
-<a class="jxr_linenumber" name="L832" href="#L832">832</a> <em class="jxr_javadoccomment">     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error</em>
-<a class="jxr_linenumber" name="L833" href="#L833">833</a> <em class="jxr_javadoccomment">     * occurs during estimation, usually because fundamental matrix corresponds</em>
-<a class="jxr_linenumber" name="L834" href="#L834">834</a> <em class="jxr_javadoccomment">     * to degenerate camera movements, or because of numerical unstabilities.</em>
-<a class="jxr_linenumber" name="L835" href="#L835">835</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L836" href="#L836">836</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> estimateKnownAspectRatio(<a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> result)
-<a class="jxr_linenumber" name="L837" href="#L837">837</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a> {
-<a class="jxr_linenumber" name="L838" href="#L838">838</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L839" href="#L839">839</a>             <strong class="jxr_keyword">double</strong> x0 = mPrincipalPointX;
-<a class="jxr_linenumber" name="L840" href="#L840">840</a>             <strong class="jxr_keyword">double</strong> y0 = mPrincipalPointY;      
-<a class="jxr_linenumber" name="L841" href="#L841">841</a>         
-<a class="jxr_linenumber" name="L842" href="#L842">842</a>             <em class="jxr_comment">//SVD decompose fundamental matrix</em>
-<a class="jxr_linenumber" name="L843" href="#L843">843</a>             mFundamentalMatrix.normalize();
-<a class="jxr_linenumber" name="L844" href="#L844">844</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(
-<a class="jxr_linenumber" name="L845" href="#L845">845</a>                     mFundamentalMatrix.getInternalMatrix());
-<a class="jxr_linenumber" name="L846" href="#L846">846</a>             decomposer.decompose();
-<a class="jxr_linenumber" name="L847" href="#L847">847</a>             
-<a class="jxr_linenumber" name="L848" href="#L848">848</a>             <strong class="jxr_keyword">double</strong>[] sigmas = decomposer.getSingularValues();
-<a class="jxr_linenumber" name="L849" href="#L849">849</a>             Matrix u = decomposer.getU();
-<a class="jxr_linenumber" name="L850" href="#L850">850</a>             Matrix v = decomposer.getV();
+<a class="jxr_linenumber" name="L792" href="#L792">792</a>         tmp2.setPolyParams(0.0, 1.0);
+<a class="jxr_linenumber" name="L793" href="#L793">793</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L794" href="#L794">794</a>         tmp.multiplyByScalar(g*n + h*m - p*e - q*d);
+<a class="jxr_linenumber" name="L795" href="#L795">795</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L796" href="#L796">796</a>         
+<a class="jxr_linenumber" name="L797" href="#L797">797</a>         <em class="jxr_comment">//(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R)</em>
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>         tmp.setPolyParams(-w, -v, -s);
+<a class="jxr_linenumber" name="L799" href="#L799">799</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L801" href="#L801">801</a>         tmp.multiplyByScalar(g*o + m*i - p*f - d*r);
+<a class="jxr_linenumber" name="L802" href="#L802">802</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L803" href="#L803">803</a>         
+<a class="jxr_linenumber" name="L804" href="#L804">804</a>         <em class="jxr_comment">//y*(y*T + U)^2*(H*O + N*I - Q*F - E*R)</em>
+<a class="jxr_linenumber" name="L805" href="#L805">805</a>         tmp.setPolyParams(0.0, 1.0);
+<a class="jxr_linenumber" name="L806" href="#L806">806</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L807" href="#L807">807</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L808" href="#L808">808</a>         tmp.multiplyByScalar(h*o + n*i - q*f - e*r);
+<a class="jxr_linenumber" name="L809" href="#L809">809</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L810" href="#L810">810</a>         
+<a class="jxr_linenumber" name="L811" href="#L811">811</a>         <em class="jxr_comment">//(y*T + U)^2*(O*I - F*R)</em>
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>         tmp.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>         tmp2.setPolyParams(u, t);
+<a class="jxr_linenumber" name="L814" href="#L814">814</a>         tmp.multiply(tmp2);
+<a class="jxr_linenumber" name="L815" href="#L815">815</a>         tmp.multiplyByScalar(o*i - f*r);
+<a class="jxr_linenumber" name="L816" href="#L816">816</a>         result.add(tmp);
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>         
+<a class="jxr_linenumber" name="L818" href="#L818">818</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L819" href="#L819">819</a>     }
+<a class="jxr_linenumber" name="L820" href="#L820">820</a>     
+<a class="jxr_linenumber" name="L821" href="#L821">821</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L822" href="#L822">822</a> <em class="jxr_javadoccomment">     * Estimates the DIAC assuming known aspect ratio.</em>
+<a class="jxr_linenumber" name="L823" href="#L823">823</a> <em class="jxr_javadoccomment">     * @param result instance where estimated DIAC will be stored.</em>
+<a class="jxr_linenumber" name="L824" href="#L824">824</a> <em class="jxr_javadoccomment">     * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error</em>
+<a class="jxr_linenumber" name="L825" href="#L825">825</a> <em class="jxr_javadoccomment">     * occurs during estimation, usually because fundamental matrix corresponds</em>
+<a class="jxr_linenumber" name="L826" href="#L826">826</a> <em class="jxr_javadoccomment">     * to degenerate camera movements, or because of numerical unstabilities.</em>
+<a class="jxr_linenumber" name="L827" href="#L827">827</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> estimateKnownAspectRatio(<a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> result)
+<a class="jxr_linenumber" name="L829" href="#L829">829</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a> {
+<a class="jxr_linenumber" name="L830" href="#L830">830</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L831" href="#L831">831</a>             <strong class="jxr_keyword">double</strong> x0 = mPrincipalPointX;
+<a class="jxr_linenumber" name="L832" href="#L832">832</a>             <strong class="jxr_keyword">double</strong> y0 = mPrincipalPointY;      
+<a class="jxr_linenumber" name="L833" href="#L833">833</a>         
+<a class="jxr_linenumber" name="L834" href="#L834">834</a>             <em class="jxr_comment">//SVD decompose fundamental matrix</em>
+<a class="jxr_linenumber" name="L835" href="#L835">835</a>             mFundamentalMatrix.normalize();
+<a class="jxr_linenumber" name="L836" href="#L836">836</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>                     mFundamentalMatrix.getInternalMatrix());
+<a class="jxr_linenumber" name="L838" href="#L838">838</a>             decomposer.decompose();
+<a class="jxr_linenumber" name="L839" href="#L839">839</a>             
+<a class="jxr_linenumber" name="L840" href="#L840">840</a>             <strong class="jxr_keyword">double</strong>[] sigmas = decomposer.getSingularValues();
+<a class="jxr_linenumber" name="L841" href="#L841">841</a>             Matrix u = decomposer.getU();
+<a class="jxr_linenumber" name="L842" href="#L842">842</a>             Matrix v = decomposer.getV();
+<a class="jxr_linenumber" name="L843" href="#L843">843</a>             
+<a class="jxr_linenumber" name="L844" href="#L844">844</a>             <strong class="jxr_keyword">double</strong> sigma1 = sigmas[0];
+<a class="jxr_linenumber" name="L845" href="#L845">845</a>             <strong class="jxr_keyword">double</strong> sigma2 = sigmas[1];
+<a class="jxr_linenumber" name="L846" href="#L846">846</a>             
+<a class="jxr_linenumber" name="L847" href="#L847">847</a>             <em class="jxr_comment">//Column u1</em>
+<a class="jxr_linenumber" name="L848" href="#L848">848</a>             <strong class="jxr_keyword">double</strong> u11 = u.getElementAt(0, 0);
+<a class="jxr_linenumber" name="L849" href="#L849">849</a>             <strong class="jxr_keyword">double</strong> u21 = u.getElementAt(1, 0);
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>             <strong class="jxr_keyword">double</strong> u31 = u.getElementAt(2, 0);
 <a class="jxr_linenumber" name="L851" href="#L851">851</a>             
-<a class="jxr_linenumber" name="L852" href="#L852">852</a>             <strong class="jxr_keyword">double</strong> sigma1 = sigmas[0];
-<a class="jxr_linenumber" name="L853" href="#L853">853</a>             <strong class="jxr_keyword">double</strong> sigma2 = sigmas[1];
-<a class="jxr_linenumber" name="L854" href="#L854">854</a>             
-<a class="jxr_linenumber" name="L855" href="#L855">855</a>             <em class="jxr_comment">//Column u1</em>
-<a class="jxr_linenumber" name="L856" href="#L856">856</a>             <strong class="jxr_keyword">double</strong> u11 = u.getElementAt(0, 0);
-<a class="jxr_linenumber" name="L857" href="#L857">857</a>             <strong class="jxr_keyword">double</strong> u21 = u.getElementAt(1, 0);
-<a class="jxr_linenumber" name="L858" href="#L858">858</a>             <strong class="jxr_keyword">double</strong> u31 = u.getElementAt(2, 0);
-<a class="jxr_linenumber" name="L859" href="#L859">859</a>             
-<a class="jxr_linenumber" name="L860" href="#L860">860</a>             <em class="jxr_comment">//Column u2</em>
-<a class="jxr_linenumber" name="L861" href="#L861">861</a>             <strong class="jxr_keyword">double</strong> u12 = u.getElementAt(0, 1);
-<a class="jxr_linenumber" name="L862" href="#L862">862</a>             <strong class="jxr_keyword">double</strong> u22 = u.getElementAt(1, 1);
-<a class="jxr_linenumber" name="L863" href="#L863">863</a>             <strong class="jxr_keyword">double</strong> u32 = u.getElementAt(2, 1);
-<a class="jxr_linenumber" name="L864" href="#L864">864</a>             
-<a class="jxr_linenumber" name="L865" href="#L865">865</a>             <em class="jxr_comment">//Column v1</em>
-<a class="jxr_linenumber" name="L866" href="#L866">866</a>             <strong class="jxr_keyword">double</strong> v11 = v.getElementAt(0, 0);
-<a class="jxr_linenumber" name="L867" href="#L867">867</a>             <strong class="jxr_keyword">double</strong> v21 = v.getElementAt(1, 0);
-<a class="jxr_linenumber" name="L868" href="#L868">868</a>             <strong class="jxr_keyword">double</strong> v31 = v.getElementAt(2, 0);
-<a class="jxr_linenumber" name="L869" href="#L869">869</a>             
-<a class="jxr_linenumber" name="L870" href="#L870">870</a>             <em class="jxr_comment">//Column v2</em>
-<a class="jxr_linenumber" name="L871" href="#L871">871</a>             <strong class="jxr_keyword">double</strong> v12 = v.getElementAt(0, 1);
-<a class="jxr_linenumber" name="L872" href="#L872">872</a>             <strong class="jxr_keyword">double</strong> v22 = v.getElementAt(1, 1);
-<a class="jxr_linenumber" name="L873" href="#L873">873</a>             <strong class="jxr_keyword">double</strong> v32 = v.getElementAt(2, 1);
-<a class="jxr_linenumber" name="L874" href="#L874">874</a>             
-<a class="jxr_linenumber" name="L875" href="#L875">875</a>             <em class="jxr_comment">//build Kruppa equations</em>
-<a class="jxr_linenumber" name="L876" href="#L876">876</a>             <strong class="jxr_keyword">double</strong> polyA = u12*u11;
-<a class="jxr_linenumber" name="L877" href="#L877">877</a>             <strong class="jxr_keyword">double</strong> polyB = u22*u21;
-<a class="jxr_linenumber" name="L878" href="#L878">878</a>             <strong class="jxr_keyword">double</strong> polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
-<a class="jxr_linenumber" name="L879" href="#L879">879</a>                     x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
-<a class="jxr_linenumber" name="L880" href="#L880">880</a>                     x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
-<a class="jxr_linenumber" name="L881" href="#L881">881</a>             <strong class="jxr_keyword">double</strong> polyD = Math.pow(sigma2, 2.0) * v12 * v12;
-<a class="jxr_linenumber" name="L882" href="#L882">882</a>             <strong class="jxr_keyword">double</strong> polyE = Math.pow(sigma2, 2.0) * v22 * v22;
-<a class="jxr_linenumber" name="L883" href="#L883">883</a>             <strong class="jxr_keyword">double</strong> polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
-<a class="jxr_linenumber" name="L884" href="#L884">884</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
-<a class="jxr_linenumber" name="L885" href="#L885">885</a>                     Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
-<a class="jxr_linenumber" name="L886" href="#L886">886</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
-<a class="jxr_linenumber" name="L887" href="#L887">887</a>                     Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
-<a class="jxr_linenumber" name="L888" href="#L888">888</a>                     Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
-<a class="jxr_linenumber" name="L889" href="#L889">889</a>                     Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
-<a class="jxr_linenumber" name="L890" href="#L890">890</a>                     Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
-<a class="jxr_linenumber" name="L891" href="#L891">891</a>                     Math.pow(sigma2, 2.0) * v32 * v32;
-<a class="jxr_linenumber" name="L892" href="#L892">892</a>             <strong class="jxr_keyword">double</strong> polyG = u11 * u11;
-<a class="jxr_linenumber" name="L893" href="#L893">893</a>             <strong class="jxr_keyword">double</strong> polyH = u21 * u21;
-<a class="jxr_linenumber" name="L894" href="#L894">894</a>             <strong class="jxr_keyword">double</strong> polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
-<a class="jxr_linenumber" name="L895" href="#L895">895</a>                     x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
-<a class="jxr_linenumber" name="L896" href="#L896">896</a>                     x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
-<a class="jxr_linenumber" name="L897" href="#L897">897</a>             <strong class="jxr_keyword">double</strong> polyJ = sigma1 * sigma2 * v12 * v11;
-<a class="jxr_linenumber" name="L898" href="#L898">898</a>             <strong class="jxr_keyword">double</strong> polyK = sigma1 * sigma2 * v22 * v21;
-<a class="jxr_linenumber" name="L899" href="#L899">899</a>             <strong class="jxr_keyword">double</strong> polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
-<a class="jxr_linenumber" name="L900" href="#L900">900</a>                     sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
-<a class="jxr_linenumber" name="L901" href="#L901">901</a>                     sigma1 * sigma2 * x0 * y0 * v12 * v21 +
-<a class="jxr_linenumber" name="L902" href="#L902">902</a>                     sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
-<a class="jxr_linenumber" name="L903" href="#L903">903</a>                     sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
-<a class="jxr_linenumber" name="L904" href="#L904">904</a>                     sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
-<a class="jxr_linenumber" name="L905" href="#L905">905</a>             <strong class="jxr_keyword">double</strong> polyM = Math.pow(sigma1, 2.0) * v11 * v11;
-<a class="jxr_linenumber" name="L906" href="#L906">906</a>             <strong class="jxr_keyword">double</strong> polyN = Math.pow(sigma1, 2.0) * v21 * v21;
-<a class="jxr_linenumber" name="L907" href="#L907">907</a>             <strong class="jxr_keyword">double</strong> polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
-<a class="jxr_linenumber" name="L908" href="#L908">908</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
-<a class="jxr_linenumber" name="L909" href="#L909">909</a>                     Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
-<a class="jxr_linenumber" name="L910" href="#L910">910</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
-<a class="jxr_linenumber" name="L911" href="#L911">911</a>                     Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
-<a class="jxr_linenumber" name="L912" href="#L912">912</a>                     Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
-<a class="jxr_linenumber" name="L913" href="#L913">913</a>                     Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
-<a class="jxr_linenumber" name="L914" href="#L914">914</a>                     Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
-<a class="jxr_linenumber" name="L915" href="#L915">915</a>                     Math.pow(sigma1, 2.0) * v31 * v31;
-<a class="jxr_linenumber" name="L916" href="#L916">916</a>             <strong class="jxr_keyword">double</strong> polyP = u12*u12;
-<a class="jxr_linenumber" name="L917" href="#L917">917</a>             <strong class="jxr_keyword">double</strong> polyQ = u22*u22;
-<a class="jxr_linenumber" name="L918" href="#L918">918</a>             <strong class="jxr_keyword">double</strong> polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
-<a class="jxr_linenumber" name="L919" href="#L919">919</a>                     x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
-<a class="jxr_linenumber" name="L920" href="#L920">920</a>                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
-<a class="jxr_linenumber" name="L921" href="#L921">921</a> 
-<a class="jxr_linenumber" name="L922" href="#L922">922</a>             <em class="jxr_comment">//try to solve any of Kruppa's equations</em>
-<a class="jxr_linenumber" name="L923" href="#L923">923</a>             Complex[] roots;
-<a class="jxr_linenumber" name="L924" href="#L924">924</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L925" href="#L925">925</a>                 Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
-<a class="jxr_linenumber" name="L926" href="#L926">926</a>                         polyJ, polyK, polyL);
-<a class="jxr_linenumber" name="L927" href="#L927">927</a>                 roots = poly3.getRoots();
-<a class="jxr_linenumber" name="L928" href="#L928">928</a>             } <strong class="jxr_keyword">catch</strong> (NumericalException e3) {
-<a class="jxr_linenumber" name="L929" href="#L929">929</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L930" href="#L930">930</a>                     <em class="jxr_comment">//if solution for poly3 fails, try with 4th polynomial</em>
-<a class="jxr_linenumber" name="L931" href="#L931">931</a>                     Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
-<a class="jxr_linenumber" name="L932" href="#L932">932</a>                             polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
-<a class="jxr_linenumber" name="L933" href="#L933">933</a>                     roots = poly4.getRoots();
-<a class="jxr_linenumber" name="L934" href="#L934">934</a>                 } <strong class="jxr_keyword">catch</strong> (NumericalException e4) {
-<a class="jxr_linenumber" name="L935" href="#L935">935</a>                     Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,
-<a class="jxr_linenumber" name="L936" href="#L936">936</a>                             polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
-<a class="jxr_linenumber" name="L937" href="#L937">937</a>                     roots = poly5.getRoots();
-<a class="jxr_linenumber" name="L938" href="#L938">938</a>                 }
-<a class="jxr_linenumber" name="L939" href="#L939">939</a>             }
-<a class="jxr_linenumber" name="L940" href="#L940">940</a>             
-<a class="jxr_linenumber" name="L941" href="#L941">941</a>             <em class="jxr_comment">//roots contain possible x values. We use only their real part</em>
-<a class="jxr_linenumber" name="L942" href="#L942">942</a>             
-<a class="jxr_linenumber" name="L943" href="#L943">943</a>             <em class="jxr_comment">//pick the best x, y values that produce a positive definite DIAC</em>
-<a class="jxr_linenumber" name="L944" href="#L944">944</a>             <em class="jxr_comment">//matrix</em>
-<a class="jxr_linenumber" name="L945" href="#L945">945</a>             <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> diac = <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a>(
-<a class="jxr_linenumber" name="L946" href="#L946">946</a>                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-<a class="jxr_linenumber" name="L947" href="#L947">947</a>             <strong class="jxr_keyword">boolean</strong> valid = false;
-<a class="jxr_linenumber" name="L948" href="#L948">948</a>             <strong class="jxr_keyword">if</strong> (roots != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L949" href="#L949">949</a>                 <strong class="jxr_keyword">double</strong> r = mFocalDistanceAspectRatio;
-<a class="jxr_linenumber" name="L950" href="#L950">950</a>                 <strong class="jxr_keyword">double</strong> r2 = r*r;
-<a class="jxr_linenumber" name="L951" href="#L951">951</a>                 <strong class="jxr_keyword">for</strong> (Complex root : roots) {
-<a class="jxr_linenumber" name="L952" href="#L952">952</a>                     <strong class="jxr_keyword">double</strong> x = root.getReal();
-<a class="jxr_linenumber" name="L953" href="#L953">953</a>                     <strong class="jxr_keyword">double</strong> y = r2*x;
-<a class="jxr_linenumber" name="L954" href="#L954">954</a>                     
-<a class="jxr_linenumber" name="L955" href="#L955">955</a>                     <em class="jxr_comment">//build DIAC matrix and check if it is positive definite</em>
-<a class="jxr_linenumber" name="L956" href="#L956">956</a>                     <strong class="jxr_keyword">if</strong> (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {
-<a class="jxr_linenumber" name="L957" href="#L957">957</a>                         <strong class="jxr_keyword">double</strong> horizontalFocalLength = Math.sqrt(x);
-<a class="jxr_linenumber" name="L958" href="#L958">958</a>                         <strong class="jxr_keyword">double</strong> verticalFocalLength = Math.sqrt(y);
-<a class="jxr_linenumber" name="L959" href="#L959">959</a>                         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L960" href="#L960">960</a>                             valid = buildDiac(horizontalFocalLength, 
-<a class="jxr_linenumber" name="L961" href="#L961">961</a>                                 verticalFocalLength, diac);
-<a class="jxr_linenumber" name="L962" href="#L962">962</a>                         } <strong class="jxr_keyword">catch</strong> (AlgebraException e) {
-<a class="jxr_linenumber" name="L963" href="#L963">963</a>                             valid = false;
-<a class="jxr_linenumber" name="L964" href="#L964">964</a>                         }
-<a class="jxr_linenumber" name="L965" href="#L965">965</a>                     }
-<a class="jxr_linenumber" name="L966" href="#L966">966</a>                     
-<a class="jxr_linenumber" name="L967" href="#L967">967</a>                     <strong class="jxr_keyword">if</strong> (valid) {
-<a class="jxr_linenumber" name="L968" href="#L968">968</a>                         <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L969" href="#L969">969</a>                     }
-<a class="jxr_linenumber" name="L970" href="#L970">970</a>                 }
-<a class="jxr_linenumber" name="L971" href="#L971">971</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L972" href="#L972">972</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
-<a class="jxr_linenumber" name="L973" href="#L973">973</a>             }
-<a class="jxr_linenumber" name="L974" href="#L974">974</a>             
-<a class="jxr_linenumber" name="L975" href="#L975">975</a>             <strong class="jxr_keyword">if</strong> (valid) {
-<a class="jxr_linenumber" name="L976" href="#L976">976</a>                 <em class="jxr_comment">//copy to result</em>
-<a class="jxr_linenumber" name="L977" href="#L977">977</a>                 result.setParameters(diac.getA(), diac.getB(), diac.getC(), 
-<a class="jxr_linenumber" name="L978" href="#L978">978</a>                         diac.getD(), diac.getE(), diac.getF());
-<a class="jxr_linenumber" name="L979" href="#L979">979</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L980" href="#L980">980</a>                 <em class="jxr_comment">//no valid DIAC could be found</em>
-<a class="jxr_linenumber" name="L981" href="#L981">981</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
-<a class="jxr_linenumber" name="L982" href="#L982">982</a>             }
-<a class="jxr_linenumber" name="L983" href="#L983">983</a>             
-<a class="jxr_linenumber" name="L984" href="#L984">984</a>         } <strong class="jxr_keyword">catch</strong> (KruppaDualImageOfAbsoluteConicEstimatorException ex) {
-<a class="jxr_linenumber" name="L985" href="#L985">985</a>             <strong class="jxr_keyword">throw</strong> ex;
-<a class="jxr_linenumber" name="L986" href="#L986">986</a>         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
-<a class="jxr_linenumber" name="L987" href="#L987">987</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>(ex);
-<a class="jxr_linenumber" name="L988" href="#L988">988</a>         }                
-<a class="jxr_linenumber" name="L989" href="#L989">989</a>     }
-<a class="jxr_linenumber" name="L990" href="#L990">990</a>     
-<a class="jxr_linenumber" name="L991" href="#L991">991</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L992" href="#L992">992</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 2 to </em>
-<a class="jxr_linenumber" name="L993" href="#L993">993</a> <em class="jxr_javadoccomment">     * solve x value, which is the squared value of horizontal focal length.</em>
-<a class="jxr_linenumber" name="L994" href="#L994">994</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is known.</em>
-<a class="jxr_linenumber" name="L995" href="#L995">995</a> <em class="jxr_javadoccomment">     * @param a internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L996" href="#L996">996</a> <em class="jxr_javadoccomment">     * @param b internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L997" href="#L997">997</a> <em class="jxr_javadoccomment">     * @param c internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L998" href="#L998">998</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L999" href="#L999">999</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a> <em class="jxr_javadoccomment">     * @param j internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a> <em class="jxr_javadoccomment">     * @param k internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a> <em class="jxr_javadoccomment">     * @param l internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
-<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial3(<strong class="jxr_keyword">double</strong> a, <strong class="jxr_keyword">double</strong> b, <strong class="jxr_keyword">double</strong> c, <strong class="jxr_keyword">double</strong> d,
-<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i, <strong class="jxr_keyword">double</strong> j,
-<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a>             <strong class="jxr_keyword">double</strong> k, <strong class="jxr_keyword">double</strong> l) {
-<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a>         
-<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>         <em class="jxr_comment">//x^2*((-A*D - G*J) + r^4*(-B*E - H*K) + r^2*(-A*E - B*D - G*K - H*J)) + </em>
-<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>         <em class="jxr_comment">//x*((-A*F - D*C - G*L - J*I) + r^2*(-B*F - E*C - H*L - K*I)) + </em>
-<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>         <em class="jxr_comment">//(- F*C - L*I) = 0</em>
-<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a>         <strong class="jxr_keyword">double</strong> r = mFocalDistanceAspectRatio;
-<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>         <strong class="jxr_keyword">double</strong> r2 = r*r;
-<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>         <strong class="jxr_keyword">double</strong> r4 = r2*r2;
-<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Polynomial(-f*c -l*i,
-<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>                 (-a*f - d*c - g*l - j*i) + r2*(-b*f - e*c - h*l - k*i),
-<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>                 ((-a*d - g*j) + r4*(-b*e - h*k) + r2*(-a*e - b*d - g*k - h*j)));
-<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>     }
-<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a> 
-<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 2 to </em>
-<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a> <em class="jxr_javadoccomment">     * solve x value, which is the squared value of horizontal focal length.</em>
-<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is known.</em>
-<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a> <em class="jxr_javadoccomment">     * @param m internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a> <em class="jxr_javadoccomment">     * @param n internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a> <em class="jxr_javadoccomment">     * @param o internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a> <em class="jxr_javadoccomment">     * @param p internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a> <em class="jxr_javadoccomment">     * @param q internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a> <em class="jxr_javadoccomment">     * @param r internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
-<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial4(<strong class="jxr_keyword">double</strong> d,
-<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i,
-<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a>             <strong class="jxr_keyword">double</strong> m, <strong class="jxr_keyword">double</strong> n, <strong class="jxr_keyword">double</strong> o, <strong class="jxr_keyword">double</strong> p,
-<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>             <strong class="jxr_keyword">double</strong> q, <strong class="jxr_keyword">double</strong> r) {
-<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a>         
-<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>         <em class="jxr_comment">//x^2*((G*M - P*D) + r^4*(H*N - Q*E) + r^2*(G*N + H*M - P*E - Q*D)) + </em>
-<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a>         <em class="jxr_comment">//x*((G*O + M*I - P*F - D*R) + r^2*(H*O + N*I - Q*F - E*R)) + </em>
-<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a>         <em class="jxr_comment">//(O*I - F*R) = 0</em>
-<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a>         <strong class="jxr_keyword">double</strong> r1 = mFocalDistanceAspectRatio;
-<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a>         <strong class="jxr_keyword">double</strong> r2 = r1*r1;
-<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a>         <strong class="jxr_keyword">double</strong> r4 = r2*r2;
-<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Polynomial(o*i - f*r,
-<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a>                 (g*o + m*i - p*f - d*r) + r2*(h*o + n*i - q*f - e*r),
-<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a>                 (g*m - p*d) + r4*(h*n - q*e) + r2*(g*n + h*m - p*e - q*d));
-<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a>     }
-<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a> 
-<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 2 to </em>
-<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a> <em class="jxr_javadoccomment">     * solve x value, which is the squared value of horizontal focal length.</em>
-<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is known.</em>
-<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a> <em class="jxr_javadoccomment">     * @param a internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a> <em class="jxr_javadoccomment">     * @param b internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a> <em class="jxr_javadoccomment">     * @param c internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a> <em class="jxr_javadoccomment">     * @param j internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> <em class="jxr_javadoccomment">     * @param k internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a> <em class="jxr_javadoccomment">     * @param l internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a> <em class="jxr_javadoccomment">     * @param m internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a> <em class="jxr_javadoccomment">     * @param n internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a> <em class="jxr_javadoccomment">     * @param o internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a> <em class="jxr_javadoccomment">     * @param p internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a> <em class="jxr_javadoccomment">     * @param q internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a> <em class="jxr_javadoccomment">     * @param r internal value from Kruppa's equations.</em>
-<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
-<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial5(<strong class="jxr_keyword">double</strong> a, <strong class="jxr_keyword">double</strong> b, <strong class="jxr_keyword">double</strong> c, <strong class="jxr_keyword">double</strong> j,
-<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a>             <strong class="jxr_keyword">double</strong> k, <strong class="jxr_keyword">double</strong> l, <strong class="jxr_keyword">double</strong> m, <strong class="jxr_keyword">double</strong> n, <strong class="jxr_keyword">double</strong> o, <strong class="jxr_keyword">double</strong> p,
-<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a>             <strong class="jxr_keyword">double</strong> q, <strong class="jxr_keyword">double</strong> r) {
-<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a>         
-<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a>         <em class="jxr_comment">//x^2*((P*J + A*M) + r^4*(Q*K + B*N) + r^2*(P*K + Q*J + A*N + B*M)) + </em>
-<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a>         <em class="jxr_comment">//x*((P*L + J*R + A*O + M*C) + r^2*(Q*L + K*R + B*O + N*C)) + </em>
-<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>         <em class="jxr_comment">//(L*R + O*C) = 0</em>
-<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a>         <strong class="jxr_keyword">double</strong> r1 = mFocalDistanceAspectRatio;
-<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a>         <strong class="jxr_keyword">double</strong> r2 = r1*r1;
-<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a>         <strong class="jxr_keyword">double</strong> r4 = r2*r2;
-<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Polynomial(l*r + o*c,
-<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a>                 (p*l + j*r + a*o + m*c) + r2*(q*l + k*r + b*o + n*c),
-<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a>                 (p*j + a*m) + r4*(q*k + b*n) + r2*(p*k + q*j + a*n + b*m));
-<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a>     }
-<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a>     
-<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a> }
+<a class="jxr_linenumber" name="L852" href="#L852">852</a>             <em class="jxr_comment">//Column u2</em>
+<a class="jxr_linenumber" name="L853" href="#L853">853</a>             <strong class="jxr_keyword">double</strong> u12 = u.getElementAt(0, 1);
+<a class="jxr_linenumber" name="L854" href="#L854">854</a>             <strong class="jxr_keyword">double</strong> u22 = u.getElementAt(1, 1);
+<a class="jxr_linenumber" name="L855" href="#L855">855</a>             <strong class="jxr_keyword">double</strong> u32 = u.getElementAt(2, 1);
+<a class="jxr_linenumber" name="L856" href="#L856">856</a>             
+<a class="jxr_linenumber" name="L857" href="#L857">857</a>             <em class="jxr_comment">//Column v1</em>
+<a class="jxr_linenumber" name="L858" href="#L858">858</a>             <strong class="jxr_keyword">double</strong> v11 = v.getElementAt(0, 0);
+<a class="jxr_linenumber" name="L859" href="#L859">859</a>             <strong class="jxr_keyword">double</strong> v21 = v.getElementAt(1, 0);
+<a class="jxr_linenumber" name="L860" href="#L860">860</a>             <strong class="jxr_keyword">double</strong> v31 = v.getElementAt(2, 0);
+<a class="jxr_linenumber" name="L861" href="#L861">861</a>             
+<a class="jxr_linenumber" name="L862" href="#L862">862</a>             <em class="jxr_comment">//Column v2</em>
+<a class="jxr_linenumber" name="L863" href="#L863">863</a>             <strong class="jxr_keyword">double</strong> v12 = v.getElementAt(0, 1);
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>             <strong class="jxr_keyword">double</strong> v22 = v.getElementAt(1, 1);
+<a class="jxr_linenumber" name="L865" href="#L865">865</a>             <strong class="jxr_keyword">double</strong> v32 = v.getElementAt(2, 1);
+<a class="jxr_linenumber" name="L866" href="#L866">866</a>             
+<a class="jxr_linenumber" name="L867" href="#L867">867</a>             <em class="jxr_comment">//build Kruppa equations</em>
+<a class="jxr_linenumber" name="L868" href="#L868">868</a>             <strong class="jxr_keyword">double</strong> polyA = u12*u11;
+<a class="jxr_linenumber" name="L869" href="#L869">869</a>             <strong class="jxr_keyword">double</strong> polyB = u22*u21;
+<a class="jxr_linenumber" name="L870" href="#L870">870</a>             <strong class="jxr_keyword">double</strong> polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>                     x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
+<a class="jxr_linenumber" name="L872" href="#L872">872</a>                     x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
+<a class="jxr_linenumber" name="L873" href="#L873">873</a>             <strong class="jxr_keyword">double</strong> polyD = Math.pow(sigma2, 2.0) * v12 * v12;
+<a class="jxr_linenumber" name="L874" href="#L874">874</a>             <strong class="jxr_keyword">double</strong> polyE = Math.pow(sigma2, 2.0) * v22 * v22;
+<a class="jxr_linenumber" name="L875" href="#L875">875</a>             <strong class="jxr_keyword">double</strong> polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
+<a class="jxr_linenumber" name="L877" href="#L877">877</a>                     Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
+<a class="jxr_linenumber" name="L878" href="#L878">878</a>                     Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
+<a class="jxr_linenumber" name="L879" href="#L879">879</a>                     Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
+<a class="jxr_linenumber" name="L880" href="#L880">880</a>                     Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
+<a class="jxr_linenumber" name="L881" href="#L881">881</a>                     Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
+<a class="jxr_linenumber" name="L882" href="#L882">882</a>                     Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>                     Math.pow(sigma2, 2.0) * v32 * v32;
+<a class="jxr_linenumber" name="L884" href="#L884">884</a>             <strong class="jxr_keyword">double</strong> polyG = u11 * u11;
+<a class="jxr_linenumber" name="L885" href="#L885">885</a>             <strong class="jxr_keyword">double</strong> polyH = u21 * u21;
+<a class="jxr_linenumber" name="L886" href="#L886">886</a>             <strong class="jxr_keyword">double</strong> polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
+<a class="jxr_linenumber" name="L887" href="#L887">887</a>                     x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
+<a class="jxr_linenumber" name="L888" href="#L888">888</a>                     x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
+<a class="jxr_linenumber" name="L889" href="#L889">889</a>             <strong class="jxr_keyword">double</strong> polyJ = sigma1 * sigma2 * v12 * v11;
+<a class="jxr_linenumber" name="L890" href="#L890">890</a>             <strong class="jxr_keyword">double</strong> polyK = sigma1 * sigma2 * v22 * v21;
+<a class="jxr_linenumber" name="L891" href="#L891">891</a>             <strong class="jxr_keyword">double</strong> polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
+<a class="jxr_linenumber" name="L892" href="#L892">892</a>                     sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
+<a class="jxr_linenumber" name="L893" href="#L893">893</a>                     sigma1 * sigma2 * x0 * y0 * v12 * v21 +
+<a class="jxr_linenumber" name="L894" href="#L894">894</a>                     sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
+<a class="jxr_linenumber" name="L895" href="#L895">895</a>                     sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
+<a class="jxr_linenumber" name="L896" href="#L896">896</a>                     sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+<a class="jxr_linenumber" name="L897" href="#L897">897</a>             <strong class="jxr_keyword">double</strong> polyM = Math.pow(sigma1, 2.0) * v11 * v11;
+<a class="jxr_linenumber" name="L898" href="#L898">898</a>             <strong class="jxr_keyword">double</strong> polyN = Math.pow(sigma1, 2.0) * v21 * v21;
+<a class="jxr_linenumber" name="L899" href="#L899">899</a>             <strong class="jxr_keyword">double</strong> polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
+<a class="jxr_linenumber" name="L900" href="#L900">900</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
+<a class="jxr_linenumber" name="L901" href="#L901">901</a>                     Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
+<a class="jxr_linenumber" name="L902" href="#L902">902</a>                     Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
+<a class="jxr_linenumber" name="L903" href="#L903">903</a>                     Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
+<a class="jxr_linenumber" name="L904" href="#L904">904</a>                     Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
+<a class="jxr_linenumber" name="L905" href="#L905">905</a>                     Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
+<a class="jxr_linenumber" name="L906" href="#L906">906</a>                     Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
+<a class="jxr_linenumber" name="L907" href="#L907">907</a>                     Math.pow(sigma1, 2.0) * v31 * v31;
+<a class="jxr_linenumber" name="L908" href="#L908">908</a>             <strong class="jxr_keyword">double</strong> polyP = u12*u12;
+<a class="jxr_linenumber" name="L909" href="#L909">909</a>             <strong class="jxr_keyword">double</strong> polyQ = u22*u22;
+<a class="jxr_linenumber" name="L910" href="#L910">910</a>             <strong class="jxr_keyword">double</strong> polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
+<a class="jxr_linenumber" name="L911" href="#L911">911</a>                     x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
+<a class="jxr_linenumber" name="L912" href="#L912">912</a>                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
+<a class="jxr_linenumber" name="L913" href="#L913">913</a> 
+<a class="jxr_linenumber" name="L914" href="#L914">914</a>             <em class="jxr_comment">//try to solve any of Kruppa's equations</em>
+<a class="jxr_linenumber" name="L915" href="#L915">915</a>             Complex[] roots = knownAspectRatioRoots(polyA, polyB, polyC, polyD,
+<a class="jxr_linenumber" name="L916" href="#L916">916</a>                     polyE, polyF, polyG, polyH, polyI, polyJ, polyK, polyL, polyM,
+<a class="jxr_linenumber" name="L917" href="#L917">917</a>                     polyN, polyO, polyP, polyQ, polyR);
+<a class="jxr_linenumber" name="L918" href="#L918">918</a> 
+<a class="jxr_linenumber" name="L919" href="#L919">919</a>             <em class="jxr_comment">//roots contain possible x values. We use only their real part</em>
+<a class="jxr_linenumber" name="L920" href="#L920">920</a>             
+<a class="jxr_linenumber" name="L921" href="#L921">921</a>             <em class="jxr_comment">//pick the best x, y values that produce a positive definite DIAC</em>
+<a class="jxr_linenumber" name="L922" href="#L922">922</a>             <em class="jxr_comment">//matrix</em>
+<a class="jxr_linenumber" name="L923" href="#L923">923</a>             <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a> diac = <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html">DualImageOfAbsoluteConic</a>(
+<a class="jxr_linenumber" name="L924" href="#L924">924</a>                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+<a class="jxr_linenumber" name="L925" href="#L925">925</a>             <strong class="jxr_keyword">boolean</strong> valid = false;
+<a class="jxr_linenumber" name="L926" href="#L926">926</a>             <strong class="jxr_keyword">if</strong> (roots != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L927" href="#L927">927</a>                 <strong class="jxr_keyword">double</strong> r = mFocalDistanceAspectRatio;
+<a class="jxr_linenumber" name="L928" href="#L928">928</a>                 <strong class="jxr_keyword">double</strong> r2 = r*r;
+<a class="jxr_linenumber" name="L929" href="#L929">929</a>                 <strong class="jxr_keyword">for</strong> (Complex root : roots) {
+<a class="jxr_linenumber" name="L930" href="#L930">930</a>                     <strong class="jxr_keyword">double</strong> x = root.getReal();
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>                     <strong class="jxr_keyword">double</strong> y = r2*x;
+<a class="jxr_linenumber" name="L932" href="#L932">932</a>                     
+<a class="jxr_linenumber" name="L933" href="#L933">933</a>                     <em class="jxr_comment">//build DIAC matrix and check if it is positive definite</em>
+<a class="jxr_linenumber" name="L934" href="#L934">934</a>                     <strong class="jxr_keyword">if</strong> (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {
+<a class="jxr_linenumber" name="L935" href="#L935">935</a>                         <strong class="jxr_keyword">double</strong> horizontalFocalLength = Math.sqrt(x);
+<a class="jxr_linenumber" name="L936" href="#L936">936</a>                         <strong class="jxr_keyword">double</strong> verticalFocalLength = Math.sqrt(y);
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>                         valid = buildDiac(horizontalFocalLength,
+<a class="jxr_linenumber" name="L938" href="#L938">938</a>                                 verticalFocalLength, diac);
+<a class="jxr_linenumber" name="L939" href="#L939">939</a>                     }
+<a class="jxr_linenumber" name="L940" href="#L940">940</a>                     
+<a class="jxr_linenumber" name="L941" href="#L941">941</a>                     <strong class="jxr_keyword">if</strong> (valid) {
+<a class="jxr_linenumber" name="L942" href="#L942">942</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L943" href="#L943">943</a>                     }
+<a class="jxr_linenumber" name="L944" href="#L944">944</a>                 }
+<a class="jxr_linenumber" name="L945" href="#L945">945</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L946" href="#L946">946</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>             }
+<a class="jxr_linenumber" name="L948" href="#L948">948</a>             
+<a class="jxr_linenumber" name="L949" href="#L949">949</a>             <strong class="jxr_keyword">if</strong> (valid) {
+<a class="jxr_linenumber" name="L950" href="#L950">950</a>                 <em class="jxr_comment">//copy to result</em>
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>                 result.setParameters(diac.getA(), diac.getB(), diac.getC(), 
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>                         diac.getD(), diac.getE(), diac.getF());
+<a class="jxr_linenumber" name="L953" href="#L953">953</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L954" href="#L954">954</a>                 <em class="jxr_comment">//no valid DIAC could be found</em>
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>();
+<a class="jxr_linenumber" name="L956" href="#L956">956</a>             }
+<a class="jxr_linenumber" name="L957" href="#L957">957</a>             
+<a class="jxr_linenumber" name="L958" href="#L958">958</a>         } <strong class="jxr_keyword">catch</strong> (KruppaDualImageOfAbsoluteConicEstimatorException ex) {
+<a class="jxr_linenumber" name="L959" href="#L959">959</a>             <strong class="jxr_keyword">throw</strong> ex;
+<a class="jxr_linenumber" name="L960" href="#L960">960</a>         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L961" href="#L961">961</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimatorException.html">KruppaDualImageOfAbsoluteConicEstimatorException</a>(ex);
+<a class="jxr_linenumber" name="L962" href="#L962">962</a>         }                
+<a class="jxr_linenumber" name="L963" href="#L963">963</a>     }
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>     
+<a class="jxr_linenumber" name="L965" href="#L965">965</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L966" href="#L966">966</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 2 to </em>
+<a class="jxr_linenumber" name="L967" href="#L967">967</a> <em class="jxr_javadoccomment">     * solve x value, which is the squared value of horizontal focal length.</em>
+<a class="jxr_linenumber" name="L968" href="#L968">968</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is known.</em>
+<a class="jxr_linenumber" name="L969" href="#L969">969</a> <em class="jxr_javadoccomment">     * @param a internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L970" href="#L970">970</a> <em class="jxr_javadoccomment">     * @param b internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L971" href="#L971">971</a> <em class="jxr_javadoccomment">     * @param c internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L972" href="#L972">972</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L973" href="#L973">973</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L974" href="#L974">974</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L975" href="#L975">975</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L976" href="#L976">976</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L977" href="#L977">977</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L978" href="#L978">978</a> <em class="jxr_javadoccomment">     * @param j internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L979" href="#L979">979</a> <em class="jxr_javadoccomment">     * @param k internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L980" href="#L980">980</a> <em class="jxr_javadoccomment">     * @param l internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L981" href="#L981">981</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
+<a class="jxr_linenumber" name="L982" href="#L982">982</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L983" href="#L983">983</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial3(<strong class="jxr_keyword">double</strong> a, <strong class="jxr_keyword">double</strong> b, <strong class="jxr_keyword">double</strong> c, <strong class="jxr_keyword">double</strong> d,
+<a class="jxr_linenumber" name="L984" href="#L984">984</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i, <strong class="jxr_keyword">double</strong> j,
+<a class="jxr_linenumber" name="L985" href="#L985">985</a>             <strong class="jxr_keyword">double</strong> k, <strong class="jxr_keyword">double</strong> l) {
+<a class="jxr_linenumber" name="L986" href="#L986">986</a>         
+<a class="jxr_linenumber" name="L987" href="#L987">987</a>         <em class="jxr_comment">//x^2*((-A*D - G*J) + r^4*(-B*E - H*K) + r^2*(-A*E - B*D - G*K - H*J)) + </em>
+<a class="jxr_linenumber" name="L988" href="#L988">988</a>         <em class="jxr_comment">//x*((-A*F - D*C - G*L - J*I) + r^2*(-B*F - E*C - H*L - K*I)) + </em>
+<a class="jxr_linenumber" name="L989" href="#L989">989</a>         <em class="jxr_comment">//(- F*C - L*I) = 0</em>
+<a class="jxr_linenumber" name="L990" href="#L990">990</a>         <strong class="jxr_keyword">double</strong> r = mFocalDistanceAspectRatio;
+<a class="jxr_linenumber" name="L991" href="#L991">991</a>         <strong class="jxr_keyword">double</strong> r2 = r*r;
+<a class="jxr_linenumber" name="L992" href="#L992">992</a>         <strong class="jxr_keyword">double</strong> r4 = r2*r2;
+<a class="jxr_linenumber" name="L993" href="#L993">993</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Polynomial(-f*c -l*i,
+<a class="jxr_linenumber" name="L994" href="#L994">994</a>                 (-a*f - d*c - g*l - j*i) + r2*(-b*f - e*c - h*l - k*i),
+<a class="jxr_linenumber" name="L995" href="#L995">995</a>                 ((-a*d - g*j) + r4*(-b*e - h*k) + r2*(-a*e - b*d - g*k - h*j)));
+<a class="jxr_linenumber" name="L996" href="#L996">996</a>     }
+<a class="jxr_linenumber" name="L997" href="#L997">997</a> 
+<a class="jxr_linenumber" name="L998" href="#L998">998</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L999" href="#L999">999</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 2 to </em>
+<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a> <em class="jxr_javadoccomment">     * solve x value, which is the squared value of horizontal focal length.</em>
+<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is known.</em>
+<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a> <em class="jxr_javadoccomment">     * @param d internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a> <em class="jxr_javadoccomment">     * @param e internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a> <em class="jxr_javadoccomment">     * @param f internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a> <em class="jxr_javadoccomment">     * @param g internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a> <em class="jxr_javadoccomment">     * @param h internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a> <em class="jxr_javadoccomment">     * @param i internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a> <em class="jxr_javadoccomment">     * @param m internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a> <em class="jxr_javadoccomment">     * @param n internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a> <em class="jxr_javadoccomment">     * @param o internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a> <em class="jxr_javadoccomment">     * @param p internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a> <em class="jxr_javadoccomment">     * @param q internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a> <em class="jxr_javadoccomment">     * @param r internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
+<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial4(<strong class="jxr_keyword">double</strong> d,
+<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>             <strong class="jxr_keyword">double</strong> e, <strong class="jxr_keyword">double</strong> f, <strong class="jxr_keyword">double</strong> g, <strong class="jxr_keyword">double</strong> h, <strong class="jxr_keyword">double</strong> i,
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>             <strong class="jxr_keyword">double</strong> m, <strong class="jxr_keyword">double</strong> n, <strong class="jxr_keyword">double</strong> o, <strong class="jxr_keyword">double</strong> p,
+<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>             <strong class="jxr_keyword">double</strong> q, <strong class="jxr_keyword">double</strong> r) {
+<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>         
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>         <em class="jxr_comment">//x^2*((G*M - P*D) + r^4*(H*N - Q*E) + r^2*(G*N + H*M - P*E - Q*D)) + </em>
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>         <em class="jxr_comment">//x*((G*O + M*I - P*F - D*R) + r^2*(H*O + N*I - Q*F - E*R)) + </em>
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>         <em class="jxr_comment">//(O*I - F*R) = 0</em>
+<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>         <strong class="jxr_keyword">double</strong> r1 = mFocalDistanceAspectRatio;
+<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>         <strong class="jxr_keyword">double</strong> r2 = r1*r1;
+<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a>         <strong class="jxr_keyword">double</strong> r4 = r2*r2;
+<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Polynomial(o*i - f*r,
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>                 (g*o + m*i - p*f - d*r) + r2*(h*o + n*i - q*f - e*r),
+<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a>                 (g*m - p*d) + r4*(h*n - q*e) + r2*(g*n + h*m - p*e - q*d));
+<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a>     }
+<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a> 
+<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a> <em class="jxr_javadoccomment">     * Another of Kruppa's equations expressed as a polynomial of degree 2 to </em>
+<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a> <em class="jxr_javadoccomment">     * solve x value, which is the squared value of horizontal focal length.</em>
+<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a> <em class="jxr_javadoccomment">     * This method is only used when aspect ratio is known.</em>
+<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a> <em class="jxr_javadoccomment">     * @param a internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a> <em class="jxr_javadoccomment">     * @param b internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a> <em class="jxr_javadoccomment">     * @param c internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a> <em class="jxr_javadoccomment">     * @param j internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a> <em class="jxr_javadoccomment">     * @param k internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a> <em class="jxr_javadoccomment">     * @param l internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a> <em class="jxr_javadoccomment">     * @param m internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a> <em class="jxr_javadoccomment">     * @param n internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a> <em class="jxr_javadoccomment">     * @param o internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a> <em class="jxr_javadoccomment">     * @param p internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a> <em class="jxr_javadoccomment">     * @param q internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a> <em class="jxr_javadoccomment">     * @param r internal value from Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a> <em class="jxr_javadoccomment">     * @return a polynomial.</em>
+<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a>     <strong class="jxr_keyword">private</strong> Polynomial buildPolynomial5(<strong class="jxr_keyword">double</strong> a, <strong class="jxr_keyword">double</strong> b, <strong class="jxr_keyword">double</strong> c, <strong class="jxr_keyword">double</strong> j,
+<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a>             <strong class="jxr_keyword">double</strong> k, <strong class="jxr_keyword">double</strong> l, <strong class="jxr_keyword">double</strong> m, <strong class="jxr_keyword">double</strong> n, <strong class="jxr_keyword">double</strong> o, <strong class="jxr_keyword">double</strong> p,
+<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a>             <strong class="jxr_keyword">double</strong> q, <strong class="jxr_keyword">double</strong> r) {
+<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a>         
+<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a>         <em class="jxr_comment">//x^2*((P*J + A*M) + r^4*(Q*K + B*N) + r^2*(P*K + Q*J + A*N + B*M)) + </em>
+<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a>         <em class="jxr_comment">//x*((P*L + J*R + A*O + M*C) + r^2*(Q*L + K*R + B*O + N*C)) + </em>
+<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a>         <em class="jxr_comment">//(L*R + O*C) = 0</em>
+<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a>         <strong class="jxr_keyword">double</strong> r1 = mFocalDistanceAspectRatio;
+<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a>         <strong class="jxr_keyword">double</strong> r2 = r1*r1;
+<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a>         <strong class="jxr_keyword">double</strong> r4 = r2*r2;
+<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Polynomial(l*r + o*c,
+<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a>                 (p*l + j*r + a*o + m*c) + r2*(q*l + k*r + b*o + n*c),
+<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a>                 (p*j + a*m) + r4*(q*k + b*n) + r2*(p*k + q*j + a*n + b*m));
+<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a>     }
+<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a> 
+<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> <em class="jxr_javadoccomment">     * Solves Kruppa's equations when aspect ratio is unknown</em>
+<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a> <em class="jxr_javadoccomment">     * @param polyA A parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a> <em class="jxr_javadoccomment">     * @param polyB B parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a> <em class="jxr_javadoccomment">     * @param polyC C parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a> <em class="jxr_javadoccomment">     * @param polyD D parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a> <em class="jxr_javadoccomment">     * @param polyE E parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a> <em class="jxr_javadoccomment">     * @param polyF F parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a> <em class="jxr_javadoccomment">     * @param polyG G parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a> <em class="jxr_javadoccomment">     * @param polyH H parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a> <em class="jxr_javadoccomment">     * @param polyI I parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a> <em class="jxr_javadoccomment">     * @param polyJ J parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a> <em class="jxr_javadoccomment">     * @param polyK K parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a> <em class="jxr_javadoccomment">     * @param polyL L parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a> <em class="jxr_javadoccomment">     * @param polyM M parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a> <em class="jxr_javadoccomment">     * @param polyN N parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a> <em class="jxr_javadoccomment">     * @param polyO O parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a> <em class="jxr_javadoccomment">     * @param polyP P parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a> <em class="jxr_javadoccomment">     * @param polyQ Q parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a> <em class="jxr_javadoccomment">     * @param polyR R parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a> <em class="jxr_javadoccomment">     * @param polyS S parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a> <em class="jxr_javadoccomment">     * @param polyT T parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a> <em class="jxr_javadoccomment">     * @param polyU U parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a> <em class="jxr_javadoccomment">     * @param polyV V parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> <em class="jxr_javadoccomment">     * @param polyW W parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a> <em class="jxr_javadoccomment">     * @return roots solving Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a> <em class="jxr_javadoccomment">     * @throws NumericalException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L1092" href="#L1092">1092</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1093" href="#L1093">1093</a>     <strong class="jxr_keyword">private</strong> Complex[] unknownAspectRatioRoots(<strong class="jxr_keyword">double</strong> polyA, <strong class="jxr_keyword">double</strong> polyB, <strong class="jxr_keyword">double</strong> polyC,
+<a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>             <strong class="jxr_keyword">double</strong> polyD, <strong class="jxr_keyword">double</strong> polyE, <strong class="jxr_keyword">double</strong> polyF, <strong class="jxr_keyword">double</strong> polyG, <strong class="jxr_keyword">double</strong> polyH,
+<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a>             <strong class="jxr_keyword">double</strong> polyI, <strong class="jxr_keyword">double</strong> polyJ, <strong class="jxr_keyword">double</strong> polyK, <strong class="jxr_keyword">double</strong> polyL, <strong class="jxr_keyword">double</strong> polyM,
+<a class="jxr_linenumber" name="L1096" href="#L1096">1096</a>             <strong class="jxr_keyword">double</strong> polyN, <strong class="jxr_keyword">double</strong> polyO, <strong class="jxr_keyword">double</strong> polyP, <strong class="jxr_keyword">double</strong> polyQ, <strong class="jxr_keyword">double</strong> polyR,
+<a class="jxr_linenumber" name="L1097" href="#L1097">1097</a>             <strong class="jxr_keyword">double</strong> polyS, <strong class="jxr_keyword">double</strong> polyT, <strong class="jxr_keyword">double</strong> polyU, <strong class="jxr_keyword">double</strong> polyV, <strong class="jxr_keyword">double</strong> polyW)
+<a class="jxr_linenumber" name="L1098" href="#L1098">1098</a>             <strong class="jxr_keyword">throws</strong> NumericalException {
+<a class="jxr_linenumber" name="L1099" href="#L1099">1099</a>         Complex[] roots;
+<a class="jxr_linenumber" name="L1100" href="#L1100">1100</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1101" href="#L1101">1101</a>             Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+<a class="jxr_linenumber" name="L1102" href="#L1102">1102</a>                     polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
+<a class="jxr_linenumber" name="L1103" href="#L1103">1103</a>             roots = poly1.getRoots();
+<a class="jxr_linenumber" name="L1104" href="#L1104">1104</a>         } <strong class="jxr_keyword">catch</strong> (NumericalException ex1) {
+<a class="jxr_linenumber" name="L1105" href="#L1105">1105</a>             <em class="jxr_comment">//if solution for poly1 fails, try with second polynomial</em>
+<a class="jxr_linenumber" name="L1106" href="#L1106">1106</a>             Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
+<a class="jxr_linenumber" name="L1107" href="#L1107">1107</a>                     polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
+<a class="jxr_linenumber" name="L1108" href="#L1108">1108</a>             roots = poly2.getRoots();
+<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a>         }
+<a class="jxr_linenumber" name="L1110" href="#L1110">1110</a> 
+<a class="jxr_linenumber" name="L1111" href="#L1111">1111</a>         <strong class="jxr_keyword">return</strong> roots;
+<a class="jxr_linenumber" name="L1112" href="#L1112">1112</a>     }
+<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a> 
+<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a> <em class="jxr_javadoccomment">     * Solves Kruppa's equations when aspect ratio is known</em>
+<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a> <em class="jxr_javadoccomment">     * @param polyA A parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a> <em class="jxr_javadoccomment">     * @param polyB B parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a> <em class="jxr_javadoccomment">     * @param polyC C parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a> <em class="jxr_javadoccomment">     * @param polyD D parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a> <em class="jxr_javadoccomment">     * @param polyE E parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a> <em class="jxr_javadoccomment">     * @param polyF F parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a> <em class="jxr_javadoccomment">     * @param polyG G parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a> <em class="jxr_javadoccomment">     * @param polyH H parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a> <em class="jxr_javadoccomment">     * @param polyI I parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1125" href="#L1125">1125</a> <em class="jxr_javadoccomment">     * @param polyJ J parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a> <em class="jxr_javadoccomment">     * @param polyK K parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1127" href="#L1127">1127</a> <em class="jxr_javadoccomment">     * @param polyL L parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1128" href="#L1128">1128</a> <em class="jxr_javadoccomment">     * @param polyM M parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1129" href="#L1129">1129</a> <em class="jxr_javadoccomment">     * @param polyN N parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1130" href="#L1130">1130</a> <em class="jxr_javadoccomment">     * @param polyO O parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1131" href="#L1131">1131</a> <em class="jxr_javadoccomment">     * @param polyP P parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1132" href="#L1132">1132</a> <em class="jxr_javadoccomment">     * @param polyQ Q parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1133" href="#L1133">1133</a> <em class="jxr_javadoccomment">     * @param polyR R parameter of Kruppa's polynomial equation.</em>
+<a class="jxr_linenumber" name="L1134" href="#L1134">1134</a> <em class="jxr_javadoccomment">     * @return roots solving Kruppa's equations.</em>
+<a class="jxr_linenumber" name="L1135" href="#L1135">1135</a> <em class="jxr_javadoccomment">     * @throws NumericalException if there are numerical instabilities.</em>
+<a class="jxr_linenumber" name="L1136" href="#L1136">1136</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1137" href="#L1137">1137</a>     <strong class="jxr_keyword">private</strong> Complex[] knownAspectRatioRoots(<strong class="jxr_keyword">double</strong> polyA, <strong class="jxr_keyword">double</strong> polyB, <strong class="jxr_keyword">double</strong> polyC,
+<a class="jxr_linenumber" name="L1138" href="#L1138">1138</a>             <strong class="jxr_keyword">double</strong> polyD, <strong class="jxr_keyword">double</strong> polyE, <strong class="jxr_keyword">double</strong> polyF, <strong class="jxr_keyword">double</strong> polyG, <strong class="jxr_keyword">double</strong> polyH,
+<a class="jxr_linenumber" name="L1139" href="#L1139">1139</a>             <strong class="jxr_keyword">double</strong> polyI, <strong class="jxr_keyword">double</strong> polyJ, <strong class="jxr_keyword">double</strong> polyK, <strong class="jxr_keyword">double</strong> polyL, <strong class="jxr_keyword">double</strong> polyM,
+<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a>             <strong class="jxr_keyword">double</strong> polyN, <strong class="jxr_keyword">double</strong> polyO, <strong class="jxr_keyword">double</strong> polyP, <strong class="jxr_keyword">double</strong> polyQ, <strong class="jxr_keyword">double</strong> polyR)
+<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a>             <strong class="jxr_keyword">throws</strong> NumericalException {
+<a class="jxr_linenumber" name="L1142" href="#L1142">1142</a>         Complex[] roots;
+<a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1144" href="#L1144">1144</a>             Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+<a class="jxr_linenumber" name="L1145" href="#L1145">1145</a>                     polyJ, polyK, polyL);
+<a class="jxr_linenumber" name="L1146" href="#L1146">1146</a>             roots = poly3.getRoots();
+<a class="jxr_linenumber" name="L1147" href="#L1147">1147</a>         } <strong class="jxr_keyword">catch</strong> (NumericalException e3) {
+<a class="jxr_linenumber" name="L1148" href="#L1148">1148</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L1149" href="#L1149">1149</a>                 <em class="jxr_comment">//if solution for poly3 fails, try with 4th polynomial</em>
+<a class="jxr_linenumber" name="L1150" href="#L1150">1150</a>                 Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
+<a class="jxr_linenumber" name="L1151" href="#L1151">1151</a>                         polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
+<a class="jxr_linenumber" name="L1152" href="#L1152">1152</a>                 roots = poly4.getRoots();
+<a class="jxr_linenumber" name="L1153" href="#L1153">1153</a>             } <strong class="jxr_keyword">catch</strong> (NumericalException e4) {
+<a class="jxr_linenumber" name="L1154" href="#L1154">1154</a>                 Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,
+<a class="jxr_linenumber" name="L1155" href="#L1155">1155</a>                         polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
+<a class="jxr_linenumber" name="L1156" href="#L1156">1156</a>                 roots = poly5.getRoots();
+<a class="jxr_linenumber" name="L1157" href="#L1157">1157</a>             }
+<a class="jxr_linenumber" name="L1158" href="#L1158">1158</a>         }
+<a class="jxr_linenumber" name="L1159" href="#L1159">1159</a> 
+<a class="jxr_linenumber" name="L1160" href="#L1160">1160</a>         <strong class="jxr_keyword">return</strong> roots;
+<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a>     }
+<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

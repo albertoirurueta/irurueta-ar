@@ -438,22 +438,24 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @param verticalFocalLength estimated vertical focal length component.
      * @param result instance where estimated DIAC will be stored.
      * @return true if estimated DIAC is valid, false otherwise.
-     * @throws AlgebraException if it cannot be determined whether DIAC is valid
-     * or not due to numerical unstabilities.
      */
     private boolean buildDiac(double horizontalFocalLength, 
-            double verticalFocalLength, DualImageOfAbsoluteConic result) 
-            throws AlgebraException {
-        
-<span class="fc" id="L448">        PinholeCameraIntrinsicParameters intrinsic = new </span>
-        PinholeCameraIntrinsicParameters(horizontalFocalLength, 
-                verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
-<span class="fc" id="L451">        result.setFromPinholeCameraIntrinsicParameters(intrinsic);</span>
-        
-<span class="fc" id="L453">        Matrix m = result.asMatrix();</span>
-<span class="fc" id="L454">        CholeskyDecomposer decomposer = new CholeskyDecomposer(m);</span>
-<span class="fc" id="L455">        decomposer.decompose();</span>
-<span class="fc" id="L456">        return decomposer.isSPD();</span>
+            double verticalFocalLength, DualImageOfAbsoluteConic result) {
+
+        try {
+<span class="fc" id="L446">            PinholeCameraIntrinsicParameters intrinsic = new</span>
+                    PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                    verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
+<span class="fc" id="L449">            result.setFromPinholeCameraIntrinsicParameters(intrinsic);</span>
+
+<span class="fc" id="L451">            Matrix m = result.asMatrix();</span>
+<span class="fc" id="L452">            CholeskyDecomposer decomposer = new CholeskyDecomposer(m);</span>
+<span class="fc" id="L453">            decomposer.decompose();</span>
+<span class="fc" id="L454">            return decomposer.isSPD();</span>
+<span class="nc" id="L455">        } catch (AlgebraException e) {</span>
+            //there are numerical instabilities
+<span class="nc" id="L457">            return false;</span>
+        }
     }    
     
     /**
@@ -466,102 +468,102 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     private void estimateUnknownAspectRatio(DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
         try {
-<span class="fc" id="L469">            double x0 = mPrincipalPointX;</span>
-<span class="fc" id="L470">            double y0 = mPrincipalPointY;      </span>
+<span class="fc" id="L471">            double x0 = mPrincipalPointX;</span>
+<span class="fc" id="L472">            double y0 = mPrincipalPointY;      </span>
         
             //SVD decompose fundamental matrix
-<span class="fc" id="L473">            mFundamentalMatrix.normalize();</span>
-<span class="fc" id="L474">            SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
-<span class="fc" id="L475">                    mFundamentalMatrix.getInternalMatrix());</span>
-<span class="fc" id="L476">            decomposer.decompose();</span>
+<span class="fc" id="L475">            mFundamentalMatrix.normalize();</span>
+<span class="fc" id="L476">            SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
+<span class="fc" id="L477">                    mFundamentalMatrix.getInternalMatrix());</span>
+<span class="fc" id="L478">            decomposer.decompose();</span>
             
-<span class="fc" id="L478">            double[] sigmas = decomposer.getSingularValues();</span>
-<span class="fc" id="L479">            Matrix u = decomposer.getU();</span>
-<span class="fc" id="L480">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L480">            double[] sigmas = decomposer.getSingularValues();</span>
+<span class="fc" id="L481">            Matrix u = decomposer.getU();</span>
+<span class="fc" id="L482">            Matrix v = decomposer.getV();</span>
             
-<span class="fc" id="L482">            double sigma1 = sigmas[0];</span>
-<span class="fc" id="L483">            double sigma2 = sigmas[1];</span>
+<span class="fc" id="L484">            double sigma1 = sigmas[0];</span>
+<span class="fc" id="L485">            double sigma2 = sigmas[1];</span>
             
             //Column u1
-<span class="fc" id="L486">            double u11 = u.getElementAt(0, 0);</span>
-<span class="fc" id="L487">            double u21 = u.getElementAt(1, 0);</span>
-<span class="fc" id="L488">            double u31 = u.getElementAt(2, 0);</span>
+<span class="fc" id="L488">            double u11 = u.getElementAt(0, 0);</span>
+<span class="fc" id="L489">            double u21 = u.getElementAt(1, 0);</span>
+<span class="fc" id="L490">            double u31 = u.getElementAt(2, 0);</span>
             
             //Column u2
-<span class="fc" id="L491">            double u12 = u.getElementAt(0, 1);</span>
-<span class="fc" id="L492">            double u22 = u.getElementAt(1, 1);</span>
-<span class="fc" id="L493">            double u32 = u.getElementAt(2, 1);</span>
+<span class="fc" id="L493">            double u12 = u.getElementAt(0, 1);</span>
+<span class="fc" id="L494">            double u22 = u.getElementAt(1, 1);</span>
+<span class="fc" id="L495">            double u32 = u.getElementAt(2, 1);</span>
             
             //Column v1
-<span class="fc" id="L496">            double v11 = v.getElementAt(0, 0);</span>
-<span class="fc" id="L497">            double v21 = v.getElementAt(1, 0);</span>
-<span class="fc" id="L498">            double v31 = v.getElementAt(2, 0);</span>
+<span class="fc" id="L498">            double v11 = v.getElementAt(0, 0);</span>
+<span class="fc" id="L499">            double v21 = v.getElementAt(1, 0);</span>
+<span class="fc" id="L500">            double v31 = v.getElementAt(2, 0);</span>
             
             //Column v2
-<span class="fc" id="L501">            double v12 = v.getElementAt(0, 1);</span>
-<span class="fc" id="L502">            double v22 = v.getElementAt(1, 1);</span>
-<span class="fc" id="L503">            double v32 = v.getElementAt(2, 1);</span>
+<span class="fc" id="L503">            double v12 = v.getElementAt(0, 1);</span>
+<span class="fc" id="L504">            double v22 = v.getElementAt(1, 1);</span>
+<span class="fc" id="L505">            double v32 = v.getElementAt(2, 1);</span>
             
             //build Kruppa equations
-<span class="fc" id="L506">            double polyA = u12*u11;</span>
-<span class="fc" id="L507">            double polyB = u22*u21;</span>
-<span class="fc" id="L508">            double polyC = Math.pow(x0,2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +</span>
-<span class="fc" id="L509">                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +</span>
+<span class="fc" id="L508">            double polyA = u12*u11;</span>
+<span class="fc" id="L509">            double polyB = u22*u21;</span>
+<span class="fc" id="L510">            double polyC = Math.pow(x0,2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +</span>
+<span class="fc" id="L511">                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +</span>
                     x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
-<span class="fc" id="L511">            double polyD = Math.pow(sigma2, 2.0) * v12 * v12;</span>
-<span class="fc" id="L512">            double polyE = Math.pow(sigma2, 2.0) * v22 * v22;</span>
-<span class="fc" id="L513">            double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +</span>
-<span class="fc" id="L514">                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +</span>
-<span class="fc" id="L515">                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +</span>
-<span class="fc" id="L516">                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +</span>
-<span class="fc" id="L517">                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +</span>
-<span class="fc" id="L518">                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +</span>
-<span class="fc" id="L519">                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +</span>
-<span class="fc" id="L520">                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +</span>
-<span class="fc" id="L521">                    Math.pow(sigma2, 2.0) * v32 * v32;</span>
-<span class="fc" id="L522">            double polyG = u11*u11;</span>
-<span class="fc" id="L523">            double polyH = u21*u21;</span>
-<span class="fc" id="L524">            double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +</span>
-<span class="fc" id="L525">                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +</span>
+<span class="fc" id="L513">            double polyD = Math.pow(sigma2, 2.0) * v12 * v12;</span>
+<span class="fc" id="L514">            double polyE = Math.pow(sigma2, 2.0) * v22 * v22;</span>
+<span class="fc" id="L515">            double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +</span>
+<span class="fc" id="L516">                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +</span>
+<span class="fc" id="L517">                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +</span>
+<span class="fc" id="L518">                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +</span>
+<span class="fc" id="L519">                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +</span>
+<span class="fc" id="L520">                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +</span>
+<span class="fc" id="L521">                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +</span>
+<span class="fc" id="L522">                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +</span>
+<span class="fc" id="L523">                    Math.pow(sigma2, 2.0) * v32 * v32;</span>
+<span class="fc" id="L524">            double polyG = u11*u11;</span>
+<span class="fc" id="L525">            double polyH = u21*u21;</span>
+<span class="fc" id="L526">            double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +</span>
+<span class="fc" id="L527">                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +</span>
                     x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
-<span class="fc" id="L527">            double polyJ = sigma1 * sigma2 * v12 * v11;</span>
-<span class="fc" id="L528">            double polyK = sigma1 * sigma2 * v22 * v21;</span>
-<span class="fc" id="L529">            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +</span>
+<span class="fc" id="L529">            double polyJ = sigma1 * sigma2 * v12 * v11;</span>
+<span class="fc" id="L530">            double polyK = sigma1 * sigma2 * v22 * v21;</span>
+<span class="fc" id="L531">            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +</span>
                     sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
                     sigma1 * sigma2 * x0 * y0 * v12 * v21 +
-<span class="fc" id="L532">                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +</span>
+<span class="fc" id="L534">                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +</span>
                     sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
                     sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
-<span class="fc" id="L535">            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;</span>
-<span class="fc" id="L536">            double polyN = Math.pow(sigma1, 2.0) * v21 * v21;</span>
-<span class="fc" id="L537">            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +</span>
-<span class="fc" id="L538">                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +</span>
-<span class="fc" id="L539">                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +</span>
-<span class="fc" id="L540">                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +</span>
-<span class="fc" id="L541">                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +</span>
-<span class="fc" id="L542">                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +</span>
-<span class="fc" id="L543">                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +</span>
-<span class="fc" id="L544">                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +</span>
-<span class="fc" id="L545">                    Math.pow(sigma1, 2.0) * v31 * v31;</span>
-<span class="fc" id="L546">            double polyP = u12 * u12;</span>
-<span class="fc" id="L547">            double polyQ = u22 * u22;</span>
-<span class="fc" id="L548">            double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +</span>
-<span class="fc" id="L549">                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +</span>
+<span class="fc" id="L537">            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;</span>
+<span class="fc" id="L538">            double polyN = Math.pow(sigma1, 2.0) * v21 * v21;</span>
+<span class="fc" id="L539">            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +</span>
+<span class="fc" id="L540">                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +</span>
+<span class="fc" id="L541">                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +</span>
+<span class="fc" id="L542">                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +</span>
+<span class="fc" id="L543">                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +</span>
+<span class="fc" id="L544">                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +</span>
+<span class="fc" id="L545">                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +</span>
+<span class="fc" id="L546">                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +</span>
+<span class="fc" id="L547">                    Math.pow(sigma1, 2.0) * v31 * v31;</span>
+<span class="fc" id="L548">            double polyP = u12 * u12;</span>
+<span class="fc" id="L549">            double polyQ = u22 * u22;</span>
+<span class="fc" id="L550">            double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +</span>
+<span class="fc" id="L551">                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +</span>
                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
             
             
-<span class="fc" id="L553">            double polyS = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
+<span class="fc" id="L555">            double polyS = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
                     (polyH * polyN - polyQ * polyE) - (polyQ * polyK + polyB * polyN));
-<span class="fc" id="L555">            double polyT = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
+<span class="fc" id="L557">            double polyT = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
                     (polyG * polyN + polyH * polyM - polyP * polyE - polyQ * polyD) -
                     (polyP * polyK + polyQ * polyJ + polyA * polyN + polyB * polyM));
-<span class="fc" id="L558">            double polyU = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
+<span class="fc" id="L560">            double polyU = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
                     (polyG * polyO + polyM * polyI - polyP * polyF - polyD * polyR) -
                     (polyP * polyL + polyJ * polyR + polyA * polyO + polyM * polyC));
-<span class="fc" id="L561">            double polyV = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
+<span class="fc" id="L563">            double polyV = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
                     (polyH * polyO + polyN * polyI - polyQ * polyF - polyE * polyR) -
                     (polyQ * polyL + polyK * polyR + polyB * polyO + polyN * polyC));
-<span class="fc" id="L564">            double polyW = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
+<span class="fc" id="L566">            double polyW = ((polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD) *</span>
                     (polyO * polyI - polyF * polyR) - (polyL * polyR + polyO * polyC));
             
             //assuming that x = ax^2, y = ay^2 which are the horizontal and
@@ -580,66 +582,56 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             
             //where we can solve y using any of the two latter equations, and
             //then use obtained y to solve x
-            Complex[] roots;
-            try {
-<span class="fc" id="L585">                Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,</span>
-                        polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
-<span class="fc" id="L587">                roots = poly1.getRoots();</span>
-<span class="nc" id="L588">            } catch (NumericalException ex1) {</span>
-                //if solution for poly1 fails, try with second polynomial
-<span class="nc" id="L590">                Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,</span>
-                        polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
-<span class="nc" id="L592">                roots = poly2.getRoots();</span>
-<span class="fc" id="L593">            }</span>
-            
+<span class="fc" id="L585">            Complex[] roots = unknownAspectRatioRoots(polyA, polyB, polyC,</span>
+                    polyD, polyE, polyF, polyG, polyH,
+                    polyI, polyJ, polyK, polyL, polyM,
+                    polyN, polyO, polyP, polyQ, polyR,
+                    polyS, polyT, polyU, polyV, polyW);
+
             //roots contain possible y values. We use only their real part
             //and find x = (-y^2*S - y*V - W) / (y*T + U)
             
             //pick the best x, y values that produce a positive definite DIAC
             //matrix
-<span class="fc" id="L600">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
+<span class="fc" id="L596">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-<span class="fc" id="L602">            boolean valid = false;</span>
-<span class="fc bfc" id="L603" title="All 2 branches covered.">            if (roots != null) {</span>
-<span class="fc bfc" id="L604" title="All 2 branches covered.">                for (Complex root : roots) {</span>
-<span class="fc" id="L605">                    double y = root.getReal();</span>
-<span class="fc" id="L606">                    double x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);</span>
+<span class="fc" id="L598">            boolean valid = false;</span>
+<span class="fc bfc" id="L599" title="All 2 branches covered.">            if (roots != null) {</span>
+<span class="fc bfc" id="L600" title="All 2 branches covered.">                for (Complex root : roots) {</span>
+<span class="fc" id="L601">                    double y = root.getReal();</span>
+<span class="fc" id="L602">                    double x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);</span>
                     
                     //build DIAC matrix and check if it is positive definite
-<span class="fc bfc" id="L609" title="All 4 branches covered.">                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {</span>
-<span class="fc" id="L610">                        double horizontalFocalLength = Math.sqrt(x);</span>
-<span class="fc" id="L611">                        double verticalFocalLength = Math.sqrt(y);</span>
-                        try {
-<span class="fc" id="L613">                            valid = buildDiac(horizontalFocalLength, </span>
+<span class="fc bfc" id="L605" title="All 4 branches covered.">                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {</span>
+<span class="fc" id="L606">                        double horizontalFocalLength = Math.sqrt(x);</span>
+<span class="fc" id="L607">                        double verticalFocalLength = Math.sqrt(y);</span>
+<span class="fc" id="L608">                        valid = buildDiac(horizontalFocalLength,</span>
                                 verticalFocalLength, diac);
-<span class="nc" id="L615">                        } catch (AlgebraException ex) {</span>
-<span class="nc" id="L616">                            valid = false;</span>
-<span class="fc" id="L617">                        }</span>
                     }
                     
-<span class="fc bfc" id="L620" title="All 2 branches covered.">                    if (valid) {</span>
-<span class="fc" id="L621">                        break;</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">                    if (valid) {</span>
+<span class="fc" id="L613">                        break;</span>
                     }
                 }
             } else {
-<span class="fc" id="L625">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+<span class="fc" id="L617">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc bfc" id="L628" title="All 2 branches covered.">            if (valid) {</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">            if (valid) {</span>
                 //copy to result
-<span class="fc" id="L630">                result.setParameters(diac.getA(), diac.getB(), diac.getC(), </span>
-<span class="fc" id="L631">                        diac.getD(), diac.getE(), diac.getF());</span>
+<span class="fc" id="L622">                result.setParameters(diac.getA(), diac.getB(), diac.getC(), </span>
+<span class="fc" id="L623">                        diac.getD(), diac.getE(), diac.getF());</span>
             } else {
                 //no valid DIAC could be found
-<span class="fc" id="L634">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+<span class="fc" id="L626">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L637">        } catch (KruppaDualImageOfAbsoluteConicEstimatorException ex) {</span>
-<span class="fc" id="L638">            throw ex;</span>
-<span class="nc" id="L639">        } catch (Exception ex) {</span>
-<span class="nc" id="L640">            throw new KruppaDualImageOfAbsoluteConicEstimatorException(ex);</span>
-<span class="fc" id="L641">        }        </span>
-<span class="fc" id="L642">    }</span>
+<span class="fc" id="L629">        } catch (KruppaDualImageOfAbsoluteConicEstimatorException ex) {</span>
+<span class="fc" id="L630">            throw ex;</span>
+<span class="nc" id="L631">        } catch (Exception ex) {</span>
+<span class="nc" id="L632">            throw new KruppaDualImageOfAbsoluteConicEstimatorException(ex);</span>
+<span class="fc" id="L633">        }        </span>
+<span class="fc" id="L634">    }</span>
         
     /**
      * Gets x value from current y value.
@@ -656,7 +648,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      */
     private double getXFromY(double y, double s, double t, double u, double v,
             double w) {
-<span class="fc" id="L659">        return (-Math.pow(y, 2.0)*s - y*v - w) / (y*t + u);</span>
+<span class="fc" id="L651">        return (-Math.pow(y, 2.0)*s - y*v - w) / (y*t + u);</span>
     }
     
     /**
@@ -691,56 +683,56 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) + 
         //y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + (y*T + U)^2*(- F*C - L*I) = 0
         
-<span class="fc" id="L694">        Polynomial result = new Polynomial(</span>
+<span class="fc" id="L686">        Polynomial result = new Polynomial(</span>
                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
         
         //(-y^2*S - y*V - W)^2 *(-A*D - G*J)
-<span class="fc" id="L698">        Polynomial tmp = new Polynomial(-w, -v, -s);</span>
-<span class="fc" id="L699">        Polynomial tmp2 = new Polynomial(-w, -v, -s);</span>
-<span class="fc" id="L700">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L701">        tmp.multiplyByScalar(-a*d - g*j);</span>
-<span class="fc" id="L702">        result.add(tmp);</span>
+<span class="fc" id="L690">        Polynomial tmp = new Polynomial(-w, -v, -s);</span>
+<span class="fc" id="L691">        Polynomial tmp2 = new Polynomial(-w, -v, -s);</span>
+<span class="fc" id="L692">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L693">        tmp.multiplyByScalar(-a*d - g*j);</span>
+<span class="fc" id="L694">        result.add(tmp);</span>
         
         //y^2*(y*T + U)^2*(-B*E - H*K)
-<span class="fc" id="L705">        tmp.setPolyParams(0.0, 0.0, 1.0);</span>
-<span class="fc" id="L706">        tmp2.setPolyParams(u, t);</span>
-<span class="fc" id="L707">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L708">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L709">        tmp.multiplyByScalar(-b*e - h*k);</span>
-<span class="fc" id="L710">        result.add(tmp);</span>
+<span class="fc" id="L697">        tmp.setPolyParams(0.0, 0.0, 1.0);</span>
+<span class="fc" id="L698">        tmp2.setPolyParams(u, t);</span>
+<span class="fc" id="L699">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L700">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L701">        tmp.multiplyByScalar(-b*e - h*k);</span>
+<span class="fc" id="L702">        result.add(tmp);</span>
         
         //(-y^2*S - y*V - W)*(y*T + U)*y*(-A*E - B*D - G*K - H*J)
-<span class="fc" id="L713">        tmp.setPolyParams(-w, -v, -s);</span>
-<span class="fc" id="L714">        tmp2.setPolyParams(u, t);</span>
-<span class="fc" id="L715">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L716">        tmp2.setPolyParams(0.0, 1);</span>
-<span class="fc" id="L717">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L718">        tmp.multiplyByScalar(-a*e - b*d - g*k - h*j);</span>
-<span class="fc" id="L719">        result.add(tmp);</span>
+<span class="fc" id="L705">        tmp.setPolyParams(-w, -v, -s);</span>
+<span class="fc" id="L706">        tmp2.setPolyParams(u, t);</span>
+<span class="fc" id="L707">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L708">        tmp2.setPolyParams(0.0, 1);</span>
+<span class="fc" id="L709">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L710">        tmp.multiplyByScalar(-a*e - b*d - g*k - h*j);</span>
+<span class="fc" id="L711">        result.add(tmp);</span>
         
         //(-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I)
-<span class="fc" id="L722">        tmp.setPolyParams(-w, -v, -s);</span>
-<span class="fc" id="L723">        tmp2.setPolyParams(u, t);</span>
-<span class="fc" id="L724">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L725">        tmp.multiplyByScalar(-a*f - d*c - g*l - j*i);</span>
-<span class="fc" id="L726">        result.add(tmp);</span>
+<span class="fc" id="L714">        tmp.setPolyParams(-w, -v, -s);</span>
+<span class="fc" id="L715">        tmp2.setPolyParams(u, t);</span>
+<span class="fc" id="L716">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L717">        tmp.multiplyByScalar(-a*f - d*c - g*l - j*i);</span>
+<span class="fc" id="L718">        result.add(tmp);</span>
         
         //y*(y*T + U)^2*(-B*F - E*C - H*L - K*I)
-<span class="fc" id="L729">        tmp.setPolyParams(0.0, 1.0);</span>
-<span class="fc" id="L730">        tmp2.setPolyParams(u, t);</span>
-<span class="fc" id="L731">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L732">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L733">        tmp.multiplyByScalar(-b*f - e*c - h*l - k*i);</span>
-<span class="fc" id="L734">        result.add(tmp);</span>
+<span class="fc" id="L721">        tmp.setPolyParams(0.0, 1.0);</span>
+<span class="fc" id="L722">        tmp2.setPolyParams(u, t);</span>
+<span class="fc" id="L723">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L724">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L725">        tmp.multiplyByScalar(-b*f - e*c - h*l - k*i);</span>
+<span class="fc" id="L726">        result.add(tmp);</span>
         
         //(y*T + U)^2*(- F*C - L*I)
-<span class="fc" id="L737">        tmp.setPolyParams(u, t);</span>
-<span class="fc" id="L738">        tmp2.setPolyParams(u, t);</span>
-<span class="fc" id="L739">        tmp.multiply(tmp2);</span>
-<span class="fc" id="L740">        tmp.multiplyByScalar(-f*c - l*i);</span>
-<span class="fc" id="L741">        result.add(tmp);</span>
+<span class="fc" id="L729">        tmp.setPolyParams(u, t);</span>
+<span class="fc" id="L730">        tmp2.setPolyParams(u, t);</span>
+<span class="fc" id="L731">        tmp.multiply(tmp2);</span>
+<span class="fc" id="L732">        tmp.multiplyByScalar(-f*c - l*i);</span>
+<span class="fc" id="L733">        result.add(tmp);</span>
         
-<span class="fc" id="L743">        return result;</span>
+<span class="fc" id="L735">        return result;</span>
     }
     
     /**
@@ -775,55 +767,55 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) + 
         //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) + 
         //y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0
-<span class="nc" id="L778">        Polynomial result = new Polynomial(</span>
+<span class="nc" id="L770">        Polynomial result = new Polynomial(</span>
                 POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
         
         //(-y^2*S - y*V - W)^2*(G*M - P*D)
-<span class="nc" id="L782">        Polynomial tmp = new Polynomial(-w, -v, -s);</span>
-<span class="nc" id="L783">        Polynomial tmp2 = new Polynomial(-w, -v, -s);</span>
-<span class="nc" id="L784">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L785">        tmp.multiplyByScalar(g*m - p*d);</span>
-<span class="nc" id="L786">        result.add(tmp);</span>
+<span class="nc" id="L774">        Polynomial tmp = new Polynomial(-w, -v, -s);</span>
+<span class="nc" id="L775">        Polynomial tmp2 = new Polynomial(-w, -v, -s);</span>
+<span class="nc" id="L776">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L777">        tmp.multiplyByScalar(g*m - p*d);</span>
+<span class="nc" id="L778">        result.add(tmp);</span>
         
         //y^2*(y*T + U)^2*(H*N - Q*E)
-<span class="nc" id="L789">        tmp.setPolyParams(0.0, 0.0, 1.0);</span>
-<span class="nc" id="L790">        tmp2.setPolyParams(u, t);</span>
-<span class="nc" id="L791">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L792">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L793">        tmp.multiplyByScalar(h*n - q*e);</span>
-<span class="nc" id="L794">        result.add(tmp);</span>
+<span class="nc" id="L781">        tmp.setPolyParams(0.0, 0.0, 1.0);</span>
+<span class="nc" id="L782">        tmp2.setPolyParams(u, t);</span>
+<span class="nc" id="L783">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L784">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L785">        tmp.multiplyByScalar(h*n - q*e);</span>
+<span class="nc" id="L786">        result.add(tmp);</span>
         
         //(-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D)
-<span class="nc" id="L797">        tmp.setPolyParams(-w, -v, -s);</span>
-<span class="nc" id="L798">        tmp2.setPolyParams(u, t);</span>
-<span class="nc" id="L799">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L800">        tmp2.setPolyParams(0.0, 1.0);</span>
-<span class="nc" id="L801">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L802">        tmp.multiplyByScalar(g*n + h*m - p*e - q*d);</span>
-<span class="nc" id="L803">        result.add(tmp);</span>
+<span class="nc" id="L789">        tmp.setPolyParams(-w, -v, -s);</span>
+<span class="nc" id="L790">        tmp2.setPolyParams(u, t);</span>
+<span class="nc" id="L791">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L792">        tmp2.setPolyParams(0.0, 1.0);</span>
+<span class="nc" id="L793">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L794">        tmp.multiplyByScalar(g*n + h*m - p*e - q*d);</span>
+<span class="nc" id="L795">        result.add(tmp);</span>
         
         //(-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R)
-<span class="nc" id="L806">        tmp.setPolyParams(-w, -v, -s);</span>
-<span class="nc" id="L807">        tmp2.setPolyParams(u, t);</span>
-<span class="nc" id="L808">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L809">        tmp.multiplyByScalar(g*o + m*i - p*f - d*r);</span>
-<span class="nc" id="L810">        result.add(tmp);</span>
+<span class="nc" id="L798">        tmp.setPolyParams(-w, -v, -s);</span>
+<span class="nc" id="L799">        tmp2.setPolyParams(u, t);</span>
+<span class="nc" id="L800">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L801">        tmp.multiplyByScalar(g*o + m*i - p*f - d*r);</span>
+<span class="nc" id="L802">        result.add(tmp);</span>
         
         //y*(y*T + U)^2*(H*O + N*I - Q*F - E*R)
-<span class="nc" id="L813">        tmp.setPolyParams(0.0, 1.0);</span>
-<span class="nc" id="L814">        tmp2.setPolyParams(u, t);</span>
-<span class="nc" id="L815">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L816">        tmp.multiplyByScalar(h*o + n*i - q*f - e*r);</span>
-<span class="nc" id="L817">        result.add(tmp);</span>
+<span class="nc" id="L805">        tmp.setPolyParams(0.0, 1.0);</span>
+<span class="nc" id="L806">        tmp2.setPolyParams(u, t);</span>
+<span class="nc" id="L807">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L808">        tmp.multiplyByScalar(h*o + n*i - q*f - e*r);</span>
+<span class="nc" id="L809">        result.add(tmp);</span>
         
         //(y*T + U)^2*(O*I - F*R)
-<span class="nc" id="L820">        tmp.setPolyParams(u, t);</span>
-<span class="nc" id="L821">        tmp2.setPolyParams(u, t);</span>
-<span class="nc" id="L822">        tmp.multiply(tmp2);</span>
-<span class="nc" id="L823">        tmp.multiplyByScalar(o*i - f*r);</span>
-<span class="nc" id="L824">        result.add(tmp);</span>
+<span class="nc" id="L812">        tmp.setPolyParams(u, t);</span>
+<span class="nc" id="L813">        tmp2.setPolyParams(u, t);</span>
+<span class="nc" id="L814">        tmp.multiply(tmp2);</span>
+<span class="nc" id="L815">        tmp.multiplyByScalar(o*i - f*r);</span>
+<span class="nc" id="L816">        result.add(tmp);</span>
         
-<span class="nc" id="L826">        return result;</span>
+<span class="nc" id="L818">        return result;</span>
     }
     
     /**
@@ -836,157 +828,139 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     private void estimateKnownAspectRatio(DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
         try {
-<span class="fc" id="L839">            double x0 = mPrincipalPointX;</span>
-<span class="fc" id="L840">            double y0 = mPrincipalPointY;      </span>
+<span class="fc" id="L831">            double x0 = mPrincipalPointX;</span>
+<span class="fc" id="L832">            double y0 = mPrincipalPointY;      </span>
         
             //SVD decompose fundamental matrix
-<span class="fc" id="L843">            mFundamentalMatrix.normalize();</span>
-<span class="fc" id="L844">            SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
-<span class="fc" id="L845">                    mFundamentalMatrix.getInternalMatrix());</span>
-<span class="fc" id="L846">            decomposer.decompose();</span>
+<span class="fc" id="L835">            mFundamentalMatrix.normalize();</span>
+<span class="fc" id="L836">            SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
+<span class="fc" id="L837">                    mFundamentalMatrix.getInternalMatrix());</span>
+<span class="fc" id="L838">            decomposer.decompose();</span>
             
-<span class="fc" id="L848">            double[] sigmas = decomposer.getSingularValues();</span>
-<span class="fc" id="L849">            Matrix u = decomposer.getU();</span>
-<span class="fc" id="L850">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L840">            double[] sigmas = decomposer.getSingularValues();</span>
+<span class="fc" id="L841">            Matrix u = decomposer.getU();</span>
+<span class="fc" id="L842">            Matrix v = decomposer.getV();</span>
             
-<span class="fc" id="L852">            double sigma1 = sigmas[0];</span>
-<span class="fc" id="L853">            double sigma2 = sigmas[1];</span>
+<span class="fc" id="L844">            double sigma1 = sigmas[0];</span>
+<span class="fc" id="L845">            double sigma2 = sigmas[1];</span>
             
             //Column u1
-<span class="fc" id="L856">            double u11 = u.getElementAt(0, 0);</span>
-<span class="fc" id="L857">            double u21 = u.getElementAt(1, 0);</span>
-<span class="fc" id="L858">            double u31 = u.getElementAt(2, 0);</span>
+<span class="fc" id="L848">            double u11 = u.getElementAt(0, 0);</span>
+<span class="fc" id="L849">            double u21 = u.getElementAt(1, 0);</span>
+<span class="fc" id="L850">            double u31 = u.getElementAt(2, 0);</span>
             
             //Column u2
-<span class="fc" id="L861">            double u12 = u.getElementAt(0, 1);</span>
-<span class="fc" id="L862">            double u22 = u.getElementAt(1, 1);</span>
-<span class="fc" id="L863">            double u32 = u.getElementAt(2, 1);</span>
+<span class="fc" id="L853">            double u12 = u.getElementAt(0, 1);</span>
+<span class="fc" id="L854">            double u22 = u.getElementAt(1, 1);</span>
+<span class="fc" id="L855">            double u32 = u.getElementAt(2, 1);</span>
             
             //Column v1
-<span class="fc" id="L866">            double v11 = v.getElementAt(0, 0);</span>
-<span class="fc" id="L867">            double v21 = v.getElementAt(1, 0);</span>
-<span class="fc" id="L868">            double v31 = v.getElementAt(2, 0);</span>
+<span class="fc" id="L858">            double v11 = v.getElementAt(0, 0);</span>
+<span class="fc" id="L859">            double v21 = v.getElementAt(1, 0);</span>
+<span class="fc" id="L860">            double v31 = v.getElementAt(2, 0);</span>
             
             //Column v2
-<span class="fc" id="L871">            double v12 = v.getElementAt(0, 1);</span>
-<span class="fc" id="L872">            double v22 = v.getElementAt(1, 1);</span>
-<span class="fc" id="L873">            double v32 = v.getElementAt(2, 1);</span>
+<span class="fc" id="L863">            double v12 = v.getElementAt(0, 1);</span>
+<span class="fc" id="L864">            double v22 = v.getElementAt(1, 1);</span>
+<span class="fc" id="L865">            double v32 = v.getElementAt(2, 1);</span>
             
             //build Kruppa equations
-<span class="fc" id="L876">            double polyA = u12*u11;</span>
-<span class="fc" id="L877">            double polyB = u22*u21;</span>
-<span class="fc" id="L878">            double polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +</span>
-<span class="fc" id="L879">                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +</span>
+<span class="fc" id="L868">            double polyA = u12*u11;</span>
+<span class="fc" id="L869">            double polyB = u22*u21;</span>
+<span class="fc" id="L870">            double polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +</span>
+<span class="fc" id="L871">                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +</span>
                     x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
-<span class="fc" id="L881">            double polyD = Math.pow(sigma2, 2.0) * v12 * v12;</span>
-<span class="fc" id="L882">            double polyE = Math.pow(sigma2, 2.0) * v22 * v22;</span>
-<span class="fc" id="L883">            double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +</span>
-<span class="fc" id="L884">                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +</span>
-<span class="fc" id="L885">                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +</span>
-<span class="fc" id="L886">                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +</span>
-<span class="fc" id="L887">                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +</span>
-<span class="fc" id="L888">                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +</span>
-<span class="fc" id="L889">                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +</span>
-<span class="fc" id="L890">                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +</span>
-<span class="fc" id="L891">                    Math.pow(sigma2, 2.0) * v32 * v32;</span>
-<span class="fc" id="L892">            double polyG = u11 * u11;</span>
-<span class="fc" id="L893">            double polyH = u21 * u21;</span>
-<span class="fc" id="L894">            double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +</span>
-<span class="fc" id="L895">                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +</span>
+<span class="fc" id="L873">            double polyD = Math.pow(sigma2, 2.0) * v12 * v12;</span>
+<span class="fc" id="L874">            double polyE = Math.pow(sigma2, 2.0) * v22 * v22;</span>
+<span class="fc" id="L875">            double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +</span>
+<span class="fc" id="L876">                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +</span>
+<span class="fc" id="L877">                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +</span>
+<span class="fc" id="L878">                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +</span>
+<span class="fc" id="L879">                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +</span>
+<span class="fc" id="L880">                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +</span>
+<span class="fc" id="L881">                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +</span>
+<span class="fc" id="L882">                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +</span>
+<span class="fc" id="L883">                    Math.pow(sigma2, 2.0) * v32 * v32;</span>
+<span class="fc" id="L884">            double polyG = u11 * u11;</span>
+<span class="fc" id="L885">            double polyH = u21 * u21;</span>
+<span class="fc" id="L886">            double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +</span>
+<span class="fc" id="L887">                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +</span>
                     x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
-<span class="fc" id="L897">            double polyJ = sigma1 * sigma2 * v12 * v11;</span>
-<span class="fc" id="L898">            double polyK = sigma1 * sigma2 * v22 * v21;</span>
-<span class="fc" id="L899">            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +</span>
+<span class="fc" id="L889">            double polyJ = sigma1 * sigma2 * v12 * v11;</span>
+<span class="fc" id="L890">            double polyK = sigma1 * sigma2 * v22 * v21;</span>
+<span class="fc" id="L891">            double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +</span>
                     sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
                     sigma1 * sigma2 * x0 * y0 * v12 * v21 +
-<span class="fc" id="L902">                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +</span>
+<span class="fc" id="L894">                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +</span>
                     sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
                     sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
-<span class="fc" id="L905">            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;</span>
-<span class="fc" id="L906">            double polyN = Math.pow(sigma1, 2.0) * v21 * v21;</span>
-<span class="fc" id="L907">            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +</span>
-<span class="fc" id="L908">                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +</span>
-<span class="fc" id="L909">                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +</span>
-<span class="fc" id="L910">                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +</span>
-<span class="fc" id="L911">                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +</span>
-<span class="fc" id="L912">                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +</span>
-<span class="fc" id="L913">                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +</span>
-<span class="fc" id="L914">                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +</span>
-<span class="fc" id="L915">                    Math.pow(sigma1, 2.0) * v31 * v31;</span>
-<span class="fc" id="L916">            double polyP = u12*u12;</span>
-<span class="fc" id="L917">            double polyQ = u22*u22;</span>
-<span class="fc" id="L918">            double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +</span>
-<span class="fc" id="L919">                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +</span>
+<span class="fc" id="L897">            double polyM = Math.pow(sigma1, 2.0) * v11 * v11;</span>
+<span class="fc" id="L898">            double polyN = Math.pow(sigma1, 2.0) * v21 * v21;</span>
+<span class="fc" id="L899">            double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +</span>
+<span class="fc" id="L900">                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +</span>
+<span class="fc" id="L901">                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +</span>
+<span class="fc" id="L902">                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +</span>
+<span class="fc" id="L903">                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +</span>
+<span class="fc" id="L904">                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +</span>
+<span class="fc" id="L905">                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +</span>
+<span class="fc" id="L906">                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +</span>
+<span class="fc" id="L907">                    Math.pow(sigma1, 2.0) * v31 * v31;</span>
+<span class="fc" id="L908">            double polyP = u12*u12;</span>
+<span class="fc" id="L909">            double polyQ = u22*u22;</span>
+<span class="fc" id="L910">            double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +</span>
+<span class="fc" id="L911">                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +</span>
                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
 
             //try to solve any of Kruppa's equations
-            Complex[] roots;
-            try {
-<span class="fc" id="L925">                Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,</span>
-                        polyJ, polyK, polyL);
-<span class="fc" id="L927">                roots = poly3.getRoots();</span>
-<span class="nc" id="L928">            } catch (NumericalException e3) {</span>
-                try {
-                    //if solution for poly3 fails, try with 4th polynomial
-<span class="nc" id="L931">                    Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,</span>
-                            polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
-<span class="nc" id="L933">                    roots = poly4.getRoots();</span>
-<span class="nc" id="L934">                } catch (NumericalException e4) {</span>
-<span class="nc" id="L935">                    Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,</span>
-                            polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
-<span class="nc" id="L937">                    roots = poly5.getRoots();</span>
-<span class="nc" id="L938">                }</span>
-<span class="fc" id="L939">            }</span>
-            
+<span class="fc" id="L915">            Complex[] roots = knownAspectRatioRoots(polyA, polyB, polyC, polyD,</span>
+                    polyE, polyF, polyG, polyH, polyI, polyJ, polyK, polyL, polyM,
+                    polyN, polyO, polyP, polyQ, polyR);
+
             //roots contain possible x values. We use only their real part
             
             //pick the best x, y values that produce a positive definite DIAC
             //matrix
-<span class="fc" id="L945">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
+<span class="fc" id="L923">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-<span class="fc" id="L947">            boolean valid = false;</span>
-<span class="fc bfc" id="L948" title="All 2 branches covered.">            if (roots != null) {</span>
-<span class="fc" id="L949">                double r = mFocalDistanceAspectRatio;</span>
-<span class="fc" id="L950">                double r2 = r*r;</span>
-<span class="fc bfc" id="L951" title="All 2 branches covered.">                for (Complex root : roots) {</span>
-<span class="fc" id="L952">                    double x = root.getReal();</span>
-<span class="fc" id="L953">                    double y = r2*x;</span>
+<span class="fc" id="L925">            boolean valid = false;</span>
+<span class="pc bpc" id="L926" title="1 of 2 branches missed.">            if (roots != null) {</span>
+<span class="fc" id="L927">                double r = mFocalDistanceAspectRatio;</span>
+<span class="fc" id="L928">                double r2 = r*r;</span>
+<span class="fc bfc" id="L929" title="All 2 branches covered.">                for (Complex root : roots) {</span>
+<span class="fc" id="L930">                    double x = root.getReal();</span>
+<span class="fc" id="L931">                    double y = r2*x;</span>
                     
                     //build DIAC matrix and check if it is positive definite
-<span class="pc bpc" id="L956" title="1 of 4 branches missed.">                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {</span>
-<span class="fc" id="L957">                        double horizontalFocalLength = Math.sqrt(x);</span>
-<span class="fc" id="L958">                        double verticalFocalLength = Math.sqrt(y);</span>
-                        try {
-<span class="fc" id="L960">                            valid = buildDiac(horizontalFocalLength, </span>
+<span class="pc bpc" id="L934" title="1 of 4 branches missed.">                    if (x &gt;= 0.0 &amp;&amp; y &gt;= 0.0) {</span>
+<span class="fc" id="L935">                        double horizontalFocalLength = Math.sqrt(x);</span>
+<span class="fc" id="L936">                        double verticalFocalLength = Math.sqrt(y);</span>
+<span class="fc" id="L937">                        valid = buildDiac(horizontalFocalLength,</span>
                                 verticalFocalLength, diac);
-<span class="nc" id="L962">                        } catch (AlgebraException e) {</span>
-<span class="nc" id="L963">                            valid = false;</span>
-<span class="fc" id="L964">                        }</span>
                     }
                     
-<span class="fc bfc" id="L967" title="All 2 branches covered.">                    if (valid) {</span>
-<span class="fc" id="L968">                        break;</span>
+<span class="fc bfc" id="L941" title="All 2 branches covered.">                    if (valid) {</span>
+<span class="fc" id="L942">                        break;</span>
                     }
                 }
-<span class="fc" id="L971">            } else {</span>
-<span class="fc" id="L972">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+<span class="fc" id="L945">            } else {</span>
+<span class="nc" id="L946">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc bfc" id="L975" title="All 2 branches covered.">            if (valid) {</span>
+<span class="fc bfc" id="L949" title="All 2 branches covered.">            if (valid) {</span>
                 //copy to result
-<span class="fc" id="L977">                result.setParameters(diac.getA(), diac.getB(), diac.getC(), </span>
-<span class="fc" id="L978">                        diac.getD(), diac.getE(), diac.getF());</span>
+<span class="fc" id="L951">                result.setParameters(diac.getA(), diac.getB(), diac.getC(), </span>
+<span class="fc" id="L952">                        diac.getD(), diac.getE(), diac.getF());</span>
             } else {
                 //no valid DIAC could be found
-<span class="fc" id="L981">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+<span class="fc" id="L955">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
             }
             
-<span class="fc" id="L984">        } catch (KruppaDualImageOfAbsoluteConicEstimatorException ex) {</span>
-<span class="fc" id="L985">            throw ex;</span>
-<span class="nc" id="L986">        } catch (Exception ex) {</span>
-<span class="nc" id="L987">            throw new KruppaDualImageOfAbsoluteConicEstimatorException(ex);</span>
-<span class="fc" id="L988">        }                </span>
-<span class="fc" id="L989">    }</span>
+<span class="fc" id="L958">        } catch (KruppaDualImageOfAbsoluteConicEstimatorException ex) {</span>
+<span class="fc" id="L959">            throw ex;</span>
+<span class="nc" id="L960">        } catch (Exception ex) {</span>
+<span class="nc" id="L961">            throw new KruppaDualImageOfAbsoluteConicEstimatorException(ex);</span>
+<span class="fc" id="L962">        }                </span>
+<span class="fc" id="L963">    }</span>
     
     /**
      * Another of Kruppa's equations expressed as a polynomial of degree 2 to 
@@ -1013,10 +987,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         //x^2*((-A*D - G*J) + r^4*(-B*E - H*K) + r^2*(-A*E - B*D - G*K - H*J)) + 
         //x*((-A*F - D*C - G*L - J*I) + r^2*(-B*F - E*C - H*L - K*I)) + 
         //(- F*C - L*I) = 0
-<span class="fc" id="L1016">        double r = mFocalDistanceAspectRatio;</span>
-<span class="fc" id="L1017">        double r2 = r*r;</span>
-<span class="fc" id="L1018">        double r4 = r2*r2;</span>
-<span class="fc" id="L1019">        return new Polynomial(-f*c -l*i,</span>
+<span class="fc" id="L990">        double r = mFocalDistanceAspectRatio;</span>
+<span class="fc" id="L991">        double r2 = r*r;</span>
+<span class="fc" id="L992">        double r4 = r2*r2;</span>
+<span class="fc" id="L993">        return new Polynomial(-f*c -l*i,</span>
                 (-a*f - d*c - g*l - j*i) + r2*(-b*f - e*c - h*l - k*i),
                 ((-a*d - g*j) + r4*(-b*e - h*k) + r2*(-a*e - b*d - g*k - h*j)));
     }
@@ -1047,10 +1021,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         //x^2*((G*M - P*D) + r^4*(H*N - Q*E) + r^2*(G*N + H*M - P*E - Q*D)) + 
         //x*((G*O + M*I - P*F - D*R) + r^2*(H*O + N*I - Q*F - E*R)) + 
         //(O*I - F*R) = 0
-<span class="nc" id="L1050">        double r1 = mFocalDistanceAspectRatio;</span>
-<span class="nc" id="L1051">        double r2 = r1*r1;</span>
-<span class="nc" id="L1052">        double r4 = r2*r2;</span>
-<span class="nc" id="L1053">        return new Polynomial(o*i - f*r,</span>
+<span class="nc" id="L1024">        double r1 = mFocalDistanceAspectRatio;</span>
+<span class="nc" id="L1025">        double r2 = r1*r1;</span>
+<span class="nc" id="L1026">        double r4 = r2*r2;</span>
+<span class="nc" id="L1027">        return new Polynomial(o*i - f*r,</span>
                 (g*o + m*i - p*f - d*r) + r2*(h*o + n*i - q*f - e*r),
                 (g*m - p*d) + r4*(h*n - q*e) + r2*(g*n + h*m - p*e - q*d));
     }
@@ -1080,13 +1054,110 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         //x^2*((P*J + A*M) + r^4*(Q*K + B*N) + r^2*(P*K + Q*J + A*N + B*M)) + 
         //x*((P*L + J*R + A*O + M*C) + r^2*(Q*L + K*R + B*O + N*C)) + 
         //(L*R + O*C) = 0
-<span class="nc" id="L1083">        double r1 = mFocalDistanceAspectRatio;</span>
-<span class="nc" id="L1084">        double r2 = r1*r1;</span>
-<span class="nc" id="L1085">        double r4 = r2*r2;</span>
-<span class="nc" id="L1086">        return new Polynomial(l*r + o*c,</span>
+<span class="nc" id="L1057">        double r1 = mFocalDistanceAspectRatio;</span>
+<span class="nc" id="L1058">        double r2 = r1*r1;</span>
+<span class="nc" id="L1059">        double r4 = r2*r2;</span>
+<span class="nc" id="L1060">        return new Polynomial(l*r + o*c,</span>
                 (p*l + j*r + a*o + m*c) + r2*(q*l + k*r + b*o + n*c),
                 (p*j + a*m) + r4*(q*k + b*n) + r2*(p*k + q*j + a*n + b*m));
     }
-    
+
+    /**
+     * Solves Kruppa's equations when aspect ratio is unknown
+     * @param polyA A parameter of Kruppa's polynomial equation.
+     * @param polyB B parameter of Kruppa's polynomial equation.
+     * @param polyC C parameter of Kruppa's polynomial equation.
+     * @param polyD D parameter of Kruppa's polynomial equation.
+     * @param polyE E parameter of Kruppa's polynomial equation.
+     * @param polyF F parameter of Kruppa's polynomial equation.
+     * @param polyG G parameter of Kruppa's polynomial equation.
+     * @param polyH H parameter of Kruppa's polynomial equation.
+     * @param polyI I parameter of Kruppa's polynomial equation.
+     * @param polyJ J parameter of Kruppa's polynomial equation.
+     * @param polyK K parameter of Kruppa's polynomial equation.
+     * @param polyL L parameter of Kruppa's polynomial equation.
+     * @param polyM M parameter of Kruppa's polynomial equation.
+     * @param polyN N parameter of Kruppa's polynomial equation.
+     * @param polyO O parameter of Kruppa's polynomial equation.
+     * @param polyP P parameter of Kruppa's polynomial equation.
+     * @param polyQ Q parameter of Kruppa's polynomial equation.
+     * @param polyR R parameter of Kruppa's polynomial equation.
+     * @param polyS S parameter of Kruppa's polynomial equation.
+     * @param polyT T parameter of Kruppa's polynomial equation.
+     * @param polyU U parameter of Kruppa's polynomial equation.
+     * @param polyV V parameter of Kruppa's polynomial equation.
+     * @param polyW W parameter of Kruppa's polynomial equation.
+     * @return roots solving Kruppa's equations.
+     * @throws NumericalException if there are numerical instabilities.
+     */
+    private Complex[] unknownAspectRatioRoots(double polyA, double polyB, double polyC,
+            double polyD, double polyE, double polyF, double polyG, double polyH,
+            double polyI, double polyJ, double polyK, double polyL, double polyM,
+            double polyN, double polyO, double polyP, double polyQ, double polyR,
+            double polyS, double polyT, double polyU, double polyV, double polyW)
+            throws NumericalException {
+        Complex[] roots;
+        try {
+<span class="fc" id="L1101">            Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,</span>
+                    polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
+<span class="fc" id="L1103">            roots = poly1.getRoots();</span>
+<span class="nc" id="L1104">        } catch (NumericalException ex1) {</span>
+            //if solution for poly1 fails, try with second polynomial
+<span class="nc" id="L1106">            Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,</span>
+                    polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
+<span class="nc" id="L1108">            roots = poly2.getRoots();</span>
+<span class="fc" id="L1109">        }</span>
+
+<span class="fc" id="L1111">        return roots;</span>
+    }
+
+    /**
+     * Solves Kruppa's equations when aspect ratio is known
+     * @param polyA A parameter of Kruppa's polynomial equation.
+     * @param polyB B parameter of Kruppa's polynomial equation.
+     * @param polyC C parameter of Kruppa's polynomial equation.
+     * @param polyD D parameter of Kruppa's polynomial equation.
+     * @param polyE E parameter of Kruppa's polynomial equation.
+     * @param polyF F parameter of Kruppa's polynomial equation.
+     * @param polyG G parameter of Kruppa's polynomial equation.
+     * @param polyH H parameter of Kruppa's polynomial equation.
+     * @param polyI I parameter of Kruppa's polynomial equation.
+     * @param polyJ J parameter of Kruppa's polynomial equation.
+     * @param polyK K parameter of Kruppa's polynomial equation.
+     * @param polyL L parameter of Kruppa's polynomial equation.
+     * @param polyM M parameter of Kruppa's polynomial equation.
+     * @param polyN N parameter of Kruppa's polynomial equation.
+     * @param polyO O parameter of Kruppa's polynomial equation.
+     * @param polyP P parameter of Kruppa's polynomial equation.
+     * @param polyQ Q parameter of Kruppa's polynomial equation.
+     * @param polyR R parameter of Kruppa's polynomial equation.
+     * @return roots solving Kruppa's equations.
+     * @throws NumericalException if there are numerical instabilities.
+     */
+    private Complex[] knownAspectRatioRoots(double polyA, double polyB, double polyC,
+            double polyD, double polyE, double polyF, double polyG, double polyH,
+            double polyI, double polyJ, double polyK, double polyL, double polyM,
+            double polyN, double polyO, double polyP, double polyQ, double polyR)
+            throws NumericalException {
+        Complex[] roots;
+        try {
+<span class="fc" id="L1144">            Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,</span>
+                    polyJ, polyK, polyL);
+<span class="fc" id="L1146">            roots = poly3.getRoots();</span>
+<span class="nc" id="L1147">        } catch (NumericalException e3) {</span>
+            try {
+                //if solution for poly3 fails, try with 4th polynomial
+<span class="nc" id="L1150">                Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,</span>
+                        polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
+<span class="nc" id="L1152">                roots = poly4.getRoots();</span>
+<span class="nc" id="L1153">            } catch (NumericalException e4) {</span>
+<span class="nc" id="L1154">                Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,</span>
+                        polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
+<span class="nc" id="L1156">                roots = poly5.getRoots();</span>
+<span class="nc" id="L1157">            }</span>
+<span class="fc" id="L1158">        }</span>
+
+<span class="fc" id="L1160">        return roots;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

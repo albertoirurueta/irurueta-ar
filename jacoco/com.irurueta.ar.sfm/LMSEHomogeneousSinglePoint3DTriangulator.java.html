@@ -65,7 +65,7 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public LMSEHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+            List&lt;PinholeCamera&gt; cameras) {
 <span class="fc" id="L69">        super(points2D, cameras);</span>
 <span class="fc" id="L70">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
 <span class="fc" id="L71">    }</span>
@@ -94,11 +94,10 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
      */
     public LMSEHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
             List&lt;PinholeCamera&gt; cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L99">        super(points2D, cameras, listener);</span>
-<span class="fc" id="L100">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
-<span class="fc" id="L101">    }</span>
+            SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L98">        super(points2D, cameras, listener);</span>
+<span class="fc" id="L99">        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L100">    }</span>
     
     /**
      * Indicates if an LMSE (Least Mean Square Error) solution is allowed if 
@@ -108,7 +107,7 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-<span class="fc" id="L111">        return mAllowLMSESolution;</span>
+<span class="fc" id="L110">        return mAllowLMSESolution;</span>
     }
     
     /**
@@ -120,11 +119,11 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
      * @throws LockedException if estimator is locked.
      */
     public void setLMSESolutionAllowed(boolean allowed) throws LockedException {
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L124">            throw new LockedException();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L123">            throw new LockedException();</span>
         }
-<span class="fc" id="L126">        mAllowLMSESolution = allowed;</span>
-<span class="fc" id="L127">    }        </span>
+<span class="fc" id="L125">        mAllowLMSESolution = allowed;</span>
+<span class="fc" id="L126">    }        </span>
 
     /**
      * Returns type of triangulator.
@@ -132,7 +131,7 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
      */
     @Override
     public Point3DTriangulatorType getType() {
-<span class="fc" id="L135">        return Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR;</span>
+<span class="fc" id="L134">        return Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR;</span>
     }
 
     /**
@@ -155,126 +154,126 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
             List&lt;PinholeCamera&gt; cameras, Point3D result) 
             throws Point3DTriangulationException {
         try {
-<span class="fc" id="L158">            mLocked = true;</span>
+<span class="fc" id="L157">            mLocked = true;</span>
             
-<span class="fc bfc" id="L160" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L161">                mListener.onTriangulateStart(this);</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L160">                mListener.onTriangulateStart(this);</span>
             }
             
-<span class="fc" id="L164">            int numViews = cameras.size();</span>
+<span class="fc" id="L163">            int numViews = cameras.size();</span>
             
             Matrix a;
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            if (mAllowLMSESolution) {</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">            if (mAllowLMSESolution) {</span>
                 //each view will add 2 equations to the linear system of 
                 //equations
-<span class="nc" id="L170">                a = new Matrix(2 * numViews, 2 * MIN_REQUIRED_VIEWS);</span>
+<span class="nc" id="L169">                a = new Matrix(2 * numViews, 2 * MIN_REQUIRED_VIEWS);</span>
             } else {
-<span class="fc" id="L172">                a = new Matrix(2 * MIN_REQUIRED_VIEWS, 2 * MIN_REQUIRED_VIEWS);</span>
+<span class="fc" id="L171">                a = new Matrix(2 * MIN_REQUIRED_VIEWS, 2 * MIN_REQUIRED_VIEWS);</span>
             }
             
             Point2D point;
             PinholeCamera camera;
-<span class="fc" id="L177">            Plane horizontalAxisPlane = new Plane();</span>
-<span class="fc" id="L178">            Plane verticalAxisPlane = new Plane();</span>
-<span class="fc" id="L179">            Plane principalPlane = new Plane();</span>
-<span class="fc" id="L180">            int row = 0;</span>
+<span class="fc" id="L176">            Plane horizontalAxisPlane = new Plane();</span>
+<span class="fc" id="L177">            Plane verticalAxisPlane = new Plane();</span>
+<span class="fc" id="L178">            Plane principalPlane = new Plane();</span>
+<span class="fc" id="L179">            int row = 0;</span>
             double rowNorm;
-<span class="fc bfc" id="L182" title="All 2 branches covered.">            for (int i = 0; i &lt; numViews; i++) {</span>
-<span class="fc" id="L183">                point = points2D.get(i);</span>
-<span class="fc" id="L184">                camera = cameras.get(i);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">            for (int i = 0; i &lt; numViews; i++) {</span>
+<span class="fc" id="L182">                point = points2D.get(i);</span>
+<span class="fc" id="L183">                camera = cameras.get(i);</span>
                 
                 //to increase accuracy
-<span class="fc" id="L187">                point.normalize();</span>
-<span class="fc" id="L188">                camera.normalize();</span>
-<span class="fc" id="L189">                camera.fixCameraSign();</span>
+<span class="fc" id="L186">                point.normalize();</span>
+<span class="fc" id="L187">                camera.normalize();</span>
+<span class="fc" id="L188">                camera.fixCameraSign();</span>
                 
-<span class="fc" id="L191">                double homX = point.getHomX();</span>
-<span class="fc" id="L192">                double homY = point.getHomY();</span>
-<span class="fc" id="L193">                double homW = point.getHomW();</span>
+<span class="fc" id="L190">                double homX = point.getHomX();</span>
+<span class="fc" id="L191">                double homY = point.getHomY();</span>
+<span class="fc" id="L192">                double homW = point.getHomW();</span>
                 
                 //pick rows of camera corresponding to different planes
                 //(we do not normalize planes, as it would introduce errors)
                 
                 //1st camera row (p1T)
-<span class="fc" id="L199">                camera.verticalAxisPlane(verticalAxisPlane);</span>
+<span class="fc" id="L198">                camera.verticalAxisPlane(verticalAxisPlane);</span>
                 //2nd camera row (p2T)
-<span class="fc" id="L201">                camera.horizontalAxisPlane(horizontalAxisPlane);</span>
+<span class="fc" id="L200">                camera.horizontalAxisPlane(horizontalAxisPlane);</span>
                 //3rd camera row (p3T)
-<span class="fc" id="L203">                camera.principalPlane(principalPlane);</span>
+<span class="fc" id="L202">                camera.principalPlane(principalPlane);</span>
                 
                 
                 //1st equation
-<span class="fc" id="L207">                a.setElementAt(row, 0, homX * principalPlane.getA() -</span>
-<span class="fc" id="L208">                        homW * verticalAxisPlane.getA());</span>
-<span class="fc" id="L209">                a.setElementAt(row, 1, homX * principalPlane.getB() -</span>
-<span class="fc" id="L210">                        homW * verticalAxisPlane.getB());</span>
-<span class="fc" id="L211">                a.setElementAt(row, 2, homX * principalPlane.getC() -</span>
-<span class="fc" id="L212">                        homW * verticalAxisPlane.getC());</span>
-<span class="fc" id="L213">                a.setElementAt(row, 3, homX * principalPlane.getD() - </span>
-<span class="fc" id="L214">                        homW * verticalAxisPlane.getD());</span>
+<span class="fc" id="L206">                a.setElementAt(row, 0, homX * principalPlane.getA() -</span>
+<span class="fc" id="L207">                        homW * verticalAxisPlane.getA());</span>
+<span class="fc" id="L208">                a.setElementAt(row, 1, homX * principalPlane.getB() -</span>
+<span class="fc" id="L209">                        homW * verticalAxisPlane.getB());</span>
+<span class="fc" id="L210">                a.setElementAt(row, 2, homX * principalPlane.getC() -</span>
+<span class="fc" id="L211">                        homW * verticalAxisPlane.getC());</span>
+<span class="fc" id="L212">                a.setElementAt(row, 3, homX * principalPlane.getD() - </span>
+<span class="fc" id="L213">                        homW * verticalAxisPlane.getD());</span>
                 
                 //normalize row (equation) to increase accuracy
-<span class="fc" id="L217">                rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
-<span class="fc" id="L218">                        Math.pow(a.getElementAt(row, 1), 2.0) +</span>
-<span class="fc" id="L219">                        Math.pow(a.getElementAt(row, 2), 2.0) +</span>
-<span class="fc" id="L220">                        Math.pow(a.getElementAt(row, 3), 2.0));</span>
+<span class="fc" id="L216">                rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
+<span class="fc" id="L217">                        Math.pow(a.getElementAt(row, 1), 2.0) +</span>
+<span class="fc" id="L218">                        Math.pow(a.getElementAt(row, 2), 2.0) +</span>
+<span class="fc" id="L219">                        Math.pow(a.getElementAt(row, 3), 2.0));</span>
                 
-<span class="fc" id="L222">                a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
-<span class="fc" id="L223">                a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
-<span class="fc" id="L224">                a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
-<span class="fc" id="L225">                a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);</span>
+<span class="fc" id="L221">                a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
+<span class="fc" id="L222">                a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
+<span class="fc" id="L223">                a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
+<span class="fc" id="L224">                a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);</span>
                 
                 //2nd equation
-<span class="fc" id="L228">                row++;</span>
+<span class="fc" id="L227">                row++;</span>
                 
-<span class="fc" id="L230">                a.setElementAt(row, 0, homY * principalPlane.getA() -</span>
-<span class="fc" id="L231">                        homW * horizontalAxisPlane.getA());</span>
-<span class="fc" id="L232">                a.setElementAt(row, 1, homY * principalPlane.getB() -</span>
-<span class="fc" id="L233">                        homW * horizontalAxisPlane.getB());</span>
-<span class="fc" id="L234">                a.setElementAt(row, 2, homY * principalPlane.getC() -</span>
-<span class="fc" id="L235">                        homW * horizontalAxisPlane.getC());</span>
-<span class="fc" id="L236">                a.setElementAt(row, 3, homY * principalPlane.getD() - </span>
-<span class="fc" id="L237">                        homW * horizontalAxisPlane.getD());                </span>
+<span class="fc" id="L229">                a.setElementAt(row, 0, homY * principalPlane.getA() -</span>
+<span class="fc" id="L230">                        homW * horizontalAxisPlane.getA());</span>
+<span class="fc" id="L231">                a.setElementAt(row, 1, homY * principalPlane.getB() -</span>
+<span class="fc" id="L232">                        homW * horizontalAxisPlane.getB());</span>
+<span class="fc" id="L233">                a.setElementAt(row, 2, homY * principalPlane.getC() -</span>
+<span class="fc" id="L234">                        homW * horizontalAxisPlane.getC());</span>
+<span class="fc" id="L235">                a.setElementAt(row, 3, homY * principalPlane.getD() - </span>
+<span class="fc" id="L236">                        homW * horizontalAxisPlane.getD());                </span>
                 
                 //normalize row (equation) to increase accuracy
-<span class="fc" id="L240">                rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
-<span class="fc" id="L241">                        Math.pow(a.getElementAt(row, 1), 2.0) +</span>
-<span class="fc" id="L242">                        Math.pow(a.getElementAt(row, 2), 2.0) +</span>
-<span class="fc" id="L243">                        Math.pow(a.getElementAt(row, 3), 2.0));</span>
+<span class="fc" id="L239">                rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
+<span class="fc" id="L240">                        Math.pow(a.getElementAt(row, 1), 2.0) +</span>
+<span class="fc" id="L241">                        Math.pow(a.getElementAt(row, 2), 2.0) +</span>
+<span class="fc" id="L242">                        Math.pow(a.getElementAt(row, 3), 2.0));</span>
                 
-<span class="fc" id="L245">                a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
-<span class="fc" id="L246">                a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
-<span class="fc" id="L247">                a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
-<span class="fc" id="L248">                a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);</span>
+<span class="fc" id="L244">                a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
+<span class="fc" id="L245">                a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
+<span class="fc" id="L246">                a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
+<span class="fc" id="L247">                a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);</span>
                 
-<span class="pc bpc" id="L250" title="1 of 4 branches missed.">                if(!mAllowLMSESolution &amp;&amp; i == MIN_REQUIRED_VIEWS) break;</span>
+<span class="pc bpc" id="L249" title="1 of 4 branches missed.">                if(!mAllowLMSESolution &amp;&amp; i == MIN_REQUIRED_VIEWS) break;</span>
             }
             
             //make SVD to find solution of A * M = 0
-<span class="fc" id="L254">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L255">            decomposer.decompose();</span>
+<span class="fc" id="L253">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L254">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L257" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //degenerate case. Unique solution (up to scale) cannot be found
-<span class="nc" id="L259">                throw new Point3DTriangulationException();</span>
+<span class="nc" id="L258">                throw new Point3DTriangulationException();</span>
             }
             
-<span class="fc" id="L262">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L261">            Matrix v = decomposer.getV();</span>
             
             //last column of v will contain homogeneous coordinates of 
             //triangulated point
-<span class="fc" id="L266">            result.setHomogeneousCoordinates(v.getElementAt(0, 3), </span>
-<span class="fc" id="L267">                    v.getElementAt(1, 3), v.getElementAt(2, 3), </span>
-<span class="fc" id="L268">                    v.getElementAt(3, 3));</span>
+<span class="fc" id="L265">            result.setHomogeneousCoordinates(v.getElementAt(0, 3), </span>
+<span class="fc" id="L266">                    v.getElementAt(1, 3), v.getElementAt(2, 3), </span>
+<span class="fc" id="L267">                    v.getElementAt(3, 3));</span>
             
-<span class="fc bfc" id="L270" title="All 2 branches covered.">            if (mListener != null) {</span>
-<span class="fc" id="L271">                mListener.onTriangulateEnd(this);</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">            if (mListener != null) {</span>
+<span class="fc" id="L270">                mListener.onTriangulateEnd(this);</span>
             }
-<span class="nc" id="L273">        } catch (AlgebraException | CameraException e) {</span>
-<span class="nc" id="L274">            throw new Point3DTriangulationException(e);</span>
+<span class="nc" id="L272">        } catch (AlgebraException | CameraException e) {</span>
+<span class="nc" id="L273">            throw new Point3DTriangulationException(e);</span>
         } finally {
-<span class="fc" id="L276">            mLocked = false;</span>
+<span class="fc" id="L275">            mLocked = false;</span>
         }
-<span class="fc" id="L278">    }    </span>
+<span class="fc" id="L277">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

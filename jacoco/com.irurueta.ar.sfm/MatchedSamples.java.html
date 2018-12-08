@@ -22,7 +22,7 @@ import java.util.BitSet;
  * Contains data relating matched 2D points and their reconstructions.
  */
 @SuppressWarnings(&quot;WeakerAccess&quot;)
-public class MatchedSamples implements Serializable {
+<span class="fc" id="L25">public class MatchedSamples implements Serializable {</span>
     
     /**
      * Default quality score value.
@@ -66,18 +66,13 @@ public class MatchedSamples implements Serializable {
     private BitSet mInliers;
     
     /**
-     * Constructor.
-     */
-<span class="fc" id="L71">    public MatchedSamples() { }</span>
-    
-    /**
      * Gets 2D matched samples on different views containing matched points.
      * Each of these points correspond to projections of the same 3D point into
      * different views.
      * @return 2D matched samples on different views.
      */
     public Sample2D[] getSamples() {
-<span class="fc" id="L80">        return mSamples;</span>
+<span class="fc" id="L75">        return mSamples;</span>
     }
     
     /**
@@ -87,15 +82,15 @@ public class MatchedSamples implements Serializable {
      * @param samples 2D matched samples on different views.
      */
     public void setSamples(Sample2D[] samples) {
-<span class="fc" id="L90">        mSamples = samples;</span>
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L85">        mSamples = samples;</span>
+<span class="fc" id="L86">    }</span>
     
     /**
      * Gets cameras associated to the views of each of the matched points.
      * @return cameras associated to the views of each of the matched points.
      */
     public EstimatedCamera[] getCameras() {
-<span class="fc" id="L98">        return mCameras;</span>
+<span class="fc" id="L93">        return mCameras;</span>
     }
     
     /**
@@ -104,15 +99,15 @@ public class MatchedSamples implements Serializable {
      * points.
      */
     public void setCameras(EstimatedCamera[] cameras) {
-<span class="fc" id="L107">        mCameras = cameras;</span>
-<span class="fc" id="L108">    }</span>
+<span class="fc" id="L102">        mCameras = cameras;</span>
+<span class="fc" id="L103">    }</span>
 
     /**
      * Gets id's of views where matched points belong to.
      * @return id's of view where matched points belong to.
      */
     public int[] getViewIds() {
-<span class="fc" id="L115">        return mViewIds;</span>
+<span class="fc" id="L110">        return mViewIds;</span>
     }
     
     /**
@@ -120,15 +115,15 @@ public class MatchedSamples implements Serializable {
      * @param viewIds id's of views where matched points belong to.
      */
     public void setViewIds(int[] viewIds) {
-<span class="fc" id="L123">        mViewIds = viewIds;</span>
-<span class="fc" id="L124">    }</span>
+<span class="fc" id="L118">        mViewIds = viewIds;</span>
+<span class="fc" id="L119">    }</span>
 
     /**
      * Gets 3D reconstructed point.
      * @return 3D reconstructed point.
      */
     public ReconstructedPoint3D getReconstructedPoint() {
-<span class="fc" id="L131">        return mReconstructedPoint;</span>
+<span class="fc" id="L126">        return mReconstructedPoint;</span>
     }
     
     /**
@@ -136,13 +131,13 @@ public class MatchedSamples implements Serializable {
      * @param reconstructedPoint 3D reconstructed point.
      */
     public void setReconstructedPoint(ReconstructedPoint3D reconstructedPoint) {
-<span class="fc" id="L139">        mReconstructedPoint = reconstructedPoint;</span>
-<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (mSamples != null) {</span>
-<span class="fc bfc" id="L141" title="All 2 branches covered.">            for (Sample2D sample : mSamples) {</span>
-<span class="fc" id="L142">                sample.setReconstructedPoint(reconstructedPoint);</span>
+<span class="fc" id="L134">        mReconstructedPoint = reconstructedPoint;</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (mSamples != null) {</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            for (Sample2D sample : mSamples) {</span>
+<span class="fc" id="L137">                sample.setReconstructedPoint(reconstructedPoint);</span>
             }
         }
-<span class="fc" id="L145">    }    </span>
+<span class="fc" id="L140">    }    </span>
     
     /**
      * Gets quality score of match. The larger the value, the better the 
@@ -152,7 +147,7 @@ public class MatchedSamples implements Serializable {
      * @return quality score of match.
      */
     public double getQualityScore() {
-<span class="fc" id="L155">        return mQualityScore;</span>
+<span class="fc" id="L150">        return mQualityScore;</span>
     }
     
     /**
@@ -163,8 +158,8 @@ public class MatchedSamples implements Serializable {
      * @param qualityScore quality score of match.
      */
     public void setQualityScore(double qualityScore) {
-<span class="fc" id="L166">        mQualityScore = qualityScore;</span>
-<span class="fc" id="L167">    }</span>
+<span class="fc" id="L161">        mQualityScore = qualityScore;</span>
+<span class="fc" id="L162">    }</span>
     
     /**
      * Indicates whether match between a pair of views has been considered an
@@ -176,7 +171,7 @@ public class MatchedSamples implements Serializable {
      * considered an inlier or not.
      */
     public BitSet getInliers() {
-<span class="fc" id="L179">        return mInliers;</span>
+<span class="fc" id="L174">        return mInliers;</span>
     }
     
     /**
@@ -189,7 +184,7 @@ public class MatchedSamples implements Serializable {
      * been considered an inlier or not.
      */
     public void setInliers(BitSet inliers) {
-<span class="fc" id="L192">        mInliers = inliers;</span>
-<span class="fc" id="L193">    }    </span>
+<span class="fc" id="L187">        mInliers = inliers;</span>
+<span class="fc" id="L188">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

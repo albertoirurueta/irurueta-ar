@@ -802,38 +802,46 @@ public class QuaternionPredictor {
             try {
 <span class="fc" id="L803">                jacobianQ2 = new Matrix(Quaternion.N_PARAMS, </span>
                         Quaternion.N_PARAMS);
-<span class="pc" id="L805">            } catch(WrongSizeException ignore) { }</span>
+<span class="nc" id="L805">            } catch(WrongSizeException ignore) {</span>
+                //never happens
+<span class="fc" id="L807">            }</span>
         }
-<span class="fc" id="L807">        Quaternion.product(dq, result, result, jacobianDQ, jacobianQ2);</span>
+<span class="fc" id="L809">        Quaternion.product(dq, result, result, jacobianDQ, jacobianQ2);</span>
         
-<span class="fc" id="L809">        Matrix jacobianQ3 = null;</span>
-<span class="pc bpc" id="L810" title="1 of 4 branches missed.">        if(jacobianDQ != null || jacobianW != null) {</span>
+<span class="fc" id="L811">        Matrix jacobianQ3 = null;</span>
+<span class="pc bpc" id="L812" title="1 of 4 branches missed.">        if(jacobianDQ != null || jacobianW != null) {</span>
             try {
-<span class="fc" id="L812">                jacobianQ3 = new Matrix(Quaternion.N_PARAMS,</span>
+<span class="fc" id="L814">                jacobianQ3 = new Matrix(Quaternion.N_PARAMS,</span>
                         Quaternion.N_PARAMS);
-<span class="pc" id="L814">            } catch(WrongSizeException ignore) { }</span>
+<span class="nc" id="L816">            } catch(WrongSizeException ignore) {</span>
+                //never happens
+<span class="fc" id="L818">            }</span>
         }
-<span class="fc" id="L816">        Quaternion.product(q, result, result, jacobianQ, jacobianQ3);</span>
+<span class="fc" id="L820">        Quaternion.product(q, result, result, jacobianQ, jacobianQ3);</span>
         
         //chain rule
-<span class="fc bfc" id="L819" title="All 2 branches covered.">        if (jacobianQ3 != null) {</span>
-<span class="pc bpc" id="L820" title="1 of 2 branches missed.">            if (jacobianDQ != null) {</span>
+<span class="fc bfc" id="L823" title="All 2 branches covered.">        if (jacobianQ3 != null) {</span>
+<span class="pc bpc" id="L824" title="1 of 2 branches missed.">            if (jacobianDQ != null) {</span>
                 try {
-<span class="fc" id="L822">                    Matrix tmp = jacobianQ3.multiplyAndReturnNew(jacobianDQ);</span>
-<span class="fc" id="L823">                    jacobianDQ.copyFrom(tmp);</span>
-<span class="pc" id="L824">                } catch (WrongSizeException ignore) { }</span>
+<span class="fc" id="L826">                    Matrix tmp = jacobianQ3.multiplyAndReturnNew(jacobianDQ);</span>
+<span class="fc" id="L827">                    jacobianDQ.copyFrom(tmp);</span>
+<span class="nc" id="L828">                } catch (WrongSizeException ignore) {</span>
+                    //never happens
+<span class="fc" id="L830">                }</span>
             }
 
             //chain rule (jacobianW is already multiplied by dt)
-<span class="pc bpc" id="L828" title="2 of 4 branches missed.">            if (jacobianW != null &amp;&amp; jacobianQ2 != null) {</span>
+<span class="pc bpc" id="L834" title="2 of 4 branches missed.">            if (jacobianW != null &amp;&amp; jacobianQ2 != null) {</span>
                 try {
-<span class="fc" id="L830">                    jacobianQ3.multiply(jacobianQ2);</span>
-<span class="fc" id="L831">                    jacobianQ3.multiply(jacobianW);</span>
-<span class="fc" id="L832">                    jacobianW.copyFrom(jacobianQ3);</span>
-<span class="pc" id="L833">                } catch (WrongSizeException ignore) { }</span>
+<span class="fc" id="L836">                    jacobianQ3.multiply(jacobianQ2);</span>
+<span class="fc" id="L837">                    jacobianQ3.multiply(jacobianW);</span>
+<span class="fc" id="L838">                    jacobianW.copyFrom(jacobianQ3);</span>
+<span class="nc" id="L839">                } catch (WrongSizeException ignore) {</span>
+                    //never happens
+<span class="fc" id="L841">                }</span>
             }
         }
-<span class="fc" id="L836">    }</span>
+<span class="fc" id="L844">    }</span>
     
     /**
      * Predicts the updated quaternion after a rotation in body frame expressed
@@ -854,12 +862,12 @@ public class QuaternionPredictor {
     public static void predictWithRotationAdjustment(Quaternion q,
             Quaternion dq, double[] w, double dt, Quaternion result, 
             Matrix jacobianQ, Matrix jacobianDQ, Matrix jacobianW) {
-<span class="fc bfc" id="L857" title="All 2 branches covered.">        if(w.length != ANGULAR_SPEED_COMPONENTS) {</span>
-<span class="fc" id="L858">            throw new IllegalArgumentException(&quot;w must have length 3&quot;);</span>
+<span class="fc bfc" id="L865" title="All 2 branches covered.">        if(w.length != ANGULAR_SPEED_COMPONENTS) {</span>
+<span class="fc" id="L866">            throw new IllegalArgumentException(&quot;w must have length 3&quot;);</span>
         }
-<span class="fc" id="L860">        predictWithRotationAdjustment(q, dq, w[0], w[1], w[2], dt, result, </span>
+<span class="fc" id="L868">        predictWithRotationAdjustment(q, dq, w[0], w[1], w[2], dt, result, </span>
                 jacobianQ, jacobianDQ, jacobianW);
-<span class="fc" id="L862">    }</span>
+<span class="fc" id="L870">    }</span>
     
     /**
      * Predicts the updated quaternion after a rotation in body frame expressed
@@ -876,9 +884,9 @@ public class QuaternionPredictor {
     public static void predictWithRotationAdjustment(Quaternion q,
             Quaternion dq, double wx, double wy, double wz, double dt,
             Quaternion result) {
-<span class="fc" id="L879">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, null, null,</span>
+<span class="fc" id="L887">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, null, null,</span>
                 null);
-<span class="fc" id="L881">    }</span>
+<span class="fc" id="L889">    }</span>
     
     /**
      * Predicts the updated quaternion after a rotation in body frame expressed
@@ -894,8 +902,8 @@ public class QuaternionPredictor {
      */
     public static void predictWithRotationAdjustment(Quaternion q,
             Quaternion dq, double[] w, double dt, Quaternion result) {
-<span class="fc" id="L897">        predictWithRotationAdjustment(q, dq, w, dt, result, null, null, null);</span>
-<span class="fc" id="L898">    }</span>
+<span class="fc" id="L905">        predictWithRotationAdjustment(q, dq, w, dt, result, null, null, null);</span>
+<span class="fc" id="L906">    }</span>
     
     /**
      * Predicts the updated quaternion after a rotation in body frame expressed
@@ -917,10 +925,10 @@ public class QuaternionPredictor {
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double wx, double wy, double wz, double dt, 
             Matrix jacobianQ, Matrix jacobianDQ, Matrix jacobianW) {
-<span class="fc" id="L920">        Quaternion result = new Quaternion();</span>
-<span class="fc" id="L921">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, jacobianQ, </span>
+<span class="fc" id="L928">        Quaternion result = new Quaternion();</span>
+<span class="fc" id="L929">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, jacobianQ, </span>
                 jacobianDQ, jacobianW);
-<span class="fc" id="L923">        return result;</span>
+<span class="fc" id="L931">        return result;</span>
     }
     
     /**
@@ -942,10 +950,10 @@ public class QuaternionPredictor {
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double[] w, double dt, Matrix jacobianQ, 
             Matrix jacobianDQ, Matrix jacobianW) {
-<span class="fc" id="L945">        Quaternion result = new Quaternion();</span>
-<span class="fc" id="L946">        predictWithRotationAdjustment(q, dq, w, dt, result, jacobianQ, </span>
+<span class="fc" id="L953">        Quaternion result = new Quaternion();</span>
+<span class="fc" id="L954">        predictWithRotationAdjustment(q, dq, w, dt, result, jacobianQ, </span>
                 jacobianDQ, jacobianW);
-<span class="fc" id="L948">        return result;</span>
+<span class="fc" id="L956">        return result;</span>
     }
     
     /**
@@ -962,9 +970,9 @@ public class QuaternionPredictor {
      */
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double wx, double wy, double wz, double dt) {
-<span class="fc" id="L965">        Quaternion result = new Quaternion();</span>
-<span class="fc" id="L966">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result);</span>
-<span class="fc" id="L967">        return result;</span>
+<span class="fc" id="L973">        Quaternion result = new Quaternion();</span>
+<span class="fc" id="L974">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result);</span>
+<span class="fc" id="L975">        return result;</span>
     }
     
     /**
@@ -981,9 +989,9 @@ public class QuaternionPredictor {
      */
     public static Quaternion predictWithRotationAdjustment(Quaternion q, 
             Quaternion dq, double[] w, double dt) {
-<span class="fc" id="L984">        Quaternion result = new Quaternion();</span>
-<span class="fc" id="L985">        predictWithRotationAdjustment(q, dq, w, dt, result);</span>
-<span class="fc" id="L986">        return result;</span>
+<span class="fc" id="L992">        Quaternion result = new Quaternion();</span>
+<span class="fc" id="L993">        predictWithRotationAdjustment(q, dq, w, dt, result);</span>
+<span class="fc" id="L994">        return result;</span>
     } 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

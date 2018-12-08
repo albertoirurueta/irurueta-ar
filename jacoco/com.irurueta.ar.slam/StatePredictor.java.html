@@ -120,173 +120,178 @@ public class StatePredictor {
      */
     public static void predict(double[] x,
             double[] u, double dt, double[] result, Matrix jacobianX, 
-            Matrix jacobianU) throws IllegalArgumentException {
+            Matrix jacobianU) {
 <span class="fc bfc" id="L124" title="All 2 branches covered.">        if(x.length != STATE_COMPONENTS) {</span>
-<span class="fc" id="L125">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
+            //x must have length 16
+<span class="fc" id="L126">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        if(u.length != CONTROL_COMPONENTS) {</span>
-<span class="fc" id="L128">            throw new IllegalArgumentException(&quot;u must have length 9&quot;);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if(u.length != CONTROL_COMPONENTS) {</span>
+            //u must have length 9
+<span class="fc" id="L130">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L130" title="All 2 branches covered.">        if(result.length != STATE_COMPONENTS) {</span>
-<span class="fc" id="L131">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if(result.length != STATE_COMPONENTS) {</span>
+            //result must have length 16
+<span class="fc" id="L134">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
-<span class="fc bfc" id="L134" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_COMPONENTS ||</span>
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_COMPONENTS)) {</span>
-<span class="fc" id="L136">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_COMPONENTS ||</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_COMPONENTS)) {</span>
+            //jacobian wrt x must be 16x16
+<span class="fc" id="L140">            throw new IllegalArgumentException();</span>
         }
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
-<span class="fc bfc" id="L139" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_COMPONENTS ||</span>
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_COMPONENTS)) {</span>
-<span class="fc" id="L141">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x9&quot;);</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_COMPONENTS ||</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_COMPONENTS)) {</span>
+            //jacobian wrt u must be 16x9
+<span class="fc" id="L146">            throw new IllegalArgumentException();</span>
         }
         
         //position
-<span class="fc" id="L145">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+<span class="fc" id="L150">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
         
         //orientation
-<span class="fc" id="L148">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+<span class="fc" id="L153">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
         
         //linear velocity
-<span class="fc" id="L151">        double vx = x[7];</span>
-<span class="fc" id="L152">        double vy = x[8];</span>
-<span class="fc" id="L153">        double vz = x[9];</span>
+<span class="fc" id="L156">        double vx = x[7];</span>
+<span class="fc" id="L157">        double vy = x[8];</span>
+<span class="fc" id="L158">        double vz = x[9];</span>
         
         //linear acceleration
-<span class="fc" id="L156">        double ax = x[10];</span>
-<span class="fc" id="L157">        double ay = x[11];</span>
-<span class="fc" id="L158">        double az = x[12];</span>
+<span class="fc" id="L161">        double ax = x[10];</span>
+<span class="fc" id="L162">        double ay = x[11];</span>
+<span class="fc" id="L163">        double az = x[12];</span>
         
         //angular velocity
-<span class="fc" id="L161">        double wx = x[13];</span>
-<span class="fc" id="L162">        double wy = x[14];</span>
-<span class="fc" id="L163">        double wz = x[15];</span>
+<span class="fc" id="L166">        double wx = x[13];</span>
+<span class="fc" id="L167">        double wy = x[14];</span>
+<span class="fc" id="L168">        double wz = x[15];</span>
         
         //linear velocity change (control)
-<span class="fc" id="L166">        double uvx = u[0];</span>
-<span class="fc" id="L167">        double uvy = u[1];</span>
-<span class="fc" id="L168">        double uvz = u[2];</span>
+<span class="fc" id="L171">        double uvx = u[0];</span>
+<span class="fc" id="L172">        double uvy = u[1];</span>
+<span class="fc" id="L173">        double uvz = u[2];</span>
         
         //linear acceleration change (control)
-<span class="fc" id="L171">        double uax = u[3];</span>
-<span class="fc" id="L172">        double uay = u[4];</span>
-<span class="fc" id="L173">        double uaz = u[5];</span>
+<span class="fc" id="L176">        double uax = u[3];</span>
+<span class="fc" id="L177">        double uay = u[4];</span>
+<span class="fc" id="L178">        double uaz = u[5];</span>
         
         //angular velocity change (control)
-<span class="fc" id="L176">        double uwx = u[6];</span>
-<span class="fc" id="L177">        double uwy = u[7];</span>
-<span class="fc" id="L178">        double uwz = u[8];</span>
+<span class="fc" id="L181">        double uwx = u[6];</span>
+<span class="fc" id="L182">        double uwy = u[7];</span>
+<span class="fc" id="L183">        double uwz = u[8];</span>
         
         try {
             //update velocity
-<span class="fc" id="L182">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
-<span class="fc" id="L183">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
-<span class="fc" id="L184">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
+<span class="fc" id="L187">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L188">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L189">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
                     vv, va);
             
             //update position
-<span class="fc" id="L188">            Matrix rr = null;</span>
-<span class="fc" id="L189">            Matrix rv = null;</span>
-<span class="fc" id="L190">            Matrix ra = null;</span>
-<span class="fc bfc" id="L191" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L192">                rr = new Matrix(</span>
+<span class="fc" id="L193">            Matrix rr = null;</span>
+<span class="fc" id="L194">            Matrix rv = null;</span>
+<span class="fc" id="L195">            Matrix ra = null;</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L197">                rr = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L195">                rv = new Matrix(</span>
+<span class="fc" id="L200">                rv = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         SPEED_COMPONENTS);
-<span class="fc" id="L198">                ra = new Matrix(</span>
+<span class="fc" id="L203">                ra = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         ACCELERATION_COMPONENTS);
             }
-<span class="fc" id="L202">            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</span>
+<span class="fc" id="L207">            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</span>
                     ra);
             
             //update orientation
-<span class="fc" id="L206">            Matrix qq = null;</span>
-<span class="fc" id="L207">            Matrix qw = null;</span>
-<span class="fc bfc" id="L208" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L209">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
-<span class="fc" id="L210">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+<span class="fc" id="L211">            Matrix qq = null;</span>
+<span class="fc" id="L212">            Matrix qw = null;</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L214">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L215">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
             }
-<span class="fc" id="L212">            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);</span>
+<span class="fc" id="L217">            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);</span>
             
             //set updated linear velocity
-<span class="fc" id="L215">            vx = v[0];</span>
-<span class="fc" id="L216">            vy = v[1];</span>
-<span class="fc" id="L217">            vz = v[2];</span>
+<span class="fc" id="L220">            vx = v[0];</span>
+<span class="fc" id="L221">            vy = v[1];</span>
+<span class="fc" id="L222">            vz = v[2];</span>
             
             //apply control signals
-<span class="fc" id="L220">            vx += uvx;</span>
-<span class="fc" id="L221">            vy += uvy;</span>
-<span class="fc" id="L222">            vz += uvz;</span>
+<span class="fc" id="L225">            vx += uvx;</span>
+<span class="fc" id="L226">            vy += uvy;</span>
+<span class="fc" id="L227">            vz += uvz;</span>
             
-<span class="fc" id="L224">            ax += uax;</span>
-<span class="fc" id="L225">            ay += uay;</span>
-<span class="fc" id="L226">            az += uaz;</span>
+<span class="fc" id="L229">            ax += uax;</span>
+<span class="fc" id="L230">            ay += uay;</span>
+<span class="fc" id="L231">            az += uaz;</span>
             
-<span class="fc" id="L228">            wx += uwx;</span>
-<span class="fc" id="L229">            wy += uwy;</span>
-<span class="fc" id="L230">            wz += uwz;</span>
+<span class="fc" id="L233">            wx += uwx;</span>
+<span class="fc" id="L234">            wy += uwy;</span>
+<span class="fc" id="L235">            wz += uwz;</span>
             
             //set new state
-<span class="fc" id="L233">            result[0] = r.getInhomX();</span>
-<span class="fc" id="L234">            result[1] = r.getInhomY();</span>
-<span class="fc" id="L235">            result[2] = r.getInhomZ();</span>
+<span class="fc" id="L238">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L239">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L240">            result[2] = r.getInhomZ();</span>
             
-<span class="fc" id="L237">            result[3] = q.getA();</span>
-<span class="fc" id="L238">            result[4] = q.getB();</span>
-<span class="fc" id="L239">            result[5] = q.getC();</span>
-<span class="fc" id="L240">            result[6] = q.getD();</span>
+<span class="fc" id="L242">            result[3] = q.getA();</span>
+<span class="fc" id="L243">            result[4] = q.getB();</span>
+<span class="fc" id="L244">            result[5] = q.getC();</span>
+<span class="fc" id="L245">            result[6] = q.getD();</span>
             
-<span class="fc" id="L242">            result[7] = vx;</span>
-<span class="fc" id="L243">            result[8] = vy;</span>
-<span class="fc" id="L244">            result[9] = vz;</span>
+<span class="fc" id="L247">            result[7] = vx;</span>
+<span class="fc" id="L248">            result[8] = vy;</span>
+<span class="fc" id="L249">            result[9] = vz;</span>
             
-<span class="fc" id="L246">            result[10] = ax;</span>
-<span class="fc" id="L247">            result[11] = ay;</span>
-<span class="fc" id="L248">            result[12] = az;</span>
+<span class="fc" id="L251">            result[10] = ax;</span>
+<span class="fc" id="L252">            result[11] = ay;</span>
+<span class="fc" id="L253">            result[12] = az;</span>
             
-<span class="fc" id="L250">            result[13] = wx;</span>
-<span class="fc" id="L251">            result[14] = wy;</span>
-<span class="fc" id="L252">            result[15] = wz;</span>
+<span class="fc" id="L255">            result[13] = wx;</span>
+<span class="fc" id="L256">            result[14] = wy;</span>
+<span class="fc" id="L257">            result[15] = wz;</span>
             
             //jacobians
-<span class="fc bfc" id="L255" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">            if (jacobianX != null) {</span>
                 //[Rr   0   Rv  Ra  0]
                 //[0    Qq  0   0   Qw]
                 //[0    0   Vv  Va  0]
                 //[0    0   0   eye 0]
                 //[0    0   0   0   eye]
-<span class="fc" id="L261">                jacobianX.initialize(0.0);</span>
-<span class="fc" id="L262">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
+<span class="fc" id="L266">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L267">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
                
-<span class="fc" id="L264">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
+<span class="fc" id="L269">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
                
-<span class="fc" id="L266">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
+<span class="fc" id="L271">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
                 
-<span class="fc" id="L268">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
+<span class="fc" id="L273">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
                 
-<span class="fc" id="L270">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
+<span class="fc" id="L275">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
                 
-<span class="fc" id="L272">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
+<span class="fc" id="L277">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
                 
-<span class="fc" id="L274">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
+<span class="fc" id="L279">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
                
-<span class="fc bfc" id="L276" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_COMPONENTS; i++) {</span>
-<span class="fc" id="L277">                    jacobianX.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_COMPONENTS; i++) {</span>
+<span class="fc" id="L282">                    jacobianX.setElementAt(i, i, 1.0);</span>
                 }               
             }
             
-<span class="fc bfc" id="L281" title="All 2 branches covered.">            if (jacobianU != null) {</span>
-<span class="fc" id="L282">                jacobianU.initialize(0.0);</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L287">                jacobianU.initialize(0.0);</span>
                 
-<span class="fc bfc" id="L284" title="All 2 branches covered.">                for(int i = 7, j = 0; i &lt; STATE_COMPONENTS; i++, j++) {</span>
-<span class="fc" id="L285">                    jacobianU.setElementAt(i, j, 1.0);</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">                for(int i = 7, j = 0; i &lt; STATE_COMPONENTS; i++, j++) {</span>
+<span class="fc" id="L290">                    jacobianU.setElementAt(i, j, 1.0);</span>
                 }
             }
-<span class="pc" id="L288">        }catch(WrongSizeException ignore) { /* never thrown */ }        </span>
-<span class="fc" id="L289">    }</span>
+<span class="pc" id="L293">        }catch(WrongSizeException ignore) { /* never thrown */ }        </span>
+<span class="fc" id="L294">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -312,8 +317,8 @@ public class StatePredictor {
      */
     public static void predict(double[] x, 
             double[] u, double dt, double[] result) {
-<span class="fc" id="L315">        predict(x, u, dt, result, null, null);</span>
-<span class="fc" id="L316">    }</span>
+<span class="fc" id="L320">        predict(x, u, dt, result, null, null);</span>
+<span class="fc" id="L321">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -340,10 +345,10 @@ public class StatePredictor {
      */
     public static double[] predict(double[] x,
             double[] u, double dt, Matrix jacobianX, Matrix jacobianU) {
-<span class="fc" id="L343">        double[] result = </span>
+<span class="fc" id="L348">        double[] result = </span>
                 new double[STATE_COMPONENTS];
-<span class="fc" id="L345">        predict(x, u, dt, result, jacobianX, jacobianU);</span>
-<span class="fc" id="L346">        return result;</span>
+<span class="fc" id="L350">        predict(x, u, dt, result, jacobianX, jacobianU);</span>
+<span class="fc" id="L351">        return result;</span>
     }
     
     /**
@@ -369,10 +374,10 @@ public class StatePredictor {
      */
     public static double[] predict(double[] x,
             double[] u, double dt) {
-<span class="fc" id="L372">        double[] result = </span>
+<span class="fc" id="L377">        double[] result = </span>
                 new double[STATE_COMPONENTS];
-<span class="fc" id="L374">        predict(x, u, dt, result);</span>
-<span class="fc" id="L375">        return result;</span>
+<span class="fc" id="L379">        predict(x, u, dt, result);</span>
+<span class="fc" id="L380">        return result;</span>
     }
     
     /**
@@ -404,179 +409,182 @@ public class StatePredictor {
     public static void predictWithPositionAdjustment(double[] x, 
             double[] u, double dt, double[] result, Matrix jacobianX, 
             Matrix jacobianU) {
-<span class="fc bfc" id="L407" title="All 2 branches covered.">        if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L408">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">        if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L413">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
         }
-<span class="fc bfc" id="L410" title="All 2 branches covered.">        if(u.length != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L411">            throw new IllegalArgumentException(&quot;u must have length 12&quot;);</span>
+<span class="fc bfc" id="L415" title="All 2 branches covered.">        if(u.length != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L416">            throw new IllegalArgumentException(&quot;u must have length 12&quot;);</span>
         }
-<span class="fc bfc" id="L413" title="All 2 branches covered.">        if(result.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L414">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
+<span class="fc bfc" id="L418" title="All 2 branches covered.">        if(result.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L419">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
         }
-<span class="fc bfc" id="L416" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
-<span class="fc bfc" id="L417" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||</span>
-<span class="pc bpc" id="L418" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {</span>
-<span class="fc" id="L419">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
+<span class="fc bfc" id="L421" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
+<span class="fc bfc" id="L422" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L424">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
         }
-<span class="fc bfc" id="L421" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
-<span class="fc bfc" id="L422" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||</span>
-<span class="pc bpc" id="L423" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {</span>
-<span class="fc" id="L424">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x12&quot;);</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L429">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x12&quot;);</span>
         }
         
         //position
-<span class="fc" id="L428">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+<span class="fc" id="L433">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
         
         //orientation
-<span class="fc" id="L431">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+<span class="fc" id="L436">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
         
         //linear velocity
-<span class="fc" id="L434">        double vx = x[7];</span>
-<span class="fc" id="L435">        double vy = x[8];</span>
-<span class="fc" id="L436">        double vz = x[9];</span>
+<span class="fc" id="L439">        double vx = x[7];</span>
+<span class="fc" id="L440">        double vy = x[8];</span>
+<span class="fc" id="L441">        double vz = x[9];</span>
         
         //linear acceleration
-<span class="fc" id="L439">        double ax = x[10];</span>
-<span class="fc" id="L440">        double ay = x[11];</span>
-<span class="fc" id="L441">        double az = x[12];</span>
+<span class="fc" id="L444">        double ax = x[10];</span>
+<span class="fc" id="L445">        double ay = x[11];</span>
+<span class="fc" id="L446">        double az = x[12];</span>
         
         //angular velocity
-<span class="fc" id="L444">        double wx = x[13];</span>
-<span class="fc" id="L445">        double wy = x[14];</span>
-<span class="fc" id="L446">        double wz = x[15];</span>
+<span class="fc" id="L449">        double wx = x[13];</span>
+<span class="fc" id="L450">        double wy = x[14];</span>
+<span class="fc" id="L451">        double wz = x[15];</span>
         
         //position change (control)
-<span class="fc" id="L449">        double drx = u[0];</span>
-<span class="fc" id="L450">        double dry = u[1];</span>
-<span class="fc" id="L451">        double drz = u[2];</span>
+<span class="fc" id="L454">        double drx = u[0];</span>
+<span class="fc" id="L455">        double dry = u[1];</span>
+<span class="fc" id="L456">        double drz = u[2];</span>
         
         //linear velocity change (control)
-<span class="fc" id="L454">        double uvx = u[3];</span>
-<span class="fc" id="L455">        double uvy = u[4];</span>
-<span class="fc" id="L456">        double uvz = u[5];</span>
+<span class="fc" id="L459">        double uvx = u[3];</span>
+<span class="fc" id="L460">        double uvy = u[4];</span>
+<span class="fc" id="L461">        double uvz = u[5];</span>
         
         //linear acceleration change (control)
-<span class="fc" id="L459">        double uax = u[6];</span>
-<span class="fc" id="L460">        double uay = u[7];</span>
-<span class="fc" id="L461">        double uaz = u[8];</span>
+<span class="fc" id="L464">        double uax = u[6];</span>
+<span class="fc" id="L465">        double uay = u[7];</span>
+<span class="fc" id="L466">        double uaz = u[8];</span>
         
         //angular velocity change (control)
-<span class="fc" id="L464">        double uwx = u[9];</span>
-<span class="fc" id="L465">        double uwy = u[10];</span>
-<span class="fc" id="L466">        double uwz = u[11];</span>
+<span class="fc" id="L469">        double uwx = u[9];</span>
+<span class="fc" id="L470">        double uwy = u[10];</span>
+<span class="fc" id="L471">        double uwz = u[11];</span>
         
         try {
             //update velocity
-<span class="fc" id="L470">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
-<span class="fc" id="L471">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
-<span class="fc" id="L472">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
+<span class="fc" id="L475">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L476">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L477">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
                     vv, va);
             
             //update position
-<span class="fc" id="L476">            Matrix rr = null, rv = null, ra = null;</span>
-<span class="fc bfc" id="L477" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L478">                rr = new Matrix(</span>
+<span class="fc" id="L481">            Matrix rr = null;</span>
+<span class="fc" id="L482">            Matrix rv = null;</span>
+<span class="fc" id="L483">            Matrix ra = null;</span>
+<span class="fc bfc" id="L484" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L485">                rr = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L481">                rv = new Matrix(</span>
+<span class="fc" id="L488">                rv = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         SPEED_COMPONENTS);
-<span class="fc" id="L484">                ra = new Matrix(</span>
+<span class="fc" id="L491">                ra = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         ACCELERATION_COMPONENTS);
             }
-<span class="fc" id="L488">            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, </span>
+<span class="fc" id="L495">            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, </span>
                     vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
             
             //update orientation
-<span class="fc" id="L492">            Matrix qq = null, qw = null;</span>
-<span class="fc bfc" id="L493" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L494">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
-<span class="fc" id="L495">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+<span class="fc" id="L499">            Matrix qq = null;</span>
+<span class="fc" id="L500">            Matrix qw = null;</span>
+<span class="fc bfc" id="L501" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L502">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L503">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
             }
-<span class="fc" id="L497">            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);</span>
+<span class="fc" id="L505">            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);</span>
             
             //set updated linear velocity
-<span class="fc" id="L500">            vx = v[0];</span>
-<span class="fc" id="L501">            vy = v[1];</span>
-<span class="fc" id="L502">            vz = v[2];</span>
+<span class="fc" id="L508">            vx = v[0];</span>
+<span class="fc" id="L509">            vy = v[1];</span>
+<span class="fc" id="L510">            vz = v[2];</span>
             
             //apply control signals
-<span class="fc" id="L505">            vx += uvx;</span>
-<span class="fc" id="L506">            vy += uvy;</span>
-<span class="fc" id="L507">            vz += uvz;</span>
+<span class="fc" id="L513">            vx += uvx;</span>
+<span class="fc" id="L514">            vy += uvy;</span>
+<span class="fc" id="L515">            vz += uvz;</span>
             
-<span class="fc" id="L509">            ax += uax;</span>
-<span class="fc" id="L510">            ay += uay;</span>
-<span class="fc" id="L511">            az += uaz;</span>
+<span class="fc" id="L517">            ax += uax;</span>
+<span class="fc" id="L518">            ay += uay;</span>
+<span class="fc" id="L519">            az += uaz;</span>
             
-<span class="fc" id="L513">            wx += uwx;</span>
-<span class="fc" id="L514">            wy += uwy;</span>
-<span class="fc" id="L515">            wz += uwz;</span>
+<span class="fc" id="L521">            wx += uwx;</span>
+<span class="fc" id="L522">            wy += uwy;</span>
+<span class="fc" id="L523">            wz += uwz;</span>
             
             //set new state
-<span class="fc" id="L518">            result[0] = r.getInhomX();</span>
-<span class="fc" id="L519">            result[1] = r.getInhomY();</span>
-<span class="fc" id="L520">            result[2] = r.getInhomZ();</span>
+<span class="fc" id="L526">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L527">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L528">            result[2] = r.getInhomZ();</span>
             
-<span class="fc" id="L522">            result[3] = q.getA();</span>
-<span class="fc" id="L523">            result[4] = q.getB();</span>
-<span class="fc" id="L524">            result[5] = q.getC();</span>
-<span class="fc" id="L525">            result[6] = q.getD();</span>
+<span class="fc" id="L530">            result[3] = q.getA();</span>
+<span class="fc" id="L531">            result[4] = q.getB();</span>
+<span class="fc" id="L532">            result[5] = q.getC();</span>
+<span class="fc" id="L533">            result[6] = q.getD();</span>
             
-<span class="fc" id="L527">            result[7] = vx;</span>
-<span class="fc" id="L528">            result[8] = vy;</span>
-<span class="fc" id="L529">            result[9] = vz;</span>
+<span class="fc" id="L535">            result[7] = vx;</span>
+<span class="fc" id="L536">            result[8] = vy;</span>
+<span class="fc" id="L537">            result[9] = vz;</span>
             
-<span class="fc" id="L531">            result[10] = ax;</span>
-<span class="fc" id="L532">            result[11] = ay;</span>
-<span class="fc" id="L533">            result[12] = az;</span>
+<span class="fc" id="L539">            result[10] = ax;</span>
+<span class="fc" id="L540">            result[11] = ay;</span>
+<span class="fc" id="L541">            result[12] = az;</span>
             
-<span class="fc" id="L535">            result[13] = wx;</span>
-<span class="fc" id="L536">            result[14] = wy;</span>
-<span class="fc" id="L537">            result[15] = wz;</span>
+<span class="fc" id="L543">            result[13] = wx;</span>
+<span class="fc" id="L544">            result[14] = wy;</span>
+<span class="fc" id="L545">            result[15] = wz;</span>
             
             //jacobians
-<span class="fc bfc" id="L540" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc bfc" id="L548" title="All 2 branches covered.">            if (jacobianX != null) {</span>
                 //[Rr   0   Rv  Ra  0]
                 //[0    Qq  0   0   Qw]
                 //[0    0   Vv  Va  0]
                 //[0    0   0   eye 0]
                 //[0    0   0   0   eye]
-<span class="fc" id="L546">                jacobianX.initialize(0.0);</span>
-<span class="fc" id="L547">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
+<span class="fc" id="L554">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L555">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
                
-<span class="fc" id="L549">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
+<span class="fc" id="L557">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
                
-<span class="fc" id="L551">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
+<span class="fc" id="L559">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
                 
-<span class="fc" id="L553">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
+<span class="fc" id="L561">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
                 
-<span class="fc" id="L555">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
+<span class="fc" id="L563">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
                 
-<span class="fc" id="L557">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
+<span class="fc" id="L565">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
                 
-<span class="fc" id="L559">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
+<span class="fc" id="L567">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
                
-<span class="fc bfc" id="L561" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {</span>
-<span class="fc" id="L562">                    jacobianX.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L569" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L570">                    jacobianX.setElementAt(i, i, 1.0);</span>
                 }               
             }
             
-<span class="fc bfc" id="L566" title="All 2 branches covered.">            if (jacobianU != null) {</span>
-<span class="fc" id="L567">                jacobianU.initialize(0.0);</span>
+<span class="fc bfc" id="L574" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L575">                jacobianU.initialize(0.0);</span>
                 
                 //variation of position
-<span class="fc bfc" id="L570" title="All 2 branches covered.">                for(int i = 0; i &lt; Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {</span>
-<span class="fc" id="L571">                    jacobianU.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L578" title="All 2 branches covered.">                for(int i = 0; i &lt; Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {</span>
+<span class="fc" id="L579">                    jacobianU.setElementAt(i, i, 1.0);</span>
                 }
                 //variation of linear speed and acceleration, and angular speed
-<span class="fc bfc" id="L574" title="All 2 branches covered.">                for(int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i &lt; STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {</span>
-<span class="fc" id="L575">                    jacobianU.setElementAt(i, j, 1.0);</span>
+<span class="fc bfc" id="L582" title="All 2 branches covered.">                for(int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i &lt; STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {</span>
+<span class="fc" id="L583">                    jacobianU.setElementAt(i, j, 1.0);</span>
                 }
             }
-<span class="pc" id="L578">        }catch(WrongSizeException ignore) { /* never thrown */ }        </span>
-<span class="fc" id="L579">    }</span>
+<span class="pc" id="L586">        }catch(WrongSizeException ignore) { /* never thrown */ }        </span>
+<span class="fc" id="L587">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -604,8 +612,8 @@ public class StatePredictor {
      */
     public static void predictWithPositionAdjustment(double[] x, 
             double[] u, double dt, double[] result) {
-<span class="fc" id="L607">        predictWithPositionAdjustment(x, u, dt, result, null, null);</span>
-<span class="fc" id="L608">    }</span>
+<span class="fc" id="L615">        predictWithPositionAdjustment(x, u, dt, result, null, null);</span>
+<span class="fc" id="L616">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -635,9 +643,9 @@ public class StatePredictor {
     public static double[] predictWithPositionAdjustment(double[] x,
                 double[] u, double dt, Matrix jacobianX, 
                 Matrix jacobianU) {
-<span class="fc" id="L638">        double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];</span>
-<span class="fc" id="L639">        predictWithPositionAdjustment(x, u, dt, result, jacobianX, jacobianU);</span>
-<span class="fc" id="L640">        return result;</span>
+<span class="fc" id="L646">        double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L647">        predictWithPositionAdjustment(x, u, dt, result, jacobianX, jacobianU);</span>
+<span class="fc" id="L648">        return result;</span>
     }
         
     /**
@@ -665,9 +673,9 @@ public class StatePredictor {
      */
     public static double[] predictWithPositionAdjustment(double[] x,
                 double[] u, double dt) {
-<span class="fc" id="L668">        double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];</span>
-<span class="fc" id="L669">        predictWithPositionAdjustment(x, u, dt, result);</span>
-<span class="fc" id="L670">        return result;            </span>
+<span class="fc" id="L676">        double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L677">        predictWithPositionAdjustment(x, u, dt, result);</span>
+<span class="fc" id="L678">        return result;            </span>
     } 
     
     /**
@@ -699,185 +707,185 @@ public class StatePredictor {
     public static void predictWithRotationAdjustment(double[] x, 
             double[] u, double dt, double[] result, Matrix jacobianX, 
             Matrix jacobianU) {
-<span class="fc bfc" id="L702" title="All 2 branches covered.">        if(x.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L703">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
+<span class="fc bfc" id="L710" title="All 2 branches covered.">        if(x.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L711">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
         }
-<span class="fc bfc" id="L705" title="All 2 branches covered.">        if(u.length != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L706">            throw new IllegalArgumentException(&quot;u must have length 13&quot;);</span>
+<span class="fc bfc" id="L713" title="All 2 branches covered.">        if(u.length != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L714">            throw new IllegalArgumentException(&quot;u must have length 13&quot;);</span>
         }
-<span class="fc bfc" id="L708" title="All 2 branches covered.">        if(result.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L709">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
+<span class="fc bfc" id="L716" title="All 2 branches covered.">        if(result.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L717">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
         }
-<span class="fc bfc" id="L711" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
-<span class="fc bfc" id="L712" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
-<span class="pc bpc" id="L713" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
-<span class="fc" id="L714">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
+<span class="fc bfc" id="L719" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
+<span class="fc bfc" id="L720" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L721" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L722">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
         }
-<span class="fc bfc" id="L716" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
-<span class="fc bfc" id="L717" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
-<span class="pc bpc" id="L718" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
-<span class="fc" id="L719">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);</span>
+<span class="fc bfc" id="L724" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
+<span class="fc bfc" id="L725" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L726" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L727">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);</span>
         }
         
         //position
-<span class="fc" id="L723">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+<span class="fc" id="L731">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
         
         //orientation
-<span class="fc" id="L726">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+<span class="fc" id="L734">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
         
         //linear velocity
-<span class="fc" id="L729">        double vx = x[7];</span>
-<span class="fc" id="L730">        double vy = x[8];</span>
-<span class="fc" id="L731">        double vz = x[9];</span>
+<span class="fc" id="L737">        double vx = x[7];</span>
+<span class="fc" id="L738">        double vy = x[8];</span>
+<span class="fc" id="L739">        double vz = x[9];</span>
         
         //linear accelertion
-<span class="fc" id="L734">        double ax = x[10];</span>
-<span class="fc" id="L735">        double ay = x[11];</span>
-<span class="fc" id="L736">        double az = x[12];</span>
+<span class="fc" id="L742">        double ax = x[10];</span>
+<span class="fc" id="L743">        double ay = x[11];</span>
+<span class="fc" id="L744">        double az = x[12];</span>
         
         //angular velocity
-<span class="fc" id="L739">        double wx = x[13];</span>
-<span class="fc" id="L740">        double wy = x[14];</span>
-<span class="fc" id="L741">        double wz = x[15];</span>
+<span class="fc" id="L747">        double wx = x[13];</span>
+<span class="fc" id="L748">        double wy = x[14];</span>
+<span class="fc" id="L749">        double wz = x[15];</span>
         
         //rotation change (control)
-<span class="fc" id="L744">        Quaternion dq = new Quaternion(u[0], u[1], u[2], u[3]);        </span>
+<span class="fc" id="L752">        Quaternion dq = new Quaternion(u[0], u[1], u[2], u[3]);        </span>
         
         //linear velocity change (control)
-<span class="fc" id="L747">        double uvx = u[4];</span>
-<span class="fc" id="L748">        double uvy = u[5];</span>
-<span class="fc" id="L749">        double uvz = u[6];</span>
+<span class="fc" id="L755">        double uvx = u[4];</span>
+<span class="fc" id="L756">        double uvy = u[5];</span>
+<span class="fc" id="L757">        double uvz = u[6];</span>
         
         //linear acceleration change (control)
-<span class="fc" id="L752">        double uax = u[7];</span>
-<span class="fc" id="L753">        double uay = u[8];</span>
-<span class="fc" id="L754">        double uaz = u[9];</span>
+<span class="fc" id="L760">        double uax = u[7];</span>
+<span class="fc" id="L761">        double uay = u[8];</span>
+<span class="fc" id="L762">        double uaz = u[9];</span>
         
         //angular velocity change (control)
-<span class="fc" id="L757">        double uwx = u[10];</span>
-<span class="fc" id="L758">        double uwy = u[11];</span>
-<span class="fc" id="L759">        double uwz = u[12];</span>
+<span class="fc" id="L765">        double uwx = u[10];</span>
+<span class="fc" id="L766">        double uwy = u[11];</span>
+<span class="fc" id="L767">        double uwz = u[12];</span>
         
         try {
             //update velocity
-<span class="fc" id="L763">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
-<span class="fc" id="L764">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
-<span class="fc" id="L765">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
+<span class="fc" id="L771">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L772">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L773">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
                     vv, va);
             
             //update position
-<span class="fc" id="L769">            Matrix rr = null;</span>
-<span class="fc" id="L770">            Matrix rv = null;</span>
-<span class="fc" id="L771">            Matrix ra = null;</span>
-<span class="fc bfc" id="L772" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L773">                rr = new Matrix(</span>
+<span class="fc" id="L777">            Matrix rr = null;</span>
+<span class="fc" id="L778">            Matrix rv = null;</span>
+<span class="fc" id="L779">            Matrix ra = null;</span>
+<span class="fc bfc" id="L780" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L781">                rr = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L776">                rv = new Matrix(</span>
+<span class="fc" id="L784">                rv = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         SPEED_COMPONENTS);
-<span class="fc" id="L779">                ra = new Matrix(</span>
+<span class="fc" id="L787">                ra = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         ACCELERATION_COMPONENTS);
             }
-<span class="fc" id="L783">            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</span>
+<span class="fc" id="L791">            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</span>
                     ra);
             
             //update orientation
-<span class="fc" id="L787">            Matrix qq = null;</span>
-<span class="fc" id="L788">            Matrix qdq = null;</span>
-<span class="fc" id="L789">            Matrix qw = null;</span>
-<span class="fc bfc" id="L790" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L791">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
-<span class="fc" id="L792">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+<span class="fc" id="L795">            Matrix qq = null;</span>
+<span class="fc" id="L796">            Matrix qdq = null;</span>
+<span class="fc" id="L797">            Matrix qw = null;</span>
+<span class="fc bfc" id="L798" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L799">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L800">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
             }
-<span class="fc bfc" id="L794" title="All 2 branches covered.">            if(jacobianU != null) {</span>
-<span class="fc" id="L795">                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc bfc" id="L802" title="All 2 branches covered.">            if(jacobianU != null) {</span>
+<span class="fc" id="L803">                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
             }
-<span class="fc" id="L797">            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, </span>
+<span class="fc" id="L805">            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, </span>
                     wx, wy, wz, dt, qq, qdq, qw);
 
             
             //set updated linear velocity
-<span class="fc" id="L802">            vx = v[0];</span>
-<span class="fc" id="L803">            vy = v[1];</span>
-<span class="fc" id="L804">            vz = v[2];</span>
+<span class="fc" id="L810">            vx = v[0];</span>
+<span class="fc" id="L811">            vy = v[1];</span>
+<span class="fc" id="L812">            vz = v[2];</span>
             
             //apply control signals
-<span class="fc" id="L807">            vx += uvx;</span>
-<span class="fc" id="L808">            vy += uvy;</span>
-<span class="fc" id="L809">            vz += uvz;</span>
+<span class="fc" id="L815">            vx += uvx;</span>
+<span class="fc" id="L816">            vy += uvy;</span>
+<span class="fc" id="L817">            vz += uvz;</span>
             
-<span class="fc" id="L811">            ax += uax;</span>
-<span class="fc" id="L812">            ay += uay;</span>
-<span class="fc" id="L813">            az += uaz;</span>
+<span class="fc" id="L819">            ax += uax;</span>
+<span class="fc" id="L820">            ay += uay;</span>
+<span class="fc" id="L821">            az += uaz;</span>
             
-<span class="fc" id="L815">            wx += uwx;</span>
-<span class="fc" id="L816">            wy += uwy;</span>
-<span class="fc" id="L817">            wz += uwz;</span>
+<span class="fc" id="L823">            wx += uwx;</span>
+<span class="fc" id="L824">            wy += uwy;</span>
+<span class="fc" id="L825">            wz += uwz;</span>
             
             //set new state
-<span class="fc" id="L820">            result[0] = r.getInhomX();</span>
-<span class="fc" id="L821">            result[1] = r.getInhomY();</span>
-<span class="fc" id="L822">            result[2] = r.getInhomZ();</span>
+<span class="fc" id="L828">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L829">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L830">            result[2] = r.getInhomZ();</span>
             
-<span class="fc" id="L824">            result[3] = q.getA();</span>
-<span class="fc" id="L825">            result[4] = q.getB();</span>
-<span class="fc" id="L826">            result[5] = q.getC();</span>
-<span class="fc" id="L827">            result[6] = q.getD();</span>
+<span class="fc" id="L832">            result[3] = q.getA();</span>
+<span class="fc" id="L833">            result[4] = q.getB();</span>
+<span class="fc" id="L834">            result[5] = q.getC();</span>
+<span class="fc" id="L835">            result[6] = q.getD();</span>
             
-<span class="fc" id="L829">            result[7] = vx;</span>
-<span class="fc" id="L830">            result[8] = vy;</span>
-<span class="fc" id="L831">            result[9] = vz;</span>
+<span class="fc" id="L837">            result[7] = vx;</span>
+<span class="fc" id="L838">            result[8] = vy;</span>
+<span class="fc" id="L839">            result[9] = vz;</span>
             
-<span class="fc" id="L833">            result[10] = ax;</span>
-<span class="fc" id="L834">            result[11] = ay;</span>
-<span class="fc" id="L835">            result[12] = az;</span>
+<span class="fc" id="L841">            result[10] = ax;</span>
+<span class="fc" id="L842">            result[11] = ay;</span>
+<span class="fc" id="L843">            result[12] = az;</span>
             
-<span class="fc" id="L837">            result[13] = wx;</span>
-<span class="fc" id="L838">            result[14] = wy;</span>
-<span class="fc" id="L839">            result[15] = wz;</span>
+<span class="fc" id="L845">            result[13] = wx;</span>
+<span class="fc" id="L846">            result[14] = wy;</span>
+<span class="fc" id="L847">            result[15] = wz;</span>
             
             //jacobians
-<span class="fc bfc" id="L842" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc bfc" id="L850" title="All 2 branches covered.">            if (jacobianX != null) {</span>
                 //[Rr   0   Rv  Ra  0]
                 //[0    Qq  0   0   Qw]
                 //[0    0   Vv  Va  0]
                 //[0    0   0   eye 0]
                 //[0    0   0   0   eye]
-<span class="fc" id="L848">                jacobianX.initialize(0.0);</span>
-<span class="fc" id="L849">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
+<span class="fc" id="L856">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L857">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
                
-<span class="fc" id="L851">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
+<span class="fc" id="L859">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
                
-<span class="fc" id="L853">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
+<span class="fc" id="L861">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
                 
-<span class="fc" id="L855">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
+<span class="fc" id="L863">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
                 
-<span class="fc" id="L857">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
+<span class="fc" id="L865">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
                 
-<span class="fc" id="L859">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
+<span class="fc" id="L867">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
                 
-<span class="fc" id="L861">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
+<span class="fc" id="L869">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
                
-<span class="fc bfc" id="L863" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
-<span class="fc" id="L864">                    jacobianX.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L871" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L872">                    jacobianX.setElementAt(i, i, 1.0);</span>
                 }               
             }
             
-<span class="fc bfc" id="L868" title="All 2 branches covered.">            if (jacobianU != null) {</span>
-<span class="fc" id="L869">                jacobianU.initialize(0.0);</span>
+<span class="fc bfc" id="L876" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L877">                jacobianU.initialize(0.0);</span>
                 
                 //variation of rotation
-<span class="fc" id="L872">                jacobianU.setSubmatrix(3, 0, 6, 3, qdq);</span>
+<span class="fc" id="L880">                jacobianU.setSubmatrix(3, 0, 6, 3, qdq);</span>
 
                 //variation of linear speed and acceleration, and angular speed
-<span class="fc bfc" id="L875" title="All 2 branches covered.">                for(int i = 7, j = Quaternion.N_PARAMS; i &lt; STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {</span>
-<span class="fc" id="L876">                    jacobianU.setElementAt(i, j, 1.0);</span>
+<span class="fc bfc" id="L883" title="All 2 branches covered.">                for(int i = 7, j = Quaternion.N_PARAMS; i &lt; STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {</span>
+<span class="fc" id="L884">                    jacobianU.setElementAt(i, j, 1.0);</span>
                 }
             }
-<span class="pc" id="L879">        }catch(WrongSizeException ignore) { /* never thrown */ }                </span>
-<span class="fc" id="L880">    }</span>
+<span class="pc" id="L887">        }catch(WrongSizeException ignore) { /* never thrown */ }                </span>
+<span class="fc" id="L888">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -905,8 +913,8 @@ public class StatePredictor {
      */
     public static void predictWithRotationAdjustment(double[] x, 
             double[] u, double dt, double[] result) {
-<span class="fc" id="L908">        predictWithRotationAdjustment(x, u, dt, result, null, null);</span>
-<span class="fc" id="L909">    }</span>
+<span class="fc" id="L916">        predictWithRotationAdjustment(x, u, dt, result, null, null);</span>
+<span class="fc" id="L917">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -935,9 +943,9 @@ public class StatePredictor {
      */
     public static double[] predictWithRotationAdjustment(double[] x, 
             double[] u, double dt, Matrix jacobianX, Matrix jacobianU) {
-<span class="fc" id="L938">        double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];</span>
-<span class="fc" id="L939">        predictWithRotationAdjustment(x, u, dt, result, jacobianX, jacobianU);</span>
-<span class="fc" id="L940">        return result;</span>
+<span class="fc" id="L946">        double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L947">        predictWithRotationAdjustment(x, u, dt, result, jacobianX, jacobianU);</span>
+<span class="fc" id="L948">        return result;</span>
     }
     
     /**
@@ -965,9 +973,9 @@ public class StatePredictor {
      */
     public static double[] predictWithRotationAdjustment(double[] x, 
             double[] u, double dt) {
-<span class="fc" id="L968">        double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];</span>
-<span class="fc" id="L969">        predictWithRotationAdjustment(x, u, dt, result);</span>
-<span class="fc" id="L970">        return result;</span>
+<span class="fc" id="L976">        double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L977">        predictWithRotationAdjustment(x, u, dt, result);</span>
+<span class="fc" id="L978">        return result;</span>
     }    
     
     /**
@@ -1000,195 +1008,195 @@ public class StatePredictor {
     public static void predictWithPositionAndRotationAdjustment(
             double[] x, double[] u, double dt, double[] result, 
             Matrix jacobianX, Matrix jacobianU) {
-<span class="fc bfc" id="L1003" title="All 2 branches covered.">        if(x.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L1004">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
+<span class="fc bfc" id="L1011" title="All 2 branches covered.">        if(x.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L1012">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
         }
-<span class="fc bfc" id="L1006" title="All 2 branches covered.">        if(u.length != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L1007">            throw new IllegalArgumentException(&quot;u must have length 13&quot;);</span>
+<span class="fc bfc" id="L1014" title="All 2 branches covered.">        if(u.length != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L1015">            throw new IllegalArgumentException(&quot;u must have length 13&quot;);</span>
         }
-<span class="fc bfc" id="L1009" title="All 2 branches covered.">        if(result.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
-<span class="fc" id="L1010">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
+<span class="fc bfc" id="L1017" title="All 2 branches covered.">        if(result.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L1018">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
         }
-<span class="fc bfc" id="L1012" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
-<span class="fc bfc" id="L1013" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
-<span class="pc bpc" id="L1014" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
-<span class="fc" id="L1015">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
+<span class="fc bfc" id="L1020" title="All 2 branches covered.">        if(jacobianX != null &amp;&amp; </span>
+<span class="fc bfc" id="L1021" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L1022" title="1 of 2 branches missed.">                jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L1023">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
         }
-<span class="fc bfc" id="L1017" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
-<span class="fc bfc" id="L1018" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
-<span class="pc bpc" id="L1019" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
-<span class="fc" id="L1020">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);</span>
+<span class="fc bfc" id="L1025" title="All 2 branches covered.">        if(jacobianU != null &amp;&amp; </span>
+<span class="fc bfc" id="L1026" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L1027" title="1 of 2 branches missed.">                jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L1028">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);</span>
         }
         
         //position
-<span class="fc" id="L1024">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+<span class="fc" id="L1032">        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
         
         //orientation
-<span class="fc" id="L1027">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+<span class="fc" id="L1035">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
         
         //linear velocity
-<span class="fc" id="L1030">        double vx = x[7];</span>
-<span class="fc" id="L1031">        double vy = x[8];</span>
-<span class="fc" id="L1032">        double vz = x[9];</span>
+<span class="fc" id="L1038">        double vx = x[7];</span>
+<span class="fc" id="L1039">        double vy = x[8];</span>
+<span class="fc" id="L1040">        double vz = x[9];</span>
         
         //linear accelertion
-<span class="fc" id="L1035">        double ax = x[10];</span>
-<span class="fc" id="L1036">        double ay = x[11];</span>
-<span class="fc" id="L1037">        double az = x[12];</span>
+<span class="fc" id="L1043">        double ax = x[10];</span>
+<span class="fc" id="L1044">        double ay = x[11];</span>
+<span class="fc" id="L1045">        double az = x[12];</span>
         
         //angular velocity
-<span class="fc" id="L1040">        double wx = x[13];</span>
-<span class="fc" id="L1041">        double wy = x[14];</span>
-<span class="fc" id="L1042">        double wz = x[15];</span>
+<span class="fc" id="L1048">        double wx = x[13];</span>
+<span class="fc" id="L1049">        double wy = x[14];</span>
+<span class="fc" id="L1050">        double wz = x[15];</span>
         
         //position change (control)
-<span class="fc" id="L1045">        double drx = u[0];</span>
-<span class="fc" id="L1046">        double dry = u[1];</span>
-<span class="fc" id="L1047">        double drz = u[2];        </span>
+<span class="fc" id="L1053">        double drx = u[0];</span>
+<span class="fc" id="L1054">        double dry = u[1];</span>
+<span class="fc" id="L1055">        double drz = u[2];        </span>
         
         //rotation change (control)
-<span class="fc" id="L1050">        Quaternion dq = new Quaternion(u[3], u[4], u[5], u[6]);        </span>
+<span class="fc" id="L1058">        Quaternion dq = new Quaternion(u[3], u[4], u[5], u[6]);        </span>
         
         //linear velocity change (control)
-<span class="fc" id="L1053">        double uvx = u[7];</span>
-<span class="fc" id="L1054">        double uvy = u[8];</span>
-<span class="fc" id="L1055">        double uvz = u[9];</span>
+<span class="fc" id="L1061">        double uvx = u[7];</span>
+<span class="fc" id="L1062">        double uvy = u[8];</span>
+<span class="fc" id="L1063">        double uvz = u[9];</span>
         
         //linear acceleration change (control)
-<span class="fc" id="L1058">        double uax = u[10];</span>
-<span class="fc" id="L1059">        double uay = u[11];</span>
-<span class="fc" id="L1060">        double uaz = u[12];</span>
+<span class="fc" id="L1066">        double uax = u[10];</span>
+<span class="fc" id="L1067">        double uay = u[11];</span>
+<span class="fc" id="L1068">        double uaz = u[12];</span>
         
         //angular velocity change (control)
-<span class="fc" id="L1063">        double uwx = u[13];</span>
-<span class="fc" id="L1064">        double uwy = u[14];</span>
-<span class="fc" id="L1065">        double uwz = u[15];</span>
+<span class="fc" id="L1071">        double uwx = u[13];</span>
+<span class="fc" id="L1072">        double uwy = u[14];</span>
+<span class="fc" id="L1073">        double uwz = u[15];</span>
         
         try {
             //update velocity
-<span class="fc" id="L1069">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
-<span class="fc" id="L1070">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
-<span class="fc" id="L1071">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
+<span class="fc" id="L1077">            Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L1078">            Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L1079">            double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, </span>
                     vv, va);
             
             //update position
-<span class="fc" id="L1075">            Matrix rr = null;</span>
-<span class="fc" id="L1076">            Matrix rv = null;</span>
-<span class="fc" id="L1077">            Matrix ra = null;</span>
-<span class="fc bfc" id="L1078" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L1079">                rr = new Matrix(</span>
+<span class="fc" id="L1083">            Matrix rr = null;</span>
+<span class="fc" id="L1084">            Matrix rv = null;</span>
+<span class="fc" id="L1085">            Matrix ra = null;</span>
+<span class="fc bfc" id="L1086" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L1087">                rr = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-<span class="fc" id="L1082">                rv = new Matrix(</span>
+<span class="fc" id="L1090">                rv = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
                         SPEED_COMPONENTS);
-<span class="fc" id="L1085">                ra = new Matrix(</span>
+<span class="fc" id="L1093">                ra = new Matrix(</span>
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         ACCELERATION_COMPONENTS);
             }
-<span class="fc" id="L1089">            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, </span>
+<span class="fc" id="L1097">            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, </span>
                     vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
             
             //update orientation
-<span class="fc" id="L1093">            Matrix qq = null;</span>
-<span class="fc" id="L1094">            Matrix qdq = null;</span>
-<span class="fc" id="L1095">            Matrix qw = null;</span>
-<span class="fc bfc" id="L1096" title="All 2 branches covered.">            if(jacobianX != null) {</span>
-<span class="fc" id="L1097">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
-<span class="fc" id="L1098">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+<span class="fc" id="L1101">            Matrix qq = null;</span>
+<span class="fc" id="L1102">            Matrix qdq = null;</span>
+<span class="fc" id="L1103">            Matrix qw = null;</span>
+<span class="fc bfc" id="L1104" title="All 2 branches covered.">            if(jacobianX != null) {</span>
+<span class="fc" id="L1105">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L1106">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
             }
-<span class="fc bfc" id="L1100" title="All 2 branches covered.">            if(jacobianU != null) {</span>
-<span class="fc" id="L1101">                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc bfc" id="L1108" title="All 2 branches covered.">            if(jacobianU != null) {</span>
+<span class="fc" id="L1109">                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
             }
-<span class="fc" id="L1103">            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, </span>
+<span class="fc" id="L1111">            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, </span>
                     wx, wy, wz, dt, qq, qdq, qw);
 
             
             //set updated linear velocity
-<span class="fc" id="L1108">            vx = v[0];</span>
-<span class="fc" id="L1109">            vy = v[1];</span>
-<span class="fc" id="L1110">            vz = v[2];</span>
+<span class="fc" id="L1116">            vx = v[0];</span>
+<span class="fc" id="L1117">            vy = v[1];</span>
+<span class="fc" id="L1118">            vz = v[2];</span>
             
             //apply control signals
-<span class="fc" id="L1113">            vx += uvx;</span>
-<span class="fc" id="L1114">            vy += uvy;</span>
-<span class="fc" id="L1115">            vz += uvz;</span>
+<span class="fc" id="L1121">            vx += uvx;</span>
+<span class="fc" id="L1122">            vy += uvy;</span>
+<span class="fc" id="L1123">            vz += uvz;</span>
             
-<span class="fc" id="L1117">            ax += uax;</span>
-<span class="fc" id="L1118">            ay += uay;</span>
-<span class="fc" id="L1119">            az += uaz;</span>
+<span class="fc" id="L1125">            ax += uax;</span>
+<span class="fc" id="L1126">            ay += uay;</span>
+<span class="fc" id="L1127">            az += uaz;</span>
             
-<span class="fc" id="L1121">            wx += uwx;</span>
-<span class="fc" id="L1122">            wy += uwy;</span>
-<span class="fc" id="L1123">            wz += uwz;</span>
+<span class="fc" id="L1129">            wx += uwx;</span>
+<span class="fc" id="L1130">            wy += uwy;</span>
+<span class="fc" id="L1131">            wz += uwz;</span>
             
             //set new state
-<span class="fc" id="L1126">            result[0] = r.getInhomX();</span>
-<span class="fc" id="L1127">            result[1] = r.getInhomY();</span>
-<span class="fc" id="L1128">            result[2] = r.getInhomZ();</span>
+<span class="fc" id="L1134">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L1135">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L1136">            result[2] = r.getInhomZ();</span>
             
-<span class="fc" id="L1130">            result[3] = q.getA();</span>
-<span class="fc" id="L1131">            result[4] = q.getB();</span>
-<span class="fc" id="L1132">            result[5] = q.getC();</span>
-<span class="fc" id="L1133">            result[6] = q.getD();</span>
+<span class="fc" id="L1138">            result[3] = q.getA();</span>
+<span class="fc" id="L1139">            result[4] = q.getB();</span>
+<span class="fc" id="L1140">            result[5] = q.getC();</span>
+<span class="fc" id="L1141">            result[6] = q.getD();</span>
             
-<span class="fc" id="L1135">            result[7] = vx;</span>
-<span class="fc" id="L1136">            result[8] = vy;</span>
-<span class="fc" id="L1137">            result[9] = vz;</span>
+<span class="fc" id="L1143">            result[7] = vx;</span>
+<span class="fc" id="L1144">            result[8] = vy;</span>
+<span class="fc" id="L1145">            result[9] = vz;</span>
             
-<span class="fc" id="L1139">            result[10] = ax;</span>
-<span class="fc" id="L1140">            result[11] = ay;</span>
-<span class="fc" id="L1141">            result[12] = az;</span>
+<span class="fc" id="L1147">            result[10] = ax;</span>
+<span class="fc" id="L1148">            result[11] = ay;</span>
+<span class="fc" id="L1149">            result[12] = az;</span>
             
-<span class="fc" id="L1143">            result[13] = wx;</span>
-<span class="fc" id="L1144">            result[14] = wy;</span>
-<span class="fc" id="L1145">            result[15] = wz;</span>
+<span class="fc" id="L1151">            result[13] = wx;</span>
+<span class="fc" id="L1152">            result[14] = wy;</span>
+<span class="fc" id="L1153">            result[15] = wz;</span>
             
             //jacobians
-<span class="fc bfc" id="L1148" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc bfc" id="L1156" title="All 2 branches covered.">            if (jacobianX != null) {</span>
                 //[Rr   0   Rv  Ra  0]
                 //[0    Qq  0   0   Qw]
                 //[0    0   Vv  Va  0]
                 //[0    0   0   eye 0]
                 //[0    0   0   0   eye]
-<span class="fc" id="L1154">                jacobianX.initialize(0.0);</span>
-<span class="fc" id="L1155">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
+<span class="fc" id="L1162">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L1163">                jacobianX.setSubmatrix(0, 0, 2, 2, rr);</span>
                
-<span class="fc" id="L1157">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
+<span class="fc" id="L1165">                jacobianX.setSubmatrix(3, 3, 6, 6, qq);</span>
                
-<span class="fc" id="L1159">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
+<span class="fc" id="L1167">                jacobianX.setSubmatrix(0, 7, 2, 9, rv);</span>
                 
-<span class="fc" id="L1161">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
+<span class="fc" id="L1169">                jacobianX.setSubmatrix(7, 7, 9, 9, vv);</span>
                 
-<span class="fc" id="L1163">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
+<span class="fc" id="L1171">                jacobianX.setSubmatrix(0, 10, 2, 12, ra);</span>
                 
-<span class="fc" id="L1165">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
+<span class="fc" id="L1173">                jacobianX.setSubmatrix(7, 10, 9, 12, va);</span>
                 
-<span class="fc" id="L1167">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
+<span class="fc" id="L1175">                jacobianX.setSubmatrix(3, 13, 6, 15, qw);</span>
                
-<span class="fc bfc" id="L1169" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
-<span class="fc" id="L1170">                    jacobianX.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L1177" title="All 2 branches covered.">                for(int i = 10; i &lt; STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L1178">                    jacobianX.setElementAt(i, i, 1.0);</span>
                 }               
             }
             
-<span class="fc bfc" id="L1174" title="All 2 branches covered.">            if (jacobianU != null) {</span>
-<span class="fc" id="L1175">                jacobianU.initialize(0.0);</span>
+<span class="fc bfc" id="L1182" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L1183">                jacobianU.initialize(0.0);</span>
                 
                 //variation of position
-<span class="fc bfc" id="L1178" title="All 2 branches covered.">                for(int i = 0; i &lt; Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {</span>
-<span class="fc" id="L1179">                    jacobianU.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L1186" title="All 2 branches covered.">                for(int i = 0; i &lt; Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {</span>
+<span class="fc" id="L1187">                    jacobianU.setElementAt(i, i, 1.0);</span>
                 }
                 
                 //variation of rotation
-<span class="fc" id="L1183">                jacobianU.setSubmatrix(3, 3, 6, 6, qdq);</span>
+<span class="fc" id="L1191">                jacobianU.setSubmatrix(3, 3, 6, 6, qdq);</span>
 
                 //variation of linear speed and acceleration, and angular speed
-<span class="fc bfc" id="L1186" title="All 2 branches covered.">                for(int i = 7; i &lt; STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
-<span class="fc" id="L1187">                    jacobianU.setElementAt(i, i, 1.0);</span>
+<span class="fc bfc" id="L1194" title="All 2 branches covered.">                for(int i = 7; i &lt; STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L1195">                    jacobianU.setElementAt(i, i, 1.0);</span>
                 }
             }
-<span class="pc" id="L1190">        }catch(WrongSizeException ignore) { /* never thrown */ }                </span>
-<span class="fc" id="L1191">    }</span>
+<span class="pc" id="L1198">        }catch(WrongSizeException ignore) { /* never thrown */ }                </span>
+<span class="fc" id="L1199">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -1217,8 +1225,8 @@ public class StatePredictor {
      */
     public static void predictWithPositionAndRotationAdjustment(
             double[] x, double[] u, double dt, double[] result) {
-<span class="fc" id="L1220">        predictWithPositionAndRotationAdjustment(x, u, dt, result, null, null);</span>
-<span class="fc" id="L1221">    }</span>
+<span class="fc" id="L1228">        predictWithPositionAndRotationAdjustment(x, u, dt, result, null, null);</span>
+<span class="fc" id="L1229">    }</span>
     
     /**
      * Updates the system model (position, orientation, linear velocity,
@@ -1249,10 +1257,10 @@ public class StatePredictor {
     public static double[] predictWithPositionAndRotationAdjustment(
             double[] x, double [] u, double dt, Matrix jacobianX, 
             Matrix jacobianU) {
-<span class="fc" id="L1252">        double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];</span>
-<span class="fc" id="L1253">        predictWithPositionAndRotationAdjustment(x, u, dt, result, jacobianX, </span>
+<span class="fc" id="L1260">        double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L1261">        predictWithPositionAndRotationAdjustment(x, u, dt, result, jacobianX, </span>
                 jacobianU);
-<span class="fc" id="L1255">        return result;</span>
+<span class="fc" id="L1263">        return result;</span>
     }
     
     /**
@@ -1281,9 +1289,9 @@ public class StatePredictor {
      */
     public static double[] predictWithPositionAndRotationAdjustment(
             double[] x, double[] u, double dt) {
-<span class="fc" id="L1284">        double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];</span>
-<span class="fc" id="L1285">        predictWithPositionAndRotationAdjustment(x, u, dt, result);</span>
-<span class="fc" id="L1286">        return result;        </span>
+<span class="fc" id="L1292">        double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L1293">        predictWithPositionAndRotationAdjustment(x, u, dt, result);</span>
+<span class="fc" id="L1294">        return result;        </span>
     }    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
