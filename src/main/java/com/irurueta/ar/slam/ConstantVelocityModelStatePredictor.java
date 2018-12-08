@@ -349,21 +349,26 @@ public class ConstantVelocityModelStatePredictor {
             double[] x, double[] u, double dt, double[] result, 
             Matrix jacobianX, Matrix jacobianU) {
         if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException("x must have length 13");
+            //x must have length 13
+            throw new IllegalArgumentException();
         }
         if(u.length != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException("u must have length 9");
+            //u must have length 9
+            throw new IllegalArgumentException();
         }
         if(result.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException("result must have length 13");
+            //result must have length 13
+            throw new IllegalArgumentException();
         }
         if(jacobianX != null && (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
                 jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt x must be 13x13");
+            //jacobian wrt x must be 13x13
+            throw new IllegalArgumentException();
         }
         if(jacobianU != null && (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
                 jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt u must be 13x9");
+            //jacobian wrt u must be 13x9
+            throw new IllegalArgumentException();
         }
         
         //position

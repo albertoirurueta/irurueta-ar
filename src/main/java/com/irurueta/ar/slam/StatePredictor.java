@@ -410,23 +410,28 @@ public class StatePredictor {
             double[] u, double dt, double[] result, Matrix jacobianX, 
             Matrix jacobianU) {
         if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException("x must have length 16");
+            //x must have length 16
+            throw new IllegalArgumentException();
         }
         if(u.length != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException("u must have length 12");
+            //u must have length 12
+            throw new IllegalArgumentException();
         }
         if(result.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException("result must have length 16");
+            //result must have length 16
+            throw new IllegalArgumentException();
         }
         if(jacobianX != null && 
                 (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
                 jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt x must be 16x16");
+            //jacobian wrt x must be 16x16
+            throw new IllegalArgumentException();
         }
         if(jacobianU != null && 
                 (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
                 jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt u must be 16x12");
+            //jacobian wrt u must be 16x12
+            throw new IllegalArgumentException();
         }
         
         //position
