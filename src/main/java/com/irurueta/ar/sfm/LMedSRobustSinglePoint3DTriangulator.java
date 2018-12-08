@@ -105,7 +105,7 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public LMedSRobustSinglePoint3DTriangulator(List<Point2D> points, 
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(points, cameras);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -124,8 +124,7 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      */
     public LMedSRobustSinglePoint3DTriangulator(List<Point2D> points,
             List<PinholeCamera> cameras, 
-            RobustSinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            RobustSinglePoint3DTriangulatorListener listener) {
         super(points, cameras, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -173,8 +172,7 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

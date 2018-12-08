@@ -177,7 +177,7 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
      * @throws NullPointerException if listener or configuration is not provided.
      */
     public BaseSparseReconstructor(C configuration,
-            L listener) throws NullPointerException {
+            L listener) {
         if (configuration == null || listener == null) {
             throw new NullPointerException();
         }
@@ -405,7 +405,7 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
      * @return true if current view is the first view, false otherwise.
      */
     public boolean isFirstView() {
-        return mViewCount == 0 && (mPreviousViewTrackedSamples == null || mPreviousViewTrackedSamples.size() == 0);
+        return mViewCount == 0 && (mPreviousViewTrackedSamples == null || mPreviousViewTrackedSamples.isEmpty());
     }
 
     /**
@@ -736,6 +736,8 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
                                         mConfiguration.getAdditionalCamerasComputeAndKeepInliers());
                                 ransacCameraEstimator.setComputeAndKeepResidualsEnabled(
                                         mConfiguration.getAdditionalCamerasComputeAndKeepResiduals());
+                                break;
+                            default:
                                 break;
                         }
 

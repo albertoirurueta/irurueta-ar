@@ -44,8 +44,7 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
      */    
     public KnownBaselineTwoViewsSparseReconstructor(
             KnownBaselineTwoViewsSparseReconstructorConfiguration configuration,
-            KnownBaselineTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            KnownBaselineTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
     
@@ -55,8 +54,7 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */    
     public KnownBaselineTwoViewsSparseReconstructor(
-            KnownBaselineTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
+            KnownBaselineTwoViewsSparseReconstructorListener listener) {
         this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(), 
                 listener);
     }

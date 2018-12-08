@@ -442,18 +442,22 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * or not due to numerical unstabilities.
      */
     private boolean buildDiac(double horizontalFocalLength, 
-            double verticalFocalLength, DualImageOfAbsoluteConic result) 
-            throws AlgebraException {
-        
-        PinholeCameraIntrinsicParameters intrinsic = new 
-        PinholeCameraIntrinsicParameters(horizontalFocalLength, 
-                verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
-        result.setFromPinholeCameraIntrinsicParameters(intrinsic);
-        
-        Matrix m = result.asMatrix();
-        CholeskyDecomposer decomposer = new CholeskyDecomposer(m);
-        decomposer.decompose();
-        return decomposer.isSPD();
+            double verticalFocalLength, DualImageOfAbsoluteConic result) {
+
+        try {
+            PinholeCameraIntrinsicParameters intrinsic = new
+                    PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                    verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
+            result.setFromPinholeCameraIntrinsicParameters(intrinsic);
+
+            Matrix m = result.asMatrix();
+            CholeskyDecomposer decomposer = new CholeskyDecomposer(m);
+            decomposer.decompose();
+            return decomposer.isSPD();
+        } catch (AlgebraException e) {
+            //there are numerical instabilities
+            return false;
+        }
     }    
     
     /**
@@ -609,12 +613,8 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                     if (x >= 0.0 && y >= 0.0) {
                         double horizontalFocalLength = Math.sqrt(x);
                         double verticalFocalLength = Math.sqrt(y);
-                        try {
-                            valid = buildDiac(horizontalFocalLength, 
+                        valid = buildDiac(horizontalFocalLength,
                                 verticalFocalLength, diac);
-                        } catch (AlgebraException ex) {
-                            valid = false;
-                        }
                     }
                     
                     if (valid) {
@@ -956,12 +956,8 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                     if (x >= 0.0 && y >= 0.0) {
                         double horizontalFocalLength = Math.sqrt(x);
                         double verticalFocalLength = Math.sqrt(y);
-                        try {
-                            valid = buildDiac(horizontalFocalLength, 
+                        valid = buildDiac(horizontalFocalLength,
                                 verticalFocalLength, diac);
-                        } catch (AlgebraException e) {
-                            valid = false;
-                        }
                     }
                     
                     if (valid) {

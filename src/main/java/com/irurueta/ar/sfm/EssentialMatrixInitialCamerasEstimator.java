@@ -1187,7 +1187,8 @@ public class EssentialMatrixInitialCamerasEstimator
                 create();
         
         int numPoints = leftPoints.size();
-        Point2D leftPoint, rightPoint;
+        Point2D leftPoint;
+        Point2D rightPoint;
         List<Point2D> points = new ArrayList<>();
         List<PinholeCamera> cameras = new ArrayList<>();
         Point3D triangulatedPoint;

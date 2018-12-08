@@ -40,12 +40,7 @@ public class KnownBaselineTwoViewsSparseReconstructorConfiguration extends
      * scale of cameras and reconstructed points can be retrieved.
      */
     private double mBaseline = DEFAULT_BASELINE;
-    
-    /**
-     * Constructor.
-     */
-    public KnownBaselineTwoViewsSparseReconstructorConfiguration() { }
-    
+
     /**
      * Creates an instance of a two views sparse reconstructor configuration 
      * with known camera baseline.

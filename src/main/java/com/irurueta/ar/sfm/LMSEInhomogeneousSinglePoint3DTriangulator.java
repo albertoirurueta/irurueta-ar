@@ -68,7 +68,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public LMSEInhomogeneousSinglePoint3DTriangulator(List<Point2D> points2D, 
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(points2D, cameras);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
@@ -97,8 +97,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulator extends
      */
     public LMSEInhomogeneousSinglePoint3DTriangulator(List<Point2D> points2D, 
             List<PinholeCamera> cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            SinglePoint3DTriangulatorListener listener) {
         super(points2D, cameras, listener);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }

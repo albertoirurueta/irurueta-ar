@@ -95,7 +95,9 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
             mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
             mCameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -152,8 +154,8 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * @return this instance so that method can be easily chained.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
-    public T setCameraPositionCovariance(Matrix cameraPositionCovariance)
-            throws IllegalArgumentException {
+    @SuppressWarnings("Duplicates")
+    public T setCameraPositionCovariance(Matrix cameraPositionCovariance) {
         if (cameraPositionCovariance.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
                 cameraPositionCovariance.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
             throw new IllegalArgumentException();
@@ -177,7 +179,9 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
             mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
             mCameraPositionCovariance.multiplyByScalar(variance);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
 
         //noinspection all
         return (T)this;

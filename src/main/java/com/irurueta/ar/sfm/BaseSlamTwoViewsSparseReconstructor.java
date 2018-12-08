@@ -69,7 +69,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
      * provided.
      */
     public BaseSlamTwoViewsSparseReconstructor(C configuration, 
-            L listener) throws NullPointerException {
+            L listener) {
         super(configuration, listener);
     }
     
@@ -107,8 +107,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
+    public void updateAccelerometerSample(long timestamp, float[] data) {
         if (mSlamEstimator != null) {
             mSlamEstimator.updateAccelerometerSample(timestamp, data);
         }
@@ -144,8 +143,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
      * @throws IllegalArgumentException if provided array does not have length 
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
+    public void updateGyroscopeSample(long timestamp, float[] data) {
         if (mSlamEstimator != null) {
             mSlamEstimator.updateGyroscopeSample(timestamp, data);
         }        
