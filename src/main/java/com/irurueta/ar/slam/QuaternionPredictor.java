@@ -802,7 +802,9 @@ public class QuaternionPredictor {
             try {
                 jacobianQ2 = new Matrix(Quaternion.N_PARAMS, 
                         Quaternion.N_PARAMS);
-            } catch(WrongSizeException ignore) { }
+            } catch(WrongSizeException ignore) {
+                //never happens
+            }
         }
         Quaternion.product(dq, result, result, jacobianDQ, jacobianQ2);
         
@@ -811,7 +813,9 @@ public class QuaternionPredictor {
             try {
                 jacobianQ3 = new Matrix(Quaternion.N_PARAMS,
                         Quaternion.N_PARAMS);
-            } catch(WrongSizeException ignore) { }
+            } catch(WrongSizeException ignore) {
+                //never happens
+            }
         }
         Quaternion.product(q, result, result, jacobianQ, jacobianQ3);
         
@@ -821,7 +825,9 @@ public class QuaternionPredictor {
                 try {
                     Matrix tmp = jacobianQ3.multiplyAndReturnNew(jacobianDQ);
                     jacobianDQ.copyFrom(tmp);
-                } catch (WrongSizeException ignore) { }
+                } catch (WrongSizeException ignore) {
+                    //never happens
+                }
             }
 
             //chain rule (jacobianW is already multiplied by dt)
@@ -830,7 +836,9 @@ public class QuaternionPredictor {
                     jacobianQ3.multiply(jacobianQ2);
                     jacobianQ3.multiply(jacobianW);
                     jacobianW.copyFrom(jacobianQ3);
-                } catch (WrongSizeException ignore) { }
+                } catch (WrongSizeException ignore) {
+                    //never happens
+                }
             }
         }
     }

@@ -120,25 +120,30 @@ public class StatePredictor {
      */
     public static void predict(double[] x,
             double[] u, double dt, double[] result, Matrix jacobianX, 
-            Matrix jacobianU) throws IllegalArgumentException {
+            Matrix jacobianU) {
         if(x.length != STATE_COMPONENTS) {
-            throw new IllegalArgumentException("x must have length 16");
+            //x must have length 16
+            throw new IllegalArgumentException();
         }
         if(u.length != CONTROL_COMPONENTS) {
-            throw new IllegalArgumentException("u must have length 9");
+            //u must have length 9
+            throw new IllegalArgumentException();
         }
         if(result.length != STATE_COMPONENTS) {
-            throw new IllegalArgumentException("result must have length 16");
+            //result must have length 16
+            throw new IllegalArgumentException();
         }
         if(jacobianX != null && 
                 (jacobianX.getRows() != STATE_COMPONENTS ||
                 jacobianX.getColumns() != STATE_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt x must be 16x16");
+            //jacobian wrt x must be 16x16
+            throw new IllegalArgumentException();
         }
         if(jacobianU != null && 
                 (jacobianU.getRows() != STATE_COMPONENTS ||
                 jacobianU.getColumns() != CONTROL_COMPONENTS)) {
-            throw new IllegalArgumentException("jacobian wrt u must be 16x9");
+            //jacobian wrt u must be 16x9
+            throw new IllegalArgumentException();
         }
         
         //position
@@ -473,7 +478,9 @@ public class StatePredictor {
                     vv, va);
             
             //update position
-            Matrix rr = null, rv = null, ra = null;
+            Matrix rr = null;
+            Matrix rv = null;
+            Matrix ra = null;
             if(jacobianX != null) {
                 rr = new Matrix(
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 
@@ -489,7 +496,8 @@ public class StatePredictor {
                     vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
             
             //update orientation
-            Matrix qq = null, qw = null;
+            Matrix qq = null;
+            Matrix qw = null;
             if(jacobianX != null) {
                 qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
                 qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);

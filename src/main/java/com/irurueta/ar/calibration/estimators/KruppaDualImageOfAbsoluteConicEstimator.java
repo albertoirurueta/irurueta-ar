@@ -438,8 +438,6 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @param verticalFocalLength estimated vertical focal length component.
      * @param result instance where estimated DIAC will be stored.
      * @return true if estimated DIAC is valid, false otherwise.
-     * @throws AlgebraException if it cannot be determined whether DIAC is valid
-     * or not due to numerical unstabilities.
      */
     private boolean buildDiac(double horizontalFocalLength, 
             double verticalFocalLength, DualImageOfAbsoluteConic result) {
@@ -584,18 +582,12 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             
             //where we can solve y using any of the two latter equations, and
             //then use obtained y to solve x
-            Complex[] roots;
-            try {
-                Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
-                        polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
-                roots = poly1.getRoots();
-            } catch (NumericalException ex1) {
-                //if solution for poly1 fails, try with second polynomial
-                Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
-                        polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
-                roots = poly2.getRoots();
-            }
-            
+            Complex[] roots = unknownAspectRatioRoots(polyA, polyB, polyC,
+                    polyD, polyE, polyF, polyG, polyH,
+                    polyI, polyJ, polyK, polyL, polyM,
+                    polyN, polyO, polyP, polyQ, polyR,
+                    polyS, polyT, polyU, polyV, polyW);
+
             //roots contain possible y values. We use only their real part
             //and find x = (-y^2*S - y*V - W) / (y*T + U)
             
@@ -920,24 +912,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                     x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
 
             //try to solve any of Kruppa's equations
-            Complex[] roots;
-            try {
-                Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
-                        polyJ, polyK, polyL);
-                roots = poly3.getRoots();
-            } catch (NumericalException e3) {
-                try {
-                    //if solution for poly3 fails, try with 4th polynomial
-                    Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
-                            polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
-                    roots = poly4.getRoots();
-                } catch (NumericalException e4) {
-                    Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,
-                            polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
-                    roots = poly5.getRoots();
-                }
-            }
-            
+            Complex[] roots = knownAspectRatioRoots(polyA, polyB, polyC, polyD,
+                    polyE, polyF, polyG, polyH, polyI, polyJ, polyK, polyL, polyM,
+                    polyN, polyO, polyP, polyQ, polyR);
+
             //roots contain possible x values. We use only their real part
             
             //pick the best x, y values that produce a positive definite DIAC
@@ -1083,5 +1061,102 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                 (p*l + j*r + a*o + m*c) + r2*(q*l + k*r + b*o + n*c),
                 (p*j + a*m) + r4*(q*k + b*n) + r2*(p*k + q*j + a*n + b*m));
     }
-    
+
+    /**
+     * Solves Kruppa's equations when aspect ratio is unknown
+     * @param polyA A parameter of Kruppa's polynomial equation.
+     * @param polyB B parameter of Kruppa's polynomial equation.
+     * @param polyC C parameter of Kruppa's polynomial equation.
+     * @param polyD D parameter of Kruppa's polynomial equation.
+     * @param polyE E parameter of Kruppa's polynomial equation.
+     * @param polyF F parameter of Kruppa's polynomial equation.
+     * @param polyG G parameter of Kruppa's polynomial equation.
+     * @param polyH H parameter of Kruppa's polynomial equation.
+     * @param polyI I parameter of Kruppa's polynomial equation.
+     * @param polyJ J parameter of Kruppa's polynomial equation.
+     * @param polyK K parameter of Kruppa's polynomial equation.
+     * @param polyL L parameter of Kruppa's polynomial equation.
+     * @param polyM M parameter of Kruppa's polynomial equation.
+     * @param polyN N parameter of Kruppa's polynomial equation.
+     * @param polyO O parameter of Kruppa's polynomial equation.
+     * @param polyP P parameter of Kruppa's polynomial equation.
+     * @param polyQ Q parameter of Kruppa's polynomial equation.
+     * @param polyR R parameter of Kruppa's polynomial equation.
+     * @param polyS S parameter of Kruppa's polynomial equation.
+     * @param polyT T parameter of Kruppa's polynomial equation.
+     * @param polyU U parameter of Kruppa's polynomial equation.
+     * @param polyV V parameter of Kruppa's polynomial equation.
+     * @param polyW W parameter of Kruppa's polynomial equation.
+     * @return roots solving Kruppa's equations.
+     * @throws NumericalException if there are numerical instabilities.
+     */
+    private Complex[] unknownAspectRatioRoots(double polyA, double polyB, double polyC,
+            double polyD, double polyE, double polyF, double polyG, double polyH,
+            double polyI, double polyJ, double polyK, double polyL, double polyM,
+            double polyN, double polyO, double polyP, double polyQ, double polyR,
+            double polyS, double polyT, double polyU, double polyV, double polyW)
+            throws NumericalException {
+        Complex[] roots;
+        try {
+            Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+                    polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
+            roots = poly1.getRoots();
+        } catch (NumericalException ex1) {
+            //if solution for poly1 fails, try with second polynomial
+            Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
+                    polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
+            roots = poly2.getRoots();
+        }
+
+        return roots;
+    }
+
+    /**
+     * Solves Kruppa's equations when aspect ratio is known
+     * @param polyA A parameter of Kruppa's polynomial equation.
+     * @param polyB B parameter of Kruppa's polynomial equation.
+     * @param polyC C parameter of Kruppa's polynomial equation.
+     * @param polyD D parameter of Kruppa's polynomial equation.
+     * @param polyE E parameter of Kruppa's polynomial equation.
+     * @param polyF F parameter of Kruppa's polynomial equation.
+     * @param polyG G parameter of Kruppa's polynomial equation.
+     * @param polyH H parameter of Kruppa's polynomial equation.
+     * @param polyI I parameter of Kruppa's polynomial equation.
+     * @param polyJ J parameter of Kruppa's polynomial equation.
+     * @param polyK K parameter of Kruppa's polynomial equation.
+     * @param polyL L parameter of Kruppa's polynomial equation.
+     * @param polyM M parameter of Kruppa's polynomial equation.
+     * @param polyN N parameter of Kruppa's polynomial equation.
+     * @param polyO O parameter of Kruppa's polynomial equation.
+     * @param polyP P parameter of Kruppa's polynomial equation.
+     * @param polyQ Q parameter of Kruppa's polynomial equation.
+     * @param polyR R parameter of Kruppa's polynomial equation.
+     * @return roots solving Kruppa's equations.
+     * @throws NumericalException if there are numerical instabilities.
+     */
+    private Complex[] knownAspectRatioRoots(double polyA, double polyB, double polyC,
+            double polyD, double polyE, double polyF, double polyG, double polyH,
+            double polyI, double polyJ, double polyK, double polyL, double polyM,
+            double polyN, double polyO, double polyP, double polyQ, double polyR)
+            throws NumericalException {
+        Complex[] roots;
+        try {
+            Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+                    polyJ, polyK, polyL);
+            roots = poly3.getRoots();
+        } catch (NumericalException e3) {
+            try {
+                //if solution for poly3 fails, try with 4th polynomial
+                Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
+                        polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
+                roots = poly4.getRoots();
+            } catch (NumericalException e4) {
+                Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,
+                        polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
+                roots = poly5.getRoots();
+            }
+        }
+
+        return roots;
+    }
 }
