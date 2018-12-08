@@ -235,12 +235,11 @@ public class AbsoluteOrientationSlamEstimator extends
      * 3x3.
      */
     @Override
-    public void setPositionCovarianceMatrix(Matrix positionCovariance)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L240" title="All 2 branches covered.">        if(positionCovariance != null) {</span>
-<span class="fc" id="L241">            mKalmanFilter.setMeasurementNoiseCov(positionCovariance);        </span>
+    public void setPositionCovarianceMatrix(Matrix positionCovariance) {
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if(positionCovariance != null) {</span>
+<span class="fc" id="L240">            mKalmanFilter.setMeasurementNoiseCov(positionCovariance);        </span>
         }
-<span class="fc" id="L243">    }    </span>
+<span class="fc" id="L242">    }    </span>
     
     /**
      * Gets current covariance matrix of position measures determining current
@@ -249,7 +248,7 @@ public class AbsoluteOrientationSlamEstimator extends
      */
     @Override
     public Matrix getPositionCovarianceMatrix() {
-<span class="fc" id="L252">        return mKalmanFilter.getMeasurementNoiseCov();</span>
+<span class="fc" id="L251">        return mKalmanFilter.getMeasurementNoiseCov();</span>
     }
     
     /**
@@ -262,41 +261,41 @@ public class AbsoluteOrientationSlamEstimator extends
     @Override
     public void correctWithPositionMeasure(double positionX, double positionY, 
             double positionZ) {
-<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (!mPredictionAvailable) {</span>
-<span class="fc" id="L266">            return;</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (!mPredictionAvailable) {</span>
+<span class="fc" id="L265">            return;</span>
         }
         
-<span class="pc bpc" id="L269" title="1 of 2 branches missed.">        if(mListener != null) {</span>
-<span class="fc" id="L270">            mListener.onCorrectWithPositionMeasure(this);</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">        if(mListener != null) {</span>
+<span class="fc" id="L269">            mListener.onCorrectWithPositionMeasure(this);</span>
         }
         
         try {
-<span class="fc" id="L274">            mMeasurement.setElementAtIndex(0, positionX);</span>
-<span class="fc" id="L275">            mMeasurement.setElementAtIndex(1, positionY);</span>
-<span class="fc" id="L276">            mMeasurement.setElementAtIndex(2, positionZ);</span>
+<span class="fc" id="L273">            mMeasurement.setElementAtIndex(0, positionX);</span>
+<span class="fc" id="L274">            mMeasurement.setElementAtIndex(1, positionY);</span>
+<span class="fc" id="L275">            mMeasurement.setElementAtIndex(2, positionZ);</span>
             
-<span class="fc" id="L278">            updateCorrectedState(mKalmanFilter.correct(mMeasurement));</span>
+<span class="fc" id="L277">            updateCorrectedState(mKalmanFilter.correct(mMeasurement));</span>
             
             //copy corrected state to predicted state
-<span class="fc" id="L281">            mKalmanFilter.getStatePost().copyTo(mKalmanFilter.getStatePre());</span>
-<span class="fc" id="L282">            mKalmanFilter.getErrorCovPost().copyTo(</span>
-<span class="fc" id="L283">                    mKalmanFilter.getErrorCovPre());</span>
+<span class="fc" id="L280">            mKalmanFilter.getStatePost().copyTo(mKalmanFilter.getStatePre());</span>
+<span class="fc" id="L281">            mKalmanFilter.getErrorCovPost().copyTo(</span>
+<span class="fc" id="L282">                    mKalmanFilter.getErrorCovPre());</span>
             
-<span class="nc" id="L285">        } catch (SignalProcessingException e) {</span>
-<span class="nc" id="L286">            mError = true;</span>
-<span class="fc" id="L287">        }</span>
+<span class="nc" id="L284">        } catch (SignalProcessingException e) {</span>
+<span class="nc" id="L285">            mError = true;</span>
+<span class="fc" id="L286">        }</span>
         
-<span class="pc bpc" id="L289" title="1 of 2 branches missed.">        if(mListener != null) {</span>
-<span class="fc" id="L290">            mListener.onCorrectedWithPositionMeasure(this);</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if(mListener != null) {</span>
+<span class="fc" id="L289">            mListener.onCorrectedWithPositionMeasure(this);</span>
         }        
-<span class="fc" id="L292">    }</span>
+<span class="fc" id="L291">    }</span>
          
     /**
      * Creates an instance of a calibrator to be used with this SLAM estimator.
      * @return a calibrator.
      */
     public static AbsoluteOrientationSlamCalibrator createCalibrator() {
-<span class="fc" id="L299">        return new AbsoluteOrientationSlamCalibrator();</span>
+<span class="fc" id="L298">        return new AbsoluteOrientationSlamCalibrator();</span>
     }    
     
     /**
@@ -305,142 +304,142 @@ public class AbsoluteOrientationSlamEstimator extends
      */
     @Override
     protected void processFullSample() {
-<span class="fc bfc" id="L308" title="All 2 branches covered.">        if(mListener != null) {</span>
-<span class="fc" id="L309">            mListener.onFullSampleReceived(this);</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">        if(mListener != null) {</span>
+<span class="fc" id="L308">            mListener.onFullSampleReceived(this);</span>
         }
         
-<span class="fc" id="L312">        long timestamp = getMostRecentTimestampNanos();</span>
-<span class="fc bfc" id="L313" title="All 2 branches covered.">        if (mLastTimestampNanos &lt; 0) {</span>
+<span class="fc" id="L311">        long timestamp = getMostRecentTimestampNanos();</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        if (mLastTimestampNanos &lt; 0) {</span>
             //first time receiving control data, we just set linear acceleration 
             //and angular speed into system state
-<span class="fc" id="L316">            mLastAccelerationX = mStateAccelerationX = mX[10] = </span>
+<span class="fc" id="L315">            mLastAccelerationX = mStateAccelerationX = mX[10] = </span>
                     mAccumulatedAccelerationSampleX;
-<span class="fc" id="L318">            mLastAccelerationY = mStateAccelerationY = mX[11] = </span>
+<span class="fc" id="L317">            mLastAccelerationY = mStateAccelerationY = mX[11] = </span>
                     mAccumulatedAccelerationSampleY;
-<span class="fc" id="L320">            mLastAccelerationZ = mStateAccelerationZ = mX[12] = </span>
+<span class="fc" id="L319">            mLastAccelerationZ = mStateAccelerationZ = mX[12] = </span>
                     mAccumulatedAccelerationSampleZ;
-<span class="fc" id="L322">            mLastAngularSpeedX = mStateAngularSpeedX = mX[13] = </span>
+<span class="fc" id="L321">            mLastAngularSpeedX = mStateAngularSpeedX = mX[13] = </span>
                     mAccumulatedAngularSpeedSampleX;
-<span class="fc" id="L324">            mLastAngularSpeedY = mStateAngularSpeedY = mX[14] = </span>
+<span class="fc" id="L323">            mLastAngularSpeedY = mStateAngularSpeedY = mX[14] = </span>
                     mAccumulatedAngularSpeedSampleY;
-<span class="fc" id="L326">            mLastAngularSpeedZ = mStateAngularSpeedZ = mX[15] = </span>
+<span class="fc" id="L325">            mLastAngularSpeedZ = mStateAngularSpeedZ = mX[15] = </span>
                     mAccumulatedAngularSpeedSampleZ;
 
             try {
-<span class="fc" id="L330">                mKalmanFilter.getStatePre().fromArray(mX);</span>
-<span class="fc" id="L331">                mKalmanFilter.getStatePost().fromArray(mX);</span>
-<span class="pc" id="L332">            } catch(WrongSizeException ignore) { /* never thrown */ }</span>
+<span class="fc" id="L329">                mKalmanFilter.getStatePre().fromArray(mX);</span>
+<span class="fc" id="L330">                mKalmanFilter.getStatePost().fromArray(mX);</span>
+<span class="pc" id="L331">            } catch(WrongSizeException ignore) { /* never thrown */ }</span>
                         
-<span class="fc" id="L334">            mLastTimestampNanos = timestamp;</span>
+<span class="fc" id="L333">            mLastTimestampNanos = timestamp;</span>
             
-<span class="fc bfc" id="L336" title="All 2 branches covered.">            if(mListener != null) {</span>
-<span class="fc" id="L337">                mListener.onFullSampleProcessed(this);</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">            if(mListener != null) {</span>
+<span class="fc" id="L336">                mListener.onFullSampleProcessed(this);</span>
             }
             
-<span class="fc" id="L340">            return;</span>
+<span class="fc" id="L339">            return;</span>
         }
         
-<span class="fc" id="L343">        mAccumulatedOrientation.normalize();</span>
+<span class="fc" id="L342">        mAccumulatedOrientation.normalize();</span>
         
-<span class="fc" id="L345">        mLastOrientation.inverse(mDeltaOrientation);</span>
-<span class="fc" id="L346">        mDeltaOrientation.combine(mAccumulatedOrientation);</span>
-<span class="fc" id="L347">        mDeltaOrientation.normalize();</span>
+<span class="fc" id="L344">        mLastOrientation.inverse(mDeltaOrientation);</span>
+<span class="fc" id="L345">        mDeltaOrientation.combine(mAccumulatedOrientation);</span>
+<span class="fc" id="L346">        mDeltaOrientation.normalize();</span>
         
-<span class="fc" id="L349">        double deltaAccelerationX = mAccumulatedAccelerationSampleX - </span>
+<span class="fc" id="L348">        double deltaAccelerationX = mAccumulatedAccelerationSampleX - </span>
                 mLastAccelerationX;
-<span class="fc" id="L351">        double deltaAccelerationY = mAccumulatedAccelerationSampleY -</span>
+<span class="fc" id="L350">        double deltaAccelerationY = mAccumulatedAccelerationSampleY -</span>
                 mLastAccelerationY;
-<span class="fc" id="L353">        double deltaAccelerationZ = mAccumulatedAccelerationSampleZ -</span>
+<span class="fc" id="L352">        double deltaAccelerationZ = mAccumulatedAccelerationSampleZ -</span>
                 mLastAccelerationZ;
-<span class="fc" id="L355">        double deltaAngularSpeedX = mAccumulatedAngularSpeedSampleX -</span>
+<span class="fc" id="L354">        double deltaAngularSpeedX = mAccumulatedAngularSpeedSampleX -</span>
                 mLastAngularSpeedX;
-<span class="fc" id="L357">        double deltaAngularSpeedY = mAccumulatedAngularSpeedSampleY -</span>
+<span class="fc" id="L356">        double deltaAngularSpeedY = mAccumulatedAngularSpeedSampleY -</span>
                 mLastAngularSpeedY;
-<span class="fc" id="L359">        double deltaAngularSpeedZ = mAccumulatedAngularSpeedSampleZ -</span>
+<span class="fc" id="L358">        double deltaAngularSpeedZ = mAccumulatedAngularSpeedSampleZ -</span>
                 mLastAngularSpeedZ;
-<span class="fc" id="L361">        double deltaTimestamp = (timestamp - mLastTimestampNanos) * </span>
+<span class="fc" id="L360">        double deltaTimestamp = (timestamp - mLastTimestampNanos) * </span>
                 NANOS_TO_SECONDS;
         
         //when a full sample is received, we update the data model
-<span class="fc" id="L365">        mU[0] = mDeltaOrientation.getA();</span>
-<span class="fc" id="L366">        mU[1] = mDeltaOrientation.getB();</span>
-<span class="fc" id="L367">        mU[2] = mDeltaOrientation.getC();</span>
-<span class="fc" id="L368">        mU[3] = mDeltaOrientation.getD();</span>
-<span class="fc" id="L369">        mU[4] = mU[5] = mU[6] = 0.0; //change in linear speed</span>
-<span class="fc" id="L370">        mU[7] = deltaAccelerationX;</span>
-<span class="fc" id="L371">        mU[8] = deltaAccelerationY;</span>
-<span class="fc" id="L372">        mU[9] = deltaAccelerationZ;</span>
-<span class="fc" id="L373">        mU[10] = deltaAngularSpeedX;</span>
-<span class="fc" id="L374">        mU[11] = deltaAngularSpeedY;</span>
-<span class="fc" id="L375">        mU[12] = deltaAngularSpeedZ;</span>
+<span class="fc" id="L364">        mU[0] = mDeltaOrientation.getA();</span>
+<span class="fc" id="L365">        mU[1] = mDeltaOrientation.getB();</span>
+<span class="fc" id="L366">        mU[2] = mDeltaOrientation.getC();</span>
+<span class="fc" id="L367">        mU[3] = mDeltaOrientation.getD();</span>
+<span class="fc" id="L368">        mU[4] = mU[5] = mU[6] = 0.0; //change in linear speed</span>
+<span class="fc" id="L369">        mU[7] = deltaAccelerationX;</span>
+<span class="fc" id="L370">        mU[8] = deltaAccelerationY;</span>
+<span class="fc" id="L371">        mU[9] = deltaAccelerationZ;</span>
+<span class="fc" id="L372">        mU[10] = deltaAngularSpeedX;</span>
+<span class="fc" id="L373">        mU[11] = deltaAngularSpeedY;</span>
+<span class="fc" id="L374">        mU[12] = deltaAngularSpeedZ;</span>
         
-<span class="fc bfc" id="L377" title="All 2 branches covered.">        if(mCalibrationData != null &amp;&amp; </span>
-<span class="pc bpc" id="L378" title="1 of 2 branches missed.">                mCalibrationData.getControlMean() != null) {</span>
+<span class="fc bfc" id="L376" title="All 2 branches covered.">        if(mCalibrationData != null &amp;&amp; </span>
+<span class="pc bpc" id="L377" title="1 of 2 branches missed.">                mCalibrationData.getControlMean() != null) {</span>
             //if calibrator is available, remove mean to correct possible biases
-<span class="fc" id="L380">            ArrayUtils.subtract(mU, mCalibrationData.getControlMean(), mU);</span>
+<span class="fc" id="L379">            ArrayUtils.subtract(mU, mCalibrationData.getControlMean(), mU);</span>
         }
         
-<span class="fc" id="L383">        StatePredictor.predictWithRotationAdjustment(mX, mU, deltaTimestamp, mX,</span>
+<span class="fc" id="L382">        StatePredictor.predictWithRotationAdjustment(mX, mU, deltaTimestamp, mX,</span>
                 mJacobianPredictionX, mJacobianPredictionU);
         
         //update Kalman filter transition matrix taking into account current 
         //state
-<span class="fc" id="L388">        mKalmanFilter.setTransitionMatrix(mJacobianPredictionX);</span>
+<span class="fc" id="L387">        mKalmanFilter.setTransitionMatrix(mJacobianPredictionX);</span>
         
         //update control matrix from control vector jacobian
-<span class="fc" id="L391">        mKalmanFilter.setControlMatrix(mJacobianPredictionU);</span>
+<span class="fc" id="L390">        mKalmanFilter.setControlMatrix(mJacobianPredictionU);</span>
         
-<span class="fc bfc" id="L393" title="All 2 branches covered.">        if(mCalibrationData != null &amp;&amp; </span>
-<span class="pc bpc" id="L394" title="1 of 2 branches missed.">                mCalibrationData.getControlMean() != null &amp;&amp;</span>
-<span class="pc bpc" id="L395" title="1 of 2 branches missed.">                mCalibrationData.getControlCovariance() != null) {</span>
+<span class="fc bfc" id="L392" title="All 2 branches covered.">        if(mCalibrationData != null &amp;&amp; </span>
+<span class="pc bpc" id="L393" title="1 of 2 branches missed.">                mCalibrationData.getControlMean() != null &amp;&amp;</span>
+<span class="pc bpc" id="L394" title="1 of 2 branches missed.">                mCalibrationData.getControlCovariance() != null) {</span>
             //if calibrator is available, propagate covariance to set process
             //covariance matrix
-<span class="fc bfc" id="L398" title="All 2 branches covered.">            if(mNormalDist == null) {</span>
-<span class="fc" id="L399">                mNormalDist = new MultivariateNormalDist(STATE_LENGTH);</span>
+<span class="fc bfc" id="L397" title="All 2 branches covered.">            if(mNormalDist == null) {</span>
+<span class="fc" id="L398">                mNormalDist = new MultivariateNormalDist(STATE_LENGTH);</span>
             }
             
             try {
-<span class="fc" id="L403">                mCalibrationData.propagateWithControlJacobian(</span>
+<span class="fc" id="L402">                mCalibrationData.propagateWithControlJacobian(</span>
                         mJacobianPredictionU, mNormalDist);
                 //update kalman filter process noise
-<span class="fc" id="L406">                Matrix processNoise = mKalmanFilter.getProcessNoiseCov();</span>
+<span class="fc" id="L405">                Matrix processNoise = mKalmanFilter.getProcessNoiseCov();</span>
                 
                 //copy normal dist covariance into processNoise
-<span class="fc" id="L409">                mNormalDist.getCovariance(processNoise);</span>
-<span class="nc" id="L410">            } catch (InvalidCovarianceMatrixException e) {</span>
+<span class="fc" id="L408">                mNormalDist.getCovariance(processNoise);</span>
+<span class="nc" id="L409">            } catch (InvalidCovarianceMatrixException e) {</span>
                 /* ignore */
-<span class="fc" id="L412">            }</span>
+<span class="fc" id="L411">            }</span>
         }
         
         try {
             //also predict the state using Kalman filter with current control 
             //data
-<span class="fc" id="L418">            mControl.fromArray(mU, true);</span>
-<span class="fc" id="L419">            updatePredictedState(mKalmanFilter.predict(mControl));</span>
+<span class="fc" id="L417">            mControl.fromArray(mU, true);</span>
+<span class="fc" id="L418">            updatePredictedState(mKalmanFilter.predict(mControl));</span>
             
             //coopy predicted state to corrected state
-<span class="fc" id="L422">            mKalmanFilter.getStatePre().copyTo(mKalmanFilter.getStatePost());</span>
-<span class="fc" id="L423">            mKalmanFilter.getErrorCovPre().copyTo(</span>
-<span class="fc" id="L424">                    mKalmanFilter.getErrorCovPost());</span>
+<span class="fc" id="L421">            mKalmanFilter.getStatePre().copyTo(mKalmanFilter.getStatePost());</span>
+<span class="fc" id="L422">            mKalmanFilter.getErrorCovPre().copyTo(</span>
+<span class="fc" id="L423">                    mKalmanFilter.getErrorCovPost());</span>
             
-<span class="fc" id="L426">            mPredictionAvailable = true;</span>
-<span class="nc" id="L427">        } catch (Exception e) {</span>
-<span class="nc" id="L428">            mError = true;</span>
-<span class="fc" id="L429">        }</span>
+<span class="fc" id="L425">            mPredictionAvailable = true;</span>
+<span class="nc" id="L426">        } catch (Exception e) {</span>
+<span class="nc" id="L427">            mError = true;</span>
+<span class="fc" id="L428">        }</span>
         
-<span class="fc" id="L431">        mLastOrientation.fromRotation(mStateOrientation);</span>
-<span class="fc" id="L432">        mLastAccelerationX = mStateAccelerationX;</span>
-<span class="fc" id="L433">        mLastAccelerationY = mStateAccelerationY;</span>
-<span class="fc" id="L434">        mLastAccelerationZ = mStateAccelerationZ;</span>
-<span class="fc" id="L435">        mLastAngularSpeedX = mStateAngularSpeedX;</span>
-<span class="fc" id="L436">        mLastAngularSpeedY = mStateAngularSpeedY;</span>
-<span class="fc" id="L437">        mLastAngularSpeedZ = mStateAngularSpeedZ;</span>
-<span class="fc" id="L438">        mLastTimestampNanos = timestamp;     </span>
+<span class="fc" id="L430">        mLastOrientation.fromRotation(mStateOrientation);</span>
+<span class="fc" id="L431">        mLastAccelerationX = mStateAccelerationX;</span>
+<span class="fc" id="L432">        mLastAccelerationY = mStateAccelerationY;</span>
+<span class="fc" id="L433">        mLastAccelerationZ = mStateAccelerationZ;</span>
+<span class="fc" id="L434">        mLastAngularSpeedX = mStateAngularSpeedX;</span>
+<span class="fc" id="L435">        mLastAngularSpeedY = mStateAngularSpeedY;</span>
+<span class="fc" id="L436">        mLastAngularSpeedZ = mStateAngularSpeedZ;</span>
+<span class="fc" id="L437">        mLastTimestampNanos = timestamp;     </span>
         
-<span class="fc bfc" id="L440" title="All 2 branches covered.">        if(mListener != null) {</span>
-<span class="fc" id="L441">            mListener.onFullSampleProcessed(this);</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">        if(mListener != null) {</span>
+<span class="fc" id="L440">            mListener.onFullSampleProcessed(this);</span>
         }        
-<span class="fc" id="L443">    }</span>
+<span class="fc" id="L442">    }</span>
     
     /**
      * Resets position, linear velocity, linear acceleration, orientation and
@@ -481,64 +480,64 @@ public class AbsoluteOrientationSlamEstimator extends
             double stateQuaternionC, double stateQuaternionD, 
             double stateAngularSpeedX, double stateAngularSpeedY,
             double stateAngularSpeedZ) {
-<span class="fc" id="L484">        super.reset(statePositionX, statePositionY, statePositionZ,</span>
+<span class="fc" id="L483">        super.reset(statePositionX, statePositionY, statePositionZ,</span>
                 stateVelocityX, stateVelocityY, stateVelocityZ,
                 stateAccelerationX, stateAccelerationY, stateAccelerationZ,
                 stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
                 stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);                
-<span class="fc bfc" id="L489" title="All 2 branches covered.">        if(mStateOrientation != null) {</span>
-<span class="fc" id="L490">            mStateOrientation.setA(stateQuaternionA);</span>
-<span class="fc" id="L491">            mStateOrientation.setB(stateQuaternionB);</span>
-<span class="fc" id="L492">            mStateOrientation.setC(stateQuaternionC);</span>
-<span class="fc" id="L493">            mStateOrientation.setD(stateQuaternionD);            </span>
+<span class="fc bfc" id="L488" title="All 2 branches covered.">        if(mStateOrientation != null) {</span>
+<span class="fc" id="L489">            mStateOrientation.setA(stateQuaternionA);</span>
+<span class="fc" id="L490">            mStateOrientation.setB(stateQuaternionB);</span>
+<span class="fc" id="L491">            mStateOrientation.setC(stateQuaternionC);</span>
+<span class="fc" id="L492">            mStateOrientation.setD(stateQuaternionD);            </span>
         }
         
-<span class="fc bfc" id="L496" title="All 2 branches covered.">        if(mLastOrientation != null) {</span>
-<span class="fc" id="L497">            mLastOrientation.setA(1.0);</span>
-<span class="fc" id="L498">            mLastOrientation.setB(0.0);</span>
-<span class="fc" id="L499">            mLastOrientation.setC(0.0);</span>
-<span class="fc" id="L500">            mLastOrientation.setD(0.0);</span>
+<span class="fc bfc" id="L495" title="All 2 branches covered.">        if(mLastOrientation != null) {</span>
+<span class="fc" id="L496">            mLastOrientation.setA(1.0);</span>
+<span class="fc" id="L497">            mLastOrientation.setB(0.0);</span>
+<span class="fc" id="L498">            mLastOrientation.setC(0.0);</span>
+<span class="fc" id="L499">            mLastOrientation.setD(0.0);</span>
         }
         
-<span class="fc bfc" id="L503" title="All 2 branches covered.">        if(mX != null) {</span>
+<span class="fc bfc" id="L502" title="All 2 branches covered.">        if(mX != null) {</span>
             //position
-<span class="fc" id="L505">            mX[0] = statePositionX;</span>
-<span class="fc" id="L506">            mX[1] = statePositionY;</span>
-<span class="fc" id="L507">            mX[2] = statePositionZ;</span>
+<span class="fc" id="L504">            mX[0] = statePositionX;</span>
+<span class="fc" id="L505">            mX[1] = statePositionY;</span>
+<span class="fc" id="L506">            mX[2] = statePositionZ;</span>
             
             //quaternion
-<span class="fc" id="L510">            mX[3] = stateQuaternionA;</span>
-<span class="fc" id="L511">            mX[4] = stateQuaternionB;</span>
-<span class="fc" id="L512">            mX[5] = stateQuaternionC;</span>
-<span class="fc" id="L513">            mX[6] = stateQuaternionD;</span>
+<span class="fc" id="L509">            mX[3] = stateQuaternionA;</span>
+<span class="fc" id="L510">            mX[4] = stateQuaternionB;</span>
+<span class="fc" id="L511">            mX[5] = stateQuaternionC;</span>
+<span class="fc" id="L512">            mX[6] = stateQuaternionD;</span>
             
             //velocity
-<span class="fc" id="L516">            mX[7] = stateVelocityX;</span>
-<span class="fc" id="L517">            mX[8] = stateVelocityY;</span>
-<span class="fc" id="L518">            mX[9] = stateVelocityZ;</span>
+<span class="fc" id="L515">            mX[7] = stateVelocityX;</span>
+<span class="fc" id="L516">            mX[8] = stateVelocityY;</span>
+<span class="fc" id="L517">            mX[9] = stateVelocityZ;</span>
             
             //linear acceleration
-<span class="fc" id="L521">            mX[10] = stateAccelerationX;</span>
-<span class="fc" id="L522">            mX[11] = stateAccelerationY;</span>
-<span class="fc" id="L523">            mX[12] = stateAccelerationZ;</span>
+<span class="fc" id="L520">            mX[10] = stateAccelerationX;</span>
+<span class="fc" id="L521">            mX[11] = stateAccelerationY;</span>
+<span class="fc" id="L522">            mX[12] = stateAccelerationZ;</span>
             
             //angular speed
-<span class="fc" id="L526">            mX[13] = stateAngularSpeedX;</span>
-<span class="fc" id="L527">            mX[14] = stateAngularSpeedY;</span>
-<span class="fc" id="L528">            mX[15] = stateAngularSpeedZ;                        </span>
+<span class="fc" id="L525">            mX[13] = stateAngularSpeedX;</span>
+<span class="fc" id="L526">            mX[14] = stateAngularSpeedY;</span>
+<span class="fc" id="L527">            mX[15] = stateAngularSpeedZ;                        </span>
 
             try {
                 //set initial Kalman filter state (state pre and pro must be two 
                 //different instances!)
-<span class="fc" id="L533">                mKalmanFilter.getStatePre().fromArray(mX);</span>
-<span class="fc" id="L534">                mKalmanFilter.getStatePost().fromArray(mX);</span>
-<span class="pc" id="L535">            } catch (WrongSizeException ignore) { /* never thrown */ }</span>
+<span class="fc" id="L532">                mKalmanFilter.getStatePre().fromArray(mX);</span>
+<span class="fc" id="L533">                mKalmanFilter.getStatePost().fromArray(mX);</span>
+<span class="pc" id="L534">            } catch (WrongSizeException ignore) { /* never thrown */ }</span>
         }
 
-<span class="fc" id="L538">        mError = false;    </span>
-<span class="fc" id="L539">        mLastTimestampNanos = -1;</span>
-<span class="fc" id="L540">        mPredictionAvailable = false;</span>
-<span class="fc" id="L541">    }  </span>
+<span class="fc" id="L537">        mError = false;    </span>
+<span class="fc" id="L538">        mLastTimestampNanos = -1;</span>
+<span class="fc" id="L539">        mPredictionAvailable = false;</span>
+<span class="fc" id="L540">    }  </span>
     
     /**
      * Updates state data of the device by using state matrix obtained after 
@@ -552,12 +551,12 @@ public class AbsoluteOrientationSlamEstimator extends
      */
     private void updatePredictedState(Matrix state) {
         //position
-<span class="fc" id="L555">        mStatePositionX = mX[0];</span>
-<span class="fc" id="L556">        mX[0] = state.getElementAtIndex(0);</span>
-<span class="fc" id="L557">        mStatePositionY = mX[1];</span>
-<span class="fc" id="L558">        mX[1] = state.getElementAtIndex(1);</span>
-<span class="fc" id="L559">        mStatePositionZ = mX[2];</span>
-<span class="fc" id="L560">        mX[2] = state.getElementAtIndex(2);</span>
+<span class="fc" id="L554">        mStatePositionX = mX[0];</span>
+<span class="fc" id="L555">        mX[0] = state.getElementAtIndex(0);</span>
+<span class="fc" id="L556">        mStatePositionY = mX[1];</span>
+<span class="fc" id="L557">        mX[1] = state.getElementAtIndex(1);</span>
+<span class="fc" id="L558">        mStatePositionZ = mX[2];</span>
+<span class="fc" id="L559">        mX[2] = state.getElementAtIndex(2);</span>
 
         //quaternion (state predictor is more reliable than Kalman filter, for
         //that reason we ignore predicted quaternion values on Kalman filter and
@@ -565,40 +564,40 @@ public class AbsoluteOrientationSlamEstimator extends
         //much more reliable than accelerometer ones. For that reason state
         //elements corresponding to quaternion (3 to 6) are not copied into mX 
         //array.
-<span class="fc" id="L568">        mStateQuaternionA = mX[3];</span>
-<span class="fc" id="L569">        mStateQuaternionB = mX[4];</span>
-<span class="fc" id="L570">        mStateQuaternionC = mX[5];</span>
-<span class="fc" id="L571">        mStateQuaternionD = mX[6];</span>
+<span class="fc" id="L567">        mStateQuaternionA = mX[3];</span>
+<span class="fc" id="L568">        mStateQuaternionB = mX[4];</span>
+<span class="fc" id="L569">        mStateQuaternionC = mX[5];</span>
+<span class="fc" id="L570">        mStateQuaternionD = mX[6];</span>
         
-<span class="fc" id="L573">        mStateOrientation.setA(mStateQuaternionA);</span>
-<span class="fc" id="L574">        mStateOrientation.setB(mStateQuaternionB);</span>
-<span class="fc" id="L575">        mStateOrientation.setC(mStateQuaternionC);</span>
-<span class="fc" id="L576">        mStateOrientation.setD(mStateQuaternionD);                    </span>
+<span class="fc" id="L572">        mStateOrientation.setA(mStateQuaternionA);</span>
+<span class="fc" id="L573">        mStateOrientation.setB(mStateQuaternionB);</span>
+<span class="fc" id="L574">        mStateOrientation.setC(mStateQuaternionC);</span>
+<span class="fc" id="L575">        mStateOrientation.setD(mStateQuaternionD);                    </span>
 
         //velocity
-<span class="fc" id="L579">        mStateVelocityX = mX[7];</span>
-<span class="fc" id="L580">        mX[7] = state.getElementAtIndex(7);</span>
-<span class="fc" id="L581">        mStateVelocityY = mX[8];</span>
-<span class="fc" id="L582">        mX[8] = state.getElementAtIndex(8);</span>
-<span class="fc" id="L583">        mStateVelocityZ = mX[9];</span>
-<span class="fc" id="L584">        mX[9] = state.getElementAtIndex(9);</span>
+<span class="fc" id="L578">        mStateVelocityX = mX[7];</span>
+<span class="fc" id="L579">        mX[7] = state.getElementAtIndex(7);</span>
+<span class="fc" id="L580">        mStateVelocityY = mX[8];</span>
+<span class="fc" id="L581">        mX[8] = state.getElementAtIndex(8);</span>
+<span class="fc" id="L582">        mStateVelocityZ = mX[9];</span>
+<span class="fc" id="L583">        mX[9] = state.getElementAtIndex(9);</span>
 
         //linear acceleration
-<span class="fc" id="L587">        mStateAccelerationX = mX[10];</span>
-<span class="fc" id="L588">        mX[10] = state.getElementAtIndex(10);</span>
-<span class="fc" id="L589">        mStateAccelerationY = mX[11];</span>
-<span class="fc" id="L590">        mX[11] = state.getElementAtIndex(11);</span>
-<span class="fc" id="L591">        mStateAccelerationZ = mX[12];</span>
-<span class="fc" id="L592">        mX[12] = state.getElementAtIndex(12);</span>
+<span class="fc" id="L586">        mStateAccelerationX = mX[10];</span>
+<span class="fc" id="L587">        mX[10] = state.getElementAtIndex(10);</span>
+<span class="fc" id="L588">        mStateAccelerationY = mX[11];</span>
+<span class="fc" id="L589">        mX[11] = state.getElementAtIndex(11);</span>
+<span class="fc" id="L590">        mStateAccelerationZ = mX[12];</span>
+<span class="fc" id="L591">        mX[12] = state.getElementAtIndex(12);</span>
 
         //angular velocity
-<span class="fc" id="L595">        mStateAngularSpeedX = mX[13];</span>
-<span class="fc" id="L596">        mX[13] = state.getElementAtIndex(13);</span>
-<span class="fc" id="L597">        mStateAngularSpeedY = mX[14];</span>
-<span class="fc" id="L598">        mX[14] = state.getElementAtIndex(14);</span>
-<span class="fc" id="L599">        mStateAngularSpeedZ = mX[15];</span>
-<span class="fc" id="L600">        mX[15] = state.getElementAtIndex(15);        </span>
-<span class="fc" id="L601">    }</span>
+<span class="fc" id="L594">        mStateAngularSpeedX = mX[13];</span>
+<span class="fc" id="L595">        mX[13] = state.getElementAtIndex(13);</span>
+<span class="fc" id="L596">        mStateAngularSpeedY = mX[14];</span>
+<span class="fc" id="L597">        mX[14] = state.getElementAtIndex(14);</span>
+<span class="fc" id="L598">        mStateAngularSpeedZ = mX[15];</span>
+<span class="fc" id="L599">        mX[15] = state.getElementAtIndex(15);        </span>
+<span class="fc" id="L600">    }</span>
     
     /**
      * Updates state data of the device by using state matrix obtained from 
@@ -607,52 +606,52 @@ public class AbsoluteOrientationSlamEstimator extends
      */    
     private void updateCorrectedState(Matrix state) {
         //position
-<span class="fc" id="L610">        mStatePositionX = mX[0] = </span>
-<span class="fc" id="L611">                state.getElementAtIndex(0);</span>
-<span class="fc" id="L612">        mStatePositionY = mX[1] = </span>
-<span class="fc" id="L613">                state.getElementAtIndex(1);</span>
-<span class="fc" id="L614">        mStatePositionZ = mX[2] = </span>
-<span class="fc" id="L615">                state.getElementAtIndex(2);</span>
+<span class="fc" id="L609">        mStatePositionX = mX[0] = </span>
+<span class="fc" id="L610">                state.getElementAtIndex(0);</span>
+<span class="fc" id="L611">        mStatePositionY = mX[1] = </span>
+<span class="fc" id="L612">                state.getElementAtIndex(1);</span>
+<span class="fc" id="L613">        mStatePositionZ = mX[2] = </span>
+<span class="fc" id="L614">                state.getElementAtIndex(2);</span>
 
         //quaternion
-<span class="fc" id="L618">        mStateQuaternionA = mX[3] = </span>
-<span class="fc" id="L619">                state.getElementAtIndex(3);</span>
-<span class="fc" id="L620">        mStateQuaternionB = mX[4] = </span>
-<span class="fc" id="L621">                state.getElementAtIndex(4);</span>
-<span class="fc" id="L622">        mStateQuaternionC = mX[5] = </span>
-<span class="fc" id="L623">                state.getElementAtIndex(5);</span>
-<span class="fc" id="L624">        mStateQuaternionD = mX[6] = </span>
-<span class="fc" id="L625">                state.getElementAtIndex(6);</span>
+<span class="fc" id="L617">        mStateQuaternionA = mX[3] = </span>
+<span class="fc" id="L618">                state.getElementAtIndex(3);</span>
+<span class="fc" id="L619">        mStateQuaternionB = mX[4] = </span>
+<span class="fc" id="L620">                state.getElementAtIndex(4);</span>
+<span class="fc" id="L621">        mStateQuaternionC = mX[5] = </span>
+<span class="fc" id="L622">                state.getElementAtIndex(5);</span>
+<span class="fc" id="L623">        mStateQuaternionD = mX[6] = </span>
+<span class="fc" id="L624">                state.getElementAtIndex(6);</span>
 
-<span class="fc" id="L627">        mStateOrientation.setA(mStateQuaternionA);</span>
-<span class="fc" id="L628">        mStateOrientation.setB(mStateQuaternionB);</span>
-<span class="fc" id="L629">        mStateOrientation.setC(mStateQuaternionC);</span>
-<span class="fc" id="L630">        mStateOrientation.setD(mStateQuaternionD);   </span>
-<span class="fc" id="L631">        mStateOrientation.normalize();</span>
+<span class="fc" id="L626">        mStateOrientation.setA(mStateQuaternionA);</span>
+<span class="fc" id="L627">        mStateOrientation.setB(mStateQuaternionB);</span>
+<span class="fc" id="L628">        mStateOrientation.setC(mStateQuaternionC);</span>
+<span class="fc" id="L629">        mStateOrientation.setD(mStateQuaternionD);   </span>
+<span class="fc" id="L630">        mStateOrientation.normalize();</span>
         
         //velocity
-<span class="fc" id="L634">        mStateVelocityX = mX[7] = </span>
-<span class="fc" id="L635">                state.getElementAtIndex(7);</span>
-<span class="fc" id="L636">        mStateVelocityY = mX[8] = </span>
-<span class="fc" id="L637">                state.getElementAtIndex(8);</span>
-<span class="fc" id="L638">        mStateVelocityZ = mX[9] = </span>
-<span class="fc" id="L639">                state.getElementAtIndex(9);</span>
+<span class="fc" id="L633">        mStateVelocityX = mX[7] = </span>
+<span class="fc" id="L634">                state.getElementAtIndex(7);</span>
+<span class="fc" id="L635">        mStateVelocityY = mX[8] = </span>
+<span class="fc" id="L636">                state.getElementAtIndex(8);</span>
+<span class="fc" id="L637">        mStateVelocityZ = mX[9] = </span>
+<span class="fc" id="L638">                state.getElementAtIndex(9);</span>
 
         //linear acceleration
-<span class="fc" id="L642">        mStateAccelerationX = mX[10] = </span>
-<span class="fc" id="L643">                state.getElementAtIndex(10);</span>
-<span class="fc" id="L644">        mStateAccelerationY = mX[11] = </span>
-<span class="fc" id="L645">                state.getElementAtIndex(11);</span>
-<span class="fc" id="L646">        mStateAccelerationZ = mX[12] = </span>
-<span class="fc" id="L647">                state.getElementAtIndex(12);</span>
+<span class="fc" id="L641">        mStateAccelerationX = mX[10] = </span>
+<span class="fc" id="L642">                state.getElementAtIndex(10);</span>
+<span class="fc" id="L643">        mStateAccelerationY = mX[11] = </span>
+<span class="fc" id="L644">                state.getElementAtIndex(11);</span>
+<span class="fc" id="L645">        mStateAccelerationZ = mX[12] = </span>
+<span class="fc" id="L646">                state.getElementAtIndex(12);</span>
 
         //angular velocity
-<span class="fc" id="L650">        mStateAngularSpeedX = mX[13] = </span>
-<span class="fc" id="L651">                state.getElementAtIndex(13);</span>
-<span class="fc" id="L652">        mStateAngularSpeedY = mX[14] = </span>
-<span class="fc" id="L653">                state.getElementAtIndex(14);</span>
-<span class="fc" id="L654">        mStateAngularSpeedZ = mX[15] = </span>
-<span class="fc" id="L655">                state.getElementAtIndex(15);       </span>
-<span class="fc" id="L656">    }    </span>
+<span class="fc" id="L649">        mStateAngularSpeedX = mX[13] = </span>
+<span class="fc" id="L650">                state.getElementAtIndex(13);</span>
+<span class="fc" id="L651">        mStateAngularSpeedY = mX[14] = </span>
+<span class="fc" id="L652">                state.getElementAtIndex(14);</span>
+<span class="fc" id="L653">        mStateAngularSpeedZ = mX[15] = </span>
+<span class="fc" id="L654">                state.getElementAtIndex(15);       </span>
+<span class="fc" id="L655">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

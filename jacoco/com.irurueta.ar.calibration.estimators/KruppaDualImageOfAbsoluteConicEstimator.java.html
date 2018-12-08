@@ -945,7 +945,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
 <span class="fc" id="L945">            DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(</span>
                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 <span class="fc" id="L947">            boolean valid = false;</span>
-<span class="pc bpc" id="L948" title="1 of 2 branches missed.">            if (roots != null) {</span>
+<span class="fc bfc" id="L948" title="All 2 branches covered.">            if (roots != null) {</span>
 <span class="fc" id="L949">                double r = mFocalDistanceAspectRatio;</span>
 <span class="fc" id="L950">                double r2 = r*r;</span>
 <span class="fc bfc" id="L951" title="All 2 branches covered.">                for (Complex root : roots) {</span>
@@ -969,7 +969,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
                     }
                 }
 <span class="fc" id="L971">            } else {</span>
-<span class="nc" id="L972">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
+<span class="fc" id="L972">                throw new KruppaDualImageOfAbsoluteConicEstimatorException();</span>
             }
             
 <span class="fc bfc" id="L975" title="All 2 branches covered.">            if (valid) {</span>

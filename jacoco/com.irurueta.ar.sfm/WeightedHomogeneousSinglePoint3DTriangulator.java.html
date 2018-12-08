@@ -90,7 +90,7 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public WeightedHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+            List&lt;PinholeCamera&gt; cameras) {
 <span class="fc" id="L94">        super(points2D, cameras);</span>
 <span class="fc" id="L95">        mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
 <span class="fc" id="L96">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
@@ -107,11 +107,10 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * minimum required to compute triangulation.
      */
     public WeightedHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
-            List&lt;PinholeCamera&gt; cameras, double[] weights) 
-            throws IllegalArgumentException {
-<span class="fc" id="L112">        this();</span>
-<span class="fc" id="L113">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
-<span class="fc" id="L114">    }</span>
+            List&lt;PinholeCamera&gt; cameras, double[] weights) {
+<span class="fc" id="L111">        this();</span>
+<span class="fc" id="L112">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
+<span class="fc" id="L113">    }</span>
     
     
     /**
@@ -121,10 +120,10 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */
     public WeightedHomogeneousSinglePoint3DTriangulator(
             SinglePoint3DTriangulatorListener listener) {
-<span class="fc" id="L124">        super(listener);</span>
-<span class="fc" id="L125">        mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
-<span class="fc" id="L126">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
-<span class="fc" id="L127">    }</span>
+<span class="fc" id="L123">        super(listener);</span>
+<span class="fc" id="L124">        mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
+<span class="fc" id="L125">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L126">    }</span>
     
     /**
      * Constructor.
@@ -139,12 +138,11 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */
     public WeightedHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
             List&lt;PinholeCamera&gt; cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L144">        super(points2D, cameras, listener);</span>
-<span class="fc" id="L145">        mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
-<span class="fc" id="L146">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
-<span class="fc" id="L147">    }</span>
+            SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L142">        super(points2D, cameras, listener);</span>
+<span class="fc" id="L143">        mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
+<span class="fc" id="L144">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L145">    }</span>
     
     /**
      * Constructor.
@@ -160,11 +158,10 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */
     public WeightedHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
             List&lt;PinholeCamera&gt; cameras, double[] weights, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L165">        this(listener);</span>
-<span class="fc" id="L166">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
-<span class="fc" id="L167">    }    </span>
+            SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L162">        this(listener);</span>
+<span class="fc" id="L163">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
+<span class="fc" id="L164">    }    </span>
     
     /**
      * Returns weights assigned to each view.
@@ -174,7 +171,7 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * @return weights assigned to each view.
      */
     public double[] getWeights() {
-<span class="fc" id="L177">        return mWeights;</span>
+<span class="fc" id="L174">        return mWeights;</span>
     }
     
     /**
@@ -191,12 +188,12 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */    
     public void setPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
             List&lt;PinholeCamera&gt; cameras, double[] weights) 
-            throws LockedException, IllegalArgumentException {
-<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L196">            throw new LockedException();</span>
+            throws LockedException {
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L193">            throw new LockedException();</span>
         }
-<span class="fc" id="L198">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
-<span class="fc" id="L199">    }</span>
+<span class="fc" id="L195">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
+<span class="fc" id="L196">    }</span>
     
     /**
      * Indicates whether this instance is ready to start the triangulation.
@@ -207,7 +204,7 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */    
     @Override
     public boolean isReady() {
-<span class="fc" id="L210">        return areValidPointsCamerasAndWeights(mPoints2D, mCameras, mWeights);</span>
+<span class="fc" id="L207">        return areValidPointsCamerasAndWeights(mPoints2D, mCameras, mWeights);</span>
     }
     
     /**
@@ -225,8 +222,8 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
     public static boolean areValidPointsCamerasAndWeights(
             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
             double[] weights) {
-<span class="fc bfc" id="L228" title="All 4 branches covered.">        return areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != null &amp;&amp;</span>
-<span class="fc bfc" id="L229" title="All 2 branches covered.">                weights.length == points2D.size();</span>
+<span class="fc bfc" id="L225" title="All 4 branches covered.">        return areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != null &amp;&amp;</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">                weights.length == points2D.size();</span>
     }
     
     /**
@@ -235,7 +232,7 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * @return maximum number of correspondences to be weighted.
      */
     public int getMaxCorrespondences() {
-<span class="fc" id="L238">        return mMaxCorrespondences;</span>
+<span class="fc" id="L235">        return mMaxCorrespondences;</span>
     }
     
     /**
@@ -247,17 +244,17 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * minimum required number of views, which is 2.
      * @throws LockedException if this instance is locked.
      */
-    public void setMaxCorrespondences(int maxCorrespondences) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L252" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L253">            throw new LockedException();</span>
+    public void setMaxCorrespondences(int maxCorrespondences)
+            throws LockedException {
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L250">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L255" title="All 2 branches covered.">        if (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {</span>
-<span class="fc" id="L256">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        if (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {</span>
+<span class="fc" id="L253">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L259">        mMaxCorrespondences = maxCorrespondences;</span>
-<span class="fc" id="L260">    }</span>
+<span class="fc" id="L256">        mMaxCorrespondences = maxCorrespondences;</span>
+<span class="fc" id="L257">    }</span>
     
     /**
      * Indicates if weights are sorted by so that largest weighted 
@@ -265,7 +262,7 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * @return true if weights are sorted, false otherwise.
      */
     public boolean isSortWeightsEnabled() {
-<span class="fc" id="L268">        return mSortWeights;</span>
+<span class="fc" id="L265">        return mSortWeights;</span>
     }
     
     /**
@@ -276,12 +273,12 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */
     public void setSortWeightsEnabled(boolean sortWeights)
             throws LockedException {
-<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L280">            throw new LockedException();</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L277">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L283">        mSortWeights = sortWeights;</span>
-<span class="fc" id="L284">    }</span>
+<span class="fc" id="L280">        mSortWeights = sortWeights;</span>
+<span class="fc" id="L281">    }</span>
     
     /**
      * Returns type of triangulator.
@@ -289,7 +286,7 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      */
     @Override
     public Point3DTriangulatorType getType() {
-<span class="fc" id="L292">        return Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR;</span>
+<span class="fc" id="L289">        return Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR;</span>
     }
 
     /**
@@ -308,129 +305,130 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * other reason (i.e. degenerate geometry, numerical instabilities, etc).
      */    
     @Override
+    @SuppressWarnings(&quot;Duplicates&quot;)
     protected void triangulate(List&lt;Point2D&gt; points2D, 
             List&lt;PinholeCamera&gt; cameras, Point3D result) 
             throws Point3DTriangulationException {
         try {
-<span class="fc" id="L315">            mLocked = true;</span>
+<span class="fc" id="L313">            mLocked = true;</span>
             
-<span class="pc bpc" id="L317" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L318">                mListener.onTriangulateStart(this);</span>
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L316">                mListener.onTriangulateStart(this);</span>
             }
             
-<span class="fc" id="L321">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
+<span class="fc" id="L319">            WeightSelection selection = WeightSelection.selectWeights(mWeights, </span>
                     mSortWeights, mMaxCorrespondences);
             
-<span class="fc" id="L324">            boolean[] selected = selection.getSelected();</span>
+<span class="fc" id="L322">            boolean[] selected = selection.getSelected();</span>
             
-<span class="fc" id="L326">            int numViews = cameras.size();</span>
+<span class="fc" id="L324">            int numViews = cameras.size();</span>
             
-<span class="fc" id="L328">            Matrix a = new Matrix(2 * numViews, 2 * MIN_REQUIRED_VIEWS);</span>
+<span class="fc" id="L326">            Matrix a = new Matrix(2 * numViews, 2 * MIN_REQUIRED_VIEWS);</span>
             
             Point2D point;
             PinholeCamera camera;
-<span class="fc" id="L332">            Plane horizontalAxisPlane = new Plane();</span>
-<span class="fc" id="L333">            Plane verticalAxisPlane = new Plane();</span>
-<span class="fc" id="L334">            Plane principalPlane = new Plane();</span>
-<span class="fc" id="L335">            int row = 0;</span>
+<span class="fc" id="L330">            Plane horizontalAxisPlane = new Plane();</span>
+<span class="fc" id="L331">            Plane verticalAxisPlane = new Plane();</span>
+<span class="fc" id="L332">            Plane principalPlane = new Plane();</span>
+<span class="fc" id="L333">            int row = 0;</span>
             double rowNorm;
-<span class="fc bfc" id="L337" title="All 2 branches covered.">            for (int i = 0; i &lt; numViews; i++) {</span>
-<span class="pc bpc" id="L338" title="1 of 2 branches missed.">                if (selected[i]) {</span>
-<span class="fc" id="L339">                    point = points2D.get(i);</span>
-<span class="fc" id="L340">                    camera = cameras.get(i);</span>
+<span class="fc bfc" id="L335" title="All 2 branches covered.">            for (int i = 0; i &lt; numViews; i++) {</span>
+<span class="pc bpc" id="L336" title="1 of 2 branches missed.">                if (selected[i]) {</span>
+<span class="fc" id="L337">                    point = points2D.get(i);</span>
+<span class="fc" id="L338">                    camera = cameras.get(i);</span>
                 
                     //to increase accuracy
-<span class="fc" id="L343">                    point.normalize();</span>
-<span class="fc" id="L344">                    camera.normalize();</span>
+<span class="fc" id="L341">                    point.normalize();</span>
+<span class="fc" id="L342">                    camera.normalize();</span>
                 
-<span class="fc" id="L346">                    double homX = point.getHomX();</span>
-<span class="fc" id="L347">                    double homY = point.getHomY();</span>
-<span class="fc" id="L348">                    double homW = point.getHomW();</span>
+<span class="fc" id="L344">                    double homX = point.getHomX();</span>
+<span class="fc" id="L345">                    double homY = point.getHomY();</span>
+<span class="fc" id="L346">                    double homW = point.getHomW();</span>
                 
                     //pick rows of camera corresponding to different planes
                     //(we do not normalize planes, as it would introduce errors)
                 
                     //1st camera row (p1T)
-<span class="fc" id="L354">                    camera.verticalAxisPlane(verticalAxisPlane);</span>
+<span class="fc" id="L352">                    camera.verticalAxisPlane(verticalAxisPlane);</span>
                     //2nd camera row (p2T)
-<span class="fc" id="L356">                    camera.horizontalAxisPlane(horizontalAxisPlane);</span>
+<span class="fc" id="L354">                    camera.horizontalAxisPlane(horizontalAxisPlane);</span>
                     //3rd camera row (p3T)
-<span class="fc" id="L358">                    camera.principalPlane(principalPlane);</span>
+<span class="fc" id="L356">                    camera.principalPlane(principalPlane);</span>
                 
                 
                     //1st equation
-<span class="fc" id="L362">                    a.setElementAt(row, 0, homX * principalPlane.getA() -</span>
-<span class="fc" id="L363">                            homW * verticalAxisPlane.getA());</span>
-<span class="fc" id="L364">                    a.setElementAt(row, 1, homX * principalPlane.getB() -</span>
-<span class="fc" id="L365">                            homW * verticalAxisPlane.getB());</span>
-<span class="fc" id="L366">                    a.setElementAt(row, 2, homX * principalPlane.getC() -</span>
-<span class="fc" id="L367">                            homW * verticalAxisPlane.getC());</span>
-<span class="fc" id="L368">                    a.setElementAt(row, 3, homX * principalPlane.getD() - </span>
-<span class="fc" id="L369">                            homW * verticalAxisPlane.getD());</span>
+<span class="fc" id="L360">                    a.setElementAt(row, 0, homX * principalPlane.getA() -</span>
+<span class="fc" id="L361">                            homW * verticalAxisPlane.getA());</span>
+<span class="fc" id="L362">                    a.setElementAt(row, 1, homX * principalPlane.getB() -</span>
+<span class="fc" id="L363">                            homW * verticalAxisPlane.getB());</span>
+<span class="fc" id="L364">                    a.setElementAt(row, 2, homX * principalPlane.getC() -</span>
+<span class="fc" id="L365">                            homW * verticalAxisPlane.getC());</span>
+<span class="fc" id="L366">                    a.setElementAt(row, 3, homX * principalPlane.getD() - </span>
+<span class="fc" id="L367">                            homW * verticalAxisPlane.getD());</span>
                 
                     //normalize row (equation) to increase accuracy
-<span class="fc" id="L372">                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
-<span class="fc" id="L373">                            Math.pow(a.getElementAt(row, 1), 2.0) +</span>
-<span class="fc" id="L374">                            Math.pow(a.getElementAt(row, 2), 2.0) +</span>
-<span class="fc" id="L375">                            Math.pow(a.getElementAt(row, 3), 2.0));</span>
+<span class="fc" id="L370">                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
+<span class="fc" id="L371">                            Math.pow(a.getElementAt(row, 1), 2.0) +</span>
+<span class="fc" id="L372">                            Math.pow(a.getElementAt(row, 2), 2.0) +</span>
+<span class="fc" id="L373">                            Math.pow(a.getElementAt(row, 3), 2.0));</span>
                 
-<span class="fc" id="L377">                    a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
-<span class="fc" id="L378">                    a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
-<span class="fc" id="L379">                    a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
-<span class="fc" id="L380">                    a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);</span>
+<span class="fc" id="L375">                    a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
+<span class="fc" id="L376">                    a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
+<span class="fc" id="L377">                    a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
+<span class="fc" id="L378">                    a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);</span>
                 
                     //2nd equation
-<span class="fc" id="L383">                    row++;</span>
+<span class="fc" id="L381">                    row++;</span>
                 
-<span class="fc" id="L385">                    a.setElementAt(row, 0, homY * principalPlane.getA() -</span>
-<span class="fc" id="L386">                            homW * horizontalAxisPlane.getA());</span>
-<span class="fc" id="L387">                    a.setElementAt(row, 1, homY * principalPlane.getB() -</span>
-<span class="fc" id="L388">                            homW * horizontalAxisPlane.getB());</span>
-<span class="fc" id="L389">                    a.setElementAt(row, 2, homY * principalPlane.getC() -</span>
-<span class="fc" id="L390">                            homW * horizontalAxisPlane.getC());</span>
-<span class="fc" id="L391">                    a.setElementAt(row, 3, homY * principalPlane.getD() - </span>
-<span class="fc" id="L392">                            homW * horizontalAxisPlane.getD());                </span>
+<span class="fc" id="L383">                    a.setElementAt(row, 0, homY * principalPlane.getA() -</span>
+<span class="fc" id="L384">                            homW * horizontalAxisPlane.getA());</span>
+<span class="fc" id="L385">                    a.setElementAt(row, 1, homY * principalPlane.getB() -</span>
+<span class="fc" id="L386">                            homW * horizontalAxisPlane.getB());</span>
+<span class="fc" id="L387">                    a.setElementAt(row, 2, homY * principalPlane.getC() -</span>
+<span class="fc" id="L388">                            homW * horizontalAxisPlane.getC());</span>
+<span class="fc" id="L389">                    a.setElementAt(row, 3, homY * principalPlane.getD() - </span>
+<span class="fc" id="L390">                            homW * horizontalAxisPlane.getD());                </span>
                 
                     //normalize row (equation) to increase accuracy
-<span class="fc" id="L395">                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
-<span class="fc" id="L396">                            Math.pow(a.getElementAt(row, 1), 2.0) +</span>
-<span class="fc" id="L397">                            Math.pow(a.getElementAt(row, 2), 2.0) +</span>
-<span class="fc" id="L398">                            Math.pow(a.getElementAt(row, 3), 2.0));</span>
+<span class="fc" id="L393">                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +</span>
+<span class="fc" id="L394">                            Math.pow(a.getElementAt(row, 1), 2.0) +</span>
+<span class="fc" id="L395">                            Math.pow(a.getElementAt(row, 2), 2.0) +</span>
+<span class="fc" id="L396">                            Math.pow(a.getElementAt(row, 3), 2.0));</span>
                 
-<span class="fc" id="L400">                    a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
-<span class="fc" id="L401">                    a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
-<span class="fc" id="L402">                    a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
-<span class="fc" id="L403">                    a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);                </span>
+<span class="fc" id="L398">                    a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
+<span class="fc" id="L399">                    a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
+<span class="fc" id="L400">                    a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
+<span class="fc" id="L401">                    a.setElementAt(row, 3, a.getElementAt(row, 3) / rowNorm);                </span>
                 }
             }
             
             //make SVD to find solution of A * M = 0
-<span class="fc" id="L408">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
-<span class="fc" id="L409">            decomposer.decompose();</span>
+<span class="fc" id="L406">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L407">            decomposer.decompose();</span>
             
-<span class="pc bpc" id="L411" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">            if (decomposer.getNullity() &gt; 1) {</span>
                 //degenerate case. Unique solution (up to scale) cannot be found
-<span class="nc" id="L413">                throw new Point3DTriangulationException();</span>
+<span class="nc" id="L411">                throw new Point3DTriangulationException();</span>
             }
             
-<span class="fc" id="L416">            Matrix v = decomposer.getV();</span>
+<span class="fc" id="L414">            Matrix v = decomposer.getV();</span>
             
             //last column of v will contain homogeneous coordinates of 
             //triangulated point
-<span class="fc" id="L420">            result.setHomogeneousCoordinates(v.getElementAt(0, 3), </span>
-<span class="fc" id="L421">                    v.getElementAt(1, 3), v.getElementAt(2, 3), </span>
-<span class="fc" id="L422">                    v.getElementAt(3, 3));</span>
+<span class="fc" id="L418">            result.setHomogeneousCoordinates(v.getElementAt(0, 3), </span>
+<span class="fc" id="L419">                    v.getElementAt(1, 3), v.getElementAt(2, 3), </span>
+<span class="fc" id="L420">                    v.getElementAt(3, 3));</span>
             
-<span class="pc bpc" id="L424" title="1 of 2 branches missed.">            if (mListener != null) {</span>
-<span class="fc" id="L425">                mListener.onTriangulateEnd(this);</span>
+<span class="pc bpc" id="L422" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L423">                mListener.onTriangulateEnd(this);</span>
             }
-<span class="nc" id="L427">        } catch (AlgebraException | SortingException e) {</span>
-<span class="nc" id="L428">            throw new Point3DTriangulationException(e);</span>
+<span class="nc" id="L425">        } catch (AlgebraException | SortingException e) {</span>
+<span class="nc" id="L426">            throw new Point3DTriangulationException(e);</span>
         } finally {
-<span class="fc" id="L430">            mLocked = false;</span>
+<span class="fc" id="L428">            mLocked = false;</span>
         }
 
-<span class="fc" id="L433">    }</span>
+<span class="fc" id="L431">    }</span>
     
     /**
      * Internal method to set list of matched 2D points for each view and their
@@ -445,15 +443,14 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     private void internalSetPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras, double[] weights) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L450" title="All 2 branches covered.">        if (!areValidPointsCamerasAndWeights(points2D, cameras, weights)) {</span>
-<span class="fc" id="L451">            throw new IllegalArgumentException();</span>
+            List&lt;PinholeCamera&gt; cameras, double[] weights) {
+<span class="fc bfc" id="L447" title="All 2 branches covered.">        if (!areValidPointsCamerasAndWeights(points2D, cameras, weights)) {</span>
+<span class="fc" id="L448">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L454">        mPoints2D = points2D;</span>
-<span class="fc" id="L455">        mCameras = cameras;</span>
-<span class="fc" id="L456">        mWeights = weights;</span>
-<span class="fc" id="L457">    }</span>
+<span class="fc" id="L451">        mPoints2D = points2D;</span>
+<span class="fc" id="L452">        mCameras = cameras;</span>
+<span class="fc" id="L453">        mWeights = weights;</span>
+<span class="fc" id="L454">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

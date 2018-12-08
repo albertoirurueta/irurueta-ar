@@ -98,369 +98,367 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>              List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras) 
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>              <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">super</strong>(points2D, cameras);
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>          mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>          mSortWeights = DEFAULT_SORT_WEIGHTS;
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      }
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">     * Constructor.</em>
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
-<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
-<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">     * @param cameras camera for each view where 2D points are represented.</em>
-<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists or weights don't have </em>
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">     * the same length or their length is less than 2 views, which is the </em>
-<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">     * minimum required to compute triangulation.</em>
-<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>             <strong class="jxr_keyword">double</strong>[] weights) <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <strong class="jxr_keyword">this</strong>();
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>     }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>              List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">super</strong>(points2D, cameras);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          mSortWeights = DEFAULT_SORT_WEIGHTS;
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      }
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">     * Constructor.</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">     * @param cameras camera for each view where 2D points are represented.</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists or weights don't have </em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">     * the same length or their length is less than 2 views, which is the </em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">     * minimum required to compute triangulation.</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>             <strong class="jxr_keyword">double</strong>[] weights) {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">this</strong>();
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * Constructor.</em>
-<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * @param listener listener to notify events generated by instances of this</em>
-<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     * class.</em>
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>             <a href="../../../../com/irurueta/ar/sfm/SinglePoint3DTriangulatorListener.html">SinglePoint3DTriangulatorListener</a> listener) {
-<a class="jxr_linenumber" name="L125" href="#L125">125</a>         <strong class="jxr_keyword">super</strong>(listener);
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>         mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>         mSortWeights = DEFAULT_SORT_WEIGHTS;
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     }
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">     * Constructor.</em>
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
-<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * @param listener listener to notify events generated by instances of this</em>
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * class.</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists don't have the same</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * length or their length is less than 2 views, which is the minimum</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>             <a href="../../../../com/irurueta/ar/sfm/SinglePoint3DTriangulatorListener.html">SinglePoint3DTriangulatorListener</a> listener) 
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>             <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">super</strong>(points2D, cameras, listener);
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>         mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>         mSortWeights = DEFAULT_SORT_WEIGHTS;
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     }
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>     
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * Constructor.</em>
-<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * @param cameras camera for each view where 2D points are represented.</em>
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * @param listener listener to notify events generated by instances of this</em>
-<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * class.</em>
-<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists or weights don't have </em>
-<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * the same length or their length is less than 2 views, which is the </em>
-<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     * minimum required to compute triangulation.</em>
-<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">double</strong>[] weights, <a href="../../../../com/irurueta/ar/sfm/SinglePoint3DTriangulatorListener.html">SinglePoint3DTriangulatorListener</a> listener) 
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>         <strong class="jxr_keyword">this</strong>(listener);
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     }    
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * Returns weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * The larger a weight is the more reliable a view is considered and </em>
-<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     * equations to triangulate a 3D point will be take precedence over other</em>
-<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     * views when estimating an averaged solution.</em>
-<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     * @return weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong>[] getWeights() {
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>         <strong class="jxr_keyword">return</strong> mWeights;
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     }
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">     * Sets list of matched 2D points for each view and their corresponding </em>
-<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">     * cameras used to project them along with their weights.</em>
-<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
-<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
-<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
-<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">     * @throws LockedException if this instance is locked.</em>
-<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists don't have the same</em>
-<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * length or their length is less than 2 views, which is the minimum </em>
-<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
-<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     */</em>    
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>             List&lt;PinholeCamera&gt; cameras, <strong class="jxr_keyword">double</strong>[] weights) 
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>             <strong class="jxr_keyword">throws</strong> LockedException, IllegalArgumentException {
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>         <strong class="jxr_keyword">if</strong> (isLocked()) {
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> LockedException();
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>         }
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>     }
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>     
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     * Indicates whether this instance is ready to start the triangulation.</em>
-<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * An instance is ready when both lists of 2D points and cameras are </em>
-<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     * provided, both lists have the same length, at least data for 2 views</em>
-<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * is provided and the corresponding weights are also provided.</em>
-<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * @return true if this instance is ready, false otherwise.</em>
-<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     */</em>    
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     @Override
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isReady() {
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>         <strong class="jxr_keyword">return</strong> areValidPointsCamerasAndWeights(mPoints2D, mCameras, mWeights);
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>     }
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>     
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">     * Indicates whether provided points, cameras and weights are valid to start</em>
-<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">     * the triangulation.</em>
-<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     * In order to triangulate points, at least two cameras and their </em>
-<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     * corresponding 2 matched 2D points are required along with weights for</em>
-<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">     * each view.</em>
-<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">     * If more views are provided, an averaged solution can be found.</em>
-<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">     * @param points2D list of matched points on each view.</em>
-<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
-<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     * @return true if data is enough to start triangulation, false otherwise.</em>
-<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> areValidPointsCamerasAndWeights(
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>             <strong class="jxr_keyword">double</strong>[] weights) {
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>         <strong class="jxr_keyword">return</strong> areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != <strong class="jxr_keyword">null</strong> &amp;&amp;
-<a class="jxr_linenumber" name="L230" href="#L230">230</a>                 weights.length == points2D.size();
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>     }
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     * Returns maximum number of correspondences to be weighted and taken into</em>
-<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     * account.</em>
-<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     * @return maximum number of correspondences to be weighted.</em>
-<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMaxCorrespondences() {
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         <strong class="jxr_keyword">return</strong> mMaxCorrespondences;
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>     }
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>     
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * Sets maximum number of correspondences to be weighted and taken into </em>
-<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     * account.</em>
-<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     * @param maxCorrespondences maximum number of correspondences to be </em>
-<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     * weighted.</em>
-<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided value is less than the </em>
-<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     * minimum required number of views, which is 2.</em>
-<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">     * @throws LockedException if this instance is locked.</em>
-<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setMaxCorrespondences(<strong class="jxr_keyword">int</strong> maxCorrespondences) 
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>             <strong class="jxr_keyword">throws</strong> IllegalArgumentException, LockedException {
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">if</strong> (isLocked()) {
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> LockedException();
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     * Constructor.</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * @param listener listener to notify events generated by instances of this</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * class.</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>             <a href="../../../../com/irurueta/ar/sfm/SinglePoint3DTriangulatorListener.html">SinglePoint3DTriangulatorListener</a> listener) {
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">super</strong>(listener);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         mSortWeights = DEFAULT_SORT_WEIGHTS;
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">     * Constructor.</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">     * @param listener listener to notify events generated by instances of this</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * class.</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists don't have the same</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * length or their length is less than 2 views, which is the minimum</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>             <a href="../../../../com/irurueta/ar/sfm/SinglePoint3DTriangulatorListener.html">SinglePoint3DTriangulatorListener</a> listener) {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">super</strong>(points2D, cameras, listener);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         mMaxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         mSortWeights = DEFAULT_SORT_WEIGHTS;
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     * Constructor.</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     * @param cameras camera for each view where 2D points are represented.</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * @param listener listener to notify events generated by instances of this</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * class.</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists or weights don't have </em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * the same length or their length is less than 2 views, which is the </em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * minimum required to compute triangulation.</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html">WeightedInhomogeneousSinglePoint3DTriangulator</a>(
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <strong class="jxr_keyword">double</strong>[] weights, <a href="../../../../com/irurueta/ar/sfm/SinglePoint3DTriangulatorListener.html">SinglePoint3DTriangulatorListener</a> listener) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>         <strong class="jxr_keyword">this</strong>(listener);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     }    
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">     * Returns weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     * The larger a weight is the more reliable a view is considered and </em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     * equations to triangulate a 3D point will be take precedence over other</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * views when estimating an averaged solution.</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * @return weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong>[] getWeights() {
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         <strong class="jxr_keyword">return</strong> mWeights;
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     }
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * Sets list of matched 2D points for each view and their corresponding </em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     * cameras used to project them along with their weights.</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">     * @throws LockedException if this instance is locked.</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists don't have the same</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">     * length or their length is less than 2 views, which is the minimum </em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     */</em>    
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>             List&lt;PinholeCamera&gt; cameras, <strong class="jxr_keyword">double</strong>[] weights) 
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>             <strong class="jxr_keyword">throws</strong> LockedException {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">if</strong> (isLocked()) {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> LockedException();
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         }
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         internalSetPointsCamerasAndWeights(points2D, cameras, weights);
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>     }
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * Indicates whether this instance is ready to start the triangulation.</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     * An instance is ready when both lists of 2D points and cameras are </em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     * provided, both lists have the same length, at least data for 2 views</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     * is provided and the corresponding weights are also provided.</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * @return true if this instance is ready, false otherwise.</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     */</em>    
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     @Override
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isReady() {
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         <strong class="jxr_keyword">return</strong> areValidPointsCamerasAndWeights(mPoints2D, mCameras, mWeights);
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     }
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">     * Indicates whether provided points, cameras and weights are valid to start</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">     * the triangulation.</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">     * In order to triangulate points, at least two cameras and their </em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">     * corresponding 2 matched 2D points are required along with weights for</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">     * each view.</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     * If more views are provided, an averaged solution can be found.</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     * @param points2D list of matched points on each view.</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">     * @return true if data is enough to start triangulation, false otherwise.</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> areValidPointsCamerasAndWeights(
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>             List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>             <strong class="jxr_keyword">double</strong>[] weights) {
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         <strong class="jxr_keyword">return</strong> areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != <strong class="jxr_keyword">null</strong> &amp;&amp;
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>                 weights.length == points2D.size();
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     }
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     * Returns maximum number of correspondences to be weighted and taken into</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">     * account.</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     * @return maximum number of correspondences to be weighted.</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getMaxCorrespondences() {
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         <strong class="jxr_keyword">return</strong> mMaxCorrespondences;
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     }
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">     * Sets maximum number of correspondences to be weighted and taken into </em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">     * account.</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     * @param maxCorrespondences maximum number of correspondences to be </em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * weighted.</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided value is less than the </em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     * minimum required number of views, which is 2.</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     * @throws LockedException if this instance is locked.</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setMaxCorrespondences(<strong class="jxr_keyword">int</strong> maxCorrespondences) 
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>             <strong class="jxr_keyword">throws</strong> LockedException {
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <strong class="jxr_keyword">if</strong> (isLocked()) {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> LockedException();
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         }
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">if</strong> (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException();
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>         }
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <strong class="jxr_keyword">if</strong> (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException();
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>         }
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>         
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>         mMaxCorrespondences = maxCorrespondences;
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     }
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     * Indicates if weights are sorted by so that largest weighted </em>
-<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * correspondences are used first.</em>
-<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     * @return true if weights are sorted, false otherwise.</em>
-<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isSortWeightsEnabled() {
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>         <strong class="jxr_keyword">return</strong> mSortWeights;
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>     }
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * Specifies whether weights are sorted by so that largest weighted</em>
-<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * correspondences are used first.</em>
-<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * @param sortWeights true if weights are sorted, false otherwise.</em>
-<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * @throws LockedException if this instance is locked.</em>
-<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSortWeightsEnabled(<strong class="jxr_keyword">boolean</strong> sortWeights)
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">throws</strong> LockedException {
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>         <strong class="jxr_keyword">if</strong> (isLocked()) {
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> LockedException();
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>         }
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>         
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>         mSortWeights = sortWeights;
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>     
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     * Returns type of triangulator.</em>
-<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     * @return type of triangulator.</em>
-<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     @Override
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/Point3DTriangulatorType.html">Point3DTriangulatorType</a> getType() {
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>         <strong class="jxr_keyword">return</strong> Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR;
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     }
-<a class="jxr_linenumber" name="L295" href="#L295">295</a> 
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * Internal method to triangulate provided matched 2D points being projected </em>
-<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     * by each corresponding camera into a single 3D point.</em>
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     * At least 2 matched 2D points and their corresponding 2 cameras are </em>
-<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">     * required to compute triangulation. If more views are provided, an </em>
-<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     * averaged solution is found.</em>
-<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     * This method does not check whether instance is locked or ready.</em>
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * @param points2D matched 2D points. Each point in the list is assumed to</em>
-<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     * be projected by the corresponding camera in the list.</em>
-<a class="jxr_linenumber" name="L305" href="#L305">305</a> <em class="jxr_javadoccomment">     * @param cameras list of cameras associated to the matched 2D point on the</em>
-<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">     * same position as the camera on the list.</em>
-<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     * @param result instance where triangulated 3D point is stored.</em>
-<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * @throws Point3DTriangulationException if triangulation fails for some</em>
-<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     * other reason (i.e. degenerate geometry, numerical instabilities, etc).</em>
-<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     */</em>    
-<a class="jxr_linenumber" name="L311" href="#L311">311</a>     @Override
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> triangulate(List&lt;Point2D&gt; points2D, 
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>             List&lt;PinholeCamera&gt; cameras, Point3D result) 
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../com/irurueta/ar/sfm/Point3DTriangulationException.html">Point3DTriangulationException</a> {
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>             mLocked = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>             
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>                 mListener.onTriangulateStart(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L320" href="#L320">320</a>             }
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>             
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>             WeightSelection selection = WeightSelection.selectWeights(mWeights, 
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>                     mSortWeights, mMaxCorrespondences);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         mMaxCorrespondences = maxCorrespondences;
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>     }
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">     * Indicates if weights are sorted by so that largest weighted </em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">     * correspondences are used first.</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     * @return true if weights are sorted, false otherwise.</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isSortWeightsEnabled() {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>         <strong class="jxr_keyword">return</strong> mSortWeights;
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     }
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     * Specifies whether weights are sorted by so that largest weighted</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     * correspondences are used first.</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * @param sortWeights true if weights are sorted, false otherwise.</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * @throws LockedException if this instance is locked.</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSortWeightsEnabled(<strong class="jxr_keyword">boolean</strong> sortWeights)
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>             <strong class="jxr_keyword">throws</strong> LockedException {
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         <strong class="jxr_keyword">if</strong> (isLocked()) {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> LockedException();
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>         
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>         mSortWeights = sortWeights;
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     }
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     * Returns type of triangulator.</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     * @return type of triangulator.</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     @Override
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../com/irurueta/ar/sfm/Point3DTriangulatorType.html">Point3DTriangulatorType</a> getType() {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         <strong class="jxr_keyword">return</strong> Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR;
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     }
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> 
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">     * Internal method to triangulate provided matched 2D points being projected </em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * by each corresponding camera into a single 3D point.</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     * At least 2 matched 2D points and their corresponding 2 cameras are </em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * required to compute triangulation. If more views are provided, an </em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     * averaged solution is found.</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     * This method does not check whether instance is locked or ready.</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">     * @param points2D matched 2D points. Each point in the list is assumed to</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     * be projected by the corresponding camera in the list.</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     * @param cameras list of cameras associated to the matched 2D point on the</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * same position as the camera on the list.</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     * @param result instance where triangulated 3D point is stored.</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> <em class="jxr_javadoccomment">     * @throws Point3DTriangulationException if triangulation fails for some</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">     * other reason (i.e. degenerate geometry, numerical instabilities, etc).</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     */</em>    
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     @Override
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>     @SuppressWarnings(<span class="jxr_string">"Duplicates"</span>)
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> triangulate(List&lt;Point2D&gt; points2D, 
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>             List&lt;PinholeCamera&gt; cameras, Point3D result) 
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../../com/irurueta/ar/sfm/Point3DTriangulationException.html">Point3DTriangulationException</a> {
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>             mLocked = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>             
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>                 mListener.onTriangulateStart(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>             }
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>             
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>             WeightSelection selection = WeightSelection.selectWeights(mWeights, 
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>                     mSortWeights, mMaxCorrespondences);
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>             
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>             <strong class="jxr_keyword">boolean</strong>[] selected = selection.getSelected();
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>             
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>             <strong class="jxr_keyword">boolean</strong>[] selected = selection.getSelected();
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>             <strong class="jxr_keyword">int</strong> numViews = cameras.size();
 <a class="jxr_linenumber" name="L326" href="#L326">326</a>             
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>             <strong class="jxr_keyword">int</strong> numViews = cameras.size();
-<a class="jxr_linenumber" name="L328" href="#L328">328</a>             
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>             Matrix a = <strong class="jxr_keyword">new</strong> Matrix(2 * numViews, 3);
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>             <strong class="jxr_keyword">double</strong>[] b = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[2 * numViews];
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>             
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>             Point2D point;
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>             PinholeCamera camera;
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>             Plane horizontalAxisPlane = <strong class="jxr_keyword">new</strong> Plane();
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>             Plane verticalAxisPlane = <strong class="jxr_keyword">new</strong> Plane();
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>             Plane principalPlane = <strong class="jxr_keyword">new</strong> Plane();
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>             <strong class="jxr_keyword">int</strong> row = 0;
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>             <strong class="jxr_keyword">double</strong> rowNorm;
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; numViews; i++) {
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>                 <strong class="jxr_keyword">if</strong> (selected[i]) {
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>                     point = points2D.get(i);
-<a class="jxr_linenumber" name="L342" href="#L342">342</a>                     camera = cameras.get(i);
-<a class="jxr_linenumber" name="L343" href="#L343">343</a>                 
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>                     <em class="jxr_comment">//to increase accuracy</em>
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>                     point.normalize();
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>                     camera.normalize();
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>                 
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>                     <strong class="jxr_keyword">double</strong> homX = point.getHomX();
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>                     <strong class="jxr_keyword">double</strong> homY = point.getHomY();
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>                     <strong class="jxr_keyword">double</strong> homW = point.getHomW();
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>                 
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>                     <em class="jxr_comment">//pick rows of camera corresponding to different planes</em>
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>                     <em class="jxr_comment">//(we do not normalize planes, as it would introduce errors)</em>
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>                 
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>                     <em class="jxr_comment">//1st camera row (p1T)</em>
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>                     camera.verticalAxisPlane(verticalAxisPlane);
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>                     <em class="jxr_comment">//2nd camera row (p2T)</em>
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>                     camera.horizontalAxisPlane(horizontalAxisPlane);
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>                     <em class="jxr_comment">//3rd camera row (p3T)</em>
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>                     camera.principalPlane(principalPlane);
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>                 
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>                 
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>                     <em class="jxr_comment">//1st equation</em>
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>                     a.setElementAt(row, 0, homX * principalPlane.getA() -
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>                             homW * verticalAxisPlane.getA());
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>                     a.setElementAt(row, 1, homX * principalPlane.getB() -
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>                             homW * verticalAxisPlane.getB());
-<a class="jxr_linenumber" name="L368" href="#L368">368</a>                     a.setElementAt(row, 2, homX * principalPlane.getC() -
-<a class="jxr_linenumber" name="L369" href="#L369">369</a>                             homW * verticalAxisPlane.getC());
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>                 
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>                     b[row] = homW * verticalAxisPlane.getD() -
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>                             homX * principalPlane.getD();
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>                 
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>                     <em class="jxr_comment">//normalize equation to increase accuracy</em>
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>                     rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +
-<a class="jxr_linenumber" name="L376" href="#L376">376</a>                             Math.pow(a.getElementAt(row, 1), 2.0) +
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>                             Math.pow(a.getElementAt(row, 2), 2.0));
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>                 
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>                     a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>                     a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>                     a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>                     b[row] /= rowNorm;
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>                 
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>                     <em class="jxr_comment">//2nd equation</em>
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>                     row++;
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>                 
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>                     a.setElementAt(row, 0, homY * principalPlane.getA() -
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>                             homW * horizontalAxisPlane.getA());
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>                     a.setElementAt(row, 1, homY * principalPlane.getB() -
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>                             homW * horizontalAxisPlane.getB());
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>                     a.setElementAt(row, 2, homY * principalPlane.getC() -
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>                             homW * horizontalAxisPlane.getC());
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>                 
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>                     b[row] = homW * horizontalAxisPlane.getD() -
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>                             homY * principalPlane.getD();
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>                 
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>                     <em class="jxr_comment">//normalize equation to increase accuracy</em>
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>                     rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>                             Math.pow(a.getElementAt(row, 1), 2.0) +
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>                             Math.pow(a.getElementAt(row, 2), 2.0));
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>                 
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>                     a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>                     a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>                     a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>                     b[row] /= rowNorm;
-<a class="jxr_linenumber" name="L406" href="#L406">406</a>                 }
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>             }
-<a class="jxr_linenumber" name="L408" href="#L408">408</a>             
-<a class="jxr_linenumber" name="L409" href="#L409">409</a>             <em class="jxr_comment">//make SVD to find solution of A * M = 0</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(a);
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>             Matrix a = <strong class="jxr_keyword">new</strong> Matrix(2 * numViews, 3);
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>             <strong class="jxr_keyword">double</strong>[] b = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[2 * numViews];
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>             
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>             Point2D point;
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>             PinholeCamera camera;
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>             Plane horizontalAxisPlane = <strong class="jxr_keyword">new</strong> Plane();
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>             Plane verticalAxisPlane = <strong class="jxr_keyword">new</strong> Plane();
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>             Plane principalPlane = <strong class="jxr_keyword">new</strong> Plane();
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>             <strong class="jxr_keyword">int</strong> row = 0;
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>             <strong class="jxr_keyword">double</strong> rowNorm;
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; numViews; i++) {
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>                 <strong class="jxr_keyword">if</strong> (selected[i]) {
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>                     point = points2D.get(i);
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>                     camera = cameras.get(i);
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>                 
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>                     <em class="jxr_comment">//to increase accuracy</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>                     point.normalize();
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>                     camera.normalize();
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>                 
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>                     <strong class="jxr_keyword">double</strong> homX = point.getHomX();
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>                     <strong class="jxr_keyword">double</strong> homY = point.getHomY();
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>                     <strong class="jxr_keyword">double</strong> homW = point.getHomW();
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>                 
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>                     <em class="jxr_comment">//pick rows of camera corresponding to different planes</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>                     <em class="jxr_comment">//(we do not normalize planes, as it would introduce errors)</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>                 
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>                     <em class="jxr_comment">//1st camera row (p1T)</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>                     camera.verticalAxisPlane(verticalAxisPlane);
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>                     <em class="jxr_comment">//2nd camera row (p2T)</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>                     camera.horizontalAxisPlane(horizontalAxisPlane);
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>                     <em class="jxr_comment">//3rd camera row (p3T)</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>                     camera.principalPlane(principalPlane);
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>                 
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>                 
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>                     <em class="jxr_comment">//1st equation</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>                     a.setElementAt(row, 0, homX * principalPlane.getA() -
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>                             homW * verticalAxisPlane.getA());
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>                     a.setElementAt(row, 1, homX * principalPlane.getB() -
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>                             homW * verticalAxisPlane.getB());
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>                     a.setElementAt(row, 2, homX * principalPlane.getC() -
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>                             homW * verticalAxisPlane.getC());
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>                 
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>                     b[row] = homW * verticalAxisPlane.getD() -
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>                             homX * principalPlane.getD();
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>                 
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>                     <em class="jxr_comment">//normalize equation to increase accuracy</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>                     rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>                             Math.pow(a.getElementAt(row, 1), 2.0) +
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>                             Math.pow(a.getElementAt(row, 2), 2.0));
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>                 
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>                     a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>                     a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>                     a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>                     b[row] /= rowNorm;
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>                 
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>                     <em class="jxr_comment">//2nd equation</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                     row++;
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>                 
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                     a.setElementAt(row, 0, homY * principalPlane.getA() -
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>                             homW * horizontalAxisPlane.getA());
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>                     a.setElementAt(row, 1, homY * principalPlane.getB() -
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>                             homW * horizontalAxisPlane.getB());
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>                     a.setElementAt(row, 2, homY * principalPlane.getC() -
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>                             homW * horizontalAxisPlane.getC());
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>                 
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>                     b[row] = homW * horizontalAxisPlane.getD() -
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>                             homY * principalPlane.getD();
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>                 
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>                     <em class="jxr_comment">//normalize equation to increase accuracy</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>                     rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0) +
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>                             Math.pow(a.getElementAt(row, 1), 2.0) +
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>                             Math.pow(a.getElementAt(row, 2), 2.0));
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>                 
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>                     a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>                     a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>                     a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>                     b[row] /= rowNorm;
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>                 }
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>             }
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>             
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>             <em class="jxr_comment">//make SVD to find solution of A * M = 0</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>             SingularValueDecomposer decomposer = <strong class="jxr_keyword">new</strong> SingularValueDecomposer(a);
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>             
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>             decomposer.decompose();
 <a class="jxr_linenumber" name="L411" href="#L411">411</a>             
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>             decomposer.decompose();
-<a class="jxr_linenumber" name="L413" href="#L413">413</a>             
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>             <em class="jxr_comment">//solve linear system of equations to obtain inhomogeneous </em>
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>             <em class="jxr_comment">//coordinates of triangulated point</em>
-<a class="jxr_linenumber" name="L416" href="#L416">416</a>             <strong class="jxr_keyword">double</strong>[] solution = decomposer.solve(b);
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>             
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>             result.setInhomogeneousCoordinates(solution[0], solution[1], 
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>                     solution[2]);
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>             
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>                 mListener.onTriangulateEnd(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>             }
-<a class="jxr_linenumber" name="L424" href="#L424">424</a>         } <strong class="jxr_keyword">catch</strong> (AlgebraException | SortingException e) {
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/sfm/Point3DTriangulationException.html">Point3DTriangulationException</a>(e);
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>         } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L427" href="#L427">427</a>             mLocked = false;
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>         }
-<a class="jxr_linenumber" name="L429" href="#L429">429</a> 
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>     }
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>     
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">     * Internal method to set list of matched 2D points for each view and their</em>
-<a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">     * corresponding cameras used to project them along with their weights.</em>
-<a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">     * This method does not check whether instance is locked.</em>
-<a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
-<a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
-<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
-<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
-<a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists don't have the same</em>
-<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     * length or their length is less than 2 views, which is the minimum </em>
-<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
-<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> internalSetPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>             List&lt;PinholeCamera&gt; cameras, <strong class="jxr_keyword">double</strong>[] weights) 
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>             <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <strong class="jxr_keyword">if</strong> (!areValidPointsCamerasAndWeights(points2D, cameras, weights)) {
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException();
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>         }
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>         
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>         mPoints2D = points2D;
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>         mCameras = cameras;
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>         mWeights = weights;
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>     }
-<a class="jxr_linenumber" name="L455" href="#L455">455</a> }
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>             <em class="jxr_comment">//solve linear system of equations to obtain inhomogeneous </em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>             <em class="jxr_comment">//coordinates of triangulated point</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>             <strong class="jxr_keyword">double</strong>[] solution = decomposer.solve(b);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>             
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>             result.setInhomogeneousCoordinates(solution[0], solution[1], 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>                     solution[2]);
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>             
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>             <strong class="jxr_keyword">if</strong> (mListener != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>                 mListener.onTriangulateEnd(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>             }
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         } <strong class="jxr_keyword">catch</strong> (AlgebraException | SortingException e) {
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../com/irurueta/ar/sfm/Point3DTriangulationException.html">Point3DTriangulationException</a>(e);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>             mLocked = false;
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         }
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>     }
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>     
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> <em class="jxr_javadoccomment">     * Internal method to set list of matched 2D points for each view and their</em>
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> <em class="jxr_javadoccomment">     * corresponding cameras used to project them along with their weights.</em>
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">     * This method does not check whether instance is locked.</em>
+<a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">     * @param points2D list of matched 2D points on each view. Each point in the</em>
+<a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">     * list is assumed to be projected by the corresponding camera in the list.</em>
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">     * @param cameras cameras for each view where 2D points are represented.</em>
+<a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">     * @param weights weights assigned to each view.</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if provided lists don't have the same</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">     * length or their length is less than 2 views, which is the minimum </em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     * required to compute triangulation.</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>     @SuppressWarnings(<span class="jxr_string">"Duplicates"</span>)
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> internalSetPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>             List&lt;PinholeCamera&gt; cameras, <strong class="jxr_keyword">double</strong>[] weights) {
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         <strong class="jxr_keyword">if</strong> (!areValidPointsCamerasAndWeights(points2D, cameras, weights)) {
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException();
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         }
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         mPoints2D = points2D;
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         mCameras = cameras;
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         mWeights = weights;
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>     }
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

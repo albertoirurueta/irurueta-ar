@@ -821,11 +821,373 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
+<td>com/irurueta/ar/slam/BaseSlamCalibrator.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/BaseSlamCalibrator.html#L373">373</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/BaseSlamEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/BaseSlamEstimator.html#L611">611</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>    }
+    
+    /**
+     * Indicates whether accumulation of samples is enabled or not.
+     * @return true if accumulation of samples is enabled, false otherwise.
+     */
+    public boolean isAccumulationEnabled() {
+        return mAccumulationEnabled;
+    }
+    
+    /**
+     * Specifies whether accumulation of samples is enabled or not.
+     * @param accumulationEnabled true if accumulation of samples is enabled,
+     * false otherwise.
+     */
+    public void setAccumulationEnabled(boolean accumulationEnabled) {
+        mAccumulationEnabled = accumulationEnabled;
+    }
+    
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * accelerometer sample, or -1 if no sample has been set yet.
+     * @return timestamp expressed in nanoseconds since the epoch time of the
+     * last accelerometer sample, or -1.
+     */
+    public long getAccelerometerTimestampNanos() {
+        return mAccelerometerTimestampNanos;
+    }
+    
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * gyroscope sample, or -1 if no sample has been set yet.
+     * @return timestamp expressed in nanoseconds since the epoch time of the 
+     * last gyroscope sample, or -1.
+     */
+    public long getGyroscopeTimestampNanos() {
+        return mGyroscopeTimestampNanos;
+    }
+    
+    /**
+     * Gets number of accelerometer samples accumulated since last full sample.
+     * @return number of accelerometer samples accumulated since last full 
+     * sample.
+     */
+    public int getAccumulatedAccelerometerSamples() {
+        return mAccumulatedAccelerometerSamples;
+    }
+    
+    /**
+     * Gets number of gyroscope samples accumulated since last full sample.
+     * @return number of gyroscope samples accumulated since last full sample.
+     */
+    public int getAccumulatedGyroscopeSamples() {
+        return mAccumulatedGyroscopeSamples;
+    }
+    
+    /**
+     * Indicates whether the accelerometer sample has been received since the
+     * last full sample (accelerometer + gyroscope).
+     * @return true if accelerometer sample has been received, false otherwise.
+     */
+    public boolean isAccelerometerSampleReceived() {
+        return mAccumulatedAccelerometerSamples &gt; 0;
+    }
+    
+    /**
+     * Indicates whether the gyroscope sample has been received since the last
+     * full sample (accelerometer + gyroscope).
+     * @return true if gyroscope sample has been received, false otherwise.
+     */
+    public boolean isGyroscopeSampleReceived() {
+        return mAccumulatedGyroscopeSamples &gt; 0;
+    }
+    
+    /**
+     * Indicates whether a full sample (accelerometer + gyroscope) has been
+     * received or not.
+     * @return true if full sample has been received, false otherwise.
+     */
+    public boolean isFullSampleAvailable() {
+        return isAccelerometerSampleReceived() &amp;&amp; isGyroscopeSampleReceived();
+    }
+    
+    /**
+     * Gets average acceleration along x-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along x-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleX() {
+        return mAccumulatedAccelerationSampleX;
+    }
+    
+    /**
+     * Gets average acceleration along y-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along y-axis accumulated since last full 
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleY() {
+        return mAccumulatedAccelerationSampleY;
+    }
+    
+    /**
+     * Gets acerage acceleration along z-axis accumulated since last full 
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along z-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleZ() {
+        return mAccumulatedAccelerationSampleZ;
+    }
+    
+    /**
+     * Gets average acceleration along x,y,z axes accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @return average acceleration along x,y,z axes expressed in meters per
+     * squared second (m/s^2).
+     */
+    public double[] getAccumulatedAccelerationSample() {
+        return new double[]{
+            mAccumulatedAccelerationSampleX,
+            mAccumulatedAccelerationSampleY,
+            mAccumulatedAccelerationSampleZ
+        };
+    }
+    
+    /**
+     * Gets average acceleration along x,yz axes accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     * @param result array where average acceleration along x,y,z axes will be
+     * stored.
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void getAccumulatedAccelerationSample(double[] result) {
+        if(result.length != N_COMPONENTS_3D) {
+            throw new IllegalArgumentException(&quot;result must have length 3&quot;);
+        }
+        result[0] = mAccumulatedAccelerationSampleX;
+        result[1] = mAccumulatedAccelerationSampleY;
+        result[2] = mAccumulatedAccelerationSampleZ;
+    }
+    
+    /**
+     * Gets average angular speed along x-axis accumulated since last full 
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along x-axis expressed in radians per 
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleX() {
+        return mAccumulatedAngularSpeedSampleX;
+    }
+    
+    /**
+     * Gets average angular speed along y-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along y-axis expressed in radians per
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleY() {
+        return mAccumulatedAngularSpeedSampleY;
+    }
+    
+    /**
+     * Gets average angular speed along z-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along z-axis expressed in radians per
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleZ() {
+        return mAccumulatedAngularSpeedSampleZ;
+    }
+    
+    /**
+     * Gets average angular speed along x,y,z axes accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @return average angular speed along x,y,z axes expressed in radians per
+     * second.
+     */
+    public double[] getAccumulatedAngularSpeedSample() {
+        return new double[]{
+            mAccumulatedAngularSpeedSampleX,
+            mAccumulatedAngularSpeedSampleY,
+            mAccumulatedAngularSpeedSampleZ
+        };
+    }
+    
+    /**
+     * Gets average angular speed along x,y,z axes accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     * @param result array where average angular speed along x,y,z axes will be
+     * stored.
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void getAccumulatedAngularSpeedSample(double[] result) {
+        if (result.length != N_COMPONENTS_3D) {
+            throw new IllegalArgumentException(&quot;result must have length 3&quot;);
+        }
+        result[0] = mAccumulatedAngularSpeedSampleX;
+        result[1] = mAccumulatedAngularSpeedSampleY;
+        result[2] = mAccumulatedAngularSpeedSampleZ;
+    }
+    
+    /**
+     * Provides a new accelerometer sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * @param accelerationX linear acceleration along x-axis expressed in meters 
+     * per squared second (m/s^2).
+     * @param accelerationY linear acceleration along y-axis expressed in meters
+     * per squared second (m/s^2).
+     * @param accelerationZ linear acceleration along z-axis expressed in meters
+     * per squared second (m/s^2).
+     */
+    public void updateAccelerometerSample(long timestamp, float accelerationX,
+            float accelerationY, float accelerationZ) {
+        if(!isFullSampleAvailable()) {
+            mAccelerometerTimestampNanos = timestamp;
+            if (isAccumulationEnabled() &amp;&amp; isAccelerometerSampleReceived()) {
+                //accumulation enabled
+                int nextSamples = mAccumulatedAccelerometerSamples + 1;
+                mAccumulatedAccelerationSampleX = 
+                        (mAccumulatedAccelerationSampleX * mAccumulatedAccelerometerSamples + 
+                        accelerationX) / nextSamples;
+                mAccumulatedAccelerationSampleY =
+                        (mAccumulatedAccelerationSampleY * mAccumulatedAccelerometerSamples +
+                        accelerationY) / nextSamples;
+                mAccumulatedAccelerationSampleZ =
+                        (mAccumulatedAccelerationSampleZ * mAccumulatedAccelerometerSamples +
+                        accelerationZ) / nextSamples;
+                mAccumulatedAccelerometerSamples = nextSamples;                
+            } else {
+                //accumulation disabled
+               mAccumulatedAccelerationSampleX = accelerationX;
+               mAccumulatedAccelerationSampleY = accelerationY;
+               mAccumulatedAccelerationSampleZ = accelerationZ;
+               mAccumulatedAccelerometerSamples++;  
+            }                      
+            notifyFullSampleAndResetSampleReceive();
+        }
+    }
+    
+    /**
+     * Provides a new accelerometer sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal 
+     * state gets also updated.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * expressed in nanoseconds.
+     * @param data array containing x,y,z components of linear acceleration 
+     * expressed in meters per squared second (m/s^2).
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void updateAccelerometerSample(long timestamp, float[] data) {
+        if(data.length != N_COMPONENTS_3D) {
+            throw new IllegalArgumentException(
+                    &quot;acceleration must have length 3&quot;);
+        }
+        updateAccelerometerSample(timestamp, data[0], data[1],
+                data[2]);
+    }
+    
+    /**
+     * Provides a new gyroscope sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal 
+     * state gets also updated.
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     * expressed in nanoseconds.
+     * @param angularSpeedX angular speed of rotation along x-axis expressed in
+     * radians per second (rad/s).
+     * @param angularSpeedY angular speed of rotation along y-axis expressed in
+     * radians per second (rad/s).
+     * @param angularSpeedZ angular speed of rotation along z-axis expressed in
+     * radians per second (rad/s).
+     */
+    public void updateGyroscopeSample(long timestamp, float angularSpeedX,
+            float angularSpeedY, float angularSpeedZ) {
+        if(!isFullSampleAvailable()) {
+            mGyroscopeTimestampNanos = timestamp;
+            if(isAccumulationEnabled() &amp;&amp; isGyroscopeSampleReceived()) {
+                //accumulation enabled
+                int nextSamples = mAccumulatedGyroscopeSamples + 1;
+                mAccumulatedAngularSpeedSampleX = 
+                        (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
+                        angularSpeedX) / nextSamples;
+                mAccumulatedAngularSpeedSampleY = 
+                        (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
+                        angularSpeedY) / nextSamples;
+                mAccumulatedAngularSpeedSampleZ = 
+                        (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
+                        angularSpeedZ) / nextSamples;
+                mAccumulatedGyroscopeSamples = nextSamples;
+            } else {
+                //accumulation disabled
+                mAccumulatedAngularSpeedSampleX = angularSpeedX;
+                mAccumulatedAngularSpeedSampleY = angularSpeedY;
+                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;
+                mAccumulatedGyroscopeSamples++;
+            }
+            notifyFullSampleAndResetSampleReceive();
+        }
+    }
+    
+    /**
+     * Provides a new gyroscope sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     * @param timestamp timestamp of gyroscope sample since epoch time and
+     * expressed in nanoseconds.
+     * @param data angular speed of rotation along x,y,z axes expressed in 
+     * radians per second (rad/s).
+     * @throws IllegalArgumentException if provided array does not have length 
+     * 3.
+     */
+    public void updateGyroscopeSample(long timestamp, float[] data) {
+        if(data.length != N_COMPONENTS_3D) {
+            throw new IllegalArgumentException(
+                    &quot;angular speed must have length 3&quot;);
+        }
+        updateGyroscopeSample(timestamp, data[0], data[1], data[2]);
+    }
+    
+    /**
+     * Gets most recent timestamp of received partial samples (accelerometer or
+     * gyroscope).
+     * @return most recent timestamp of received partial sample.
+     */
+    public long getMostRecentTimestampNanos() {
+        return mAccelerometerTimestampNanos &gt; mGyroscopeTimestampNanos ?
+                    mAccelerometerTimestampNanos : mGyroscopeTimestampNanos;
+    }
+    
+    /**
+     * Gets listener in charge of handling events raised by instances of this 
+     * class.
+     * @return listener in charge of handling events raised by instances of this 
+     * class.
+     */
+    public BaseSlamCalibratorListener getListener() {</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
 <td>com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.html#L189">189</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L344">344</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L342">342</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>                camera.fixCameraSign();
@@ -1020,7 +1382,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L188">188</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L340">340</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L338">338</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            for (int i = 0; i &lt; numViews; i++) {
@@ -1735,7 +2097,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationBaseSlamCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationBaseSlamCalibrator.html#L65">65</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationBaseSlamCalibrator.html#L64">64</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationBaseSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationBaseSlamEstimator.html#L64">64</a></td></tr>
@@ -2060,8 +2422,8 @@ com.irurueta:irurueta-ar
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L181">181</a></td></tr>
 <tr class="b">
-<td>com/irurueta/ar/slam/SlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L160">160</a></td></tr>
+<td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L142">142</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>    public AbsoluteOrientationConstantVelocityModelSlamEstimator() {
@@ -2119,8 +2481,7 @@ com.irurueta:irurueta-ar
      * 3x3.
      */
     @Override
-    public void setPositionCovarianceMatrix(Matrix positionCovariance)
-            throws IllegalArgumentException {
+    public void setPositionCovarianceMatrix(Matrix positionCovariance) {
         if(positionCovariance != null) {
             mKalmanFilter.setMeasurementNoiseCov(positionCovariance);        
         }
@@ -2473,10 +2834,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L651">651</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L653">653</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L909">909</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L911">911</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
@@ -3291,7 +3652,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L467">467</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L469">469</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L564">564</a></td></tr>
@@ -3497,150 +3858,6 @@ com.irurueta:irurueta-ar
             }
 
             FundamentalMatrix fundamentalMatrix = estimator.estimate();</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L161">161</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L162">162</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    public WeightedHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
-            List&lt;PinholeCamera&gt; cameras, double[] weights, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-        this(listener);
-        internalSetPointsCamerasAndWeights(points2D, cameras, weights);
-    }    
-    
-    /**
-     * Returns weights assigned to each view.
-     * The larger a weight is the more reliable a view is considered and 
-     * equations to triangulate a 3D point will be take precedence over other
-     * views when estimating an averaged solution.
-     * @return weights assigned to each view.
-     */
-    public double[] getWeights() {
-        return mWeights;
-    }
-    
-    /**
-     * Sets list of matched 2D points for each view and their corresponding 
-     * cameras used to project them along with their weights.
-     * @param points2D list of matched 2D points on each view. Each point in the
-     * list is assumed to be projected by the corresponding camera in the list.
-     * @param cameras cameras for each view where 2D points are represented.
-     * @param weights weights assigned to each view.
-     * @throws LockedException if this instance is locked.
-     * @throws IllegalArgumentException if provided lists don't have the same
-     * length or their length is less than 2 views, which is the minimum 
-     * required to compute triangulation.
-     */    
-    public void setPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras, double[] weights) 
-            throws LockedException, IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        internalSetPointsCamerasAndWeights(points2D, cameras, weights);
-    }
-    
-    /**
-     * Indicates whether this instance is ready to start the triangulation.
-     * An instance is ready when both lists of 2D points and cameras are 
-     * provided, both lists have the same length, at least data for 2 views
-     * is provided and the corresponding weights are also provided.
-     * @return true if this instance is ready, false otherwise.
-     */    
-    @Override
-    public boolean isReady() {
-        return areValidPointsCamerasAndWeights(mPoints2D, mCameras, mWeights);
-    }
-    
-    /**
-     * Indicates whether provided points, cameras and weights are valid to start
-     * the triangulation.
-     * In order to triangulate points, at least two cameras and their 
-     * corresponding 2 matched 2D points are required along with weights for
-     * each view.
-     * If more views are provided, an averaged solution can be found.
-     * @param points2D list of matched points on each view.
-     * @param cameras cameras for each view where 2D points are represented.
-     * @param weights weights assigned to each view.
-     * @return true if data is enough to start triangulation, false otherwise.
-     */
-    public static boolean areValidPointsCamerasAndWeights(
-            List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
-            double[] weights) {
-        return areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != null &amp;&amp;
-                weights.length == points2D.size();
-    }
-    
-    /**
-     * Returns maximum number of correspondences to be weighted and taken into
-     * account.
-     * @return maximum number of correspondences to be weighted.
-     */
-    public int getMaxCorrespondences() {
-        return mMaxCorrespondences;
-    }
-    
-    /**
-     * Sets maximum number of correspondences to be weighted and taken into 
-     * account.
-     * @param maxCorrespondences maximum number of correspondences to be 
-     * weighted.
-     * @throws IllegalArgumentException if provided value is less than the 
-     * minimum required number of views, which is 2.
-     * @throws LockedException if this instance is locked.
-     */
-    public void setMaxCorrespondences(int maxCorrespondences) 
-            throws IllegalArgumentException, LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        if (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {
-            throw new IllegalArgumentException();
-        }
-        
-        mMaxCorrespondences = maxCorrespondences;
-    }
-    
-    /**
-     * Indicates if weights are sorted by so that largest weighted 
-     * correspondences are used first.
-     * @return true if weights are sorted, false otherwise.
-     */
-    public boolean isSortWeightsEnabled() {
-        return mSortWeights;
-    }
-    
-    /**
-     * Specifies whether weights are sorted by so that largest weighted
-     * correspondences are used first.
-     * @param sortWeights true if weights are sorted, false otherwise.
-     * @throws LockedException if this instance is locked.
-     */
-    public void setSortWeightsEnabled(boolean sortWeights)
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        
-        mSortWeights = sortWeights;
-    }
-    
-    /**
-     * Returns type of triangulator.
-     * @return type of triangulator.
-     */
-    @Override
-    public Point3DTriangulatorType getType() {
-        return Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>
@@ -3918,10 +4135,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L402">402</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L401">401</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L435">435</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L434">434</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>        mLastAngularSpeedX = mStateAngularSpeedX;
@@ -4016,8 +4233,72 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
+<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L180">180</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L413">413</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>            PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
+            
+            //update orientation
+            Matrix qq = null;
+            Matrix qw = null;
+            if(jacobianX != null) {
+                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
+                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
+            }
+            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
+            
+            //apply control signals
+            vx += uvx;
+            vy += uvy;
+            vz += uvz;
+            
+            wx += uwx;
+            wy += uwy;
+            wz += uwz;
+            
+            //set new state
+            result[0] = r.getInhomX();
+            result[1] = r.getInhomY();
+            result[2] = r.getInhomZ();
+            
+            result[3] = q.getA();
+            result[4] = q.getB();
+            result[5] = q.getC();
+            result[6] = q.getD();
+            
+            result[7] = vx;
+            result[8] = vy;
+            result[9] = vz;
+            
+            result[10] = wx;
+            result[11] = wy;
+            result[12] = wz;
+            
+            //jacobians
+            if (jacobianX != null) {
+                //[Rr   0   Rv  0]
+                //[0    Qq  0   Qw]
+                //[0    0   eye 0]
+                //[0    0   0   eye]                
+                jacobianX.initialize(0.0);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+               
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+               
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+               
+                for(int i = 7; i &lt; STATE_COMPONENTS; i++) {</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L579">579</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L578">578</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L526">526</a></td></tr>
@@ -4142,8 +4423,151 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
+<td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L159">159</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L160">160</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>    public WeightedHomogeneousSinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
+            List&lt;PinholeCamera&gt; cameras, double[] weights, 
+            SinglePoint3DTriangulatorListener listener) {
+        this(listener);
+        internalSetPointsCamerasAndWeights(points2D, cameras, weights);
+    }    
+    
+    /**
+     * Returns weights assigned to each view.
+     * The larger a weight is the more reliable a view is considered and 
+     * equations to triangulate a 3D point will be take precedence over other
+     * views when estimating an averaged solution.
+     * @return weights assigned to each view.
+     */
+    public double[] getWeights() {
+        return mWeights;
+    }
+    
+    /**
+     * Sets list of matched 2D points for each view and their corresponding 
+     * cameras used to project them along with their weights.
+     * @param points2D list of matched 2D points on each view. Each point in the
+     * list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras cameras for each view where 2D points are represented.
+     * @param weights weights assigned to each view.
+     * @throws LockedException if this instance is locked.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     * length or their length is less than 2 views, which is the minimum 
+     * required to compute triangulation.
+     */    
+    public void setPointsCamerasAndWeights(List&lt;Point2D&gt; points2D,
+            List&lt;PinholeCamera&gt; cameras, double[] weights) 
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetPointsCamerasAndWeights(points2D, cameras, weights);
+    }
+    
+    /**
+     * Indicates whether this instance is ready to start the triangulation.
+     * An instance is ready when both lists of 2D points and cameras are 
+     * provided, both lists have the same length, at least data for 2 views
+     * is provided and the corresponding weights are also provided.
+     * @return true if this instance is ready, false otherwise.
+     */    
+    @Override
+    public boolean isReady() {
+        return areValidPointsCamerasAndWeights(mPoints2D, mCameras, mWeights);
+    }
+    
+    /**
+     * Indicates whether provided points, cameras and weights are valid to start
+     * the triangulation.
+     * In order to triangulate points, at least two cameras and their 
+     * corresponding 2 matched 2D points are required along with weights for
+     * each view.
+     * If more views are provided, an averaged solution can be found.
+     * @param points2D list of matched points on each view.
+     * @param cameras cameras for each view where 2D points are represented.
+     * @param weights weights assigned to each view.
+     * @return true if data is enough to start triangulation, false otherwise.
+     */
+    public static boolean areValidPointsCamerasAndWeights(
+            List&lt;Point2D&gt; points2D, List&lt;PinholeCamera&gt; cameras, 
+            double[] weights) {
+        return areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != null &amp;&amp;
+                weights.length == points2D.size();
+    }
+    
+    /**
+     * Returns maximum number of correspondences to be weighted and taken into
+     * account.
+     * @return maximum number of correspondences to be weighted.
+     */
+    public int getMaxCorrespondences() {
+        return mMaxCorrespondences;
+    }
+    
+    /**
+     * Sets maximum number of correspondences to be weighted and taken into 
+     * account.
+     * @param maxCorrespondences maximum number of correspondences to be 
+     * weighted.
+     * @throws IllegalArgumentException if provided value is less than the 
+     * minimum required number of views, which is 2.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setMaxCorrespondences(int maxCorrespondences)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {
+            throw new IllegalArgumentException();
+        }
+        
+        mMaxCorrespondences = maxCorrespondences;
+    }
+    
+    /**
+     * Indicates if weights are sorted by so that largest weighted 
+     * correspondences are used first.
+     * @return true if weights are sorted, false otherwise.
+     */
+    public boolean isSortWeightsEnabled() {
+        return mSortWeights;
+    }
+    
+    /**
+     * Specifies whether weights are sorted by so that largest weighted
+     * correspondences are used first.
+     * @param sortWeights true if weights are sorted, false otherwise.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setSortWeightsEnabled(boolean sortWeights)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        
+        mSortWeights = sortWeights;
+    }
+    
+    /**
+     * Returns type of triangulator.
+     * @return type of triangulator.
+     */
+    @Override
+    public Point3DTriangulatorType getType() {
+        return Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR;</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L712">712</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L714">714</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L866">866</a></td></tr>
@@ -4414,66 +4838,6 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 2), 2.0) +
                         Math.pow(a.getElementAt(counter, 3), 2.0) +
                         Math.pow(a.getElementAt(counter, 4), 2.0));</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L182">182</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L415">415</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>            Matrix qq = null, qw = null;
-            if(jacobianX != null) {
-                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
-                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);
-            }
-            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
-            
-            //apply control signals
-            vx += uvx;
-            vy += uvy;
-            vz += uvz;
-            
-            wx += uwx;
-            wy += uwy;
-            wz += uwz;
-            
-            //set new state
-            result[0] = r.getInhomX();
-            result[1] = r.getInhomY();
-            result[2] = r.getInhomZ();
-            
-            result[3] = q.getA();
-            result[4] = q.getB();
-            result[5] = q.getC();
-            result[6] = q.getD();
-            
-            result[7] = vx;
-            result[8] = vy;
-            result[9] = vz;
-            
-            result[10] = wx;
-            result[11] = wy;
-            result[12] = wz;
-            
-            //jacobians
-            if (jacobianX != null) {
-                //[Rr   0   Rv  0]
-                //[0    Qq  0   Qw]
-                //[0    0   eye 0]
-                //[0    0   0   eye]                
-                jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
-               
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
-               
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
-               
-                for(int i = 7; i &lt; STATE_COMPONENTS; i++) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>
@@ -4949,7 +5313,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L234">234</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L236">236</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L279">279</a></td></tr>
@@ -5362,7 +5726,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L503">503</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L502">502</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L456">456</a></td></tr>
@@ -5595,7 +5959,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L970">970</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L972">972</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1172">1172</a></td></tr>
@@ -5894,7 +6258,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L541">541</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L540">540</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L490">490</a></td></tr>
@@ -6189,7 +6553,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L470">470</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L469">469</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L425">425</a></td></tr>
@@ -6741,10 +7105,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L490">490</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L489">489</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L528">528</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L527">527</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            mX[12] = stateAngularSpeedZ;                        
@@ -7291,10 +7655,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L330">330</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L328">328</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L332">332</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L330">330</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            Point2D point;
@@ -7499,16 +7863,16 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L187">187</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L189">189</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L420">420</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L422">422</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L665">665</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L667">667</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L923">923</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L925">925</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
@@ -9113,10 +9477,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L559">559</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L558">558</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L600">600</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L599">599</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>        mX[12] = state.getElementAtIndex(12);
@@ -9299,10 +9663,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L353">353</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L352">352</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L383">383</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L382">382</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>        ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(mX, mU, deltaTimestamp, mX,
@@ -9427,7 +9791,7 @@ com.irurueta:irurueta-ar
      * 3x3.
      */
     @Override
-    public void setPositionCovarianceMatrix(Matrix positionCovariance)</pre></div></td></tr></table>
+    public void setPositionCovarianceMatrix(Matrix positionCovariance) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>File</th>
@@ -9582,10 +9946,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L220">220</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L219">219</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L239">239</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L238">238</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L197">197</a></td></tr>
@@ -9594,7 +9958,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L217">217</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
-<pre>            throws IllegalArgumentException {
+<pre>    public void setPositionCovarianceMatrix(Matrix positionCovariance) {
         if(positionCovariance != null) {
             mKalmanFilter.setMeasurementNoiseCov(positionCovariance);        
         }
@@ -10074,10 +10438,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L353">353</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L352">352</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L383">383</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L382">382</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L323">323</a></td></tr>
@@ -10322,154 +10686,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/slam/BaseSlamCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamCalibrator.html#L378">378</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/BaseSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamEstimator.html#L610">610</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>    }
-    
-    /**
-     * Indicates whether accumulation of samples is enabled or not.
-     * @return true if accumulation of samples is enabled, false otherwise.
-     */
-    public boolean isAccumulationEnabled() {
-        return mAccumulationEnabled;
-    }
-    
-    /**
-     * Specifies whether accumulation of samples is enabled or not.
-     * @param accumulationEnabled true if accumulation of samples is enabled,
-     * false otherwise.
-     */
-    public void setAccumulationEnabled(boolean accumulationEnabled) {
-        mAccumulationEnabled = accumulationEnabled;
-    }
-    
-    /**
-     * Gets timestamp expressed in nanoseconds since the epoch time of the last
-     * accelerometer sample, or -1 if no sample has been set yet.
-     * @return timestamp expressed in nanoseconds since the epoch time of the
-     * last accelerometer sample, or -1.
-     */
-    public long getAccelerometerTimestampNanos() {
-        return mAccelerometerTimestampNanos;
-    }
-    
-    /**
-     * Gets timestamp expressed in nanoseconds since the epoch time of the last
-     * gyroscope sample, or -1 if no sample has been set yet.
-     * @return timestamp expressed in nanoseconds since the epoch time of the 
-     * last gyroscope sample, or -1.
-     */
-    public long getGyroscopeTimestampNanos() {
-        return mGyroscopeTimestampNanos;
-    }
-    
-    /**
-     * Gets number of accelerometer samples accumulated since last full sample.
-     * @return number of accelerometer samples accumulated since last full 
-     * sample.
-     */
-    public int getAccumulatedAccelerometerSamples() {
-        return mAccumulatedAccelerometerSamples;
-    }
-    
-    /**
-     * Gets number of gyroscope samples accumulated since last full sample.
-     * @return number of gyroscope samples accumulated since last full sample.
-     */
-    public int getAccumulatedGyroscopeSamples() {
-        return mAccumulatedGyroscopeSamples;
-    }
-    
-    /**
-     * Indicates whether the accelerometer sample has been received since the
-     * last full sample (accelerometer + gyroscope).
-     * @return true if accelerometer sample has been received, false otherwise.
-     */
-    public boolean isAccelerometerSampleReceived() {
-        return mAccumulatedAccelerometerSamples &gt; 0;
-    }
-    
-    /**
-     * Indicates whether the gyroscope sample has been received since the last
-     * full sample (accelerometer + gyroscope).
-     * @return true if gyroscope sample has been received, false otherwise.
-     */
-    public boolean isGyroscopeSampleReceived() {
-        return mAccumulatedGyroscopeSamples &gt; 0;
-    }
-    
-    /**
-     * Indicates whether a full sample (accelerometer + gyroscope) has been
-     * received or not.
-     * @return true if full sample has been received, false otherwise.
-     */
-    public boolean isFullSampleAvailable() {
-        return isAccelerometerSampleReceived() &amp;&amp; isGyroscopeSampleReceived();
-    }
-    
-    /**
-     * Gets average acceleration along x-axis accumulated since last full
-     * sample. Expressed in meters per squared second (m/s^2).
-     * @return average acceleration along x-axis accumulated since last full
-     * sample.
-     */
-    public double getAccumulatedAccelerationSampleX() {
-        return mAccumulatedAccelerationSampleX;
-    }
-    
-    /**
-     * Gets average acceleration along y-axis accumulated since last full
-     * sample. Expressed in meters per squared second (m/s^2).
-     * @return average acceleration along y-axis accumulated since last full 
-     * sample.
-     */
-    public double getAccumulatedAccelerationSampleY() {
-        return mAccumulatedAccelerationSampleY;
-    }
-    
-    /**
-     * Gets acerage acceleration along z-axis accumulated since last full 
-     * sample. Expressed in meters per squared second (m/s^2).
-     * @return average acceleration along z-axis accumulated since last full
-     * sample.
-     */
-    public double getAccumulatedAccelerationSampleZ() {
-        return mAccumulatedAccelerationSampleZ;
-    }
-    
-    /**
-     * Gets average acceleration along x,y,z axes accumulated since last full
-     * sample. Expressed in meters per squared second (m/s^2).
-     * @return average acceleration along x,y,z axes expressed in meters per
-     * squared second (m/s^2).
-     */
-    public double[] getAccumulatedAccelerationSample() {
-        return new double[]{
-            mAccumulatedAccelerationSampleX,
-            mAccumulatedAccelerationSampleY,
-            mAccumulatedAccelerationSampleZ
-        };
-    }
-    
-    /**
-     * Gets average acceleration along x,yz axes accumulated since last full
-     * sample. Expressed in meters per squared second (m/s^2).
-     * @param result array where average acceleration along x,y,z axes will be
-     * stored.
-     * @throws IllegalArgumentException if provided array does not have length 
-     * 3.
-     */
-    public void getAccumulatedAccelerationSample(double[] result)</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.html#L214">214</a></td></tr>
 <tr class="a">
@@ -10477,10 +10693,10 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEHomogeneousSinglePoint3DTriangulator.html#L237">237</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L369">369</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L367">367</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L392">392</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L390">390</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>                        homW * verticalAxisPlane.getD());
@@ -10554,84 +10770,6 @@ com.irurueta:irurueta-ar
                 
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12);</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="b">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/BaseSlamCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamCalibrator.html#L641">641</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/BaseSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamEstimator.html#L871">871</a></td></tr>
-<tr class="a"><td colspan='2'>
-<div>
-<pre>            throws IllegalArgumentException {
-        if(data.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException(
-                    &quot;acceleration must have length 3&quot;);
-        }
-        updateAccelerometerSample(timestamp, data[0], data[1],
-                data[2]);
-    }
-    
-    /**
-     * Provides a new gyroscope sample.
-     * If accumulation is enabled, samples are averaged until a full sample is
-     * received.
-     * When a full sample (accelerometer + gyroscope) is received, internal 
-     * state gets also updated.
-     * @param timestamp timestamp of accelerometer sample since epoch time and
-     * expressed in nanoseconds.
-     * @param angularSpeedX angular speed of rotation along x-axis expressed in
-     * radians per second (rad/s).
-     * @param angularSpeedY angular speed of rotation along y-axis expressed in
-     * radians per second (rad/s).
-     * @param angularSpeedZ angular speed of rotation along z-axis expressed in
-     * radians per second (rad/s).
-     */
-    public void updateGyroscopeSample(long timestamp, float angularSpeedX,
-            float angularSpeedY, float angularSpeedZ) {
-        if(!isFullSampleAvailable()) {
-            mGyroscopeTimestampNanos = timestamp;
-            if(isAccumulationEnabled() &amp;&amp; isGyroscopeSampleReceived()) {
-                //accumulation enabled
-                int nextSamples = mAccumulatedGyroscopeSamples + 1;
-                mAccumulatedAngularSpeedSampleX = 
-                        (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
-                        angularSpeedX) / nextSamples;
-                mAccumulatedAngularSpeedSampleY = 
-                        (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
-                        angularSpeedY) / nextSamples;
-                mAccumulatedAngularSpeedSampleZ = 
-                        (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
-                        angularSpeedZ) / nextSamples;
-                mAccumulatedGyroscopeSamples = nextSamples;
-            } else {
-                //accumulation disabled
-                mAccumulatedAngularSpeedSampleX = angularSpeedX;
-                mAccumulatedAngularSpeedSampleY = angularSpeedY;
-                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;
-                mAccumulatedGyroscopeSamples++;
-            }
-            notifyFullSampleAndResetSampleReceive();
-        }
-    }
-    
-    /**
-     * Provides a new gyroscope sample.
-     * If accumulation is enabled, samples are averaged until a full sample is
-     * received.
-     * When a full sample (accelerometer + gyroscope) is received, internal
-     * state gets also updated.
-     * @param timestamp timestamp of gyroscope sample since epoch time and
-     * expressed in nanoseconds.
-     * @param data angular speed of rotation along x,y,z axes expressed in 
-     * radians per second (rad/s).
-     * @throws IllegalArgumentException if provided array does not have length 
-     * 3.
-     */
-    public void updateGyroscopeSample(long timestamp, float[] data) </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
 <tr class="b">
 <th>File</th>
@@ -10729,83 +10867,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/slam/BaseSlamCalibrator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamCalibrator.html#L576">576</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/BaseSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamEstimator.html#L806">806</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>            throws IllegalArgumentException {
-        if (result.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException(&quot;result must have length 3&quot;);
-        }
-        result[0] = mAccumulatedAngularSpeedSampleX;
-        result[1] = mAccumulatedAngularSpeedSampleY;
-        result[2] = mAccumulatedAngularSpeedSampleZ;
-    }
-    
-    /**
-     * Provides a new accelerometer sample.
-     * If accumulation is enabled, samples are averaged until a full sample is
-     * received.
-     * When a full sample (accelerometer + gyroscope) is received, internal
-     * state gets also updated.
-     * @param timestamp timestamp of accelerometer sample since epoch time and
-     * @param accelerationX linear acceleration along x-axis expressed in meters 
-     * per squared second (m/s^2).
-     * @param accelerationY linear acceleration along y-axis expressed in meters
-     * per squared second (m/s^2).
-     * @param accelerationZ linear acceleration along z-axis expressed in meters
-     * per squared second (m/s^2).
-     */
-    public void updateAccelerometerSample(long timestamp, float accelerationX,
-            float accelerationY, float accelerationZ) {
-        if(!isFullSampleAvailable()) {
-            mAccelerometerTimestampNanos = timestamp;
-            if (isAccumulationEnabled() &amp;&amp; isAccelerometerSampleReceived()) {
-                //accumulation enabled
-                int nextSamples = mAccumulatedAccelerometerSamples + 1;
-                mAccumulatedAccelerationSampleX = 
-                        (mAccumulatedAccelerationSampleX * mAccumulatedAccelerometerSamples + 
-                        accelerationX) / nextSamples;
-                mAccumulatedAccelerationSampleY =
-                        (mAccumulatedAccelerationSampleY * mAccumulatedAccelerometerSamples +
-                        accelerationY) / nextSamples;
-                mAccumulatedAccelerationSampleZ =
-                        (mAccumulatedAccelerationSampleZ * mAccumulatedAccelerometerSamples +
-                        accelerationZ) / nextSamples;
-                mAccumulatedAccelerometerSamples = nextSamples;                
-            } else {
-                //accumulation disabled
-               mAccumulatedAccelerationSampleX = accelerationX;
-               mAccumulatedAccelerationSampleY = accelerationY;
-               mAccumulatedAccelerationSampleZ = accelerationZ;
-               mAccumulatedAccelerometerSamples++;  
-            }                      
-            notifyFullSampleAndResetSampleReceive();
-        }
-    }
-    
-    /**
-     * Provides a new accelerometer sample.
-     * If accumulation is enabled, samples are averaged until a full sample is
-     * received.
-     * When a full sample (accelerometer + gyroscope) is received, internal 
-     * state gets also updated.
-     * @param timestamp timestamp of accelerometer sample since epoch time and
-     * expressed in nanoseconds.
-     * @param data array containing x,y,z components of linear acceleration 
-     * expressed in meters per squared second (m/s^2).
-     * @throws IllegalArgumentException if provided array does not have length 
-     * 3.
-     */
-    public void updateAccelerometerSample(long timestamp, float[] data) </pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/epipolar/estimators/MSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/MSACFundamentalMatrixRobustEstimator.html#L228">228</a></td></tr>
 <tr class="a">
@@ -10863,7 +10924,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L299">299</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L298">298</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L277">277</a></td></tr>
@@ -11427,7 +11488,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L188">188</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L338">338</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedHomogeneousSinglePoint3DTriangulator.html#L336">336</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            for (int i = 0; i &lt; numViews; i++) {
@@ -12522,7 +12583,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L432">432</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L431">431</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L399">399</a></td></tr>
@@ -12592,7 +12653,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L490">490</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L489">489</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L481">481</a></td></tr>
@@ -12648,7 +12709,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L528">528</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L527">527</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L445">445</a></td></tr>
@@ -13079,7 +13140,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L281">281</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L280">280</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L257">257</a></td></tr>
@@ -13609,10 +13670,10 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L242">242</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L372">372</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L370">370</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L395">395</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L393">393</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>                        homX * principalPlane.getD();
@@ -13956,10 +14017,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L402">402</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L401">401</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L435">435</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L434">434</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L371">371</a></td></tr>
@@ -14029,7 +14090,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L631">631</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L630">630</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L572">572</a></td></tr>
@@ -15024,7 +15085,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/sfm/LMSEInhomogeneousSinglePoint3DTriangulator.html#L194">194</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L346">346</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/WeightedInhomogeneousSinglePoint3DTriangulator.html#L344">344</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>                camera.fixCameraSign();
@@ -15599,10 +15660,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L364">364</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L366">366</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L859">859</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L861">861</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException(&quot;jacobian wrt u must be 13x9&quot;);
@@ -16576,16 +16637,16 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L194">194</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L196">196</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L427">427</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L429">429</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L672">672</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L674">674</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L930">930</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L932">932</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L228">228</a></td></tr>
@@ -16625,7 +16686,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L559">559</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L558">558</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L547">547</a></td></tr>
@@ -16663,7 +16724,7 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L600">600</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L599">599</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L508">508</a></td></tr>

@@ -62,23 +62,22 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException if provided length is not greater than 
      * zero.
      */
-    public BaseCalibrationData(int controlLength, int stateLength) 
-<span class="fc" id="L66">            throws IllegalArgumentException {</span>
-<span class="pc bpc" id="L67" title="2 of 4 branches missed.">        if (controlLength &lt; 1 || stateLength &lt; 1) {</span>
-<span class="nc" id="L68">            throw new IllegalArgumentException(</span>
+<span class="fc" id="L65">    public BaseCalibrationData(int controlLength, int stateLength) {</span>
+<span class="pc bpc" id="L66" title="2 of 4 branches missed.">        if (controlLength &lt; 1 || stateLength &lt; 1) {</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(</span>
                     &quot;length must be greater than zero&quot;);
         }
         
-<span class="fc" id="L72">        mControlLength = controlLength;</span>
-<span class="fc" id="L73">        mStateLength = stateLength;</span>
-<span class="fc" id="L74">    }</span>
+<span class="fc" id="L71">        mControlLength = controlLength;</span>
+<span class="fc" id="L72">        mStateLength = stateLength;</span>
+<span class="fc" id="L73">    }</span>
     
     /**
      * Gets length of control signal.
      * @return length of control signal.
      */
     public int getControlLength() {
-<span class="fc" id="L81">        return mControlLength;</span>
+<span class="fc" id="L80">        return mControlLength;</span>
     }
     
     /**
@@ -86,7 +85,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return length of state in SLAM estimator.
      */
     public int getStateLength() {
-<span class="fc" id="L89">        return mStateLength;</span>
+<span class="fc" id="L88">        return mStateLength;</span>
     }
     
     /**
@@ -94,7 +93,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return control signal mean.
      */
     public double[] getControlMean() {
-<span class="fc" id="L97">        return mControlMean;</span>
+<span class="fc" id="L96">        return mControlMean;</span>
     }
     
     /**
@@ -103,14 +102,13 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException if provided array does not have expected 
      * length.
      */
-    public void setControlMean(double[] controlMean) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        if(controlMean.length != mControlLength) {</span>
-<span class="fc" id="L109">            throw new IllegalArgumentException(&quot;wrong mean length&quot;);</span>
+    public void setControlMean(double[] controlMean) {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if(controlMean.length != mControlLength) {</span>
+<span class="fc" id="L107">            throw new IllegalArgumentException(&quot;wrong mean length&quot;);</span>
         }
         
-<span class="fc" id="L112">        mControlMean = controlMean;</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L110">        mControlMean = controlMean;</span>
+<span class="fc" id="L111">    }</span>
     
     /**
      * Gets control signal covariance to take into account for estimation of 
@@ -118,7 +116,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return control signal covariance.
      */
     public Matrix getControlCovariance() {
-<span class="fc" id="L121">        return mControlCovariance;</span>
+<span class="fc" id="L119">        return mControlCovariance;</span>
     }
     
     /**
@@ -127,15 +125,14 @@ public abstract class BaseCalibrationData implements Serializable {
      * @param controlCovariance control signal covariance.
      * @throws IllegalArgumentException if provided covariance size is wrong.
      */
-    public void setControlCovariance(Matrix controlCovariance)
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L132" title="All 2 branches covered.">        if(controlCovariance.getRows() != mControlLength ||</span>
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">                controlCovariance.getColumns() != mControlLength) {</span>
-<span class="fc" id="L134">            throw new IllegalArgumentException(&quot;wrong covariance size&quot;);</span>
+    public void setControlCovariance(Matrix controlCovariance) {
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if(controlCovariance.getRows() != mControlLength ||</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                controlCovariance.getColumns() != mControlLength) {</span>
+<span class="fc" id="L131">            throw new IllegalArgumentException(&quot;wrong covariance size&quot;);</span>
         }
         
-<span class="fc" id="L137">        mControlCovariance = controlCovariance;</span>
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L134">        mControlCovariance = controlCovariance;</span>
+<span class="fc" id="L135">    }</span>
     
     /**
      * Sets control signal mean and covariange to correct biases in control 
@@ -147,19 +144,19 @@ public abstract class BaseCalibrationData implements Serializable {
      * have proper size or length.
      */
     public void setControlMeanAndCovariance(double[] controlMean,
-            Matrix controlCovariance) throws IllegalArgumentException {
-<span class="fc bfc" id="L151" title="All 2 branches covered.">        if(controlMean.length != mControlLength) {</span>
-<span class="fc" id="L152">            throw new IllegalArgumentException(&quot;wrong mean length&quot;);</span>
+            Matrix controlCovariance) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if(controlMean.length != mControlLength) {</span>
+<span class="fc" id="L149">            throw new IllegalArgumentException(&quot;wrong mean length&quot;);</span>
         }
-<span class="fc bfc" id="L154" title="All 2 branches covered.">        if(controlCovariance.getRows() != mControlLength ||</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">                controlCovariance.getColumns() != mControlLength) {</span>
-<span class="fc" id="L156">            throw new IllegalArgumentException(&quot;wrong covariance size&quot;);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if(controlCovariance.getRows() != mControlLength ||</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">                controlCovariance.getColumns() != mControlLength) {</span>
+<span class="fc" id="L153">            throw new IllegalArgumentException(&quot;wrong covariance size&quot;);</span>
         }
         
         
-<span class="fc" id="L160">        mControlMean = controlMean;        </span>
-<span class="fc" id="L161">        mControlCovariance = controlCovariance;</span>
-<span class="fc" id="L162">    }</span>
+<span class="fc" id="L157">        mControlMean = controlMean;        </span>
+<span class="fc" id="L158">        mControlCovariance = controlCovariance;</span>
+<span class="fc" id="L159">    }</span>
     
     /**
      * Propagates calibrated control signal covariance using current control
@@ -173,11 +170,10 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException if provided jacobian has invalid size.
      */
     public MultivariateNormalDist propagateWithControlJacobian(
-            Matrix controlJacobian) throws InvalidCovarianceMatrixException,
-            IllegalArgumentException {
-<span class="fc" id="L178">        MultivariateNormalDist dist = new MultivariateNormalDist();</span>
-<span class="fc" id="L179">        propagateWithControlJacobian(controlJacobian, dist);</span>
-<span class="fc" id="L180">        return dist;</span>
+            Matrix controlJacobian) throws InvalidCovarianceMatrixException {
+<span class="fc" id="L174">        MultivariateNormalDist dist = new MultivariateNormalDist();</span>
+<span class="fc" id="L175">        propagateWithControlJacobian(controlJacobian, dist);</span>
+<span class="fc" id="L176">        return dist;</span>
     }
     
     /**
@@ -192,33 +188,32 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException if provided jacobian has invalid size.
      */
     public void propagateWithControlJacobian(final Matrix controlJacobian,
-            MultivariateNormalDist result) 
-            throws InvalidCovarianceMatrixException, IllegalArgumentException {
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">        if(controlJacobian.getRows() != mStateLength ||</span>
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">                controlJacobian.getColumns() != mControlLength) {</span>
-<span class="nc" id="L199">            throw new IllegalArgumentException(&quot;wrong control jacobian size&quot;);</span>
+            MultivariateNormalDist result) throws InvalidCovarianceMatrixException {
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        if(controlJacobian.getRows() != mStateLength ||</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">                controlJacobian.getColumns() != mControlLength) {</span>
+<span class="nc" id="L194">            throw new IllegalArgumentException(&quot;wrong control jacobian size&quot;);</span>
         }
         
-<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (mEvaluator == null) {</span>
-<span class="fc" id="L203">            mEvaluator = new MultivariateNormalDist.JacobianEvaluator() {</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        if (mEvaluator == null) {</span>
+<span class="fc" id="L198">            mEvaluator = new MultivariateNormalDist.JacobianEvaluator() {</span>
                 @Override
                 public void evaluate(double[] x, double[] y, Matrix jacobian) {
-<span class="fc" id="L206">                    controlJacobian.copyTo(jacobian);</span>
-<span class="fc" id="L207">                }</span>
+<span class="fc" id="L201">                    controlJacobian.copyTo(jacobian);</span>
+<span class="fc" id="L202">                }</span>
 
                 @Override
                 public int getNumberOfVariables() {
-<span class="fc" id="L211">                    return mStateLength;</span>
+<span class="fc" id="L206">                    return mStateLength;</span>
                 }
             };
         }
         
         try {
-<span class="fc" id="L217">            MultivariateNormalDist.propagate(mEvaluator, mControlMean, </span>
+<span class="fc" id="L212">            MultivariateNormalDist.propagate(mEvaluator, mControlMean, </span>
                     mControlCovariance, result);
-<span class="nc" id="L219">        } catch (WrongSizeException e) { </span>
-<span class="nc" id="L220">            throw new InvalidCovarianceMatrixException(e);</span>
-<span class="fc" id="L221">        }</span>
-<span class="fc" id="L222">    }</span>
+<span class="nc" id="L214">        } catch (WrongSizeException e) { </span>
+<span class="nc" id="L215">            throw new InvalidCovarianceMatrixException(e);</span>
+<span class="fc" id="L216">        }</span>
+<span class="fc" id="L217">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
