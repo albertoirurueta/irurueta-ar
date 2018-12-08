@@ -588,7 +588,8 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public void getStateAngularSpeed(double[] result) {
         if(result.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException("result must have length 3");
+            //result must have length 3
+            throw new IllegalArgumentException();
         }
         result[0] = mStateAngularSpeedX;
         result[1] = mStateAngularSpeedY;
