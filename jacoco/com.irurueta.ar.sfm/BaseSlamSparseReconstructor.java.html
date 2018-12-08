@@ -68,7 +68,7 @@ public abstract class BaseSlamSparseReconstructor&lt;
      * provided.
      */
     public BaseSlamSparseReconstructor(C configuration,
-            L listener) throws NullPointerException {
+            L listener) {
 <span class="fc" id="L72">        super(configuration, listener);</span>
 <span class="fc" id="L73">    }</span>
 
@@ -106,12 +106,11 @@ public abstract class BaseSlamSparseReconstructor&lt;
      * @throws IllegalArgumentException if provided array does not have length
      * 3.
      */
-    public void updateAccelerometerSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L112">            mSlamEstimator.updateAccelerometerSample(timestamp, data);</span>
+    public void updateAccelerometerSample(long timestamp, float[] data) {
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L111">            mSlamEstimator.updateAccelerometerSample(timestamp, data);</span>
         }
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L113">    }</span>
 
     /**
      * Provides a new gyroscope sample to update SLAM estimation.
@@ -127,11 +126,11 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     public void updateGyroscopeSample(long timestamp, float angularSpeedX,
                                       float angularSpeedY, float angularSpeedZ) {
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L131">            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX,</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L130">            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX,</span>
                     angularSpeedY, angularSpeedZ);
         }
-<span class="fc" id="L134">    }</span>
+<span class="fc" id="L133">    }</span>
 
     /**
      * Provies a new gyroscope sample to update SLAM estimation.
@@ -143,49 +142,48 @@ public abstract class BaseSlamSparseReconstructor&lt;
      * @throws IllegalArgumentException if provided array does not have length
      * 3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data)
-            throws IllegalArgumentException {
-<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L149">            mSlamEstimator.updateGyroscopeSample(timestamp, data);</span>
+    public void updateGyroscopeSample(long timestamp, float[] data) {
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L147">            mSlamEstimator.updateGyroscopeSample(timestamp, data);</span>
         }
-<span class="fc" id="L151">    }</span>
+<span class="fc" id="L149">    }</span>
 
     /**
      * Configures calibration data on SLAM estimator if available.
      */
     protected void setUpCalibrationData() {
-<span class="fc" id="L157">        BaseCalibrationData calibrationData =</span>
-<span class="fc" id="L158">                mConfiguration.getCalibrationData();</span>
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (calibrationData != null) {</span>
+<span class="fc" id="L155">        BaseCalibrationData calibrationData =</span>
+<span class="fc" id="L156">                mConfiguration.getCalibrationData();</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if (calibrationData != null) {</span>
             //noinspection all
-<span class="fc" id="L161">            mSlamEstimator.setCalibrationData(calibrationData);</span>
+<span class="fc" id="L159">            mSlamEstimator.setCalibrationData(calibrationData);</span>
         }
-<span class="fc" id="L163">    }</span>
+<span class="fc" id="L161">    }</span>
 
     /**
      * Configures listener of SLAM estimator
      */
     protected void setUpSlamEstimatorListener() {
-<span class="fc" id="L169">        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener() {</span>
+<span class="fc" id="L167">        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener() {</span>
             @Override
-<span class="fc" id="L171">            public void onFullSampleReceived(BaseSlamEstimator estimator) { /* not used */ }</span>
+<span class="fc" id="L169">            public void onFullSampleReceived(BaseSlamEstimator estimator) { /* not used */ }</span>
 
             @Override
             public void onFullSampleProcessed(BaseSlamEstimator estimator) {
-<span class="fc" id="L175">                notifySlamStateIfNeeded();</span>
-<span class="fc" id="L176">                notifySlamCameraIfNeeded();</span>
-<span class="fc" id="L177">            }</span>
+<span class="fc" id="L173">                notifySlamStateIfNeeded();</span>
+<span class="fc" id="L174">                notifySlamCameraIfNeeded();</span>
+<span class="fc" id="L175">            }</span>
 
             @Override
-<span class="fc" id="L180">            public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) { /* not used */ }</span>
+<span class="fc" id="L178">            public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) { /* not used */ }</span>
 
             @Override
             public void onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
-<span class="fc" id="L184">                notifySlamStateIfNeeded();</span>
-<span class="fc" id="L185">                notifySlamCameraIfNeeded();</span>
-<span class="fc" id="L186">            }</span>
+<span class="fc" id="L182">                notifySlamStateIfNeeded();</span>
+<span class="fc" id="L183">                notifySlamCameraIfNeeded();</span>
+<span class="fc" id="L184">            }</span>
         });
-<span class="fc" id="L188">    }</span>
+<span class="fc" id="L186">    }</span>
 
     /**
      * Update scene scale using SLAM data.
@@ -194,10 +192,12 @@ public abstract class BaseSlamSparseReconstructor&lt;
      */
     protected boolean updateScale(boolean isInitialPairOfViews) {
         try {
-<span class="fc" id="L197">            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();</span>
-<span class="fc" id="L198">            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L195">            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L196">            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();</span>
 
-            double slamPosX, slamPosY, slamPosZ;
+            double slamPosX;
+            double slamPosY;
+            double slamPosZ;
             double scale;
 <span class="fc bfc" id="L202" title="All 2 branches covered.">            if (isInitialPairOfViews) {</span>
                 //obtain baseline (camera separation from slam estimator data

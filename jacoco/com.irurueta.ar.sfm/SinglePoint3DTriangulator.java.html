@@ -89,7 +89,7 @@ public abstract class SinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public SinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
-<span class="fc" id="L92">            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {</span>
+<span class="fc" id="L92">            List&lt;PinholeCamera&gt; cameras) {</span>
 <span class="fc" id="L93">        internalSetPointsAndCameras(points2D, cameras);</span>
 <span class="fc" id="L94">    }</span>
     
@@ -116,11 +116,10 @@ public abstract class SinglePoint3DTriangulator {
      */
     public SinglePoint3DTriangulator(List&lt;Point2D&gt; points2D, 
             List&lt;PinholeCamera&gt; cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L121">        this(points2D, cameras);</span>
-<span class="fc" id="L122">        mListener = listener;</span>
-<span class="fc" id="L123">    }</span>
+            SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L120">        this(points2D, cameras);</span>
+<span class="fc" id="L121">        mListener = listener;</span>
+<span class="fc" id="L122">    }</span>
     
     /**
      * Returns list of matched 2D points on each view. Each point in the list is
@@ -128,7 +127,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return list of matched 2D points on each view.
      */
     public List&lt;Point2D&gt; getPoints2D() {
-<span class="fc" id="L131">        return mPoints2D;</span>
+<span class="fc" id="L130">        return mPoints2D;</span>
     }
     
     /**
@@ -136,7 +135,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return cameras for each view where 2D points are represented.
      */
     public List&lt;PinholeCamera&gt; getCameras() {
-<span class="fc" id="L139">        return mCameras;</span>
+<span class="fc" id="L138">        return mCameras;</span>
     }
     
     /**
@@ -151,13 +150,12 @@ public abstract class SinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public void setPointsAndCameras(List&lt;Point2D&gt; points2D, 
-            List&lt;PinholeCamera&gt; cameras) throws LockedException, 
-            IllegalArgumentException {
-<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L157">            throw new LockedException();</span>
+            List&lt;PinholeCamera&gt; cameras) throws LockedException {
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L155">            throw new LockedException();</span>
         }
-<span class="fc" id="L159">        internalSetPointsAndCameras(points2D, cameras);</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L157">        internalSetPointsAndCameras(points2D, cameras);</span>
+<span class="fc" id="L158">    }</span>
     
     /**
      * Indicates whether this instance is locked because computations are being
@@ -165,7 +163,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return true if instance is locked, false otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L168">        return mLocked;</span>
+<span class="fc" id="L166">        return mLocked;</span>
     }
     
     /**
@@ -176,7 +174,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return true if this instance is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="fc" id="L179">        return areValidPointsAndCameras(mPoints2D, mCameras);</span>
+<span class="fc" id="L177">        return areValidPointsAndCameras(mPoints2D, mCameras);</span>
     }
         
     /**
@@ -186,7 +184,7 @@ public abstract class SinglePoint3DTriangulator {
      * class.
      */
     public SinglePoint3DTriangulatorListener getListener() {
-<span class="fc" id="L189">        return mListener;</span>
+<span class="fc" id="L187">        return mListener;</span>
     }
     
     /**
@@ -198,12 +196,12 @@ public abstract class SinglePoint3DTriangulator {
      */
     public void setListener(SinglePoint3DTriangulatorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L202">            throw new LockedException();</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L200">            throw new LockedException();</span>
         }
         
-<span class="fc" id="L205">        mListener = listener;</span>
-<span class="fc" id="L206">    }</span>
+<span class="fc" id="L203">        mListener = listener;</span>
+<span class="fc" id="L204">    }</span>
     
     /**
      * Triangulates provided matched 2D points being projected by each 
@@ -220,10 +218,10 @@ public abstract class SinglePoint3DTriangulator {
      */
     public Point3D triangulate() throws LockedException, NotReadyException, 
             Point3DTriangulationException {
-<span class="fc" id="L223">        Point3D result = Point3D.create(</span>
+<span class="fc" id="L221">        Point3D result = Point3D.create(</span>
                 CoordinatesType.HOMOGENEOUS_COORDINATES);
-<span class="fc" id="L225">        triangulate(result);</span>
-<span class="fc" id="L226">        return result;</span>
+<span class="fc" id="L223">        triangulate(result);</span>
+<span class="fc" id="L224">        return result;</span>
     }
     
     /**
@@ -241,15 +239,15 @@ public abstract class SinglePoint3DTriangulator {
      */
     public void triangulate(Point3D result) throws LockedException, 
             NotReadyException, Point3DTriangulationException {
-<span class="fc bfc" id="L244" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L245">            throw new LockedException();</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L243">            throw new LockedException();</span>
         }
-<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (!isReady()) {</span>
-<span class="nc" id="L248">            throw new NotReadyException();</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L246">            throw new NotReadyException();</span>
         }
         
-<span class="fc" id="L251">        triangulate(mPoints2D, mCameras, result);</span>
-<span class="fc" id="L252">    }</span>
+<span class="fc" id="L249">        triangulate(mPoints2D, mCameras, result);</span>
+<span class="fc" id="L250">    }</span>
     /**
      * Indicates whether provided points and cameras are valid to start the 
      * triangulation.
@@ -262,9 +260,9 @@ public abstract class SinglePoint3DTriangulator {
      */
     public static boolean areValidPointsAndCameras(List&lt;Point2D&gt; points2D, 
             List&lt;PinholeCamera&gt; cameras) {
-<span class="pc bpc" id="L265" title="1 of 4 branches missed.">        return points2D != null &amp;&amp; cameras != null &amp;&amp;</span>
-<span class="fc bfc" id="L266" title="All 2 branches covered.">                points2D.size() == cameras.size() &amp;&amp;</span>
-<span class="fc bfc" id="L267" title="All 2 branches covered.">                points2D.size() &gt;= MIN_REQUIRED_VIEWS;</span>
+<span class="pc bpc" id="L263" title="1 of 4 branches missed.">        return points2D != null &amp;&amp; cameras != null &amp;&amp;</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">                points2D.size() == cameras.size() &amp;&amp;</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">                points2D.size() &gt;= MIN_REQUIRED_VIEWS;</span>
     }
     
     /**
@@ -274,16 +272,16 @@ public abstract class SinglePoint3DTriangulator {
      */
     public static SinglePoint3DTriangulator create(
             Point3DTriangulatorType type) {
-<span class="fc bfc" id="L277" title="All 4 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L275" title="All 4 branches covered.">        switch (type) {</span>
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L279">                return new WeightedInhomogeneousSinglePoint3DTriangulator();</span>
+<span class="fc" id="L277">                return new WeightedInhomogeneousSinglePoint3DTriangulator();</span>
             case WEIGHTED_HOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L281">                return new WeightedHomogeneousSinglePoint3DTriangulator();</span>
+<span class="fc" id="L279">                return new WeightedHomogeneousSinglePoint3DTriangulator();</span>
             case LMSE_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L283">                return new LMSEInhomogeneousSinglePoint3DTriangulator();</span>
+<span class="fc" id="L281">                return new LMSEInhomogeneousSinglePoint3DTriangulator();</span>
             case LMSE_HOMOGENEOUS_TRIANGULATOR:
             default:
-<span class="fc" id="L286">                return new LMSEHomogeneousSinglePoint3DTriangulator();</span>
+<span class="fc" id="L284">                return new LMSEHomogeneousSinglePoint3DTriangulator();</span>
         }
     }
     
@@ -300,22 +298,21 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras, Point3DTriangulatorType type) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L305" title="All 4 branches covered.">        switch (type) {</span>
+            List&lt;PinholeCamera&gt; cameras, Point3DTriangulatorType type) {
+<span class="fc bfc" id="L302" title="All 4 branches covered.">        switch (type) {</span>
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L307">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L304">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras);
             case WEIGHTED_HOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L310">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L307">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras);
             case LMSE_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L313">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L310">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras);
             case LMSE_HOMOGENEOUS_TRIANGULATOR:
             default:
                 
-<span class="fc" id="L318">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L315">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras);
         }
     }
@@ -335,20 +332,20 @@ public abstract class SinglePoint3DTriangulator {
      */    
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
             List&lt;PinholeCamera&gt; cameras, double[] weights, 
-            Point3DTriangulatorType type) throws IllegalArgumentException {
-<span class="fc bfc" id="L339" title="All 4 branches covered.">        switch (type) {</span>
+            Point3DTriangulatorType type) {
+<span class="fc bfc" id="L336" title="All 4 branches covered.">        switch (type) {</span>
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L341">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L338">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras, weights);
             case WEIGHTED_HOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L344">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L341">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras, weights);
             case LMSE_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L347">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L344">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras);
             case LMSE_HOMOGENEOUS_TRIANGULATOR:
             default:
-<span class="fc" id="L351">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L348">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras);
         }
     }
@@ -364,18 +361,18 @@ public abstract class SinglePoint3DTriangulator {
     public static SinglePoint3DTriangulator create(
             SinglePoint3DTriangulatorListener listener, 
             Point3DTriangulatorType type) {
-<span class="fc bfc" id="L367" title="All 4 branches covered.">        switch (type) {</span>
+<span class="fc bfc" id="L364" title="All 4 branches covered.">        switch (type) {</span>
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L369">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L366">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
                         listener);
             case WEIGHTED_HOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L372">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L369">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
                         listener);
             case LMSE_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L375">                return new LMSEInhomogeneousSinglePoint3DTriangulator(listener);</span>
+<span class="fc" id="L372">                return new LMSEInhomogeneousSinglePoint3DTriangulator(listener);</span>
             case LMSE_HOMOGENEOUS_TRIANGULATOR:
             default:
-<span class="fc" id="L378">                return new LMSEHomogeneousSinglePoint3DTriangulator(listener);</span>
+<span class="fc" id="L375">                return new LMSEHomogeneousSinglePoint3DTriangulator(listener);</span>
         }
     }
     
@@ -396,20 +393,20 @@ public abstract class SinglePoint3DTriangulator {
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
             List&lt;PinholeCamera&gt; cameras, 
             SinglePoint3DTriangulatorListener listener, 
-            Point3DTriangulatorType type) throws IllegalArgumentException {
-<span class="fc bfc" id="L400" title="All 4 branches covered.">        switch (type) {</span>
+            Point3DTriangulatorType type) {
+<span class="fc bfc" id="L397" title="All 4 branches covered.">        switch (type) {</span>
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L402">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L399">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras, listener);
             case WEIGHTED_HOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L405">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L402">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras, listener);
             case LMSE_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L408">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L405">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras, listener);
             case LMSE_HOMOGENEOUS_TRIANGULATOR:
             default:
-<span class="fc" id="L412">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L409">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras, listener);
         }
     }
@@ -432,20 +429,20 @@ public abstract class SinglePoint3DTriangulator {
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
             List&lt;PinholeCamera&gt; cameras, double[] weights, 
             SinglePoint3DTriangulatorListener listener, 
-            Point3DTriangulatorType type) throws IllegalArgumentException {
-<span class="fc bfc" id="L436" title="All 4 branches covered.">        switch (type) {</span>
+            Point3DTriangulatorType type) {
+<span class="fc bfc" id="L433" title="All 4 branches covered.">        switch (type) {</span>
             case WEIGHTED_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L438">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L435">                return new WeightedInhomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras, weights, listener);
             case WEIGHTED_HOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L441">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
+<span class="fc" id="L438">                return new WeightedHomogeneousSinglePoint3DTriangulator(</span>
                         points2D, cameras, weights, listener);
             case LMSE_INHOMOGENEOUS_TRIANGULATOR:
-<span class="fc" id="L444">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L441">                return new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras, listener);
             case LMSE_HOMOGENEOUS_TRIANGULATOR:
             default:
-<span class="fc" id="L448">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
+<span class="fc" id="L445">                return new LMSEHomogeneousSinglePoint3DTriangulator(points2D, </span>
                         cameras, listener);
         }
     }
@@ -455,7 +452,7 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */
     public static SinglePoint3DTriangulator create() {
-<span class="fc" id="L458">        return create(DEFAULT_TYPE);</span>
+<span class="fc" id="L455">        return create(DEFAULT_TYPE);</span>
     }
     
     /**
@@ -470,8 +467,8 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
-<span class="fc" id="L474">        return create(points2D, cameras, DEFAULT_TYPE);</span>
+            List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L471">        return create(points2D, cameras, DEFAULT_TYPE);</span>
     }
     
     /**
@@ -487,9 +484,8 @@ public abstract class SinglePoint3DTriangulator {
      * @return a 3D point triangulator instance.
      */    
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras, double[] weights) 
-            throws IllegalArgumentException {
-<span class="fc" id="L492">        return create(points2D, cameras, weights, DEFAULT_TYPE);</span>
+            List&lt;PinholeCamera&gt; cameras, double[] weights) {
+<span class="fc" id="L488">        return create(points2D, cameras, weights, DEFAULT_TYPE);</span>
     }
 
     /**
@@ -501,7 +497,7 @@ public abstract class SinglePoint3DTriangulator {
      */
     public static SinglePoint3DTriangulator create(
             SinglePoint3DTriangulatorListener listener) {
-<span class="fc" id="L504">        return create(listener, DEFAULT_TYPE);</span>
+<span class="fc" id="L500">        return create(listener, DEFAULT_TYPE);</span>
     }
     
     /**
@@ -519,9 +515,8 @@ public abstract class SinglePoint3DTriangulator {
      */
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
             List&lt;PinholeCamera&gt; cameras, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L524">        return create(points2D, cameras, listener, DEFAULT_TYPE);</span>
+            SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L519">        return create(points2D, cameras, listener, DEFAULT_TYPE);</span>
     }
     
     /**
@@ -540,9 +535,8 @@ public abstract class SinglePoint3DTriangulator {
      */    
     public static SinglePoint3DTriangulator create(List&lt;Point2D&gt; points2D,
             List&lt;PinholeCamera&gt; cameras, double[] weights, 
-            SinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L545">        return create(points2D, cameras, weights, listener, DEFAULT_TYPE);</span>
+            SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L539">        return create(points2D, cameras, weights, listener, DEFAULT_TYPE);</span>
     }    
     
     /**
@@ -583,14 +577,14 @@ public abstract class SinglePoint3DTriangulator {
      * required to compute triangulation.
      */    
     private void internalSetPointsAndCameras(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+            List&lt;PinholeCamera&gt; cameras) {
         
-<span class="fc bfc" id="L588" title="All 2 branches covered.">        if (!areValidPointsAndCameras(points2D, cameras)) {</span>
-<span class="fc" id="L589">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L582" title="All 2 branches covered.">        if (!areValidPointsAndCameras(points2D, cameras)) {</span>
+<span class="fc" id="L583">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L592">        mPoints2D = points2D;</span>
-<span class="fc" id="L593">        mCameras = cameras;</span>
-<span class="fc" id="L594">    }    </span>
+<span class="fc" id="L586">        mPoints2D = points2D;</span>
+<span class="fc" id="L587">        mCameras = cameras;</span>
+<span class="fc" id="L588">    }    </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

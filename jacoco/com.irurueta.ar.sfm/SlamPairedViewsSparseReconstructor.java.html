@@ -37,10 +37,9 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      */
     public SlamPairedViewsSparseReconstructor(
             SlamPairedViewsSparseReconstructorConfiguration configuration,
-            SlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L42">        super(configuration, listener);</span>
-<span class="fc" id="L43">    }</span>
+            SlamPairedViewsSparseReconstructorListener listener) {
+<span class="fc" id="L41">        super(configuration, listener);</span>
+<span class="fc" id="L42">    }</span>
 
     /**
      * Constructor.
@@ -48,10 +47,9 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      * @throws NullPointerException if listener or configuration is not
      * provided.
      */
-    public SlamPairedViewsSparseReconstructor(SlamPairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L53">        super(new SlamPairedViewsSparseReconstructorConfiguration(), listener);</span>
-<span class="fc" id="L54">    }</span>
+    public SlamPairedViewsSparseReconstructor(SlamPairedViewsSparseReconstructorListener listener) {
+<span class="fc" id="L51">        super(new SlamPairedViewsSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L52">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -61,13 +59,13 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      */
     @Override
     public boolean processOneViewPair() {
-<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L65">            mSlamEstimator = new SlamEstimator();</span>
-<span class="fc" id="L66">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L67">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L63">            mSlamEstimator = new SlamEstimator();</span>
+<span class="fc" id="L64">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L65">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L70">        return super.processOneViewPair();</span>
+<span class="fc" id="L68">        return super.processOneViewPair();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

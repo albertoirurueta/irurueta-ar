@@ -180,7 +180,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public RobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points, 
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+            List&lt;PinholeCamera&gt; cameras) {
 <span class="fc" id="L184">        this();</span>
 <span class="fc" id="L185">        internalSetPointsAndCameras(points, cameras);</span>
 <span class="fc" id="L186">    }</span>
@@ -199,11 +199,10 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public RobustSinglePoint3DTriangulator(List&lt;Point2D&gt; points,
             List&lt;PinholeCamera&gt; cameras, 
-            RobustSinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
-<span class="fc" id="L204">        this(points, cameras);</span>
-<span class="fc" id="L205">        mListener = listener;</span>
-<span class="fc" id="L206">    }</span>
+            RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L203">        this(points, cameras);</span>
+<span class="fc" id="L204">        mListener = listener;</span>
+<span class="fc" id="L205">    }</span>
     
     /**
      * Returns reference to listener to be notified of events such as when
@@ -211,7 +210,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return listener to be notified of events.
      */
     public RobustSinglePoint3DTriangulatorListener getListener() {
-<span class="fc" id="L214">        return mListener;</span>
+<span class="fc" id="L213">        return mListener;</span>
     }
     
     /**
@@ -222,11 +221,11 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public void setListener(RobustSinglePoint3DTriangulatorListener listener)
             throws LockedException {
-<span class="fc bfc" id="L225" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L226">            throw new LockedException();</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L225">            throw new LockedException();</span>
         }
-<span class="fc" id="L228">        mListener = listener;</span>
-<span class="fc" id="L229">    }</span>
+<span class="fc" id="L227">        mListener = listener;</span>
+<span class="fc" id="L228">    }</span>
     
     /**
      * Indicates whether listener has been provided and is available for 
@@ -234,7 +233,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable() {
-<span class="fc bfc" id="L237" title="All 2 branches covered.">        return mListener != null;</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">        return mListener != null;</span>
     }
     
     /**
@@ -247,7 +246,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * false otherwise.
      */
     public boolean isUseHomogeneousSolution() {
-<span class="fc" id="L250">        return mUseHomogeneousSolution;</span>
+<span class="fc" id="L249">        return mUseHomogeneousSolution;</span>
     }    
     
     /**
@@ -262,11 +261,11 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public void setUseHomogeneousSolution(boolean useHomogeneousSolution)
             throws LockedException{
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (isLocked()) {</span>
-<span class="nc" id="L266">            throw new LockedException();</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L265">            throw new LockedException();</span>
         }
-<span class="fc" id="L268">        mUseHomogeneousSolution = useHomogeneousSolution;</span>
-<span class="fc" id="L269">    }</span>
+<span class="fc" id="L267">        mUseHomogeneousSolution = useHomogeneousSolution;</span>
+<span class="fc" id="L268">    }</span>
     
     /**
      * Indicates if this instance is locked because triangulation is being
@@ -274,7 +273,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return true if locked, false otherwise.
      */
     public boolean isLocked() {
-<span class="fc" id="L277">        return mLocked;</span>
+<span class="fc" id="L276">        return mLocked;</span>
     }
     
     /**
@@ -284,7 +283,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * during estimation.
      */
     public float getProgressDelta() {
-<span class="fc" id="L287">        return mProgressDelta;</span>
+<span class="fc" id="L286">        return mProgressDelta;</span>
     }
     
     /**
@@ -297,8 +296,9 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
+    @SuppressWarnings(&quot;Duplicates&quot;)
     public void setProgressDelta(float progressDelta) 
-            throws IllegalArgumentException, LockedException{
+            throws LockedException {
 <span class="fc bfc" id="L302" title="All 2 branches covered.">        if (isLocked()) {</span>
 <span class="fc" id="L303">            throw new LockedException();</span>
         }
@@ -331,8 +331,8 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException if this estimator is locked because an estimator 
      * is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    @SuppressWarnings(&quot;Duplicates&quot;)
+    public void setConfidence(double confidence) throws LockedException {
 <span class="fc bfc" id="L336" title="All 2 branches covered.">        if (isLocked()) {</span>
 <span class="fc" id="L337">            throw new LockedException();</span>
         }
@@ -361,16 +361,15 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException if this estimator is locked because an estimation
      * is being computed.
      */
-    public void setMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
-<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L367">            throw new LockedException();</span>
+    public void setMaxIterations(int maxIterations) throws LockedException {
+<span class="fc bfc" id="L365" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L366">            throw new LockedException();</span>
         }
-<span class="fc bfc" id="L369" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
-<span class="fc" id="L370">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L369">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L372">        mMaxIterations = maxIterations;</span>
-<span class="fc" id="L373">    }    </span>
+<span class="fc" id="L371">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L372">    }    </span>
     
     /**
      * Sets list of matched 2D points for each view and their corresponding
@@ -384,13 +383,12 @@ public abstract class RobustSinglePoint3DTriangulator {
      * required to compute triangulation.
      */
     public void setPointsAndCameras(List&lt;Point2D&gt; points2D, 
-            List&lt;PinholeCamera&gt; cameras) throws LockedException, 
-            IllegalArgumentException {
-<span class="fc bfc" id="L389" title="All 2 branches covered.">        if (isLocked()) {</span>
-<span class="fc" id="L390">            throw new LockedException();</span>
+            List&lt;PinholeCamera&gt; cameras) throws LockedException {
+<span class="fc bfc" id="L387" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L388">            throw new LockedException();</span>
         }
-<span class="fc" id="L392">        internalSetPointsAndCameras(points2D, cameras);</span>
-<span class="fc" id="L393">    }</span>
+<span class="fc" id="L390">        internalSetPointsAndCameras(points2D, cameras);</span>
+<span class="fc" id="L391">    }</span>
 
     /**
      * Returns list of matched 2D points on each view. Each point in the list is
@@ -398,7 +396,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return list of matched 2D points on each view.
      */
     public List&lt;Point2D&gt; getPoints2D() {
-<span class="fc" id="L401">        return mPoints2D;</span>
+<span class="fc" id="L399">        return mPoints2D;</span>
     }
     
     /**
@@ -406,7 +404,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return cameras for each view where 2D points are represented.
      */
     public List&lt;PinholeCamera&gt; getCameras() {
-<span class="fc" id="L409">        return mCameras;</span>
+<span class="fc" id="L407">        return mCameras;</span>
     }    
     
     /**
@@ -417,7 +415,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return quality scores corresponding to each view.
      */
     public double[] getQualityScores() {
-<span class="fc" id="L420">        return null;</span>
+<span class="fc" id="L418">        return null;</span>
     }
     
     /**
@@ -431,8 +429,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MIN_REQUIRED_VIEWS (i.e. 2 views).
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-<span class="fc" id="L435">            IllegalArgumentException { }</span>
+<span class="fc" id="L432">    public void setQualityScores(double[] qualityScores) throws LockedException { }</span>
     
     
     /**
@@ -443,7 +440,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return true if this instance is ready, false otherwise.
      */
     public boolean isReady() {
-<span class="fc" id="L446">        return SinglePoint3DTriangulator.areValidPointsAndCameras(mPoints2D, </span>
+<span class="fc" id="L443">        return SinglePoint3DTriangulator.areValidPointsAndCameras(mPoints2D, </span>
                 mCameras);
     }
         
@@ -478,18 +475,18 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public static RobustSinglePoint3DTriangulator create(
             RobustEstimatorMethod method) {
-<span class="fc bfc" id="L481" title="All 5 branches covered.">        switch (method) {</span>
+<span class="fc bfc" id="L478" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L483">                return new RANSACRobustSinglePoint3DTriangulator();</span>
+<span class="fc" id="L480">                return new RANSACRobustSinglePoint3DTriangulator();</span>
             case LMedS:
-<span class="fc" id="L485">                return new LMedSRobustSinglePoint3DTriangulator();</span>
+<span class="fc" id="L482">                return new LMedSRobustSinglePoint3DTriangulator();</span>
             case MSAC:
-<span class="fc" id="L487">                return new MSACRobustSinglePoint3DTriangulator();</span>
+<span class="fc" id="L484">                return new MSACRobustSinglePoint3DTriangulator();</span>
             case PROSAC:
-<span class="fc" id="L489">                return new PROSACRobustSinglePoint3DTriangulator();</span>
+<span class="fc" id="L486">                return new PROSACRobustSinglePoint3DTriangulator();</span>
             case PROMedS:
             default:
-<span class="fc" id="L492">                return new PROMedSRobustSinglePoint3DTriangulator();</span>
+<span class="fc" id="L489">                return new PROMedSRobustSinglePoint3DTriangulator();</span>
         }
     }
     
@@ -508,23 +505,22 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create(List&lt;Point2D&gt; points,
-            List&lt;PinholeCamera&gt; cameras, RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L513" title="All 5 branches covered.">        switch (method) {</span>
+            List&lt;PinholeCamera&gt; cameras, RobustEstimatorMethod method) {
+<span class="fc bfc" id="L509" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L515">                return new RANSACRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L511">                return new RANSACRobustSinglePoint3DTriangulator(points, </span>
                         cameras);
             case LMedS:
-<span class="fc" id="L518">                return new LMedSRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L514">                return new LMedSRobustSinglePoint3DTriangulator(points, </span>
                         cameras);
             case MSAC:
-<span class="fc" id="L521">                return new MSACRobustSinglePoint3DTriangulator(points, cameras);</span>
+<span class="fc" id="L517">                return new MSACRobustSinglePoint3DTriangulator(points, cameras);</span>
             case PROSAC:
-<span class="fc" id="L523">                return new PROSACRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L519">                return new PROSACRobustSinglePoint3DTriangulator(points, </span>
                         cameras);
             case PROMedS:
             default:
-<span class="fc" id="L527">                return new PROMedSRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L523">                return new PROMedSRobustSinglePoint3DTriangulator(points, </span>
                         cameras);
         }
     }
@@ -546,23 +542,22 @@ public abstract class RobustSinglePoint3DTriangulator {
      */
     public static RobustSinglePoint3DTriangulator create(List&lt;Point2D&gt; points,
             List&lt;PinholeCamera&gt; cameras, double[] qualityScores, 
-            RobustEstimatorMethod method) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L551" title="All 5 branches covered.">        switch (method) {</span>
+            RobustEstimatorMethod method) {
+<span class="fc bfc" id="L546" title="All 5 branches covered.">        switch (method) {</span>
             case RANSAC:
-<span class="fc" id="L553">                return new RANSACRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L548">                return new RANSACRobustSinglePoint3DTriangulator(points, </span>
                         cameras);
             case LMedS:
-<span class="fc" id="L556">                return new LMedSRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L551">                return new LMedSRobustSinglePoint3DTriangulator(points, </span>
                         cameras);
             case MSAC:
-<span class="fc" id="L559">                return new MSACRobustSinglePoint3DTriangulator(points, cameras);</span>
+<span class="fc" id="L554">                return new MSACRobustSinglePoint3DTriangulator(points, cameras);</span>
             case PROSAC:
-<span class="fc" id="L561">                return new PROSACRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L556">                return new PROSACRobustSinglePoint3DTriangulator(points, </span>
                         cameras, qualityScores);
             case PROMedS:
             default:
-<span class="fc" id="L565">                return new PROMedSRobustSinglePoint3DTriangulator(points, </span>
+<span class="fc" id="L560">                return new PROMedSRobustSinglePoint3DTriangulator(points, </span>
                         cameras, qualityScores);
         }
     }
@@ -573,7 +568,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create() {
-<span class="fc" id="L576">        return create(DEFAULT_ROBUST_METHOD);</span>
+<span class="fc" id="L571">        return create(DEFAULT_ROBUST_METHOD);</span>
     }
     
     /**
@@ -589,8 +584,8 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create(List&lt;Point2D&gt; points,
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
-<span class="fc" id="L593">        return create(points, cameras, DEFAULT_ROBUST_METHOD);</span>
+            List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L588">        return create(points, cameras, DEFAULT_ROBUST_METHOD);</span>
     }
 
     /**
@@ -607,9 +602,8 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return an instance of a robust single 3D point triangulator.
      */
     public static RobustSinglePoint3DTriangulator create(List&lt;Point2D&gt; points,
-            List&lt;PinholeCamera&gt; cameras, double[] qualityScores) 
-            throws IllegalArgumentException {
-<span class="fc" id="L612">        return create(points, cameras, qualityScores, DEFAULT_ROBUST_METHOD);</span>
+            List&lt;PinholeCamera&gt; cameras, double[] qualityScores) {
+<span class="fc" id="L606">        return create(points, cameras, qualityScores, DEFAULT_ROBUST_METHOD);</span>
     }
     
     /**
@@ -624,14 +618,14 @@ public abstract class RobustSinglePoint3DTriangulator {
      * required to compute triangulation.
      */    
     private void internalSetPointsAndCameras(List&lt;Point2D&gt; points2D,
-            List&lt;PinholeCamera&gt; cameras) throws IllegalArgumentException {
+            List&lt;PinholeCamera&gt; cameras) {
         
-<span class="fc bfc" id="L629" title="All 2 branches covered.">        if (!SinglePoint3DTriangulator.areValidPointsAndCameras(points2D, cameras)) {</span>
-<span class="fc" id="L630">            throw new IllegalArgumentException();</span>
+<span class="fc bfc" id="L623" title="All 2 branches covered.">        if (!SinglePoint3DTriangulator.areValidPointsAndCameras(points2D, cameras)) {</span>
+<span class="fc" id="L624">            throw new IllegalArgumentException();</span>
         }
         
-<span class="fc" id="L633">        mPoints2D = points2D;</span>
-<span class="fc" id="L634">        mCameras = cameras;</span>
-<span class="fc" id="L635">    }        </span>
+<span class="fc" id="L627">        mPoints2D = points2D;</span>
+<span class="fc" id="L628">        mCameras = cameras;</span>
+<span class="fc" id="L629">    }        </span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -44,10 +44,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
             AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
-<span class="fc" id="L49">        super(configuration, listener);</span>
-<span class="fc" id="L50">    }</span>
+            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L48">        super(configuration, listener);</span>
+<span class="fc" id="L49">    }</span>
     
     /**
      * Constructor.
@@ -55,11 +54,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      * @throws NullPointerException if listener is not provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
-<span class="fc" id="L60">        this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(), </span>
+            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L58">        this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(), </span>
                 listener);
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L60">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -69,13 +67,13 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      */
     @Override
     public boolean processOneView() {
-<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L73">            mSlamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();</span>
-<span class="fc" id="L74">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L75">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L71">            mSlamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();</span>
+<span class="fc" id="L72">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L73">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L78">        return super.processOneView();</span>
+<span class="fc" id="L76">        return super.processOneView();</span>
     }
 
     /**
@@ -85,7 +83,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      */
     @Override
     protected boolean postProcessOne() {
-<span class="fc" id="L88">        return updateScaleAndOrientation();</span>
+<span class="fc" id="L86">        return updateScaleAndOrientation();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

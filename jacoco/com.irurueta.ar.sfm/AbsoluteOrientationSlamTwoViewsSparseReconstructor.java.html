@@ -39,10 +39,9 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructor extends
      */
     public AbsoluteOrientationSlamTwoViewsSparseReconstructor(
             AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationSlamTwoViewsSparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L44">        super(configuration, listener);</span>
-<span class="fc" id="L45">    }</span>
+            AbsoluteOrientationSlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L43">        super(configuration, listener);</span>
+<span class="fc" id="L44">    }</span>
     
     /**
      * Constructor.
@@ -50,11 +49,10 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public AbsoluteOrientationSlamTwoViewsSparseReconstructor(
-            AbsoluteOrientationSlamTwoViewsSparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L55">        this(new AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration(), </span>
+            AbsoluteOrientationSlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L53">        this(new AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration(), </span>
                 listener);
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -64,13 +62,13 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructor extends
      */
     @Override
     public boolean processOneView() {
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L68">            mSlamEstimator = new AbsoluteOrientationSlamEstimator();</span>
-<span class="fc" id="L69">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L70">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L66">            mSlamEstimator = new AbsoluteOrientationSlamEstimator();</span>
+<span class="fc" id="L67">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L68">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L73">        return super.processOneView();</span>
+<span class="fc" id="L71">        return super.processOneView();</span>
     }
 
     /**
@@ -80,7 +78,7 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructor extends
      */
     @Override
     protected boolean postProcessOne() {
-<span class="fc" id="L83">        return updateScaleAndOrientation();</span>
+<span class="fc" id="L81">        return updateScaleAndOrientation();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

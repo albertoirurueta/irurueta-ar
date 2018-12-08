@@ -526,7 +526,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
         //compute total points for samples where homography could be estimated
 <span class="fc" id="L527">        int totalPoints = 0;</span>
 <span class="fc bfc" id="L528" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L529" title="All 2 branches covered.">            if (sample.getHomography() != null) {</span>
+<span class="pc bpc" id="L529" title="1 of 2 branches missed.">            if (sample.getHomography() != null) {</span>
 <span class="fc" id="L530">                totalPoints += sample.getSampledMarkers().size();</span>
             }
 <span class="fc" id="L532">        }</span>
@@ -541,11 +541,11 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
 <span class="fc" id="L541">        int pointCounter = 0;</span>
 <span class="fc" id="L542">        int sampleCounter = 0;</span>
 <span class="fc bfc" id="L543" title="All 2 branches covered.">        for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L544" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="pc bpc" id="L544" title="1 of 2 branches missed.">            if (sample.getHomography() == null) {</span>
                 //homography computation failed, so we cannot compute camera
                 //pose for this sample, or use this sample for radial distortion
                 //estimation
-<span class="fc" id="L548">                continue;</span>
+<span class="nc" id="L548">                continue;</span>
             }
 <span class="fc" id="L550">            sample.computeCameraPose(mIntrinsic);</span>
 
@@ -617,8 +617,8 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             //set undistorted points obtained after undistorting sampled points
             //to refine homography on next iteration
 <span class="fc bfc" id="L619" title="All 2 branches covered.">            for (CameraCalibratorSample sample : mSamples) {</span>
-<span class="fc bfc" id="L620" title="All 2 branches covered.">                if (sample.getHomography() == null) {</span>
-<span class="fc" id="L621">                    continue;</span>
+<span class="pc bpc" id="L620" title="1 of 2 branches missed.">                if (sample.getHomography() == null) {</span>
+<span class="nc" id="L621">                    continue;</span>
                 }
 
                 //undo distortion of distorted (sampled) points using estimated 

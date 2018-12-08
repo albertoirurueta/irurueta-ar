@@ -39,10 +39,9 @@ public class SlamTwoViewsSparseReconstructor extends
      */
     public SlamTwoViewsSparseReconstructor(
             SlamTwoViewsSparseReconstructorConfiguration configuration,
-            SlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
-<span class="fc" id="L44">        super(configuration, listener);</span>
-<span class="fc" id="L45">    }</span>
+            SlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L43">        super(configuration, listener);</span>
+<span class="fc" id="L44">    }</span>
     
     /**
      * Constructor.
@@ -50,10 +49,9 @@ public class SlamTwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public SlamTwoViewsSparseReconstructor(
-            SlamTwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
-<span class="fc" id="L55">        this(new SlamTwoViewsSparseReconstructorConfiguration(), listener);</span>
-<span class="fc" id="L56">    }</span>
+            SlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L53">        this(new SlamTwoViewsSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L54">    }</span>
 
     /**
      * Process one view of all the available data during the reconstruction.
@@ -63,13 +61,13 @@ public class SlamTwoViewsSparseReconstructor extends
      */
     @Override
     public boolean processOneView() {
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (!mRunning) {</span>
-<span class="fc" id="L67">            mSlamEstimator = new SlamEstimator();</span>
-<span class="fc" id="L68">            setUpSlamEstimatorListener();</span>
-<span class="fc" id="L69">            setUpCalibrationData();</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (!mRunning) {</span>
+<span class="fc" id="L65">            mSlamEstimator = new SlamEstimator();</span>
+<span class="fc" id="L66">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L67">            setUpCalibrationData();</span>
         }
 
-<span class="fc" id="L72">        return super.processOneView();</span>
+<span class="fc" id="L70">        return super.processOneView();</span>
     }
 
     /**
@@ -79,7 +77,7 @@ public class SlamTwoViewsSparseReconstructor extends
      */
     @Override
     protected boolean postProcessOne() {
-<span class="fc" id="L82">        return updateScale();</span>
+<span class="fc" id="L80">        return updateScale();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

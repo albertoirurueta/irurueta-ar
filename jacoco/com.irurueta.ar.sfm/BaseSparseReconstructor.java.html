@@ -1187,8 +1187,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
      * @return quality scores for matched points.
      */
     private double[] setUpCameraEstimatorMatches(List&lt;Point3D&gt; points3D, List&lt;Point2D&gt; points2D) {
-<span class="pc bpc" id="L1190" title="2 of 4 branches missed.">        if (mMatches == null || mMatches.isEmpty()) {</span>
-<span class="nc" id="L1191">            return null;</span>
+<span class="pc bpc" id="L1190" title="1 of 4 branches missed.">        if (mMatches == null || mMatches.isEmpty()) {</span>
+<span class="fc" id="L1191">            return null;</span>
         }
 
 <span class="fc" id="L1194">        points3D.clear();</span>
@@ -1236,7 +1236,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 
         //pick quality scores
 <span class="fc" id="L1238">        double[] qualityScores = null;</span>
-<span class="pc bpc" id="L1239" title="1 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
+<span class="pc bpc" id="L1239" title="2 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
 <span class="fc" id="L1240">            qualityScores = new double[numMatches];</span>
 <span class="fc" id="L1241">            int j = 0;</span>
 <span class="fc bfc" id="L1242" title="All 2 branches covered.">            for (i = 0; i &lt; positions.length; i++) {</span>
@@ -1335,7 +1335,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
         } else {
             //EPnP, UPnP or DLT is used for additional cameras estimation without fundamental
             //matrix. Only 6 matches are required
-<span class="pc bpc" id="L1338" title="1 of 2 branches missed.">            return count &gt;= PointCorrespondencePinholeCameraRobustEstimator.MIN_NUMBER_OF_POINT_CORRESPONDENCES;</span>
+<span class="fc bfc" id="L1338" title="All 2 branches covered.">            return count &gt;= PointCorrespondencePinholeCameraRobustEstimator.MIN_NUMBER_OF_POINT_CORRESPONDENCES;</span>
         }
     }
 
@@ -1373,7 +1373,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="nc bnc" id="L1373" title="All 2 branches missed.">                return count &gt;= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
 <span class="pc bpc" id="L1374" title="1 of 2 branches missed.">            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==</span>
                     FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
-<span class="fc bfc" id="L1376" title="All 2 branches covered.">                return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+<span class="pc bpc" id="L1376" title="1 of 2 branches missed.">                return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
             }
 <span class="nc bnc" id="L1378" title="All 2 branches missed.">        } else if (mConfiguration.isPlanarSceneAllowed()) {</span>
 <span class="nc bnc" id="L1379" title="All 2 branches missed.">            return count &gt;= ProjectiveTransformation2DRobustEstimator.MINIMUM_SIZE;</span>

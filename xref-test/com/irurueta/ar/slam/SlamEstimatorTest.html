@@ -7327,519 +7327,520 @@
 <a class="jxr_linenumber" name="L7319" href="#L7319">7319</a> 
 <a class="jxr_linenumber" name="L7320" href="#L7320">7320</a>             <strong class="jxr_keyword">if</strong> (rotationImproved &amp;&amp; positionImproved) {
 <a class="jxr_linenumber" name="L7321" href="#L7321">7321</a>                 numSuccess++;
-<a class="jxr_linenumber" name="L7322" href="#L7322">7322</a>             }            
-<a class="jxr_linenumber" name="L7323" href="#L7323">7323</a>         }
-<a class="jxr_linenumber" name="L7324" href="#L7324">7324</a>         
-<a class="jxr_linenumber" name="L7325" href="#L7325">7325</a>         assertTrue(numSuccess &gt;= REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);        
-<a class="jxr_linenumber" name="L7326" href="#L7326">7326</a>     }
-<a class="jxr_linenumber" name="L7327" href="#L7327">7327</a>     
-<a class="jxr_linenumber" name="L7328" href="#L7328">7328</a>     @Test
-<a class="jxr_linenumber" name="L7329" href="#L7329">7329</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testPredictionVariableAngularSpeedWithNoiseAndCalibration() {
-<a class="jxr_linenumber" name="L7330" href="#L7330">7330</a>         <strong class="jxr_keyword">int</strong> numSuccess = 0;
-<a class="jxr_linenumber" name="L7331" href="#L7331">7331</a>         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> t = 0; t &lt; 2*REPEAT_TIMES; t++) {
-<a class="jxr_linenumber" name="L7332" href="#L7332">7332</a>             UniformRandomizer offsetRandomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(
-<a class="jxr_linenumber" name="L7333" href="#L7333">7333</a>                     <strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L7334" href="#L7334">7334</a>             GaussianRandomizer noiseRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
-<a class="jxr_linenumber" name="L7335" href="#L7335">7335</a>                     <strong class="jxr_keyword">new</strong> Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
-<a class="jxr_linenumber" name="L7336" href="#L7336">7336</a> 
-<a class="jxr_linenumber" name="L7337" href="#L7337">7337</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetX = offsetRandomizer.nextFloat(
-<a class="jxr_linenumber" name="L7338" href="#L7338">7338</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-<a class="jxr_linenumber" name="L7339" href="#L7339">7339</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetY = offsetRandomizer.nextFloat(
-<a class="jxr_linenumber" name="L7340" href="#L7340">7340</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-<a class="jxr_linenumber" name="L7341" href="#L7341">7341</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetZ = offsetRandomizer.nextFloat(
-<a class="jxr_linenumber" name="L7342" href="#L7342">7342</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-<a class="jxr_linenumber" name="L7343" href="#L7343">7343</a>         
-<a class="jxr_linenumber" name="L7344" href="#L7344">7344</a>             <strong class="jxr_keyword">float</strong> angularOffsetX = offsetRandomizer.nextFloat(
-<a class="jxr_linenumber" name="L7345" href="#L7345">7345</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-<a class="jxr_linenumber" name="L7346" href="#L7346">7346</a>             <strong class="jxr_keyword">float</strong> angularOffsetY = offsetRandomizer.nextFloat(
-<a class="jxr_linenumber" name="L7347" href="#L7347">7347</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-<a class="jxr_linenumber" name="L7348" href="#L7348">7348</a>             <strong class="jxr_keyword">float</strong> angularOffsetZ = offsetRandomizer.nextFloat(
-<a class="jxr_linenumber" name="L7349" href="#L7349">7349</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-<a class="jxr_linenumber" name="L7350" href="#L7350">7350</a> 
-<a class="jxr_linenumber" name="L7351" href="#L7351">7351</a>             SlamCalibrator calibrator = createFinishedCalibrator(
-<a class="jxr_linenumber" name="L7352" href="#L7352">7352</a>                     accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ, 
-<a class="jxr_linenumber" name="L7353" href="#L7353">7353</a>                     angularOffsetX, angularOffsetY, angularOffsetZ, 
-<a class="jxr_linenumber" name="L7354" href="#L7354">7354</a>                     noiseRandomizer);
-<a class="jxr_linenumber" name="L7355" href="#L7355">7355</a>             SlamCalibrationData calibration = calibrator.getCalibrationData();
-<a class="jxr_linenumber" name="L7356" href="#L7356">7356</a>             
-<a class="jxr_linenumber" name="L7357" href="#L7357">7357</a>             UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
-<a class="jxr_linenumber" name="L7358" href="#L7358">7358</a>             
-<a class="jxr_linenumber" name="L7359" href="#L7359">7359</a>             <strong class="jxr_keyword">double</strong> gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-<a class="jxr_linenumber" name="L7360" href="#L7360">7360</a>             <strong class="jxr_keyword">double</strong> gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-<a class="jxr_linenumber" name="L7361" href="#L7361">7361</a>             <strong class="jxr_keyword">float</strong> gtAccelerationX = 0.0f, gtAccelerationY = 0.0f,
-<a class="jxr_linenumber" name="L7362" href="#L7362">7362</a>                     gtAccelerationZ = 0.0f;
-<a class="jxr_linenumber" name="L7363" href="#L7363">7363</a>             <strong class="jxr_keyword">int</strong> period = N_PREDICTION_SAMPLES / 2;
-<a class="jxr_linenumber" name="L7364" href="#L7364">7364</a>             <strong class="jxr_keyword">int</strong> offsetAngularSpeedX = randomizer.nextInt(0, 
-<a class="jxr_linenumber" name="L7365" href="#L7365">7365</a>                     N_PREDICTION_SAMPLES);
-<a class="jxr_linenumber" name="L7366" href="#L7366">7366</a>             <strong class="jxr_keyword">int</strong> offsetAngularSpeedY = randomizer.nextInt(0, 
-<a class="jxr_linenumber" name="L7367" href="#L7367">7367</a>                     N_PREDICTION_SAMPLES);
-<a class="jxr_linenumber" name="L7368" href="#L7368">7368</a>             <strong class="jxr_keyword">int</strong> offsetAngularSpeedZ = randomizer.nextInt(0, 
-<a class="jxr_linenumber" name="L7369" href="#L7369">7369</a>                     N_PREDICTION_SAMPLES);
-<a class="jxr_linenumber" name="L7370" href="#L7370">7370</a>             <strong class="jxr_keyword">float</strong> amplitudeAngularSpeedX = randomizer.nextFloat();
-<a class="jxr_linenumber" name="L7371" href="#L7371">7371</a>             <strong class="jxr_keyword">float</strong> amplitudeAngularSpeedY = randomizer.nextFloat();
-<a class="jxr_linenumber" name="L7372" href="#L7372">7372</a>             <strong class="jxr_keyword">float</strong> amplitudeAngularSpeedZ = randomizer.nextFloat();
-<a class="jxr_linenumber" name="L7373" href="#L7373">7373</a>             <strong class="jxr_keyword">float</strong> gtAngularSpeedX = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedX * Math.sin(
-<a class="jxr_linenumber" name="L7374" href="#L7374">7374</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
-<a class="jxr_linenumber" name="L7375" href="#L7375">7375</a>                     (<strong class="jxr_keyword">double</strong>)(0 - offsetAngularSpeedX)));
-<a class="jxr_linenumber" name="L7376" href="#L7376">7376</a>             <strong class="jxr_keyword">float</strong> gtAngularSpeedY = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedY * Math.sin(
-<a class="jxr_linenumber" name="L7377" href="#L7377">7377</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
-<a class="jxr_linenumber" name="L7378" href="#L7378">7378</a>                     (<strong class="jxr_keyword">double</strong>)(0 - offsetAngularSpeedY)));
-<a class="jxr_linenumber" name="L7379" href="#L7379">7379</a>             <strong class="jxr_keyword">float</strong> gtAngularSpeedZ = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedZ * Math.sin(
-<a class="jxr_linenumber" name="L7380" href="#L7380">7380</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
-<a class="jxr_linenumber" name="L7381" href="#L7381">7381</a>                     (<strong class="jxr_keyword">double</strong>)(0 - offsetAngularSpeedZ)));
-<a class="jxr_linenumber" name="L7382" href="#L7382">7382</a>             <strong class="jxr_keyword">float</strong> gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-<a class="jxr_linenumber" name="L7383" href="#L7383">7383</a>                     gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
-<a class="jxr_linenumber" name="L7384" href="#L7384">7384</a> 
-<a class="jxr_linenumber" name="L7385" href="#L7385">7385</a>             SlamEstimator estimator = <strong class="jxr_keyword">new</strong> SlamEstimator();
-<a class="jxr_linenumber" name="L7386" href="#L7386">7386</a> 
-<a class="jxr_linenumber" name="L7387" href="#L7387">7387</a>             SlamEstimator estimatorWithCalibration = <strong class="jxr_keyword">new</strong> SlamEstimator();
-<a class="jxr_linenumber" name="L7388" href="#L7388">7388</a>             estimatorWithCalibration.setCalibrationData(calibration);
-<a class="jxr_linenumber" name="L7389" href="#L7389">7389</a>             
-<a class="jxr_linenumber" name="L7390" href="#L7390">7390</a>             GaussianRandomizer accelerationRandomizer =
-<a class="jxr_linenumber" name="L7391" href="#L7391">7391</a>                     <strong class="jxr_keyword">new</strong> GaussianRandomizer(<strong class="jxr_keyword">new</strong> Random(), 0.0,
-<a class="jxr_linenumber" name="L7392" href="#L7392">7392</a>                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-<a class="jxr_linenumber" name="L7393" href="#L7393">7393</a>             GaussianRandomizer angularSpeedRandomizer =
-<a class="jxr_linenumber" name="L7394" href="#L7394">7394</a>                     <strong class="jxr_keyword">new</strong> GaussianRandomizer(<strong class="jxr_keyword">new</strong> Random(), 0.0,
-<a class="jxr_linenumber" name="L7395" href="#L7395">7395</a>                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-<a class="jxr_linenumber" name="L7396" href="#L7396">7396</a>         
-<a class="jxr_linenumber" name="L7397" href="#L7397">7397</a>             <strong class="jxr_keyword">long</strong> timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-<a class="jxr_linenumber" name="L7398" href="#L7398">7398</a>             <strong class="jxr_keyword">float</strong> accelerationX, accelerationY, accelerationZ;
-<a class="jxr_linenumber" name="L7399" href="#L7399">7399</a>             <strong class="jxr_keyword">float</strong> angularSpeedX, angularSpeedY, angularSpeedZ;
-<a class="jxr_linenumber" name="L7400" href="#L7400">7400</a>             <strong class="jxr_keyword">float</strong> accelerationWithOffsetX, accelerationWithOffsetY, 
-<a class="jxr_linenumber" name="L7401" href="#L7401">7401</a>                     accelerationWithOffsetZ;
-<a class="jxr_linenumber" name="L7402" href="#L7402">7402</a>             <strong class="jxr_keyword">float</strong> angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-<a class="jxr_linenumber" name="L7403" href="#L7403">7403</a>                     angularSpeedWithOffsetZ;                    
-<a class="jxr_linenumber" name="L7404" href="#L7404">7404</a>             <strong class="jxr_keyword">float</strong> noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-<a class="jxr_linenumber" name="L7405" href="#L7405">7405</a>             <strong class="jxr_keyword">float</strong> noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-<a class="jxr_linenumber" name="L7406" href="#L7406">7406</a>             <strong class="jxr_keyword">double</strong> lastAccelerationX = 0.0, lastAccelerationY = 0.0,
-<a class="jxr_linenumber" name="L7407" href="#L7407">7407</a>                     lastAccelerationZ = 0.0;
-<a class="jxr_linenumber" name="L7408" href="#L7408">7408</a>             <strong class="jxr_keyword">double</strong> lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0,
-<a class="jxr_linenumber" name="L7409" href="#L7409">7409</a>                     lastAngularSpeedZ = 0.0;
-<a class="jxr_linenumber" name="L7410" href="#L7410">7410</a>             <strong class="jxr_keyword">double</strong> deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-<a class="jxr_linenumber" name="L7411" href="#L7411">7411</a>             <strong class="jxr_keyword">double</strong> deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-<a class="jxr_linenumber" name="L7412" href="#L7412">7412</a>             <strong class="jxr_keyword">double</strong> lastAccelerationWithOffsetX = 0.0, 
-<a class="jxr_linenumber" name="L7413" href="#L7413">7413</a>                     lastAccelerationWithOffsetY = 0.0, 
-<a class="jxr_linenumber" name="L7414" href="#L7414">7414</a>                     lastAccelerationWithOffsetZ = 0.0;
-<a class="jxr_linenumber" name="L7415" href="#L7415">7415</a>             <strong class="jxr_keyword">double</strong> lastAngularSpeedWithOffsetX = 0.0, 
-<a class="jxr_linenumber" name="L7416" href="#L7416">7416</a>                     lastAngularSpeedWithOffsetY = 0.0, 
-<a class="jxr_linenumber" name="L7417" href="#L7417">7417</a>                     lastAngularSpeedWithOffsetZ = 0.0;
-<a class="jxr_linenumber" name="L7418" href="#L7418">7418</a>             <strong class="jxr_keyword">double</strong> deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-<a class="jxr_linenumber" name="L7419" href="#L7419">7419</a>                     deltaAccelerationWithOffsetZ;
-<a class="jxr_linenumber" name="L7420" href="#L7420">7420</a>             <strong class="jxr_keyword">double</strong> deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-<a class="jxr_linenumber" name="L7421" href="#L7421">7421</a>                     deltaAngularSpeedWithOffsetZ;
-<a class="jxr_linenumber" name="L7422" href="#L7422">7422</a>             
-<a class="jxr_linenumber" name="L7423" href="#L7423">7423</a>             <strong class="jxr_keyword">double</strong> lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-<a class="jxr_linenumber" name="L7424" href="#L7424">7424</a>                     lastGtAccelerationZ = 0.0;
-<a class="jxr_linenumber" name="L7425" href="#L7425">7425</a>             <strong class="jxr_keyword">double</strong> lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-<a class="jxr_linenumber" name="L7426" href="#L7426">7426</a>                     lastGtAngularSpeedZ = 0.0;
-<a class="jxr_linenumber" name="L7427" href="#L7427">7427</a>             <strong class="jxr_keyword">double</strong> deltaGtAccelerationX, deltaGtAccelerationY, 
-<a class="jxr_linenumber" name="L7428" href="#L7428">7428</a>                     deltaGtAccelerationZ;
-<a class="jxr_linenumber" name="L7429" href="#L7429">7429</a>             <strong class="jxr_keyword">double</strong> deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-<a class="jxr_linenumber" name="L7430" href="#L7430">7430</a>                     deltaGtAngularSpeedZ;
-<a class="jxr_linenumber" name="L7431" href="#L7431">7431</a>             <strong class="jxr_keyword">double</strong>[] x = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[16];
-<a class="jxr_linenumber" name="L7432" href="#L7432">7432</a>             <strong class="jxr_keyword">double</strong>[] u = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[9];
-<a class="jxr_linenumber" name="L7433" href="#L7433">7433</a>             <strong class="jxr_keyword">double</strong>[] uWithOffset = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[9];
-<a class="jxr_linenumber" name="L7434" href="#L7434">7434</a>             x[0] = gtPositionX;
-<a class="jxr_linenumber" name="L7435" href="#L7435">7435</a>             x[1] = gtPositionY;
-<a class="jxr_linenumber" name="L7436" href="#L7436">7436</a>             x[2] = gtPositionZ;
-<a class="jxr_linenumber" name="L7437" href="#L7437">7437</a>             x[3] = gtQuaternionA;
-<a class="jxr_linenumber" name="L7438" href="#L7438">7438</a>             x[4] = gtQuaternionB;
-<a class="jxr_linenumber" name="L7439" href="#L7439">7439</a>             x[5] = gtQuaternionC;
-<a class="jxr_linenumber" name="L7440" href="#L7440">7440</a>             x[6] = gtQuaternionD;
-<a class="jxr_linenumber" name="L7441" href="#L7441">7441</a>             x[7] = gtSpeedX;
-<a class="jxr_linenumber" name="L7442" href="#L7442">7442</a>             x[8] = gtSpeedY;
-<a class="jxr_linenumber" name="L7443" href="#L7443">7443</a>             x[9] = gtSpeedZ;
-<a class="jxr_linenumber" name="L7444" href="#L7444">7444</a>             x[10] = gtAccelerationX;
-<a class="jxr_linenumber" name="L7445" href="#L7445">7445</a>             x[11] = gtAccelerationY;
-<a class="jxr_linenumber" name="L7446" href="#L7446">7446</a>             x[12] = gtAccelerationZ;
-<a class="jxr_linenumber" name="L7447" href="#L7447">7447</a>             x[13] = gtAngularSpeedX;
-<a class="jxr_linenumber" name="L7448" href="#L7448">7448</a>             x[14] = gtAngularSpeedY;
-<a class="jxr_linenumber" name="L7449" href="#L7449">7449</a>             x[15] = gtAngularSpeedZ;            
-<a class="jxr_linenumber" name="L7450" href="#L7450">7450</a>             
-<a class="jxr_linenumber" name="L7451" href="#L7451">7451</a>             <em class="jxr_comment">//ground truth state and control</em>
-<a class="jxr_linenumber" name="L7452" href="#L7452">7452</a>             <strong class="jxr_keyword">double</strong>[] gtX = Arrays.copyOf(x, x.length);
-<a class="jxr_linenumber" name="L7453" href="#L7453">7453</a>             <strong class="jxr_keyword">double</strong>[] gtU = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[9];
-<a class="jxr_linenumber" name="L7454" href="#L7454">7454</a>             
-<a class="jxr_linenumber" name="L7455" href="#L7455">7455</a>             <strong class="jxr_keyword">double</strong>[] xWithOffset = Arrays.copyOf(x, x.length);
-<a class="jxr_linenumber" name="L7456" href="#L7456">7456</a> 
-<a class="jxr_linenumber" name="L7457" href="#L7457">7457</a>             <em class="jxr_comment">//set initial state</em>
-<a class="jxr_linenumber" name="L7458" href="#L7458">7458</a>             estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-<a class="jxr_linenumber" name="L7459" href="#L7459">7459</a>                     gtSpeedX, gtSpeedY, gtSpeedZ, 
-<a class="jxr_linenumber" name="L7460" href="#L7460">7460</a>                     gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-<a class="jxr_linenumber" name="L7461" href="#L7461">7461</a>                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-<a class="jxr_linenumber" name="L7462" href="#L7462">7462</a>                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-<a class="jxr_linenumber" name="L7463" href="#L7463">7463</a>             estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-<a class="jxr_linenumber" name="L7464" href="#L7464">7464</a>                     gtSpeedX, gtSpeedY, gtSpeedZ, 
-<a class="jxr_linenumber" name="L7465" href="#L7465">7465</a>                     gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-<a class="jxr_linenumber" name="L7466" href="#L7466">7466</a>                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-<a class="jxr_linenumber" name="L7467" href="#L7467">7467</a>                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-<a class="jxr_linenumber" name="L7468" href="#L7468">7468</a>         
-<a class="jxr_linenumber" name="L7469" href="#L7469">7469</a>             String msg;
-<a class="jxr_linenumber" name="L7470" href="#L7470">7470</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; N_PREDICTION_SAMPLES; i++) {
-<a class="jxr_linenumber" name="L7471" href="#L7471">7471</a>                 noiseAccelerationX = accelerationRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7472" href="#L7472">7472</a>                 noiseAccelerationY = accelerationRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7473" href="#L7473">7473</a>                 noiseAccelerationZ = accelerationRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7474" href="#L7474">7474</a>                                 
-<a class="jxr_linenumber" name="L7475" href="#L7475">7475</a>                 accelerationX = gtAccelerationX + noiseAccelerationX;
-<a class="jxr_linenumber" name="L7476" href="#L7476">7476</a>                 accelerationY = gtAccelerationY + noiseAccelerationY;
-<a class="jxr_linenumber" name="L7477" href="#L7477">7477</a>                 accelerationZ = gtAccelerationZ + noiseAccelerationZ;
-<a class="jxr_linenumber" name="L7478" href="#L7478">7478</a> 
-<a class="jxr_linenumber" name="L7479" href="#L7479">7479</a>                 accelerationWithOffsetX = accelerationX + accelerationOffsetX;
-<a class="jxr_linenumber" name="L7480" href="#L7480">7480</a>                 accelerationWithOffsetY = accelerationY + accelerationOffsetY;
-<a class="jxr_linenumber" name="L7481" href="#L7481">7481</a>                 accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-<a class="jxr_linenumber" name="L7482" href="#L7482">7482</a>                 
-<a class="jxr_linenumber" name="L7483" href="#L7483">7483</a>                 noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7484" href="#L7484">7484</a>                 noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7485" href="#L7485">7485</a>                 noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7486" href="#L7486">7486</a> 
-<a class="jxr_linenumber" name="L7487" href="#L7487">7487</a>                 gtAngularSpeedX = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedX * Math.sin(
-<a class="jxr_linenumber" name="L7488" href="#L7488">7488</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
-<a class="jxr_linenumber" name="L7489" href="#L7489">7489</a>                     (<strong class="jxr_keyword">double</strong>)(i - offsetAngularSpeedX)));
-<a class="jxr_linenumber" name="L7490" href="#L7490">7490</a>                 gtAngularSpeedY = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedY * Math.sin(
-<a class="jxr_linenumber" name="L7491" href="#L7491">7491</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
-<a class="jxr_linenumber" name="L7492" href="#L7492">7492</a>                     (<strong class="jxr_keyword">double</strong>)(i - offsetAngularSpeedY)));
-<a class="jxr_linenumber" name="L7493" href="#L7493">7493</a>                 gtAngularSpeedZ = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedZ * Math.sin(
-<a class="jxr_linenumber" name="L7494" href="#L7494">7494</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
-<a class="jxr_linenumber" name="L7495" href="#L7495">7495</a>                     (<strong class="jxr_keyword">double</strong>)(i - offsetAngularSpeedZ)));
-<a class="jxr_linenumber" name="L7496" href="#L7496">7496</a>                 
-<a class="jxr_linenumber" name="L7497" href="#L7497">7497</a>                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
-<a class="jxr_linenumber" name="L7498" href="#L7498">7498</a>                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
-<a class="jxr_linenumber" name="L7499" href="#L7499">7499</a>                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-<a class="jxr_linenumber" name="L7500" href="#L7500">7500</a>             
-<a class="jxr_linenumber" name="L7501" href="#L7501">7501</a>                 angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
-<a class="jxr_linenumber" name="L7502" href="#L7502">7502</a>                 angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
-<a class="jxr_linenumber" name="L7503" href="#L7503">7503</a>                 angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-<a class="jxr_linenumber" name="L7504" href="#L7504">7504</a>                 
-<a class="jxr_linenumber" name="L7505" href="#L7505">7505</a>                 estimator.updateAccelerometerSample(timestamp, accelerationX, 
-<a class="jxr_linenumber" name="L7506" href="#L7506">7506</a>                         accelerationY, accelerationZ);
-<a class="jxr_linenumber" name="L7507" href="#L7507">7507</a>                 estimator.updateGyroscopeSample(timestamp, 
-<a class="jxr_linenumber" name="L7508" href="#L7508">7508</a>                         angularSpeedX, angularSpeedY, angularSpeedZ);
-<a class="jxr_linenumber" name="L7509" href="#L7509">7509</a> 
-<a class="jxr_linenumber" name="L7510" href="#L7510">7510</a>                 estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-<a class="jxr_linenumber" name="L7511" href="#L7511">7511</a>                         accelerationWithOffsetX, accelerationWithOffsetY, 
-<a class="jxr_linenumber" name="L7512" href="#L7512">7512</a>                         accelerationWithOffsetZ);
-<a class="jxr_linenumber" name="L7513" href="#L7513">7513</a>                 estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-<a class="jxr_linenumber" name="L7514" href="#L7514">7514</a>                         angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-<a class="jxr_linenumber" name="L7515" href="#L7515">7515</a>                         angularSpeedWithOffsetZ);
-<a class="jxr_linenumber" name="L7516" href="#L7516">7516</a>                 
-<a class="jxr_linenumber" name="L7517" href="#L7517">7517</a>                 timestamp += DELTA_NANOS;
-<a class="jxr_linenumber" name="L7518" href="#L7518">7518</a>                 
-<a class="jxr_linenumber" name="L7519" href="#L7519">7519</a>                 <strong class="jxr_keyword">if</strong> (i == 0) {
-<a class="jxr_linenumber" name="L7520" href="#L7520">7520</a>                     lastAccelerationX = accelerationX;
-<a class="jxr_linenumber" name="L7521" href="#L7521">7521</a>                     lastAccelerationY = accelerationY;
-<a class="jxr_linenumber" name="L7522" href="#L7522">7522</a>                     lastAccelerationZ = accelerationZ;
-<a class="jxr_linenumber" name="L7523" href="#L7523">7523</a> 
-<a class="jxr_linenumber" name="L7524" href="#L7524">7524</a>                     lastAngularSpeedX = angularSpeedX;
-<a class="jxr_linenumber" name="L7525" href="#L7525">7525</a>                     lastAngularSpeedY = angularSpeedY;
-<a class="jxr_linenumber" name="L7526" href="#L7526">7526</a>                     lastAngularSpeedZ = angularSpeedZ;  
-<a class="jxr_linenumber" name="L7527" href="#L7527">7527</a>                     
-<a class="jxr_linenumber" name="L7528" href="#L7528">7528</a>                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
-<a class="jxr_linenumber" name="L7529" href="#L7529">7529</a>                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
-<a class="jxr_linenumber" name="L7530" href="#L7530">7530</a>                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-<a class="jxr_linenumber" name="L7531" href="#L7531">7531</a> 
-<a class="jxr_linenumber" name="L7532" href="#L7532">7532</a>                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
-<a class="jxr_linenumber" name="L7533" href="#L7533">7533</a>                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-<a class="jxr_linenumber" name="L7534" href="#L7534">7534</a>                     lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
-<a class="jxr_linenumber" name="L7535" href="#L7535">7535</a>                     
-<a class="jxr_linenumber" name="L7536" href="#L7536">7536</a>                     lastGtAccelerationX = gtAccelerationX;
-<a class="jxr_linenumber" name="L7537" href="#L7537">7537</a>                     lastGtAccelerationY = gtAccelerationY;
-<a class="jxr_linenumber" name="L7538" href="#L7538">7538</a>                     lastGtAccelerationZ = gtAccelerationZ;
-<a class="jxr_linenumber" name="L7539" href="#L7539">7539</a>                     
-<a class="jxr_linenumber" name="L7540" href="#L7540">7540</a>                     lastGtAngularSpeedX = gtAngularSpeedX;
-<a class="jxr_linenumber" name="L7541" href="#L7541">7541</a>                     lastGtAngularSpeedY = gtAngularSpeedY;
-<a class="jxr_linenumber" name="L7542" href="#L7542">7542</a>                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-<a class="jxr_linenumber" name="L7543" href="#L7543">7543</a>                     
-<a class="jxr_linenumber" name="L7544" href="#L7544">7544</a>                 } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L7545" href="#L7545">7545</a>                     deltaAccelerationX = accelerationX - lastAccelerationX;
-<a class="jxr_linenumber" name="L7546" href="#L7546">7546</a>                     deltaAccelerationY = accelerationY - lastAccelerationY;
-<a class="jxr_linenumber" name="L7547" href="#L7547">7547</a>                     deltaAccelerationZ = accelerationZ - lastAccelerationZ;
-<a class="jxr_linenumber" name="L7548" href="#L7548">7548</a> 
-<a class="jxr_linenumber" name="L7549" href="#L7549">7549</a>                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
-<a class="jxr_linenumber" name="L7550" href="#L7550">7550</a>                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
-<a class="jxr_linenumber" name="L7551" href="#L7551">7551</a>                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-<a class="jxr_linenumber" name="L7552" href="#L7552">7552</a>                     
-<a class="jxr_linenumber" name="L7553" href="#L7553">7553</a>                     deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
-<a class="jxr_linenumber" name="L7554" href="#L7554">7554</a>                             lastAccelerationWithOffsetX;
-<a class="jxr_linenumber" name="L7555" href="#L7555">7555</a>                     deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-<a class="jxr_linenumber" name="L7556" href="#L7556">7556</a>                             lastAccelerationWithOffsetY;
-<a class="jxr_linenumber" name="L7557" href="#L7557">7557</a>                     deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-<a class="jxr_linenumber" name="L7558" href="#L7558">7558</a>                             lastAccelerationWithOffsetZ;
-<a class="jxr_linenumber" name="L7559" href="#L7559">7559</a> 
-<a class="jxr_linenumber" name="L7560" href="#L7560">7560</a>                     deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
-<a class="jxr_linenumber" name="L7561" href="#L7561">7561</a>                             lastAngularSpeedWithOffsetX;
-<a class="jxr_linenumber" name="L7562" href="#L7562">7562</a>                     deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-<a class="jxr_linenumber" name="L7563" href="#L7563">7563</a>                             lastAngularSpeedWithOffsetY;
-<a class="jxr_linenumber" name="L7564" href="#L7564">7564</a>                     deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-<a class="jxr_linenumber" name="L7565" href="#L7565">7565</a>                             lastAngularSpeedWithOffsetZ;
-<a class="jxr_linenumber" name="L7566" href="#L7566">7566</a>                     
-<a class="jxr_linenumber" name="L7567" href="#L7567">7567</a>                     deltaGtAccelerationX = gtAccelerationX - 
-<a class="jxr_linenumber" name="L7568" href="#L7568">7568</a>                             lastGtAccelerationX;
-<a class="jxr_linenumber" name="L7569" href="#L7569">7569</a>                     deltaGtAccelerationY = gtAccelerationY -
-<a class="jxr_linenumber" name="L7570" href="#L7570">7570</a>                             lastGtAccelerationY;
-<a class="jxr_linenumber" name="L7571" href="#L7571">7571</a>                     deltaGtAccelerationZ = gtAccelerationZ -
-<a class="jxr_linenumber" name="L7572" href="#L7572">7572</a>                             lastGtAccelerationZ;
-<a class="jxr_linenumber" name="L7573" href="#L7573">7573</a>                     
-<a class="jxr_linenumber" name="L7574" href="#L7574">7574</a>                     deltaGtAngularSpeedX = gtAngularSpeedX - 
-<a class="jxr_linenumber" name="L7575" href="#L7575">7575</a>                             lastGtAngularSpeedX;
-<a class="jxr_linenumber" name="L7576" href="#L7576">7576</a>                     deltaGtAngularSpeedY = gtAngularSpeedY -
-<a class="jxr_linenumber" name="L7577" href="#L7577">7577</a>                             lastGtAngularSpeedY;
-<a class="jxr_linenumber" name="L7578" href="#L7578">7578</a>                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
-<a class="jxr_linenumber" name="L7579" href="#L7579">7579</a>                             lastGtAngularSpeedZ;
-<a class="jxr_linenumber" name="L7580" href="#L7580">7580</a>                 
-<a class="jxr_linenumber" name="L7581" href="#L7581">7581</a>                     <em class="jxr_comment">//delta acceleration and angular speed only cointain noise, </em>
-<a class="jxr_linenumber" name="L7582" href="#L7582">7582</a>                     <em class="jxr_comment">//since no real change in those values is present on a </em>
-<a class="jxr_linenumber" name="L7583" href="#L7583">7583</a>                     <em class="jxr_comment">//constant speed movement</em>
-<a class="jxr_linenumber" name="L7584" href="#L7584">7584</a>                     u[0] = u[1] = u[2] = 0.0;
-<a class="jxr_linenumber" name="L7585" href="#L7585">7585</a>                     u[3] = deltaAccelerationX;
-<a class="jxr_linenumber" name="L7586" href="#L7586">7586</a>                     u[4] = deltaAccelerationY;
-<a class="jxr_linenumber" name="L7587" href="#L7587">7587</a>                     u[5] = deltaAccelerationZ;
-<a class="jxr_linenumber" name="L7588" href="#L7588">7588</a>                     u[6] = deltaAngularSpeedX;
-<a class="jxr_linenumber" name="L7589" href="#L7589">7589</a>                     u[7] = deltaAngularSpeedY;
-<a class="jxr_linenumber" name="L7590" href="#L7590">7590</a>                     u[8] = deltaAngularSpeedZ;
-<a class="jxr_linenumber" name="L7591" href="#L7591">7591</a>                     StatePredictor.predict(x, u, DELTA_SECONDS, x);
-<a class="jxr_linenumber" name="L7592" href="#L7592">7592</a> 
-<a class="jxr_linenumber" name="L7593" href="#L7593">7593</a>                     <em class="jxr_comment">//we also take into account control signals with offset</em>
-<a class="jxr_linenumber" name="L7594" href="#L7594">7594</a>                     uWithOffset[0] = uWithOffset[1] = uWithOffset[2] = 0.0;                
-<a class="jxr_linenumber" name="L7595" href="#L7595">7595</a>                     uWithOffset[3] = deltaAccelerationWithOffsetX;
-<a class="jxr_linenumber" name="L7596" href="#L7596">7596</a>                     uWithOffset[4] = deltaAccelerationWithOffsetY;
-<a class="jxr_linenumber" name="L7597" href="#L7597">7597</a>                     uWithOffset[5] = deltaAccelerationWithOffsetZ;
-<a class="jxr_linenumber" name="L7598" href="#L7598">7598</a>                     uWithOffset[6] = deltaAngularSpeedWithOffsetX;
-<a class="jxr_linenumber" name="L7599" href="#L7599">7599</a>                     uWithOffset[7] = deltaAngularSpeedWithOffsetY;
-<a class="jxr_linenumber" name="L7600" href="#L7600">7600</a>                     uWithOffset[8] = deltaAngularSpeedWithOffsetZ;
-<a class="jxr_linenumber" name="L7601" href="#L7601">7601</a>                     StatePredictor.predict(xWithOffset, uWithOffset, DELTA_SECONDS, 
-<a class="jxr_linenumber" name="L7602" href="#L7602">7602</a>                             xWithOffset);
-<a class="jxr_linenumber" name="L7603" href="#L7603">7603</a>                     
-<a class="jxr_linenumber" name="L7604" href="#L7604">7604</a>                     gtU[0] = gtU[1] = gtU[2] = 0.0;
-<a class="jxr_linenumber" name="L7605" href="#L7605">7605</a>                     gtU[3] = deltaGtAccelerationX;
-<a class="jxr_linenumber" name="L7606" href="#L7606">7606</a>                     gtU[4] = deltaGtAccelerationY;
-<a class="jxr_linenumber" name="L7607" href="#L7607">7607</a>                     gtU[5] = deltaGtAccelerationZ;
-<a class="jxr_linenumber" name="L7608" href="#L7608">7608</a>                     gtU[6] = deltaGtAngularSpeedX;
-<a class="jxr_linenumber" name="L7609" href="#L7609">7609</a>                     gtU[7] = deltaGtAngularSpeedY;
-<a class="jxr_linenumber" name="L7610" href="#L7610">7610</a>                     gtU[8] = deltaGtAngularSpeedZ;
-<a class="jxr_linenumber" name="L7611" href="#L7611">7611</a>                     StatePredictor.predict(gtX, gtU, DELTA_SECONDS, gtX);
-<a class="jxr_linenumber" name="L7612" href="#L7612">7612</a> 
-<a class="jxr_linenumber" name="L7613" href="#L7613">7613</a>                     lastAccelerationX = accelerationX;
-<a class="jxr_linenumber" name="L7614" href="#L7614">7614</a>                     lastAccelerationY = accelerationY;
-<a class="jxr_linenumber" name="L7615" href="#L7615">7615</a>                     lastAccelerationZ = accelerationZ;
-<a class="jxr_linenumber" name="L7616" href="#L7616">7616</a> 
-<a class="jxr_linenumber" name="L7617" href="#L7617">7617</a>                     lastAngularSpeedX = angularSpeedX;
-<a class="jxr_linenumber" name="L7618" href="#L7618">7618</a>                     lastAngularSpeedY = angularSpeedY;
-<a class="jxr_linenumber" name="L7619" href="#L7619">7619</a>                     lastAngularSpeedZ = angularSpeedZ; 
-<a class="jxr_linenumber" name="L7620" href="#L7620">7620</a>                     
-<a class="jxr_linenumber" name="L7621" href="#L7621">7621</a>                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
-<a class="jxr_linenumber" name="L7622" href="#L7622">7622</a>                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
-<a class="jxr_linenumber" name="L7623" href="#L7623">7623</a>                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-<a class="jxr_linenumber" name="L7624" href="#L7624">7624</a> 
-<a class="jxr_linenumber" name="L7625" href="#L7625">7625</a>                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
-<a class="jxr_linenumber" name="L7626" href="#L7626">7626</a>                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-<a class="jxr_linenumber" name="L7627" href="#L7627">7627</a>                     lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-<a class="jxr_linenumber" name="L7628" href="#L7628">7628</a>                     
-<a class="jxr_linenumber" name="L7629" href="#L7629">7629</a>                     lastGtAccelerationX = gtAccelerationX;
-<a class="jxr_linenumber" name="L7630" href="#L7630">7630</a>                     lastGtAccelerationY = gtAccelerationY;
-<a class="jxr_linenumber" name="L7631" href="#L7631">7631</a>                     lastGtAccelerationZ = gtAccelerationZ;
-<a class="jxr_linenumber" name="L7632" href="#L7632">7632</a>                     
-<a class="jxr_linenumber" name="L7633" href="#L7633">7633</a>                     lastGtAngularSpeedX = gtAngularSpeedX;
-<a class="jxr_linenumber" name="L7634" href="#L7634">7634</a>                     lastGtAngularSpeedY = gtAngularSpeedY;
-<a class="jxr_linenumber" name="L7635" href="#L7635">7635</a>                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-<a class="jxr_linenumber" name="L7636" href="#L7636">7636</a>                 }            
-<a class="jxr_linenumber" name="L7637" href="#L7637">7637</a>             }
-<a class="jxr_linenumber" name="L7638" href="#L7638">7638</a>             
-<a class="jxr_linenumber" name="L7639" href="#L7639">7639</a>             msg = <span class="jxr_string">"Filtered with calibrator - positionX: "</span> + estimatorWithCalibration.getStatePositionX() + 
-<a class="jxr_linenumber" name="L7640" href="#L7640">7640</a>                     <span class="jxr_string">", positionY: "</span> + estimatorWithCalibration.getStatePositionY() +
-<a class="jxr_linenumber" name="L7641" href="#L7641">7641</a>                     <span class="jxr_string">", positionZ: "</span> + estimatorWithCalibration.getStatePositionZ() + 
-<a class="jxr_linenumber" name="L7642" href="#L7642">7642</a>                     <span class="jxr_string">", velocityX: "</span> + estimatorWithCalibration.getStateVelocityX() + 
-<a class="jxr_linenumber" name="L7643" href="#L7643">7643</a>                     <span class="jxr_string">", velocityY: "</span> + estimatorWithCalibration.getStateVelocityY() +
-<a class="jxr_linenumber" name="L7644" href="#L7644">7644</a>                     <span class="jxr_string">", velocityZ: "</span> + estimatorWithCalibration.getStateVelocityZ() +
-<a class="jxr_linenumber" name="L7645" href="#L7645">7645</a>                     <span class="jxr_string">", accelerationX: "</span> + estimatorWithCalibration.getStateAccelerationX() +
-<a class="jxr_linenumber" name="L7646" href="#L7646">7646</a>                     <span class="jxr_string">", accelerationY: "</span> + estimatorWithCalibration.getStateAccelerationY() +
-<a class="jxr_linenumber" name="L7647" href="#L7647">7647</a>                     <span class="jxr_string">", accelerationZ: "</span> + estimatorWithCalibration.getStateAccelerationZ() +
-<a class="jxr_linenumber" name="L7648" href="#L7648">7648</a>                     <span class="jxr_string">", quaternionA: "</span> + estimatorWithCalibration.getStateQuaternionA() +
-<a class="jxr_linenumber" name="L7649" href="#L7649">7649</a>                     <span class="jxr_string">", quaternionB: "</span> + estimatorWithCalibration.getStateQuaternionB() +
-<a class="jxr_linenumber" name="L7650" href="#L7650">7650</a>                     <span class="jxr_string">", quaternionC: "</span> + estimatorWithCalibration.getStateQuaternionC() +
-<a class="jxr_linenumber" name="L7651" href="#L7651">7651</a>                     <span class="jxr_string">", quaternionD: "</span> + estimatorWithCalibration.getStateQuaternionD() +
-<a class="jxr_linenumber" name="L7652" href="#L7652">7652</a>                     <span class="jxr_string">", angularSpeedX: "</span> + estimatorWithCalibration.getStateAngularSpeedX() +
-<a class="jxr_linenumber" name="L7653" href="#L7653">7653</a>                     <span class="jxr_string">", angularSpeedY: "</span> + estimatorWithCalibration.getStateAngularSpeedY() +
-<a class="jxr_linenumber" name="L7654" href="#L7654">7654</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + estimatorWithCalibration.getStateAngularSpeedZ();
-<a class="jxr_linenumber" name="L7655" href="#L7655">7655</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
-<a class="jxr_linenumber" name="L7656" href="#L7656">7656</a>                     Level.INFO, msg);
-<a class="jxr_linenumber" name="L7657" href="#L7657">7657</a>             
-<a class="jxr_linenumber" name="L7658" href="#L7658">7658</a>             msg = <span class="jxr_string">"Filtered - positionX: "</span> + estimator.getStatePositionX() + 
-<a class="jxr_linenumber" name="L7659" href="#L7659">7659</a>                     <span class="jxr_string">", positionY: "</span> + estimator.getStatePositionY() +
-<a class="jxr_linenumber" name="L7660" href="#L7660">7660</a>                     <span class="jxr_string">", positionZ: "</span> + estimator.getStatePositionZ() + 
-<a class="jxr_linenumber" name="L7661" href="#L7661">7661</a>                     <span class="jxr_string">", velocityX: "</span> + estimator.getStateVelocityX() + 
-<a class="jxr_linenumber" name="L7662" href="#L7662">7662</a>                     <span class="jxr_string">", velocityY: "</span> + estimator.getStateVelocityY() +
-<a class="jxr_linenumber" name="L7663" href="#L7663">7663</a>                     <span class="jxr_string">", velocityZ: "</span> + estimator.getStateVelocityZ() +
-<a class="jxr_linenumber" name="L7664" href="#L7664">7664</a>                     <span class="jxr_string">", accelerationX: "</span> + estimator.getStateAccelerationX() +
-<a class="jxr_linenumber" name="L7665" href="#L7665">7665</a>                     <span class="jxr_string">", accelerationY: "</span> + estimator.getStateAccelerationY() +
-<a class="jxr_linenumber" name="L7666" href="#L7666">7666</a>                     <span class="jxr_string">", accelerationZ: "</span> + estimator.getStateAccelerationZ() +
-<a class="jxr_linenumber" name="L7667" href="#L7667">7667</a>                     <span class="jxr_string">", quaternionA: "</span> + estimator.getStateQuaternionA() +
-<a class="jxr_linenumber" name="L7668" href="#L7668">7668</a>                     <span class="jxr_string">", quaternionB: "</span> + estimator.getStateQuaternionB() +
-<a class="jxr_linenumber" name="L7669" href="#L7669">7669</a>                     <span class="jxr_string">", quaternionC: "</span> + estimator.getStateQuaternionC() +
-<a class="jxr_linenumber" name="L7670" href="#L7670">7670</a>                     <span class="jxr_string">", quaternionD: "</span> + estimator.getStateQuaternionD() +
-<a class="jxr_linenumber" name="L7671" href="#L7671">7671</a>                     <span class="jxr_string">", angularSpeedX: "</span> + estimator.getStateAngularSpeedX() +
-<a class="jxr_linenumber" name="L7672" href="#L7672">7672</a>                     <span class="jxr_string">", angularSpeedY: "</span> + estimator.getStateAngularSpeedY() +
-<a class="jxr_linenumber" name="L7673" href="#L7673">7673</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + estimator.getStateAngularSpeedZ();
-<a class="jxr_linenumber" name="L7674" href="#L7674">7674</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
-<a class="jxr_linenumber" name="L7675" href="#L7675">7675</a>                     Level.INFO, msg);
-<a class="jxr_linenumber" name="L7676" href="#L7676">7676</a>         
-<a class="jxr_linenumber" name="L7677" href="#L7677">7677</a>             msg = <span class="jxr_string">"Prediction - positionX: "</span> + x[0] + 
-<a class="jxr_linenumber" name="L7678" href="#L7678">7678</a>                     <span class="jxr_string">", positionY: "</span> + x[1] +
-<a class="jxr_linenumber" name="L7679" href="#L7679">7679</a>                     <span class="jxr_string">", positionZ: "</span> + x[2] + 
-<a class="jxr_linenumber" name="L7680" href="#L7680">7680</a>                     <span class="jxr_string">", velocityX: "</span> + x[7] + 
-<a class="jxr_linenumber" name="L7681" href="#L7681">7681</a>                     <span class="jxr_string">", velocityY: "</span> + x[8] +
-<a class="jxr_linenumber" name="L7682" href="#L7682">7682</a>                     <span class="jxr_string">", velocityZ: "</span> + x[9] +
-<a class="jxr_linenumber" name="L7683" href="#L7683">7683</a>                     <span class="jxr_string">", accelerationX: "</span> + x[10] +
-<a class="jxr_linenumber" name="L7684" href="#L7684">7684</a>                     <span class="jxr_string">", accelerationY: "</span> + x[11] +
-<a class="jxr_linenumber" name="L7685" href="#L7685">7685</a>                     <span class="jxr_string">", accelerationZ: "</span> + x[12] +
-<a class="jxr_linenumber" name="L7686" href="#L7686">7686</a>                     <span class="jxr_string">", quaternionA: "</span> + x[3] +
-<a class="jxr_linenumber" name="L7687" href="#L7687">7687</a>                     <span class="jxr_string">", quaternionB: "</span> + x[4] +
-<a class="jxr_linenumber" name="L7688" href="#L7688">7688</a>                     <span class="jxr_string">", quaternionC: "</span> + x[5] +
-<a class="jxr_linenumber" name="L7689" href="#L7689">7689</a>                     <span class="jxr_string">", quaternionD: "</span> + x[6] +
-<a class="jxr_linenumber" name="L7690" href="#L7690">7690</a>                     <span class="jxr_string">", angularSpeedX: "</span> + x[13] +
-<a class="jxr_linenumber" name="L7691" href="#L7691">7691</a>                     <span class="jxr_string">", angularSpeedY: "</span> + x[14] +
-<a class="jxr_linenumber" name="L7692" href="#L7692">7692</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + x[15];
-<a class="jxr_linenumber" name="L7693" href="#L7693">7693</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
-<a class="jxr_linenumber" name="L7694" href="#L7694">7694</a>                     Level.INFO, msg);
-<a class="jxr_linenumber" name="L7695" href="#L7695">7695</a> 
-<a class="jxr_linenumber" name="L7696" href="#L7696">7696</a>             msg = <span class="jxr_string">"Ground truth - positionX: "</span> + gtX[0] + 
-<a class="jxr_linenumber" name="L7697" href="#L7697">7697</a>                     <span class="jxr_string">", positionY: "</span> + gtX[1] +
-<a class="jxr_linenumber" name="L7698" href="#L7698">7698</a>                     <span class="jxr_string">", positionZ: "</span> + gtX[2] + 
-<a class="jxr_linenumber" name="L7699" href="#L7699">7699</a>                     <span class="jxr_string">", velocityX: "</span> + gtX[7] + 
-<a class="jxr_linenumber" name="L7700" href="#L7700">7700</a>                     <span class="jxr_string">", velocityY: "</span> + gtX[8] +
-<a class="jxr_linenumber" name="L7701" href="#L7701">7701</a>                     <span class="jxr_string">", velocityZ: "</span> + gtX[9] +
-<a class="jxr_linenumber" name="L7702" href="#L7702">7702</a>                     <span class="jxr_string">", accelerationX: "</span> + gtX[10] +
-<a class="jxr_linenumber" name="L7703" href="#L7703">7703</a>                     <span class="jxr_string">", accelerationY: "</span> + gtX[11] +
-<a class="jxr_linenumber" name="L7704" href="#L7704">7704</a>                     <span class="jxr_string">", accelerationZ: "</span> + gtX[12] +
-<a class="jxr_linenumber" name="L7705" href="#L7705">7705</a>                     <span class="jxr_string">", quaternionA: "</span> + gtX[3] +
-<a class="jxr_linenumber" name="L7706" href="#L7706">7706</a>                     <span class="jxr_string">", quaternionB: "</span> + gtX[4] +
-<a class="jxr_linenumber" name="L7707" href="#L7707">7707</a>                     <span class="jxr_string">", quaternionC: "</span> + gtX[5] +
-<a class="jxr_linenumber" name="L7708" href="#L7708">7708</a>                     <span class="jxr_string">", quaternionD: "</span> + gtX[6] +
-<a class="jxr_linenumber" name="L7709" href="#L7709">7709</a>                     <span class="jxr_string">", angularSpeedX: "</span> + gtX[13] +
-<a class="jxr_linenumber" name="L7710" href="#L7710">7710</a>                     <span class="jxr_string">", angularSpeedY: "</span> + gtX[14] +
-<a class="jxr_linenumber" name="L7711" href="#L7711">7711</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + gtX[15];
-<a class="jxr_linenumber" name="L7712" href="#L7712">7712</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
-<a class="jxr_linenumber" name="L7713" href="#L7713">7713</a>                     Level.INFO, msg);   
-<a class="jxr_linenumber" name="L7714" href="#L7714">7714</a>         
-<a class="jxr_linenumber" name="L7715" href="#L7715">7715</a>             <em class="jxr_comment">//rotate random point with quaternions and check that filtered </em>
-<a class="jxr_linenumber" name="L7716" href="#L7716">7716</a>             <em class="jxr_comment">//quaternion is closer to ground truth than predicted quaternion</em>
-<a class="jxr_linenumber" name="L7717" href="#L7717">7717</a>             InhomogeneousPoint3D randomPoint = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
-<a class="jxr_linenumber" name="L7718" href="#L7718">7718</a>                     randomizer.nextDouble(), randomizer.nextDouble(), 
-<a class="jxr_linenumber" name="L7719" href="#L7719">7719</a>                     randomizer.nextDouble());
-<a class="jxr_linenumber" name="L7720" href="#L7720">7720</a> 
-<a class="jxr_linenumber" name="L7721" href="#L7721">7721</a>             Quaternion filteredQuaternion = 
-<a class="jxr_linenumber" name="L7722" href="#L7722">7722</a>                     estimatorWithCalibration.getStateQuaternion();
-<a class="jxr_linenumber" name="L7723" href="#L7723">7723</a>             Quaternion predictedQuaternion = <strong class="jxr_keyword">new</strong> Quaternion(
-<a class="jxr_linenumber" name="L7724" href="#L7724">7724</a>                     x[3], x[4], x[5], x[6]);
-<a class="jxr_linenumber" name="L7725" href="#L7725">7725</a>             Quaternion groundTruthQuaternion = <strong class="jxr_keyword">new</strong> Quaternion(
-<a class="jxr_linenumber" name="L7726" href="#L7726">7726</a>                     gtX[3], gtX[4], gtX[5], gtX[6]);
-<a class="jxr_linenumber" name="L7727" href="#L7727">7727</a> 
-<a class="jxr_linenumber" name="L7728" href="#L7728">7728</a>             Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-<a class="jxr_linenumber" name="L7729" href="#L7729">7729</a>             Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-<a class="jxr_linenumber" name="L7730" href="#L7730">7730</a>             Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-<a class="jxr_linenumber" name="L7731" href="#L7731">7731</a>                     randomPoint);
-<a class="jxr_linenumber" name="L7732" href="#L7732">7732</a> 
-<a class="jxr_linenumber" name="L7733" href="#L7733">7733</a>             <strong class="jxr_keyword">boolean</strong> rotationImproved = 
-<a class="jxr_linenumber" name="L7734" href="#L7734">7734</a>                     filteredRotated.distanceTo(groundTruthRotated) &lt; 
-<a class="jxr_linenumber" name="L7735" href="#L7735">7735</a>                     predictedRotated.distanceTo(groundTruthRotated);
-<a class="jxr_linenumber" name="L7736" href="#L7736">7736</a>         
-<a class="jxr_linenumber" name="L7737" href="#L7737">7737</a>             <em class="jxr_comment">//check that filtered position is closer to ground truth than </em>
-<a class="jxr_linenumber" name="L7738" href="#L7738">7738</a>             <em class="jxr_comment">//predicted position, and hence Kalman filter improves results</em>
-<a class="jxr_linenumber" name="L7739" href="#L7739">7739</a>             InhomogeneousPoint3D filteredPos = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
-<a class="jxr_linenumber" name="L7740" href="#L7740">7740</a>                     estimatorWithCalibration.getStatePositionX(), 
-<a class="jxr_linenumber" name="L7741" href="#L7741">7741</a>                     estimatorWithCalibration.getStatePositionY(), 
-<a class="jxr_linenumber" name="L7742" href="#L7742">7742</a>                     estimatorWithCalibration.getStatePositionZ());
-<a class="jxr_linenumber" name="L7743" href="#L7743">7743</a> 
-<a class="jxr_linenumber" name="L7744" href="#L7744">7744</a>             InhomogeneousPoint3D predictedPos = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
-<a class="jxr_linenumber" name="L7745" href="#L7745">7745</a>                     x[0], x[1], x[2]);
-<a class="jxr_linenumber" name="L7746" href="#L7746">7746</a> 
-<a class="jxr_linenumber" name="L7747" href="#L7747">7747</a>             InhomogeneousPoint3D groundTruthPos = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
-<a class="jxr_linenumber" name="L7748" href="#L7748">7748</a>                     gtX[0], gtX[1], gtX[2]);
-<a class="jxr_linenumber" name="L7749" href="#L7749">7749</a> 
-<a class="jxr_linenumber" name="L7750" href="#L7750">7750</a>             <strong class="jxr_keyword">boolean</strong> positionImproved = 
-<a class="jxr_linenumber" name="L7751" href="#L7751">7751</a>                     filteredPos.distanceTo(groundTruthPos) &lt; 
-<a class="jxr_linenumber" name="L7752" href="#L7752">7752</a>                     predictedPos.distanceTo(groundTruthPos);
-<a class="jxr_linenumber" name="L7753" href="#L7753">7753</a>             
-<a class="jxr_linenumber" name="L7754" href="#L7754">7754</a>             <strong class="jxr_keyword">if</strong> (rotationImproved &amp;&amp; positionImproved) {
-<a class="jxr_linenumber" name="L7755" href="#L7755">7755</a>                 numSuccess++;
-<a class="jxr_linenumber" name="L7756" href="#L7756">7756</a>             }
-<a class="jxr_linenumber" name="L7757" href="#L7757">7757</a>         }
-<a class="jxr_linenumber" name="L7758" href="#L7758">7758</a>         
-<a class="jxr_linenumber" name="L7759" href="#L7759">7759</a>         assertTrue(numSuccess &gt;= REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);        
-<a class="jxr_linenumber" name="L7760" href="#L7760">7760</a>     }    
-<a class="jxr_linenumber" name="L7761" href="#L7761">7761</a> 
-<a class="jxr_linenumber" name="L7762" href="#L7762">7762</a>     @Override
-<a class="jxr_linenumber" name="L7763" href="#L7763">7763</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onFullSampleReceived(BaseSlamEstimator estimator) {
-<a class="jxr_linenumber" name="L7764" href="#L7764">7764</a>         fullSampleReceived++;
-<a class="jxr_linenumber" name="L7765" href="#L7765">7765</a>     }
-<a class="jxr_linenumber" name="L7766" href="#L7766">7766</a> 
-<a class="jxr_linenumber" name="L7767" href="#L7767">7767</a>     @Override
-<a class="jxr_linenumber" name="L7768" href="#L7768">7768</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onFullSampleProcessed(BaseSlamEstimator estimator) {
-<a class="jxr_linenumber" name="L7769" href="#L7769">7769</a>         fullSampleProcessed++;
-<a class="jxr_linenumber" name="L7770" href="#L7770">7770</a>     }
-<a class="jxr_linenumber" name="L7771" href="#L7771">7771</a> 
-<a class="jxr_linenumber" name="L7772" href="#L7772">7772</a>     @Override
-<a class="jxr_linenumber" name="L7773" href="#L7773">7773</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCorrectWithPositionMeasure(BaseSlamEstimator estimator) {
-<a class="jxr_linenumber" name="L7774" href="#L7774">7774</a>         correctWithPositionMeasure++;
-<a class="jxr_linenumber" name="L7775" href="#L7775">7775</a>     }
-<a class="jxr_linenumber" name="L7776" href="#L7776">7776</a> 
-<a class="jxr_linenumber" name="L7777" href="#L7777">7777</a>     @Override
-<a class="jxr_linenumber" name="L7778" href="#L7778">7778</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
-<a class="jxr_linenumber" name="L7779" href="#L7779">7779</a>         correctedWithPositionMeasure++;
-<a class="jxr_linenumber" name="L7780" href="#L7780">7780</a>     }
-<a class="jxr_linenumber" name="L7781" href="#L7781">7781</a> 
-<a class="jxr_linenumber" name="L7782" href="#L7782">7782</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reset() {
-<a class="jxr_linenumber" name="L7783" href="#L7783">7783</a>         fullSampleReceived = fullSampleProcessed = correctWithPositionMeasure =
-<a class="jxr_linenumber" name="L7784" href="#L7784">7784</a>                 correctedWithPositionMeasure = 0;
-<a class="jxr_linenumber" name="L7785" href="#L7785">7785</a>     }
-<a class="jxr_linenumber" name="L7786" href="#L7786">7786</a> 
-<a class="jxr_linenumber" name="L7787" href="#L7787">7787</a>     <strong class="jxr_keyword">private</strong> SlamCalibrator createFinishedCalibrator(<strong class="jxr_keyword">float</strong> accelerationOffsetX,
-<a class="jxr_linenumber" name="L7788" href="#L7788">7788</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetY, <strong class="jxr_keyword">float</strong> accelerationOffsetZ, 
-<a class="jxr_linenumber" name="L7789" href="#L7789">7789</a>             <strong class="jxr_keyword">float</strong> angularOffsetX, <strong class="jxr_keyword">float</strong> angularOffsetY, <strong class="jxr_keyword">float</strong> angularOffsetZ,
-<a class="jxr_linenumber" name="L7790" href="#L7790">7790</a>             GaussianRandomizer noiseRandomizer) {
-<a class="jxr_linenumber" name="L7791" href="#L7791">7791</a>         SlamCalibrator calibrator = SlamEstimator.createCalibrator();
-<a class="jxr_linenumber" name="L7792" href="#L7792">7792</a>         calibrator.setConvergenceThreshold(ABSOLUTE_ERROR);
-<a class="jxr_linenumber" name="L7793" href="#L7793">7793</a>         calibrator.setMaxNumSamples(MAX_CALIBRATION_SAMPLES);
-<a class="jxr_linenumber" name="L7794" href="#L7794">7794</a>         
-<a class="jxr_linenumber" name="L7795" href="#L7795">7795</a>         <strong class="jxr_keyword">long</strong> timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-<a class="jxr_linenumber" name="L7796" href="#L7796">7796</a>         
-<a class="jxr_linenumber" name="L7797" href="#L7797">7797</a>         <strong class="jxr_keyword">float</strong> accelerationNoiseX, accelerationNoiseY, accelerationNoiseZ;
-<a class="jxr_linenumber" name="L7798" href="#L7798">7798</a>         <strong class="jxr_keyword">float</strong> angularNoiseX, angularNoiseY, angularNoiseZ;
-<a class="jxr_linenumber" name="L7799" href="#L7799">7799</a>         
-<a class="jxr_linenumber" name="L7800" href="#L7800">7800</a>         <strong class="jxr_keyword">double</strong> accelerationX, accelerationY, accelerationZ;
-<a class="jxr_linenumber" name="L7801" href="#L7801">7801</a>         <strong class="jxr_keyword">double</strong> angularX, angularY, angularZ;
-<a class="jxr_linenumber" name="L7802" href="#L7802">7802</a> 
-<a class="jxr_linenumber" name="L7803" href="#L7803">7803</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; MAX_CALIBRATION_SAMPLES; i++) {
-<a class="jxr_linenumber" name="L7804" href="#L7804">7804</a>             accelerationNoiseX = noiseRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7805" href="#L7805">7805</a>             accelerationNoiseY = noiseRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7806" href="#L7806">7806</a>             accelerationNoiseZ = noiseRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7807" href="#L7807">7807</a>             
-<a class="jxr_linenumber" name="L7808" href="#L7808">7808</a>             angularNoiseX = noiseRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7809" href="#L7809">7809</a>             angularNoiseY = noiseRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7810" href="#L7810">7810</a>             angularNoiseZ = noiseRandomizer.nextFloat();
-<a class="jxr_linenumber" name="L7811" href="#L7811">7811</a>             
-<a class="jxr_linenumber" name="L7812" href="#L7812">7812</a>             accelerationX = accelerationOffsetX + accelerationNoiseX;
-<a class="jxr_linenumber" name="L7813" href="#L7813">7813</a>             accelerationY = accelerationOffsetY + accelerationNoiseY;
-<a class="jxr_linenumber" name="L7814" href="#L7814">7814</a>             accelerationZ = accelerationOffsetZ + accelerationNoiseZ;
-<a class="jxr_linenumber" name="L7815" href="#L7815">7815</a>             
-<a class="jxr_linenumber" name="L7816" href="#L7816">7816</a>             angularX = angularOffsetX + angularNoiseX;
-<a class="jxr_linenumber" name="L7817" href="#L7817">7817</a>             angularY = angularOffsetY + angularNoiseY;
-<a class="jxr_linenumber" name="L7818" href="#L7818">7818</a>             angularZ = angularOffsetZ + angularNoiseZ;            
-<a class="jxr_linenumber" name="L7819" href="#L7819">7819</a>             
-<a class="jxr_linenumber" name="L7820" href="#L7820">7820</a>             calibrator.updateAccelerometerSample(timestamp, (<strong class="jxr_keyword">float</strong>)accelerationX, 
-<a class="jxr_linenumber" name="L7821" href="#L7821">7821</a>                     (<strong class="jxr_keyword">float</strong>)accelerationY, (<strong class="jxr_keyword">float</strong>)accelerationZ);
-<a class="jxr_linenumber" name="L7822" href="#L7822">7822</a>             calibrator.updateGyroscopeSample(timestamp, (<strong class="jxr_keyword">float</strong>)angularX, (<strong class="jxr_keyword">float</strong>)angularY, 
-<a class="jxr_linenumber" name="L7823" href="#L7823">7823</a>                     (<strong class="jxr_keyword">float</strong>)angularZ);
-<a class="jxr_linenumber" name="L7824" href="#L7824">7824</a>             
-<a class="jxr_linenumber" name="L7825" href="#L7825">7825</a>             <strong class="jxr_keyword">if</strong> (calibrator.isFinished()) {
-<a class="jxr_linenumber" name="L7826" href="#L7826">7826</a>                 <strong class="jxr_keyword">break</strong>;
-<a class="jxr_linenumber" name="L7827" href="#L7827">7827</a>             }
-<a class="jxr_linenumber" name="L7828" href="#L7828">7828</a>             
-<a class="jxr_linenumber" name="L7829" href="#L7829">7829</a>             timestamp += DELTA_NANOS;
-<a class="jxr_linenumber" name="L7830" href="#L7830">7830</a>         }
-<a class="jxr_linenumber" name="L7831" href="#L7831">7831</a>         
-<a class="jxr_linenumber" name="L7832" href="#L7832">7832</a>         <strong class="jxr_keyword">return</strong> calibrator;
-<a class="jxr_linenumber" name="L7833" href="#L7833">7833</a>     }    
-<a class="jxr_linenumber" name="L7834" href="#L7834">7834</a> }
+<a class="jxr_linenumber" name="L7322" href="#L7322">7322</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L7323" href="#L7323">7323</a>             }            
+<a class="jxr_linenumber" name="L7324" href="#L7324">7324</a>         }
+<a class="jxr_linenumber" name="L7325" href="#L7325">7325</a> 
+<a class="jxr_linenumber" name="L7326" href="#L7326">7326</a>         assertTrue(numSuccess &gt; 0);
+<a class="jxr_linenumber" name="L7327" href="#L7327">7327</a>     }
+<a class="jxr_linenumber" name="L7328" href="#L7328">7328</a>     
+<a class="jxr_linenumber" name="L7329" href="#L7329">7329</a>     @Test
+<a class="jxr_linenumber" name="L7330" href="#L7330">7330</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testPredictionVariableAngularSpeedWithNoiseAndCalibration() {
+<a class="jxr_linenumber" name="L7331" href="#L7331">7331</a>         <strong class="jxr_keyword">int</strong> numSuccess = 0;
+<a class="jxr_linenumber" name="L7332" href="#L7332">7332</a>         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> t = 0; t &lt; 2*REPEAT_TIMES; t++) {
+<a class="jxr_linenumber" name="L7333" href="#L7333">7333</a>             UniformRandomizer offsetRandomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(
+<a class="jxr_linenumber" name="L7334" href="#L7334">7334</a>                     <strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L7335" href="#L7335">7335</a>             GaussianRandomizer noiseRandomizer = <strong class="jxr_keyword">new</strong> GaussianRandomizer(
+<a class="jxr_linenumber" name="L7336" href="#L7336">7336</a>                     <strong class="jxr_keyword">new</strong> Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+<a class="jxr_linenumber" name="L7337" href="#L7337">7337</a> 
+<a class="jxr_linenumber" name="L7338" href="#L7338">7338</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetX = offsetRandomizer.nextFloat(
+<a class="jxr_linenumber" name="L7339" href="#L7339">7339</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+<a class="jxr_linenumber" name="L7340" href="#L7340">7340</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetY = offsetRandomizer.nextFloat(
+<a class="jxr_linenumber" name="L7341" href="#L7341">7341</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+<a class="jxr_linenumber" name="L7342" href="#L7342">7342</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetZ = offsetRandomizer.nextFloat(
+<a class="jxr_linenumber" name="L7343" href="#L7343">7343</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+<a class="jxr_linenumber" name="L7344" href="#L7344">7344</a>         
+<a class="jxr_linenumber" name="L7345" href="#L7345">7345</a>             <strong class="jxr_keyword">float</strong> angularOffsetX = offsetRandomizer.nextFloat(
+<a class="jxr_linenumber" name="L7346" href="#L7346">7346</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+<a class="jxr_linenumber" name="L7347" href="#L7347">7347</a>             <strong class="jxr_keyword">float</strong> angularOffsetY = offsetRandomizer.nextFloat(
+<a class="jxr_linenumber" name="L7348" href="#L7348">7348</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+<a class="jxr_linenumber" name="L7349" href="#L7349">7349</a>             <strong class="jxr_keyword">float</strong> angularOffsetZ = offsetRandomizer.nextFloat(
+<a class="jxr_linenumber" name="L7350" href="#L7350">7350</a>                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+<a class="jxr_linenumber" name="L7351" href="#L7351">7351</a> 
+<a class="jxr_linenumber" name="L7352" href="#L7352">7352</a>             SlamCalibrator calibrator = createFinishedCalibrator(
+<a class="jxr_linenumber" name="L7353" href="#L7353">7353</a>                     accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ, 
+<a class="jxr_linenumber" name="L7354" href="#L7354">7354</a>                     angularOffsetX, angularOffsetY, angularOffsetZ, 
+<a class="jxr_linenumber" name="L7355" href="#L7355">7355</a>                     noiseRandomizer);
+<a class="jxr_linenumber" name="L7356" href="#L7356">7356</a>             SlamCalibrationData calibration = calibrator.getCalibrationData();
+<a class="jxr_linenumber" name="L7357" href="#L7357">7357</a>             
+<a class="jxr_linenumber" name="L7358" href="#L7358">7358</a>             UniformRandomizer randomizer = <strong class="jxr_keyword">new</strong> UniformRandomizer(<strong class="jxr_keyword">new</strong> Random());
+<a class="jxr_linenumber" name="L7359" href="#L7359">7359</a>             
+<a class="jxr_linenumber" name="L7360" href="#L7360">7360</a>             <strong class="jxr_keyword">double</strong> gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
+<a class="jxr_linenumber" name="L7361" href="#L7361">7361</a>             <strong class="jxr_keyword">double</strong> gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
+<a class="jxr_linenumber" name="L7362" href="#L7362">7362</a>             <strong class="jxr_keyword">float</strong> gtAccelerationX = 0.0f, gtAccelerationY = 0.0f,
+<a class="jxr_linenumber" name="L7363" href="#L7363">7363</a>                     gtAccelerationZ = 0.0f;
+<a class="jxr_linenumber" name="L7364" href="#L7364">7364</a>             <strong class="jxr_keyword">int</strong> period = N_PREDICTION_SAMPLES / 2;
+<a class="jxr_linenumber" name="L7365" href="#L7365">7365</a>             <strong class="jxr_keyword">int</strong> offsetAngularSpeedX = randomizer.nextInt(0, 
+<a class="jxr_linenumber" name="L7366" href="#L7366">7366</a>                     N_PREDICTION_SAMPLES);
+<a class="jxr_linenumber" name="L7367" href="#L7367">7367</a>             <strong class="jxr_keyword">int</strong> offsetAngularSpeedY = randomizer.nextInt(0, 
+<a class="jxr_linenumber" name="L7368" href="#L7368">7368</a>                     N_PREDICTION_SAMPLES);
+<a class="jxr_linenumber" name="L7369" href="#L7369">7369</a>             <strong class="jxr_keyword">int</strong> offsetAngularSpeedZ = randomizer.nextInt(0, 
+<a class="jxr_linenumber" name="L7370" href="#L7370">7370</a>                     N_PREDICTION_SAMPLES);
+<a class="jxr_linenumber" name="L7371" href="#L7371">7371</a>             <strong class="jxr_keyword">float</strong> amplitudeAngularSpeedX = randomizer.nextFloat();
+<a class="jxr_linenumber" name="L7372" href="#L7372">7372</a>             <strong class="jxr_keyword">float</strong> amplitudeAngularSpeedY = randomizer.nextFloat();
+<a class="jxr_linenumber" name="L7373" href="#L7373">7373</a>             <strong class="jxr_keyword">float</strong> amplitudeAngularSpeedZ = randomizer.nextFloat();
+<a class="jxr_linenumber" name="L7374" href="#L7374">7374</a>             <strong class="jxr_keyword">float</strong> gtAngularSpeedX = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedX * Math.sin(
+<a class="jxr_linenumber" name="L7375" href="#L7375">7375</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
+<a class="jxr_linenumber" name="L7376" href="#L7376">7376</a>                     (<strong class="jxr_keyword">double</strong>)(0 - offsetAngularSpeedX)));
+<a class="jxr_linenumber" name="L7377" href="#L7377">7377</a>             <strong class="jxr_keyword">float</strong> gtAngularSpeedY = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedY * Math.sin(
+<a class="jxr_linenumber" name="L7378" href="#L7378">7378</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
+<a class="jxr_linenumber" name="L7379" href="#L7379">7379</a>                     (<strong class="jxr_keyword">double</strong>)(0 - offsetAngularSpeedY)));
+<a class="jxr_linenumber" name="L7380" href="#L7380">7380</a>             <strong class="jxr_keyword">float</strong> gtAngularSpeedZ = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedZ * Math.sin(
+<a class="jxr_linenumber" name="L7381" href="#L7381">7381</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
+<a class="jxr_linenumber" name="L7382" href="#L7382">7382</a>                     (<strong class="jxr_keyword">double</strong>)(0 - offsetAngularSpeedZ)));
+<a class="jxr_linenumber" name="L7383" href="#L7383">7383</a>             <strong class="jxr_keyword">float</strong> gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
+<a class="jxr_linenumber" name="L7384" href="#L7384">7384</a>                     gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+<a class="jxr_linenumber" name="L7385" href="#L7385">7385</a> 
+<a class="jxr_linenumber" name="L7386" href="#L7386">7386</a>             SlamEstimator estimator = <strong class="jxr_keyword">new</strong> SlamEstimator();
+<a class="jxr_linenumber" name="L7387" href="#L7387">7387</a> 
+<a class="jxr_linenumber" name="L7388" href="#L7388">7388</a>             SlamEstimator estimatorWithCalibration = <strong class="jxr_keyword">new</strong> SlamEstimator();
+<a class="jxr_linenumber" name="L7389" href="#L7389">7389</a>             estimatorWithCalibration.setCalibrationData(calibration);
+<a class="jxr_linenumber" name="L7390" href="#L7390">7390</a>             
+<a class="jxr_linenumber" name="L7391" href="#L7391">7391</a>             GaussianRandomizer accelerationRandomizer =
+<a class="jxr_linenumber" name="L7392" href="#L7392">7392</a>                     <strong class="jxr_keyword">new</strong> GaussianRandomizer(<strong class="jxr_keyword">new</strong> Random(), 0.0,
+<a class="jxr_linenumber" name="L7393" href="#L7393">7393</a>                             ACCELERATION_NOISE_STANDARD_DEVIATION);
+<a class="jxr_linenumber" name="L7394" href="#L7394">7394</a>             GaussianRandomizer angularSpeedRandomizer =
+<a class="jxr_linenumber" name="L7395" href="#L7395">7395</a>                     <strong class="jxr_keyword">new</strong> GaussianRandomizer(<strong class="jxr_keyword">new</strong> Random(), 0.0,
+<a class="jxr_linenumber" name="L7396" href="#L7396">7396</a>                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+<a class="jxr_linenumber" name="L7397" href="#L7397">7397</a>         
+<a class="jxr_linenumber" name="L7398" href="#L7398">7398</a>             <strong class="jxr_keyword">long</strong> timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+<a class="jxr_linenumber" name="L7399" href="#L7399">7399</a>             <strong class="jxr_keyword">float</strong> accelerationX, accelerationY, accelerationZ;
+<a class="jxr_linenumber" name="L7400" href="#L7400">7400</a>             <strong class="jxr_keyword">float</strong> angularSpeedX, angularSpeedY, angularSpeedZ;
+<a class="jxr_linenumber" name="L7401" href="#L7401">7401</a>             <strong class="jxr_keyword">float</strong> accelerationWithOffsetX, accelerationWithOffsetY, 
+<a class="jxr_linenumber" name="L7402" href="#L7402">7402</a>                     accelerationWithOffsetZ;
+<a class="jxr_linenumber" name="L7403" href="#L7403">7403</a>             <strong class="jxr_keyword">float</strong> angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
+<a class="jxr_linenumber" name="L7404" href="#L7404">7404</a>                     angularSpeedWithOffsetZ;                    
+<a class="jxr_linenumber" name="L7405" href="#L7405">7405</a>             <strong class="jxr_keyword">float</strong> noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
+<a class="jxr_linenumber" name="L7406" href="#L7406">7406</a>             <strong class="jxr_keyword">float</strong> noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
+<a class="jxr_linenumber" name="L7407" href="#L7407">7407</a>             <strong class="jxr_keyword">double</strong> lastAccelerationX = 0.0, lastAccelerationY = 0.0,
+<a class="jxr_linenumber" name="L7408" href="#L7408">7408</a>                     lastAccelerationZ = 0.0;
+<a class="jxr_linenumber" name="L7409" href="#L7409">7409</a>             <strong class="jxr_keyword">double</strong> lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0,
+<a class="jxr_linenumber" name="L7410" href="#L7410">7410</a>                     lastAngularSpeedZ = 0.0;
+<a class="jxr_linenumber" name="L7411" href="#L7411">7411</a>             <strong class="jxr_keyword">double</strong> deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
+<a class="jxr_linenumber" name="L7412" href="#L7412">7412</a>             <strong class="jxr_keyword">double</strong> deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
+<a class="jxr_linenumber" name="L7413" href="#L7413">7413</a>             <strong class="jxr_keyword">double</strong> lastAccelerationWithOffsetX = 0.0, 
+<a class="jxr_linenumber" name="L7414" href="#L7414">7414</a>                     lastAccelerationWithOffsetY = 0.0, 
+<a class="jxr_linenumber" name="L7415" href="#L7415">7415</a>                     lastAccelerationWithOffsetZ = 0.0;
+<a class="jxr_linenumber" name="L7416" href="#L7416">7416</a>             <strong class="jxr_keyword">double</strong> lastAngularSpeedWithOffsetX = 0.0, 
+<a class="jxr_linenumber" name="L7417" href="#L7417">7417</a>                     lastAngularSpeedWithOffsetY = 0.0, 
+<a class="jxr_linenumber" name="L7418" href="#L7418">7418</a>                     lastAngularSpeedWithOffsetZ = 0.0;
+<a class="jxr_linenumber" name="L7419" href="#L7419">7419</a>             <strong class="jxr_keyword">double</strong> deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
+<a class="jxr_linenumber" name="L7420" href="#L7420">7420</a>                     deltaAccelerationWithOffsetZ;
+<a class="jxr_linenumber" name="L7421" href="#L7421">7421</a>             <strong class="jxr_keyword">double</strong> deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
+<a class="jxr_linenumber" name="L7422" href="#L7422">7422</a>                     deltaAngularSpeedWithOffsetZ;
+<a class="jxr_linenumber" name="L7423" href="#L7423">7423</a>             
+<a class="jxr_linenumber" name="L7424" href="#L7424">7424</a>             <strong class="jxr_keyword">double</strong> lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
+<a class="jxr_linenumber" name="L7425" href="#L7425">7425</a>                     lastGtAccelerationZ = 0.0;
+<a class="jxr_linenumber" name="L7426" href="#L7426">7426</a>             <strong class="jxr_keyword">double</strong> lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
+<a class="jxr_linenumber" name="L7427" href="#L7427">7427</a>                     lastGtAngularSpeedZ = 0.0;
+<a class="jxr_linenumber" name="L7428" href="#L7428">7428</a>             <strong class="jxr_keyword">double</strong> deltaGtAccelerationX, deltaGtAccelerationY, 
+<a class="jxr_linenumber" name="L7429" href="#L7429">7429</a>                     deltaGtAccelerationZ;
+<a class="jxr_linenumber" name="L7430" href="#L7430">7430</a>             <strong class="jxr_keyword">double</strong> deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
+<a class="jxr_linenumber" name="L7431" href="#L7431">7431</a>                     deltaGtAngularSpeedZ;
+<a class="jxr_linenumber" name="L7432" href="#L7432">7432</a>             <strong class="jxr_keyword">double</strong>[] x = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[16];
+<a class="jxr_linenumber" name="L7433" href="#L7433">7433</a>             <strong class="jxr_keyword">double</strong>[] u = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[9];
+<a class="jxr_linenumber" name="L7434" href="#L7434">7434</a>             <strong class="jxr_keyword">double</strong>[] uWithOffset = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[9];
+<a class="jxr_linenumber" name="L7435" href="#L7435">7435</a>             x[0] = gtPositionX;
+<a class="jxr_linenumber" name="L7436" href="#L7436">7436</a>             x[1] = gtPositionY;
+<a class="jxr_linenumber" name="L7437" href="#L7437">7437</a>             x[2] = gtPositionZ;
+<a class="jxr_linenumber" name="L7438" href="#L7438">7438</a>             x[3] = gtQuaternionA;
+<a class="jxr_linenumber" name="L7439" href="#L7439">7439</a>             x[4] = gtQuaternionB;
+<a class="jxr_linenumber" name="L7440" href="#L7440">7440</a>             x[5] = gtQuaternionC;
+<a class="jxr_linenumber" name="L7441" href="#L7441">7441</a>             x[6] = gtQuaternionD;
+<a class="jxr_linenumber" name="L7442" href="#L7442">7442</a>             x[7] = gtSpeedX;
+<a class="jxr_linenumber" name="L7443" href="#L7443">7443</a>             x[8] = gtSpeedY;
+<a class="jxr_linenumber" name="L7444" href="#L7444">7444</a>             x[9] = gtSpeedZ;
+<a class="jxr_linenumber" name="L7445" href="#L7445">7445</a>             x[10] = gtAccelerationX;
+<a class="jxr_linenumber" name="L7446" href="#L7446">7446</a>             x[11] = gtAccelerationY;
+<a class="jxr_linenumber" name="L7447" href="#L7447">7447</a>             x[12] = gtAccelerationZ;
+<a class="jxr_linenumber" name="L7448" href="#L7448">7448</a>             x[13] = gtAngularSpeedX;
+<a class="jxr_linenumber" name="L7449" href="#L7449">7449</a>             x[14] = gtAngularSpeedY;
+<a class="jxr_linenumber" name="L7450" href="#L7450">7450</a>             x[15] = gtAngularSpeedZ;            
+<a class="jxr_linenumber" name="L7451" href="#L7451">7451</a>             
+<a class="jxr_linenumber" name="L7452" href="#L7452">7452</a>             <em class="jxr_comment">//ground truth state and control</em>
+<a class="jxr_linenumber" name="L7453" href="#L7453">7453</a>             <strong class="jxr_keyword">double</strong>[] gtX = Arrays.copyOf(x, x.length);
+<a class="jxr_linenumber" name="L7454" href="#L7454">7454</a>             <strong class="jxr_keyword">double</strong>[] gtU = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">double</strong>[9];
+<a class="jxr_linenumber" name="L7455" href="#L7455">7455</a>             
+<a class="jxr_linenumber" name="L7456" href="#L7456">7456</a>             <strong class="jxr_keyword">double</strong>[] xWithOffset = Arrays.copyOf(x, x.length);
+<a class="jxr_linenumber" name="L7457" href="#L7457">7457</a> 
+<a class="jxr_linenumber" name="L7458" href="#L7458">7458</a>             <em class="jxr_comment">//set initial state</em>
+<a class="jxr_linenumber" name="L7459" href="#L7459">7459</a>             estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
+<a class="jxr_linenumber" name="L7460" href="#L7460">7460</a>                     gtSpeedX, gtSpeedY, gtSpeedZ, 
+<a class="jxr_linenumber" name="L7461" href="#L7461">7461</a>                     gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+<a class="jxr_linenumber" name="L7462" href="#L7462">7462</a>                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+<a class="jxr_linenumber" name="L7463" href="#L7463">7463</a>                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+<a class="jxr_linenumber" name="L7464" href="#L7464">7464</a>             estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
+<a class="jxr_linenumber" name="L7465" href="#L7465">7465</a>                     gtSpeedX, gtSpeedY, gtSpeedZ, 
+<a class="jxr_linenumber" name="L7466" href="#L7466">7466</a>                     gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+<a class="jxr_linenumber" name="L7467" href="#L7467">7467</a>                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+<a class="jxr_linenumber" name="L7468" href="#L7468">7468</a>                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+<a class="jxr_linenumber" name="L7469" href="#L7469">7469</a>         
+<a class="jxr_linenumber" name="L7470" href="#L7470">7470</a>             String msg;
+<a class="jxr_linenumber" name="L7471" href="#L7471">7471</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; N_PREDICTION_SAMPLES; i++) {
+<a class="jxr_linenumber" name="L7472" href="#L7472">7472</a>                 noiseAccelerationX = accelerationRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7473" href="#L7473">7473</a>                 noiseAccelerationY = accelerationRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7474" href="#L7474">7474</a>                 noiseAccelerationZ = accelerationRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7475" href="#L7475">7475</a>                                 
+<a class="jxr_linenumber" name="L7476" href="#L7476">7476</a>                 accelerationX = gtAccelerationX + noiseAccelerationX;
+<a class="jxr_linenumber" name="L7477" href="#L7477">7477</a>                 accelerationY = gtAccelerationY + noiseAccelerationY;
+<a class="jxr_linenumber" name="L7478" href="#L7478">7478</a>                 accelerationZ = gtAccelerationZ + noiseAccelerationZ;
+<a class="jxr_linenumber" name="L7479" href="#L7479">7479</a> 
+<a class="jxr_linenumber" name="L7480" href="#L7480">7480</a>                 accelerationWithOffsetX = accelerationX + accelerationOffsetX;
+<a class="jxr_linenumber" name="L7481" href="#L7481">7481</a>                 accelerationWithOffsetY = accelerationY + accelerationOffsetY;
+<a class="jxr_linenumber" name="L7482" href="#L7482">7482</a>                 accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
+<a class="jxr_linenumber" name="L7483" href="#L7483">7483</a>                 
+<a class="jxr_linenumber" name="L7484" href="#L7484">7484</a>                 noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7485" href="#L7485">7485</a>                 noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7486" href="#L7486">7486</a>                 noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7487" href="#L7487">7487</a> 
+<a class="jxr_linenumber" name="L7488" href="#L7488">7488</a>                 gtAngularSpeedX = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedX * Math.sin(
+<a class="jxr_linenumber" name="L7489" href="#L7489">7489</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
+<a class="jxr_linenumber" name="L7490" href="#L7490">7490</a>                     (<strong class="jxr_keyword">double</strong>)(i - offsetAngularSpeedX)));
+<a class="jxr_linenumber" name="L7491" href="#L7491">7491</a>                 gtAngularSpeedY = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedY * Math.sin(
+<a class="jxr_linenumber" name="L7492" href="#L7492">7492</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
+<a class="jxr_linenumber" name="L7493" href="#L7493">7493</a>                     (<strong class="jxr_keyword">double</strong>)(i - offsetAngularSpeedY)));
+<a class="jxr_linenumber" name="L7494" href="#L7494">7494</a>                 gtAngularSpeedZ = (<strong class="jxr_keyword">float</strong>)(amplitudeAngularSpeedZ * Math.sin(
+<a class="jxr_linenumber" name="L7495" href="#L7495">7495</a>                     2.0 * Math.PI / (<strong class="jxr_keyword">double</strong>)period * 
+<a class="jxr_linenumber" name="L7496" href="#L7496">7496</a>                     (<strong class="jxr_keyword">double</strong>)(i - offsetAngularSpeedZ)));
+<a class="jxr_linenumber" name="L7497" href="#L7497">7497</a>                 
+<a class="jxr_linenumber" name="L7498" href="#L7498">7498</a>                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
+<a class="jxr_linenumber" name="L7499" href="#L7499">7499</a>                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
+<a class="jxr_linenumber" name="L7500" href="#L7500">7500</a>                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
+<a class="jxr_linenumber" name="L7501" href="#L7501">7501</a>             
+<a class="jxr_linenumber" name="L7502" href="#L7502">7502</a>                 angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
+<a class="jxr_linenumber" name="L7503" href="#L7503">7503</a>                 angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
+<a class="jxr_linenumber" name="L7504" href="#L7504">7504</a>                 angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
+<a class="jxr_linenumber" name="L7505" href="#L7505">7505</a>                 
+<a class="jxr_linenumber" name="L7506" href="#L7506">7506</a>                 estimator.updateAccelerometerSample(timestamp, accelerationX, 
+<a class="jxr_linenumber" name="L7507" href="#L7507">7507</a>                         accelerationY, accelerationZ);
+<a class="jxr_linenumber" name="L7508" href="#L7508">7508</a>                 estimator.updateGyroscopeSample(timestamp, 
+<a class="jxr_linenumber" name="L7509" href="#L7509">7509</a>                         angularSpeedX, angularSpeedY, angularSpeedZ);
+<a class="jxr_linenumber" name="L7510" href="#L7510">7510</a> 
+<a class="jxr_linenumber" name="L7511" href="#L7511">7511</a>                 estimatorWithCalibration.updateAccelerometerSample(timestamp, 
+<a class="jxr_linenumber" name="L7512" href="#L7512">7512</a>                         accelerationWithOffsetX, accelerationWithOffsetY, 
+<a class="jxr_linenumber" name="L7513" href="#L7513">7513</a>                         accelerationWithOffsetZ);
+<a class="jxr_linenumber" name="L7514" href="#L7514">7514</a>                 estimatorWithCalibration.updateGyroscopeSample(timestamp, 
+<a class="jxr_linenumber" name="L7515" href="#L7515">7515</a>                         angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
+<a class="jxr_linenumber" name="L7516" href="#L7516">7516</a>                         angularSpeedWithOffsetZ);
+<a class="jxr_linenumber" name="L7517" href="#L7517">7517</a>                 
+<a class="jxr_linenumber" name="L7518" href="#L7518">7518</a>                 timestamp += DELTA_NANOS;
+<a class="jxr_linenumber" name="L7519" href="#L7519">7519</a>                 
+<a class="jxr_linenumber" name="L7520" href="#L7520">7520</a>                 <strong class="jxr_keyword">if</strong> (i == 0) {
+<a class="jxr_linenumber" name="L7521" href="#L7521">7521</a>                     lastAccelerationX = accelerationX;
+<a class="jxr_linenumber" name="L7522" href="#L7522">7522</a>                     lastAccelerationY = accelerationY;
+<a class="jxr_linenumber" name="L7523" href="#L7523">7523</a>                     lastAccelerationZ = accelerationZ;
+<a class="jxr_linenumber" name="L7524" href="#L7524">7524</a> 
+<a class="jxr_linenumber" name="L7525" href="#L7525">7525</a>                     lastAngularSpeedX = angularSpeedX;
+<a class="jxr_linenumber" name="L7526" href="#L7526">7526</a>                     lastAngularSpeedY = angularSpeedY;
+<a class="jxr_linenumber" name="L7527" href="#L7527">7527</a>                     lastAngularSpeedZ = angularSpeedZ;  
+<a class="jxr_linenumber" name="L7528" href="#L7528">7528</a>                     
+<a class="jxr_linenumber" name="L7529" href="#L7529">7529</a>                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
+<a class="jxr_linenumber" name="L7530" href="#L7530">7530</a>                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
+<a class="jxr_linenumber" name="L7531" href="#L7531">7531</a>                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
+<a class="jxr_linenumber" name="L7532" href="#L7532">7532</a> 
+<a class="jxr_linenumber" name="L7533" href="#L7533">7533</a>                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
+<a class="jxr_linenumber" name="L7534" href="#L7534">7534</a>                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
+<a class="jxr_linenumber" name="L7535" href="#L7535">7535</a>                     lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+<a class="jxr_linenumber" name="L7536" href="#L7536">7536</a>                     
+<a class="jxr_linenumber" name="L7537" href="#L7537">7537</a>                     lastGtAccelerationX = gtAccelerationX;
+<a class="jxr_linenumber" name="L7538" href="#L7538">7538</a>                     lastGtAccelerationY = gtAccelerationY;
+<a class="jxr_linenumber" name="L7539" href="#L7539">7539</a>                     lastGtAccelerationZ = gtAccelerationZ;
+<a class="jxr_linenumber" name="L7540" href="#L7540">7540</a>                     
+<a class="jxr_linenumber" name="L7541" href="#L7541">7541</a>                     lastGtAngularSpeedX = gtAngularSpeedX;
+<a class="jxr_linenumber" name="L7542" href="#L7542">7542</a>                     lastGtAngularSpeedY = gtAngularSpeedY;
+<a class="jxr_linenumber" name="L7543" href="#L7543">7543</a>                     lastGtAngularSpeedZ = gtAngularSpeedZ;
+<a class="jxr_linenumber" name="L7544" href="#L7544">7544</a>                     
+<a class="jxr_linenumber" name="L7545" href="#L7545">7545</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L7546" href="#L7546">7546</a>                     deltaAccelerationX = accelerationX - lastAccelerationX;
+<a class="jxr_linenumber" name="L7547" href="#L7547">7547</a>                     deltaAccelerationY = accelerationY - lastAccelerationY;
+<a class="jxr_linenumber" name="L7548" href="#L7548">7548</a>                     deltaAccelerationZ = accelerationZ - lastAccelerationZ;
+<a class="jxr_linenumber" name="L7549" href="#L7549">7549</a> 
+<a class="jxr_linenumber" name="L7550" href="#L7550">7550</a>                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
+<a class="jxr_linenumber" name="L7551" href="#L7551">7551</a>                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
+<a class="jxr_linenumber" name="L7552" href="#L7552">7552</a>                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
+<a class="jxr_linenumber" name="L7553" href="#L7553">7553</a>                     
+<a class="jxr_linenumber" name="L7554" href="#L7554">7554</a>                     deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
+<a class="jxr_linenumber" name="L7555" href="#L7555">7555</a>                             lastAccelerationWithOffsetX;
+<a class="jxr_linenumber" name="L7556" href="#L7556">7556</a>                     deltaAccelerationWithOffsetY = accelerationWithOffsetY -
+<a class="jxr_linenumber" name="L7557" href="#L7557">7557</a>                             lastAccelerationWithOffsetY;
+<a class="jxr_linenumber" name="L7558" href="#L7558">7558</a>                     deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
+<a class="jxr_linenumber" name="L7559" href="#L7559">7559</a>                             lastAccelerationWithOffsetZ;
+<a class="jxr_linenumber" name="L7560" href="#L7560">7560</a> 
+<a class="jxr_linenumber" name="L7561" href="#L7561">7561</a>                     deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
+<a class="jxr_linenumber" name="L7562" href="#L7562">7562</a>                             lastAngularSpeedWithOffsetX;
+<a class="jxr_linenumber" name="L7563" href="#L7563">7563</a>                     deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
+<a class="jxr_linenumber" name="L7564" href="#L7564">7564</a>                             lastAngularSpeedWithOffsetY;
+<a class="jxr_linenumber" name="L7565" href="#L7565">7565</a>                     deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
+<a class="jxr_linenumber" name="L7566" href="#L7566">7566</a>                             lastAngularSpeedWithOffsetZ;
+<a class="jxr_linenumber" name="L7567" href="#L7567">7567</a>                     
+<a class="jxr_linenumber" name="L7568" href="#L7568">7568</a>                     deltaGtAccelerationX = gtAccelerationX - 
+<a class="jxr_linenumber" name="L7569" href="#L7569">7569</a>                             lastGtAccelerationX;
+<a class="jxr_linenumber" name="L7570" href="#L7570">7570</a>                     deltaGtAccelerationY = gtAccelerationY -
+<a class="jxr_linenumber" name="L7571" href="#L7571">7571</a>                             lastGtAccelerationY;
+<a class="jxr_linenumber" name="L7572" href="#L7572">7572</a>                     deltaGtAccelerationZ = gtAccelerationZ -
+<a class="jxr_linenumber" name="L7573" href="#L7573">7573</a>                             lastGtAccelerationZ;
+<a class="jxr_linenumber" name="L7574" href="#L7574">7574</a>                     
+<a class="jxr_linenumber" name="L7575" href="#L7575">7575</a>                     deltaGtAngularSpeedX = gtAngularSpeedX - 
+<a class="jxr_linenumber" name="L7576" href="#L7576">7576</a>                             lastGtAngularSpeedX;
+<a class="jxr_linenumber" name="L7577" href="#L7577">7577</a>                     deltaGtAngularSpeedY = gtAngularSpeedY -
+<a class="jxr_linenumber" name="L7578" href="#L7578">7578</a>                             lastGtAngularSpeedY;
+<a class="jxr_linenumber" name="L7579" href="#L7579">7579</a>                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
+<a class="jxr_linenumber" name="L7580" href="#L7580">7580</a>                             lastGtAngularSpeedZ;
+<a class="jxr_linenumber" name="L7581" href="#L7581">7581</a>                 
+<a class="jxr_linenumber" name="L7582" href="#L7582">7582</a>                     <em class="jxr_comment">//delta acceleration and angular speed only cointain noise, </em>
+<a class="jxr_linenumber" name="L7583" href="#L7583">7583</a>                     <em class="jxr_comment">//since no real change in those values is present on a </em>
+<a class="jxr_linenumber" name="L7584" href="#L7584">7584</a>                     <em class="jxr_comment">//constant speed movement</em>
+<a class="jxr_linenumber" name="L7585" href="#L7585">7585</a>                     u[0] = u[1] = u[2] = 0.0;
+<a class="jxr_linenumber" name="L7586" href="#L7586">7586</a>                     u[3] = deltaAccelerationX;
+<a class="jxr_linenumber" name="L7587" href="#L7587">7587</a>                     u[4] = deltaAccelerationY;
+<a class="jxr_linenumber" name="L7588" href="#L7588">7588</a>                     u[5] = deltaAccelerationZ;
+<a class="jxr_linenumber" name="L7589" href="#L7589">7589</a>                     u[6] = deltaAngularSpeedX;
+<a class="jxr_linenumber" name="L7590" href="#L7590">7590</a>                     u[7] = deltaAngularSpeedY;
+<a class="jxr_linenumber" name="L7591" href="#L7591">7591</a>                     u[8] = deltaAngularSpeedZ;
+<a class="jxr_linenumber" name="L7592" href="#L7592">7592</a>                     StatePredictor.predict(x, u, DELTA_SECONDS, x);
+<a class="jxr_linenumber" name="L7593" href="#L7593">7593</a> 
+<a class="jxr_linenumber" name="L7594" href="#L7594">7594</a>                     <em class="jxr_comment">//we also take into account control signals with offset</em>
+<a class="jxr_linenumber" name="L7595" href="#L7595">7595</a>                     uWithOffset[0] = uWithOffset[1] = uWithOffset[2] = 0.0;                
+<a class="jxr_linenumber" name="L7596" href="#L7596">7596</a>                     uWithOffset[3] = deltaAccelerationWithOffsetX;
+<a class="jxr_linenumber" name="L7597" href="#L7597">7597</a>                     uWithOffset[4] = deltaAccelerationWithOffsetY;
+<a class="jxr_linenumber" name="L7598" href="#L7598">7598</a>                     uWithOffset[5] = deltaAccelerationWithOffsetZ;
+<a class="jxr_linenumber" name="L7599" href="#L7599">7599</a>                     uWithOffset[6] = deltaAngularSpeedWithOffsetX;
+<a class="jxr_linenumber" name="L7600" href="#L7600">7600</a>                     uWithOffset[7] = deltaAngularSpeedWithOffsetY;
+<a class="jxr_linenumber" name="L7601" href="#L7601">7601</a>                     uWithOffset[8] = deltaAngularSpeedWithOffsetZ;
+<a class="jxr_linenumber" name="L7602" href="#L7602">7602</a>                     StatePredictor.predict(xWithOffset, uWithOffset, DELTA_SECONDS, 
+<a class="jxr_linenumber" name="L7603" href="#L7603">7603</a>                             xWithOffset);
+<a class="jxr_linenumber" name="L7604" href="#L7604">7604</a>                     
+<a class="jxr_linenumber" name="L7605" href="#L7605">7605</a>                     gtU[0] = gtU[1] = gtU[2] = 0.0;
+<a class="jxr_linenumber" name="L7606" href="#L7606">7606</a>                     gtU[3] = deltaGtAccelerationX;
+<a class="jxr_linenumber" name="L7607" href="#L7607">7607</a>                     gtU[4] = deltaGtAccelerationY;
+<a class="jxr_linenumber" name="L7608" href="#L7608">7608</a>                     gtU[5] = deltaGtAccelerationZ;
+<a class="jxr_linenumber" name="L7609" href="#L7609">7609</a>                     gtU[6] = deltaGtAngularSpeedX;
+<a class="jxr_linenumber" name="L7610" href="#L7610">7610</a>                     gtU[7] = deltaGtAngularSpeedY;
+<a class="jxr_linenumber" name="L7611" href="#L7611">7611</a>                     gtU[8] = deltaGtAngularSpeedZ;
+<a class="jxr_linenumber" name="L7612" href="#L7612">7612</a>                     StatePredictor.predict(gtX, gtU, DELTA_SECONDS, gtX);
+<a class="jxr_linenumber" name="L7613" href="#L7613">7613</a> 
+<a class="jxr_linenumber" name="L7614" href="#L7614">7614</a>                     lastAccelerationX = accelerationX;
+<a class="jxr_linenumber" name="L7615" href="#L7615">7615</a>                     lastAccelerationY = accelerationY;
+<a class="jxr_linenumber" name="L7616" href="#L7616">7616</a>                     lastAccelerationZ = accelerationZ;
+<a class="jxr_linenumber" name="L7617" href="#L7617">7617</a> 
+<a class="jxr_linenumber" name="L7618" href="#L7618">7618</a>                     lastAngularSpeedX = angularSpeedX;
+<a class="jxr_linenumber" name="L7619" href="#L7619">7619</a>                     lastAngularSpeedY = angularSpeedY;
+<a class="jxr_linenumber" name="L7620" href="#L7620">7620</a>                     lastAngularSpeedZ = angularSpeedZ; 
+<a class="jxr_linenumber" name="L7621" href="#L7621">7621</a>                     
+<a class="jxr_linenumber" name="L7622" href="#L7622">7622</a>                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
+<a class="jxr_linenumber" name="L7623" href="#L7623">7623</a>                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
+<a class="jxr_linenumber" name="L7624" href="#L7624">7624</a>                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
+<a class="jxr_linenumber" name="L7625" href="#L7625">7625</a> 
+<a class="jxr_linenumber" name="L7626" href="#L7626">7626</a>                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
+<a class="jxr_linenumber" name="L7627" href="#L7627">7627</a>                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
+<a class="jxr_linenumber" name="L7628" href="#L7628">7628</a>                     lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
+<a class="jxr_linenumber" name="L7629" href="#L7629">7629</a>                     
+<a class="jxr_linenumber" name="L7630" href="#L7630">7630</a>                     lastGtAccelerationX = gtAccelerationX;
+<a class="jxr_linenumber" name="L7631" href="#L7631">7631</a>                     lastGtAccelerationY = gtAccelerationY;
+<a class="jxr_linenumber" name="L7632" href="#L7632">7632</a>                     lastGtAccelerationZ = gtAccelerationZ;
+<a class="jxr_linenumber" name="L7633" href="#L7633">7633</a>                     
+<a class="jxr_linenumber" name="L7634" href="#L7634">7634</a>                     lastGtAngularSpeedX = gtAngularSpeedX;
+<a class="jxr_linenumber" name="L7635" href="#L7635">7635</a>                     lastGtAngularSpeedY = gtAngularSpeedY;
+<a class="jxr_linenumber" name="L7636" href="#L7636">7636</a>                     lastGtAngularSpeedZ = gtAngularSpeedZ;
+<a class="jxr_linenumber" name="L7637" href="#L7637">7637</a>                 }            
+<a class="jxr_linenumber" name="L7638" href="#L7638">7638</a>             }
+<a class="jxr_linenumber" name="L7639" href="#L7639">7639</a>             
+<a class="jxr_linenumber" name="L7640" href="#L7640">7640</a>             msg = <span class="jxr_string">"Filtered with calibrator - positionX: "</span> + estimatorWithCalibration.getStatePositionX() + 
+<a class="jxr_linenumber" name="L7641" href="#L7641">7641</a>                     <span class="jxr_string">", positionY: "</span> + estimatorWithCalibration.getStatePositionY() +
+<a class="jxr_linenumber" name="L7642" href="#L7642">7642</a>                     <span class="jxr_string">", positionZ: "</span> + estimatorWithCalibration.getStatePositionZ() + 
+<a class="jxr_linenumber" name="L7643" href="#L7643">7643</a>                     <span class="jxr_string">", velocityX: "</span> + estimatorWithCalibration.getStateVelocityX() + 
+<a class="jxr_linenumber" name="L7644" href="#L7644">7644</a>                     <span class="jxr_string">", velocityY: "</span> + estimatorWithCalibration.getStateVelocityY() +
+<a class="jxr_linenumber" name="L7645" href="#L7645">7645</a>                     <span class="jxr_string">", velocityZ: "</span> + estimatorWithCalibration.getStateVelocityZ() +
+<a class="jxr_linenumber" name="L7646" href="#L7646">7646</a>                     <span class="jxr_string">", accelerationX: "</span> + estimatorWithCalibration.getStateAccelerationX() +
+<a class="jxr_linenumber" name="L7647" href="#L7647">7647</a>                     <span class="jxr_string">", accelerationY: "</span> + estimatorWithCalibration.getStateAccelerationY() +
+<a class="jxr_linenumber" name="L7648" href="#L7648">7648</a>                     <span class="jxr_string">", accelerationZ: "</span> + estimatorWithCalibration.getStateAccelerationZ() +
+<a class="jxr_linenumber" name="L7649" href="#L7649">7649</a>                     <span class="jxr_string">", quaternionA: "</span> + estimatorWithCalibration.getStateQuaternionA() +
+<a class="jxr_linenumber" name="L7650" href="#L7650">7650</a>                     <span class="jxr_string">", quaternionB: "</span> + estimatorWithCalibration.getStateQuaternionB() +
+<a class="jxr_linenumber" name="L7651" href="#L7651">7651</a>                     <span class="jxr_string">", quaternionC: "</span> + estimatorWithCalibration.getStateQuaternionC() +
+<a class="jxr_linenumber" name="L7652" href="#L7652">7652</a>                     <span class="jxr_string">", quaternionD: "</span> + estimatorWithCalibration.getStateQuaternionD() +
+<a class="jxr_linenumber" name="L7653" href="#L7653">7653</a>                     <span class="jxr_string">", angularSpeedX: "</span> + estimatorWithCalibration.getStateAngularSpeedX() +
+<a class="jxr_linenumber" name="L7654" href="#L7654">7654</a>                     <span class="jxr_string">", angularSpeedY: "</span> + estimatorWithCalibration.getStateAngularSpeedY() +
+<a class="jxr_linenumber" name="L7655" href="#L7655">7655</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + estimatorWithCalibration.getStateAngularSpeedZ();
+<a class="jxr_linenumber" name="L7656" href="#L7656">7656</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
+<a class="jxr_linenumber" name="L7657" href="#L7657">7657</a>                     Level.INFO, msg);
+<a class="jxr_linenumber" name="L7658" href="#L7658">7658</a>             
+<a class="jxr_linenumber" name="L7659" href="#L7659">7659</a>             msg = <span class="jxr_string">"Filtered - positionX: "</span> + estimator.getStatePositionX() + 
+<a class="jxr_linenumber" name="L7660" href="#L7660">7660</a>                     <span class="jxr_string">", positionY: "</span> + estimator.getStatePositionY() +
+<a class="jxr_linenumber" name="L7661" href="#L7661">7661</a>                     <span class="jxr_string">", positionZ: "</span> + estimator.getStatePositionZ() + 
+<a class="jxr_linenumber" name="L7662" href="#L7662">7662</a>                     <span class="jxr_string">", velocityX: "</span> + estimator.getStateVelocityX() + 
+<a class="jxr_linenumber" name="L7663" href="#L7663">7663</a>                     <span class="jxr_string">", velocityY: "</span> + estimator.getStateVelocityY() +
+<a class="jxr_linenumber" name="L7664" href="#L7664">7664</a>                     <span class="jxr_string">", velocityZ: "</span> + estimator.getStateVelocityZ() +
+<a class="jxr_linenumber" name="L7665" href="#L7665">7665</a>                     <span class="jxr_string">", accelerationX: "</span> + estimator.getStateAccelerationX() +
+<a class="jxr_linenumber" name="L7666" href="#L7666">7666</a>                     <span class="jxr_string">", accelerationY: "</span> + estimator.getStateAccelerationY() +
+<a class="jxr_linenumber" name="L7667" href="#L7667">7667</a>                     <span class="jxr_string">", accelerationZ: "</span> + estimator.getStateAccelerationZ() +
+<a class="jxr_linenumber" name="L7668" href="#L7668">7668</a>                     <span class="jxr_string">", quaternionA: "</span> + estimator.getStateQuaternionA() +
+<a class="jxr_linenumber" name="L7669" href="#L7669">7669</a>                     <span class="jxr_string">", quaternionB: "</span> + estimator.getStateQuaternionB() +
+<a class="jxr_linenumber" name="L7670" href="#L7670">7670</a>                     <span class="jxr_string">", quaternionC: "</span> + estimator.getStateQuaternionC() +
+<a class="jxr_linenumber" name="L7671" href="#L7671">7671</a>                     <span class="jxr_string">", quaternionD: "</span> + estimator.getStateQuaternionD() +
+<a class="jxr_linenumber" name="L7672" href="#L7672">7672</a>                     <span class="jxr_string">", angularSpeedX: "</span> + estimator.getStateAngularSpeedX() +
+<a class="jxr_linenumber" name="L7673" href="#L7673">7673</a>                     <span class="jxr_string">", angularSpeedY: "</span> + estimator.getStateAngularSpeedY() +
+<a class="jxr_linenumber" name="L7674" href="#L7674">7674</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + estimator.getStateAngularSpeedZ();
+<a class="jxr_linenumber" name="L7675" href="#L7675">7675</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
+<a class="jxr_linenumber" name="L7676" href="#L7676">7676</a>                     Level.INFO, msg);
+<a class="jxr_linenumber" name="L7677" href="#L7677">7677</a>         
+<a class="jxr_linenumber" name="L7678" href="#L7678">7678</a>             msg = <span class="jxr_string">"Prediction - positionX: "</span> + x[0] + 
+<a class="jxr_linenumber" name="L7679" href="#L7679">7679</a>                     <span class="jxr_string">", positionY: "</span> + x[1] +
+<a class="jxr_linenumber" name="L7680" href="#L7680">7680</a>                     <span class="jxr_string">", positionZ: "</span> + x[2] + 
+<a class="jxr_linenumber" name="L7681" href="#L7681">7681</a>                     <span class="jxr_string">", velocityX: "</span> + x[7] + 
+<a class="jxr_linenumber" name="L7682" href="#L7682">7682</a>                     <span class="jxr_string">", velocityY: "</span> + x[8] +
+<a class="jxr_linenumber" name="L7683" href="#L7683">7683</a>                     <span class="jxr_string">", velocityZ: "</span> + x[9] +
+<a class="jxr_linenumber" name="L7684" href="#L7684">7684</a>                     <span class="jxr_string">", accelerationX: "</span> + x[10] +
+<a class="jxr_linenumber" name="L7685" href="#L7685">7685</a>                     <span class="jxr_string">", accelerationY: "</span> + x[11] +
+<a class="jxr_linenumber" name="L7686" href="#L7686">7686</a>                     <span class="jxr_string">", accelerationZ: "</span> + x[12] +
+<a class="jxr_linenumber" name="L7687" href="#L7687">7687</a>                     <span class="jxr_string">", quaternionA: "</span> + x[3] +
+<a class="jxr_linenumber" name="L7688" href="#L7688">7688</a>                     <span class="jxr_string">", quaternionB: "</span> + x[4] +
+<a class="jxr_linenumber" name="L7689" href="#L7689">7689</a>                     <span class="jxr_string">", quaternionC: "</span> + x[5] +
+<a class="jxr_linenumber" name="L7690" href="#L7690">7690</a>                     <span class="jxr_string">", quaternionD: "</span> + x[6] +
+<a class="jxr_linenumber" name="L7691" href="#L7691">7691</a>                     <span class="jxr_string">", angularSpeedX: "</span> + x[13] +
+<a class="jxr_linenumber" name="L7692" href="#L7692">7692</a>                     <span class="jxr_string">", angularSpeedY: "</span> + x[14] +
+<a class="jxr_linenumber" name="L7693" href="#L7693">7693</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + x[15];
+<a class="jxr_linenumber" name="L7694" href="#L7694">7694</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
+<a class="jxr_linenumber" name="L7695" href="#L7695">7695</a>                     Level.INFO, msg);
+<a class="jxr_linenumber" name="L7696" href="#L7696">7696</a> 
+<a class="jxr_linenumber" name="L7697" href="#L7697">7697</a>             msg = <span class="jxr_string">"Ground truth - positionX: "</span> + gtX[0] + 
+<a class="jxr_linenumber" name="L7698" href="#L7698">7698</a>                     <span class="jxr_string">", positionY: "</span> + gtX[1] +
+<a class="jxr_linenumber" name="L7699" href="#L7699">7699</a>                     <span class="jxr_string">", positionZ: "</span> + gtX[2] + 
+<a class="jxr_linenumber" name="L7700" href="#L7700">7700</a>                     <span class="jxr_string">", velocityX: "</span> + gtX[7] + 
+<a class="jxr_linenumber" name="L7701" href="#L7701">7701</a>                     <span class="jxr_string">", velocityY: "</span> + gtX[8] +
+<a class="jxr_linenumber" name="L7702" href="#L7702">7702</a>                     <span class="jxr_string">", velocityZ: "</span> + gtX[9] +
+<a class="jxr_linenumber" name="L7703" href="#L7703">7703</a>                     <span class="jxr_string">", accelerationX: "</span> + gtX[10] +
+<a class="jxr_linenumber" name="L7704" href="#L7704">7704</a>                     <span class="jxr_string">", accelerationY: "</span> + gtX[11] +
+<a class="jxr_linenumber" name="L7705" href="#L7705">7705</a>                     <span class="jxr_string">", accelerationZ: "</span> + gtX[12] +
+<a class="jxr_linenumber" name="L7706" href="#L7706">7706</a>                     <span class="jxr_string">", quaternionA: "</span> + gtX[3] +
+<a class="jxr_linenumber" name="L7707" href="#L7707">7707</a>                     <span class="jxr_string">", quaternionB: "</span> + gtX[4] +
+<a class="jxr_linenumber" name="L7708" href="#L7708">7708</a>                     <span class="jxr_string">", quaternionC: "</span> + gtX[5] +
+<a class="jxr_linenumber" name="L7709" href="#L7709">7709</a>                     <span class="jxr_string">", quaternionD: "</span> + gtX[6] +
+<a class="jxr_linenumber" name="L7710" href="#L7710">7710</a>                     <span class="jxr_string">", angularSpeedX: "</span> + gtX[13] +
+<a class="jxr_linenumber" name="L7711" href="#L7711">7711</a>                     <span class="jxr_string">", angularSpeedY: "</span> + gtX[14] +
+<a class="jxr_linenumber" name="L7712" href="#L7712">7712</a>                     <span class="jxr_string">", angularSpeedZ: "</span> + gtX[15];
+<a class="jxr_linenumber" name="L7713" href="#L7713">7713</a>             Logger.getLogger(SlamEstimatorTest.<strong class="jxr_keyword">class</strong>.getSimpleName()).log(
+<a class="jxr_linenumber" name="L7714" href="#L7714">7714</a>                     Level.INFO, msg);   
+<a class="jxr_linenumber" name="L7715" href="#L7715">7715</a>         
+<a class="jxr_linenumber" name="L7716" href="#L7716">7716</a>             <em class="jxr_comment">//rotate random point with quaternions and check that filtered </em>
+<a class="jxr_linenumber" name="L7717" href="#L7717">7717</a>             <em class="jxr_comment">//quaternion is closer to ground truth than predicted quaternion</em>
+<a class="jxr_linenumber" name="L7718" href="#L7718">7718</a>             InhomogeneousPoint3D randomPoint = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
+<a class="jxr_linenumber" name="L7719" href="#L7719">7719</a>                     randomizer.nextDouble(), randomizer.nextDouble(), 
+<a class="jxr_linenumber" name="L7720" href="#L7720">7720</a>                     randomizer.nextDouble());
+<a class="jxr_linenumber" name="L7721" href="#L7721">7721</a> 
+<a class="jxr_linenumber" name="L7722" href="#L7722">7722</a>             Quaternion filteredQuaternion = 
+<a class="jxr_linenumber" name="L7723" href="#L7723">7723</a>                     estimatorWithCalibration.getStateQuaternion();
+<a class="jxr_linenumber" name="L7724" href="#L7724">7724</a>             Quaternion predictedQuaternion = <strong class="jxr_keyword">new</strong> Quaternion(
+<a class="jxr_linenumber" name="L7725" href="#L7725">7725</a>                     x[3], x[4], x[5], x[6]);
+<a class="jxr_linenumber" name="L7726" href="#L7726">7726</a>             Quaternion groundTruthQuaternion = <strong class="jxr_keyword">new</strong> Quaternion(
+<a class="jxr_linenumber" name="L7727" href="#L7727">7727</a>                     gtX[3], gtX[4], gtX[5], gtX[6]);
+<a class="jxr_linenumber" name="L7728" href="#L7728">7728</a> 
+<a class="jxr_linenumber" name="L7729" href="#L7729">7729</a>             Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+<a class="jxr_linenumber" name="L7730" href="#L7730">7730</a>             Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+<a class="jxr_linenumber" name="L7731" href="#L7731">7731</a>             Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+<a class="jxr_linenumber" name="L7732" href="#L7732">7732</a>                     randomPoint);
+<a class="jxr_linenumber" name="L7733" href="#L7733">7733</a> 
+<a class="jxr_linenumber" name="L7734" href="#L7734">7734</a>             <strong class="jxr_keyword">boolean</strong> rotationImproved = 
+<a class="jxr_linenumber" name="L7735" href="#L7735">7735</a>                     filteredRotated.distanceTo(groundTruthRotated) &lt; 
+<a class="jxr_linenumber" name="L7736" href="#L7736">7736</a>                     predictedRotated.distanceTo(groundTruthRotated);
+<a class="jxr_linenumber" name="L7737" href="#L7737">7737</a>         
+<a class="jxr_linenumber" name="L7738" href="#L7738">7738</a>             <em class="jxr_comment">//check that filtered position is closer to ground truth than </em>
+<a class="jxr_linenumber" name="L7739" href="#L7739">7739</a>             <em class="jxr_comment">//predicted position, and hence Kalman filter improves results</em>
+<a class="jxr_linenumber" name="L7740" href="#L7740">7740</a>             InhomogeneousPoint3D filteredPos = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
+<a class="jxr_linenumber" name="L7741" href="#L7741">7741</a>                     estimatorWithCalibration.getStatePositionX(), 
+<a class="jxr_linenumber" name="L7742" href="#L7742">7742</a>                     estimatorWithCalibration.getStatePositionY(), 
+<a class="jxr_linenumber" name="L7743" href="#L7743">7743</a>                     estimatorWithCalibration.getStatePositionZ());
+<a class="jxr_linenumber" name="L7744" href="#L7744">7744</a> 
+<a class="jxr_linenumber" name="L7745" href="#L7745">7745</a>             InhomogeneousPoint3D predictedPos = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
+<a class="jxr_linenumber" name="L7746" href="#L7746">7746</a>                     x[0], x[1], x[2]);
+<a class="jxr_linenumber" name="L7747" href="#L7747">7747</a> 
+<a class="jxr_linenumber" name="L7748" href="#L7748">7748</a>             InhomogeneousPoint3D groundTruthPos = <strong class="jxr_keyword">new</strong> InhomogeneousPoint3D(
+<a class="jxr_linenumber" name="L7749" href="#L7749">7749</a>                     gtX[0], gtX[1], gtX[2]);
+<a class="jxr_linenumber" name="L7750" href="#L7750">7750</a> 
+<a class="jxr_linenumber" name="L7751" href="#L7751">7751</a>             <strong class="jxr_keyword">boolean</strong> positionImproved = 
+<a class="jxr_linenumber" name="L7752" href="#L7752">7752</a>                     filteredPos.distanceTo(groundTruthPos) &lt; 
+<a class="jxr_linenumber" name="L7753" href="#L7753">7753</a>                     predictedPos.distanceTo(groundTruthPos);
+<a class="jxr_linenumber" name="L7754" href="#L7754">7754</a>             
+<a class="jxr_linenumber" name="L7755" href="#L7755">7755</a>             <strong class="jxr_keyword">if</strong> (rotationImproved &amp;&amp; positionImproved) {
+<a class="jxr_linenumber" name="L7756" href="#L7756">7756</a>                 numSuccess++;
+<a class="jxr_linenumber" name="L7757" href="#L7757">7757</a>             }
+<a class="jxr_linenumber" name="L7758" href="#L7758">7758</a>         }
+<a class="jxr_linenumber" name="L7759" href="#L7759">7759</a>         
+<a class="jxr_linenumber" name="L7760" href="#L7760">7760</a>         assertTrue(numSuccess &gt;= REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);        
+<a class="jxr_linenumber" name="L7761" href="#L7761">7761</a>     }    
+<a class="jxr_linenumber" name="L7762" href="#L7762">7762</a> 
+<a class="jxr_linenumber" name="L7763" href="#L7763">7763</a>     @Override
+<a class="jxr_linenumber" name="L7764" href="#L7764">7764</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onFullSampleReceived(BaseSlamEstimator estimator) {
+<a class="jxr_linenumber" name="L7765" href="#L7765">7765</a>         fullSampleReceived++;
+<a class="jxr_linenumber" name="L7766" href="#L7766">7766</a>     }
+<a class="jxr_linenumber" name="L7767" href="#L7767">7767</a> 
+<a class="jxr_linenumber" name="L7768" href="#L7768">7768</a>     @Override
+<a class="jxr_linenumber" name="L7769" href="#L7769">7769</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onFullSampleProcessed(BaseSlamEstimator estimator) {
+<a class="jxr_linenumber" name="L7770" href="#L7770">7770</a>         fullSampleProcessed++;
+<a class="jxr_linenumber" name="L7771" href="#L7771">7771</a>     }
+<a class="jxr_linenumber" name="L7772" href="#L7772">7772</a> 
+<a class="jxr_linenumber" name="L7773" href="#L7773">7773</a>     @Override
+<a class="jxr_linenumber" name="L7774" href="#L7774">7774</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCorrectWithPositionMeasure(BaseSlamEstimator estimator) {
+<a class="jxr_linenumber" name="L7775" href="#L7775">7775</a>         correctWithPositionMeasure++;
+<a class="jxr_linenumber" name="L7776" href="#L7776">7776</a>     }
+<a class="jxr_linenumber" name="L7777" href="#L7777">7777</a> 
+<a class="jxr_linenumber" name="L7778" href="#L7778">7778</a>     @Override
+<a class="jxr_linenumber" name="L7779" href="#L7779">7779</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
+<a class="jxr_linenumber" name="L7780" href="#L7780">7780</a>         correctedWithPositionMeasure++;
+<a class="jxr_linenumber" name="L7781" href="#L7781">7781</a>     }
+<a class="jxr_linenumber" name="L7782" href="#L7782">7782</a> 
+<a class="jxr_linenumber" name="L7783" href="#L7783">7783</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> reset() {
+<a class="jxr_linenumber" name="L7784" href="#L7784">7784</a>         fullSampleReceived = fullSampleProcessed = correctWithPositionMeasure =
+<a class="jxr_linenumber" name="L7785" href="#L7785">7785</a>                 correctedWithPositionMeasure = 0;
+<a class="jxr_linenumber" name="L7786" href="#L7786">7786</a>     }
+<a class="jxr_linenumber" name="L7787" href="#L7787">7787</a> 
+<a class="jxr_linenumber" name="L7788" href="#L7788">7788</a>     <strong class="jxr_keyword">private</strong> SlamCalibrator createFinishedCalibrator(<strong class="jxr_keyword">float</strong> accelerationOffsetX,
+<a class="jxr_linenumber" name="L7789" href="#L7789">7789</a>             <strong class="jxr_keyword">float</strong> accelerationOffsetY, <strong class="jxr_keyword">float</strong> accelerationOffsetZ, 
+<a class="jxr_linenumber" name="L7790" href="#L7790">7790</a>             <strong class="jxr_keyword">float</strong> angularOffsetX, <strong class="jxr_keyword">float</strong> angularOffsetY, <strong class="jxr_keyword">float</strong> angularOffsetZ,
+<a class="jxr_linenumber" name="L7791" href="#L7791">7791</a>             GaussianRandomizer noiseRandomizer) {
+<a class="jxr_linenumber" name="L7792" href="#L7792">7792</a>         SlamCalibrator calibrator = SlamEstimator.createCalibrator();
+<a class="jxr_linenumber" name="L7793" href="#L7793">7793</a>         calibrator.setConvergenceThreshold(ABSOLUTE_ERROR);
+<a class="jxr_linenumber" name="L7794" href="#L7794">7794</a>         calibrator.setMaxNumSamples(MAX_CALIBRATION_SAMPLES);
+<a class="jxr_linenumber" name="L7795" href="#L7795">7795</a>         
+<a class="jxr_linenumber" name="L7796" href="#L7796">7796</a>         <strong class="jxr_keyword">long</strong> timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+<a class="jxr_linenumber" name="L7797" href="#L7797">7797</a>         
+<a class="jxr_linenumber" name="L7798" href="#L7798">7798</a>         <strong class="jxr_keyword">float</strong> accelerationNoiseX, accelerationNoiseY, accelerationNoiseZ;
+<a class="jxr_linenumber" name="L7799" href="#L7799">7799</a>         <strong class="jxr_keyword">float</strong> angularNoiseX, angularNoiseY, angularNoiseZ;
+<a class="jxr_linenumber" name="L7800" href="#L7800">7800</a>         
+<a class="jxr_linenumber" name="L7801" href="#L7801">7801</a>         <strong class="jxr_keyword">double</strong> accelerationX, accelerationY, accelerationZ;
+<a class="jxr_linenumber" name="L7802" href="#L7802">7802</a>         <strong class="jxr_keyword">double</strong> angularX, angularY, angularZ;
+<a class="jxr_linenumber" name="L7803" href="#L7803">7803</a> 
+<a class="jxr_linenumber" name="L7804" href="#L7804">7804</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; MAX_CALIBRATION_SAMPLES; i++) {
+<a class="jxr_linenumber" name="L7805" href="#L7805">7805</a>             accelerationNoiseX = noiseRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7806" href="#L7806">7806</a>             accelerationNoiseY = noiseRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7807" href="#L7807">7807</a>             accelerationNoiseZ = noiseRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7808" href="#L7808">7808</a>             
+<a class="jxr_linenumber" name="L7809" href="#L7809">7809</a>             angularNoiseX = noiseRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7810" href="#L7810">7810</a>             angularNoiseY = noiseRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7811" href="#L7811">7811</a>             angularNoiseZ = noiseRandomizer.nextFloat();
+<a class="jxr_linenumber" name="L7812" href="#L7812">7812</a>             
+<a class="jxr_linenumber" name="L7813" href="#L7813">7813</a>             accelerationX = accelerationOffsetX + accelerationNoiseX;
+<a class="jxr_linenumber" name="L7814" href="#L7814">7814</a>             accelerationY = accelerationOffsetY + accelerationNoiseY;
+<a class="jxr_linenumber" name="L7815" href="#L7815">7815</a>             accelerationZ = accelerationOffsetZ + accelerationNoiseZ;
+<a class="jxr_linenumber" name="L7816" href="#L7816">7816</a>             
+<a class="jxr_linenumber" name="L7817" href="#L7817">7817</a>             angularX = angularOffsetX + angularNoiseX;
+<a class="jxr_linenumber" name="L7818" href="#L7818">7818</a>             angularY = angularOffsetY + angularNoiseY;
+<a class="jxr_linenumber" name="L7819" href="#L7819">7819</a>             angularZ = angularOffsetZ + angularNoiseZ;            
+<a class="jxr_linenumber" name="L7820" href="#L7820">7820</a>             
+<a class="jxr_linenumber" name="L7821" href="#L7821">7821</a>             calibrator.updateAccelerometerSample(timestamp, (<strong class="jxr_keyword">float</strong>)accelerationX, 
+<a class="jxr_linenumber" name="L7822" href="#L7822">7822</a>                     (<strong class="jxr_keyword">float</strong>)accelerationY, (<strong class="jxr_keyword">float</strong>)accelerationZ);
+<a class="jxr_linenumber" name="L7823" href="#L7823">7823</a>             calibrator.updateGyroscopeSample(timestamp, (<strong class="jxr_keyword">float</strong>)angularX, (<strong class="jxr_keyword">float</strong>)angularY, 
+<a class="jxr_linenumber" name="L7824" href="#L7824">7824</a>                     (<strong class="jxr_keyword">float</strong>)angularZ);
+<a class="jxr_linenumber" name="L7825" href="#L7825">7825</a>             
+<a class="jxr_linenumber" name="L7826" href="#L7826">7826</a>             <strong class="jxr_keyword">if</strong> (calibrator.isFinished()) {
+<a class="jxr_linenumber" name="L7827" href="#L7827">7827</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L7828" href="#L7828">7828</a>             }
+<a class="jxr_linenumber" name="L7829" href="#L7829">7829</a>             
+<a class="jxr_linenumber" name="L7830" href="#L7830">7830</a>             timestamp += DELTA_NANOS;
+<a class="jxr_linenumber" name="L7831" href="#L7831">7831</a>         }
+<a class="jxr_linenumber" name="L7832" href="#L7832">7832</a>         
+<a class="jxr_linenumber" name="L7833" href="#L7833">7833</a>         <strong class="jxr_keyword">return</strong> calibrator;
+<a class="jxr_linenumber" name="L7834" href="#L7834">7834</a>     }    
+<a class="jxr_linenumber" name="L7835" href="#L7835">7835</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2018. All rights reserved.</div>

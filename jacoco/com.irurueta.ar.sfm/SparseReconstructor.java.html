@@ -33,7 +33,7 @@ public class SparseReconstructor extends
      * provided.
      */
     public SparseReconstructor(SparseReconstructorConfiguration configuration,
-            SparseReconstructorListener listener) throws NullPointerException {
+            SparseReconstructorListener listener) {
 <span class="fc" id="L37">        super(configuration, listener);</span>
 <span class="fc" id="L38">    }</span>
 
@@ -42,10 +42,9 @@ public class SparseReconstructor extends
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public SparseReconstructor(SparseReconstructorListener listener)
-            throws NullPointerException {
-<span class="fc" id="L47">        this(new SparseReconstructorConfiguration(), listener);</span>
-<span class="fc" id="L48">    }</span>
+    public SparseReconstructor(SparseReconstructorListener listener) {
+<span class="fc" id="L46">        this(new SparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L47">    }</span>
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
@@ -56,11 +55,11 @@ public class SparseReconstructor extends
     @Override
     protected boolean postProcessOne(boolean isInitialPairOfViews) {
         //no need for post processing when computing metric reconstruction
-<span class="fc" id="L59">        mPreviousEuclideanEstimatedCamera = mPreviousMetricEstimatedCamera;</span>
-<span class="fc" id="L60">        mCurrentEuclideanEstimatedCamera = mCurrentMetricEstimatedCamera;</span>
-<span class="fc" id="L61">        mActiveEuclideanReconstructedPoints = mActiveMetricReconstructedPoints;</span>
-<span class="fc" id="L62">        mCurrentScale = DEFAULT_SCALE;</span>
-<span class="fc" id="L63">        return true;</span>
+<span class="fc" id="L58">        mPreviousEuclideanEstimatedCamera = mPreviousMetricEstimatedCamera;</span>
+<span class="fc" id="L59">        mCurrentEuclideanEstimatedCamera = mCurrentMetricEstimatedCamera;</span>
+<span class="fc" id="L60">        mActiveEuclideanReconstructedPoints = mActiveMetricReconstructedPoints;</span>
+<span class="fc" id="L61">        mCurrentScale = DEFAULT_SCALE;</span>
+<span class="fc" id="L62">        return true;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

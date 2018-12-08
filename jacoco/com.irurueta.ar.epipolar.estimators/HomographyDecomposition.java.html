@@ -59,19 +59,18 @@ public class HomographyDecomposition {
      * length 3.
      */
     public HomographyDecomposition(EuclideanTransformation3D transformation, 
-            double[] planeNormal, double planeDistance) 
-<span class="fc" id="L63">            throws IllegalArgumentException {</span>
-<span class="fc" id="L64">        setPlaneNormal(planeNormal);</span>
-<span class="fc" id="L65">        mTransformation = transformation;</span>
-<span class="fc" id="L66">        mPlaneDistance = planeDistance;</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L62">            double[] planeNormal, double planeDistance) {</span>
+<span class="fc" id="L63">        setPlaneNormal(planeNormal);</span>
+<span class="fc" id="L64">        mTransformation = transformation;</span>
+<span class="fc" id="L65">        mPlaneDistance = planeDistance;</span>
+<span class="fc" id="L66">    }</span>
     
     /**
      * Gets rotation and translation obtained from homography decomposition.
      * @return rotation and translation obtained from homography decomposition.
      */
     public EuclideanTransformation3D getTransformation() {
-<span class="fc" id="L74">        return mTransformation;</span>
+<span class="fc" id="L73">        return mTransformation;</span>
     }
     
     /**
@@ -80,15 +79,15 @@ public class HomographyDecomposition {
      * decomposition.
      */
     public void setTransformation(EuclideanTransformation3D transformation) {
-<span class="fc" id="L83">        mTransformation = transformation;</span>
-<span class="fc" id="L84">    }</span>
+<span class="fc" id="L82">        mTransformation = transformation;</span>
+<span class="fc" id="L83">    }</span>
     
     /**
      * Gets computed plane normal obtained from homography decomposition.
      * @return plane normal obtained from homography decomposition.
      */
     public double[] getPlaneNormal() {
-<span class="fc" id="L91">        return mPlaneNormal;</span>
+<span class="fc" id="L90">        return mPlaneNormal;</span>
     }
     
     /**
@@ -97,20 +96,19 @@ public class HomographyDecomposition {
      * @throws IllegalArgumentException if provided plane normal does not have
      * length 3.
      */
-    public final void setPlaneNormal(double[] planeNormal) 
-            throws IllegalArgumentException {
-<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (planeNormal.length != PLANE_NORMAL_LENGTH) {</span>
-<span class="fc" id="L103">            throw new IllegalArgumentException();</span>
+    public final void setPlaneNormal(double[] planeNormal) {
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (planeNormal.length != PLANE_NORMAL_LENGTH) {</span>
+<span class="fc" id="L101">            throw new IllegalArgumentException();</span>
         }
-<span class="fc" id="L105">        mPlaneNormal = planeNormal;        </span>
-<span class="fc" id="L106">    }</span>
+<span class="fc" id="L103">        mPlaneNormal = planeNormal;        </span>
+<span class="fc" id="L104">    }</span>
     
     /**
      * Gets distance to computed plane.
      * @return distance to computed plane.
      */
     public double getPlaneDistance() {
-<span class="fc" id="L113">        return mPlaneDistance;</span>
+<span class="fc" id="L111">        return mPlaneDistance;</span>
     }
     
     /**
@@ -118,7 +116,7 @@ public class HomographyDecomposition {
      * @param planeDistance distance to computed plane.
      */
     public void setPlaneDistance(double planeDistance) {
-<span class="fc" id="L121">        mPlaneDistance = planeDistance;</span>
-<span class="fc" id="L122">    }</span>
+<span class="fc" id="L119">        mPlaneDistance = planeDistance;</span>
+<span class="fc" id="L120">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

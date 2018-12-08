@@ -35,10 +35,9 @@ public class TwoViewsSparseReconstructor extends
      */
     public TwoViewsSparseReconstructor(
             TwoViewsSparseReconstructorConfiguration configuration,
-            TwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
-<span class="fc" id="L40">        super(configuration, listener);</span>
-<span class="fc" id="L41">    }</span>
+            TwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L39">        super(configuration, listener);</span>
+<span class="fc" id="L40">    }</span>
     
     /**
      * Constructor with default configuration.
@@ -46,10 +45,9 @@ public class TwoViewsSparseReconstructor extends
      * @throws NullPointerException if listener is not provided.
      */
     public TwoViewsSparseReconstructor(
-            TwoViewsSparseReconstructorListener listener) 
-            throws NullPointerException {
-<span class="fc" id="L51">        this(new TwoViewsSparseReconstructorConfiguration(), listener);</span>
-<span class="fc" id="L52">    }</span>
+            TwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L49">        this(new TwoViewsSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L50">    }</span>
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
@@ -59,7 +57,7 @@ public class TwoViewsSparseReconstructor extends
     @Override
     protected boolean postProcessOne() {
         //no need for post processing when computing metric reconstruction
-<span class="fc" id="L62">        return true;</span>
+<span class="fc" id="L60">        return true;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

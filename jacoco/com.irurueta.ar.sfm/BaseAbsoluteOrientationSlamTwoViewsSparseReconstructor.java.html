@@ -59,10 +59,9 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor&lt;
      * provided.
      */
     public BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor(
-            C configuration, L listener)
-            throws NullPointerException {
-<span class="fc" id="L64">        super(configuration, listener);</span>
-<span class="fc" id="L65">    }    </span>
+            C configuration, L listener) {
+<span class="fc" id="L63">        super(configuration, listener);</span>
+<span class="fc" id="L64">    }    </span>
     
     /**
      * Provides a new orientation sample to update SLAM estimator.
@@ -73,14 +72,14 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor&lt;
      */    
     public void updateOrientationSample(long timestamp,
             Rotation3D orientation) {
-<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
-<span class="fc" id="L77">            mSlamEstimator.updateOrientationSample(timestamp, orientation);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (mSlamEstimator != null) {</span>
+<span class="fc" id="L76">            mSlamEstimator.updateOrientationSample(timestamp, orientation);</span>
         }
-<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (mFirstOrientation == null) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (mFirstOrientation == null) {</span>
             //make a copy of orientation
-<span class="fc" id="L81">            mFirstOrientation = orientation.toQuaternion();</span>
+<span class="fc" id="L80">            mFirstOrientation = orientation.toQuaternion();</span>
         }
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L82">    }</span>
     
     /**
      * Updates scene scale and orientation using SLAM data.
@@ -89,23 +88,23 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor&lt;
     protected boolean updateScaleAndOrientation() {
             
         //obtain baseline (camera separation from slam estimator data
-<span class="fc" id="L92">        double posX = mSlamEstimator.getStatePositionX();</span>
-<span class="fc" id="L93">        double posY = mSlamEstimator.getStatePositionY();</span>
-<span class="fc" id="L94">        double posZ = mSlamEstimator.getStatePositionZ();</span>
+<span class="fc" id="L91">        double posX = mSlamEstimator.getStatePositionX();</span>
+<span class="fc" id="L92">        double posY = mSlamEstimator.getStatePositionY();</span>
+<span class="fc" id="L93">        double posZ = mSlamEstimator.getStatePositionZ();</span>
             
         //to estimate baseline, we assume that first camera is placed at
         //world origin
-<span class="fc" id="L98">        double baseline = Math.sqrt(posX*posX + posY*posY + posZ*posZ);</span>
+<span class="fc" id="L97">        double baseline = Math.sqrt(posX*posX + posY*posY + posZ*posZ);</span>
             
         try {
-<span class="fc" id="L101">            PinholeCamera camera1 = mEstimatedCamera1.getCamera();</span>
-<span class="fc" id="L102">            PinholeCamera camera2 = mEstimatedCamera2.getCamera();</span>
+<span class="fc" id="L100">            PinholeCamera camera1 = mEstimatedCamera1.getCamera();</span>
+<span class="fc" id="L101">            PinholeCamera camera2 = mEstimatedCamera2.getCamera();</span>
             
-<span class="fc" id="L104">            camera1.decompose();</span>
-<span class="fc" id="L105">            camera2.decompose();</span>
+<span class="fc" id="L103">            camera1.decompose();</span>
+<span class="fc" id="L104">            camera2.decompose();</span>
             
-<span class="fc" id="L107">            Point3D center1 = camera1.getCameraCenter();</span>
-<span class="fc" id="L108">            Point3D center2 = camera2.getCameraCenter();</span>
+<span class="fc" id="L106">            Point3D center1 = camera1.getCameraCenter();</span>
+<span class="fc" id="L107">            Point3D center2 = camera2.getCameraCenter();</span>
                 
             //R1' = R1*Rdiff
             //Rdiff = R1^T*R1'
@@ -136,47 +135,47 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor&lt;
             //T = [s*R1'^T 0]
             //    [0       1]
                 
-<span class="fc" id="L139">            Rotation3D r = mFirstOrientation.inverseRotationAndReturnNew();</span>
+<span class="fc" id="L138">            Rotation3D r = mFirstOrientation.inverseRotationAndReturnNew();</span>
             
-<span class="fc" id="L141">            double estimatedBaseline = center1.distanceTo(center2);</span>
+<span class="fc" id="L140">            double estimatedBaseline = center1.distanceTo(center2);</span>
             
-<span class="fc" id="L143">            double scale = baseline / estimatedBaseline;</span>
+<span class="fc" id="L142">            double scale = baseline / estimatedBaseline;</span>
             
-<span class="fc" id="L145">            MetricTransformation3D scaleAndOrientationTransformation =</span>
+<span class="fc" id="L144">            MetricTransformation3D scaleAndOrientationTransformation =</span>
                     new MetricTransformation3D(scale);
-<span class="fc" id="L147">            scaleAndOrientationTransformation.setRotation(r);</span>
+<span class="fc" id="L146">            scaleAndOrientationTransformation.setRotation(r);</span>
             
             //update scale of cameras
-<span class="fc" id="L150">            scaleAndOrientationTransformation.transform(camera1);</span>
-<span class="fc" id="L151">            scaleAndOrientationTransformation.transform(camera2);</span>
+<span class="fc" id="L149">            scaleAndOrientationTransformation.transform(camera1);</span>
+<span class="fc" id="L150">            scaleAndOrientationTransformation.transform(camera2);</span>
             
-<span class="fc" id="L153">            mEstimatedCamera1.setCamera(camera1);</span>
-<span class="fc" id="L154">            mEstimatedCamera2.setCamera(camera2);</span>
+<span class="fc" id="L152">            mEstimatedCamera1.setCamera(camera1);</span>
+<span class="fc" id="L153">            mEstimatedCamera2.setCamera(camera2);</span>
             
             //update scale of reconstructed points
-<span class="fc" id="L157">            int numPoints = mReconstructedPoints.size();</span>
-<span class="fc" id="L158">            List&lt;Point3D&gt; reconstructedPoints3D = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {</span>
-<span class="fc" id="L160">                reconstructedPoints3D.add(reconstructedPoint.</span>
-<span class="fc" id="L161">                        getPoint());</span>
-<span class="fc" id="L162">            }</span>
+<span class="fc" id="L156">            int numPoints = mReconstructedPoints.size();</span>
+<span class="fc" id="L157">            List&lt;Point3D&gt; reconstructedPoints3D = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {</span>
+<span class="fc" id="L159">                reconstructedPoints3D.add(reconstructedPoint.</span>
+<span class="fc" id="L160">                        getPoint());</span>
+<span class="fc" id="L161">            }</span>
             
-<span class="fc" id="L164">            scaleAndOrientationTransformation.transformAndOverwritePoints(</span>
+<span class="fc" id="L163">            scaleAndOrientationTransformation.transformAndOverwritePoints(</span>
                     reconstructedPoints3D);
             
             //set scaled points into result
-<span class="fc bfc" id="L168" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
-<span class="fc" id="L169">                mReconstructedPoints.get(i).setPoint(</span>
-<span class="fc" id="L170">                        reconstructedPoints3D.get(i));</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L168">                mReconstructedPoints.get(i).setPoint(</span>
+<span class="fc" id="L169">                        reconstructedPoints3D.get(i));</span>
             }
 
-<span class="fc" id="L173">            return true;</span>
-<span class="nc" id="L174">        } catch (Exception e) {</span>
-<span class="nc" id="L175">            mFailed = true;</span>
+<span class="fc" id="L172">            return true;</span>
+<span class="nc" id="L173">        } catch (Exception e) {</span>
+<span class="nc" id="L174">            mFailed = true;</span>
             //noinspection unchecked
-<span class="nc" id="L177">            mListener.onFail((R)this);</span>
+<span class="nc" id="L176">            mListener.onFail((R)this);</span>
 
-<span class="nc" id="L179">            return false;</span>
+<span class="nc" id="L178">            return false;</span>
         }
     }    
 }
