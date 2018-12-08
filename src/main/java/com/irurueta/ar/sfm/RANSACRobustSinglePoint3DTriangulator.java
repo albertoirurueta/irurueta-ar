@@ -87,7 +87,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public RANSACRobustSinglePoint3DTriangulator(List<Point2D> points, 
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(points, cameras);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -106,8 +106,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      */
     public RANSACRobustSinglePoint3DTriangulator(List<Point2D> points,
             List<PinholeCamera> cameras, 
-            RobustSinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            RobustSinglePoint3DTriangulatorListener listener) {
         super(points, cameras, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -135,8 +134,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException, 
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

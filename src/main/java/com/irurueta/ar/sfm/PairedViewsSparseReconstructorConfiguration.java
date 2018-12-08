@@ -27,11 +27,6 @@ public class PairedViewsSparseReconstructorConfiguration extends
         implements Serializable {
 
     /**
-     * Constructor.
-     */
-    public PairedViewsSparseReconstructorConfiguration() { }
-
-    /**
      * Creates an instance of a sparse reconstructor configuration.
      * @return configuration instance.
      */

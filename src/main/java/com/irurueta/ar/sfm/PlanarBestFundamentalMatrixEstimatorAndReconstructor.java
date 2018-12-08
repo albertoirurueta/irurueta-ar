@@ -155,8 +155,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     public PlanarBestFundamentalMatrixEstimatorAndReconstructor(
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             PinholeCameraIntrinsicParameters leftIntrinsics,
-            PinholeCameraIntrinsicParameters rightIntrinsics) 
-            throws IllegalArgumentException {
+            PinholeCameraIntrinsicParameters rightIntrinsics) {
         this();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
         mLeftIntrinsics = leftIntrinsics;
@@ -180,8 +179,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
             List<Point2D> leftPoints, List<Point2D> rightPoints,
             PinholeCameraIntrinsicParameters leftIntrinsics,
             PinholeCameraIntrinsicParameters rightIntrinsics,
-            PlanarBestFundamentalMatrixEstimatorAndReconstructorListener listener) 
-            throws IllegalArgumentException {
+            PlanarBestFundamentalMatrixEstimatorAndReconstructorListener listener) {
         this(leftPoints, rightPoints, leftIntrinsics, rightIntrinsics);
         mListener = listener;
     }
@@ -201,8 +199,8 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @throws IllegalArgumentException if provided points do not have enough 
      * points.
      */
-    public void setLeftPoints(List<Point2D> leftPoints) throws LockedException, 
-            IllegalArgumentException {
+    @SuppressWarnings("Duplicates")
+    public void setLeftPoints(List<Point2D> leftPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -228,8 +226,9 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @throws IllegalArgumentException if provided points do not have enough
      * points.
      */
+    @SuppressWarnings("Duplicates")
     public void setRightPoints(List<Point2D> rightPoints) 
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -249,8 +248,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * points or lists have different sizes.
      */
     public void setLeftAndRightPoints(List<Point2D> leftPoints, 
-            List<Point2D> rightPoints) throws LockedException, 
-            IllegalArgumentException {
+            List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -323,7 +321,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     public void setHomographyEstimator(
             PointCorrespondenceProjectiveTransformation2DRobustEstimator homographyEstimator) 
-            throws LockedException, NullPointerException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -380,7 +378,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @throws LockedException if estimator is locked.
      */
     public void setHomographyConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -403,7 +401,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @throws LockedException if estimator is locked.
      */
     public void setHomographyMaxIterations(int maxIterations) 
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -499,8 +497,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than minimum required size (4 points).
      */
-    public void setQualityScores(double[] qualityScore) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScore) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -708,7 +705,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      * points or lists have different sizes.
      */
     private void internalSetLeftAndRightPoints(List<Point2D> leftPoints,
-            List<Point2D> rightPoints) throws IllegalArgumentException {
+            List<Point2D> rightPoints) {
         if (leftPoints.size() < MINIMUM_SIZE || 
                 rightPoints.size() < MINIMUM_SIZE ||
                 leftPoints.size() != rightPoints.size()) {
@@ -719,27 +716,25 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
         mRightPoints = rightPoints;
         try {
             mHomographyEstimator.setPoints(leftPoints, rightPoints);
-            
-            switch (mHomographyEstimator.getMethod()) {
-                case PROMedS:
-                    PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator promedsEstimator =
-                            (PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-                    if (promedsEstimator.getQualityScores() == null) {
-                        double[] qualityScores = new double[leftPoints.size()];
-                        Arrays.fill(qualityScores, 1.0);
-                        promedsEstimator.setQualityScores(qualityScores);
-                    }
-                    break;
-                case PROSAC:
-                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacEstimator =
-                            (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-                    if (prosacEstimator.getQualityScores() == null) {
-                        double[] qualityScores = new double[leftPoints.size()];
-                        Arrays.fill(qualityScores, 1.0);
-                        prosacEstimator.setQualityScores(qualityScores);
-                    }
+
+            if (mHomographyEstimator.getMethod() == RobustEstimatorMethod.PROMedS) {
+                PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator promedsEstimator =
+                        (PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
+                if (promedsEstimator.getQualityScores() == null) {
+                    double[] qualityScores = new double[leftPoints.size()];
+                    Arrays.fill(qualityScores, 1.0);
+                    promedsEstimator.setQualityScores(qualityScores);
+                }
+            } else if (mHomographyEstimator.getMethod() == RobustEstimatorMethod.PROSAC) {
+                PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacEstimator =
+                        (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
+                if (prosacEstimator.getQualityScores() == null) {
+                    double[] qualityScores = new double[leftPoints.size()];
+                    Arrays.fill(qualityScores, 1.0);
+                    prosacEstimator.setQualityScores(qualityScores);
+                }
             }
-            
+
         } catch (LockedException ignore) { /* never happens */ }        
     }  
     
@@ -748,17 +743,16 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
      */
     private void enableHomographyInliersEstimation() {
         try {
-            switch (mHomographyEstimator.getMethod()) {
-                case RANSAC:
-                    RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =
-                            (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-                    ransacHomographyEstimator.setComputeAndKeepInliersEnabled(true);
-                    ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);
-                case PROSAC:
-                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =
-                            (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
-                    prosacHomographyEstimator.setComputeAndKeepInliersEnabled(true);
-                    prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);
+            if (mHomographyEstimator.getMethod() == RobustEstimatorMethod.RANSAC) {
+                RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =
+                        (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
+                ransacHomographyEstimator.setComputeAndKeepInliersEnabled(true);
+                ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);
+            } else if (mHomographyEstimator.getMethod() == RobustEstimatorMethod.PROSAC) {
+                PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =
+                        (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator;
+                prosacHomographyEstimator.setComputeAndKeepInliersEnabled(true);
+                prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(true);
             }
         } catch (LockedException ignore) { /* never happens */ }
     }

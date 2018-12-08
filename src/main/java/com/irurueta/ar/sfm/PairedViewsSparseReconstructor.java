@@ -40,7 +40,7 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
      * @throws NullPointerException if listener or configuration is not provided.
      */
     public PairedViewsSparseReconstructor(PairedViewsSparseReconstructorConfiguration configuration,
-            PairedViewsSparseReconstructorListener listener) throws NullPointerException {
+            PairedViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
@@ -49,8 +49,7 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not provided.
      */
-    public PairedViewsSparseReconstructor(PairedViewsSparseReconstructorListener listener)
-            throws NullPointerException {
+    public PairedViewsSparseReconstructor(PairedViewsSparseReconstructorListener listener) {
         this(new PairedViewsSparseReconstructorConfiguration(), listener);
     }
 
@@ -130,7 +129,8 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
             //transform points
             mEuclideanReconstructedPoints = new ArrayList<>();
             ReconstructedPoint3D euclideanReconstructedPoint;
-            Point3D metricPoint, euclideanPoint;
+            Point3D metricPoint;
+            Point3D euclideanPoint;
             for (ReconstructedPoint3D metricReconstructedPoint : mMetricReconstructedPoints) {
                 metricPoint = metricReconstructedPoint.getPoint();
                 euclideanPoint = mReferenceEuclideanTransformation.transformAndReturnNew(

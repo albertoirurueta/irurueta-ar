@@ -111,7 +111,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * required to compute triangulation.
      */
     public PROMedSRobustSinglePoint3DTriangulator(List<Point2D> points, 
-            List<PinholeCamera> cameras) throws IllegalArgumentException {
+            List<PinholeCamera> cameras) {
         super(points, cameras);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -130,8 +130,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      */
     public PROMedSRobustSinglePoint3DTriangulator(List<Point2D> points,
             List<PinholeCamera> cameras, 
-            RobustSinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            RobustSinglePoint3DTriangulatorListener listener) {
         super(points, cameras, listener);
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
     }
@@ -142,8 +141,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than requiredsize (i.e. 2 views).
      */
-    public PROMedSRobustSinglePoint3DTriangulator(double[] qualityScores) 
-            throws IllegalArgumentException {
+    public PROMedSRobustSinglePoint3DTriangulator(double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -174,8 +172,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * is the minimum required to compute triangulation.
      */
     public PROMedSRobustSinglePoint3DTriangulator(List<Point2D> points, 
-            List<PinholeCamera> cameras, double[] qualityScores) 
-            throws IllegalArgumentException {
+            List<PinholeCamera> cameras, double[] qualityScores) {
         this(points, cameras);
         internalSetQualityScores(qualityScores);
     }
@@ -195,8 +192,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      */
     public PROMedSRobustSinglePoint3DTriangulator(List<Point2D> points,
             List<PinholeCamera> cameras, double[] qualityScores,
-            RobustSinglePoint3DTriangulatorListener listener) 
-            throws IllegalArgumentException {
+            RobustSinglePoint3DTriangulatorListener listener) {
         this(points, cameras, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -244,8 +240,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * @throws LockedException if robust estimator is locked because an 
      * estimation is already in progress.
      */
-    public void setStopThreshold(double stopThreshold) 
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -276,8 +271,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * smaller than MIN_REQUIRED_VIEWS (i.e. 2 views).
      */
     @Override
-    public void setQualityScores(double[] qualityScores) throws LockedException,
-            IllegalArgumentException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -469,8 +463,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * @throws IllegalArgumentException if provided quality scores length is
      * smaller than MINIMUM_SIZE.
      */
-    private void internalSetQualityScores(double[] qualityScores) 
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores.length < MIN_REQUIRED_VIEWS) {
             throw new IllegalArgumentException();
         }

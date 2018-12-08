@@ -66,11 +66,6 @@ public class MatchedSamples implements Serializable {
     private BitSet mInliers;
     
     /**
-     * Constructor.
-     */
-    public MatchedSamples() { }
-    
-    /**
      * Gets 2D matched samples on different views containing matched points.
      * Each of these points correspond to projections of the same 3D point into
      * different views.
