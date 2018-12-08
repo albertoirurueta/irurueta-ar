@@ -825,7 +825,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/BaseSlamCalibrator.html#L373">373</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/BaseSlamEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/BaseSlamEstimator.html#L611">611</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/BaseSlamEstimator.html#L612">612</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>    }
@@ -1905,11 +1905,174 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L791">791</a></td></tr>
+<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L236">236</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1098">1098</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L284">284</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>            }
+            
+            if (jacobianU != null) {
+                jacobianU.initialize(0.0);
+                
+                for(int i = 7, j = 0; i &lt; STATE_COMPONENTS; i++, j++) {
+                    jacobianU.setElementAt(i, j, 1.0);
+                }
+            }
+        }catch(WrongSizeException ignore) { /* never thrown */ }
+    }
+    
+    /**
+     * Updates the system model (position, orientation, linear velocity and 
+     * angular velocity assuming a constant velocity model (without 
+     * acceleration).
+     * @param x initial system state containing: position-x, position-y, 
+     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have 
+     * length 13.
+     * @param u linear and angular velocity perturbations or controls: 
+     * linear-velocity-change-x, linear-velocity-change-y, 
+     * linear-velocity-change-z, angulat-velocity-change-x, 
+     * angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated system model will be stored. Must
+     * have length 13.
+     * @throws IllegalArgumentException if system state array or control array 
+     * or result do not have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;constVel.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(double[] x, double[] u, double dt, 
+            double[] result) {
+        predict(x, u, dt, result, null, null);
+    }
+    
+    /**
+     * Updates the system model (position, orientation, linear velocity and 
+     * angular velocity assuming a constant velocity model (without 
+     * acceleration).
+     * @param x initial system state containing: position-x, position-y, 
+     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have 
+     * length 13.
+     * @param u linear and angular velocity perturbations or controls: 
+     * linear-velocity-change-x, linear-velocity-change-y, 
+     * linear-velocity-change-z, angulat-velocity-change-x, 
+     * angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param jacobianX jacobian wrt system state. Must be 13x13.
+     * @param jacobianU jacobian wrt control. Must be 13x6.
+     * @return instance where updated system model will be stored.
+     * @throws IllegalArgumentException if system state array, control array or
+     * jacobians do not have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;constVel.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static double[] predict(double[] x, double[] u, double dt, 
+            Matrix jacobianX, Matrix jacobianU) {
+        double[] result = new double[STATE_COMPONENTS];
+        predict(x, u, dt, result, jacobianX, jacobianU);
+        return result;
+    }
+    
+    /**
+     * Updates the system model (position, orientation, linear velocity and 
+     * angular velocity assuming a constant velocity model (without 
+     * acceleration).
+     * @param x initial system state containing: position-x, position-y, 
+     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have 
+     * length 13.
+     * @param u linear and angular velocity perturbations or controls: 
+     * linear-velocity-change-x, linear-velocity-change-y, 
+     * linear-velocity-change-z, angulat-velocity-change-x, 
+     * angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing the updated system state.
+     * @throws IllegalArgumentException if system state array, control array or
+     * jacobians do not have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;constVel.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static double[] predict(double[] x, double[] u, double dt) {
+        double[] result = new double[STATE_COMPONENTS];
+        predict(x, u, dt, result);
+        return result;
+    }
+       
+    /**
+     * Updates the system model (position, orientation, linear velocity and 
+     * angular velocity) assuming a constant velocity model (without 
+     * acceleration) when no velocity control signal is present.
+     * @param x initial system state containing: position-x, position-y, 
+     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     * length 13.
+     * @param u linear ang angular velocity perturbations or controls and 
+     * position perturbations or controls: position-change-x, position-change-y,
+     * position-change-z, linear-velocity-change-x, linear-velocity-change-y,
+     * linear-velocity-change-z, angular-velocity-change-x, 
+     * angular-velocity-change-y, angular-velocity-change-z. Must have length 9.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @param result instance where updated system model will be stored. Must 
+     * have length 13.
+     * @param jacobianX jacobian wrt system state. Must be 13x13.
+     * @param jacobianU jacobian wrt control. Must be 13x9.
+     * @throws IllegalArgumentException if system state array, control array,
+     * result or jacobians do not have proper size.
+     */
+    public static void predictWithPositionAdjustment(
+            double[] x, double[] u, double dt, double[] result, 
+            Matrix jacobianX, Matrix jacobianU) {
+        if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
+            //x must have length 13
+            throw new IllegalArgumentException();
+        }
+        if(u.length != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
+            //u must have length 9
+            throw new IllegalArgumentException();
+        }
+        if(result.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
+            //result must have length 13
+            throw new IllegalArgumentException();
+        }
+        if(jacobianX != null &amp;&amp; (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
+                jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
+            //jacobian wrt x must be 13x13
+            throw new IllegalArgumentException();
+        }
+        if(jacobianU != null &amp;&amp; (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
+                jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
+            //jacobian wrt u must be 13x9
+            throw new IllegalArgumentException();
+        }
+        
+        //position
+        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
+        
+        //orientation
+        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);
+        
+        //linear velocity
+        double vx = x[7];
+        double vy = x[8];
+        double vz = x[9];
+        
+        //angular velocity
+        double wx = x[10];</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L796">796</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1103">1103</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,
@@ -2100,7 +2263,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L207">207</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L496">496</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L501">501</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,
@@ -2712,13 +2875,13 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L217">217</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L505">505</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L510">510</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L806">806</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L811">811</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1112">1112</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1117">1117</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
@@ -2920,10 +3083,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L653">653</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L658">658</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L911">911</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L916">916</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
@@ -3738,10 +3901,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L469">469</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L474">474</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L572">572</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L577">577</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            }
@@ -4459,7 +4622,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L180">180</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L413">413</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L418">418</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            PositionPredictor.predict(r, vx, vy, vz, dt, r, rr, rv, null);
@@ -4789,10 +4952,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L714">714</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L719">719</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L874">874</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L879">879</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>            }
@@ -5534,135 +5697,6 @@ com.irurueta:irurueta-ar
 <th>File</th>
 <th>Line</th></tr>
 <tr class="b">
-<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L236">236</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L284">284</a></td></tr>
-<tr class="b"><td colspan='2'>
-<div>
-<pre>            }
-            
-            if (jacobianU != null) {
-                jacobianU.initialize(0.0);
-                
-                for(int i = 7, j = 0; i &lt; STATE_COMPONENTS; i++, j++) {
-                    jacobianU.setElementAt(i, j, 1.0);
-                }
-            }
-        }catch(WrongSizeException ignore) { /* never thrown */ }
-    }
-    
-    /**
-     * Updates the system model (position, orientation, linear velocity and 
-     * angular velocity assuming a constant velocity model (without 
-     * acceleration).
-     * @param x initial system state containing: position-x, position-y, 
-     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
-     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
-     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have 
-     * length 13.
-     * @param u linear and angular velocity perturbations or controls: 
-     * linear-velocity-change-x, linear-velocity-change-y, 
-     * linear-velocity-change-z, angulat-velocity-change-x, 
-     * angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
-     * @param dt time interval to compute prediction expressed in seconds.
-     * @param result instance where updated system model will be stored. Must
-     * have length 13.
-     * @throws IllegalArgumentException if system state array or control array 
-     * or result do not have proper size.
-     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;constVel.m at https://github.com/joansola/slamtb&lt;/a&gt;
-     */
-    public static void predict(double[] x, double[] u, double dt, 
-            double[] result) {
-        predict(x, u, dt, result, null, null);
-    }
-    
-    /**
-     * Updates the system model (position, orientation, linear velocity and 
-     * angular velocity assuming a constant velocity model (without 
-     * acceleration).
-     * @param x initial system state containing: position-x, position-y, 
-     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
-     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
-     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have 
-     * length 13.
-     * @param u linear and angular velocity perturbations or controls: 
-     * linear-velocity-change-x, linear-velocity-change-y, 
-     * linear-velocity-change-z, angulat-velocity-change-x, 
-     * angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
-     * @param dt time interval to compute prediction expressed in seconds.
-     * @param jacobianX jacobian wrt system state. Must be 13x13.
-     * @param jacobianU jacobian wrt control. Must be 13x6.
-     * @return instance where updated system model will be stored.
-     * @throws IllegalArgumentException if system state array, control array or
-     * jacobians do not have proper size.
-     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;constVel.m at https://github.com/joansola/slamtb&lt;/a&gt;
-     */
-    public static double[] predict(double[] x, double[] u, double dt, 
-            Matrix jacobianX, Matrix jacobianU) {
-        double[] result = new double[STATE_COMPONENTS];
-        predict(x, u, dt, result, jacobianX, jacobianU);
-        return result;
-    }
-    
-    /**
-     * Updates the system model (position, orientation, linear velocity and 
-     * angular velocity assuming a constant velocity model (without 
-     * acceleration).
-     * @param x initial system state containing: position-x, position-y, 
-     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
-     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
-     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have 
-     * length 13.
-     * @param u linear and angular velocity perturbations or controls: 
-     * linear-velocity-change-x, linear-velocity-change-y, 
-     * linear-velocity-change-z, angulat-velocity-change-x, 
-     * angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
-     * @param dt time interval to compute prediction expressed in seconds.
-     * @return a new instance containing the updated system state.
-     * @throws IllegalArgumentException if system state array, control array or
-     * jacobians do not have proper size.
-     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;constVel.m at https://github.com/joansola/slamtb&lt;/a&gt;
-     */
-    public static double[] predict(double[] x, double[] u, double dt) {
-        double[] result = new double[STATE_COMPONENTS];
-        predict(x, u, dt, result);
-        return result;
-    }
-       
-    /**
-     * Updates the system model (position, orientation, linear velocity and 
-     * angular velocity) assuming a constant velocity model (without 
-     * acceleration) when no velocity control signal is present.
-     * @param x initial system state containing: position-x, position-y, 
-     * position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
-     * linear-velocity-x, linear-velocity-y, linear-velocity-z,
-     * angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
-     * length 13.
-     * @param u linear ang angular velocity perturbations or controls and 
-     * position perturbations or controls: position-change-x, position-change-y,
-     * position-change-z, linear-velocity-change-x, linear-velocity-change-y,
-     * linear-velocity-change-z, angular-velocity-change-x, 
-     * angular-velocity-change-y, angular-velocity-change-z. Must have length 9.
-     * @param dt time interval to compute prediction expressed in seconds.
-     * @param result instance where updated system model will be stored. Must 
-     * have length 13.
-     * @param jacobianX jacobian wrt system state. Must be 13x13.
-     * @param jacobianU jacobian wrt control. Must be 13x9.
-     * @throws IllegalArgumentException if system state array, control array,
-     * result or jacobians do not have proper size.
-     */
-    public static void predictWithPositionAdjustment(
-            double[] x, double[] u, double dt, double[] result, 
-            Matrix jacobianX, Matrix jacobianU) {
-        if(x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
-            throw new IllegalArgumentException(&quot;x must have length 13&quot;);</pre></div></td></tr></table>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th>File</th>
-<th>Line</th></tr>
-<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1213">1213</a></td></tr>
 <tr class="a">
@@ -6181,10 +6215,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L972">972</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L977">977</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1180">1180</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1185">1185</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            }
@@ -8227,13 +8261,13 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L189">189</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L422">422</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L427">427</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L667">667</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L672">672</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L925">925</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L930">930</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
@@ -11199,10 +11233,10 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L471">471</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L476">476</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1073">1073</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1078">1078</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>        double uwz = u[11];
@@ -11915,7 +11949,7 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L183">183</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L767">767</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L772">772</a></td></tr>
 <tr class="b"><td colspan='2'>
 <div>
 <pre>        double uwz = u[8];
@@ -12514,13 +12548,13 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L429">429</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L434">434</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1028">1028</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1033">1033</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
-<pre>            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x12&quot;);
+<pre>            throw new IllegalArgumentException();
         }
         
         //position
@@ -14362,10 +14396,50 @@ com.irurueta:irurueta-ar
 <th>Line</th></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L726">726</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L144">144</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1027">1027</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L432">432</a></td></tr>
+<tr class="a"><td colspan='2'>
+<div>
+<pre>                jacobianU.getColumns() != CONTROL_COMPONENTS)) {
+            //jacobian wrt u must be 16x9
+            throw new IllegalArgumentException();
+        }
+        
+        //position
+        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
+        
+        //orientation
+        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);
+        
+        //linear velocity
+        double vx = x[7];
+        double vy = x[8];
+        double vz = x[9];
+        
+        //linear acceleration
+        double ax = x[10];
+        double ay = x[11];
+        double az = x[12];
+        
+        //angular velocity
+        double wx = x[13];
+        double wy = x[14];
+        double wz = x[15];
+        
+        //linear velocity change (control)
+        double uvx = u[0];</pre></div></td></tr></table>
+<table border="0" class="bodyTable">
+<tr class="b">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L731">731</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1032">1032</a></td></tr>
 <tr class="a"><td colspan='2'>
 <div>
 <pre>                jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {
@@ -15809,11 +15883,8 @@ com.irurueta:irurueta-ar
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L146">146</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L429">429</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1028">1028</a></td></tr>
-<tr class="b"><td colspan='2'>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1033">1033</a></td></tr>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException();
         }
@@ -15842,18 +15913,18 @@ com.irurueta:irurueta-ar
         //linear velocity change (control)
         double uvx = u[0];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L366">366</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L861">861</a></td></tr>
-<tr class="b"><td colspan='2'>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L371">371</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L866">866</a></td></tr>
+<tr class="a"><td colspan='2'>
 <div>
-<pre>            throw new IllegalArgumentException(&quot;jacobian wrt u must be 13x9&quot;);
+<pre>            throw new IllegalArgumentException();
         }
         
         //position
@@ -15877,19 +15948,19 @@ com.irurueta:irurueta-ar
         double dry = u[1];
         double drz = u[2];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L146">146</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L429">429</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L146">146</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L727">727</a></td></tr>
-<tr class="a"><td colspan='2'>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L434">434</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L732">732</a></td></tr>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            throw new IllegalArgumentException();
         }
@@ -15915,16 +15986,16 @@ com.irurueta:irurueta-ar
         double wy = x[14];
         double wz = x[15];</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACDualAbsoluteQuadricRobustEstimator.html#L97">97</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACDualAbsoluteQuadricRobustEstimator.html#L97">97</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    public MSACDualAbsoluteQuadricRobustEstimator(List&lt;PinholeCamera&gt; cameras,
             DualAbsoluteQuadricRobustEstimatorListener listener) {
@@ -15983,16 +16054,16 @@ com.irurueta:irurueta-ar
             throw new NotReadyException();
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/MSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/MSACImageOfAbsoluteConicRobustEstimator.html#L104">104</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/RANSACImageOfAbsoluteConicRobustEstimator.html#L103">103</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    public MSACImageOfAbsoluteConicRobustEstimator(
             List&lt;Transformation2D&gt; homographies, 
@@ -16055,19 +16126,19 @@ com.irurueta:irurueta-ar
             throw new NotReadyException();
         }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L824">824</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1019">1019</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L824">824</a></td></tr>
 <tr class="a">
+<td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L1019">1019</a></td></tr>
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1535">1535</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
@@ -16107,16 +16178,16 @@ com.irurueta:irurueta-ar
      */
     private boolean estimatePlanarFundamentalMatrix(</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L929">929</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L1073">1073</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                counter++;                
             }
@@ -16152,19 +16223,19 @@ com.irurueta:irurueta-ar
             return new ImageOfAbsoluteConic(b11, 0.0, b22, b13, b23, b33);
         } catch(AlgebraException e) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L824">824</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1535">1535</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1535">1535</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L1751">1751</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
@@ -16204,16 +16275,16 @@ com.irurueta:irurueta-ar
      */
     private boolean estimatePlanarFundamentalMatrix(</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
-<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
-<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L575">575</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
+<td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L575">575</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.html#L765">765</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
@@ -16243,34 +16314,34 @@ com.irurueta:irurueta-ar
         }
     }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSDualAbsoluteQuadricRobustEstimator.html#L390">390</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSImageOfAbsoluteConicRobustEstimator.html#L399">399</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROMedSRadialDistortionRobustEstimator.html#L507">507</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACDualAbsoluteQuadricRobustEstimator.html#L352">352</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACImageOfAbsoluteConicRobustEstimator.html#L368">368</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.html#L465">465</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROMedSRobustSinglePoint3DTriangulator.html#L423">423</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.html#L384">384</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                            PROMedSDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
@@ -16306,22 +16377,22 @@ com.irurueta:irurueta-ar
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.PROMedS;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L183">183</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L471">471</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L767">767</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L476">476</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1073">1073</a></td></tr>
-<tr class="a"><td colspan='2'>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L772">772</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1078">1078</a></td></tr>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>        double uwz = u[8];
         
@@ -16349,28 +16420,28 @@ com.irurueta:irurueta-ar
             }
             PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L242">242</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L405">405</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L562">562</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L711">711</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L998">998</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L998">998</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L1155">1155</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -16397,28 +16468,28 @@ com.irurueta:irurueta-ar
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L853">853</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L1040">1040</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L381">381</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L546">546</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L705">705</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L546">546</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L705">705</a></td></tr>
+<tr class="a">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L856">856</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>                homography.asMatrix(h);
                 if (t == null) {
@@ -16445,16 +16516,16 @@ com.irurueta:irurueta-ar
                 //fill first equation
                 a.setElementAt(counter, 0, h11 * h12 + </pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/epipolar/estimators/MSACFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/MSACFundamentalMatrixRobustEstimator.html#L306">306</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/epipolar/estimators/PROMedSFundamentalMatrixRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/epipolar/estimators/PROMedSFundamentalMatrixRobustEstimator.html#L577">577</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>            }
         });
@@ -16485,16 +16556,16 @@ com.irurueta:irurueta-ar
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.MSAC;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BasePairedViewsSparseReconstructor.html#L216">216</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSparseReconstructor.html#L179">179</a></td></tr>
-<tr class="a"><td colspan='2'>
+<tr class="b"><td colspan='2'>
 <div>
 <pre>    public BasePairedViewsSparseReconstructor(C configuration, L listener) {
         if  (configuration == null || listener == null) {
@@ -16578,19 +16649,19 @@ com.irurueta:irurueta-ar
      */
     public EstimatedCamera getCurrentEuclideanEstimatedCamera() {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="b">
+<tr class="a">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.html#L194">194</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSlamSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamSparseReconstructor.html#L149">149</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSlamTwoViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamTwoViewsSparseReconstructor.html#L150">150</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>    }
 
@@ -16632,22 +16703,22 @@ com.irurueta:irurueta-ar
         });
     }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L418">418</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L451">451</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L581">581</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L451">451</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L581">581</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L610">610</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                            Math.pow(a.getElementAt(counter, 5), 2.0));
                     factor = weight / rowNorm ;
@@ -16663,22 +16734,22 @@ com.irurueta:irurueta-ar
                     a.setElementAt(counter, 4, a.getElementAt(counter, 4) *
                             factor);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L308">308</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L460">460</a></td></tr>
-<tr class="b">
-<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L442">442</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L442">442</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L602">602</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
                 
@@ -16690,16 +16761,16 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 3), 2.0) +
                         Math.pow(a.getElementAt(counter, 4), 2.0) +</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L636">636</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L778">778</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                counter++;                
             }
@@ -16734,22 +16805,22 @@ com.irurueta:irurueta-ar
             return new ImageOfAbsoluteConic(b11, b12, b22, 0.0, 0.0, b33);
         } catch (AlgebraException e) {</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMedSDualAbsoluteQuadricRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMedSDualAbsoluteQuadricRobustEstimator.html#L272">272</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMedSImageOfAbsoluteConicRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMedSImageOfAbsoluteConicRobustEstimator.html#L279">279</a></td></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMedSRadialDistortionRobustEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMedSRadialDistortionRobustEstimator.html#L351">351</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/LMedSRobustSinglePoint3DTriangulator.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/LMedSRobustSinglePoint3DTriangulator.html#L310">310</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                            LMedSDualAbsoluteQuadricRobustEstimator.this, 
                             progress);
@@ -16783,16 +16854,16 @@ com.irurueta:irurueta-ar
     }    
 }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L270">270</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L442">442</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 5, h31 * h32);
                 
@@ -16805,16 +16876,16 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 4), 2.0) +
                         Math.pow(a.getElementAt(counter, 5), 2.0));</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L308">308</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/WeightedImageOfAbsoluteConicEstimator.html#L409">409</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
                 
@@ -16827,16 +16898,16 @@ com.irurueta:irurueta-ar
                         Math.pow(a.getElementAt(counter, 4), 2.0) +
                         Math.pow(a.getElementAt(counter, 5), 2.0));</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructor.html#L476">476</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/sfm/BaseSlamSparseReconstructor.java</td>
 <td><a href="./xref/com/irurueta/ar/sfm/BaseSlamSparseReconstructor.html#L406">406</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            double positionZ = lastPosZ + mSlamEstimator.getStatePositionZ();
             mSlamPosition.setInhomogeneousCoordinates(positionX, positionY, positionZ);
@@ -16860,34 +16931,34 @@ com.irurueta:irurueta-ar
     }
 }</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L196">196</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L429">429</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L674">674</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L434">434</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L932">932</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L679">679</a></td></tr>
 <tr class="b">
+<td>com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelStatePredictor.html#L937">937</a></td></tr>
+<tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L233">233</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L521">521</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L823">823</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L526">526</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/slam/StatePredictor.java</td>
-<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1129">1129</a></td></tr>
-<tr class="b"><td colspan='2'>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L828">828</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/slam/StatePredictor.java</td>
+<td><a href="./xref/com/irurueta/ar/slam/StatePredictor.html#L1134">1134</a></td></tr>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>            wx += uwx;
             wy += uwy;
@@ -16909,16 +16980,16 @@ com.irurueta:irurueta-ar
             
             result[10] = wx;</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationConstantVelocityModelSlamEstimator.html#L558">558</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/SlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/SlamEstimator.html#L546">546</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        mX[12] = state.getElementAtIndex(12);
     }
@@ -16947,16 +17018,16 @@ com.irurueta:irurueta-ar
         mStateQuaternionD = mX[6] = 
                 state.getElementAtIndex(6);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/AbsoluteOrientationSlamEstimator.html#L599">599</a></td></tr>
-<tr class="a">
+<tr class="b">
 <td>com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/slam/ConstantVelocityModelSlamEstimator.html#L508">508</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>        mX[15] = state.getElementAtIndex(15);        
     }
@@ -16985,22 +17056,22 @@ com.irurueta:irurueta-ar
         mStateQuaternionD = mX[6] = 
                 state.getElementAtIndex(6);</pre></div></td></tr></table>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th>File</th>
 <th>Line</th></tr>
-<tr class="b">
+<tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L279">279</a></td></tr>
-<tr class="a">
-<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L317">317</a></td></tr>
 <tr class="b">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
-<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L440">440</a></td></tr>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L317">317</a></td></tr>
 <tr class="a">
 <td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
+<td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L440">440</a></td></tr>
+<tr class="b">
+<td>com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.java</td>
 <td><a href="./xref/com/irurueta/ar/calibration/estimators/LMSEImageOfAbsoluteConicEstimator.html#L468">468</a></td></tr>
-<tr class="b"><td colspan='2'>
+<tr class="a"><td colspan='2'>
 <div>
 <pre>                        Math.pow(a.getElementAt(counter, 5), 2.0));
                 
