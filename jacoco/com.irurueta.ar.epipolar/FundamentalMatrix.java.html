@@ -264,15 +264,15 @@ public class FundamentalMatrix implements Serializable {
 
             //test that resulting matrix is 3x3 and rank 2, otherwise provided
             //cameras span a degenerate epipolar geometry and are not valid
-<span class="pc bpc" id="L267" title="1 of 2 branches missed.">            if (!isValidInternalMatrix(fundamentalMatrix)) {</span>
-<span class="nc" id="L268">                throw new InvalidPairOfCamerasException();</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">            if (!isValidInternalMatrix(fundamentalMatrix)) {</span>
+<span class="fc" id="L268">                throw new InvalidPairOfCamerasException();</span>
             }
 
 <span class="fc" id="L271">            mInternalMatrix = fundamentalMatrix;</span>
 <span class="fc" id="L272">            mNormalized = false;</span>
 <span class="fc" id="L273">            mLeftEpipole = mRightEpipole = null;</span>
-<span class="nc" id="L274">        } catch (InvalidPairOfCamerasException e) {</span>
-<span class="nc" id="L275">            throw e;</span>
+<span class="fc" id="L274">        } catch (InvalidPairOfCamerasException e) {</span>
+<span class="fc" id="L275">            throw e;</span>
 <span class="nc" id="L276">        } catch (AlgebraException | GeometryException e) {</span>
 <span class="nc" id="L277">            throw new InvalidPairOfCamerasException(e);</span>
 <span class="fc" id="L278">        }</span>

@@ -496,8 +496,8 @@ public class WeightedDualAbsoluteQuadricEstimator extends
 <span class="fc" id="L496">            SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
 <span class="fc" id="L497">            enforceRank3IfNeeded(decomposer, result);</span>
             
-<span class="nc" id="L499">        } catch (AlgebraException | SortingException | NumericalException e) {</span>
-<span class="nc" id="L500">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="fc" id="L499">        } catch (AlgebraException | SortingException | NumericalException e) {</span>
+<span class="fc" id="L500">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
 <span class="fc" id="L501">        }</span>
 <span class="fc" id="L502">    }</span>
 

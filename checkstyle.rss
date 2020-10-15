@@ -23,7 +23,7 @@ under the License.
     <link>https://bitbucket.org/alberto_irurueta/irurueta-ar</link>
     <description>com.irurueta:irurueta-ar - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2018</copyright>
+    <copyright>&#169;2018 - 2020</copyright>
     <item>
       <title>File: 253,
              Errors: 4291,
@@ -74,20 +74,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.LMedSDualAbsoluteQuadricRobustEstimator.java">com/irurueta/ar/calibration/estimators/LMedSDualAbsoluteQuadricRobustEstimator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  47
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.ConstantVelocityModelSlamPairedViewsSparseReconstructor.java">com/irurueta/ar/sfm/ConstantVelocityModelSlamPairedViewsSparseReconstructor.java</a>
                 </td>
                 <td>
@@ -98,6 +84,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.LMedSDualAbsoluteQuadricRobustEstimator.java">com/irurueta/ar/calibration/estimators/LMedSDualAbsoluteQuadricRobustEstimator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  47
                 </td>
               </tr>
                           <tr>
@@ -256,6 +256,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.SlamSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/SlamSparseReconstructorConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.CameraCalibratorMethod.java">com/irurueta/ar/calibration/CameraCalibratorMethod.java</a>
                 </td>
                 <td>
@@ -270,7 +284,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.SlamSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/SlamSparseReconstructorConfiguration.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.Pattern2D.java">com/irurueta/ar/calibration/Pattern2D.java</a>
                 </td>
                 <td>
                   0
@@ -294,20 +308,6 @@ under the License.
                 </td>
                 <td>
                   7
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.Pattern2D.java">com/irurueta/ar/calibration/Pattern2D.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
               </tr>
                           <tr>
@@ -410,20 +410,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.RadialDistortionRobustEstimator.java">com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BaseSparseReconstructor.java">com/irurueta/ar/sfm/BaseSparseReconstructor.java</a>
                 </td>
                 <td>
@@ -434,6 +420,20 @@ under the License.
                 </td>
                 <td>
                   19
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.RadialDistortionRobustEstimator.java">com/irurueta/ar/calibration/estimators/RadialDistortionRobustEstimator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
                 </td>
               </tr>
                           <tr>
@@ -480,7 +480,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.DualAbsoluteQuadricEstimatorListener.java">com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimatorListener.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.KnownBaselineTwoViewsSparseReconstructor.java">com/irurueta/ar/sfm/KnownBaselineTwoViewsSparseReconstructor.java</a>
                 </td>
                 <td>
                   0
@@ -494,7 +494,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.KnownBaselineTwoViewsSparseReconstructor.java">com/irurueta/ar/sfm/KnownBaselineTwoViewsSparseReconstructor.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.DualAbsoluteQuadricEstimatorListener.java">com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimatorListener.java</a>
                 </td>
                 <td>
                   0
@@ -587,7 +587,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  21
+                  20
                 </td>
               </tr>
                           <tr>
@@ -746,20 +746,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicRobustEstimatorListener.java">com/irurueta/ar/calibration/estimators/ImageOfAbsoluteConicRobustEstimatorListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  4
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor.java</a>
                 </td>
                 <td>
@@ -770,6 +756,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicRobustEstimatorListener.java">com/irurueta/ar/calibration/estimators/ImageOfAbsoluteConicRobustEstimatorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
                 </td>
               </tr>
                           <tr>
@@ -811,7 +811,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  15
+                  16
                 </td>
               </tr>
                           <tr>
@@ -928,20 +928,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.epipolar.estimators.PlanarFundamentalMatrixEstimatorListener.java">com/irurueta/ar/epipolar/estimators/PlanarFundamentalMatrixEstimatorListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.epipolar.FundamentalMatrixComparatorListener.java">com/irurueta/ar/epipolar/FundamentalMatrixComparatorListener.java</a>
                 </td>
                 <td>
@@ -956,7 +942,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.java">com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.epipolar.estimators.PlanarFundamentalMatrixEstimatorListener.java">com/irurueta/ar/epipolar/estimators/PlanarFundamentalMatrixEstimatorListener.java</a>
                 </td>
                 <td>
                   0
@@ -965,7 +951,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  15
+                  0
                 </td>
               </tr>
                           <tr>
@@ -980,6 +966,20 @@ under the License.
                 </td>
                 <td>
                   11
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BaseTwoViewsSparseReconstructor.java">com/irurueta/ar/sfm/BaseTwoViewsSparseReconstructor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  15
                 </td>
               </tr>
                           <tr>
@@ -1222,20 +1222,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator.java">com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  69
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.DistortionException.java">com/irurueta/ar/calibration/DistortionException.java</a>
                 </td>
                 <td>
@@ -1246,6 +1232,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator.java">com/irurueta/ar/calibration/estimators/PROSACRadialDistortionRobustEstimator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  69
                 </td>
               </tr>
                           <tr>
@@ -1292,20 +1292,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.FailedReconstructionException.java">com/irurueta/ar/sfm/FailedReconstructionException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BaseSlamPairedViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/BaseSlamPairedViewsSparseReconstructorListener.java</a>
                 </td>
                 <td>
@@ -1321,6 +1307,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.FailedReconstructionException.java">com/irurueta/ar/sfm/FailedReconstructionException.java</a>
                 </td>
                 <td>
                   0
@@ -1390,7 +1390,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.EssentialMatrixInitialCamerasEstimator.java">com/irurueta/ar/sfm/EssentialMatrixInitialCamerasEstimator.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener.java</a>
                 </td>
                 <td>
                   0
@@ -1399,7 +1399,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  12
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1418,7 +1418,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.EssentialMatrixInitialCamerasEstimator.java">com/irurueta/ar/sfm/EssentialMatrixInitialCamerasEstimator.java</a>
                 </td>
                 <td>
                   0
@@ -1427,7 +1427,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  0
+                  12
                 </td>
               </tr>
                           <tr>
@@ -1460,20 +1460,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator.java">com/irurueta/ar/calibration/estimators/LMedSRadialDistortionRobustEstimator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  65
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.InvalidPlaneAtInfinityException.java">com/irurueta/ar/calibration/InvalidPlaneAtInfinityException.java</a>
                 </td>
                 <td>
@@ -1484,6 +1470,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator.java">com/irurueta/ar/calibration/estimators/LMedSRadialDistortionRobustEstimator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  65
                 </td>
               </tr>
                           <tr>
@@ -1502,20 +1502,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.ARException.java">com/irurueta/ar/ARException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.slam.VelocityPredictor.java">com/irurueta/ar/slam/VelocityPredictor.java</a>
                 </td>
                 <td>
@@ -1526,6 +1512,20 @@ under the License.
                 </td>
                 <td>
                   25
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.ARException.java">com/irurueta/ar/ARException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1558,20 +1558,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.PROSACRobustSinglePoint3DTriangulator.java">com/irurueta/ar/sfm/PROSACRobustSinglePoint3DTriangulator.java</a>
                 </td>
                 <td>
@@ -1586,7 +1572,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationSlamPairedViewsSparseReconstructor.java">com/irurueta/ar/sfm/AbsoluteOrientationSlamPairedViewsSparseReconstructor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor.java</a>
                 </td>
                 <td>
                   0
@@ -1610,20 +1624,6 @@ under the License.
                 </td>
                 <td>
                   1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
                 </td>
               </tr>
                           <tr>
@@ -1684,7 +1684,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.DualAbsoluteQuadricEstimatorType.java">com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimatorType.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/BasePairedViewsSparseReconstructorConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -1698,7 +1698,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/BasePairedViewsSparseReconstructorConfiguration.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.DualAbsoluteQuadricEstimatorType.java">com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimatorType.java</a>
                 </td>
                 <td>
                   0
@@ -1992,7 +1992,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.CalibrationEstimatorException.java">com/irurueta/ar/calibration/estimators/CalibrationEstimatorException.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.SingleHomographyPinholeCameraEstimatorException.java">com/irurueta/ar/calibration/estimators/SingleHomographyPinholeCameraEstimatorException.java</a>
                 </td>
                 <td>
                   0
@@ -2006,7 +2006,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.SingleHomographyPinholeCameraEstimatorException.java">com/irurueta/ar/calibration/estimators/SingleHomographyPinholeCameraEstimatorException.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.estimators.CalibrationEstimatorException.java">com/irurueta/ar/calibration/estimators/CalibrationEstimatorException.java</a>
                 </td>
                 <td>
                   0
@@ -2202,7 +2202,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.MatchedSamples.java">com/irurueta/ar/sfm/MatchedSamples.java</a>
                 </td>
                 <td>
                   0
@@ -2216,7 +2216,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.MatchedSamples.java">com/irurueta/ar/sfm/MatchedSamples.java</a>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener.java</a>
                 </td>
                 <td>
                   0
@@ -2986,20 +2986,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BaseSlamSparseReconstructorListener.java">com/irurueta/ar/sfm/BaseSlamSparseReconstructorListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.java">com/irurueta/ar/sfm/AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.java</a>
                 </td>
                 <td>
@@ -3010,6 +2996,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BaseSlamSparseReconstructorListener.java">com/irurueta/ar/sfm/BaseSlamSparseReconstructorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
                 </td>
               </tr>
                           <tr>
@@ -3042,20 +3042,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.CameraCalibratorSample.java">com/irurueta/ar/calibration/CameraCalibratorSample.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  3
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.ReconstructedPoint3D.java">com/irurueta/ar/sfm/ReconstructedPoint3D.java</a>
                 </td>
                 <td>
@@ -3066,6 +3052,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.calibration.CameraCalibratorSample.java">com/irurueta/ar/calibration/CameraCalibratorSample.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
                 </td>
               </tr>
                           <tr>
@@ -3154,20 +3154,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/BasePairedViewsSparseReconstructorListener.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.PlanarBestFundamentalMatrixEstimatorAndReconstructor.java">com/irurueta/ar/sfm/PlanarBestFundamentalMatrixEstimatorAndReconstructor.java</a>
                 </td>
                 <td>
@@ -3178,6 +3164,20 @@ under the License.
                 </td>
                 <td>
                   2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.sfm.BasePairedViewsSparseReconstructorListener.java">com/irurueta/ar/sfm/BasePairedViewsSparseReconstructorListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -3224,20 +3224,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimator.java">com/irurueta/ar/epipolar/estimators/FundamentalMatrixEstimator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.epipolar.FundamentalMatrixComparatorException.java">com/irurueta/ar/epipolar/FundamentalMatrixComparatorException.java</a>
                 </td>
                 <td>
@@ -3248,6 +3234,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://bitbucket.org/alberto_irurueta/irurueta-ar/checkstyle.html#com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimator.java">com/irurueta/ar/epipolar/estimators/FundamentalMatrixEstimator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
                 </td>
               </tr>
                           <tr>

@@ -567,7 +567,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="fc" id="L567">                    mListener.onFundamentalMatrixEstimated((R) this,</span>
                             mCurrentEstimatedFundamentalMatrix);
 
-<span class="pc bpc" id="L570" title="1 of 2 branches missed.">                    if (estimateInitialCamerasAndPoints()) {</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">                    if (estimateInitialCamerasAndPoints()) {</span>
                         //cameras and points have been estimated
                         //noinspection unchecked
 <span class="fc" id="L573">                        mListener.onMetricCameraEstimated((R) this,</span>
@@ -595,10 +595,10 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
                         }
                     } else {
                         //initial cameras failed
-<span class="nc" id="L598">                        mFailed = true;</span>
+<span class="fc" id="L598">                        mFailed = true;</span>
                         //noinspection unchecked
-<span class="nc" id="L600">                        mListener.onFail((R) this);</span>
-<span class="nc" id="L601">                        return false;</span>
+<span class="fc" id="L600">                        mListener.onFail((R) this);</span>
+<span class="fc" id="L601">                        return false;</span>
                     }
                 } else {
                     //estimation of fundamental matrix failed
@@ -1189,8 +1189,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
      * @return quality scores for matched points.
      */
     private double[] setUpCameraEstimatorMatches(List&lt;Point3D&gt; points3D, List&lt;Point2D&gt; points2D) {
-<span class="pc bpc" id="L1192" title="2 of 4 branches missed.">        if (mMatches == null || mMatches.isEmpty()) {</span>
-<span class="nc" id="L1193">            return null;</span>
+<span class="pc bpc" id="L1192" title="1 of 4 branches missed.">        if (mMatches == null || mMatches.isEmpty()) {</span>
+<span class="fc" id="L1193">            return null;</span>
         }
 
 <span class="fc" id="L1196">        points3D.clear();</span>
@@ -1238,7 +1238,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 
         //pick quality scores
 <span class="fc" id="L1240">        double[] qualityScores = null;</span>
-<span class="pc bpc" id="L1241" title="1 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
+<span class="pc bpc" id="L1241" title="2 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
 <span class="fc" id="L1242">            qualityScores = new double[numMatches];</span>
 <span class="fc" id="L1243">            int j = 0;</span>
 <span class="fc bfc" id="L1244" title="All 2 branches covered.">            for (i = 0; i &lt; positions.length; i++) {</span>
@@ -1375,7 +1375,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 <span class="nc bnc" id="L1375" title="All 2 branches missed.">                return count &gt;= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
 <span class="pc bpc" id="L1376" title="1 of 2 branches missed.">            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==</span>
                     FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
-<span class="pc bpc" id="L1378" title="1 of 2 branches missed.">                return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+<span class="fc bfc" id="L1378" title="All 2 branches covered.">                return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
             }
 <span class="nc bnc" id="L1380" title="All 2 branches missed.">        } else if (mConfiguration.isPlanarSceneAllowed()) {</span>
 <span class="nc bnc" id="L1381" title="All 2 branches missed.">            return count &gt;= ProjectiveTransformation2DRobustEstimator.MINIMUM_SIZE;</span>
@@ -2106,8 +2106,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
             }
 
 <span class="fc" id="L2108">            return true;</span>
-<span class="nc" id="L2109">        } catch (Exception e) {</span>
-<span class="nc" id="L2110">            return false;</span>
+<span class="fc" id="L2109">        } catch (Exception e) {</span>
+<span class="fc" id="L2110">            return false;</span>
         }
     }
 
