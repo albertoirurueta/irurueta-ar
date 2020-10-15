@@ -4553,6 +4553,10 @@ public class SparseReconstructorTest {
             estimatedMetricCamera1.decompose();
             estimatedMetricCamera2.decompose();
 
+            if (mMetricReconstructedPoints.size() < numPoints1) {
+                continue;
+            }
+
             List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
                 metricReconstructedPoints3D.add(
