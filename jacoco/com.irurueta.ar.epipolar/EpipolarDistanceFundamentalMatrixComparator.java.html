@@ -654,7 +654,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                 
                 //if point lies outside retinal plane limits, try setting random
                 //vertical component within provided disparity
-<span class="pc bpc" id="L657" title="1 of 4 branches missed.">                if ((inhomY &lt; mMinY) || (inhomY &gt; mMaxY)) {</span>
+<span class="fc bfc" id="L657" title="All 4 branches covered.">                if ((inhomY &lt; mMinY) || (inhomY &gt; mMaxY)) {</span>
 <span class="fc" id="L658">                    inhomY = m1.getInhomY() + randomizer.nextDouble(</span>
                             minVerticalDisparity, maxVerticalDisparity);
 <span class="fc" id="L660">                    inhomX = -(inhomY * l2real.getB() + l2real.getC()) /</span>
@@ -748,7 +748,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                 
                 //if point lies outside retinal plane limits, try setting random
                 //Vertical component within provided disparity
-<span class="pc bpc" id="L751" title="1 of 4 branches missed.">                if ((inhomY &lt; mMinY) || (inhomY &gt; mMaxY)) {</span>
+<span class="fc bfc" id="L751" title="All 4 branches covered.">                if ((inhomY &lt; mMinY) || (inhomY &gt; mMaxY)) {</span>
 <span class="fc" id="L752">                    inhomY = m1.getInhomY() + randomizer.nextDouble(</span>
                             minVerticalDisparity, maxVerticalDisparity);
 <span class="fc" id="L754">                    inhomX = -(inhomY * l2est.getB() + l2est.getC()) /</span>

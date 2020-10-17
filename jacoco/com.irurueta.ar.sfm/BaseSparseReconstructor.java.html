@@ -1189,8 +1189,8 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
      * @return quality scores for matched points.
      */
     private double[] setUpCameraEstimatorMatches(List&lt;Point3D&gt; points3D, List&lt;Point2D&gt; points2D) {
-<span class="pc bpc" id="L1192" title="1 of 4 branches missed.">        if (mMatches == null || mMatches.isEmpty()) {</span>
-<span class="fc" id="L1193">            return null;</span>
+<span class="pc bpc" id="L1192" title="2 of 4 branches missed.">        if (mMatches == null || mMatches.isEmpty()) {</span>
+<span class="nc" id="L1193">            return null;</span>
         }
 
 <span class="fc" id="L1196">        points3D.clear();</span>
@@ -1238,7 +1238,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
 
         //pick quality scores
 <span class="fc" id="L1240">        double[] qualityScores = null;</span>
-<span class="pc bpc" id="L1241" title="2 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
+<span class="pc bpc" id="L1241" title="1 of 4 branches missed.">        if (qualityScoresRequired &amp;&amp; numMatches &gt; 0) {</span>
 <span class="fc" id="L1242">            qualityScores = new double[numMatches];</span>
 <span class="fc" id="L1243">            int j = 0;</span>
 <span class="fc bfc" id="L1244" title="All 2 branches covered.">            for (i = 0; i &lt; positions.length; i++) {</span>
@@ -1337,7 +1337,7 @@ public abstract class BaseSparseReconstructor&lt;C extends BaseSparseReconstruct
         } else {
             //EPnP, UPnP or DLT is used for additional cameras estimation without fundamental
             //matrix. Only 6 matches are required
-<span class="fc bfc" id="L1340" title="All 2 branches covered.">            return count &gt;= PointCorrespondencePinholeCameraRobustEstimator.MIN_NUMBER_OF_POINT_CORRESPONDENCES;</span>
+<span class="pc bpc" id="L1340" title="1 of 2 branches missed.">            return count &gt;= PointCorrespondencePinholeCameraRobustEstimator.MIN_NUMBER_OF_POINT_CORRESPONDENCES;</span>
         }
     }
 
