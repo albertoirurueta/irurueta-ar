@@ -220,7 +220,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      *                     prediction stage in SLAM estimator.
      * @throws IllegalArgumentException if sample length is less than 1.
      */
-    public BaseSlamCalibrator(final int sampleLength) {
+    protected BaseSlamCalibrator(final int sampleLength) {
         if (sampleLength < MIN_SAMPLE_LENGTH) {
             throw new IllegalArgumentException("length must be greater than 0");
         }

@@ -741,6 +741,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
                             mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
                     break;
                 case RANSAC:
+                default:
                     final RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =
                             (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
 

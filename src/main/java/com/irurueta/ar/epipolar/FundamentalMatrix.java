@@ -263,7 +263,7 @@ public class FundamentalMatrix implements Serializable {
             // compute skew matrix of left epipole
             final Matrix skewLeftEpipoleMatrix = Utils.skewMatrix(
                     leftEpipole.asArray());
-            // transSkewLeftEpipoleMatrix = skewLeftEpipoleMatrix;
+            // transSkewLeftEpipoleMatrix = skewLeftEpipoleMatrix
             skewLeftEpipoleMatrix.transpose();
 
             // compute transposed of internal left pinhole camera
@@ -281,7 +281,7 @@ public class FundamentalMatrix implements Serializable {
             // compute pseudoTransRightCameraMatrix * transLeftCameraMatrix *
             // transSkewLeftEpipoleMatrix
             transLeftCameraMatrix.multiply(skewLeftEpipoleMatrix);
-            // fundamentalMatrix = pseudoTransRightCameraMatrix;
+            // fundamentalMatrix = pseudoTransRightCameraMatrix
             pseudoTransRightCameraMatrix.multiply(transLeftCameraMatrix);
 
             // test that resulting matrix is 3x3 and rank 2, otherwise provided

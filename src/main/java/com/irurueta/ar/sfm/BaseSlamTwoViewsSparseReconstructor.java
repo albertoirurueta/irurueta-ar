@@ -187,8 +187,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
 
             @Override
             public void onFullSampleProcessed(final BaseSlamEstimator<D> estimator) {
-                notifySlamStateIfNeeded();
-                notifySlamCameraIfNeeded();
+                notifySlamStateAndCamera();
             }
 
             @Override
@@ -198,6 +197,10 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
 
             @Override
             public void onCorrectedWithPositionMeasure(final BaseSlamEstimator<D> estimator) {
+                notifySlamStateAndCamera();
+            }
+
+            private void notifySlamStateAndCamera() {
                 notifySlamStateIfNeeded();
                 notifySlamCameraIfNeeded();
             }
