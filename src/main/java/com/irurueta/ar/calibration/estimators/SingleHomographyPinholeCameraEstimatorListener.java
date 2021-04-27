@@ -21,13 +21,15 @@ package com.irurueta.ar.calibration.estimators;
 public interface SingleHomographyPinholeCameraEstimatorListener {
     /**
      * Called when an estimator starts.
+     *
      * @param estimator reference to an estimator.
      */
-    void onEstimateStart(SingleHomographyPinholeCameraEstimator estimator);
-    
+    void onEstimateStart(final SingleHomographyPinholeCameraEstimator estimator);
+
     /**
      * Called when an estimator ends.
+     *
      * @param estimator reference to an estimator.
      */
-    void onEstimateEnd(SingleHomographyPinholeCameraEstimator estimator);
+    void onEstimateEnd(final SingleHomographyPinholeCameraEstimator estimator);
 }

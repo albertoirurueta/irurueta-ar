@@ -21,14 +21,22 @@ import com.irurueta.algebra.Utils;
 import com.irurueta.ar.calibration.DualAbsoluteQuadric;
 import com.irurueta.ar.calibration.DualImageOfAbsoluteConic;
 import com.irurueta.ar.calibration.InvalidTransformationException;
-import com.irurueta.geometry.*;
+import com.irurueta.geometry.CameraException;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.NotAvailableException;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.ProjectiveTransformation3D;
+import com.irurueta.geometry.Quaternion;
+import com.irurueta.geometry.Rotation3D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,49 +46,34 @@ import static org.junit.Assert.*;
 
 public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         DualAbsoluteQuadricRobustEstimatorListener {
-    
+
     private static final double MIN_FOCAL_LENGTH = 1.0;
     private static final double MAX_FOCAL_LENGTH = 100.0;
-    
+
     private static final double MIN_RANDOM_VALUE = -10.0;
     private static final double MAX_RANDOM_VALUE = 10.0;
-    
+
     private static final double MIN_ANGLE_DEGREES = 0.0;
     private static final double MAX_ANGLE_DEGREES = 90.0;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
-    
+
     private static final int TIMES = 50;
-    
+
     private static final int NUM_CAMS = 100;
-    
+
     private static final int PERCENTAGE_OUTLIERS = 5;
-    
+
     private static final double STD_ERROR = 1.0;
-    
-    
-    public MSACDualAbsoluteQuadricRobustEstimatorTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
 
     @Test
     public void testConstructor() {
-        //test empty constructor
+        // test empty constructor
         MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -93,11 +86,11 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(), 
+        assertEquals(estimator.getProgressDelta(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(), 
+        assertEquals(estimator.getConfidence(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(), 
+        assertEquals(estimator.getMaxIterations(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getCameras());
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
@@ -107,12 +100,11 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(estimator.getThreshold(),
                 MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        
-        
-        //test with listener
+
+        // test with listener
         estimator = new MSACDualAbsoluteQuadricRobustEstimator(this);
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -120,16 +112,16 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
         assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, 
+                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
                 0.0);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(), 
+        assertEquals(estimator.getProgressDelta(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(), 
+        assertEquals(estimator.getConfidence(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(), 
+        assertEquals(estimator.getMaxIterations(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getCameras());
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
@@ -138,17 +130,16 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(estimator.getThreshold(),
-                MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD, 0.0);        
-        
-        
-        //test with cameras
-        List<PinholeCamera> cameras = new ArrayList<>();
+                MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD, 0.0);
+
+        // test with cameras
+        final List<PinholeCamera> cameras = new ArrayList<>();
         cameras.add(new PinholeCamera());
-        cameras.add(new PinholeCamera());        
+        cameras.add(new PinholeCamera());
 
         estimator = new MSACDualAbsoluteQuadricRobustEstimator(cameras);
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -156,16 +147,16 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
         assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, 
+                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
                 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(), 
+        assertEquals(estimator.getProgressDelta(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(), 
+        assertEquals(estimator.getConfidence(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(), 
+        assertEquals(estimator.getMaxIterations(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
         assertSame(estimator.getCameras(), cameras);
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
@@ -176,20 +167,20 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(estimator.getThreshold(),
                 MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD, 0.0);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MSACDualAbsoluteQuadricRobustEstimator(
                     new ArrayList<PinholeCamera>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
-        
-        
-        //test with cameras and listener
+
+        // test with cameras and listener
         estimator = new MSACDualAbsoluteQuadricRobustEstimator(cameras, this);
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -197,16 +188,16 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
         assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, 
+                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
                 0.0);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(), 
+        assertEquals(estimator.getProgressDelta(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(), 
+        assertEquals(estimator.getConfidence(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(), 
+        assertEquals(estimator.getMaxIterations(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
         assertSame(estimator.getCameras(), cameras);
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
@@ -216,454 +207,463 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(estimator.getThreshold(),
                 MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        
-        //Force IllegalArgumentException
+
+        // Force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MSACDualAbsoluteQuadricRobustEstimator(
                     new ArrayList<PinholeCamera>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        assertNull(estimator);        
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(estimator);
     }
-    
+
     @Test
     public void testIsSetZeroSkewness() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertTrue(estimator.isZeroSkewness());
-        
-        //set new value
+
+        // set new value
         estimator.setZeroSkewness(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.isZeroSkewness());
     }
-    
+
     @Test
     public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertTrue(estimator.isPrincipalPointAtOrigin());
-        
-        //set new value
+
+        // set new value
         estimator.setPrincipalPointAtOrigin(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.isPrincipalPointAtOrigin());
     }
-    
+
     @Test
     public void testIsFocalDistanceAspectRatioKnown() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        
-        //set new value
+
+        // set new value
         estimator.setFocalDistanceAspectRatioKnown(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.isFocalDistanceAspectRatioKnown());
     }
-    
+
     @Test
     public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
-        
-        //set new value
+
+        // set new value
         estimator.setFocalDistanceAspectRatio(0.5);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getFocalDistanceAspectRatio(), 0.5, 0.0);
     }
-    
+
     @Test
     public void testIsSetSingularityEnforced() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertTrue(estimator.isSingularityEnforced());
-        
-        //set new value
+
+        // set new value
         estimator.setSingularityEnforced(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.isSingularityEnforced());
     }
-    
+
     @Test
-    public void testIsSetEnforcedsingularityValidated() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+    public void testIsSetEnforcedSingularityValidated() throws LockedException {
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertTrue(estimator.isEnforcedSingularityValidated());
-        
-        //set new value
+
+        // set new value
         estimator.setEnforcedSingularityValidated(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.isEnforcedSingularityValidated());
     }
-    
+
     @Test
     public void testGetSetDeterminantThreshold() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, 
+                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
                 0.0);
-        
-        //set new value
+
+        // set new value
         estimator.setDeterminantThreshold(1e-3);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getDeterminantThreshold(), 1e-3, 0.0);
     }
-    
+
     @Test
     public void testGetSetListenerAndIsListenerAvailable()
             throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
-        
-        //check default value
+
+        // check default value
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
-        
-        //set new value
+
+        // set new value
         estimator.setListener(this);
-        
-        //check correctness
+
+        // check correctness
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isListenerAvailable());
     }
-    
+
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertEquals(estimator.getProgressDelta(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        
-        //set new value
+
+        // set new value
         estimator.setProgressDelta(0.1f);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getProgressDelta(), 0.1f, 0.0);
-        
-        //Force IllegalArgumentException
+
+        // Force IllegalArgumentException
         try {
             estimator.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setProgressDelta(2.0f);
-            fail("IllegalArgumentException expected but not thrown");            
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetSetConfidence() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertEquals(estimator.getConfidence(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        
-        //set new value
+
+        // set new value
         estimator.setConfidence(0.8);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getConfidence(), 0.8, 0.0);
-        
-        //Force IllegalArgumentException
+
+        // Force IllegalArgumentException
         try {
             estimator.setConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setConfidence(2.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertEquals(estimator.getMaxIterations(),
                 DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        
-        //set new value
+
+        // set new value
         estimator.setMaxIterations(100);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getMaxIterations(), 100);
-        
-        //Force IllegalArgumentException
+
+        // Force IllegalArgumentException
         try {
             estimator.setMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetSetCameras() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //initial value
+
+        // initial value
         assertNull(estimator.getCameras());
-        
-        //set new value
-        List<PinholeCamera> cameras = new ArrayList<>();
+
+        // set new value
+        final List<PinholeCamera> cameras = new ArrayList<>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
         estimator.setCameras(cameras);
-        
-        //check correctness
+
+        // check correctness
         assertSame(estimator.getCameras(), cameras);
-        
-        //Force IllegalArgumentException
+
+        // Force IllegalArgumentException
         try {
             estimator.setCameras(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setCameras(new ArrayList<PinholeCamera>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetMinNumberOfRequiredCameras() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
-        
-        //disable principal point at origin
+
+        // disable principal point at origin
         estimator.setPrincipalPointAtOrigin(false);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getMinNumberOfRequiredCameras(), -1);
-        
-        //disable zero skewness
+
+        // disable zero skewness
         estimator.setPrincipalPointAtOrigin(true);
         estimator.setZeroSkewness(false);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 4);
-        
-        
-        //disable focal distance aspect ratio known
+
+        // disable focal distance aspect ratio known
         estimator.setZeroSkewness(true);
         estimator.setFocalDistanceAspectRatioKnown(false);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
-        
-        
-        //disable zero skewness and singularity enforcement
+
+        // disable zero skewness and singularity enforcement
         estimator.setZeroSkewness(false);
         estimator.setSingularityEnforced(false);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getMinNumberOfRequiredCameras(), 5);
-        
-        
-        //disable focal distance aspect ratio known and singularity enforcement
+
+        // disable focal distance aspect ratio known and singularity enforcement
         estimator.setZeroSkewness(true);
-        
-        //check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);        
+
+        // check correctness
+        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
     }
-    
+
     @Test
     public void testAreValidConstraints() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertTrue(estimator.areValidConstraints());
-        
-        //disable principal point at origin
+
+        // disable principal point at origin
         estimator.setPrincipalPointAtOrigin(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.areValidConstraints());
-        
-        
-        //disable zero skewness
+
+        // disable zero skewness
         estimator.setPrincipalPointAtOrigin(true);
         estimator.setZeroSkewness(false);
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.areValidConstraints());
-        
-        
-        //disable focal distance aspect ratio known
+
+        // disable focal distance aspect ratio known
         estimator.setZeroSkewness(true);
         estimator.setFocalDistanceAspectRatioKnown(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.areValidConstraints());
-        
-        //disable singularity enforcement
+
+        // disable singularity enforcement
         estimator.setSingularityEnforced(false);
-        
-        //check correctness
-        assertTrue(estimator.areValidConstraints());        
+
+        // check correctness
+        assertTrue(estimator.areValidConstraints());
     }
-    
+
     @Test
     public void testIsReady() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check default value
+
+        // check default value
         assertNull(estimator.getCameras());
-        assertTrue(estimator.areValidConstraints());        
+        assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        
-        List<PinholeCamera> cameras = new ArrayList<>();
+
+        final List<PinholeCamera> cameras = new ArrayList<>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
-        
+
         estimator.setCameras(cameras);
         estimator.setQualityScores(new double[cameras.size()]);
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.isReady());
 
-        
-        //disable principal point at origin
+        // disable principal point at origin
         estimator.setPrincipalPointAtOrigin(false);
-        
-        //check correctness
+
+        // check correctness
         assertFalse(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
 
-        //enable principal point at origin
+        // enable principal point at origin
         estimator.setPrincipalPointAtOrigin(true);
-        
-        //check correctness
+
+        // check correctness
         assertTrue(estimator.isReady());
-        
-        //clear cameras
+
+        // clear cameras
         cameras.clear();
 
-        //check correctness
-        assertFalse(estimator.isReady());        
+        // check correctness
+        assertFalse(estimator.isReady());
     }
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        MSACDualAbsoluteQuadricRobustEstimator estimator =
+        final MSACDualAbsoluteQuadricRobustEstimator estimator =
                 new MSACDualAbsoluteQuadricRobustEstimator();
-        
-        //check correctness
-        assertEquals(estimator.getThreshold(), 
-                MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD, 
+
+        // check correctness
+        assertEquals(estimator.getThreshold(),
+                MSACDualAbsoluteQuadricRobustEstimator.DEFAULT_THRESHOLD,
                 0.0);
-        
-        //set new value
+
+        // set new value
         estimator.setThreshold(1e-3);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getThreshold(), 1e-3, 0.0);
-        
-        //Force IllegalArgumentException
+
+        // Force IllegalArgumentException
         try {
             estimator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     @SuppressWarnings("Duplicates")
-    public void testEstimate() throws AlgebraException, 
-            InvalidTransformationException, LockedException, NotReadyException, 
+    public void testEstimate() throws AlgebraException,
+            InvalidTransformationException, LockedException, NotReadyException,
             CameraException, NotAvailableException {
-        
+
         int numSucceeded = 0;
-        for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-            //create ground truth intrinsic parameters
-            double horizontalFocalLength, verticalFocalLength, skewness,
-                    horizontalPrincipalPoint, verticalPrincipalPoint;
-            double aspectRatio = 1.0;
-            horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, 
+        for (int times = 0; times < TIMES; times++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            // create ground truth intrinsic parameters
+            final double aspectRatio = 1.0;
+            double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
                     MAX_FOCAL_LENGTH);
-            verticalFocalLength = aspectRatio * horizontalFocalLength;
-            skewness = horizontalPrincipalPoint = verticalPrincipalPoint = 0.0;
-        
-            PinholeCameraIntrinsicParameters metricIntrinsic =
+            double verticalFocalLength = aspectRatio * horizontalFocalLength;
+            double skewness = 0.0;
+            double horizontalPrincipalPoint = 0.0;
+            double verticalPrincipalPoint = 0.0;
+
+            final PinholeCameraIntrinsicParameters metricIntrinsic =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                    verticalFocalLength, horizontalPrincipalPoint,
-                    verticalPrincipalPoint, skewness);
-        
-            DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
+                            verticalFocalLength, horizontalPrincipalPoint,
+                            verticalPrincipalPoint, skewness);
+
+            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
                     metricIntrinsic);
             metricDiac.normalize();
             Matrix metricDiacMatrix = metricDiac.asMatrix();
-        
-            //generate random projective transformation to transform ground 
-            //truth cameras
-            Matrix T = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS, 
-                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, 
-                    MAX_RANDOM_VALUE);
-        
-            //ensure last element is not zero
-            T.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1, 
-                    ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);        
 
-            ProjectiveTransformation3D transformation = 
-                    new ProjectiveTransformation3D(T);
-        
+            // generate random projective transformation to transform ground
+            // truth cameras
+            Matrix t = Matrix.createWithUniformRandomValues(
+                    ProjectiveTransformation3D.HOM_COORDS,
+                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
+                    MAX_RANDOM_VALUE);
+
+            // ensure last element is not zero
+            t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
+                    ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
+
+            final ProjectiveTransformation3D transformation =
+                    new ProjectiveTransformation3D(t);
+
             transformation.normalize();
-        
-            DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
+
+            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
                     transformation);
             projectiveDaq.normalize();
-                
-            Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
-        
-            double roll, pitch, yaw, x, y, z;
+
+            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+
+            double roll;
+            double pitch;
+            double yaw;
+            double x;
+            double y;
+            double z;
             Quaternion q;
             InhomogeneousPoint3D cameraCenter;
-            PinholeCamera metricCamera, projectiveCamera;
-            List<PinholeCamera> metricCameras = new ArrayList<>();
-            List<PinholeCamera> projectiveCameras = 
+            PinholeCamera metricCamera;
+            PinholeCamera projectiveCamera;
+            final List<PinholeCamera> metricCameras = new ArrayList<>();
+            final List<PinholeCamera> projectiveCameras =
                     new ArrayList<>();
-        
-            MSACDualAbsoluteQuadricRobustEstimator estimator =
+
+            final MSACDualAbsoluteQuadricRobustEstimator estimator =
                     new MSACDualAbsoluteQuadricRobustEstimator();
             estimator.setListener(this);
             estimator.setZeroSkewness(true);
@@ -671,131 +671,134 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
             estimator.setFocalDistanceAspectRatioKnown(true);
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(false);
-        
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, STD_ERROR);
-            boolean[] inliers = new boolean[NUM_CAMS];
+            final boolean[] inliers = new boolean[NUM_CAMS];
             for (int i = 0; i < NUM_CAMS; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 
+                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
                         2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES, 
+                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                         MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 
+                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
                         2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
                 q = new Quaternion(roll, pitch, yaw);
-            
+
                 x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 cameraCenter = new InhomogeneousPoint3D(x, y, z);
-            
+
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier (add error to metric intrinsics)
+                    // outlier (add error to metric intrinsics)
                     inliers[i] = false;
-                    double errorHorizontalFocalLength = 
+                    final double errorHorizontalFocalLength =
                             errorRandomizer.nextDouble();
-                    double errorAspectRatio = errorRandomizer.nextDouble();
-                    double errorSkewness = errorRandomizer.nextDouble();
-                    double errorHorizontalPrincipalPoint = 
+                    final double errorAspectRatio = errorRandomizer.nextDouble();
+                    final double errorSkewness = errorRandomizer.nextDouble();
+                    final double errorHorizontalPrincipalPoint =
                             errorRandomizer.nextDouble();
-                    double errorVerticalPrincipalPoint =
+                    final double errorVerticalPrincipalPoint =
                             errorRandomizer.nextDouble();
-                
-                    double outlierHorizontalFocalLength = 
+
+                    final double outlierHorizontalFocalLength =
                             horizontalFocalLength + errorHorizontalFocalLength;
-                    double outlierAspectRatio = aspectRatio + errorAspectRatio;
-                    double outlierVerticalFocalLength = 
+                    final double outlierAspectRatio = aspectRatio + errorAspectRatio;
+                    final double outlierVerticalFocalLength =
                             outlierAspectRatio * outlierHorizontalFocalLength;
-                    double outlierSkewness = skewness + errorSkewness;
-                    double outlierHorizontalPrincipalPoint = 
-                            horizontalPrincipalPoint + 
-                            errorHorizontalPrincipalPoint;
-                    double outlierVerticalPrincipalPoint =
+                    final double outlierSkewness = skewness + errorSkewness;
+                    final double outlierHorizontalPrincipalPoint =
+                            horizontalPrincipalPoint +
+                                    errorHorizontalPrincipalPoint;
+                    final double outlierVerticalPrincipalPoint =
                             verticalPrincipalPoint + errorVerticalPrincipalPoint;
-                
-                    PinholeCameraIntrinsicParameters outlierMetricIntrinsic = 
+
+                    final PinholeCameraIntrinsicParameters outlierMetricIntrinsic =
                             new PinholeCameraIntrinsicParameters(
-                            outlierHorizontalFocalLength,
-                            outlierVerticalFocalLength, 
-                            outlierHorizontalPrincipalPoint,
-                            outlierVerticalPrincipalPoint, outlierSkewness);
-                      
-                    metricCamera = new PinholeCamera(outlierMetricIntrinsic, q, 
+                                    outlierHorizontalFocalLength,
+                                    outlierVerticalFocalLength,
+                                    outlierHorizontalPrincipalPoint,
+                                    outlierVerticalPrincipalPoint, outlierSkewness);
+
+                    metricCamera = new PinholeCamera(outlierMetricIntrinsic, q,
                             cameraCenter);
                 } else {
-                    //inlier
+                    // inlier
                     inliers[i] = true;
-                    metricCamera = new PinholeCamera(metricIntrinsic, q, 
-                        cameraCenter);
+                    metricCamera = new PinholeCamera(metricIntrinsic, q,
+                            cameraCenter);
                 }
-                metricCamera.normalize();  
+                metricCamera.normalize();
                 metricCameras.add(metricCamera);
-            
-                //transform camera
+
+                // transform camera
                 projectiveCamera = transformation.transformAndReturnNew(
                         metricCamera);
-            
-                projectiveCameras.add(projectiveCamera);            
-            }
-        
-            estimator.setCameras(projectiveCameras);
-        
-            try {
-                DualAbsoluteQuadric estimatedDaq = estimator.estimate();
-                estimatedDaq.normalize();
-                Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                //check that DAQ has rank 3 (zero determinant)
+                projectiveCameras.add(projectiveCamera);
+            }
+
+            estimator.setCameras(projectiveCameras);
+
+            try {
+                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                estimatedDaq.normalize();
+                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+
+                // check that DAQ has rank 3 (zero determinant)
                 if (Math.abs(Utils.det(estimatedDaqMatrix)) > ABSOLUTE_ERROR) {
                     continue;
                 }
-                assertEquals(Utils.det(estimatedDaqMatrix), 0.0, 
+                assertEquals(Utils.det(estimatedDaqMatrix), 0.0,
                         ABSOLUTE_ERROR);
-                
+
                 if (!projectiveDaqMatrix.equals(estimatedDaqMatrix,
                         ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, 
+                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix,
                         ABSOLUTE_ERROR));
-                
-                ProjectiveTransformation3D estimatedTransformation =
+
+                final ProjectiveTransformation3D estimatedTransformation =
                         estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                ProjectiveTransformation3D invEstimatedTransformation =
-                        (ProjectiveTransformation3D)estimatedTransformation.
+                final ProjectiveTransformation3D invEstimatedTransformation =
+                        (ProjectiveTransformation3D) estimatedTransformation.
                                 inverseAndReturnNew();
-                
-                //projected estimated DAQ using projective cameras to obtain 
-                //DIAC and check that DIAC in projective stratum is equal to 
-                //DIAC in metric stratum (for inlier cameras only)
+
+                // projected estimated DAQ using projective cameras to obtain
+                // DIAC and check that DIAC in projective stratum is equal to
+                // DIAC in metric stratum (for inlier cameras only)
                 Point3D previousEstimatedMetricCenter = null;
                 Point3D previousMetricCenter = null;
                 Point3D estimatedMetricCenter, metricCenter;
                 Rotation3D previousEstimatedMetricRotation = null;
                 Rotation3D previousMetricRotation = null;
-                Rotation3D estimatedMetricRotation, metricRotation;
-                double distanceEstimatedCenter, distanceCenter;
-                double previousScale = 1.0, scale = 1.0;                                
+                Rotation3D estimatedMetricRotation;
+                Rotation3D metricRotation;
+                double distanceEstimatedCenter;
+                double distanceCenter;
+                double previousScale = 1.0;
+                double scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
                 boolean anyFailed = false;
-                int count = 0;                
+                int count = 0;
                 for (int i = 0; i < NUM_CAMS; i++) {
                     if (!inliers[i]) {
                         continue;
                     }
-                    
+
                     projectiveCamera = projectiveCameras.get(i);
-                    
-                    DualImageOfAbsoluteConic projectedProjectiveDiac =
+
+                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
                             new DualImageOfAbsoluteConic(projectiveCamera,
-                            estimatedDaq);
+                                    estimatedDaq);
                     projectedProjectiveDiac.normalize();
-                    
-                    Matrix projectedProjectiveDiacMatrix =
+
+                    final Matrix projectedProjectiveDiacMatrix =
                             projectedProjectiveDiac.asMatrix();
-                    
+
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix,
                             ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -803,180 +806,194 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
                     }
                     assertTrue(metricDiacMatrix.equals(
                             projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
-                    
+
                     estimatedMetricCamera = invEstimatedTransformation.
                             transformAndReturnNew(projectiveCamera);
-                    
+
                     estimatedMetricCamera.decompose();
-                    PinholeCameraIntrinsicParameters estimatedIntrinsic =
+                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
                             estimatedMetricCamera.getIntrinsicParameters();
-                    
+
                     assertEquals(horizontalFocalLength,
                             estimatedIntrinsic.getHorizontalFocalLength(),
-                            5*LARGE_ABSOLUTE_ERROR);
+                            5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalFocalLength,
                             estimatedIntrinsic.getVerticalFocalLength(),
-                            5*LARGE_ABSOLUTE_ERROR);
+                            5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5*LARGE_ABSOLUTE_ERROR);
+                            5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(horizontalPrincipalPoint,
                             estimatedIntrinsic.getHorizontalPrincipalPoint(),
-                            5*LARGE_ABSOLUTE_ERROR);
+                            5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalPrincipalPoint,
                             estimatedIntrinsic.getVerticalPrincipalPoint(),
-                            5*LARGE_ABSOLUTE_ERROR);
-                    
+                            5 * LARGE_ABSOLUTE_ERROR);
+
                     if (anyFailed) {
                         continue;
                     }
-                    
-                    //check that when DAQ is successfully estimated, estimated
-                    //metric cameras are in the metric stratum up to an 
-                    //arbitrary scale
-                    
+
+                    // check that when DAQ is successfully estimated, estimated
+                    // metric cameras are in the metric stratum up to an
+                    // arbitrary scale
+
                     metricCamera = metricCameras.get(i);
                     metricCamera.decompose();
-                    
+
                     estimatedMetricCenter = estimatedMetricCamera.
                             getCameraCenter();
                     metricCenter = metricCamera.getCameraCenter();
                     estimatedMetricRotation = estimatedMetricCamera.
                             getCameraRotation();
                     metricRotation = metricCamera.getCameraRotation();
-                                        
+
                     if (count > 0) {
                         distanceEstimatedCenter = previousEstimatedMetricCenter.
                                 distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(
                                 metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
-                        
-                        Rotation3D diffEstimatedRotation =
+
+                        final Rotation3D diffEstimatedRotation =
                                 estimatedMetricRotation.combineAndReturnNew(
-                                previousEstimatedMetricRotation.
-                                inverseRotationAndReturnNew());
-                        Rotation3D diffRotation = metricRotation.
+                                        previousEstimatedMetricRotation.
+                                                inverseRotationAndReturnNew());
+                        final Rotation3D diffRotation = metricRotation.
                                 combineAndReturnNew(previousMetricRotation.
-                                inverseRotationAndReturnNew());
-                        
-                        Matrix rot1 = diffEstimatedRotation.
+                                        inverseRotationAndReturnNew());
+
+                        final Matrix rot1 = diffEstimatedRotation.
                                 asInhomogeneousMatrix();
-                        Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
-                    
+
                     if (count > 1) {
-                        assertEquals(scale, previousScale, 5*LARGE_ABSOLUTE_ERROR);                    
+                        assertEquals(scale, previousScale, 5 * LARGE_ABSOLUTE_ERROR);
                     }
-                                        
+
                     previousEstimatedMetricCenter = estimatedMetricCenter;
                     previousMetricCenter = metricCenter;
-                    previousScale = scale;         
-                    
+                    previousScale = scale;
+
                     previousEstimatedMetricRotation = estimatedMetricRotation;
-                    previousMetricRotation = metricRotation;                    
-                    
-                    count++;                    
+                    previousMetricRotation = metricRotation;
+
+                    count++;
                 }
-                
+
                 numSucceeded++;
                 break;
-            }  catch (RobustEstimatorException ignore) { }
+            } catch (final RobustEstimatorException ignore) {
+            }
         }
-        
-        //sometimes if cameras are in degenerate configurations, DAQ estimation
-        //can fail, for that reason we check that algorithm at least works one
-        //if we retry multiple times.
+
+        // sometimes if cameras are in degenerate configurations, DAQ estimation
+        // can fail, for that reason we check that algorithm at least works one
+        // if we retry multiple times.
         assertTrue(numSucceeded > 0);
     }
-    
+
 
     @Override
-    public void onEstimateStart(DualAbsoluteQuadricRobustEstimator estimator) {
+    public void onEstimateStart(final DualAbsoluteQuadricRobustEstimator estimator) {
         assertTrue(estimator.isLocked());
         checkLocked(estimator);
     }
 
     @Override
-    public void onEstimateEnd(DualAbsoluteQuadricRobustEstimator estimator) {
+    public void onEstimateEnd(final DualAbsoluteQuadricRobustEstimator estimator) {
         assertTrue(estimator.isLocked());
         checkLocked(estimator);
     }
 
     @Override
     public void onEstimateNextIteration(
-            DualAbsoluteQuadricRobustEstimator estimator, int iteration) {
+            final DualAbsoluteQuadricRobustEstimator estimator, final int iteration) {
         checkLocked(estimator);
     }
 
     @Override
     public void onEstimateProgressChange(
-            DualAbsoluteQuadricRobustEstimator estimator, float progress) {
+            final DualAbsoluteQuadricRobustEstimator estimator, final float progress) {
         checkLocked(estimator);
     }
-    
-    private void checkLocked(DualAbsoluteQuadricRobustEstimator estimator) {
-        MSACDualAbsoluteQuadricRobustEstimator msacEstimator =
-                (MSACDualAbsoluteQuadricRobustEstimator)estimator;
-        
+
+    private void checkLocked(final DualAbsoluteQuadricRobustEstimator estimator) {
+        final MSACDualAbsoluteQuadricRobustEstimator msacEstimator =
+                (MSACDualAbsoluteQuadricRobustEstimator) estimator;
+
         try {
             msacEstimator.setThreshold(1.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setZeroSkewness(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setPrincipalPointAtOrigin(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setFocalDistanceAspectRatioKnown(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setFocalDistanceAspectRatio(2.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setSingularityEnforced(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setEnforcedSingularityValidated(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setDeterminantThreshold(1e-3);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setProgressDelta(0.1f);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setConfidence(0.8);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setMaxIterations(100);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.setCameras(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             msacEstimator.estimate();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception ignore) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception ignore) {
             fail("LockedException expected but not thrown");
         }
-    }    
+    }
 }

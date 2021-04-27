@@ -34,6 +34,7 @@ public class AbsoluteOrientationSlamPairedViewsSparseReconstructorConfiguration 
     /**
      * Creates an instance of a paired view sparse reconstructor configuration with slam
      * estimation and absolute orientation.
+     *
      * @return configuration instance.
      */
     public static AbsoluteOrientationSlamPairedViewsSparseReconstructorConfiguration make() {

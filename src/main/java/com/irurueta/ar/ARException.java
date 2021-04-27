@@ -28,26 +28,29 @@ public class ARException extends Exception {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message Message indicating the cause of the exception.
      */
-    public ARException(String message) {
+    public ARException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
+     *
      * @param message Message describing the cause of the exception.
-     * @param cause Instance containing the cause of the exception.
+     * @param cause   Instance containing the cause of the exception.
      */
-    public ARException(String message, Throwable cause) {
+    public ARException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * Constructor with cause.
+     *
      * @param cause Instance containing the cause of the exception.
      */
-    public ARException(Throwable cause) {
+    public ARException(final Throwable cause) {
         super(cause);
     }
 }

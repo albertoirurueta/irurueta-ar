@@ -16,6 +16,7 @@
 
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.slam.ConstantVelocityModelSlamCalibrationData;
 import com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator;
 
 /**
@@ -23,35 +24,37 @@ import com.irurueta.ar.slam.ConstantVelocityModelSlamEstimator;
  * correspondences in multiple view pairs and using SLAM (with accelerometer and gyroscope
  * data) with constant velocity model for overall scale estimation.
  */
-@SuppressWarnings("WeakerAccess")
 public class ConstantVelocityModelSlamPairedViewsSparseReconstructor extends
         BaseSlamPairedViewsSparseReconstructor<
-        ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration,
-        ConstantVelocityModelSlamPairedViewsSparseReconstructor,
-        ConstantVelocityModelSlamPairedViewsSparseReconstructorListener,
-        ConstantVelocityModelSlamEstimator> {
+                ConstantVelocityModelSlamCalibrationData,
+                ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration,
+                ConstantVelocityModelSlamPairedViewsSparseReconstructor,
+                ConstantVelocityModelSlamPairedViewsSparseReconstructorListener,
+                ConstantVelocityModelSlamEstimator> {
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
+     * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
     public ConstantVelocityModelSlamPairedViewsSparseReconstructor(
-            ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration configuration,
-            ConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener) {
+            final ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration configuration,
+            final ConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
     public ConstantVelocityModelSlamPairedViewsSparseReconstructor(
-            ConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener) {
+            final ConstantVelocityModelSlamPairedViewsSparseReconstructorListener listener) {
         this(new ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration(),
                 listener);
     }
@@ -60,6 +63,7 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructor extends
      * Process one view of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
      * one view at a time.
+     *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     @Override

@@ -16,6 +16,7 @@
 
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrationData;
 import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimator;
 
 /**
@@ -27,34 +28,36 @@ import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimato
  * Use AbsoluteOrientationSlamSparseReconstructor if absolute orientation is needed,
  * or SlamSparseReconstructor otherwise to get better accuracy.
  */
-@SuppressWarnings("WeakerAccess")
 public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor extends
         BaseAbsoluteOrientationSlamSparseReconstructor<
-        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration,
-        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor,
-        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener,
-        AbsoluteOrientationConstantVelocityModelSlamEstimator> {
+                AbsoluteOrientationConstantVelocityModelSlamCalibrationData,
+                AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration,
+                AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor,
+                AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener,
+                AbsoluteOrientationConstantVelocityModelSlamEstimator> {
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
+     * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener) {
+            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration,
+            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener) {
+            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener) {
         this(new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration(),
                 listener);
     }
@@ -63,6 +66,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
      * Process one view of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
      * one view at a time.
+     *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     @Override
@@ -79,11 +83,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @param isInitialPairOfViews true if initial pair of views is being processed, false otherwise.
      * @return true if post processing succeeded, false otherwise.
      */
     @Override
-    protected boolean postProcessOne(boolean isInitialPairOfViews) {
+    protected boolean postProcessOne(final boolean isInitialPairOfViews) {
         return updateScaleAndOrientation(isInitialPairOfViews);
     }
 }

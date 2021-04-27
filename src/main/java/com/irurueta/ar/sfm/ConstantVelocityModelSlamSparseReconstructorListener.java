@@ -20,6 +20,6 @@ package com.irurueta.ar.sfm;
  * sparse image point correspondence in multiple views and using SLAM with constant
  * velocity model for scale estimation.
  */
-@SuppressWarnings("WeakerAccess")
 public interface ConstantVelocityModelSlamSparseReconstructorListener extends
-        BaseSlamSparseReconstructorListener<ConstantVelocityModelSlamSparseReconstructor> { }
+        BaseSlamSparseReconstructorListener<ConstantVelocityModelSlamSparseReconstructor> {
+}

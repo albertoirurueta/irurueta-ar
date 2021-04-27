@@ -24,7 +24,7 @@ public enum FundamentalMatrixComparatorType {
      * Has no geometric meaning.
      */
     ALGEBRAIC_COMPARATOR,
-    
+
     /**
      * Comparator based on distances to epipolar lines assuming a certain
      * image size.

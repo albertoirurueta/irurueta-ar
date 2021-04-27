@@ -16,31 +16,34 @@
 package com.irurueta.ar.calibration.estimators;
 
 /**
- * Listener to be notified when estimation starts, finishes or any progress 
+ * Listener to be notified when estimation starts, finishes or any progress
  * changes.
  */
 public interface DualAbsoluteQuadricEstimatorListener {
-    
+
     /**
-     * Called when an estimator starts the Dual Absolute Quadric estimation 
+     * Called when an estimator starts the Dual Absolute Quadric estimation
      * process.
+     *
      * @param estimator reference to a DAQ estimator.
      */
-    void onEstimateStart(DualAbsoluteQuadricEstimator estimator);
-    
+    void onEstimateStart(final DualAbsoluteQuadricEstimator estimator);
+
     /**
-     * Called when an estimator ends the Dual Absolute Quadric estimation 
+     * Called when an estimator ends the Dual Absolute Quadric estimation
      * process.
+     *
      * @param estimator reference to a DAQ estimator.
      */
-    void onEstimateEnd(DualAbsoluteQuadricEstimator estimator);
-    
+    void onEstimateEnd(final DualAbsoluteQuadricEstimator estimator);
+
     /**
      * Called to notify changes in DAQ estimation progress.
+     *
      * @param estimator reference to a DAQ estimator.
-     * @param progress current percentage of progress expressed as a value
-     * between 0.0f and 1.0f.
+     * @param progress  current percentage of progress expressed as a value
+     *                  between 0.0f and 1.0f.
      */
-    void onEstimationProgressChange(DualAbsoluteQuadricEstimator estimator,
-            float progress);
+    void onEstimationProgressChange(final DualAbsoluteQuadricEstimator estimator,
+                                    final float progress);
 }

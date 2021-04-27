@@ -15,36 +15,22 @@
  */
 package com.irurueta.ar.calibration;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class Pattern2DTest {
-    
-    public Pattern2DTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
 
     @Test
     public void testCreate() {
         Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
-        
+
         assertEquals(pattern.getType(), Pattern2DType.QR);
         assertTrue(pattern instanceof QRPattern2D);
-        
+
         pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-        
+
         assertEquals(pattern.getType(), Pattern2DType.CIRCLES);
         assertTrue(pattern instanceof CirclesPattern2D);
     }

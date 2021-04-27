@@ -15,81 +15,68 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class PointColorDataTest {
-    
-    public PointColorDataTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
 
     @Test
-    public void testConstructor() { 
-        PointColorData data = new CustomPointColorData();
-        
-        //check default value
+    public void testConstructor() {
+        final PointColorData data = new CustomPointColorData();
+
+        // check default value
         assertNull(data.getId());
-        assertEquals(data.getQualityScore(), 
+        assertEquals(data.getQualityScore(),
                 PointColorData.DEFAULT_QUALITY_SCORE, 0.0);
     }
-    
+
     @Test
     public void testGetSetId() {
-        PointColorData data = new CustomPointColorData();
-        
-        //check default value
+        final PointColorData data = new CustomPointColorData();
+
+        // check default value
         assertNull(data.getId());
-        
-        //set new value
+
+        // set new value
         data.setId("id");
-        
-        //check correctness
+
+        // check correctness
         assertEquals(data.getId(), "id");
     }
-    
+
     @Test
     public void testGetSetQualityScore() {
-        PointColorData data = new CustomPointColorData();
-        
-        //check default value
-        assertEquals(data.getQualityScore(), 
+        final PointColorData data = new CustomPointColorData();
+
+        // check default value
+        assertEquals(data.getQualityScore(),
                 PointColorData.DEFAULT_QUALITY_SCORE, 0.0);
-        
-        //set new value
+
+        // set new value
         data.setQualityScore(5.0);
-        
-        //check correctness
-        assertEquals(data.getQualityScore(), 5.0, 0.0);                
+
+        // check correctness
+        assertEquals(data.getQualityScore(), 5.0, 0.0);
     }
-    
+
     @Test
     public void testAverage() {
-        PointColorData data1 = new CustomPointColorData();
-        PointColorData data2 = new CustomPointColorData();
-        PointColorData data3 = new CustomPointColorData();
-        
+        final PointColorData data1 = new CustomPointColorData();
+        final PointColorData data2 = new CustomPointColorData();
+        final PointColorData data3 = new CustomPointColorData();
+
         data1.average(data2, data3);
-        
+
         assertNotNull(data1);
         assertNotNull(data2);
         assertNotNull(data3);
     }
-    
+
     public static class CustomPointColorData extends PointColorData {
 
         @Override
-        public void average(PointColorData other, PointColorData result) { }        
+        public void average(final PointColorData other, final PointColorData result) {
+        }
     }
 }

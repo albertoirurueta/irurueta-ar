@@ -21,9 +21,9 @@ import java.io.Serializable;
  * Contains control calibration data for a SLAM estimator during
  * Kalman filtering prediction stage.
  */
-public class SlamCalibrationData extends BaseCalibrationData 
+public class SlamCalibrationData extends BaseCalibrationData
         implements Serializable {
-    
+
     /**
      * Constructor.
      */

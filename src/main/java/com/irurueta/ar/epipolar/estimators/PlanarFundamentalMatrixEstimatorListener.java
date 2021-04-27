@@ -24,18 +24,20 @@ import java.util.List;
  * estimator.
  */
 public interface PlanarFundamentalMatrixEstimatorListener {
-    
+
     /**
      * Called when fundamental matrix estimation starts.
+     *
      * @param estimator a planar fundamental matrix estimator.
      */
-    void onEstimateStart(PlanarFundamentalMatrixEstimator estimator);
-    
+    void onEstimateStart(final PlanarFundamentalMatrixEstimator estimator);
+
     /**
      * Called when fundamental matrix estimation ends.
-     * @param estimator a planar fundamental matrix estimator.
+     *
+     * @param estimator           a planar fundamental matrix estimator.
      * @param fundamentalMatrices estimated fundamental matrices.
      */
-    void onEstimateEnd(PlanarFundamentalMatrixEstimator estimator, 
-            List<FundamentalMatrix> fundamentalMatrices);
+    void onEstimateEnd(final PlanarFundamentalMatrixEstimator estimator,
+                       final List<FundamentalMatrix> fundamentalMatrices);
 }

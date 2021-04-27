@@ -15,8 +15,18 @@
  */
 package com.irurueta.ar.calibration;
 
-import com.irurueta.ar.calibration.estimators.*;
-import com.irurueta.geometry.*;
+import com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicRobustEstimator;
+import com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicRobustEstimatorListener;
+import com.irurueta.ar.calibration.estimators.LMedSImageOfAbsoluteConicRobustEstimator;
+import com.irurueta.ar.calibration.estimators.MSACImageOfAbsoluteConicRobustEstimator;
+import com.irurueta.ar.calibration.estimators.PROMedSImageOfAbsoluteConicRobustEstimator;
+import com.irurueta.ar.calibration.estimators.PROSACImageOfAbsoluteConicRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RANSACImageOfAbsoluteConicRobustEstimator;
+import com.irurueta.geometry.GeometryException;
+import com.irurueta.geometry.HomogeneousPoint2D;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Transformation2D;
 import com.irurueta.geometry.estimators.*;
 import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -31,67 +41,66 @@ import java.util.logging.Logger;
  * Calibrates a camera in order to find its intrinsic parameters and other
  * parameters such as radial distortion.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class CameraCalibrator {
-    
+
     /**
      * Default robust estimator method to be used for homography estimations.
      */
     public static final RobustEstimatorMethod DEFAULT_HOMOGRAPHY_METHOD =
             RobustEstimatorMethod.PROSAC;
-    
+
     /**
      * Default robust estimator method to be used for IAC estimation.
      */
-    public static final RobustEstimatorMethod DEFAULT_IAC_METHOD = 
+    public static final RobustEstimatorMethod DEFAULT_IAC_METHOD =
             RobustEstimatorMethod.PROSAC;
-    
+
     /**
      * Indicates whether radial distortion must be estimated or not by default.
      */
     public static final boolean DEFAULT_ESTIMATE_RADIAL_DISTORTION = true;
-    
+
     /**
-     * Default amount of progress variation before notifying a change in 
+     * Default amount of progress variation before notifying a change in
      * estimation progress. By default this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
-    
+
     /**
      * Minimum allowed value for progress delta.
      */
     public static final float MIN_PROGRESS_DELTA = 0.0f;
-    
+
     /**
      * Maximum allowed value for progress delta.
      */
     public static final float MAX_PROGRESS_DELTA = 1.0f;
-    
+
     /**
      * Default method used for camera calibration.
      * The default method uses an alternating technique where first intrinsic
-     * parameters and camera pose are estimated without accounting for 
+     * parameters and camera pose are estimated without accounting for
      * distortion and then the results are used to obtain an initial guess
      * for distortion, which is then used to correct initially sampled points
      * and repeat the whole process until convergence is achieved.
      */
-    public static final CameraCalibratorMethod DEFAULT_METHOD = 
+    public static final CameraCalibratorMethod DEFAULT_METHOD =
             CameraCalibratorMethod.ERROR_OPTIMIZATION;
-    
+
     /**
-     * Pattern used for camera calibration. Each pattern contains a unique 
+     * Pattern used for camera calibration. Each pattern contains a unique
      * combination of 2D points that must be sampled using the camera to be
      * calibrated.
      */
     protected Pattern2D mPattern;
-    
+
     /**
-     * List of samples obtained from different pictures using the same camera 
-     * device (or same camera model). Several samples can be used to calibrate 
+     * List of samples obtained from different pictures using the same camera
+     * device (or same camera model). Several samples can be used to calibrate
      * the camera. The more samples are used, typically the better the results.
      */
     protected List<CameraCalibratorSample> mSamples;
-    
+
     /**
      * Quality scores for samples. This can be used on certain
      * robust estimation methods of the IAC such as PROSAC and PROMedS.
@@ -100,48 +109,48 @@ public abstract class CameraCalibrator {
      * Typically this will not be provided, but it can be used in case that it
      * can be assured by some means that one sample is better than another.
      */
-    protected double[] mSamplesQualityScores;    
-    
+    protected double[] mSamplesQualityScores;
+
     /**
      * Estimated homographies from provided list of samples respect to provided
      * pattern.
      */
     protected List<Transformation2D> mHomographies;
-        
+
     /**
-     * Quality scores for estimated homographies to be used during IAC 
+     * Quality scores for estimated homographies to be used during IAC
      * estimation when PROSAC or PROMedS robust method is used. This value
      * is only computed when no samples quality scores are provided.
      * Homography quality scores are obtained based on reprojection error of
      * marker coordinates.
      */
     protected double[] mHomographyQualityScores;
-    
+
     /**
      * Indicates whether homography quality scores need to be estimated if
      * samples quality scores are not provided.
      */
     protected boolean mHomographyQualityScoresRequired;
-    
+
     /**
      * Estimated image of absolute conic. This can be used to obtain intrinsic
      * pinhole camera intrinsic parameters.
      */
     protected ImageOfAbsoluteConic mIAC;
-    
+
     /**
-     * Estimated intrinsic pinhole camera parameters. Intrinsic parameters 
+     * Estimated intrinsic pinhole camera parameters. Intrinsic parameters
      * contain data related to the camera sensor such as focal length,
-     * skewness or principal point. Except focal length, typically intrinsic 
-     * parameters are fixed, and even in some situations such as when camera 
+     * skewness or principal point. Except focal length, typically intrinsic
+     * parameters are fixed, and even in some situations such as when camera
      * lens is fixed, focal length also remains constant. Because the latter is
-     * true in most phone cameras, it can be considered that intrinsic 
+     * true in most phone cameras, it can be considered that intrinsic
      * parameters remain constant for all phones of the same maker and model,
      * and for that reason a calibrator can be used with pictures taken from
      * different phones as long as they are the same phone model.
      */
     protected PinholeCameraIntrinsicParameters mIntrinsic;
-    
+
     /**
      * Estimated radial distortion. Radial distortion is inherent to the camera
      * lens, and remains constant as long as the lens doesn't change.
@@ -151,12 +160,12 @@ public abstract class CameraCalibrator {
      * as they are the same phone model.
      */
     protected RadialDistortion mDistortion;
-    
+
     /**
      * Indicates whether radial distortion must be estimated or not.
      */
     protected boolean mEstimateRadialDistortion;
-    
+
     /**
      * Robust estimator method to be used during homography estimation.
      * This will only be taken into account if more than 4 markers are detected
@@ -164,7 +173,7 @@ public abstract class CameraCalibrator {
      * solution for the homography is found.
      */
     protected RobustEstimatorMethod mHomographyMethod;
-    
+
     /**
      * Robust estimator method to be used during IAC estimation.
      * This will only be taken into account if more than 1 sample is provided,
@@ -172,72 +181,72 @@ public abstract class CameraCalibrator {
      * IAC is found.
      */
     protected RobustEstimatorMethod mImageOfAbsoluteConicMethod;
-    
+
     /**
-     * Robust estimator of homographies between sampled markers and ideal 
+     * Robust estimator of homographies between sampled markers and ideal
      * pattern markers.
      */
-    protected PointCorrespondenceProjectiveTransformation2DRobustEstimator 
-            mHomographyEstimator;    
-    
+    protected PointCorrespondenceProjectiveTransformation2DRobustEstimator
+            mHomographyEstimator;
+
     /**
      * Robust estimator of the Image of Absolute Conic (IAC).
      */
     protected ImageOfAbsoluteConicRobustEstimator mIACEstimator;
-    
+
     /**
      * Listener for homography estimator.
      */
-    protected ProjectiveTransformation2DRobustEstimatorListener 
-            mHomographyEstimatorListener;    
-    
+    protected ProjectiveTransformation2DRobustEstimatorListener
+            mHomographyEstimatorListener;
+
     /**
      * Listener for image of absolute conic estimator.
      */
     protected ImageOfAbsoluteConicRobustEstimatorListener mIACEstimatorListener;
-    
+
     /**
-     * Indicates whether this instance is locked because calibration is in 
+     * Indicates whether this instance is locked because calibration is in
      * progress.
      */
     protected volatile boolean mLocked;
-    
+
     /**
      * Amount of progress variation before notifying a progress change during
      * estimation.
      */
-    protected float mProgressDelta;    
-    
+    protected float mProgressDelta;
+
     /**
-     * Listener to notify when calibration starts, finishes or its progress 
+     * Listener to notify when calibration starts, finishes or its progress
      * significantly changes.
      */
     protected CameraCalibratorListener mListener;
-            
+
     /**
      * Indicates progress of homography estimation.
      */
     protected float mHomographyProgress;
-    
+
     /**
      * Indicates progress of homography estimation for all samples.
      */
     protected float mSampleProgress;
-    
+
     /**
      * Indicates progress of IAC estimation.
      */
     protected float mIACProgress;
-    
+
     /**
      * Indicates progress of intrinsic parameters estimation.
      */
-    protected float mIntrinsicProgress;     
-    
+    protected float mIntrinsicProgress;
+
     /**
      * Constructor.
      */
-    public CameraCalibrator() {
+    protected CameraCalibrator() {
         mPattern = null;
         mHomographies = null;
         mHomographyQualityScores = null;
@@ -248,22 +257,23 @@ public abstract class CameraCalibrator {
 
         internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);
         internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);
-        
+
         mSamples = null;
         mSamplesQualityScores = null;
-        
+
         mProgressDelta = DEFAULT_PROGRESS_DELTA;
     }
-    
+
     /**
      * Constructor.
+     *
      * @param pattern 2D pattern to use for calibration.
      * @param samples samples of the pattern taken with the camera to calibrate.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public CameraCalibrator(Pattern2D pattern, 
-            List<CameraCalibratorSample> samples) {
-        mPattern = pattern;        
+    protected CameraCalibrator(final Pattern2D pattern,
+                               final List<CameraCalibratorSample> samples) {
+        mPattern = pattern;
         mHomographies = null;
         mHomographyQualityScores = null;
         mIAC = null;
@@ -273,29 +283,30 @@ public abstract class CameraCalibrator {
 
         internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);
         internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);
-        
+
         internalSetSamples(samples);
         mSamplesQualityScores = null;
 
-        mProgressDelta = DEFAULT_PROGRESS_DELTA;        
+        mProgressDelta = DEFAULT_PROGRESS_DELTA;
     }
-    
+
     /**
      * Constructor.
-     * @param pattern 2D pattern to use for calibration.
-     * @param samples samples of the pattern taken with the camera to calibrate.
+     *
+     * @param pattern              2D pattern to use for calibration.
+     * @param samples              samples of the pattern taken with the camera to calibrate.
      * @param samplesQualityScores quality scores for each sample.
      * @throws IllegalArgumentException if not enough samples are provided or if
-     * both samples and quality scores do not have the same size.
+     *                                  both samples and quality scores do not have the same size.
      */
-    public CameraCalibrator(Pattern2D pattern,
-            List<CameraCalibratorSample> samples,
-            double[] samplesQualityScores) {
+    protected CameraCalibrator(final Pattern2D pattern,
+                               final List<CameraCalibratorSample> samples,
+                               final double[] samplesQualityScores) {
         if (samples.size() != samplesQualityScores.length) {
             throw new IllegalArgumentException();
         }
-        
-        mPattern = pattern;        
+
+        mPattern = pattern;
         mHomographies = null;
         mHomographyQualityScores = null;
         mIAC = null;
@@ -305,101 +316,107 @@ public abstract class CameraCalibrator {
 
         internalSetHomographyMethod(DEFAULT_HOMOGRAPHY_METHOD);
         internalSetImageOfAbsoluteConicMethod(DEFAULT_IAC_METHOD);
-        
+
         internalSetSamples(samples);
         internalSetSamplesQualityScores(samplesQualityScores);
 
-        mProgressDelta = DEFAULT_PROGRESS_DELTA;        
+        mProgressDelta = DEFAULT_PROGRESS_DELTA;
     }
-    
+
     /**
-     * Returns pattern used for camera calibration. Each pattern contain a 
-     * unique combination of 2D points that must be sampled using the camera to 
+     * Returns pattern used for camera calibration. Each pattern contain a
+     * unique combination of 2D points that must be sampled using the camera to
      * be calibrated.
+     *
      * @return pattern used for camera calibration.
      */
     public Pattern2D getPattern() {
         return mPattern;
     }
-    
+
     /**
      * Sets pattern used for camera calibration. Each pattern contains a unique
      * combination of 2D points that must be sampled using the camera to be
      * calibrated.
+     *
      * @param pattern pattern used for camera calibration.
      * @throws LockedException if this instance is locked.
      */
-    public void setPattern(Pattern2D pattern) throws LockedException {
+    public void setPattern(final Pattern2D pattern) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mPattern = pattern;
     }
-    
+
     /**
      * Returns list of samples obtained from different pictures using the same
-     * camera device (or same camera model). Several samples can be used to 
+     * camera device (or same camera model). Several samples can be used to
      * calibrate the camera (a pinhole camera can be estimated for each sample).
      * The more samples are used, typically the better the results.
+     *
      * @return list of samples.
      */
     public List<CameraCalibratorSample> getSamples() {
         return mSamples;
     }
-    
+
     /**
      * Sets list of samples obtained from different pictures using the same
-     * camera device (or same camera model). Several samples can be used to 
+     * camera device (or same camera model). Several samples can be used to
      * calibrate the camera (a pinhole camera can be estimated for each sample).
      * The more samples are used, typically the better the results.
+     *
      * @param samples list of samples.
-     * @throws LockedException if this instance is locked.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if not enough samples are provided to
-     * estimate the intrinsic parameters. By default the minimum is 1, but 
-     * depending on the settings at least 3 samples might be required.
+     *                                  estimate the intrinsic parameters. By default the minimum is 1, but
+     *                                  depending on the settings at least 3 samples might be required.
      */
-    public void setSamples(List<CameraCalibratorSample> samples) throws LockedException {
+    public void setSamples(final List<CameraCalibratorSample> samples) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         internalSetSamples(samples);
     }
-        
+
     /**
      * Returns quality scores assigned to each provided sample. This can be used
-     * on certain robust estimation methods of the IAC such as PROSAC and 
-     * PROMedS. If not provided, homography quality scores will be estimated 
+     * on certain robust estimation methods of the IAC such as PROSAC and
+     * PROMedS. If not provided, homography quality scores will be estimated
      * based on reprojection error and this value will be ignored.
      * Typically this will not be provided, but it can be used in case that it
      * can be assured by some means that one sample is better than another
+     *
      * @return quality scores assigned to each provided sample.
      */
     public double[] getSamplesQualityScores() {
         return mSamplesQualityScores;
     }
-    
+
     /**
      * Sets quality scores assigned to each provided sample. This can be used on
      * certain robust estimation methods of the IAC such as PROSAC and PROMedS.
      * If not provided, homography quality scores will be estimated based on
      * reprojection error and this value will be ignored.
-     * @param samplesQualityScores quality scores assigned to each provided 
-     * sample.
-     * @throws LockedException if this instance is locked.
-     * @throws IllegalArgumentException if not enough quality scores are 
-     * provided for the corresponding samples to estimate the intrinsic 
-     * parameters. By default the minimum is 1, but depending on the settings at
-     * least 3 samples might be required.
+     *
+     * @param samplesQualityScores quality scores assigned to each provided
+     *                             sample.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if not enough quality scores are
+     *                                  provided for the corresponding samples to estimate the intrinsic
+     *                                  parameters. By default the minimum is 1, but depending on the settings at
+     *                                  least 3 samples might be required.
      */
-    public void setSamplesQualityScores(double[] samplesQualityScores)
+    public void setSamplesQualityScores(final double[] samplesQualityScores)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         internalSetSamplesQualityScores(samplesQualityScores);
     }
-    
+
     /**
      * Returns quality scores for estimated homographies.
      * If samples quality scores were provided, these will be equal
@@ -409,205 +426,220 @@ public abstract class CameraCalibrator {
      * This should rarely be used. It can be used for debugging purposes
      * teo determine whether homographies used for calibration are
      * reliable or not.
+     *
      * @return estimated quality scores for homographies.
      */
     public double[] getHomographyQualityScores() {
         return mHomographyQualityScores;
     }
-    
+
     /**
-     * Returns estimated image of absolute conic. This can be used to obtain 
+     * Returns estimated image of absolute conic. This can be used to obtain
      * intrinsic pinhole camera intrinsic parameters.
+     *
      * @return estimated image of absolute conic or null if estimation has not
      * been completed.
      */
     public ImageOfAbsoluteConic getEstimatedImageOfAbsoluteConic() {
         return mIAC;
     }
-    
+
     /**
      * Returns estimated pinhole camera intrinsic parameters.
-     * @return estimated pinhole camera intrinsic parameters or null if 
+     *
+     * @return estimated pinhole camera intrinsic parameters or null if
      * estimation has not been completed.
      */
     public PinholeCameraIntrinsicParameters getEstimatedIntrinsicParameters() {
         return mIntrinsic;
     }
-    
+
     /**
      * Returns estimated radial distortion due to camera lens.
+     *
      * @return estimated radial distortion or null if estimation has not
      * completed or radial distortion was not requested.
      */
     public RadialDistortion getDistortion() {
         return mDistortion;
     }
-    
+
     /**
      * Returns boolean indicating whether radial distortion must be estimated or
      * not during calibration.
+     *
      * @return true if radial distortion must be estimated, false otherwise.
      */
     public boolean getEstimateRadialDistortion() {
         return mEstimateRadialDistortion;
     }
-    
+
     /**
      * Sets boolean indicating whether radial distortion must be estimated or
      * not during calibration.
-     * @param estimateRadialDistortion true if radial distortion must be 
-     * estimated, false otherwise.
+     *
+     * @param estimateRadialDistortion true if radial distortion must be
+     *                                 estimated, false otherwise.
      * @throws LockedException if this instance is locked.
      */
-    public void setEstimateRadialDistortion(boolean estimateRadialDistortion)
+    public void setEstimateRadialDistortion(final boolean estimateRadialDistortion)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mEstimateRadialDistortion = estimateRadialDistortion;
     }
-    
+
     /**
      * Returns robust estimator method to be used during homography estimation.
      * This will only be taken into account if more than 4 markers are detected
      * on a single sample, otherwise no robust method is used and a single LMSE
      * solution for the homography is found.
+     *
      * @return robust estimator method to be used during homography estimation.
      */
     public RobustEstimatorMethod getHomographyMethod() {
         return mHomographyMethod;
     }
-    
+
     /**
      * Sets robust estimator method to be used during homography estimation.
      * This will only be taken into account if more than 4 markers are detected
      * on a single sample, otherwise no robust method is used and a single LMSE
      * solution for the homography is found.
-     * @param homographyMethod robust estimator method to be used during 
-     * homography estimation.
+     *
+     * @param homographyMethod robust estimator method to be used during
+     *                         homography estimation.
      * @throws LockedException if this instance is locked.
      */
-    public void setHomographyMethod(RobustEstimatorMethod homographyMethod)
+    public void setHomographyMethod(final RobustEstimatorMethod homographyMethod)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         internalSetHomographyMethod(homographyMethod);
     }
-            
+
     /**
      * Returns robust estimator method to be used during IAC estimation.
      * This will only be taken into account if more than 1 sample is provided,
      * otherwise no robust method is used and a single LMSE solution for the
      * IAC is found
+     *
      * @return robust estimator method to be used during IAC estimation
      */
-    public RobustEstimatorMethod getImageOfAbsoluteConicMethod(){
+    public RobustEstimatorMethod getImageOfAbsoluteConicMethod() {
         return mImageOfAbsoluteConicMethod;
     }
-    
+
     /**
      * Sets robust estimator method to be used during IAC estimation.
      * This will only be taken into account if more than 1 sample is provided,
      * otherwise no robust method is used and a single LMSE solution for the
      * IAC is found.
+     *
      * @param imageOfAbsoluteConicMethod robust estimator method to be used
-     * during IAC estimation.
+     *                                   during IAC estimation.
      * @throws LockedException if this instance is locked.
      */
     public void setImageOfAbsoluteConicMethod(
-            RobustEstimatorMethod imageOfAbsoluteConicMethod)
+            final RobustEstimatorMethod imageOfAbsoluteConicMethod)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         internalSetImageOfAbsoluteConicMethod(imageOfAbsoluteConicMethod);
     }
-            
+
     /**
      * Returns homography estimator, which can be retrieved in case that some
      * additional parameter needed to be adjusted.
      * It is discouraged to directly access the homography estimator during
      * camera calibration, as it might interfere with the results.
+     *
      * @return homography estimator.
      */
-    public PointCorrespondenceProjectiveTransformation2DRobustEstimator
-            getHomographyEstimator() {
+    public PointCorrespondenceProjectiveTransformation2DRobustEstimator getHomographyEstimator() {
         return mHomographyEstimator;
     }
-    
+
     /**
-     * Returns IAC estimator, which can be retrieved in case that some 
+     * Returns IAC estimator, which can be retrieved in case that some
      * additional parameter needed to be adjusted.
      * It is discouraged to directly access the homography estimator during
      * camera calibration, as it might interfere with the results.
+     *
      * @return IAC estimator.
      */
     public ImageOfAbsoluteConicRobustEstimator getIACEstimator() {
         return mIACEstimator;
     }
-    
+
     /**
      * Returns boolean indicating whether camera skewness is assumed to be zero
      * or not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
      * Typically skewness is a value equal or very close to zero.
+     *
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated.
      */
     public boolean isZeroSkewness() {
         return mIACEstimator.isZeroSkewness();
     }
-    
+
     /**
      * Sets boolean indicating whether camera skewness is assumed to be zero or
      * not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
      * Typically skewness is a value equal or very close to zero.
-     * @param zeroSkewness true if camera skewness is assumed to be zero, 
-     * otherwise camera skewness is estimated.
+     *
+     * @param zeroSkewness true if camera skewness is assumed to be zero,
+     *                     otherwise camera skewness is estimated.
      * @throws LockedException if this instance is locked.
      */
-    public void setZeroSkewness(boolean zeroSkewness) throws LockedException {
+    public void setZeroSkewness(final boolean zeroSkewness) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mIACEstimator.setZeroSkewness(zeroSkewness);
     }
-    
+
     /**
      * Returns boolean indicating whether principal point is assumed to be at
      * origin of coordinates or not.
-     * Typically principal point is located at image center (origin of 
-     * coordinates), and usually matches the center of radial distortion if it 
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if it
      * is taken into account.
-     * @return true if principal point is assumed to be at origin of 
+     *
+     * @return true if principal point is assumed to be at origin of
      * coordinates, false if principal point must be estimated.
      */
     public boolean isPrincipalPointAtOrigin() {
         return mIACEstimator.isPrincipalPointAtOrigin();
     }
-    
+
     /**
      * Sets boolean indicating whether principal point is assumed to be at
      * origin of coordinates or not.
      * Typically principal point is located at image center (origin of
      * coordinates), and usually matches the center of radial distortion if it
      * is taken into account.
-     * @param principalPointAtOrigin true if principal point is assumed to bet 
-     * at origin of coordinates, false if principal point must be estimated.
+     *
+     * @param principalPointAtOrigin true if principal point is assumed to bet
+     *                               at origin of coordinates, false if principal point must be estimated.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPointAtOrigin(boolean principalPointAtOrigin)
+    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mIACEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);
     }
 
@@ -620,12 +652,13 @@ public abstract class CameraCalibrator {
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
+     *
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
     public boolean isFocalDistanceAspectRatioKnown() {
         return mIACEstimator.isFocalDistanceAspectRatioKnown();
     }
-    
+
     /**
      * Sets boolean indicating whether aspect ratio of focal distances (i.e.
      * vertical focal distance divided by horizontal focal distance) is known or
@@ -635,20 +668,21 @@ public abstract class CameraCalibrator {
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
+     *
      * @param focalDistanceAspectRatioKnown true if focal distance aspect ratio
-     * is known, false otherwise.
+     *                                      is known, false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setFocalDistanceAspectRatioKnown(
-            boolean focalDistanceAspectRatioKnown) throws LockedException {
+            final boolean focalDistanceAspectRatioKnown) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mIACEstimator.setFocalDistanceAspectRatioKnown(
                 focalDistanceAspectRatioKnown);
     }
-    
+
     /**
      * Returns aspect ratio of focal distances (i.e. vertical focal distance
      * divided by horizontal focal distance).
@@ -660,17 +694,18 @@ public abstract class CameraCalibrator {
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
      * aspect ratio.
-     * Notice that a negative aspect ratio indicates that vertical axis is 
+     * Notice that a negative aspect ratio indicates that vertical axis is
      * reversed. This can be useful in some situations where image vertical
      * coordinates are reversed respect to the physical world (i.e. in computer
      * graphics typically image vertical coordinates go downwards, while in
      * physical world they go upwards).
+     *
      * @return aspect ratio of focal distances.
-     */    
+     */
     public double getFocalDistanceAspectRatio() {
         return mIACEstimator.getFocalDistanceAspectRatio();
     }
-    
+
     /**
      * Sets aspect ratio of focal distances (i.e. vertical focal distance
      * divided by horizontal focal distance).
@@ -682,55 +717,59 @@ public abstract class CameraCalibrator {
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
      * aspect ratio.
-     * Notice that a negative aspect ratio indicates that vertical axis is 
+     * Notice that a negative aspect ratio indicates that vertical axis is
      * reversed. This can be useful in some situations where image vertical
      * coordinates are reversed respect to the physical world (i.e. in computer
      * graphics typically image vertical coordinates go downwards, while in
      * physical world they go upwards).
+     *
      * @param focalDistanceAspectRatio aspect ratio of focal distances to be set.
-     * @throws LockedException if estimator is locked.
-     * @throws IllegalArgumentException if focal distance aspect ratio is too 
-     * close to zero, as it might produce numerical instabilities.
-     */    
-    public void setFocalDistanceAspectRatio(double focalDistanceAspectRatio)
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if focal distance aspect ratio is too
+     *                                  close to zero, as it might produce numerical instabilities.
+     */
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mIACEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);
     }
-    
+
     /**
-     * Indicates whether this instance is locked because calibration is in 
+     * Indicates whether this instance is locked because calibration is in
      * progress.
+     *
      * @return true if this instance, false otherwise.
      */
     public boolean isLocked() {
         return mLocked;
     }
-    
+
     /**
      * Returns amount of progress variation before notifying a progress change
      * during estimation.
+     *
      * @return amount of progress variation before notifying a progress change
      * during estimation.
      */
     public float getProgressDelta() {
         return mProgressDelta;
     }
-    
+
     /**
      * Sets amount of progress variation before notifying a progress change
      * during estimation.
+     *
      * @param progressDelta amount of progress variation before notifying a
-     * progress change during estimation.
+     *                      progress change during estimation.
      * @throws IllegalArgumentException if progress delta is less than zero or
-     * greater than 1.
-     * @throws LockedException if this estimator is locked because an estimation
-     * is being computed.
+     *                                  greater than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -740,101 +779,110 @@ public abstract class CameraCalibrator {
         }
         mProgressDelta = progressDelta;
     }
-    
+
     /**
      * Indicates whether this instance is ready to start camera calibration
-     * @return true if this instance has enough data to start camera 
+     *
+     * @return true if this instance has enough data to start camera
      * calibration, false otherwise.
      */
     public boolean isReady() {
-        return mPattern != null && mSamples != null && 
+        return mPattern != null && mSamples != null &&
                 mSamples.size() >= mIACEstimator.getMinNumberOfRequiredHomographies();
     }
-    
+
     /**
      * Returns threshold to robustly estimate homographies between ideal pattern
      * markers and sampled pattern markers.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments
+     *
      * @return threshold to robustly estimate homographies between ideal pattern
      * markers and sampled pattern markers.
      */
     public double getHomographyEstimatorThreshold() {
         switch (mHomographyEstimator.getMethod()) {
             case LMedS:
-                return ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getStopThreshold();
+                return ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
+                        .getStopThreshold();
             case MSAC:
-                return ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();
+                return ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
+                        .getThreshold();
             case PROSAC:
-                return ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();
+                return ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
+                        .getThreshold();
             case PROMedS:
-                return ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getStopThreshold();
+                return ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
+                        .getStopThreshold();
             case RANSAC:
             default:
-                return ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).getThreshold();
+                return ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
+                        .getThreshold();
         }
     }
-    
+
     /**
      * Sets threshold to robustly estimate homographies between ideal pattern
      * markers and sampled pattern markers.
-     * Usually the default value is good enough for most situations, but this 
+     * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
-     * @param homographyEstimatorThreshold threshold to robustly estimate 
-     * homographies between ideal pattern markers and sampled pattern markers.
-     * @throws LockedException if this instance is locked.
+     *
+     * @param homographyEstimatorThreshold threshold to robustly estimate
+     *                                     homographies between ideal pattern markers and sampled pattern markers.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
     public void setHomographyEstimatorThreshold(
-            double homographyEstimatorThreshold) throws LockedException {
+            final double homographyEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         switch (mHomographyEstimator.getMethod()) {
             case LMedS:
-                ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).
+                ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setStopThreshold(homographyEstimatorThreshold);
                 break;
             case MSAC:
-                ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).
+                ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setThreshold(homographyEstimatorThreshold);
                 break;
             case PROSAC:
-                ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).
+                ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setThreshold(homographyEstimatorThreshold);
                 break;
             case PROMedS:
-                ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).
+                ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setStopThreshold(homographyEstimatorThreshold);
                 break;
             case RANSAC:
             default:
-                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)mHomographyEstimator).
+                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setThreshold(homographyEstimatorThreshold);
-                break;                
+                break;
         }
     }
-    
+
     /**
-     * Returns confidence to robustly estimate homographies between ideal 
+     * Returns confidence to robustly estimate homographies between ideal
      * pattern markers and sampled pattern markers.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
      * Confidence is expressed as a value between 0.0 (0%) and 1.0 (100%). The
-     * amount of confidence indicates the probability that the estimated 
+     * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
      * Typically this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @return confidence to robustly estimate homographies.
      */
     public double getHomographyEstimatorConfidence() {
         return mHomographyEstimator.getConfidence();
     }
-    
+
     /**
      * Sets confidence to robustly estimate homographies between ideal pattern
      * markers and sampled pattern markers.
@@ -848,36 +896,38 @@ public abstract class CameraCalibrator {
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @param homographyEstimatorConfidence confidence to robustly estimate
-     * homographies.
-     * @throws LockedException if this instance is locked.
+     *                                      homographies.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is not between 0.0 and
-     * 1.0.
+     *                                  1.0.
      */
     public void setHomographyEstimatorConfidence(
-            double homographyEstimatorConfidence) throws LockedException {
+            final double homographyEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mHomographyEstimator.setConfidence(homographyEstimatorConfidence);
     }
-    
+
     /**
      * Returns the maximum number of iterations to be done when estimating
-     * the homographies between ideal pattern markers and sampled pattern 
+     * the homographies between ideal pattern markers and sampled pattern
      * markers.
-     * If the maximum allowed number of iterations is reached, resulting 
+     * If the maximum allowed number of iterations is reached, resulting
      * estimation might not have desired confidence.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @return maximum number of iterations to be done when estimating the
      * homographies.
      */
     public int getHomographyEstimatorMaxIterations() {
         return mHomographyEstimator.getMaxIterations();
     }
-    
+
     /**
      * Sets the maximum number of iterations to be done when estimating the
      * homographies between ideal pattern markers and sampled pattern markers.
@@ -885,83 +935,86 @@ public abstract class CameraCalibrator {
      * estimation might not have desired confidence.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @param homographyEstimatorMaxIterations maximum number of iterations to
-     * be done when estimating the homographies between ideal pattern markers 
-     * and sampled pattern markers.
-     * @throws LockedException if this instance is locked.
+     *                                         be done when estimating the homographies between ideal pattern markers
+     *                                         and sampled pattern markers.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
     public void setHomographyEstimatorMaxIterations(
-            int homographyEstimatorMaxIterations) throws LockedException {
+            final int homographyEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mHomographyEstimator.setMaxIterations(homographyEstimatorMaxIterations);
     }
-    
+
     /**
      * Returns threshold to robustly estimate the image of absolute conic.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @return threshold to robustly estimate the image of absolute conic.
      */
     public double getIACEstimatorThreshold() {
         switch (mIACEstimator.getMethod()) {
             case LMedS:
-                return ((LMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).getStopThreshold();
+                return ((LMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).getStopThreshold();
             case MSAC:
-                return ((MSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();
+                return ((MSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).getThreshold();
             case PROSAC:
-                return ((PROSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();
+                return ((PROSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).getThreshold();
             case PROMedS:
-                return ((PROMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).getStopThreshold();
+                return ((PROMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).getStopThreshold();
             case RANSAC:
             default:
-                return ((RANSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).getThreshold();
+                return ((RANSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).getThreshold();
         }
     }
-    
+
     /**
      * Sets threshold to robustly estimate the image of absolute conic.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @param iacEstimatorThreshold threshold to robustly estimate the image of
-     * absolute conic.
-     * @throws LockedException if this instance is locked.
+     *                              absolute conic.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setIACEstimatorThreshold(double iacEstimatorThreshold)
+    public void setIACEstimatorThreshold(final double iacEstimatorThreshold)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         switch (mIACEstimator.getMethod()) {
             case LMedS:
-                ((LMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).
+                ((LMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setStopThreshold(iacEstimatorThreshold);
                 break;
             case MSAC:
-                ((MSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).
+                ((MSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setThreshold(iacEstimatorThreshold);
                 break;
             case PROSAC:
-                ((PROSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).
+                ((PROSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setThreshold(iacEstimatorThreshold);
                 break;
             case PROMedS:
-                ((PROMedSImageOfAbsoluteConicRobustEstimator)mIACEstimator).
+                ((PROMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setStopThreshold(iacEstimatorThreshold);
                 break;
             case RANSAC:
             default:
-                ((RANSACImageOfAbsoluteConicRobustEstimator)mIACEstimator).
+                ((RANSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setThreshold(iacEstimatorThreshold);
                 break;
         }
     }
-    
+
     /**
      * Returns confidence to robustly estimate image of absolute conic
      * Usually the default value is good enough for most situations, but this
@@ -974,12 +1027,13 @@ public abstract class CameraCalibrator {
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @return confidence to robustly estimate the IAC.
      */
     public double getIACEstimatorConfidence() {
         return mIACEstimator.getConfidence();
     }
-    
+
     /**
      * Sets confidence to robustly estimate image of absolute conic.
      * Usually the default value is good enough for most situations, but this
@@ -992,34 +1046,36 @@ public abstract class CameraCalibrator {
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @param iacEstimatorConfidence confidence to robustly estimate the IAC.
-     * @throws LockedException if this instance is locked.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is not between 0.0 and
-     * 1.0.
+     *                                  1.0.
      */
-    public void setIACEstimatorConfidence(double iacEstimatorConfidence)
+    public void setIACEstimatorConfidence(final double iacEstimatorConfidence)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mIACEstimator.setConfidence(iacEstimatorConfidence);
     }
-    
+
     /**
-     * Returns the maximum number of iterations to be done when estimating 
+     * Returns the maximum number of iterations to be done when estimating
      * the image of absolute conic.
-     * If the maximum allowed number of iterations is reached, resulting 
+     * If the maximum allowed number of iterations is reached, resulting
      * estimation might not have desired confidence.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @return maximum number of iterations to be done when estimating the
      * image of absolute conic.
      */
     public int getIACEstimatorMaxIterations() {
         return mIACEstimator.getMaxIterations();
     }
-    
+
     /**
      * Sets the maximum number of iterations to be done when estimating the
      * image of absolute conic.
@@ -1027,52 +1083,56 @@ public abstract class CameraCalibrator {
      * estimation might not have desired confidence.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
+     *
      * @param iacEstimatorMaxIterations maximum number of iterations to be done
-     * when estimating the image of absolute conic.
-     * @throws LockedException if this instance is locked.
+     *                                  when estimating the image of absolute conic.
+     * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
-    public void setIACEstimatorMaxIterations(int iacEstimatorMaxIterations)
+    public void setIACEstimatorMaxIterations(final int iacEstimatorMaxIterations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mIACEstimator.setMaxIterations(iacEstimatorMaxIterations);
     }
-    
+
     /**
-     * Returns listener to notify when calibration starts, finishes or its 
+     * Returns listener to notify when calibration starts, finishes or its
      * progress significantly changes.
+     *
      * @return listener to notify when calibration starts, finishes or its
      * progress significantly changes.
      */
     public CameraCalibratorListener getListener() {
         return mListener;
     }
-    
+
     /**
      * Sets listener to notify when calibration starts, finishes or its progress
      * significantly changes.
-     * @param listener listener to notify when calibration starts, finishes or 
-     * its progress significantly changes.
+     *
+     * @param listener listener to notify when calibration starts, finishes or
+     *                 its progress significantly changes.
      * @throws LockedException if this instance is locked.
      */
-    public void setListener(CameraCalibratorListener listener)
+    public void setListener(final CameraCalibratorListener listener)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        
+
         mListener = listener;
     }
-    
+
     /**
      * Creates a camera calibrator using provided method.
+     *
      * @param method a camera calibrator method.
      * @return a camera calibrator.
      */
-    public static CameraCalibrator create(CameraCalibratorMethod method) {
+    public static CameraCalibrator create(final CameraCalibratorMethod method) {
         switch (method) {
             case ERROR_OPTIMIZATION:
                 return new ErrorOptimizationCameraCalibrator();
@@ -1081,19 +1141,21 @@ public abstract class CameraCalibrator {
                 return new AlternatingCameraCalibrator();
         }
     }
-    
+
     /**
      * Creates a camera calibrator using provided pattern, samples and
      * method.
+     *
      * @param pattern a 2D pattern to use for calibration.
      * @param samples samples of the 2D pattern taken with the camera to be
-     * calibrated.
-     * @param method a camera calibrator method.
+     *                calibrated.
+     * @param method  a camera calibrator method.
      * @return a camera calibrator.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples, CameraCalibratorMethod method) {
+    public static CameraCalibrator create(final Pattern2D pattern,
+                                          final List<CameraCalibratorSample> samples,
+                                          final CameraCalibratorMethod method) {
         switch (method) {
             case ERROR_OPTIMIZATION:
                 return new ErrorOptimizationCameraCalibrator(pattern, samples);
@@ -1102,111 +1164,119 @@ public abstract class CameraCalibrator {
                 return new AlternatingCameraCalibrator(pattern, samples);
         }
     }
-    
+
     /**
      * Creates a camera calibrator using provided pattern, samples and method.
-     * @param pattern a 2D pattern to use for calibration.
-     * @param samples samples of the 2D pattern taken with the camera to be
-     * calibrated.
+     *
+     * @param pattern              a 2D pattern to use for calibration.
+     * @param samples              samples of the 2D pattern taken with the camera to be
+     *                             calibrated.
      * @param samplesQualityScores quality scores for each sample.
-     * @param method a camera calibrator method.
+     * @param method               a camera calibrator method.
      * @return a camera calibrator.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples, double[] samplesQualityScores,
-            CameraCalibratorMethod method) {
+    public static CameraCalibrator create(final Pattern2D pattern,
+                                          final List<CameraCalibratorSample> samples,
+                                          final double[] samplesQualityScores,
+                                          final CameraCalibratorMethod method) {
         switch (method) {
             case ERROR_OPTIMIZATION:
                 return new ErrorOptimizationCameraCalibrator(pattern, samples,
                         samplesQualityScores);
             case ALTERNATING_CALIBRATOR:
             default:
-                return new AlternatingCameraCalibrator(pattern, samples, 
+                return new AlternatingCameraCalibrator(pattern, samples,
                         samplesQualityScores);
         }
     }
 
     /**
      * Creates a camera calibrator using default method.
+     *
      * @return a camera calibrator.
      */
     public static CameraCalibrator create() {
         return create(DEFAULT_METHOD);
     }
-    
+
     /**
      * Creates a camera calibrator using provided pattern, samples and
      * default method.
+     *
      * @param pattern a 2D pattern to use for calibration.
      * @param samples samples of the 2D pattern taken with the camera to be
-     * calibrated.
+     *                calibrated.
      * @return a camera calibrator.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples) {
+    public static CameraCalibrator create(final Pattern2D pattern,
+                                          final List<CameraCalibratorSample> samples) {
         return create(pattern, samples, DEFAULT_METHOD);
     }
-    
+
     /**
-     * Creates a camera calibrator using provided pattern, samples and default 
+     * Creates a camera calibrator using provided pattern, samples and default
      * method.
-     * @param pattern a 2D pattern to use for calibration.
-     * @param samples samples of the 2D pattern taken with the camera to be
-     * calibrated.
+     *
+     * @param pattern              a 2D pattern to use for calibration.
+     * @param samples              samples of the 2D pattern taken with the camera to be
+     *                             calibrated.
      * @param samplesQualityScores quality scores for each sample.
      * @return a camera calibrator.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public static CameraCalibrator create(Pattern2D pattern,
-            List<CameraCalibratorSample> samples, double[] samplesQualityScores) {
+    public static CameraCalibrator create(final Pattern2D pattern,
+                                          final List<CameraCalibratorSample> samples,
+                                          final double[] samplesQualityScores) {
         return create(pattern, samples, samplesQualityScores, DEFAULT_METHOD);
-    }    
-    
+    }
+
     /**
      * Starts the calibration process.
      * Depending on the settings the following will be estimated:
      * intrinsic pinhole camera parameters, radial distortion of lens,
-     * camera pose (rotation and translation) for each sample, and the 
-     * associated homobraphy of sampled points respect to the ideal pattern 
+     * camera pose (rotation and translation) for each sample, and the
+     * associated homobraphy of sampled points respect to the ideal pattern
      * samples.
+     *
      * @throws CalibrationException if calibration fails for some reason.
-     * @throws LockedException if this instance is locked because calibration is
-     * already in progress.
-     * @throws NotReadyException if this instance does not have enough data to
-     * start camera calibration.
+     * @throws LockedException      if this instance is locked because calibration is
+     *                              already in progress.
+     * @throws NotReadyException    if this instance does not have enough data to
+     *                              start camera calibration.
      */
-    public abstract void calibrate() throws CalibrationException, 
+    public abstract void calibrate() throws CalibrationException,
             LockedException, NotReadyException;
-    
+
     /**
      * Returns the camera calibrator method used by this instance.
+     *
      * @return the camera calibrator method.
      */
     public abstract CameraCalibratorMethod getMethod();
-    
+
     /**
      * Notifies progress to current listener, if needed.
      */
     protected abstract void notifyProgress();
-    
+
     /**
      * Computes intrinsic estimation progress.
      */
     protected void computeIntrinsicProgress() {
-        float lambda = 1.0f / (float)mSamples.size();
-        mIntrinsicProgress = 
+        final float lambda = 1.0f / (float) mSamples.size();
+        mIntrinsicProgress =
                 0.5f * (mSampleProgress + lambda * mHomographyProgress) +
-                0.5f * mIACProgress;
+                        0.5f * mIACProgress;
     }
-    
+
     /**
      * Resets estimated value to their initial values.
      */
     protected void reset() {
         mHomographies = null;
-        for (CameraCalibratorSample sample : mSamples) {
+        for (final CameraCalibratorSample sample : mSamples) {
             sample.setUndistortedMarkers(null);
             sample.setHomography(null);
             sample.setRotation(null);
@@ -1218,80 +1288,83 @@ public abstract class CameraCalibrator {
         mIntrinsic = null;
         mDistortion = null;
     }
-    
+
     /**
      * Estimates pinhole camera intrinsic parameters without accounting for
      * lens radial distortion.
+     *
      * @param idealFallbackPatternMarkers ideal pattern markers coordinates used
-     * as fallback if pattern is not provided for a given sample.
+     *                                    as fallback if pattern is not provided for a given sample.
      * @throws CalibrationException if calibration fails for some reason.
      */
     protected void estimateIntrinsicParameters(
-            List<Point2D> idealFallbackPatternMarkers) 
+            final List<Point2D> idealFallbackPatternMarkers)
             throws CalibrationException {
-        
+
         mHomographyProgress = mSampleProgress = mIACProgress =
                 mIntrinsicProgress = 0.0f;
-        
+
         if (mListener != null) {
             mListener.onIntrinsicParametersEstimationStarts(this);
         }
-                
-        //for each sample estimate the homography between the ideal pattern 
-        //markers and the sampled ones
+
+        // for each sample estimate the homography between the ideal pattern
+        // markers and the sampled ones
         List<Point2D> sampledPatternMarkers;
         Transformation2D homography;
-        int sampleSize = mSamples.size();
+        final int sampleSize = mSamples.size();
         mHomographies = new ArrayList<>(sampleSize);
-        double[] tmpHomographyQualityScores = new double[sampleSize];
+        final double[] tmpHomographyQualityScores = new double[sampleSize];
         int index = 0;
         int counter = 0;
         double error;
-        for (CameraCalibratorSample sample : mSamples) {
+        for (final CameraCalibratorSample sample : mSamples) {
             try {
-                //reset homography before estimation in case that estimation
-                //fails on current iteration
+                // reset homography before estimation in case that estimation
+                // fails on current iteration
                 sample.setHomography(null);
-                List<Point2D> idealPatternMarkers;
+                final List<Point2D> idealPatternMarkers;
                 if (sample.getPattern() != null) {
-                    //use sample pattern for homography estimation
+                    // use sample pattern for homography estimation
                     idealPatternMarkers = sample.getPattern().getIdealPoints();
                 } else {
-                    //use fallback pattern common to all samples
+                    // use fallback pattern common to all samples
                     idealPatternMarkers = idealFallbackPatternMarkers;
                 }
-                homography = sample.estimateHomography(mHomographyEstimator, 
+                homography = sample.estimateHomography(mHomographyEstimator,
                         idealPatternMarkers);
                 sampledPatternMarkers = sample.getUndistortedMarkers() != null ?
-                        sample.getUndistortedMarkers() : 
+                        sample.getUndistortedMarkers() :
                         sample.getSampledMarkers();
                 sample.setHomography(homography);
                 mHomographies.add(homography);
-                
+
                 if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
                         mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||
                         mHomographyQualityScoresRequired) {
                     if (mSamplesQualityScores != null) {
-                        //pick corresponding quality score
-                        tmpHomographyQualityScores[counter] = 
-                            mSamplesQualityScores[index];
+                        // pick corresponding quality score
+                        tmpHomographyQualityScores[counter] =
+                                mSamplesQualityScores[index];
                     } else {
-                        //compute reprojection error
+                        // compute reprojection error
                         error = homographyTransformationError(homography,
                                 idealPatternMarkers, sampledPatternMarkers);
-                        tmpHomographyQualityScores[counter] = 
+                        tmpHomographyQualityScores[counter] =
                                 1.0 / (1.0 + error);
                     }
                 }
-                counter++; //counter of homography estimation successes
-            } catch (NumericalException | GeometryException ignore) {
-                //homographies are attempted to be estimated. It's ok if some fail
+                // counter of homography estimation successes
+                counter++;
+            } catch (final NumericalException | GeometryException ignore) {
+                // homographies are attempted to be estimated. It's ok if some fail
             }
-            
-            index++; //position index (regardless of homography estimation success)
-            
+
+            // position index (regardless of homography estimation success)
+            index++;
+
             mHomographyProgress = 0.0f;
-            mSampleProgress = (float)index / (float)sampleSize;
+            mSampleProgress = (float) index / (float) sampleSize;
             computeIntrinsicProgress();
             notifyProgress();
         }
@@ -1299,63 +1372,64 @@ public abstract class CameraCalibrator {
         if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
                 mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||
                 mHomographyQualityScoresRequired) {
-        
-            //truncate tmpHomographyQualityScores to contain only actual number of
-            //successfully estimated homographies
-            mHomographyQualityScores = Arrays.copyOf(tmpHomographyQualityScores, 
+
+            // truncate tmpHomographyQualityScores to contain only actual number of
+            // successfully estimated homographies
+            mHomographyQualityScores = Arrays.copyOf(tmpHomographyQualityScores,
                     counter);
         }
-        
-        //estimate IAC using estimated homographies
+
+        // estimate IAC using estimated homographies
         try {
             mIACEstimator.setHomographies(mHomographies);
             mIACEstimator.setQualityScores(mHomographyQualityScores);
             mIAC = mIACEstimator.estimate();
-            
+
             mIntrinsic = mIAC.getIntrinsicParameters();
-        } catch (GeometryException | NumericalException e) {
+        } catch (final GeometryException | NumericalException e) {
             throw new CalibrationException(e);
-        } 
-        
+        }
+
         if (mListener != null) {
             mListener.onIntrinsicParametersEstimationEnds(this, mIntrinsic);
         }
     }
-    
+
     /**
-     * Computes average transformation error as a result of comparing sampled 
+     * Computes average transformation error as a result of comparing sampled
      * pattern markers against the transformation of ideal pattern markers using
      * the estimated homography.
-     * @param homography estimated homography.
-     * @param idealPatternMarkers ideal pattern markers.
+     *
+     * @param homography            estimated homography.
+     * @param idealPatternMarkers   ideal pattern markers.
      * @param sampledPatternMarkers sampled pattern markers.
      * @return average reprojection error.
      */
     protected static double homographyTransformationError(
-            Transformation2D homography,
-            List<Point2D> idealPatternMarkers, 
-            List<Point2D> sampledPatternMarkers) {
-        
-        Point2D transformedPoint = new HomogeneousPoint2D();
+            final Transformation2D homography,
+            final List<Point2D> idealPatternMarkers,
+            final List<Point2D> sampledPatternMarkers) {
+
+        final Point2D transformedPoint = new HomogeneousPoint2D();
         Point2D idealPatternMarker;
         Point2D sampledPatternMarker;
         double avgError = 0.0;
         double distance;
-        int size = sampledPatternMarkers.size();
+        final int size = sampledPatternMarkers.size();
         for (int i = 0; i < size; i++) {
-            idealPatternMarker = idealPatternMarkers.get(i);            
+            idealPatternMarker = idealPatternMarkers.get(i);
             sampledPatternMarker = sampledPatternMarkers.get(i);
-            
+
             homography.transform(idealPatternMarker, transformedPoint);
             distance = transformedPoint.distanceTo(sampledPatternMarker);
             avgError += distance;
         }
-        
-        avgError /= (double)size;
-        
+
+        avgError /= size;
+
         return avgError;
     }
-    
+
     /**
      * Refreshes listener of homography estimator.
      */
@@ -1365,7 +1439,7 @@ public abstract class CameraCalibrator {
 
                 @Override
                 public void onEstimateStart(
-                        ProjectiveTransformation2DRobustEstimator estimator) {
+                        final ProjectiveTransformation2DRobustEstimator estimator) {
                     mHomographyProgress = 0.0f;
                     computeIntrinsicProgress();
                     notifyProgress();
@@ -1373,7 +1447,7 @@ public abstract class CameraCalibrator {
 
                 @Override
                 public void onEstimateEnd(
-                        ProjectiveTransformation2DRobustEstimator estimator) {
+                        final ProjectiveTransformation2DRobustEstimator estimator) {
                     mHomographyProgress = 1.0f;
                     computeIntrinsicProgress();
                     notifyProgress();
@@ -1381,29 +1455,31 @@ public abstract class CameraCalibrator {
 
                 @Override
                 public void onEstimateNextIteration(
-                        ProjectiveTransformation2DRobustEstimator estimator, 
-                        int iteration) { /* not used */ }
+                        final ProjectiveTransformation2DRobustEstimator estimator,
+                        int iteration) {
+                    // not used
+                }
 
                 @Override
                 public void onEstimateProgressChange(
-                        ProjectiveTransformation2DRobustEstimator estimator, 
-                        float progress) {
+                        final ProjectiveTransformation2DRobustEstimator estimator,
+                        final float progress) {
                     mHomographyProgress = progress;
                     computeIntrinsicProgress();
                     notifyProgress();
                 }
             };
         }
-        
+
         try {
             mHomographyEstimator.setListener(mHomographyEstimatorListener);
-        } catch (LockedException e) {
+        } catch (final LockedException e) {
             Logger.getLogger(CameraCalibrator.class.getName()).log(
-                    Level.WARNING, 
+                    Level.WARNING,
                     "Could not set homography estimator listener", e);
         }
-    }    
-    
+    }
+
     /**
      * Refreshes listener of IAC estimator.
      */
@@ -1413,7 +1489,7 @@ public abstract class CameraCalibrator {
 
                 @Override
                 public void onEstimateStart(
-                        ImageOfAbsoluteConicRobustEstimator estimator) {
+                        final ImageOfAbsoluteConicRobustEstimator estimator) {
                     mIACProgress = 0.0f;
                     computeIntrinsicProgress();
                     notifyProgress();
@@ -1421,7 +1497,7 @@ public abstract class CameraCalibrator {
 
                 @Override
                 public void onEstimateEnd(
-                        ImageOfAbsoluteConicRobustEstimator estimator) {
+                        final ImageOfAbsoluteConicRobustEstimator estimator) {
                     mIACProgress = 1.0f;
                     computeIntrinsicProgress();
                     notifyProgress();
@@ -1429,49 +1505,52 @@ public abstract class CameraCalibrator {
 
                 @Override
                 public void onEstimateNextIteration(
-                        ImageOfAbsoluteConicRobustEstimator estimator, 
-                        int iteration) { /* not used */ }
+                        final ImageOfAbsoluteConicRobustEstimator estimator,
+                        final int iteration) {
+                    // not used
+                }
 
                 @Override
                 public void onEstimateProgressChange(
-                        ImageOfAbsoluteConicRobustEstimator estimator, 
-                        float progress) {
+                        final ImageOfAbsoluteConicRobustEstimator estimator,
+                        final float progress) {
                     mIACProgress = progress;
                     computeIntrinsicProgress();
                     notifyProgress();
                 }
             };
         }
-        
+
         try {
             mIACEstimator.setListener(mIACEstimatorListener);
-        } catch (LockedException e) {
+        } catch (final LockedException e) {
             Logger.getLogger(CameraCalibrator.class.getName()).log(
                     Level.WARNING, "Could not set IAC estimator listener", e);
         }
-    }  
-    
+    }
+
     /**
-     * Internal method to set list of samples obtained from different pictures 
+     * Internal method to set list of samples obtained from different pictures
      * using the same camera device (or same camera model). Several samples can
      * be used to calibrate the camera (a pinhole camera can be estimated for
-     * each sample). The more samples are used, typically the better the 
+     * each sample). The more samples are used, typically the better the
      * results.
      * This method is for internal use only and does not check whether this
      * instance is locked or not.
+     *
      * @param samples list of samples.
      * @throws IllegalArgumentException if not enough samples are provided to
-     * estimate the intrinsic parameters. By default the minimum is 1, but
-     * depending on the settings at least 3 samples might be required.
+     *                                  estimate the intrinsic parameters. By default the minimum is 1, but
+     *                                  depending on the settings at least 3 samples might be required.
      */
-    private void internalSetSamples(List<CameraCalibratorSample> samples) {
+    private void internalSetSamples(final List<CameraCalibratorSample> samples) {
         if (samples.size() < mIACEstimator.getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }
-        
-        mSamples = samples;        
-    }    
-    
+
+        mSamples = samples;
+    }
+
     /**
      * Sets quality scores assigned to each provided sample. This can be used on
      * certain robust estimation methods of the IAC such as PROSAC and PROMedS.
@@ -1479,32 +1558,34 @@ public abstract class CameraCalibrator {
      * reprojection error and this value will be ignored.
      * This method is for internal use only and does not check whether this
      * instance is locked or not.
-     * @param samplesQualityScores quality scores assigned to each provided 
-     * sample.
-     * @throws IllegalArgumentException if not enough quality scores are 
-     * provided for the corresponding samples to estimate the intrinsic 
-     * parameters. By default the minimum is 1, but depending on the settings at
-     * least 3 samples might be required.
-     */    
-    private void internalSetSamplesQualityScores(double[] samplesQualityScores) {
+     *
+     * @param samplesQualityScores quality scores assigned to each provided
+     *                             sample.
+     * @throws IllegalArgumentException if not enough quality scores are
+     *                                  provided for the corresponding samples to estimate the intrinsic
+     *                                  parameters. By default the minimum is 1, but depending on the settings at
+     *                                  least 3 samples might be required.
+     */
+    private void internalSetSamplesQualityScores(final double[] samplesQualityScores) {
         if (samplesQualityScores.length < mIACEstimator.getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }
-        
-        mSamplesQualityScores = samplesQualityScores;        
+
+        mSamplesQualityScores = samplesQualityScores;
     }
-        
+
     /**
      * Sets robust homography estimation method.
      * If method changes, then a new homography robust estimator is created and
      * configured.
+     *
      * @param homographyMethod robust homography estimation method to be set.
      */
     private void internalSetHomographyMethod(
-            RobustEstimatorMethod homographyMethod) {
-        //if method changes, homography estimator must be recreated
+            final RobustEstimatorMethod homographyMethod) {
+        // if method changes, homography estimator must be recreated
         if (homographyMethod != mHomographyMethod) {
-            boolean previousAvailable = mHomographyEstimator != null;
+            final boolean previousAvailable = mHomographyEstimator != null;
             double threshold = 0.0;
             double confidence = 0.0;
             int maxIterations = 0;
@@ -1513,39 +1594,40 @@ public abstract class CameraCalibrator {
                 confidence = getHomographyEstimatorConfidence();
                 maxIterations = getHomographyEstimatorMaxIterations();
             }
-            
-            mHomographyEstimator = 
+
+            mHomographyEstimator =
                     PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                    create(homographyMethod);
-            
-            //configure new estimator
+                            create(homographyMethod);
+
+            // configure new estimator
             refreshHomographyEstimatorListener();
             if (previousAvailable) {
                 try {
                     setHomographyEstimatorThreshold(threshold);
                     setHomographyEstimatorConfidence(confidence);
                     setHomographyEstimatorMaxIterations(maxIterations);
-                } catch (LockedException e) {
+                } catch (final LockedException e) {
                     Logger.getLogger(CameraCalibrator.class.getName()).log(
-                            Level.WARNING, 
+                            Level.WARNING,
                             "Could not reconfigure homography estimator", e);
                 }
             }
         }
-        mHomographyMethod = homographyMethod;        
+        mHomographyMethod = homographyMethod;
     }
 
     /**
      * Sets robust IAC estimation method.
-     * IF method changes, then a new IAC robust estimator is created and 
+     * IF method changes, then a new IAC robust estimator is created and
      * configured
+     *
      * @param imageOfAbsoluteConicMethod robust IAC estimation method to be set
      */
     private void internalSetImageOfAbsoluteConicMethod(
-            RobustEstimatorMethod imageOfAbsoluteConicMethod) {
-        //if method changes, iac estimator must be recreated
+            final RobustEstimatorMethod imageOfAbsoluteConicMethod) {
+        // if method changes, iac estimator must be recreated
         if (imageOfAbsoluteConicMethod != mImageOfAbsoluteConicMethod) {
-            boolean previousAvailable = mIACEstimator != null;
+            final boolean previousAvailable = mIACEstimator != null;
             double threshold = 0.0;
             double confidence = 0.0;
             int maxIterations = 0;
@@ -1559,15 +1641,15 @@ public abstract class CameraCalibrator {
                 maxIterations = getIACEstimatorMaxIterations();
                 zeroSkewness = isZeroSkewness();
                 principalPointAtOrigin = isPrincipalPointAtOrigin();
-                focalDistanceAspectRatioKnown = 
+                focalDistanceAspectRatioKnown =
                         isFocalDistanceAspectRatioKnown();
                 focalDistanceAspectRatio = getFocalDistanceAspectRatio();
             }
-            
+
             mIACEstimator = ImageOfAbsoluteConicRobustEstimator.create(
-                imageOfAbsoluteConicMethod);
-            
-            //configure new estimator
+                    imageOfAbsoluteConicMethod);
+
+            // configure new estimator
             refreshIACEstimatorListener();
             if (previousAvailable) {
                 try {
@@ -1579,13 +1661,13 @@ public abstract class CameraCalibrator {
                     setFocalDistanceAspectRatioKnown(
                             focalDistanceAspectRatioKnown);
                     setFocalDistanceAspectRatio(focalDistanceAspectRatio);
-                } catch (LockedException e) {
+                } catch (final LockedException e) {
                     Logger.getLogger(CameraCalibrator.class.getName()).log(
-                            Level.WARNING, 
+                            Level.WARNING,
                             "Could not reconfigure IAC estimator", e);
                 }
             }
         }
-        mImageOfAbsoluteConicMethod = imageOfAbsoluteConicMethod;        
-    }    
+        mImageOfAbsoluteConicMethod = imageOfAbsoluteConicMethod;
+    }
 }

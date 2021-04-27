@@ -35,6 +35,7 @@ public class SlamPairedViewsSparseReconstructorConfiguration extends
     /**
      * Creates an instance of a paired view sparse reconstructor configuration with slam
      * estimation.
+     *
      * @return configuration instance.
      */
     public static SlamPairedViewsSparseReconstructorConfiguration make() {

@@ -16,16 +16,16 @@
 package com.irurueta.ar.calibration.estimators;
 
 /**
- * Defines types of radial distortion estimators depending on their 
+ * Defines types of radial distortion estimators depending on their
  * implementation.
  */
 public enum RadialDistortionEstimatorType {
     /**
-     * Radial distortion estimator using LMSE (Least Mean Square Error) 
+     * Radial distortion estimator using LMSE (Least Mean Square Error)
      * solutions.
      */
     LMSE_RADIAL_DISTORTION_ESTIMATOR,
-    
+
     /**
      * Radial distortion estimator using weighted samples.
      */

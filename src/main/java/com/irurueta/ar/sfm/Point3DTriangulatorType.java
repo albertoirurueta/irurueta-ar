@@ -24,22 +24,22 @@ package com.irurueta.ar.sfm;
  */
 public enum Point3DTriangulatorType {
     /**
-     * Triangulator using homogeneous method and an LMSE (Least Mean Square 
+     * Triangulator using homogeneous method and an LMSE (Least Mean Square
      * Error) solution.
      */
     LMSE_HOMOGENEOUS_TRIANGULATOR,
-    
+
     /**
      * Triangulator using inhomogeneous method and an LMSE (Least Mean Square
      * Error) solution.
      */
     LMSE_INHOMOGENEOUS_TRIANGULATOR,
-    
+
     /**
      * Triangulator using homogeneous method and a weighted solution.
      */
     WEIGHTED_HOMOGENEOUS_TRIANGULATOR,
-    
+
     /**
      * Triangulator using inhomogeneous method and a weighted solution.
      */

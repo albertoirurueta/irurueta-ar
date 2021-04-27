@@ -35,6 +35,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConf
     /**
      * Creates an instance of a multiple views sparse reconstructor configuration with
      * constant velocity model in slam estimation and absolute orientation.
+     *
      * @return configuration instance.
      */
     public static AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration make() {

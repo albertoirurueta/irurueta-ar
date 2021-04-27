@@ -19,25 +19,28 @@ package com.irurueta.ar.epipolar;
  * Handles events produced by a FundamentalMatrixComparator.
  */
 public interface FundamentalMatrixComparatorListener {
-    
+
     /**
      * Called when comparison starts.
+     *
      * @param comparator instance that raised the event.
      */
-    void onCompareStart(FundamentalMatrixComparator comparator);
-    
+    void onCompareStart(final FundamentalMatrixComparator comparator);
+
     /**
      * Called when comparison finishes.
+     *
      * @param comparator instance that raised the event.
      */
-    void onCompareEnd(FundamentalMatrixComparator comparator);
-    
+    void onCompareEnd(final FundamentalMatrixComparator comparator);
+
     /**
      * Called when progress of comparison significantly changes.
+     *
      * @param comparator instance that riased the event.
-     * @param progress progress of comparison expressed as a value between 0.0
-     * and 1.0.
+     * @param progress   progress of comparison expressed as a value between 0.0
+     *                   and 1.0.
      */
-    void onCompareProgressChange(FundamentalMatrixComparator comparator,
-            float progress);
+    void onCompareProgressChange(final FundamentalMatrixComparator comparator,
+                                 final float progress);
 }

@@ -18,38 +18,40 @@ package com.irurueta.ar.sfm;
 /**
  * Exception raised if a reconstructor fails or is cancelled.
  */
-@SuppressWarnings("WeakerAccess")
 public class ReconstructionException extends StructureFromMotionException {
-    
+
     /**
      * Constructor.
      */
     public ReconstructionException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public ReconstructionException(String message) {
+    public ReconstructionException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public ReconstructionException(String message, Throwable cause) {
+    public ReconstructionException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public ReconstructionException(Throwable cause) {
+    public ReconstructionException(final Throwable cause) {
         super(cause);
     }
 }

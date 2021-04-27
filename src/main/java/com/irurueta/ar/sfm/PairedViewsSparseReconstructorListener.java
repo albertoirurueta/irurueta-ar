@@ -21,19 +21,22 @@ package com.irurueta.ar.sfm;
  * from sparse image point correspondences.
  */
 public interface PairedViewsSparseReconstructorListener extends
-        BasePairedViewsSparseReconstructorListener<PairedViewsSparseReconstructor>{
+        BasePairedViewsSparseReconstructorListener<PairedViewsSparseReconstructor> {
 
     /**
      * Requests baseline for provided pair of views so that actual scale can be estimated
      * to obtain cameras an reconstructed points in an euclidean space (up to certain rotation and
      * translation).
+     *
      * @param reconstructor reconstructor raising this event.
-     * @param viewId1 id of previous view (i.e. 1st view).
-     * @param viewId2 id of current view (i.e. 2nd view).
+     * @param viewId1       id of previous view (i.e. 1st view).
+     * @param viewId2       id of current view (i.e. 2nd view).
      * @param metricCamera1 estimated first metric camera.
      * @param metricCamera2 estimated second metric camera
      * @return baseline separating cameras.
      */
-    double onBaselineRequested(PairedViewsSparseReconstructor reconstructor, int viewId1, int viewId2,
-                       EstimatedCamera metricCamera1, EstimatedCamera metricCamera2);
+    double onBaselineRequested(final PairedViewsSparseReconstructor reconstructor,
+                               final int viewId1, final int viewId2,
+                               final EstimatedCamera metricCamera1,
+                               final EstimatedCamera metricCamera2);
 }

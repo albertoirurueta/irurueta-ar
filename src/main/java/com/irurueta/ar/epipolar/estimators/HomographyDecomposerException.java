@@ -20,38 +20,40 @@ import com.irurueta.ar.epipolar.EpipolarException;
 /**
  * Exception raised if homography decomposition fails.
  */
-@SuppressWarnings("WeakerAccess")
 public class HomographyDecomposerException extends EpipolarException {
-    
+
     /**
      * Constructor.
      */
     public HomographyDecomposerException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public HomographyDecomposerException(String message) {
+    public HomographyDecomposerException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public HomographyDecomposerException(String message, Throwable cause) {
+    public HomographyDecomposerException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public HomographyDecomposerException(Throwable cause) {
+    public HomographyDecomposerException(final Throwable cause) {
         super(cause);
     }
 }

@@ -16,41 +16,43 @@
 package com.irurueta.ar.epipolar;
 
 /**
- * Exception raised when point correction fails when trying to be fit into a 
+ * Exception raised when point correction fails when trying to be fit into a
  * given epipolar geometry.
  */
-@SuppressWarnings("WeakerAccess")
 public class CorrectionException extends EpipolarException {
-    
+
     /**
      * Constructor.
      */
     public CorrectionException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public CorrectionException(String message) {
+    public CorrectionException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public CorrectionException(String message, Throwable cause) {
+    public CorrectionException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public CorrectionException(Throwable cause) {
+    public CorrectionException(final Throwable cause) {
         super(cause);
     }
 }

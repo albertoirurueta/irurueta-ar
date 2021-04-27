@@ -20,16 +20,18 @@ package com.irurueta.ar.calibration.estimators;
  * changes.
  */
 public interface KruppaDualImageOfAbsoluteConicEstimatorListener {
-    
+
     /**
      * Called when an estimator starts the DIAC estimation process.
+     *
      * @param estimator reference to a DIAC estimator.
      */
-    void onEstimateStart(KruppaDualImageOfAbsoluteConicEstimator estimator);
-    
+    void onEstimateStart(final KruppaDualImageOfAbsoluteConicEstimator estimator);
+
     /**
      * Called when an estimator ends the DIAC estimation process.
+     *
      * @param estimator reference to a DIAC estimator.
      */
-    void onEstimateEnd(KruppaDualImageOfAbsoluteConicEstimator estimator);    
+    void onEstimateEnd(final KruppaDualImageOfAbsoluteConicEstimator estimator);
 }

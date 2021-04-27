@@ -27,29 +27,32 @@ public class CalibrationException extends ARException {
     public CalibrationException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message Message indicating the cause of the exception.
      */
-    public CalibrationException(String message) {
+    public CalibrationException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message Message describing the cause of the exception.
-     * @param cause Instance containing the cause of the exception.
+     * @param cause   Instance containing the cause of the exception.
      */
-    public CalibrationException(String message, Throwable cause) {
+    public CalibrationException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause Instance containing the cause of the exception.
      */
-    public CalibrationException(Throwable cause) {
+    public CalibrationException(final Throwable cause) {
         super(cause);
-    }                
+    }
 }

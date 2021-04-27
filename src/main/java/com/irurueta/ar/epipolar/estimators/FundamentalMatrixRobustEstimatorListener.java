@@ -20,33 +20,37 @@ package com.irurueta.ar.epipolar.estimators;
  * when progress changes.
  */
 public interface FundamentalMatrixRobustEstimatorListener {
-    
+
     /**
      * Called when estimation starts.
-     * @param estimator referente to robust estimator.
-     */
-    void onEstimateStart(FundamentalMatrixRobustEstimator estimator);
-    
-    /**
-     * Called when estimation ends.
+     *
      * @param estimator reference to robust estimator.
      */
-    void onEstimateEnd(FundamentalMatrixRobustEstimator estimator);
-    
+    void onEstimateStart(final FundamentalMatrixRobustEstimator estimator);
+
+    /**
+     * Called when estimation ends.
+     *
+     * @param estimator reference to robust estimator.
+     */
+    void onEstimateEnd(final FundamentalMatrixRobustEstimator estimator);
+
     /**
      * Called when estimator iterates to refine a possible solution.
+     *
      * @param estimator reference to robust estimator.
      * @param iteration current iteration.
      */
     void onEstimateNextIteration(
-            FundamentalMatrixRobustEstimator estimator, int iteration);
-    
+            final FundamentalMatrixRobustEstimator estimator, final int iteration);
+
     /**
      * Called when estimation progress changes significantly.
+     *
      * @param estimator reference to robust estimator.
-     * @param progress progress of estimation expressed as a value between 0.0
-     * and 1.0.
+     * @param progress  progress of estimation expressed as a value between 0.0
+     *                  and 1.0.
      */
     void onEstimateProgressChange(
-            FundamentalMatrixRobustEstimator estimator, float progress);
+            final FundamentalMatrixRobustEstimator estimator, final float progress);
 }

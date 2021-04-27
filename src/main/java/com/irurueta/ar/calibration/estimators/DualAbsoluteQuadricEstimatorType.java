@@ -16,7 +16,7 @@
 package com.irurueta.ar.calibration.estimators;
 
 /**
- * Defines types of Dual Absolute Quadric estimators depending their algorithm 
+ * Defines types of Dual Absolute Quadric estimators depending their algorithm
  * of implementation.
  */
 public enum DualAbsoluteQuadricEstimatorType {
@@ -24,7 +24,7 @@ public enum DualAbsoluteQuadricEstimatorType {
      * Dual Absolute Quadric estimator using an LMSE solution.
      */
     LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
-    
+
     /**
      * Dual Absolute Quadric estimator.
      */

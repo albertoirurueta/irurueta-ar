@@ -18,12 +18,12 @@ package com.irurueta.ar.slam;
 import java.io.Serializable;
 
 /**
- * Contains control calibration data for an absolute orientation SLAM estimator 
+ * Contains control calibration data for an absolute orientation SLAM estimator
  * during Kalman filtering prediction stage.
  */
-public class AbsoluteOrientationSlamCalibrationData extends BaseCalibrationData 
+public class AbsoluteOrientationSlamCalibrationData extends BaseCalibrationData
         implements Serializable {
-    
+
     /**
      * Constructor.
      */

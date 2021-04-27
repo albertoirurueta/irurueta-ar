@@ -15,7 +15,7 @@
  */
 
 /**
- * This package contains classes needed to estimate structures needed for camera 
+ * This package contains classes needed to estimate structures needed for camera
  * calibration
  */
 package com.irurueta.ar.calibration.estimators;

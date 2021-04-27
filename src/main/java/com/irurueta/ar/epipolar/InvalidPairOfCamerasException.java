@@ -20,36 +20,39 @@ package com.irurueta.ar.epipolar;
  * typically because they are set in a degenerate configuration.
  */
 public class InvalidPairOfCamerasException extends EpipolarException {
-    
+
     /**
      * Constructor.
      */
     public InvalidPairOfCamerasException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public InvalidPairOfCamerasException(String message) {
+    public InvalidPairOfCamerasException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public InvalidPairOfCamerasException(String message, Throwable cause) {
+    public InvalidPairOfCamerasException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public InvalidPairOfCamerasException(Throwable cause) {
+    public InvalidPairOfCamerasException(final Throwable cause) {
         super(cause);
     }
 }

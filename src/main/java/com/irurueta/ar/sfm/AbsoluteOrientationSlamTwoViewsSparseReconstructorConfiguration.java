@@ -27,14 +27,15 @@ import java.io.Serializable;
  * This configuration assumes that an absolute orientation will be considered
  * on each view.
  */
-public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration 
+public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration
         extends BaseSlamTwoViewsSparseReconstructorConfiguration<
-        AbsoluteOrientationSlamCalibrationData, 
+        AbsoluteOrientationSlamCalibrationData,
         AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration> implements Serializable {
 
     /**
      * Creates an instance of a two views sparse reconstructor configuration with
      * slam estimation and absolute orientation.
+     *
      * @return configuration instance.
      */
     public static AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration make() {

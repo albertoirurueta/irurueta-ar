@@ -35,6 +35,7 @@ public class SlamSparseReconstructorConfiguration extends
     /**
      * Creates an instance of a multiple views sparse reconstructor configuration with slam
      * estimation.
+     *
      * @return configuration instance.
      */
     public static SlamSparseReconstructorConfiguration make() {

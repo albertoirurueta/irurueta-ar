@@ -18,7 +18,6 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when DAQ estimation fails.
  */
-@SuppressWarnings("WeakerAccess")
 public class DualAbsoluteQuadricEstimatorException extends
         CalibrationEstimatorException {
     
@@ -33,7 +32,7 @@ public class DualAbsoluteQuadricEstimatorException extends
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
-    public DualAbsoluteQuadricEstimatorException(String message) {
+    public DualAbsoluteQuadricEstimatorException(final String message) {
         super(message);
     }
     
@@ -42,8 +41,8 @@ public class DualAbsoluteQuadricEstimatorException extends
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public DualAbsoluteQuadricEstimatorException(String message, 
-            Throwable cause) {
+    public DualAbsoluteQuadricEstimatorException(final String message,
+            final Throwable cause) {
         super(message, cause);
     }
     
@@ -51,7 +50,7 @@ public class DualAbsoluteQuadricEstimatorException extends
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
-    public DualAbsoluteQuadricEstimatorException(Throwable cause) {
+    public DualAbsoluteQuadricEstimatorException(final Throwable cause) {
         super(cause);
     }
 }

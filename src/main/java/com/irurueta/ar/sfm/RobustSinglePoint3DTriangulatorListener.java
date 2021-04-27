@@ -20,34 +20,38 @@ package com.irurueta.ar.sfm;
  * when progress changes.
  */
 public interface RobustSinglePoint3DTriangulatorListener {
-    
+
     /**
      * Called when triangulation starts.
+     *
      * @param triangulator reference to robust triangulator.
      */
     void onTriangulateStart(
-            RobustSinglePoint3DTriangulator triangulator);
-    
+            final RobustSinglePoint3DTriangulator triangulator);
+
     /**
      * Called when triangulation ends.
-     * @param triangulator reference to robust triangulator.
+     *
+     * @param triangulator reøference to robust triangulator.
      */
-    void onTriangulateEnd(RobustSinglePoint3DTriangulator triangulator);
-    
+    void onTriangulateEnd(final RobustSinglePoint3DTriangulator triangulator);
+
     /**
      * Called when robust triangulator iterates to refine a possible solution.
+     *
      * @param triangulator reference to robust triangulator.
-     * @param iteration current iteration.
+     * @param iteration    current iteration.
      */
     void onTriangulateNextIteration(
-            RobustSinglePoint3DTriangulator triangulator, int iteration);
-    
+            final RobustSinglePoint3DTriangulator triangulator, final int iteration);
+
     /**
      * Called when estimation progress changes significantly.
+     *
      * @param triangulator reference to robust triangulator.
-     * @param progress progress of estimation expressed as a value between 0.0
-     * and 1.0.
+     * @param progress     progress of estimation expressed as a value between 0.0
+     *                     and 1.0.
      */
     void onTriangulateProgressChange(
-            RobustSinglePoint3DTriangulator triangulator, float progress);
+            final RobustSinglePoint3DTriangulator triangulator, final float progress);
 }

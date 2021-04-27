@@ -18,7 +18,7 @@ package com.irurueta.ar.calibration.estimators;
 import com.irurueta.geometry.ProjectiveTransformation2D;
 import com.irurueta.geometry.Transformation2D;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,47 +26,33 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ImageOfAbsoluteConicRobustEstimatorTest {
-    
-    public ImageOfAbsoluteConicRobustEstimatorTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
-    
+
     @Test
     public void testCreate() {
-        //test with method
-        
-        //RANSAC
+        // test with method
+
+        // RANSAC
         ImageOfAbsoluteConicRobustEstimator estimator =
                 ImageOfAbsoluteConicRobustEstimator.create(
-                RobustEstimatorMethod.RANSAC);
-        
-        //check correctness
+                        RobustEstimatorMethod.RANSAC);
+
+        // check correctness
         assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -78,30 +64,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 RANSACImageOfAbsoluteConicRobustEstimator);
-        
-        //LMedS
+
+        // LMedS
         estimator = ImageOfAbsoluteConicRobustEstimator.create(
                 RobustEstimatorMethod.LMedS);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -115,28 +101,28 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertTrue(estimator instanceof
                 LMedSImageOfAbsoluteConicRobustEstimator);
-        
-        //MSAC
+
+        // MSAC
         estimator = ImageOfAbsoluteConicRobustEstimator.create(
                 RobustEstimatorMethod.MSAC);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -150,28 +136,28 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
         assertTrue(estimator instanceof
                 MSACImageOfAbsoluteConicRobustEstimator);
-        
-        //PROSAC
+
+        // PROSAC
         estimator = ImageOfAbsoluteConicRobustEstimator.create(
                 RobustEstimatorMethod.PROSAC);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -185,28 +171,28 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertTrue(estimator instanceof
                 PROSACImageOfAbsoluteConicRobustEstimator);
-        
-        //PROMedS
+
+        // PROMedS
         estimator = ImageOfAbsoluteConicRobustEstimator.create(
                 RobustEstimatorMethod.PROMedS);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -218,37 +204,37 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROMedSImageOfAbsoluteConicRobustEstimator);
-        
-        //test with homographies, quality scores and method
-        List<Transformation2D> homographies = new ArrayList<>();
+
+        // test with homographies, quality scores and method
+        final List<Transformation2D> homographies = new ArrayList<>();
         homographies.add(new ProjectiveTransformation2D());
         homographies.add(new ProjectiveTransformation2D());
         homographies.add(new ProjectiveTransformation2D());
-        double[] qualityScores = new double[3];
-        
-        //RANSAC
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        final double[] qualityScores = new double[3];
+
+        // RANSAC
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 qualityScores, RobustEstimatorMethod.RANSAC);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -260,30 +246,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 RANSACImageOfAbsoluteConicRobustEstimator);
-        
-        //LMedS
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+
+        // LMedS
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 qualityScores, RobustEstimatorMethod.LMedS);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -295,30 +281,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 LMedSImageOfAbsoluteConicRobustEstimator);
 
-        //MSAC
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        // MSAC
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 qualityScores, RobustEstimatorMethod.MSAC);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);        
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -330,30 +316,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 MSACImageOfAbsoluteConicRobustEstimator);
 
-        //PROSAC
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        // PROSAC
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 qualityScores, RobustEstimatorMethod.PROSAC);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -365,30 +351,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROSACImageOfAbsoluteConicRobustEstimator);
 
-        //PROMedS
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        // PROMedS
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 qualityScores, RobustEstimatorMethod.PROMedS);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -400,33 +386,32 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROMedSImageOfAbsoluteConicRobustEstimator);
-        
-        
-        //test with homographies and method
-        
-        //RANSAC
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+
+        // test with homographies and method
+
+        // RANSAC
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 RobustEstimatorMethod.RANSAC);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);        
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -438,30 +423,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 RANSACImageOfAbsoluteConicRobustEstimator);
 
-        //LMedS
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        // LMedS
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 RobustEstimatorMethod.LMedS);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -473,30 +458,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 LMedSImageOfAbsoluteConicRobustEstimator);
 
-        //MSAC
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        // MSAC
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 RobustEstimatorMethod.MSAC);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -508,30 +493,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 MSACImageOfAbsoluteConicRobustEstimator);
-        
-        //PROSAC
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+
+        // PROSAC
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 RobustEstimatorMethod.PROSAC);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -543,30 +528,30 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROSACImageOfAbsoluteConicRobustEstimator);
 
-        //PROMedS
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+        // PROMedS
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 RobustEstimatorMethod.PROMedS);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -578,29 +563,29 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROMedSImageOfAbsoluteConicRobustEstimator);
-        
-        //test without aruments
+
+        // test without arguments
         estimator = ImageOfAbsoluteConicRobustEstimator.create();
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -611,32 +596,32 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
                 1);
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), 
+        assertEquals(estimator.getMethod(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_ROBUST_METHOD);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROSACImageOfAbsoluteConicRobustEstimator);
-        
-        //test with homographies and quality scores
-        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies, 
+
+        // test with homographies and quality scores
+        estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies,
                 qualityScores);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -647,31 +632,31 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
                 1);
         assertTrue(estimator.isReady());
         assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(), 
+        assertEquals(estimator.getMethod(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_ROBUST_METHOD);
-        assertTrue(estimator instanceof 
+        assertTrue(estimator instanceof
                 PROSACImageOfAbsoluteConicRobustEstimator);
 
-        //test with homographies
+        // test with homographies
         estimator = ImageOfAbsoluteConicRobustEstimator.create(homographies);
-        
-        //check correctness
-        assertEquals(estimator.isZeroSkewness(), 
+
+        // check correctness
+        assertEquals(estimator.isZeroSkewness(),
                 ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
         assertEquals(estimator.isPrincipalPointAtOrigin(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
         assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
         assertEquals(estimator.getFocalDistanceAspectRatio(),
                 ImageOfAbsoluteConicEstimator.
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);                
+                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA, 
+                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(estimator.getConfidence(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
@@ -682,9 +667,9 @@ public class ImageOfAbsoluteConicRobustEstimatorTest {
                 1);
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), 
+        assertEquals(estimator.getMethod(),
                 ImageOfAbsoluteConicRobustEstimator.DEFAULT_ROBUST_METHOD);
-        assertTrue(estimator instanceof 
-                PROSACImageOfAbsoluteConicRobustEstimator);        
+        assertTrue(estimator instanceof
+                PROSACImageOfAbsoluteConicRobustEstimator);
     }
 }

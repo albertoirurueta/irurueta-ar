@@ -15,41 +15,44 @@
  */
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.slam.SlamCalibrationData;
 import com.irurueta.ar.slam.SlamEstimator;
 
 /**
- * Estimates cameras and 3D reconstructed points from sparse image point 
+ * Estimates cameras and 3D reconstructed points from sparse image point
  * correspondences in two views and using SLAM (with accelerometer and gyroscope
  * data) for overall scale estimation.
  */
-@SuppressWarnings("WeakerAccess")
-public class SlamTwoViewsSparseReconstructor extends 
+public class SlamTwoViewsSparseReconstructor extends
         BaseSlamTwoViewsSparseReconstructor<
-        SlamTwoViewsSparseReconstructorConfiguration, 
-        SlamTwoViewsSparseReconstructor,
-        SlamTwoViewsSparseReconstructorListener,
-        SlamEstimator> {
-    
+                SlamCalibrationData,
+                SlamTwoViewsSparseReconstructorConfiguration,
+                SlamTwoViewsSparseReconstructor,
+                SlamTwoViewsSparseReconstructorListener,
+                SlamEstimator> {
+
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
-     * @throws NullPointerException if listener or configuration is not 
-     * provided.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
      */
     public SlamTwoViewsSparseReconstructor(
-            SlamTwoViewsSparseReconstructorConfiguration configuration,
-            SlamTwoViewsSparseReconstructorListener listener) {
+            final SlamTwoViewsSparseReconstructorConfiguration configuration,
+            final SlamTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
-    
+
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
     public SlamTwoViewsSparseReconstructor(
-            SlamTwoViewsSparseReconstructorListener listener) {
+            final SlamTwoViewsSparseReconstructorListener listener) {
         this(new SlamTwoViewsSparseReconstructorConfiguration(), listener);
     }
 
@@ -57,6 +60,7 @@ public class SlamTwoViewsSparseReconstructor extends
      * Process one view of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
      * one view at a time.
+     *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     @Override
@@ -73,6 +77,7 @@ public class SlamTwoViewsSparseReconstructor extends
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @return true if post processing succeeded, false otherwise.
      */
     @Override

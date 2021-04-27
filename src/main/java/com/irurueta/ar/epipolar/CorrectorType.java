@@ -23,7 +23,7 @@ public enum CorrectorType {
      * Corrector that uses Sampson approximation.
      */
     SAMPSON_CORRECTOR,
-    
+
     /**
      * Corrector that uses Gold Standard method.
      */

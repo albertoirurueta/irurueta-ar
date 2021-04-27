@@ -29,73 +29,76 @@ import java.util.List;
  * (camera separation), so that cameras and reconstructed points are obtained with
  * exact scale.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class KnownBaselineSparseReconstructor extends
         BaseSparseReconstructor<KnownBaselineSparseReconstructorConfiguration,
                 KnownBaselineSparseReconstructor, KnownBaselineSparseReconstructorListener> {
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
+     * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
     public KnownBaselineSparseReconstructor(
-            KnownBaselineSparseReconstructorConfiguration configuration,
-            KnownBaselineSparseReconstructorListener listener) {
+            final KnownBaselineSparseReconstructorConfiguration configuration,
+            final KnownBaselineSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
     /**
      * Constructor with default configuration.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
     public KnownBaselineSparseReconstructor(
-            KnownBaselineSparseReconstructorListener listener) {
+            final KnownBaselineSparseReconstructorListener listener) {
         this(new KnownBaselineSparseReconstructorConfiguration(), listener);
     }
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @param isInitialPairOfViews true if initial pair of views is being processed, false otherwise.
      * @return true if post processing succeeded, false otherwise.
      */
+    @SuppressWarnings("DuplicatedCode")
     @Override
-    protected boolean postProcessOne(boolean isInitialPairOfViews) {
+    protected boolean postProcessOne(final boolean isInitialPairOfViews) {
         try {
-            PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();
-            PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();
+            final PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();
+            final PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();
 
             metricCamera1.decompose();
             metricCamera2.decompose();
 
-            double scale;
+            final double scale;
             if (isInitialPairOfViews) {
-                //reconstruction succeeded, so we update scale of cameras and
-                //reconstructed points
-                double baseline = mConfiguration.getBaseline();
+                // reconstruction succeeded, so we update scale of cameras and
+                // reconstructed points
+                final double baseline = mConfiguration.getBaseline();
 
-                Point3D center1 = metricCamera1.getCameraCenter();
-                Point3D center2 = metricCamera2.getCameraCenter();
+                final Point3D center1 = metricCamera1.getCameraCenter();
+                final Point3D center2 = metricCamera2.getCameraCenter();
 
-                double estimatedBaseline = center1.distanceTo(center2);
+                final double estimatedBaseline = center1.distanceTo(center2);
 
                 scale = mCurrentScale = baseline / estimatedBaseline;
             } else {
                 scale = mCurrentScale;
             }
 
-            double sqrScale = scale * scale;
+            final double sqrScale = scale * scale;
 
-            MetricTransformation3D scaleTransformation =
+            final MetricTransformation3D scaleTransformation =
                     new MetricTransformation3D(scale);
 
-            //update scale of cameras
-            PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);
-            PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);
+            // update scale of cameras
+            final PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);
+            final PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);
 
             mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
             mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
@@ -115,18 +118,18 @@ public class KnownBaselineSparseReconstructor extends
                         mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
             }
 
-            //update scale of reconstructed points
-            int numPoints = mActiveMetricReconstructedPoints.size();
-            List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
+            // update scale of reconstructed points
+            final int numPoints = mActiveMetricReconstructedPoints.size();
+            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             for (ReconstructedPoint3D activeMetricReconstructedPoint : mActiveMetricReconstructedPoints) {
                 metricReconstructedPoints3D.add(activeMetricReconstructedPoint.
                         getPoint());
             }
 
-            List<Point3D> euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(
+            final List<Point3D> euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(
                     metricReconstructedPoints3D);
 
-            //set scaled points into result
+            // set scaled points into result
             mActiveEuclideanReconstructedPoints = new ArrayList<>();
             ReconstructedPoint3D euclideanPoint;
             ReconstructedPoint3D metricPoint;
@@ -147,7 +150,7 @@ public class KnownBaselineSparseReconstructor extends
             }
 
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             mFailed = true;
             mListener.onFail(this);
 

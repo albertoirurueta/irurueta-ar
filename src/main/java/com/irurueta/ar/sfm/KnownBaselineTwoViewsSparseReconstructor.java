@@ -28,76 +28,79 @@ import java.util.List;
  * separation), so that both cameras and reconstructed points are obtained with
  * exact scale.
  */
-@SuppressWarnings("WeakerAccess")
-public class KnownBaselineTwoViewsSparseReconstructor extends 
+public class KnownBaselineTwoViewsSparseReconstructor extends
         BaseTwoViewsSparseReconstructor<
-        KnownBaselineTwoViewsSparseReconstructorConfiguration, 
-        KnownBaselineTwoViewsSparseReconstructor,
-        KnownBaselineTwoViewsSparseReconstructorListener> {
-        
+                KnownBaselineTwoViewsSparseReconstructorConfiguration,
+                KnownBaselineTwoViewsSparseReconstructor,
+                KnownBaselineTwoViewsSparseReconstructorListener> {
+
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
-     * @throws NullPointerException if listener or configuration is not 
-     * provided.
-     */    
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
+     */
     public KnownBaselineTwoViewsSparseReconstructor(
-            KnownBaselineTwoViewsSparseReconstructorConfiguration configuration,
-            KnownBaselineTwoViewsSparseReconstructorListener listener) {
+            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration,
+            final KnownBaselineTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
-    
+
     /**
      * Constructor with default configuration.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
-     */    
+     */
     public KnownBaselineTwoViewsSparseReconstructor(
-            KnownBaselineTwoViewsSparseReconstructorListener listener) {
-        this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(), 
+            final KnownBaselineTwoViewsSparseReconstructorListener listener) {
+        this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(),
                 listener);
     }
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @return true if post processing succeeded, false otherwise.
      */
+    @SuppressWarnings("DuplicatedCode")
     @Override
     protected boolean postProcessOne() {
         try {
-            //reconstruction succeeded, so we update scale of cameras and
-            //reconstructed points
-            double baseline = mConfiguration.getBaseline();
+            // reconstruction succeeded, so we update scale of cameras and
+            // reconstructed points
+            final double baseline = mConfiguration.getBaseline();
 
-            PinholeCamera camera1 = mEstimatedCamera1.getCamera();
-            PinholeCamera camera2 = mEstimatedCamera2.getCamera();
+            final PinholeCamera camera1 = mEstimatedCamera1.getCamera();
+            final PinholeCamera camera2 = mEstimatedCamera2.getCamera();
 
             camera1.decompose();
             camera2.decompose();
 
-            Point3D center1 = camera1.getCameraCenter();
-            Point3D center2 = camera2.getCameraCenter();
+            final Point3D center1 = camera1.getCameraCenter();
+            final Point3D center2 = camera2.getCameraCenter();
 
-            double estimatedBaseline = center1.distanceTo(center2);
+            final double estimatedBaseline = center1.distanceTo(center2);
 
-            double scale = baseline / estimatedBaseline;
+            final double scale = baseline / estimatedBaseline;
 
-            MetricTransformation3D scaleTransformation =
+            final MetricTransformation3D scaleTransformation =
                     new MetricTransformation3D(scale);
 
-            //update scale of cameras
+            // update scale of cameras
             scaleTransformation.transform(camera1);
             scaleTransformation.transform(camera2);
 
             mEstimatedCamera1.setCamera(camera1);
             mEstimatedCamera2.setCamera(camera2);
 
-            //update scale of reconstructed points
-            int numPoints = mReconstructedPoints.size();
-            List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {
+            // update scale of reconstructed points
+            final int numPoints = mReconstructedPoints.size();
+            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
+            for (final ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {
                 reconstructedPoints3D.add(reconstructedPoint.
                         getPoint());
             }
@@ -105,14 +108,14 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
             scaleTransformation.transformAndOverwritePoints(
                     reconstructedPoints3D);
 
-            //set scaled points into result
+            // set scaled points into result
             for (int i = 0; i < numPoints; i++) {
                 mReconstructedPoints.get(i).setPoint(
                         reconstructedPoints3D.get(i));
             }
 
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             mFailed = true;
             mListener.onFail(this);
 

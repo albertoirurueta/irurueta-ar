@@ -25,307 +25,337 @@ import java.io.Serializable;
 
 /**
  * The essential matrix defines the relation between two views in a similar way
- * that the fundamental matrix does, but taking into account the intrinsic 
+ * that the fundamental matrix does, but taking into account the intrinsic
  * parameters of the cameras associated to both views. That ways the relation
  * between their extrinsic parameters (rotation and translation) can be prcisely
  * obtained.
  */
-@SuppressWarnings("WeakerAccess")
 public class EssentialMatrix extends FundamentalMatrix implements Serializable {
-    
+
     /**
      * Default threshold to determine that the two non-zero singular values are
      * equal.
      */
     public static final double DEFAULT_SINGULAR_VALUES_THRESHOLD = 1e-8;
-    
+
     private Rotation3D mRotation1;
     private Rotation3D mRotation2;
-    
+
     private Point2D mTranslation1;
     private Point2D mTranslation2;
-    
+
     private boolean mPossibleRotationsAndTranslationsAvailable;
-    
+
     /**
      * Constructor.
      */
     public EssentialMatrix() {
         super();
     }
-    
+
     /**
      * Constructor.
-     * @param internalMatrix matrix to be set internally.
+     *
+     * @param internalMatrix          matrix to be set internally.
      * @param singularValuesThreshold threshold to determine that both singular
-     * values are equal.
+     *                                values are equal.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     * does not have rank 2 or its two non-zero singular values are not equal up
-     * to provided threshold.
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                         does not have rank 2 or its two non-zero singular values are not equal up
+     *                                         to provided threshold.
+     * @throws IllegalArgumentException        if provided threshold is negative.
      */
-    public EssentialMatrix(Matrix internalMatrix, 
-            double singularValuesThreshold) 
+    public EssentialMatrix(final Matrix internalMatrix,
+                           final double singularValuesThreshold)
             throws InvalidEssentialMatrixException {
         super();
         setInternalMatrix(internalMatrix, singularValuesThreshold);
     }
-    
+
     /**
      * Constructor.
+     *
      * @param internalMatrix matrix to be set internally.
-     * @throws InvalidEssentialMatrixException  if provided matrix is not 3x3,
-     * does not have rank 2 or its two non-zero singular values are not equal.
+     * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
+     *                                         does not have rank 2 or its two non-zero singular values are not equal.
      */
-    public EssentialMatrix(Matrix internalMatrix) 
+    public EssentialMatrix(final Matrix internalMatrix)
             throws InvalidEssentialMatrixException {
         this(internalMatrix, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
-    
+
     /**
      * Constructor from pair of cameras.
-     * @param leftCamera camera corresponding to left view.
-     * @param rightCamera camera corresponding to right view.
+     *
+     * @param leftCamera              camera corresponding to left view.
+     * @param rightCamera             camera corresponding to right view.
      * @param singularValuesThreshold threshold to determine that both singular
-     * values of generated essential matrix are equal.
-     * @throws InvalidPairOfCamerasException if provided cameras do not span a 
-     * valid epipolar geometry (i.e. they are set in a degenerate configuration).
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                values of generated essential matrix are equal.
+     * @throws InvalidPairOfCamerasException if provided cameras do not span a
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate configuration).
+     * @throws IllegalArgumentException      if provided threshold is negative.
      */
-    public EssentialMatrix(PinholeCamera leftCamera, PinholeCamera rightCamera,
-            double singularValuesThreshold) 
+    public EssentialMatrix(
+            final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera,
+            final double singularValuesThreshold)
             throws InvalidPairOfCamerasException {
         super();
         setFromPairOfCameras(leftCamera, rightCamera, singularValuesThreshold);
     }
-    
+
     /**
      * Constructor from pair of cameras.
-     * @param leftCamera camera corresponding to left view.
+     *
+     * @param leftCamera  camera corresponding to left view.
      * @param rightCamera camera corresponding to right view.
      * @throws InvalidPairOfCamerasException if provided cameras do not span a
-     * valid epipolar geometry (i.e. they are set in a degenerate configuration).
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate configuration).
      */
-    public EssentialMatrix(PinholeCamera leftCamera, PinholeCamera rightCamera)
+    public EssentialMatrix(
+            final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera)
             throws InvalidPairOfCamerasException {
         this(leftCamera, rightCamera, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
-    
+
     /**
      * Constructor from rotation and translation of the image of world origin
      * relative to left view camera, which is assumed to be located at origin
      * of coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
-     * @param translation translation of the image of world origin on right
-     * camera relative to left camera.
+     *
+     * @param rotation                rotation of right camera relative to left camera.
+     * @param translation             translation of the image of world origin on right
+     *                                camera relative to left camera.
      * @param singularValuesThreshold threshold to determine that both singular
-     * values of generated essential matrix are equal.
+     *                                values of generated essential matrix are equal.
      * @throws InvalidRotationAndTranslationException if provided rotation and
-     * translation yield a degenerate epipolar geometry.
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                                translation yield a degenerate epipolar geometry.
+     * @throws IllegalArgumentException               if provided threshold is negative.
      */
-    public EssentialMatrix(Rotation3D rotation, Point2D translation, 
-            double singularValuesThreshold) 
+    public EssentialMatrix(
+            final Rotation3D rotation,
+            final Point2D translation,
+            final double singularValuesThreshold)
             throws InvalidRotationAndTranslationException {
         super();
-        setFromRotationAndTranslation(rotation, translation, 
+        setFromRotationAndTranslation(rotation, translation,
                 singularValuesThreshold);
     }
-    
+
     /**
      * Constructor from rotation and translation of the image of world origin
      * relative to left view camera, which is assumed to be located at origin
      * of coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
+     *
+     * @param rotation    rotation of right camera relative to left camera.
      * @param translation translation of the image of world origin on right
-     * camera relative to left camera.
+     *                    camera relative to left camera.
      * @throws InvalidRotationAndTranslationException if provided rotation and
-     * translation yield a degenerate epipolar geometry.
+     *                                                translation yield a degenerate epipolar geometry.
      */
-    public EssentialMatrix(Rotation3D rotation, Point2D translation)
+    public EssentialMatrix(
+            final Rotation3D rotation,
+            final Point2D translation)
             throws InvalidRotationAndTranslationException {
         this(rotation, translation, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
-    
+
     /**
      * Constructor from rotation and translation of the camera center relative
-     * to left view camera, which is assumed to be located at origin of 
+     * to left view camera, which is assumed to be located at origin of
      * coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
-     * @param cameraCenter camera center of right camera relative to left camera.
+     *
+     * @param rotation                rotation of right camera relative to left camera.
+     * @param cameraCenter            camera center of right camera relative to left camera.
      * @param singularValuesThreshold threshold to determine that both singular
-     * values of generated essential matrix are equal.
+     *                                values of generated essential matrix are equal.
      * @throws InvalidRotationAndTranslationException if provided rotation and
-     * translation yield a degenerate epipolar geometry.
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                                translation yield a degenerate epipolar geometry.
+     * @throws IllegalArgumentException               if provided threshold is negative.
      */
-    public EssentialMatrix(Rotation3D rotation, Point3D cameraCenter, 
-            double singularValuesThreshold)
+    public EssentialMatrix(
+            final Rotation3D rotation,
+            final Point3D cameraCenter,
+            final double singularValuesThreshold)
             throws InvalidRotationAndTranslationException {
-        setFromRotationAndCameraCenter(rotation, cameraCenter, 
+        setFromRotationAndCameraCenter(rotation, cameraCenter,
                 singularValuesThreshold);
     }
-    
+
     /**
      * Constructor from rotation and translation of the camera center relative
-     * to left view camera, which is assumed to be located at origin of 
+     * to left view camera, which is assumed to be located at origin of
      * coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
+     *
+     * @param rotation     rotation of right camera relative to left camera.
      * @param cameraCenter camera center of right camera relative to left camera.
      * @throws InvalidRotationAndTranslationException if provided rotation and
-     * translation yield a degenerate epipolar geometry.
-     */    
-    public EssentialMatrix(Rotation3D rotation, Point3D cameraCenter)
+     *                                                translation yield a degenerate epipolar geometry.
+     */
+    public EssentialMatrix(
+            final Rotation3D rotation,
+            final Point3D cameraCenter)
             throws InvalidRotationAndTranslationException {
         this(rotation, cameraCenter, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
-    
+
     /**
      * Constructor from fundamental matrix and intrinsic camera parameters.
-     * @param fundamentalMatrix a fundamental matrix.
-     * @param leftIntrinsicParameters intrinsic camera parameters of left view.
+     *
+     * @param fundamentalMatrix        a fundamental matrix.
+     * @param leftIntrinsicParameters  intrinsic camera parameters of left view.
      * @param rightIntrinsicParameters intrinsic camera parameters of right view.
-     * @throws InvalidPairOfIntrinsicParametersException  if provided intrinsic
-     * parameters generate an invalid essential matrix.
+     * @throws InvalidPairOfIntrinsicParametersException if provided intrinsic
+     *                                                   parameters generate an invalid essential matrix.
      */
-    public EssentialMatrix(FundamentalMatrix fundamentalMatrix, 
-            PinholeCameraIntrinsicParameters leftIntrinsicParameters,
-            PinholeCameraIntrinsicParameters rightIntrinsicParameters)
+    public EssentialMatrix(
+            final FundamentalMatrix fundamentalMatrix,
+            final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
+            final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
             throws InvalidPairOfIntrinsicParametersException {
-        setFromFundamentalMatrixAndIntrinsics(fundamentalMatrix, 
+        setFromFundamentalMatrixAndIntrinsics(fundamentalMatrix,
                 leftIntrinsicParameters, rightIntrinsicParameters);
     }
-            
+
     /**
      * Sets internal matrix associated to this instance.
      * This method makes a copy of provided matrix.
+     *
      * @param internalMatrix matrix to be assigned to this instance.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     * does not have rank 2 or its two non-zero singular values are not equal.
+     *                                         does not have rank 2 or its two non-zero singular values are not equal.
      */
     @Override
-    public final void setInternalMatrix(Matrix internalMatrix) 
+    public final void setInternalMatrix(final Matrix internalMatrix)
             throws InvalidEssentialMatrixException {
         setInternalMatrix(internalMatrix, DEFAULT_SINGULAR_VALUES_THRESHOLD);
-    } 
-    
+    }
+
     /**
      * Sets internal matrix associated to this instance.
      * This method makes a copy of provided matrix.
-     * @param internalMatrix matrix to be assigned to this instance.
+     *
+     * @param internalMatrix          matrix to be assigned to this instance.
      * @param singularValuesThreshold threshold to determine that both
-     * singular values are equal.
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                singular values are equal.
+     * @throws IllegalArgumentException        if provided threshold is negative.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     * does not have rank 2 or its two non-zero singular values are not equal up
-     * to provided threshold.
+     *                                         does not have rank 2 or its two non-zero singular values are not equal up
+     *                                         to provided threshold.
      */
-    public final void setInternalMatrix(Matrix internalMatrix, 
-            double singularValuesThreshold)
+    public final void setInternalMatrix(
+            final Matrix internalMatrix,
+            final double singularValuesThreshold)
             throws InvalidEssentialMatrixException {
         if (!isValidInternalMatrix(internalMatrix, singularValuesThreshold)) {
             throw new InvalidEssentialMatrixException();
         }
-        
-        //because provided matrix is valid, we proceed to setting it
-        
-        mInternalMatrix = internalMatrix.clone();
+
+        // because provided matrix is valid, we proceed to setting it
+        mInternalMatrix = new Matrix(internalMatrix);
         mNormalized = false;
-        mLeftEpipole = mRightEpipole = null;        
+        mLeftEpipole = mRightEpipole = null;
     }
-    
+
     /**
      * Returns a boolean indicating whether provided matrix is a valid essential
      * matrix (i.e. has size 3x3, rank 2 and two non-zero and equal singular
      * values).
+     *
      * @param internalMatrix matrix to be checked.
      * @return true if provided matrix is a valid essential matrix, false
      * otherwise.
      */
-    public static boolean isValidInternalMatrix(Matrix internalMatrix) {
-        return isValidInternalMatrix(internalMatrix, 
+    public static boolean isValidInternalMatrix(final Matrix internalMatrix) {
+        return isValidInternalMatrix(internalMatrix,
                 DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
-    
+
     /**
-     * Returns a boolean indicating whether provided matrix is a valid 
+     * Returns a boolean indicating whether provided matrix is a valid
      * essential matrix (i.e. has size 3x3, rank 2 and his two non-zero singular
      * values are equal up to provided threshold).
-     * @param internalMatrix matrix to be checked.
+     *
+     * @param internalMatrix          matrix to be checked.
      * @param singularValuesThreshold threshold to determine that both singular
-     * values are equal.
-     * @return true if provided matrix is a valid essential matrix, false 
+     *                                values are equal.
+     * @return true if provided matrix is a valid essential matrix, false
      * otherwise.
      * @throws IllegalArgumentException if provided threshold is negative.
      */
-    public static boolean isValidInternalMatrix(Matrix internalMatrix, 
-            double singularValuesThreshold) {
+    public static boolean isValidInternalMatrix(
+            final Matrix internalMatrix,
+            final double singularValuesThreshold) {
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
-        
+
         if (internalMatrix.getColumns() != FUNDAMENTAL_MATRIX_COLS ||
                 internalMatrix.getRows() != FUNDAMENTAL_MATRIX_ROWS) {
             return false;
         }
-        
+
         try {
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     internalMatrix);
 
             decomposer.decompose();
 
-            double rankEssential = decomposer.getRank();
+            final double rankEssential = decomposer.getRank();
 
             if (rankEssential != FUNDAMENTAL_MATRIX_RANK) {
                 return false;
             }
 
-            double[] singularValues = decomposer.getSingularValues();
+            final double[] singularValues = decomposer.getSingularValues();
 
             return (Math.abs(singularValues[0] - singularValues[1]) <= singularValuesThreshold);
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             return false;
         }
-    }    
-    
+    }
+
     /**
      * Sets essential matrix from provided pair of cameras.
-     * @param leftCamera camera corresponding to left view.
+     *
+     * @param leftCamera  camera corresponding to left view.
      * @param rightCamera camera corresponding to right view.
-     * @throws InvalidPairOfCamerasException if provided cameras do not span a 
-     * valid epipolar geometry (i.e. they are set in a degenerate 
-     * configuration).
+     * @throws InvalidPairOfCamerasException if provided cameras do not span a
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate
+     *                                       configuration).
      */
     @Override
-    public void setFromPairOfCameras(PinholeCamera leftCamera,
-            PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
-        setFromPairOfCameras(leftCamera, rightCamera, 
+    public void setFromPairOfCameras(
+            final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
+        setFromPairOfCameras(leftCamera, rightCamera,
                 DEFAULT_SINGULAR_VALUES_THRESHOLD);
-    }   
-    
+    }
+
     /**
      * Sets essential matrix from provided pair of cameras.
-     * @param leftCamera camera corresponding to left view.
-     * @param rightCamera camera corresponding to right view.
+     *
+     * @param leftCamera              camera corresponding to left view.
+     * @param rightCamera             camera corresponding to right view.
      * @param singularValuesThreshold threshold to determine that both singular
-     * values of generated essential matrix are equal.
+     *                                values of generated essential matrix are equal.
      * @throws InvalidPairOfCamerasException if provided cameras do not span a
-     * valid epipolar geometry (i.e. they are set in a degenerate configuration).
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate configuration).
+     * @throws IllegalArgumentException      if provided threshold is negative.
      */
-    @SuppressWarnings("Duplicates")
-    public final void setFromPairOfCameras(PinholeCamera leftCamera,
-            PinholeCamera rightCamera, double singularValuesThreshold)
+    public final void setFromPairOfCameras(
+            final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera,
+            final double singularValuesThreshold)
             throws InvalidPairOfCamerasException {
-        
+
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
-        
+
         try {
-            //normalize cameras to increase accuracy of results and fix their signs
-            //if needed
+            // normalize cameras to increase accuracy of results and fix their signs
+            // if needed
             leftCamera.normalize();
             rightCamera.normalize();
 
@@ -336,8 +366,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
                 rightCamera.fixCameraSign();
             }
 
-            //Obtain intrinsic parameters of cameras to obtain normalized pinhole
-            //cameras where intrinsic parameters have been removed P1' = inv(K) * P1
+            // Obtain intrinsic parameters of cameras to obtain normalized pinhole
+            // cameras where intrinsic parameters have been removed P1' = inv(K) * P1
             if (!leftCamera.areIntrinsicParametersAvailable()) {
                 leftCamera.decompose(true, false);
             }
@@ -345,246 +375,249 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
                 rightCamera.decompose(true, false);
             }
 
-            PinholeCameraIntrinsicParameters leftIntrinsics =
+            final PinholeCameraIntrinsicParameters leftIntrinsics =
                     leftCamera.getIntrinsicParameters();
-            PinholeCameraIntrinsicParameters rightIntrinsics =
+            final PinholeCameraIntrinsicParameters rightIntrinsics =
                     rightCamera.getIntrinsicParameters();
 
-            Matrix leftIntrinsicsMatrix = leftIntrinsics.getInternalMatrix();
-            Matrix rightIntrinsicsMatrix = rightIntrinsics.getInternalMatrix();
+            final Matrix leftIntrinsicsMatrix = leftIntrinsics.getInternalMatrix();
+            final Matrix rightIntrinsicsMatrix = rightIntrinsics.getInternalMatrix();
 
-            //get left and right internal matrices of cameras
-            Matrix leftCameraInternalMatrix = leftCamera.getInternalMatrix();
-            Matrix rightCameraInternalMatrix = rightCamera.getInternalMatrix();
+            // get left and right internal matrices of cameras
+            final Matrix leftCameraInternalMatrix = leftCamera.getInternalMatrix();
+            final Matrix rightCameraInternalMatrix = rightCamera.getInternalMatrix();
 
-            //normalize internal camera matrices using inverse intrinsic matrices
-            Matrix invLeftIntrinsicsMatrix = Utils.inverse(
+            // normalize internal camera matrices using inverse intrinsic matrices
+            final Matrix invLeftIntrinsicsMatrix = Utils.inverse(
                     leftIntrinsicsMatrix);
-            Matrix invRightIntrinsicsMatrix = Utils.inverse(
+            final Matrix invRightIntrinsicsMatrix = Utils.inverse(
                     rightIntrinsicsMatrix);
 
-            //normalize cameras
-            //P1' = inv(K1) * P1
+            // normalize cameras
+            // P1' = inv(K1) * P1
             invLeftIntrinsicsMatrix.multiply(leftCameraInternalMatrix);
-            //noinspection all
-            Matrix normLeftCameraMatrix = invLeftIntrinsicsMatrix;
 
-            //P2' = inv(K2) * P2
+            // P2' = inv(K2) * P2
             invRightIntrinsicsMatrix.multiply(rightCameraInternalMatrix);
-            //noinspection all
-            Matrix normRightCameraMatrix = invRightIntrinsicsMatrix;
 
-            //instantiate normalized left camera to project right camera center
-            //and obtain left eipole
-            PinholeCamera normLeftCamera = new PinholeCamera(normLeftCameraMatrix);
+            // instantiate normalized left camera to project right camera center
+            // and obtain left eipole
+            final PinholeCamera normLeftCamera = new PinholeCamera(invLeftIntrinsicsMatrix);
 
-            //instantiate normalized right camera to decompose it and obtain its
-            //center
-            PinholeCamera normRightCamera = new PinholeCamera(
-                    normRightCameraMatrix);
+            // instantiate normalized right camera to decompose it and obtain its
+            // center
+            final PinholeCamera normRightCamera = new PinholeCamera(
+                    invRightIntrinsicsMatrix);
 
             normRightCamera.decompose(false, true);
 
-            Point3D rightCameraCenter = normRightCamera.getCameraCenter();
-            Point2D normLeftEpipole = normLeftCamera.project(rightCameraCenter);
-            normLeftEpipole.normalize(); //to increase accuracy
+            final Point3D rightCameraCenter = normRightCamera.getCameraCenter();
+            final Point2D normLeftEpipole = normLeftCamera.project(rightCameraCenter);
+            // to increase accuracy
+            normLeftEpipole.normalize();
 
-            //compute skew matrix of left epipole
-            Matrix skewNormLeftEpipoleMatrix = Utils.skewMatrix(new double[]{
-                normLeftEpipole.getHomX(), normLeftEpipole.getHomY(),
-                normLeftEpipole.getHomW() });
+            // compute skew matrix of left epipole
+            final Matrix skewNormLeftEpipoleMatrix = Utils.skewMatrix(new double[]{
+                    normLeftEpipole.getHomX(), normLeftEpipole.getHomY(),
+                    normLeftEpipole.getHomW()});
 
-            //compute transposed of internal normalized left pinhole camera
-            Matrix transNormLeftCameraMatrix = 
-                    normLeftCameraMatrix.transposeAndReturnNew();
+            // compute transposed of internal normalized left pinhole camera
+            final Matrix transNormLeftCameraMatrix =
+                    invLeftIntrinsicsMatrix.transposeAndReturnNew();
 
-            //compute transposed of internal normalized right pinhole camera
-            Matrix transNormRightCameraMatrix =
-                    normRightCameraMatrix.transposeAndReturnNew();
+            // compute transposed of internal normalized right pinhole camera
+            final Matrix transNormRightCameraMatrix =
+                    invRightIntrinsicsMatrix.transposeAndReturnNew();
 
-            //compute pseudo-inverse of transposed normalized right pinhole camera
-            Matrix pseudoTransNormRightCameraMatrix = Utils.pseudoInverse(
+            // compute pseudo-inverse of transposed normalized right pinhole camera
+            final Matrix pseudoTransNormRightCameraMatrix = Utils.pseudoInverse(
                     transNormRightCameraMatrix);
 
-            //obtain essential matrix as: inv(P2norm') * P1norm' * skew(e1)
+            // obtain essential matrix as: inv(P2norm') * P1norm' * skew(e1)
             transNormLeftCameraMatrix.multiply(skewNormLeftEpipoleMatrix);
             pseudoTransNormRightCameraMatrix.multiply(transNormLeftCameraMatrix);
-            //noinspection all
-            Matrix essentialMatrix = pseudoTransNormRightCameraMatrix;
 
-            setInternalMatrix(essentialMatrix, singularValuesThreshold);
-        } catch (GeometryException | AlgebraException  e) {
+            setInternalMatrix(pseudoTransNormRightCameraMatrix, singularValuesThreshold);
+        } catch (final GeometryException | AlgebraException e) {
             throw new InvalidPairOfCamerasException(e);
         }
     }
-    
+
     /**
      * Sets essential matrix from provided rotation and translation of the image
-     * of world origin relative to left view camera, which is assumed to be 
-     * located at origin of coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
-     * @param translation translation of the image of world origin on right
-     * camera relative to left camera.
-     * @throws InvalidRotationAndTranslationException if provided rotation and
-     * translation yield a degenerate epipolar geometry.
-     */
-    public void setFromRotationAndTranslation(Rotation3D rotation, 
-            Point2D translation) throws InvalidRotationAndTranslationException {
-        setFromRotationAndTranslation(rotation, translation, 
-                DEFAULT_SINGULAR_VALUES_THRESHOLD);
-    }
-    
-    /**
-     * Sets essential matrix from provided rotation and translation of the image 
      * of world origin relative to left view camera, which is assumed to be
      * located at origin of coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
+     *
+     * @param rotation    rotation of right camera relative to left camera.
      * @param translation translation of the image of world origin on right
-     * camera relative to left camera.
-     * @param singularValuesThreshold threshold to determine that both singular
-     * values of generated essential matrix are equal.
+     *                    camera relative to left camera.
      * @throws InvalidRotationAndTranslationException if provided rotation and
-     * translation yield a degenerate epipolar geometry.
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                                translation yield a degenerate epipolar geometry.
      */
-    public final void setFromRotationAndTranslation(Rotation3D rotation,
-            Point2D translation, double singularValuesThreshold)
+    public void setFromRotationAndTranslation(
+            final Rotation3D rotation,
+            final Point2D translation) throws InvalidRotationAndTranslationException {
+        setFromRotationAndTranslation(rotation, translation,
+                DEFAULT_SINGULAR_VALUES_THRESHOLD);
+    }
+
+    /**
+     * Sets essential matrix from provided rotation and translation of the image
+     * of world origin relative to left view camera, which is assumed to be
+     * located at origin of coordinates with no rotation.
+     *
+     * @param rotation                rotation of right camera relative to left camera.
+     * @param translation             translation of the image of world origin on right
+     *                                camera relative to left camera.
+     * @param singularValuesThreshold threshold to determine that both singular
+     *                                values of generated essential matrix are equal.
+     * @throws InvalidRotationAndTranslationException if provided rotation and
+     *                                                translation yield a degenerate epipolar geometry.
+     * @throws IllegalArgumentException               if provided threshold is negative.
+     */
+    public final void setFromRotationAndTranslation(
+            final Rotation3D rotation,
+            final Point2D translation,
+            final double singularValuesThreshold)
             throws InvalidRotationAndTranslationException {
-        
+
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
-        
+
         try {
-            translation.normalize(); //to increase accuracy
-            double[] translationArray = new double[] {
-                translation.getHomX(), translation.getHomY(), translation.getHomW()
+            // to increase accuracy
+            translation.normalize();
+            final double[] translationArray = new double[]{
+                    translation.getHomX(), translation.getHomY(), translation.getHomW()
             };
 
-            Matrix skewTranslationMatrix = Utils.skewMatrix(translationArray);
+            final Matrix skewTranslationMatrix = Utils.skewMatrix(translationArray);
 
-            Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+            final Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
 
-            //obtain essential matrix as: skew(translation) * rotation
+            // obtain essential matrix as: skew(translation) * rotation
             skewTranslationMatrix.multiply(rotationMatrix);
 
             setInternalMatrix(skewTranslationMatrix, singularValuesThreshold);
-        } catch (AlgebraException | InvalidEssentialMatrixException e) {
+        } catch (final AlgebraException | InvalidEssentialMatrixException e) {
             throw new InvalidRotationAndTranslationException(e);
         }
     }
-    
-    /**
-     * Sets essential matrix from provided rotation and translation of the
-     * camera center relative to left view camera, which is assumed to be
-     * located at origin of coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
-     * @param cameraCenter camera center of right camera relative to left camera.
-     * @throws InvalidRotationAndTranslationException if provided rotation and
-     * camera center yield a degenerate epipolar geometry.
-     */
-    public void setFromRotationAndCameraCenter(Rotation3D rotation, 
-            Point3D cameraCenter) throws 
-            InvalidRotationAndTranslationException {
-        setFromRotationAndCameraCenter(rotation, cameraCenter, 
-                DEFAULT_SINGULAR_VALUES_THRESHOLD);
-    }    
 
     /**
      * Sets essential matrix from provided rotation and translation of the
      * camera center relative to left view camera, which is assumed to be
      * located at origin of coordinates with no rotation.
-     * @param rotation rotation of right camera relative to left camera.
+     *
+     * @param rotation     rotation of right camera relative to left camera.
      * @param cameraCenter camera center of right camera relative to left camera.
-     * @param singularValuesThreshold threshold to determine that both singular
-     * values of generated essential matrix are equal.
      * @throws InvalidRotationAndTranslationException if provided rotation and
-     * camera center yield a degenerate epipolar geometry.
-     * @throws IllegalArgumentException if provided threshold is negative.
+     *                                                camera center yield a degenerate epipolar geometry.
      */
-    public final void setFromRotationAndCameraCenter(Rotation3D rotation, 
-            Point3D cameraCenter, double singularValuesThreshold) throws 
-            InvalidRotationAndTranslationException {
-        
+    public void setFromRotationAndCameraCenter(
+            final Rotation3D rotation,
+            final Point3D cameraCenter) throws InvalidRotationAndTranslationException {
+        setFromRotationAndCameraCenter(rotation, cameraCenter,
+                DEFAULT_SINGULAR_VALUES_THRESHOLD);
+    }
+
+    /**
+     * Sets essential matrix from provided rotation and translation of the
+     * camera center relative to left view camera, which is assumed to be
+     * located at origin of coordinates with no rotation.
+     *
+     * @param rotation                rotation of right camera relative to left camera.
+     * @param cameraCenter            camera center of right camera relative to left camera.
+     * @param singularValuesThreshold threshold to determine that both singular
+     *                                values of generated essential matrix are equal.
+     * @throws InvalidRotationAndTranslationException if provided rotation and
+     *                                                camera center yield a degenerate epipolar geometry.
+     * @throws IllegalArgumentException               if provided threshold is negative.
+     */
+    public final void setFromRotationAndCameraCenter(
+            final Rotation3D rotation,
+            final Point3D cameraCenter,
+            final double singularValuesThreshold) throws InvalidRotationAndTranslationException {
+
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
-        
+
         try {
             Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
-        
-            cameraCenter.normalize(); //to increase accuracy
-            Matrix inhomCenterMatrix = new Matrix(
+
+            // to increase accuracy
+            cameraCenter.normalize();
+            final Matrix inhomCenterMatrix = new Matrix(
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 1);
             inhomCenterMatrix.setElementAtIndex(0, cameraCenter.getInhomX());
             inhomCenterMatrix.setElementAtIndex(1, cameraCenter.getInhomY());
             inhomCenterMatrix.setElementAtIndex(2, cameraCenter.getInhomZ());
-        
-            //translationMatrix = -rotationMatrix * inhomCenterMatrix
+
+            // translationMatrix = -rotationMatrix * inhomCenterMatrix
             rotationMatrix.multiplyByScalar(-1.0);
             rotationMatrix.multiply(inhomCenterMatrix);
-            Matrix translationMatrix = rotationMatrix;
-            
-            //essentialMatrix = skew(translationMatrix) * rotationMatrix
-            Matrix skewTranslationMatrix = Utils.skewMatrix(translationMatrix);
+            final Matrix translationMatrix = rotationMatrix;
+
+            // essentialMatrix = skew(translationMatrix) * rotationMatrix
+            final Matrix skewTranslationMatrix = Utils.skewMatrix(translationMatrix);
             rotationMatrix = rotation.asInhomogeneousMatrix();
             skewTranslationMatrix.multiply(rotationMatrix);
 
             setInternalMatrix(skewTranslationMatrix, singularValuesThreshold);
-            
-        } catch (AlgebraException | InvalidEssentialMatrixException e) {
+
+        } catch (final AlgebraException | InvalidEssentialMatrixException e) {
             throw new InvalidRotationAndTranslationException(e);
         }
-    }    
-    
+    }
+
     /**
-     * Sets essential matrix from provided fundamental matrix and intrinsic 
+     * Sets essential matrix from provided fundamental matrix and intrinsic
      * camera parameters.
-     * @param fundamentalMatrix a fundamental matrix.
+     *
+     * @param fundamentalMatrix        a fundamental matrix.
      * @param leftInstrinsicParameters intrinsic camera parameters of left view.
      * @param rightIntrinsicParameters intrinsic camera parameters of right view.
      * @throws InvalidPairOfIntrinsicParametersException if provided intrinsic
-     * parameters generate an invalid essential matrix.
+     *                                                   parameters generate an invalid essential matrix.
      */
     public final void setFromFundamentalMatrixAndIntrinsics(
-            FundamentalMatrix fundamentalMatrix, 
-            PinholeCameraIntrinsicParameters leftInstrinsicParameters,
-            PinholeCameraIntrinsicParameters rightIntrinsicParameters)
+            final FundamentalMatrix fundamentalMatrix,
+            final PinholeCameraIntrinsicParameters leftInstrinsicParameters,
+            final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
             throws InvalidPairOfIntrinsicParametersException {
-        
+
         try {
-            Matrix k1 = leftInstrinsicParameters.getInternalMatrix();
-            double normK1 = Utils.normF(k1);
+            final Matrix k1 = leftInstrinsicParameters.getInternalMatrix();
+            final double normK1 = Utils.normF(k1);
             k1.multiplyByScalar(1.0 / normK1);
 
-            Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
-            double normK2 = Utils.normF(k2);
+            final Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
+            final double normK2 = Utils.normF(k2);
             k2.multiplyByScalar(1.0 / normK2);
 
-            fundamentalMatrix.normalize(); //to increase accuracy
-            Matrix fundMatrix = fundamentalMatrix.getInternalMatrix();
+            // to increase accuracy
+            fundamentalMatrix.normalize();
+            final Matrix fundMatrix = fundamentalMatrix.getInternalMatrix();
 
             k2.transpose();
-            //noinspection all
-            Matrix transK2 = k2;
 
-            //E = K2' * F * K1
+            // E = K2' * F * K1
             fundMatrix.multiply(k1);
-            transK2.multiply(fundMatrix);
-            //noinspection all
-            Matrix essentialMatrix = transK2;
+            k2.multiply(fundMatrix);
 
-            double normEssential = Utils.normF(essentialMatrix);
-            essentialMatrix.multiplyByScalar(1.0 / normEssential);
+            final double normEssential = Utils.normF(k2);
+            k2.multiplyByScalar(1.0 / normEssential);
 
-            mInternalMatrix = essentialMatrix;
+            mInternalMatrix = k2;
             mNormalized = false;
-            mLeftEpipole = mRightEpipole = null;   
-        } catch (AlgebraException | GeometryException e) {
+            mLeftEpipole = mRightEpipole = null;
+        } catch (final AlgebraException | GeometryException e) {
             throw new InvalidPairOfIntrinsicParametersException(e);
         }
     }
-    
+
     /**
      * Converts this essential matrix into a fundamental matrix by applying
      * provided intrinsic parameters on left and right views.
@@ -593,164 +626,163 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * information about the intrinsic parameters in both views.
      * NOTE: although essential matrix is a subclass of fundamental matrix, it
      * does not behave like a fundamental matrix.
-     * @param leftIntrinsicParameters intrinsic parameters in left view.
+     *
+     * @param leftIntrinsicParameters  intrinsic parameters in left view.
      * @param rightIntrinsicParameters intrinsic parameters in right view.
      * @return a fundamental matrix.
      * @throws EpipolarException if something fails.
      */
-    @SuppressWarnings("Duplicates")
     public FundamentalMatrix toFundamentalMatrix(
-            PinholeCameraIntrinsicParameters leftIntrinsicParameters,
-            PinholeCameraIntrinsicParameters rightIntrinsicParameters) 
+            final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
+            final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
             throws EpipolarException {
         try {
             normalize();
-        
-            Matrix essentialMatrix = getInternalMatrix();
-        
-            Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
-            Matrix invK1 = Utils.inverse(k1);
-            double normInvK1 = Utils.normF(invK1);
+
+            final Matrix essentialMatrix = getInternalMatrix();
+
+            final Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
+            final Matrix invK1 = Utils.inverse(k1);
+            final double normInvK1 = Utils.normF(invK1);
             invK1.multiplyByScalar(1.0 / normInvK1);
-        
-            Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
-            Matrix invK2 = Utils.inverse(k2);
-            double normInvK2 = Utils.normF(invK2);
+
+            final Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
+            final Matrix invK2 = Utils.inverse(k2);
+            final double normInvK2 = Utils.normF(invK2);
             invK2.multiplyByScalar(1.0 / normInvK2);
             invK2.transpose();
-            //noinspection all
-            Matrix transInvK2 = invK2;
-            
+
             essentialMatrix.multiply(invK1);
-            transInvK2.multiply(essentialMatrix);
-            //noinspection all
-            Matrix fundMatrix = transInvK2;
-            
-            return new FundamentalMatrix(fundMatrix);
-            
-        } catch(AlgebraException | GeometryException e) {
+            invK2.multiply(essentialMatrix);
+
+            return new FundamentalMatrix(invK2);
+
+        } catch (final AlgebraException | GeometryException e) {
             throw new EpipolarException(e);
         }
     }
-    
+
     /**
      * Computes all possible camera rotations and translations that can generate
      * this essential matrix.
+     *
      * @throws InvalidEssentialMatrixException if essential matrix contains
-     * numerically unstable values.
+     *                                         numerically unstable values.
      */
-    @SuppressWarnings("Duplicates")
-    public void computePossibleRotationAndTranslations() 
+    public void computePossibleRotationAndTranslations()
             throws InvalidEssentialMatrixException {
-        
+
         try {
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     mInternalMatrix);
 
             decomposer.decompose();
 
-            Matrix u = decomposer.getU();
-            Matrix v = decomposer.getV();
+            final Matrix u = decomposer.getU();
+            final Matrix v = decomposer.getV();
 
             v.transpose();
-            //noinspection all
-            Matrix transV = v;
 
             mTranslation1 = new HomogeneousPoint2D(u.getElementAt(0, 2),
-                u.getElementAt(1, 2), u.getElementAt(2, 2));
+                    u.getElementAt(1, 2), u.getElementAt(2, 2));
             mTranslation2 = new HomogeneousPoint2D(-u.getElementAt(0, 2),
-                -u.getElementAt(1, 2), -u.getElementAt(2, 2));
+                    -u.getElementAt(1, 2), -u.getElementAt(2, 2));
 
-            //W is a skew-symmetric matrix that can be used to obtain two possible
-            //rotations
-            Matrix w = new Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
+            // W is a skew-symmetric matrix that can be used to obtain two possible
+            // rotations
+            final Matrix w = new Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
             w.setElementAt(0, 1, -1.0);
             w.setElementAt(1, 0, 1.0);
             w.setElementAt(2, 2, 1.0);
-            
-            Matrix transW = w.transposeAndReturnNew();
-            
-            //R1 = U * W * V'
-            w.multiply(transV);
-            Matrix rotationMatrix1 = u.multiplyAndReturnNew(w);
-            
-            //R2 = U * W' * V'
-            transW.multiply(transV);
-            Matrix rotationMatrix2 = u.multiplyAndReturnNew(transW);
-            
+
+            final Matrix transW = w.transposeAndReturnNew();
+
+            // R1 = U * W * V'
+            w.multiply(v);
+            final Matrix rotationMatrix1 = u.multiplyAndReturnNew(w);
+
+            // R2 = U * W' * V'
+            transW.multiply(v);
+            final Matrix rotationMatrix2 = u.multiplyAndReturnNew(transW);
+
             mRotation1 = new MatrixRotation3D(rotationMatrix1);
             mRotation2 = new MatrixRotation3D(rotationMatrix2);
-            
+
             mPossibleRotationsAndTranslationsAvailable = true;
-        } catch(AlgebraException | InvalidRotationMatrixException e) {
+        } catch (final AlgebraException | InvalidRotationMatrixException e) {
             throw new InvalidEssentialMatrixException(e);
         }
     }
-    
+
     /**
-     * Indicates whether possible camera rotations and translations that can 
+     * Indicates whether possible camera rotations and translations that can
      * generate this essential matrix have already been computed or not.
+     *
      * @return true if possible camera rotations and translations have been
      * computed, false otherwise.
      */
     public boolean arePossibleRotationsAndTranslationsAvailable() {
         return mPossibleRotationsAndTranslationsAvailable;
     }
-    
+
     /**
      * Gets first possible rotation that can generate this essential matrix.
+     *
      * @return first possible rotation.
      * @throws NotAvailableException if possible rotation has not yet been
-     * computed.
+     *                               computed.
      */
     public Rotation3D getFirstPossibleRotation() throws NotAvailableException {
         if (!arePossibleRotationsAndTranslationsAvailable()) {
             throw new NotAvailableException();
         }
-                    
+
         return mRotation1;
     }
-    
+
     /**
      * Gets second possible rotation that can generate this essential matrix.
+     *
      * @return second possible rotation.
      * @throws NotAvailableException if possible rotation has not yet been
-     * computed.
+     *                               computed.
      */
     public Rotation3D getSecondPossibleRotation() throws NotAvailableException {
         if (!arePossibleRotationsAndTranslationsAvailable()) {
             throw new NotAvailableException();
         }
-        
+
         return mRotation2;
     }
-    
+
     /**
      * Gets first possible translation that can generate this essential matrix.
+     *
      * @return first possible translation.
      * @throws NotAvailableException if possible translation has not yet been
-     * computed.
+     *                               computed.
      */
     public Point2D getFirstPossibleTranslation() throws NotAvailableException {
         if (!arePossibleRotationsAndTranslationsAvailable()) {
             throw new NotAvailableException();
         }
-        
+
         return mTranslation1;
     }
-    
+
     /**
      * Gets second possible translation that can generate this essential matrix.
+     *
      * @return second possible translation.
      * @throws NotAvailableException if possible translation has not yet been
-     * computed.
+     *                               computed.
      */
     public Point2D getSecondPossibleTranslation() throws NotAvailableException {
         if (!arePossibleRotationsAndTranslationsAvailable()) {
             throw new NotAvailableException();
         }
-        
+
         return mTranslation2;
-    }  
-    
+    }
+
 }

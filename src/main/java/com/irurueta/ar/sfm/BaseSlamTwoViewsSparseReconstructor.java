@@ -17,31 +17,39 @@ package com.irurueta.ar.sfm;
 
 import com.irurueta.ar.slam.BaseCalibrationData;
 import com.irurueta.ar.slam.BaseSlamEstimator;
-import com.irurueta.geometry.*;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.MetricTransformation3D;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Quaternion;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Base class in charge of estimating cameras and 3D reconstructed points from
- * sparse image point correspondences in two views and also in charge of 
+ * sparse image point correspondences in two views and also in charge of
  * estimating overall scene scale by means of SLAM (Simultaneous Location And
  * Mapping) using data obtained from sensors like accelerometers or gyroscopes.
+ *
+ * @param <D> type of calibration data.
  * @param <C> type of configuration.
  * @param <R> type of reconstructor.
  * @param <L> type of listener.
  * @param <S> type of SLAM estimator.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public abstract class BaseSlamTwoViewsSparseReconstructor<
-        C extends BaseSlamTwoViewsSparseReconstructorConfiguration,
-        R extends BaseSlamTwoViewsSparseReconstructor,
+        D extends BaseCalibrationData,
+        C extends BaseSlamTwoViewsSparseReconstructorConfiguration<D, C>,
+        R extends BaseSlamTwoViewsSparseReconstructor<D, C, R, L, S>,
         L extends BaseSlamTwoViewsSparseReconstructorListener<R>,
-        S extends BaseSlamEstimator> extends 
+        S extends BaseSlamEstimator<D>> extends
         BaseTwoViewsSparseReconstructor<C, R, L> {
-    
+
     /**
-     * Slam estimator to estimate position, speed, orientation using 
+     * Slam estimator to estimate position, speed, orientation using
      * accelerometer and gyroscope data.
      */
     protected S mSlamEstimator;
@@ -49,114 +57,120 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
     /**
      * Position estimated by means of SLAM. It is reused each time it is notified.
      */
-    private InhomogeneousPoint3D mSlamPosition = new InhomogeneousPoint3D();
+    private final InhomogeneousPoint3D mSlamPosition = new InhomogeneousPoint3D();
 
     /**
      * Camera estimated by means of SLAM. It is reused each time it is notified.
      */
-    private PinholeCamera mSlamCamera = new PinholeCamera();
+    private final PinholeCamera mSlamCamera = new PinholeCamera();
 
     /**
      * Camera rotation estimated by means of SLAM. It is reused each time it is notified.
      */
-    private Quaternion mSlamRotation = new Quaternion();
+    private final Quaternion mSlamRotation = new Quaternion();
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
-     * @throws NullPointerException if listener or configuration is not 
-     * provided.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
      */
-    public BaseSlamTwoViewsSparseReconstructor(C configuration, 
-            L listener) {
+    protected BaseSlamTwoViewsSparseReconstructor(
+            final C configuration, final L listener) {
         super(configuration, listener);
     }
-    
-    /**
-     * Provides a new accelerometer sample to update SLAM estimation.
-     * This method must be called whenever the accelerometer sensor receives new 
-     * data.
-     * If reconstructor is not running, calling this method has no effect.
-     * @param timestamp timestamp of accelerometer sample since epoch time and 
-     * expressed in nanoseconds.
-     * @param accelerationX linear acceleration along x-axis expressed in meters
-     * per squared second (m/s^2).
-     * @param accelerationY linear acceleration along y-axis expressed in meters
-     * per squared second (m/s^2).
-     * @param accelerationZ linear acceleration along z-axis expressed in meters
-     * per squared second (m/s^2).
-     */
-    public void updateAccelerometerSample(long timestamp, float accelerationX,
-            float accelerationY, float accelerationZ) {
-        if (mSlamEstimator != null) {
-            mSlamEstimator.updateAccelerometerSample(timestamp, accelerationX, 
-                    accelerationY, accelerationZ);
-        }
-    }
-    
+
     /**
      * Provides a new accelerometer sample to update SLAM estimation.
      * This method must be called whenever the accelerometer sensor receives new
      * data.
      * If reconstructor is not running, calling this method has no effect.
-     * @param timestamp timestamp of accelerometer sample since epoch time and
-     * expressed in nanoseconds.
-     * @param data array containing x,y,z components of linear acceleration
-     * expressed in meters per squared second (m/s^2).
-     * @throws IllegalArgumentException if provided array does not have length 
-     * 3.
+     *
+     * @param timestamp     timestamp of accelerometer sample since epoch time and
+     *                      expressed in nanoseconds.
+     * @param accelerationX linear acceleration along x-axis expressed in meters
+     *                      per squared second (m/s^2).
+     * @param accelerationY linear acceleration along y-axis expressed in meters
+     *                      per squared second (m/s^2).
+     * @param accelerationZ linear acceleration along z-axis expressed in meters
+     *                      per squared second (m/s^2).
      */
-    public void updateAccelerometerSample(long timestamp, float[] data) {
+    public void updateAccelerometerSample(
+            final long timestamp, final float accelerationX,
+            final float accelerationY, final float accelerationZ) {
+        if (mSlamEstimator != null) {
+            mSlamEstimator.updateAccelerometerSample(timestamp, accelerationX,
+                    accelerationY, accelerationZ);
+        }
+    }
+
+    /**
+     * Provides a new accelerometer sample to update SLAM estimation.
+     * This method must be called whenever the accelerometer sensor receives new
+     * data.
+     * If reconstructor is not running, calling this method has no effect.
+     *
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     *                  expressed in nanoseconds.
+     * @param data      array containing x,y,z components of linear acceleration
+     *                  expressed in meters per squared second (m/s^2).
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void updateAccelerometerSample(
+            final long timestamp, final float[] data) {
         if (mSlamEstimator != null) {
             mSlamEstimator.updateAccelerometerSample(timestamp, data);
         }
     }
-    
+
     /**
      * Provides a new gyroscope sample to update SLAM estimation.
      * If reconstructor is not running, calling this method has no effect.
-     * @param timestamp timestamp of gyroscope sample since epoch time and
-     * expressed in nanoseconds.
+     *
+     * @param timestamp     timestamp of gyroscope sample since epoch time and
+     *                      expressed in nanoseconds.
      * @param angularSpeedX angular speed of rotation along x-axis expressed in
-     * radians per second (rad/s).
+     *                      radians per second (rad/s).
      * @param angularSpeedY angular speed of rotation along y-axis expressed in
-     * radians per second (rad/s).
+     *                      radians per second (rad/s).
      * @param angularSpeedZ angular speed of rotation along z-axis expressed in
-     * radians per second (rad/s).
+     *                      radians per second (rad/s).
      */
-    public void updateGyroscopeSample(long timestamp, float angularSpeedX,
-            float angularSpeedY, float angularSpeedZ) {
+    public void updateGyroscopeSample(
+            final long timestamp, final float angularSpeedX,
+            final float angularSpeedY, final float angularSpeedZ) {
         if (mSlamEstimator != null) {
-            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX, 
+            mSlamEstimator.updateGyroscopeSample(timestamp, angularSpeedX,
                     angularSpeedY, angularSpeedZ);
         }
     }
-    
+
     /**
      * Provies a new gyroscope sample to update SLAM estimation.
      * If reconstructor is not running, calling this method has no effect.
-     * @param timestamp timestamp of gyroscope sample since epoch time and 
-     * expressed in nanoseconds.
-     * @param data angular speed of rotation along x,y,z axes expressed in 
-     * radians per second (rad/s).
-     * @throws IllegalArgumentException if provided array does not have length 
-     * 3.
+     *
+     * @param timestamp timestamp of gyroscope sample since epoch time and
+     *                  expressed in nanoseconds.
+     * @param data      angular speed of rotation along x,y,z axes expressed in
+     *                  radians per second (rad/s).
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
      */
-    public void updateGyroscopeSample(long timestamp, float[] data) {
+    public void updateGyroscopeSample(final long timestamp, final float[] data) {
         if (mSlamEstimator != null) {
             mSlamEstimator.updateGyroscopeSample(timestamp, data);
-        }        
+        }
     }
-    
+
     /**
      * Set ups calibration data on SLAM estimator if available.
      */
     protected void setUpCalibrationData() {
-        BaseCalibrationData calibrationData = 
-                mConfiguration.getCalibrationData();
+        D calibrationData = mConfiguration.getCalibrationData();
         if (calibrationData != null) {
-            //noinspection unchecked
             mSlamEstimator.setCalibrationData(calibrationData);
         }
     }
@@ -165,87 +179,92 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
      * Configures listener of SLAM estimator
      */
     protected void setUpSlamEstimatorListener() {
-        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener() {
+        mSlamEstimator.setListener(new BaseSlamEstimator.BaseSlamEstimatorListener<D>() {
             @Override
-            public void onFullSampleReceived(BaseSlamEstimator estimator) { /* not used */ }
+            public void onFullSampleReceived(final BaseSlamEstimator<D> estimator) {
+                // not used
+            }
 
             @Override
-            public void onFullSampleProcessed(BaseSlamEstimator estimator) {
+            public void onFullSampleProcessed(final BaseSlamEstimator<D> estimator) {
                 notifySlamStateIfNeeded();
                 notifySlamCameraIfNeeded();
             }
 
             @Override
-            public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) { /* not used */ }
+            public void onCorrectWithPositionMeasure(final BaseSlamEstimator<D> estimator) {
+                // not used
+            }
 
             @Override
-            public void onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
+            public void onCorrectedWithPositionMeasure(final BaseSlamEstimator<D> estimator) {
                 notifySlamStateIfNeeded();
                 notifySlamCameraIfNeeded();
             }
         });
     }
-    
+
     /**
      * Update scene scale using SLAM data.
+     *
      * @return true if scale was successfully updated, false otherwise.
      */
     protected boolean updateScale() {
-        //obtain baseline (camera separation from slam estimator data
-        double posX = mSlamEstimator.getStatePositionX();
-        double posY = mSlamEstimator.getStatePositionY();
-        double posZ = mSlamEstimator.getStatePositionZ();
-            
-        //to estimate baseline, we assume that first camera is placed at
-        //world origin
-        double baseline = Math.sqrt(posX*posX + posY*posY + posZ*posZ);
-            
+        // obtain baseline (camera separation from slam estimator data
+        final double posX = mSlamEstimator.getStatePositionX();
+        final double posY = mSlamEstimator.getStatePositionY();
+        final double posZ = mSlamEstimator.getStatePositionZ();
+
+        // to estimate baseline, we assume that first camera is placed at
+        // world origin
+        final double baseline = Math.sqrt(posX * posX + posY * posY + posZ * posZ);
+
         try {
-            PinholeCamera camera1 = mEstimatedCamera1.getCamera();
-            PinholeCamera camera2 = mEstimatedCamera2.getCamera();
-            
+            final PinholeCamera camera1 = mEstimatedCamera1.getCamera();
+            final PinholeCamera camera2 = mEstimatedCamera2.getCamera();
+
             camera1.decompose();
             camera2.decompose();
 
-            Point3D center1 = camera1.getCameraCenter();
-            Point3D center2 = camera2.getCameraCenter();
-            
-            double estimatedBaseline = center1.distanceTo(center2);
-            
-            double scale = baseline / estimatedBaseline;
-            
-            MetricTransformation3D scaleTransformation =
+            final Point3D center1 = camera1.getCameraCenter();
+            final Point3D center2 = camera2.getCameraCenter();
+
+            final double estimatedBaseline = center1.distanceTo(center2);
+
+            final double scale = baseline / estimatedBaseline;
+
+            final MetricTransformation3D scaleTransformation =
                     new MetricTransformation3D(scale);
-            
-            //update scale of cameras
+
+            // update scale of cameras
             scaleTransformation.transform(camera1);
             scaleTransformation.transform(camera2);
-            
+
             mEstimatedCamera1.setCamera(camera1);
             mEstimatedCamera2.setCamera(camera2);
-            
-            //update scale of reconstructed points
-            int numPoints = mReconstructedPoints.size();
-            List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {
+
+            // update scale of reconstructed points
+            final int numPoints = mReconstructedPoints.size();
+            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
+            for (final ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {
                 reconstructedPoints3D.add(reconstructedPoint.
                         getPoint());
             }
-            
+
             scaleTransformation.transformAndOverwritePoints(
                     reconstructedPoints3D);
-            
-            //set scaled points into result
+
+            // set scaled points into result
             for (int i = 0; i < numPoints; i++) {
                 mReconstructedPoints.get(i).setPoint(
                         reconstructedPoints3D.get(i));
             }
 
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             mFailed = true;
             //noinspection unchecked
-            mListener.onFail((R)this);
+            mListener.onFail((R) this);
 
             return false;
         }
@@ -259,29 +278,29 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
             return;
         }
 
-        double positionX = mSlamEstimator.getStatePositionX();
-        double positionY = mSlamEstimator.getStatePositionY();
-        double positionZ = mSlamEstimator.getStatePositionZ();
+        final double positionX = mSlamEstimator.getStatePositionX();
+        final double positionY = mSlamEstimator.getStatePositionY();
+        final double positionZ = mSlamEstimator.getStatePositionZ();
 
-        double velocityX = mSlamEstimator.getStateVelocityX();
-        double velocityY = mSlamEstimator.getStateVelocityY();
-        double velocityZ = mSlamEstimator.getStateVelocityZ();
+        final double velocityX = mSlamEstimator.getStateVelocityX();
+        final double velocityY = mSlamEstimator.getStateVelocityY();
+        final double velocityZ = mSlamEstimator.getStateVelocityZ();
 
-        double accelerationX = mSlamEstimator.getStateAccelerationX();
-        double accelerationY = mSlamEstimator.getStateAccelerationY();
-        double accelerationZ = mSlamEstimator.getStateAccelerationZ();
+        final double accelerationX = mSlamEstimator.getStateAccelerationX();
+        final double accelerationY = mSlamEstimator.getStateAccelerationY();
+        final double accelerationZ = mSlamEstimator.getStateAccelerationZ();
 
-        double quaternionA = mSlamEstimator.getStateQuaternionA();
-        double quaternionB = mSlamEstimator.getStateQuaternionB();
-        double quaternionC = mSlamEstimator.getStateQuaternionC();
-        double quaternionD = mSlamEstimator.getStateQuaternionD();
+        final double quaternionA = mSlamEstimator.getStateQuaternionA();
+        final double quaternionB = mSlamEstimator.getStateQuaternionB();
+        final double quaternionC = mSlamEstimator.getStateQuaternionC();
+        final double quaternionD = mSlamEstimator.getStateQuaternionD();
 
-        double angularSpeedX = mSlamEstimator.getStateAngularSpeedX();
-        double angularSpeedY = mSlamEstimator.getStateAngularSpeedY();
-        double angularSpeedZ = mSlamEstimator.getStateAngularSpeedZ();
+        final double angularSpeedX = mSlamEstimator.getStateAngularSpeedX();
+        final double angularSpeedY = mSlamEstimator.getStateAngularSpeedY();
+        final double angularSpeedZ = mSlamEstimator.getStateAngularSpeedZ();
 
-        //noinspection all
-        mListener.onSlamDataAvailable((R)this, positionX, positionY, positionZ,
+        //noinspection unchecked
+        mListener.onSlamDataAvailable((R) this, positionX, positionY, positionZ,
                 velocityX, velocityY, velocityZ,
                 accelerationX, accelerationY, accelerationZ,
                 quaternionA, quaternionB, quaternionC, quaternionD,
@@ -308,15 +327,15 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
             return;
         }
 
-        double positionX = mSlamEstimator.getStatePositionX();
-        double positionY = mSlamEstimator.getStatePositionY();
-        double positionZ = mSlamEstimator.getStatePositionZ();
+        final double positionX = mSlamEstimator.getStatePositionX();
+        final double positionY = mSlamEstimator.getStatePositionY();
+        final double positionZ = mSlamEstimator.getStatePositionZ();
         mSlamPosition.setInhomogeneousCoordinates(positionX, positionY, positionZ);
 
-        double quaternionA = mSlamEstimator.getStateQuaternionA();
-        double quaternionB = mSlamEstimator.getStateQuaternionB();
-        double quaternionC = mSlamEstimator.getStateQuaternionC();
-        double quaternionD = mSlamEstimator.getStateQuaternionD();
+        final double quaternionA = mSlamEstimator.getStateQuaternionA();
+        final double quaternionB = mSlamEstimator.getStateQuaternionB();
+        final double quaternionC = mSlamEstimator.getStateQuaternionC();
+        final double quaternionD = mSlamEstimator.getStateQuaternionD();
         mSlamRotation.setA(quaternionA);
         mSlamRotation.setB(quaternionB);
         mSlamRotation.setC(quaternionC);
@@ -325,7 +344,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructor<
         mSlamCamera.setIntrinsicAndExtrinsicParameters(intrinsicParameters, mSlamRotation,
                 mSlamPosition);
 
-        //noinspection all
-        mListener.onSlamCameraEstimated((R)this, mSlamCamera);
+        //noinspection unchecked
+        mListener.onSlamCameraEstimated((R) this, mSlamCamera);
     }
 }

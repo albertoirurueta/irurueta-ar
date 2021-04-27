@@ -16,11 +16,11 @@
 package com.irurueta.ar.sfm;
 
 /**
- * Listener to retrieve and store required data to compute a 3D reconstruction 
+ * Listener to retrieve and store required data to compute a 3D reconstruction
  * from sparse image point correspondences in two views and using SLAM with
  * absolute orientation for scale and orientation estimation.
  */
-@SuppressWarnings("WeakerAccess")
-public interface AbsoluteOrientationSlamTwoViewsSparseReconstructorListener 
+public interface AbsoluteOrientationSlamTwoViewsSparseReconstructorListener
         extends BaseSlamTwoViewsSparseReconstructorListener<
-        AbsoluteOrientationSlamTwoViewsSparseReconstructor> { }
+        AbsoluteOrientationSlamTwoViewsSparseReconstructor> {
+}

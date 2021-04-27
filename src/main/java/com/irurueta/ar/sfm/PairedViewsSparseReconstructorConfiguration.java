@@ -28,6 +28,7 @@ public class PairedViewsSparseReconstructorConfiguration extends
 
     /**
      * Creates an instance of a sparse reconstructor configuration.
+     *
      * @return configuration instance.
      */
     public static PairedViewsSparseReconstructorConfiguration make() {

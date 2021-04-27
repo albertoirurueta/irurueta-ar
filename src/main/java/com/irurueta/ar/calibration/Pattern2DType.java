@@ -23,7 +23,7 @@ public enum Pattern2DType {
      * Circles pattern.
      */
     CIRCLES,
-    
+
     /**
      * QR code pattern.
      */

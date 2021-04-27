@@ -22,28 +22,31 @@ import com.irurueta.geometry.PinholeCamera;
  * such as when estimation starts or finishes.
  */
 public interface InitialCamerasEstimatorListener {
-    
+
     /**
      * Called when estimation starts.
+     *
      * @param estimator estimator raising the event.
      */
-    void onStart(InitialCamerasEstimator estimator);
-    
+    void onStart(final InitialCamerasEstimator estimator);
+
     /**
      * Called when estimation successfully finishes.
-     * @param estimator estimator raising the event.
-     * @param estimatedLeftCamera estimated camera on left view.
+     *
+     * @param estimator            estimator raising the event.
+     * @param estimatedLeftCamera  estimated camera on left view.
      * @param estimatedRightCamera estimated camera on right view.
      */
-    void onFinish(InitialCamerasEstimator estimator, 
-            PinholeCamera estimatedLeftCamera, 
-            PinholeCamera estimatedRightCamera);
-    
+    void onFinish(final InitialCamerasEstimator estimator,
+                  final PinholeCamera estimatedLeftCamera,
+                  final PinholeCamera estimatedRightCamera);
+
     /**
      * Called when estimation fails.
+     *
      * @param estimator estimator raising the event.
-     * @param e reason of estimation failure.
+     * @param e         reason of estimation failure.
      */
-    void onFail(InitialCamerasEstimator estimator, 
-            InitialCamerasEstimationFailedException e);
+    void onFail(final InitialCamerasEstimator estimator,
+                final InitialCamerasEstimationFailedException e);
 }

@@ -28,12 +28,12 @@ import java.io.Serializable;
  * Location And Mapping) to determine the scale of the scene (i.e. the baseline or separation
  * between cameras) by fusing both camera data and data from sensors like an accelerometer or
  * gyroscope.
+ *
  * @param <C> type defining calibration data.
  * @param <T> an actual implementation of a configuration class.
  */
-@SuppressWarnings("WeakerAccess")
 public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationData,
-        T extends BaseSlamSparseReconstructorConfiguration> extends BaseSparseReconstructorConfiguration<T>
+        T extends BaseSlamSparseReconstructorConfiguration<C, T>> extends BaseSparseReconstructorConfiguration<T>
         implements Serializable {
 
     /**
@@ -90,13 +90,13 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * Constructor.
      */
     public BaseSlamSparseReconstructorConfiguration() {
-        //initialize default covariance
+        // initialize default covariance
         try {
             mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
             mCameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);
-        } catch (AlgebraException ignore) {
-            //never happens
+        } catch (final AlgebraException ignore) {
+            // never happens
         }
     }
 
@@ -107,6 +107,7 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * Calibration data is usually obtained by keeping the system in a constant
      * state of motion (e.g. acceleration and rotation).
      * If this is null, no calibration data will be used.
+     *
      * @return calibration data or null.
      */
     public C getCalibrationData() {
@@ -120,14 +121,15 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * Calibration data is usually obtained by keeping the system in a constant
      * state of motion (e.g. acceleration and rotation).
      * If set to null, no calibration data will be used.
+     *
      * @param calibrationData calibration data or null.
      * @return this instance so that method can be easily chained.
      */
-    public T setCalibrationData(C calibrationData) {
+    public T setCalibrationData(final C calibrationData) {
         mCalibrationData = calibrationData;
 
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 
     /**
@@ -137,6 +139,7 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * Values of this matrix are device specific and depends on factors such as
      * resolution of images, pictures quality, gyroscope and accelerometer accuracy.
      * This matrix must be a 3x3 symmetric positive definite matrix.
+     *
      * @return covariance of measured camera positions.
      */
     public Matrix getCameraPositionCovariance() {
@@ -150,12 +153,12 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * Values of this matrix are device specific and depends on factors such as
      * resolution of images, pictures quality, gyroscope and accelerometer accuracy.
      * This matrix must be a 3x3 symmetric positive definite matrix.
+     *
      * @param cameraPositionCovariance covariance of measured camera positions.
      * @return this instance so that method can be easily chained.
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
-    @SuppressWarnings("Duplicates")
-    public T setCameraPositionCovariance(Matrix cameraPositionCovariance) {
+    public T setCameraPositionCovariance(final Matrix cameraPositionCovariance) {
         if (cameraPositionCovariance.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
                 cameraPositionCovariance.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
             throw new IllegalArgumentException();
@@ -164,32 +167,34 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
         mCameraPositionCovariance = cameraPositionCovariance;
 
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 
     /**
      * Sets independent variance of coordinates of measured camera positions.
      * When using this method, camera position covariance matrix is set as a diagonal matrix whose diagonal elements
      * are equal to provided value.
+     *
      * @param variance variance of coordinates of measured camera positions.
      * @return this instance so that method can be easily chained.
      */
-    public T setCameraPositionVariance(double variance) {
+    public T setCameraPositionVariance(final double variance) {
         try {
             mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
             mCameraPositionCovariance.multiplyByScalar(variance);
         } catch (AlgebraException ignore) {
-            //never happens
+            // never happens
         }
 
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 
     /**
      * Indicates whether new available SLAM state is notified each time that a whole set of IMU (Inertial Measurement
      * Unit) data is received. IMU data contains accelerometer, gyroscope and orientation samples.
+     *
      * @return true if new available SLAM state is notified each time that a whole set of IMU data is received.
      */
     public boolean isNotifyAvailableSlamDataEnabled() {
@@ -199,20 +204,22 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
     /**
      * Specifies whether new available SLAM state is notified each time that a whole set of IMU (Inertial Measurement
      * Unit) data is received. IMU data contains accelerometer, gyroscope and orientation samples.
+     *
      * @param notifyAvailableSlamData true if new availabla SLAM state is notified each time that a whole set of IMU
      *                                data is received, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setNotifyAvailableSlamDataEnabled(boolean notifyAvailableSlamData) {
+    public T setNotifyAvailableSlamDataEnabled(final boolean notifyAvailableSlamData) {
         mNotifyAvailableSlamData = notifyAvailableSlamData;
 
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 
     /**
      * Indicates whether any new camera that can be estimated by means of SLAM using IMU data, will be notified each
      * time that accelerometer, gyroscope and orientation data is received.
+     *
      * @return true if any newly estimated camera is notified, false otherwise.
      */
     public boolean isNotifyEstimatedSlamCameraEnabled() {
@@ -222,13 +229,14 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
     /**
      * Specifies whether any new camera that can be estimated by means of SLAM using IMU data, will be notified each
      * time that accelerometer, gyroscope and orientation data is received.
+     *
      * @param notifyEstimatedSlamCamera true if any newly estimated camera is notified, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setNotifyEstimatedSlamCameraEnabled(boolean notifyEstimatedSlamCamera) {
+    public T setNotifyEstimatedSlamCameraEnabled(final boolean notifyEstimatedSlamCamera) {
         mNotifyEstimatedSlamCamera = notifyEstimatedSlamCamera;
 
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 }

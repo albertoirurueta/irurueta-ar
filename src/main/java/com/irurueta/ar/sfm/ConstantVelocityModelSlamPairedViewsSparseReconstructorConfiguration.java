@@ -35,6 +35,7 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguratio
     /**
      * Creates an instance of a paired view sparse reconstructor configuration with constant
      * velocity model in slam estimation.
+     *
      * @return configuration instance.
      */
     public static ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration make() {

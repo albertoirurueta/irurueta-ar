@@ -20,17 +20,17 @@ import java.io.Serializable;
 /**
  * Contains configuration for a two view sparse reconstructor.
  */
-@SuppressWarnings("WeakerAccess")
-public class TwoViewsSparseReconstructorConfiguration extends 
+public class TwoViewsSparseReconstructorConfiguration extends
         BaseTwoViewsSparseReconstructorConfiguration<
-        TwoViewsSparseReconstructorConfiguration> implements Serializable {
-    
+                TwoViewsSparseReconstructorConfiguration> implements Serializable {
+
 
     /**
      * Creates an instance of a two views sparse reconstructor configuration.
+     *
      * @return configuration instance.
      */
     public static TwoViewsSparseReconstructorConfiguration make() {
         return new TwoViewsSparseReconstructorConfiguration();
-    }   
+    }
 }

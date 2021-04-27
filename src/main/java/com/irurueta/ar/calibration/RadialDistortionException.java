@@ -18,7 +18,6 @@ package com.irurueta.ar.calibration;
 /**
  * Raised when an error occurs while using a RadialDistortion.
  */
-@SuppressWarnings("WeakerAccess")
 public class RadialDistortionException extends DistortionException {
     /**
      * Constructor.
@@ -26,29 +25,32 @@ public class RadialDistortionException extends DistortionException {
     public RadialDistortionException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message Message indicating the cause of the exception.
      */
-    public RadialDistortionException(String message) {
+    public RadialDistortionException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message Message describing the cause of the exception.
-     * @param cause Instance containing the cause of the exception.
+     * @param cause   Instance containing the cause of the exception.
      */
-    public RadialDistortionException(String message, Throwable cause) {
+    public RadialDistortionException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause Instance containing the cause of the exception.
      */
-    public RadialDistortionException(Throwable cause) {
+    public RadialDistortionException(final Throwable cause) {
         super(cause);
-    }        
+    }
 }

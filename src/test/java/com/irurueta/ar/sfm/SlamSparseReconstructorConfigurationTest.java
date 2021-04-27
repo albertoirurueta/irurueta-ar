@@ -24,29 +24,18 @@ import com.irurueta.ar.slam.SlamCalibrationData;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ConstantConditions")
 public class SlamSparseReconstructorConfigurationTest {
-
-    @BeforeClass
-    public static void setUpClass() { }
-
-    @AfterClass
-    public static void tearDownClass() { }
-
-    @Before
-    public void setUp() { }
-
-    @After
-    public void tearDown() { }
 
     @Test
     public void testConstructor() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default values
+        // check default values
         assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
         assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
@@ -181,9 +170,9 @@ public class SlamSparseReconstructorConfigurationTest {
 
     @Test
     public void testMake() {
-        SlamSparseReconstructorConfiguration cfg = SlamSparseReconstructorConfiguration.make();
+        final SlamSparseReconstructorConfiguration cfg = SlamSparseReconstructorConfiguration.make();
 
-        //check default values
+        // check default values
         assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
         assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
@@ -320,1170 +309,1170 @@ public class SlamSparseReconstructorConfigurationTest {
 
     @Test
     public void testGetSetNonRobustFundamentalMatrixEstimatorMethod() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
 
-        //set new value
+        // set new value
         assertSame(cfg.setNonRobustFundamentalMatrixEstimatorMethod(
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
     }
 
     @Test
     public void testGetSetRobustFundamentalMatrixEstimatorMethod() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
 
-        //set new value
+        // set new value
         assertSame(cfg.setRobustFundamentalMatrixEstimatorMethod(
                 RobustEstimatorMethod.LMedS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
                 RobustEstimatorMethod.LMedS);
     }
 
     @Test
     public void testIsSetFundamentalMatrixRefined() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isFundamentalMatrixRefined(),
                 SlamSparseReconstructorConfiguration.
                         DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixRefined(false), cfg);
 
-        //check correctness
+        // check correctness
         assertFalse(cfg.isFundamentalMatrixRefined());
     }
 
     @Test
     public void testIsSetFundamentalMatrixCovarianceKept() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
                 SlamSparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixCovarianceKept(true), cfg);
 
-        //check correctness
+        // check correctness
         assertTrue(cfg.isFundamentalMatrixCovarianceKept());
     }
 
     @Test
     public void testGetSetFundamentalMatrixConfidence() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getFundamentalMatrixConfidence(),
                 SlamSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixConfidence(0.7), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getFundamentalMatrixConfidence(), 0.7, 0.0);
     }
 
     @Test
     public void testGetSetFundamentalMatrixMaxIterations() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getFundamentalMatrixMaxIterations(),
                 SlamSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixMaxIterations(10), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getFundamentalMatrixMaxIterations(), 10);
     }
 
     @Test
     public void testGetSetFundamentalMatrixThreshold() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getFundamentalMatrixThreshold(),
                 SlamSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixThreshold(2.0), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getFundamentalMatrixThreshold(), 2.0, 0.0);
     }
 
     @Test
     public void testGetSetFundamentalMatrixComputeAndKeepInliers() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
                 SlamSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixComputeAndKeepInliers(false), cfg);
 
-        //check correctness
+        // check correctness
         assertFalse(cfg.getFundamentalMatrixComputeAndKeepInliers());
     }
 
     @Test
     public void testGetSetFundamentalMatrixComputeAndKeepResiduals() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
                 SlamSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setFundamentalMatrixComputeAndKeepResiduals(false), cfg);
 
-        //check correctness
+        // check correctness
         assertFalse(cfg.getFundamentalMatrixComputeAndKeepResiduals());
     }
 
     @Test
     public void testGetSetInitialCamerasEstimatorMethod() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getInitialCamerasEstimatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
 
-        //set new value
+        // set new value
         assertSame(cfg.setInitialCamerasEstimatorMethod(
                 InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC),
                 cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getInitialCamerasEstimatorMethod(),
                 InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
     }
 
     @Test
     public void testGetSetDaqUseHomogeneousPointTriangulator() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
                 SlamSparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
 
-        //set new value
+        // set new value
         assertSame(cfg.setDaqUseHomogeneousPointTriangulator(false), cfg);
 
-        //check correctness
+        // check correctness
         assertFalse(cfg.getDaqUseHomogeneousPointTriangulator());
     }
 
     @Test
     public void testGetSetInitialCamerasAspectRatio() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getInitialCamerasAspectRatio(),
                 SlamSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setInitialCamerasAspectRatio(0.5), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getInitialCamerasAspectRatio(), 0.5, 0.0);
     }
 
     @Test
     public void testGetSetPrincipalPointX() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPrincipalPointX(),
                 SlamSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPrincipalPointX(10.0), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPrincipalPointX(), 10.0, 0.0);
     }
 
     @Test
     public void testGetSetPrincipalPointY() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPrincipalPointY(),
                 SlamSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPrincipalPointY(10.0), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPrincipalPointY(), 10.0, 0.0);
     }
 
     @Test
     public void testGetSetInitialCamerasCorrectorType() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getInitialCamerasCorrectorType(),
                 SlamSparseReconstructorConfiguration.
                         DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE);
 
-        //set new value
+        // set new value
         assertSame(cfg.setInitialCamerasCorrectorType(
                 CorrectorType.GOLD_STANDARD), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getInitialCamerasCorrectorType(),
                 CorrectorType.GOLD_STANDARD);
     }
 
     @Test
     public void testGetSetInitialCamerasMarkValidTriangulatedPoints() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getInitialCamerasMarkValidTriangulatedPoints(),
                 SlamSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setInitialCamerasMarkValidTriangulatedPoints(false),
                 cfg);
 
-        //check correctness
+        // check correctness
         assertFalse(cfg.getInitialCamerasMarkValidTriangulatedPoints());
     }
 
     @Test
     public void testGetSetInitialIntrinsic1() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNull(cfg.getInitialIntrinsic1());
 
-        //set new value
-        PinholeCameraIntrinsicParameters intrinsic =
+        // set new value
+        final PinholeCameraIntrinsicParameters intrinsic =
                 new PinholeCameraIntrinsicParameters();
         assertSame(cfg.setInitialIntrinsic1(intrinsic), cfg);
 
-        //check correctness
+        // check correctness
         assertSame(cfg.getInitialIntrinsic1(), intrinsic);
     }
 
     @Test
     public void testGetSetInitialIntrinsic2() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNull(cfg.getInitialIntrinsic2());
 
-        //set new value
-        PinholeCameraIntrinsicParameters intrinsic =
+        // set new value
+        final PinholeCameraIntrinsicParameters intrinsic =
                 new PinholeCameraIntrinsicParameters();
         assertSame(cfg.setInitialIntrinsic2(intrinsic), cfg);
 
-        //check correctness
+        // check correctness
         assertSame(cfg.getInitialIntrinsic2(), intrinsic);
     }
 
     @Test
     public void testIsSetGeneralSceneAllowed() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isGeneralSceneAllowed(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE);
 
-        //set new value
+        // set new value
         assertSame(cfg.setGeneralSceneAllowed(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isGeneralSceneAllowed(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE);
     }
 
     @Test
     public void testIsSetPlanarSceneAllowed() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isPlanarSceneAllowed(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarSceneAllowed(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isPlanarSceneAllowed(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE);
     }
 
     @Test
     public void testGetSetRobustPlanarHomographyEstimatorMethod() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
 
-        //set new value
+        // set new value
         assertSame(cfg.setRobustPlanarHomographyEstimatorMethod(
                 RobustEstimatorMethod.RANSAC), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
                 RobustEstimatorMethod.RANSAC);
     }
 
     @Test
     public void testIsSetPlanarHomographyRefined() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isPlanarHomographyRefined(),
                 SlamSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyRefined(
                 !SlamSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isPlanarHomographyRefined(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
     }
 
     @Test
     public void testIsSetPlanarHomographyCovarianceKept() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isPlanarHomographyCovarianceKept(),
                 SlamSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyCovarianceKept(
                 !SlamSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isPlanarHomographyCovarianceKept(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
     }
 
     @Test
     public void testGetSetPlanarHomographyConfidence() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPlanarHomographyConfidence(),
                 SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyConfidence(0.5), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPlanarHomographyConfidence(), 0.5, 0.0);
     }
 
     @Test
     public void testGetSetPlanarHomographyMaxIterations() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPlanarHomographyMaxIterations(),
                 SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyMaxIterations(100), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPlanarHomographyMaxIterations(), 100);
     }
 
     @Test
     public void testGetSetPlanarHomographyThreshold() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPlanarHomographyThreshold(),
                 SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyThreshold(0.5), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPlanarHomographyThreshold(), 0.5, 0.0);
     }
 
     @Test
     public void testGetSetPlanarHomographyComputeAndKeepInliers() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
                 SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyComputeAndKeepInliers(
                 !SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
     }
 
     @Test
     public void testGetSetPlanarHomographyComputeAndKeepResiduals() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
                 SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPlanarHomographyComputeAndKeepResiduals(
                 !SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(!cfg.getPlanarHomographyComputeAndKeepResiduals(),
                 SlamSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
     }
 
     @Test
     public void testGetSetUseDAQForAdditionalCamerasIntrinsics() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getUseDAQForAdditionalCamerasIntrinsics(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setUseDAQForAdditionalCamerasIntrinics(
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(!cfg.getUseDAQForAdditionalCamerasIntrinsics(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
     }
 
     @Test
     public void testGetSetUseDIACForAdditionalCamerasIntrinsics() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getUseDIACForAdditionalCamerasIntrinsics(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setUseDIACForAdditionalCamerasIntrinsics(
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(!cfg.getUseDIACForAdditionalCamerasIntrinsics(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
     }
 
     @Test
     public void testGetSetAdditionalCamerasIntrinsics() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNull(cfg.getAdditionalCamerasIntrinsics());
 
-        //set new value
-        PinholeCameraIntrinsicParameters intrinsics = new PinholeCameraIntrinsicParameters();
+        // set new value
+        final PinholeCameraIntrinsicParameters intrinsics = new PinholeCameraIntrinsicParameters();
         assertSame(cfg.setAdditionalCamerasIntrinsics(intrinsics), cfg);
 
-        //check correctness
+        // check correctness
         assertSame(cfg.getAdditionalCamerasIntrinsics(), intrinsics);
     }
 
     @Test
     public void testGetSetAdditionalCamerasSkewness() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasSkewness(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSkewness(1e-3), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasSkewness(), 1e-3, 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasHorizontalPrincipalPoint() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasHorizontalPrincipalPoint(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasHorizontalPrincipalPoint(320), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasHorizontalPrincipalPoint(), 320, 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasVerticalPrincipalPoint() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasVerticalPrincipalPoint(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasVerticalPrincipalPoint(240), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasVerticalPrincipalPoint(), 240, 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasAspectRatio() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasAspectRatio(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasAspectRatio(-1.0), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasAspectRatio(), -1.0, 0.0);
     }
 
     @Test
     public void testGetSetUseEPnPForAdditionalCamerasEstimation() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getUseEPnPForAdditionalCamerasEstimation(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
 
-        //set new value
+        // set new value
         assertSame(cfg.setUseEPnPForAdditionalCamerasEstimation(
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getUseEPnPForAdditionalCamerasEstimation(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
     }
 
     @Test
     public void testGetSetUseUPnPForAdditionalCamerasEstimation() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getUseUPnPForAdditionalCamerasEstimation(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
 
-        //set new value
+        // set new value
         assertSame(cfg.setUseUPnPForAdditionalCamerasEstimation(
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getUseUPnPForAdditionalCamerasEstimation(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
     }
 
     @Test
     public void testGetSetAdditionalCamerasRobustEstimationMethod() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasRobustEstimationMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasRobustEstimationMethod(
                 RobustEstimatorMethod.LMedS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasRobustEstimationMethod(),
                 RobustEstimatorMethod.LMedS);
     }
 
     @Test
     public void testGetSetAdditionalCamerasAllowPlanarConfiguration() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasAllowPlanarConfiguration(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasAllowPlanarConfiguration(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasAllowPlanarConfiguration(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION);
     }
 
     @Test
     public void testGetSetAdditionalCamerasAllowNullspaceDimension2() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension2(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasAllowNullspaceDimension2(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension2(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2);
     }
 
     @Test
     public void testGetSetAdditionalCamerasAllowNullspaceDimension3() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension3(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasAllowNullspaceDimension3(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension3(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3);
     }
 
     @Test
     public void testGetSetAdditionalCamerasPlanarThreshold() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasPlanarThreshold(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasPlanarThreshold(1e-3), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasPlanarThreshold(), 1e-3, 0.0);
     }
 
     @Test
     public void testAreSetAdditionalCamerasRefined() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.areAdditionalCamerasRefined(),
                 SlamSparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasRefined(
                 !SlamSparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.areAdditionalCamerasRefined(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS);
     }
 
     @Test
     public void testIsSetAdditionalCamerasCovarianceKept() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isAdditionalCamerasCovarianceKept(),
                 SlamSparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasCovarianceKept(
                 !SlamSparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isAdditionalCamerasCovarianceKept(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS);
     }
 
     @Test
     public void testGetSetAdditionalCamerasUseFastRefinement() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasUseFastRefinement(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasUseFastRefinement(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasUseFastRefinement(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT);
     }
 
     @Test
     public void testGetSetAdditionalCamerasConfidence() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasConfidence(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasConfidence(0.8), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasConfidence(), 0.8, 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasMaxIterations() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasMaxIterations(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasMaxIterations(100), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasMaxIterations(), 100);
     }
 
     @Test
     public void testGetSetAdditionalCamerasThreshold() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasThreshold(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasThreshold(2.0), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasThreshold(), 2.0, 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasComputeAndKeepInliers() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasComputeAndKeepInliers(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasComputeAndKeepInliers(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS), cfg);
 
-        //check correctnes
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasComputeAndKeepInliers(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS);
     }
 
     @Test
     public void testGetSetAdditionalCamerasComputeAndKeepResiduals() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasComputeAndKeepResiduals(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasComputeAndKeepResiduals(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasComputeAndKeepResiduals(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestSkewnessValueEnabled() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestSkewnessValueEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED);
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedSkewnessValue() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasSuggestedSkewnessValue(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestedSkewnessValue(1e-3), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasSuggestedSkewnessValue(), 1e-3, 0.0);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestHorizontalFocalLengthEnabled() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestHorizontalFocalLengthEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED),
                 cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED);
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedHorizontalFocalLengthValue() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestedHorizontalFocalLengthValue(320), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 320, 0.0);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestVerticalFocalLengthEnabled() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestVerticalFocalLengthEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED),
                 cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED);
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedVerticalFocalLengthValue() {
-        SlamSparseReconstructorConfiguration cfg =
+        final SlamSparseReconstructorConfiguration cfg =
                 new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestedVerticalFocalLengthValue(240), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 240, 0.0);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestAspectRatioEnabled() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isAdditionalCamerasSuggestAspectRatioEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestAspectRatioEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isAdditionalCamerasSuggestAspectRatioEnabled(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED);
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedAspectRatioValue() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getAdditionalCamerasSuggestedAspectRatioValue(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestedAspectRatioValue(1.1), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getAdditionalCamerasSuggestedAspectRatioValue(), 1.1, 0.0);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestPrincipalPointEnabled() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED);
 
-        //set new value
+        // set new value
         assertSame(cfg.setAdditionalCamerasSuggestPrincipalPointEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED), cfg);
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedPrincipalPointValue() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNull(cfg.getAdditionalCamerasSuggestedPrincipalPointValue());
 
-        //set new value
-        InhomogeneousPoint2D principalPoint = new InhomogeneousPoint2D();
+        // set new value
+        final InhomogeneousPoint2D principalPoint = new InhomogeneousPoint2D();
         assertSame(cfg.setAdditionalCamerasSuggestedPrincipalPointValue(principalPoint), cfg);
 
-        //check correctness
+        // check correctness
         assertSame(cfg.getAdditionalCamerasSuggestedPrincipalPointValue(), principalPoint);
     }
 
     @Test
     public void testIsSetHomogeneousPointTriangulatorUsed() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isHomogeneousPointTriangulatorUsed(),
                 SlamSparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
 
-        //set new value
+        // set new value
         assertSame(cfg.setHomogeneousPointTriangulatorUsed(
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isHomogeneousPointTriangulatorUsed(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
     }
 
     @Test
     public void testGetSetRobustPointTriangulatorMethod() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getRobustPointTriangulatorMethod(),
                 SlamSparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD);
 
-        //set new value
+        // set new value
         assertSame(cfg.setRobustPointTriangulatorMethod(RobustEstimatorMethod.MSAC), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getRobustPointTriangulatorMethod(), RobustEstimatorMethod.MSAC);
     }
 
     @Test
     public void testGetSetPointTriangulatorConfidence() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPointTriangulatorConfidence(),
                 SlamSparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPointTriangulatorConfidence(0.8), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPointTriangulatorConfidence(), 0.8, 0.0);
     }
 
     @Test
     public void testGetSetPointTriangulatorMaxIterations() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPointTriangulatorMaxIterations(),
                 SlamSparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPointTriangulatorMaxIterations(100), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPointTriangulatorMaxIterations(), 100);
     }
 
     @Test
     public void testGetStPointTriangulatorThreshold() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.getPointTriangulatorThreshold(),
                 SlamSparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setPointTriangulatorThreshold(1e-3), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getPointTriangulatorThreshold(), 1e-3, 0.0);
     }
 
     @Test
     public void testGetSetCalibrationData() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNull(cfg.getCalibrationData());
 
-        //set new value
-        SlamCalibrationData calibrationData = new SlamCalibrationData();
+        // set new value
+        final SlamCalibrationData calibrationData = new SlamCalibrationData();
         assertSame(cfg.setCalibrationData(calibrationData), cfg);
 
-        //check correctness
+        // check correctness
         assertSame(cfg.getCalibrationData(), calibrationData);
     }
 
     @Test
     public void testGetSetCameraPositionVariance() throws AlgebraException {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNotNull(cfg.getCameraPositionCovariance());
 
-        //set new value
-        Matrix cov = new Matrix(3,3);
+        // set new value
+        final Matrix cov = new Matrix(3, 3);
         assertSame(cfg.setCameraPositionCovariance(cov), cfg);
 
-        //check correctness
+        // check correctness
         assertSame(cfg.getCameraPositionCovariance(), cov);
     }
 
     @Test
     public void testSetCameraPositionVariance() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertNotNull(cfg.getCameraPositionCovariance());
 
-        //set new value
-        Matrix cov = Matrix.diagonal(new double[]{2.0, 2.0, 2.0});
+        // set new value
+        final Matrix cov = Matrix.diagonal(new double[]{2.0, 2.0, 2.0});
         assertSame(cfg.setCameraPositionVariance(2.0), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.getCameraPositionCovariance(), cov);
     }
 
     @Test
     public void testIsSetNotifyAvailableSlamDataEnabled() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isNotifyAvailableSlamDataEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
 
-        //set new value
+        // set new value
         assertSame(cfg.setNotifyAvailableSlamDataEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isNotifyAvailableSlamDataEnabled(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
     }
 
     @Test
     public void testIsSetNotifyEstimatedSlamCameraEnabled() {
-        SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
+        final SlamSparseReconstructorConfiguration cfg = new SlamSparseReconstructorConfiguration();
 
-        //check default value
+        // check default value
         assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
                 SlamSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
 
-        //set new value
+        // set new value
         assertSame(cfg.setNotifyEstimatedSlamCameraEnabled(
                 !SlamSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA), cfg);
 
-        //check correctness
+        // check correctness
         assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
                 !SlamSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
     }

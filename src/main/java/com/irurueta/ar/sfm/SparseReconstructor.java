@@ -20,41 +20,43 @@ package com.irurueta.ar.sfm;
  * Class in charge of estimating cameras and 3D reconstruction points from
  * sparse image point correspondences.
  */
-@SuppressWarnings("WeakerAccess")
 public class SparseReconstructor extends
         BaseSparseReconstructor<SparseReconstructorConfiguration, SparseReconstructor,
-        SparseReconstructorListener> {
+                SparseReconstructorListener> {
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
+     * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
-    public SparseReconstructor(SparseReconstructorConfiguration configuration,
-            SparseReconstructorListener listener) {
+    public SparseReconstructor(final SparseReconstructorConfiguration configuration,
+                               final SparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
     /**
      * Constructor with default configuration.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public SparseReconstructor(SparseReconstructorListener listener) {
+    public SparseReconstructor(final SparseReconstructorListener listener) {
         this(new SparseReconstructorConfiguration(), listener);
     }
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @param isInitialPairOfViews true if initial pair of views is being processed, false otherwise.
      * @return true if post processing succeeded, false otherwise.
      */
     @Override
-    protected boolean postProcessOne(boolean isInitialPairOfViews) {
-        //no need for post processing when computing metric reconstruction
+    protected boolean postProcessOne(final boolean isInitialPairOfViews) {
+        // no need for post processing when computing metric reconstruction
         mPreviousEuclideanEstimatedCamera = mPreviousMetricEstimatedCamera;
         mCurrentEuclideanEstimatedCamera = mCurrentMetricEstimatedCamera;
         mActiveEuclideanReconstructedPoints = mActiveMetricReconstructedPoints;

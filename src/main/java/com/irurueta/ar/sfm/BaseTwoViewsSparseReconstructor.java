@@ -23,9 +23,29 @@ import com.irurueta.ar.epipolar.Corrector;
 import com.irurueta.ar.epipolar.EpipolarException;
 import com.irurueta.ar.epipolar.EssentialMatrix;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
-import com.irurueta.ar.epipolar.estimators.*;
-import com.irurueta.geometry.*;
-import com.irurueta.geometry.estimators.*;
+import com.irurueta.ar.epipolar.estimators.EightPointsFundamentalMatrixEstimator;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.LMedSFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.MSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROMedSFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.RANSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.SevenPointsFundamentalMatrixEstimator;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.estimators.PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.PointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
 import com.irurueta.numerical.robust.InliersData;
 
 import java.util.ArrayList;
@@ -33,48 +53,49 @@ import java.util.BitSet;
 import java.util.List;
 
 /**
- * Base class in charge of estimating cameras and 3D reconstructed points from 
+ * Base class in charge of estimating cameras and 3D reconstructed points from
  * sparse image point correspondences in two views.
+ *
  * @param <C> type of configuration.
  * @param <R> type of reconstructor.
  * @param <L> type of listener.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("DuplicatedCode")
 public abstract class BaseTwoViewsSparseReconstructor<
-        C extends BaseTwoViewsSparseReconstructorConfiguration,
-        R extends BaseTwoViewsSparseReconstructor,
+        C extends BaseTwoViewsSparseReconstructorConfiguration<C>,
+        R extends BaseTwoViewsSparseReconstructor<C, R, L>,
         L extends BaseTwoViewsSparseReconstructorListener<R>> {
-    
+
     /**
      * Number of views.
      */
     public static final int NUMBER_OF_VIEWS = 2;
-    
+
     /**
      * Estimated fundamental matrix.
      */
     protected EstimatedFundamentalMatrix mEstimatedFundamentalMatrix;
-    
+
     /**
      * Estimated first camera.
      */
     protected EstimatedCamera mEstimatedCamera1;
-    
+
     /**
      * Estimated second camera.
      */
     protected EstimatedCamera mEstimatedCamera2;
-    
+
     /**
      * Reconstructed 3D points.
      */
     protected List<ReconstructedPoint3D> mReconstructedPoints;
-    
+
     /**
      * Configuration for this reconstructor.
      */
     protected C mConfiguration;
-    
+
     /**
      * Listener in charge of handling events such as when reconstruction starts,
      * ends, when certain data is needed or when estimation of data has been
@@ -91,7 +112,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
      * Indicates whether reconstruction is running or not.
      */
     protected volatile boolean mRunning;
-    
+
     /**
      * Indicates whether reconstruction has been cancelled or not.
      */
@@ -120,7 +141,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
     /**
      * Matches between first and current view.
      */
-    private List<MatchedSamples> mMatches = new ArrayList<>();
+    private final List<MatchedSamples> mMatches = new ArrayList<>();
 
     /**
      * Id of first view.
@@ -129,57 +150,63 @@ public abstract class BaseTwoViewsSparseReconstructor<
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
-     * @throws NullPointerException if listener or configuration is not 
-     * provided.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
      */
-    public BaseTwoViewsSparseReconstructor(C configuration,
-            L listener) {
-        if  (configuration == null || listener == null) {
-                throw new NullPointerException();
+    protected BaseTwoViewsSparseReconstructor(
+            final C configuration, final L listener) {
+        if (configuration == null || listener == null) {
+            throw new NullPointerException();
         }
         mConfiguration = configuration;
         mListener = listener;
     }
-        
+
     /**
      * Gets configuration for this reconstructor.
+     *
      * @return configuration for this reconstructor.
      */
     public C getConfiguration() {
         return mConfiguration;
     }
-    
+
     /**
-     * Gets listener in charge of handling events such as when reconstruction 
+     * Gets listener in charge of handling events such as when reconstruction
      * starts, ends, when certain data is needed or when estimation of data has
      * been computed.
+     *
      * @return listener in charge of handling events.
      */
     public BaseTwoViewsSparseReconstructorListener<R> getListener() {
         return mListener;
     }
-    
+
     /**
      * Indicates whether reconstruction is running or not.
+     *
      * @return true if reconstruction is running, false if reconstruction has
      * stopped for any reason.
      */
     public boolean isRunning() {
         return mRunning;
     }
-    
+
     /**
      * Indicates whether reconstruction has been cancelled or not.
+     *
      * @return true if reconstruction has been cancelled, false otherwise.
      */
     public boolean isCancelled() {
         return mCancelled;
     }
-    
+
     /**
      * Indicates whether reconstruction has failed or not.
+     *
      * @return true if reconstruction has failed, false otherwise.
      */
     public boolean hasFailed() {
@@ -188,30 +215,34 @@ public abstract class BaseTwoViewsSparseReconstructor<
 
     /**
      * Indicates whether the reconstruction has finished.
+     *
      * @return true if reconstruction has finished, false otherwise.
      */
     public boolean isFinished() {
         return mFinished;
     }
-    
+
     /**
      * Gets counter of number of processed views.
+     *
      * @return counter of number of processed views.
      */
     public int getViewCount() {
         return mViewCount;
     }
-    
+
     /**
      * Gets estimated fundamental matrix.
+     *
      * @return estimated fundamental matrix.
      */
     public EstimatedFundamentalMatrix getEstimatedFundamentalMatrix() {
         return mEstimatedFundamentalMatrix;
     }
-    
+
     /**
      * Gets estimated first camera.
+     *
      * @return estimated first camera.
      */
     public EstimatedCamera getEstimatedCamera1() {
@@ -220,14 +251,16 @@ public abstract class BaseTwoViewsSparseReconstructor<
 
     /**
      * Gets estimated second camera.
+     *
      * @return estimated second camera.
      */
     public EstimatedCamera getEstimatedCamera2() {
         return mEstimatedCamera2;
     }
-    
+
     /**
      * Gets reconstructed 3D points.
+     *
      * @return reconstructed 3D points.
      */
     public List<ReconstructedPoint3D> getReconstructedPoints() {
@@ -238,38 +271,39 @@ public abstract class BaseTwoViewsSparseReconstructor<
      * Process one view of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
      * one view at a time.
+     *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     public boolean processOneView() {
         if (mViewCount == 0) {
             if (mRunning) {
-                //already started
+                // already started
                 return true;
             }
 
             reset();
             mRunning = true;
 
-            //noinspection all
-            mListener.onStart((R)this);
+            //noinspection unchecked
+            mListener.onStart((R) this);
         }
 
-        //noinspection all
-        if(!mListener.hasMoreViewsAvailable((R)this)) {
+        //noinspection unchecked
+        if (!mListener.hasMoreViewsAvailable((R) this)) {
             return false;
         }
 
         mEstimatedFundamentalMatrix = null;
         mCurrentViewSamples = new ArrayList<>();
-        //noinspection all
-        mListener.onRequestSamplesForCurrentView((R)this, mViewCount,
+        //noinspection unchecked
+        mListener.onRequestSamplesForCurrentView((R) this, mViewCount,
                 mCurrentViewSamples);
 
         if (mFirstViewSamples == null) {
-            //for first view we simply keep samples (if enough are provided)
-            if(hasEnoughSamples(mCurrentViewSamples)) {
-                //noinspection all
-                mListener.onSamplesAccepted((R)this, mViewCount,
+            // for first view we simply keep samples (if enough are provided)
+            if (hasEnoughSamples(mCurrentViewSamples)) {
+                //noinspection unchecked
+                mListener.onSamplesAccepted((R) this, mViewCount,
                         mCurrentViewSamples);
                 mFirstViewSamples = mCurrentViewSamples;
                 mFirstViewId = mViewCount;
@@ -277,60 +311,60 @@ public abstract class BaseTwoViewsSparseReconstructor<
 
         } else {
 
-            //for second view, check that we have enough samples
+            // for second view, check that we have enough samples
             if (hasEnoughSamples(mCurrentViewSamples)) {
 
-                //find matches
+                // find matches
                 mMatches.clear();
-                //noinspection all
-                mListener.onRequestMatches((R)this, mFirstViewSamples,
+                //noinspection unchecked
+                mListener.onRequestMatches((R) this, mFirstViewSamples,
                         mCurrentViewSamples, mFirstViewId, mViewCount,
                         mMatches);
 
                 if (hasEnoughMatches(mMatches)) {
-                    //if enough matches are retrieved, attempt to compute
-                    //fundamental matrix
+                    // if enough matches are retrieved, attempt to compute
+                    // fundamental matrix
                     if ((mConfiguration.isGeneralSceneAllowed() &&
                             estimateFundamentalMatrix(mMatches, mFirstViewId,
                                     mViewCount)) ||
                             (mConfiguration.isPlanarSceneAllowed() &&
                                     estimatePlanarFundamentalMatrix(mMatches,
                                             mFirstViewId, mViewCount))) {
-                        //fundamental matrix could be estimated
-                        //noinspection all
-                        mListener.onSamplesAccepted((R)this, mViewCount,
+                        // fundamental matrix could be estimated
+                        //noinspection unchecked
+                        mListener.onSamplesAccepted((R) this, mViewCount,
                                 mCurrentViewSamples);
                         int secondViewId = mViewCount;
 
-                        //noinspection all
-                        mListener.onFundamentalMatrixEstimated((R)this,
+                        //noinspection unchecked
+                        mListener.onFundamentalMatrixEstimated((R) this,
                                 mEstimatedFundamentalMatrix);
 
-                        if(estimateInitialCamerasAndPoints()) {
-                            //cameras and points have been estimated
-                            //noinspection all
-                            mListener.onCamerasEstimated((R)this,
+                        if (estimateInitialCamerasAndPoints()) {
+                            // cameras and points have been estimated
+                            //noinspection unchecked
+                            mListener.onCamerasEstimated((R) this,
                                     mFirstViewId, secondViewId,
                                     mEstimatedCamera1, mEstimatedCamera2);
-                            //noinspection all
+                            //noinspection unchecked
                             mListener.onReconstructedPointsEstimated(
-                                    (R)this, mMatches, mReconstructedPoints);
-                            if(postProcessOne()) {
-                                //noinspection all
+                                    (R) this, mMatches, mReconstructedPoints);
+                            if (postProcessOne()) {
+                                //noinspection unchecked
                                 mListener.onFinish((R) this);
                                 mRunning = false;
                                 mFinished = true;
                             }
                         } else {
-                            //initial cameras failed
+                            // initial cameras failed
                             mFailed = true;
-                            //noinspection all
-                            mListener.onFail((R)this);
+                            //noinspection unchecked
+                            mListener.onFail((R) this);
                         }
                     } else {
-                        //estimation of fundamental matrix failed
-                        //noinspection all
-                        mListener.onSamplesRejected((R)this, mViewCount,
+                        // estimation of fundamental matrix failed
+                        //noinspection unchecked
+                        mListener.onSamplesRejected((R) this, mViewCount,
                                 mCurrentViewSamples);
                     }
                 }
@@ -340,26 +374,26 @@ public abstract class BaseTwoViewsSparseReconstructor<
         mViewCount++;
 
         if (mCancelled) {
-            //noinspection all
-            mListener.onCancel((R)this);
+            //noinspection unchecked
+            mListener.onCancel((R) this);
         }
 
         return !mFinished;
     }
-    
+
     /**
      * Starts reconstruction of all available data to reconstruct the whole scene.
      * If reconstruction has already started and is running, calling this method
      * has no effect.
      */
     public void start() {
-        while(processOneView()) {
+        while (processOneView()) {
             if (mCancelled) {
                 break;
             }
         }
     }
-    
+
     /**
      * Cancels reconstruction.
      * If reconstruction has already been cancelled, calling this method has no
@@ -367,13 +401,13 @@ public abstract class BaseTwoViewsSparseReconstructor<
      */
     public void cancel() {
         if (mCancelled) {
-            //already cancelled
+            // already cancelled
             return;
         }
-        
+
         mCancelled = true;
     }
-    
+
     /**
      * Resets this instance so that a reconstruction can be started from the beginning without cancelling current one.
      */
@@ -383,7 +417,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
         mCancelled = mFailed = false;
         mViewCount = 0;
         mRunning = false;
-        
+
         mEstimatedFundamentalMatrix = null;
         mEstimatedCamera1 = mEstimatedCamera2 = null;
         mReconstructedPoints = null;
@@ -394,37 +428,41 @@ public abstract class BaseTwoViewsSparseReconstructor<
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @return true if post processing succeeded, false otherwise.
      */
     protected abstract boolean postProcessOne();
 
     /**
-     * Indicates whether there are enough samples to estimate a fundamental 
+     * Indicates whether there are enough samples to estimate a fundamental
      * matrix.
+     *
      * @param samples samples to check.
      * @return true if there are enough samples, false otherwise.
      */
-    private boolean hasEnoughSamples(List<Sample2D> samples) {
+    private boolean hasEnoughSamples(final List<Sample2D> samples) {
         return hasEnoughSamplesOrMatches(samples != null ? samples.size() : 0);
     }
-    
+
     /**
      * Indicates whether there are enough matches to estimate a fundamental
      * matrix.
+     *
      * @param matches matches to check.
      * @return true if there are enough matches, false otherwise.
      */
-    private boolean hasEnoughMatches(List<MatchedSamples> matches) {
+    private boolean hasEnoughMatches(final List<MatchedSamples> matches) {
         return hasEnoughSamplesOrMatches(matches != null ? matches.size() : 0);
     }
-    
+
     /**
-     * Indicates whether there are enough matches or samples to estimate a 
+     * Indicates whether there are enough matches or samples to estimate a
      * fundamental matrix.
+     *
      * @param count number of matches or samples.
      * @return true if there are enough matches or samples, false otherwise.
      */
-    private boolean hasEnoughSamplesOrMatches(int count) {
+    private boolean hasEnoughSamplesOrMatches(final int count) {
         if (mConfiguration.isGeneralSceneAllowed()) {
             if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
                     FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
@@ -439,75 +477,76 @@ public abstract class BaseTwoViewsSparseReconstructor<
             return count >= ProjectiveTransformation2DRobustEstimator.
                     MINIMUM_SIZE;
         }
-        return false;        
+        return false;
     }
-    
+
     /**
      * Estimates fundamental matrix for provided matches, when 3D points lay in
      * a general non degenerate 3D configuration.
+     *
      * @param matches pairs of matches to find fundamental matrix.
      * @param viewId1 id of first view.
      * @param viewId2 id of second view.
      * @return true if estimation succeeded, false otherwise.
      */
-    private boolean estimateFundamentalMatrix(List<MatchedSamples> matches,
-            int viewId1, int viewId2) {
+    private boolean estimateFundamentalMatrix(final List<MatchedSamples> matches,
+                                              final int viewId1, final int viewId2) {
         if (matches == null) {
             return false;
         }
-        
-        int count = matches.size();
-        List<Sample2D> leftSamples = new ArrayList<>(count);
-        List<Sample2D> rightSamples = new ArrayList<>(count);
-        List<Point2D> leftPoints = new ArrayList<>(count);
-        List<Point2D> rightPoints = new ArrayList<>(count);
-        double[] qualityScores = new double[count];
-        double principalPointX;
-        double principalPointY;
-        if (mConfiguration.getInitialCamerasEstimatorMethod() == 
+
+        final int count = matches.size();
+        final List<Sample2D> leftSamples = new ArrayList<>(count);
+        final List<Sample2D> rightSamples = new ArrayList<>(count);
+        final List<Point2D> leftPoints = new ArrayList<>(count);
+        final List<Point2D> rightPoints = new ArrayList<>(count);
+        final double[] qualityScores = new double[count];
+        final double principalPointX;
+        final double principalPointY;
+        if (mConfiguration.getInitialCamerasEstimatorMethod() ==
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
                 mConfiguration.getInitialCamerasEstimatorMethod() ==
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+                        InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
             principalPointX = mConfiguration.getPrincipalPointX();
             principalPointY = mConfiguration.getPrincipalPointY();
         } else {
             principalPointX = principalPointY = 0.0;
         }
-        
+
         int i = 0;
-        for (MatchedSamples match : matches) {
-            Sample2D[] samples = match.getSamples();
-            if(samples.length != NUMBER_OF_VIEWS) {
+        for (final MatchedSamples match : matches) {
+            final Sample2D[] samples = match.getSamples();
+            if (samples.length != NUMBER_OF_VIEWS) {
                 return false;
             }
-            
+
             leftSamples.add(samples[0]);
             rightSamples.add(samples[1]);
-            
-            Point2D leftPoint = Point2D.create();
+
+            final Point2D leftPoint = Point2D.create();
             leftPoint.setInhomogeneousCoordinates(
-                    samples[0].getPoint().getInhomX() - principalPointX, 
+                    samples[0].getPoint().getInhomX() - principalPointX,
                     samples[0].getPoint().getInhomY() - principalPointY);
             leftPoints.add(leftPoint);
-            
-            Point2D rightPoint = Point2D.create();
+
+            final Point2D rightPoint = Point2D.create();
             rightPoint.setInhomogeneousCoordinates(
-                    samples[1].getPoint().getInhomX() - principalPointX, 
+                    samples[1].getPoint().getInhomX() - principalPointX,
                     samples[1].getPoint().getInhomY() - principalPointY);
             rightPoints.add(rightPoint);
-            
+
             qualityScores[i] = match.getQualityScore();
             i++;
         }
-        
+
         try {
-            FundamentalMatrixRobustEstimator estimator =
-                    FundamentalMatrixRobustEstimator.create(leftPoints, 
-                    rightPoints, qualityScores, mConfiguration.
-                    getRobustFundamentalMatrixEstimatorMethod());
+            final FundamentalMatrixRobustEstimator estimator =
+                    FundamentalMatrixRobustEstimator.create(leftPoints,
+                            rightPoints, qualityScores, mConfiguration.
+                                    getRobustFundamentalMatrixEstimatorMethod());
             estimator.setNonRobustFundamentalMatrixEstimatorMethod(
                     mConfiguration.
-                    getNonRobustFundamentalMatrixEstimatorMethod());
+                            getNonRobustFundamentalMatrixEstimatorMethod());
             estimator.setResultRefined(
                     mConfiguration.isFundamentalMatrixRefined());
             estimator.setCovarianceKept(
@@ -516,154 +555,155 @@ public abstract class BaseTwoViewsSparseReconstructor<
                     mConfiguration.getFundamentalMatrixConfidence());
             estimator.setMaxIterations(
                     mConfiguration.getFundamentalMatrixMaxIterations());
-        
-            switch(mConfiguration.getRobustFundamentalMatrixEstimatorMethod()) {
+
+            switch (mConfiguration.getRobustFundamentalMatrixEstimatorMethod()) {
                 case LMedS:
-                    ((LMedSFundamentalMatrixRobustEstimator)estimator).
+                    ((LMedSFundamentalMatrixRobustEstimator) estimator).
                             setStopThreshold(mConfiguration.
-                            getFundamentalMatrixThreshold());
+                                    getFundamentalMatrixThreshold());
                     break;
                 case MSAC:
-                    ((MSACFundamentalMatrixRobustEstimator)estimator).
+                    ((MSACFundamentalMatrixRobustEstimator) estimator).
                             setThreshold(mConfiguration.
-                            getFundamentalMatrixThreshold());
+                                    getFundamentalMatrixThreshold());
                     break;
                 case PROMedS:
-                    ((PROMedSFundamentalMatrixRobustEstimator)estimator).
+                    ((PROMedSFundamentalMatrixRobustEstimator) estimator).
                             setStopThreshold(mConfiguration.
-                            getFundamentalMatrixThreshold());
+                                    getFundamentalMatrixThreshold());
                     break;
                 case PROSAC:
                     PROSACFundamentalMatrixRobustEstimator prosacEstimator =
-                            (PROSACFundamentalMatrixRobustEstimator)estimator;
+                            (PROSACFundamentalMatrixRobustEstimator) estimator;
                     prosacEstimator.setThreshold(
                             mConfiguration.getFundamentalMatrixThreshold());
                     prosacEstimator.setComputeAndKeepInliersEnabled(
                             mConfiguration.
-                            getFundamentalMatrixComputeAndKeepInliers());
+                                    getFundamentalMatrixComputeAndKeepInliers());
                     prosacEstimator.setComputeAndKeepResidualsEnabled(
                             mConfiguration.
-                            getFundamentalMatrixComputeAndKeepResiduals());
+                                    getFundamentalMatrixComputeAndKeepResiduals());
                     break;
                 case RANSAC:
                     RANSACFundamentalMatrixRobustEstimator ransacEstimator =
-                            (RANSACFundamentalMatrixRobustEstimator)estimator;
+                            (RANSACFundamentalMatrixRobustEstimator) estimator;
                     ransacEstimator.setThreshold(
                             mConfiguration.getFundamentalMatrixThreshold());
                     ransacEstimator.setComputeAndKeepInliersEnabled(
                             mConfiguration.
-                            getFundamentalMatrixComputeAndKeepInliers());
+                                    getFundamentalMatrixComputeAndKeepInliers());
                     ransacEstimator.setComputeAndKeepResidualsEnabled(
                             mConfiguration.
-                            getFundamentalMatrixComputeAndKeepResiduals());
+                                    getFundamentalMatrixComputeAndKeepResiduals());
                     break;
                 default:
                     break;
             }
-        
-        
-            FundamentalMatrix fundamentalMatrix = estimator.estimate();
-            
+
+
+            final FundamentalMatrix fundamentalMatrix = estimator.estimate();
+
             mEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();
             mEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);
             mEstimatedFundamentalMatrix.setViewId1(viewId1);
             mEstimatedFundamentalMatrix.setViewId2(viewId2);
             mEstimatedFundamentalMatrix.setCovariance(
                     estimator.getCovariance());
-            
-            //determine quality score and inliers
-            InliersData inliersData = estimator.getInliersData();
+
+            // determine quality score and inliers
+            final InliersData inliersData = estimator.getInliersData();
             if (inliersData != null) {
-                int numInliers = inliersData.getNumInliers();
-                BitSet inliers = inliersData.getInliers();
-                int length = inliers.length();                
+                final int numInliers = inliersData.getNumInliers();
+                final BitSet inliers = inliersData.getInliers();
+                final int length = inliers.length();
                 double fundamentalMatrixQualityScore = 0.0;
                 for (i = 0; i < length; i++) {
                     if (inliers.get(i)) {
-                        //inlier
-                        fundamentalMatrixQualityScore += 
+                        // inlier
+                        fundamentalMatrixQualityScore +=
                                 qualityScores[i] / numInliers;
                     }
                 }
                 mEstimatedFundamentalMatrix.setQualityScore(
                         fundamentalMatrixQualityScore);
-                mEstimatedFundamentalMatrix.setInliers(inliers);                
+                mEstimatedFundamentalMatrix.setInliers(inliers);
             }
-            
-            //store left/right samples
+
+            // store left/right samples
             mEstimatedFundamentalMatrix.setLeftSamples(leftSamples);
             mEstimatedFundamentalMatrix.setRightSamples(rightSamples);
-            
+
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
     }
-    
+
     /**
      * Estimates fundamental matrix for provided matches, when 3D points lay in
      * a planar 3D scene.
+     *
      * @param matches pairs of matches to find fundamental matrix.
      * @param viewId1 id of first view.
      * @param viewId2 id of second view.
-     * @return true if estimation succeeeded, false otherwise.
+     * @return true if estimation succeeded, false otherwise.
      */
-    @SuppressWarnings("all")
     private boolean estimatePlanarFundamentalMatrix(
-            List<MatchedSamples> matches, int viewId1, int viewId2) {
+            final List<MatchedSamples> matches, final int viewId1, final int viewId2) {
         if (matches == null) {
             return false;
         }
-        
-        int count = matches.size();
-        List<Sample2D> leftSamples = new ArrayList<>();
-        List<Sample2D> rightSamples = new ArrayList<>();
-        List<Point2D> leftPoints = new ArrayList<>();
-        List<Point2D> rightPoints = new ArrayList<>();
-        double[] qualityScores = new double[count];
-        double principalPointX, principalPointY;
+
+        final int count = matches.size();
+        final List<Sample2D> leftSamples = new ArrayList<>();
+        final List<Sample2D> rightSamples = new ArrayList<>();
+        final List<Point2D> leftPoints = new ArrayList<>();
+        final List<Point2D> rightPoints = new ArrayList<>();
+        final double[] qualityScores = new double[count];
+        final double principalPointX;
+        final double principalPointY;
         if (mConfiguration.getInitialCamerasEstimatorMethod() ==
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
                 mConfiguration.getInitialCamerasEstimatorMethod() ==
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+                        InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
             principalPointX = mConfiguration.getPrincipalPointX();
             principalPointY = mConfiguration.getPrincipalPointY();
         } else {
             principalPointX = principalPointY = 0.0;
         }
-        
+
         int i = 0;
-        for (MatchedSamples match : matches) {
-            Sample2D[] samples = match.getSamples();
+        for (final MatchedSamples match : matches) {
+            final Sample2D[] samples = match.getSamples();
             if (samples.length != NUMBER_OF_VIEWS) {
                 return false;
             }
-            
+
             leftSamples.add(samples[0]);
             rightSamples.add(samples[1]);
-            
-            Point2D leftPoint = Point2D.create();
+
+            final Point2D leftPoint = Point2D.create();
             leftPoint.setInhomogeneousCoordinates(
-                    samples[0].getPoint().getInhomX() - principalPointX, 
+                    samples[0].getPoint().getInhomX() - principalPointX,
                     samples[0].getPoint().getInhomY() - principalPointY);
             leftPoints.add(leftPoint);
-            
-            Point2D rightPoint = Point2D.create();
+
+            final Point2D rightPoint = Point2D.create();
             rightPoint.setInhomogeneousCoordinates(
-                    samples[1].getPoint().getInhomX() - principalPointX, 
+                    samples[1].getPoint().getInhomX() - principalPointX,
                     samples[1].getPoint().getInhomY() - principalPointY);
             rightPoints.add(rightPoint);
-            
+
             qualityScores[i] = match.getQualityScore();
             i++;
         }
-        
+
         try {
-            PointCorrespondenceProjectiveTransformation2DRobustEstimator
-                    homographyEstimator = 
+            final PointCorrespondenceProjectiveTransformation2DRobustEstimator
+                    homographyEstimator =
                     PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                    create(mConfiguration.
-                    getRobustPlanarHomographyEstimatorMethod());
+                            create(mConfiguration.
+                                    getRobustPlanarHomographyEstimatorMethod());
             homographyEstimator.setResultRefined(
                     mConfiguration.isPlanarHomographyRefined());
             homographyEstimator.setCovarianceKept(
@@ -672,8 +712,8 @@ public abstract class BaseTwoViewsSparseReconstructor<
                     mConfiguration.getPlanarHomographyConfidence());
             homographyEstimator.setMaxIterations(
                     mConfiguration.getPlanarHomographyMaxIterations());
-            
-            switch(mConfiguration.getRobustPlanarHomographyEstimatorMethod()) {
+
+            switch (mConfiguration.getRobustPlanarHomographyEstimatorMethod()) {
                 case LMedS:
                     ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                             homographyEstimator).setStopThreshold(
@@ -690,9 +730,9 @@ public abstract class BaseTwoViewsSparseReconstructor<
                             mConfiguration.getPlanarHomographyThreshold());
                     break;
                 case PROSAC:
-                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =
-                            (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)homographyEstimator;
-                    
+                    final PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =
+                            (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
+
                     prosacHomographyEstimator.setThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
                     prosacHomographyEstimator.setComputeAndKeepInliersEnabled(
@@ -701,9 +741,9 @@ public abstract class BaseTwoViewsSparseReconstructor<
                             mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
                     break;
                 case RANSAC:
-                    RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =
-                    (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)homographyEstimator;
-                    
+                    final RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =
+                            (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
+
                     ransacHomographyEstimator.setThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
                     ransacHomographyEstimator.setComputeAndKeepInliersEnabled(
@@ -712,260 +752,263 @@ public abstract class BaseTwoViewsSparseReconstructor<
                             mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
                     break;
             }
-            
-            PlanarBestFundamentalMatrixEstimatorAndReconstructor 
-                    fundamentalMatrixEstimator = 
+
+            final PlanarBestFundamentalMatrixEstimatorAndReconstructor
+                    fundamentalMatrixEstimator =
                     new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
             fundamentalMatrixEstimator.setHomographyEstimator(
                     homographyEstimator);
-            fundamentalMatrixEstimator.setLeftAndRightPoints(leftPoints, 
+            fundamentalMatrixEstimator.setLeftAndRightPoints(leftPoints,
                     rightPoints);
             fundamentalMatrixEstimator.setQualityScores(qualityScores);
-            
-            PinholeCameraIntrinsicParameters intrinsic1 = 
+
+            PinholeCameraIntrinsicParameters intrinsic1 =
                     mConfiguration.getInitialIntrinsic1();
             PinholeCameraIntrinsicParameters intrinsic2 =
                     mConfiguration.getInitialIntrinsic1();
             if (intrinsic1 == null && intrinsic2 == null) {
-                //estimate homography
-                ProjectiveTransformation2D homography = homographyEstimator.
+                // estimate homography
+                final ProjectiveTransformation2D homography = homographyEstimator.
                         estimate();
-                
-                //estimate intrinsic parameters using the Image of Absolute 
-                //Conic (IAC)
-                List<Transformation2D> homographies = 
+
+                // estimate intrinsic parameters using the Image of Absolute
+                // Conic (IAC)
+                final List<Transformation2D> homographies =
                         new ArrayList<>();
                 homographies.add(homography);
-                
-                ImageOfAbsoluteConicEstimator iacEstimator = 
+
+                final ImageOfAbsoluteConicEstimator iacEstimator =
                         new LMSEImageOfAbsoluteConicEstimator(homographies);
-                ImageOfAbsoluteConic iac = iacEstimator.estimate();
-                
+                final ImageOfAbsoluteConic iac = iacEstimator.estimate();
+
                 intrinsic1 = intrinsic2 = iac.getIntrinsicParameters();
 
-            } else if (intrinsic1 == null && intrinsic2 != null) {
+            } else if (intrinsic1 == null) { // && intrinsic2 != null
                 intrinsic1 = intrinsic2;
-            } else if (intrinsic1 != null && intrinsic2 == null) {
+            } else if (intrinsic2 == null) { // && intrinsic1 != null
                 intrinsic2 = intrinsic1;
             }
             fundamentalMatrixEstimator.setLeftIntrinsics(intrinsic1);
             fundamentalMatrixEstimator.setRightIntrinsics(intrinsic2);
-            
+
             fundamentalMatrixEstimator.estimateAndReconstruct();
-            
-            FundamentalMatrix fundamentalMatrix = 
+
+            final FundamentalMatrix fundamentalMatrix =
                     fundamentalMatrixEstimator.getFundamentalMatrix();
-            
+
             mEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();
             mEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);
             mEstimatedFundamentalMatrix.setViewId1(viewId1);
             mEstimatedFundamentalMatrix.setViewId2(viewId2);
-            
-            //determine quality score and inliers
-            InliersData inliersData = homographyEstimator.getInliersData();
+
+            // determine quality score and inliers
+            final InliersData inliersData = homographyEstimator.getInliersData();
             if (inliersData != null) {
-                int numInliers = inliersData.getNumInliers();
-                BitSet inliers = inliersData.getInliers();
-                int length = inliers.length();                
+                final int numInliers = inliersData.getNumInliers();
+                final BitSet inliers = inliersData.getInliers();
+                final int length = inliers.length();
                 double fundamentalMatrixQualityScore = 0.0;
                 for (i = 0; i < length; i++) {
                     if (inliers.get(i)) {
-                        //inlier
-                        fundamentalMatrixQualityScore += 
+                        // inlier
+                        fundamentalMatrixQualityScore +=
                                 qualityScores[i] / numInliers;
                     }
                 }
                 mEstimatedFundamentalMatrix.setQualityScore(
                         fundamentalMatrixQualityScore);
-                mEstimatedFundamentalMatrix.setInliers(inliers);                
+                mEstimatedFundamentalMatrix.setInliers(inliers);
             }
-                        
-            //store left/right samples
+
+            // store left/right samples
             mEstimatedFundamentalMatrix.setLeftSamples(leftSamples);
             mEstimatedFundamentalMatrix.setRightSamples(rightSamples);
-            
+
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
     }
-    
+
     /**
      * Estimates initial cameras and reconstructed points.
+     *
      * @return true if cameras and points could be estimated, false if something
      * failed.
      */
     private boolean estimateInitialCamerasAndPoints() {
-        switch(mConfiguration.getInitialCamerasEstimatorMethod()) {
+        switch (mConfiguration.getInitialCamerasEstimatorMethod()) {
             case ESSENTIAL_MATRIX:
                 return estimateInitialCamerasAndPointsEssential();
             case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
-                return estimateInitialCamerasAndPointsDIAC();                
-            case DUAL_ABSOLUTE_QUADRIC:            
+                return estimateInitialCamerasAndPointsDIAC();
+            case DUAL_ABSOLUTE_QUADRIC:
                 return estimateInitialCamerasAndPointsDAQ();
             case DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX:
             default:
                 return estimateInitialCamerasAndPointsDAQAndEssential();
         }
     }
-    
+
     /**
-     * Estimates initial cameras and reconstructed points using the Dual 
+     * Estimates initial cameras and reconstructed points using the Dual
      * Absolute Quadric to estimate intrinsic parameters and then use those
      * intrinsic parameters with the essential matrix.
+     *
      * @return true if cameras and points could be estimated, false if something
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsDAQAndEssential() {
         try {
-            FundamentalMatrix fundamentalMatrix =
+            final FundamentalMatrix fundamentalMatrix =
                     mEstimatedFundamentalMatrix.getFundamentalMatrix();
-            
-            DualAbsoluteQuadricInitialCamerasEstimator estimator =
+
+            final DualAbsoluteQuadricInitialCamerasEstimator estimator =
                     new DualAbsoluteQuadricInitialCamerasEstimator(
                             fundamentalMatrix);
             estimator.setAspectRatio(
                     mConfiguration.getInitialCamerasAspectRatio());
             estimator.estimate();
-            
-            PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            PinholeCamera camera2 = estimator.getEstimatedRightCamera();
-            
+
+            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
+            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+
             camera1.decompose();
             camera2.decompose();
-            
-            PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =
+
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =
                     camera1.getIntrinsicParameters();
-            PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =
                     camera2.getIntrinsicParameters();
-                        
-            double principalPointX = mConfiguration.getPrincipalPointX();
-            double principalPointY = mConfiguration.getPrincipalPointY();                        
-            
-            PinholeCameraIntrinsicParameters intrinsic1 = 
+
+            final double principalPointX = mConfiguration.getPrincipalPointX();
+            final double principalPointY = mConfiguration.getPrincipalPointY();
+
+            final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(
                             intrinsicZeroPrincipalPoint1);
             intrinsic1.setHorizontalPrincipalPoint(
                     intrinsic1.getHorizontalPrincipalPoint() + principalPointX);
             intrinsic1.setVerticalPrincipalPoint(
                     intrinsic1.getVerticalPrincipalPoint() + principalPointY);
-            
-            PinholeCameraIntrinsicParameters intrinsic2 =
+
+            final PinholeCameraIntrinsicParameters intrinsic2 =
                     new PinholeCameraIntrinsicParameters(
                             intrinsicZeroPrincipalPoint2);
             intrinsic2.setHorizontalPrincipalPoint(
                     intrinsic2.getHorizontalPrincipalPoint() + principalPointX);
             intrinsic2.setVerticalPrincipalPoint(
                     intrinsic2.getVerticalPrincipalPoint() + principalPointY);
-            
-            //fix fundamental matrix to account for principal point different 
-            //from zero
-            fixFundamentalMatrix(fundamentalMatrix, 
+
+            // fix fundamental matrix to account for principal point different
+            // from zero
+            fixFundamentalMatrix(fundamentalMatrix,
                     intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
                     intrinsic1, intrinsic2);
-            
+
             return estimateInitialCamerasAndPointsEssential(intrinsic1,
                     intrinsic2);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
     }
-        
+
     /**
-     * Estimates initial cameras and reconstructed points using the Dual 
+     * Estimates initial cameras and reconstructed points using the Dual
      * Absolute Quadric.
+     *
      * @return true if cameras and points could be estimated, false if something
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsDAQ() {
         try {
-            FundamentalMatrix fundamentalMatrix = 
+            final FundamentalMatrix fundamentalMatrix =
                     mEstimatedFundamentalMatrix.getFundamentalMatrix();
-            fundamentalMatrix.normalize();            
-        
-            DualAbsoluteQuadricInitialCamerasEstimator estimator =
+            fundamentalMatrix.normalize();
+
+            final DualAbsoluteQuadricInitialCamerasEstimator estimator =
                     new DualAbsoluteQuadricInitialCamerasEstimator(
                             fundamentalMatrix);
             estimator.setAspectRatio(
                     mConfiguration.getInitialCamerasAspectRatio());
             estimator.estimate();
-        
-            PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            PinholeCamera camera2 = estimator.getEstimatedRightCamera();
-            
+
+            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
+            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+
             camera1.decompose();
             camera2.decompose();
-            
-            PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 = 
+
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =
                     camera1.getIntrinsicParameters();
-            PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =
                     camera2.getIntrinsicParameters();
-            
-            double principalPointX = mConfiguration.getPrincipalPointX();
-            double principalPointY = mConfiguration.getPrincipalPointY();                        
-            
-            PinholeCameraIntrinsicParameters intrinsic1 = 
+
+            final double principalPointX = mConfiguration.getPrincipalPointX();
+            final double principalPointY = mConfiguration.getPrincipalPointY();
+
+            final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(
-                            intrinsicZeroPrincipalPoint1);            
+                            intrinsicZeroPrincipalPoint1);
             intrinsic1.setHorizontalPrincipalPoint(
                     intrinsic1.getHorizontalPrincipalPoint() + principalPointX);
             intrinsic1.setVerticalPrincipalPoint(
                     intrinsic1.getVerticalPrincipalPoint() + principalPointY);
             camera1.setIntrinsicParameters(intrinsic1);
-            
-            PinholeCameraIntrinsicParameters intrinsic2 =
+
+            final PinholeCameraIntrinsicParameters intrinsic2 =
                     new PinholeCameraIntrinsicParameters(
-                            intrinsicZeroPrincipalPoint2);            
+                            intrinsicZeroPrincipalPoint2);
             intrinsic2.setHorizontalPrincipalPoint(
                     intrinsic2.getHorizontalPrincipalPoint() + principalPointX);
             intrinsic2.setVerticalPrincipalPoint(
                     intrinsic2.getVerticalPrincipalPoint() + principalPointY);
             camera2.setIntrinsicParameters(intrinsic2);
-            
+
             mEstimatedCamera1 = new EstimatedCamera();
             mEstimatedCamera1.setCamera(camera1);
-        
+
             mEstimatedCamera2 = new EstimatedCamera();
             mEstimatedCamera2.setCamera(camera2);
-            
-            //fix fundamental matrix to account for principal point different 
-            //from zero
-            fixFundamentalMatrix(fundamentalMatrix, 
+
+            // fix fundamental matrix to account for principal point different
+            // from zero
+            fixFundamentalMatrix(fundamentalMatrix,
                     intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
                     intrinsic1, intrinsic2);
-            
-            //triangulate points
+
+            // triangulate points
             Corrector corrector = null;
             if (mConfiguration.getInitialCamerasCorrectorType() != null) {
                 corrector = Corrector.create(fundamentalMatrix,
                         mConfiguration.getInitialCamerasCorrectorType());
             }
 
-            //use all points used for fundamental matrix estimation
-            List<Sample2D> samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
-            List<Sample2D> samples2 = mEstimatedFundamentalMatrix.getRightSamples();
-        
-            List<Point2D> points1 = new ArrayList<>();
-            List<Point2D> points2 = new ArrayList<>();
-            int length = samples1.size();
+            // use all points used for fundamental matrix estimation
+            final List<Sample2D> samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
+            final List<Sample2D> samples2 = mEstimatedFundamentalMatrix.getRightSamples();
+
+            final List<Point2D> points1 = new ArrayList<>();
+            final List<Point2D> points2 = new ArrayList<>();
+            final int length = samples1.size();
             for (int i = 0; i < length; i++) {
-                Sample2D sample1 = samples1.get(i);
-                Sample2D sample2 = samples2.get(i);
-                
-                Point2D point1 = sample1.getPoint();
-                Point2D point2 = sample2.getPoint();                    
-                
+                final Sample2D sample1 = samples1.get(i);
+                final Sample2D sample2 = samples2.get(i);
+
+                final Point2D point1 = sample1.getPoint();
+                final Point2D point2 = sample2.getPoint();
+
                 points1.add(point1);
                 points2.add(point2);
             }
-            
-            //correct points if needed
+
+            // correct points if needed
             List<Point2D> correctedPoints1;
             List<Point2D> correctedPoints2;
             if (corrector != null) {
                 corrector.setLeftAndRightPoints(points1, points2);
                 corrector.correct();
-                
+
                 correctedPoints1 = corrector.getLeftCorrectedPoints();
                 correctedPoints2 = corrector.getRightCorrectedPoints();
             } else {
@@ -973,9 +1016,8 @@ public abstract class BaseTwoViewsSparseReconstructor<
                 correctedPoints2 = points2;
             }
 
-
-            //triangulate points
-            SinglePoint3DTriangulator triangulator;
+            // triangulate points
+            final SinglePoint3DTriangulator triangulator;
             if (mConfiguration.getDaqUseHomogeneousPointTriangulator()) {
                 triangulator = SinglePoint3DTriangulator.create(
                         Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
@@ -984,74 +1026,75 @@ public abstract class BaseTwoViewsSparseReconstructor<
                         Point3DTriangulatorType.
                                 LMSE_INHOMOGENEOUS_TRIANGULATOR);
             }
-            
-            List<PinholeCamera> cameras = new ArrayList<>();
+
+            final List<PinholeCamera> cameras = new ArrayList<>();
             cameras.add(camera1);
             cameras.add(camera2);
-            
+
             mReconstructedPoints = new ArrayList<>();
-            List<Point2D> points = new ArrayList<>();
-            int numPoints = correctedPoints1.size();
+            final List<Point2D> points = new ArrayList<>();
+            final int numPoints = correctedPoints1.size();
             Point3D triangulatedPoint;
             ReconstructedPoint3D reconstructedPoint;
             for (int i = 0; i < numPoints; i++) {
                 points.clear();
                 points.add(correctedPoints1.get(i));
                 points.add(correctedPoints2.get(i));
-                
+
                 triangulator.setPointsAndCameras(points, cameras);
                 triangulatedPoint = triangulator.triangulate();
-                
+
                 reconstructedPoint = new ReconstructedPoint3D();
                 reconstructedPoint.setPoint(triangulatedPoint);
-                
-                //only points reconstructed in front of both cameras are 
-                //considered valid
-                boolean front1 = camera1.isPointInFrontOfCamera(
+
+                // only points reconstructed in front of both cameras are
+                // considered valid
+                final boolean front1 = camera1.isPointInFrontOfCamera(
                         triangulatedPoint);
-                boolean front2 = camera2.isPointInFrontOfCamera(
+                final boolean front2 = camera2.isPointInFrontOfCamera(
                         triangulatedPoint);
                 reconstructedPoint.setInlier(front1 && front2);
 
-                mReconstructedPoints.add(reconstructedPoint);                
+                mReconstructedPoints.add(reconstructedPoint);
             }
-            
+
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return false;
         }
     }
-    
+
     /**
-     * Estimates initial cameras and reconstructed points using Dual Image of 
+     * Estimates initial cameras and reconstructed points using Dual Image of
      * Absolute Conic.
+     *
      * @return true if cameras and points could be estimated, false if something
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsDIAC() {
-        FundamentalMatrix fundamentalMatrix = 
+        final FundamentalMatrix fundamentalMatrix =
                 mEstimatedFundamentalMatrix.getFundamentalMatrix();
-                
-        //use inlier points used for fundamental matrix estimation
-        List<Sample2D> samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
-        List<Sample2D> samples2 = mEstimatedFundamentalMatrix.getRightSamples();
-        
-        List<Point2D> points1 = new ArrayList<>();
-        List<Point2D> points2 = new ArrayList<>();
-        int length = samples1.size();
+
+        // use inlier points used for fundamental matrix estimation
+        final List<Sample2D> samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
+        final List<Sample2D> samples2 = mEstimatedFundamentalMatrix.getRightSamples();
+
+        final List<Point2D> points1 = new ArrayList<>();
+        final List<Point2D> points2 = new ArrayList<>();
+        final int length = samples1.size();
         for (int i = 0; i < length; i++) {
-            Sample2D sample1 = samples1.get(i);
-            Sample2D sample2 = samples2.get(i);
-                
-            Point2D point1 = sample1.getPoint();
-            Point2D point2 = sample2.getPoint();
-                
+            final Sample2D sample1 = samples1.get(i);
+            final Sample2D sample2 = samples2.get(i);
+
+            final Point2D point1 = sample1.getPoint();
+            final Point2D point2 = sample2.getPoint();
+
             points1.add(point1);
             points2.add(point2);
         }
 
         try {
-            DualImageOfAbsoluteConicInitialCamerasEstimator estimator =
+            final DualImageOfAbsoluteConicInitialCamerasEstimator estimator =
                     new DualImageOfAbsoluteConicInitialCamerasEstimator(
                             fundamentalMatrix, points1, points2);
             estimator.setPrincipalPoint(mConfiguration.getPrincipalPointX(),
@@ -1063,166 +1106,170 @@ public abstract class BaseTwoViewsSparseReconstructor<
             estimator.setPointsTriangulated(true);
             estimator.setValidTriangulatedPointsMarked(
                     mConfiguration.getInitialCamerasMarkValidTriangulatedPoints());
-        
+
             estimator.estimate();
-        
-            //store cameras
-            PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            PinholeCamera camera2 = estimator.getEstimatedRightCamera();
-            
+
+            // store cameras
+            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
+            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+
             mEstimatedCamera1 = new EstimatedCamera();
             mEstimatedCamera1.setCamera(camera1);
-        
+
             mEstimatedCamera2 = new EstimatedCamera();
             mEstimatedCamera2.setCamera(camera2);
-            
-            //store points
-            List<Point3D> triangulatedPoints = 
+
+            // store points
+            final List<Point3D> triangulatedPoints =
                     estimator.getTriangulatedPoints();
-            BitSet validTriangulatedPoints =
+            final BitSet validTriangulatedPoints =
                     estimator.getValidTriangulatedPoints();
-            
+
             mReconstructedPoints = new ArrayList<>();
-            int size = triangulatedPoints.size();
+            final int size = triangulatedPoints.size();
             for (int i = 0; i < size; i++) {
-                ReconstructedPoint3D reconstructedPoint =
+                final ReconstructedPoint3D reconstructedPoint =
                         new ReconstructedPoint3D();
                 reconstructedPoint.setPoint(triangulatedPoints.get(i));
                 reconstructedPoint.setInlier(validTriangulatedPoints.get(i));
-                mReconstructedPoints.add(reconstructedPoint);                
+                mReconstructedPoints.add(reconstructedPoint);
             }
-            
-            return true;        
-        } catch (Exception e) {
-            return false;          
+
+            return true;
+        } catch (final Exception e) {
+            return false;
         }
     }
-    
+
     /**
      * Estimates initial cameras and reconstructed points using the essential
-     * matrix and provided intrinsic parameters that must have been set during 
+     * matrix and provided intrinsic parameters that must have been set during
      * offline calibration.
+     *
      * @return true if cameras and points could be estimated, false if something
      * failed.
-     */    
+     */
     private boolean estimateInitialCamerasAndPointsEssential() {
-        PinholeCameraIntrinsicParameters intrinsic1 = 
+        final PinholeCameraIntrinsicParameters intrinsic1 =
                 mConfiguration.getInitialIntrinsic1();
-        PinholeCameraIntrinsicParameters intrinsic2 =
+        final PinholeCameraIntrinsicParameters intrinsic2 =
                 mConfiguration.getInitialIntrinsic2();
         return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2);
     }
-    
+
     /**
      * Estimates initial cameras and reconstructed points using the essential
-     * matrix and provided intrinsic parameters that must have been set during 
+     * matrix and provided intrinsic parameters that must have been set during
      * offline calibration.
+     *
      * @param intrinsic1 intrinsic parameters of 1st camera.
      * @param intrinsic2 intrinsic parameters of 2nd camera.
      * @return true if cameras and points could be estimated, false if something
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsEssential(
-            PinholeCameraIntrinsicParameters intrinsic1,
-            PinholeCameraIntrinsicParameters intrinsic2) {
-        FundamentalMatrix fundamentalMatrix = 
+            final PinholeCameraIntrinsicParameters intrinsic1,
+            final PinholeCameraIntrinsicParameters intrinsic2) {
+        final FundamentalMatrix fundamentalMatrix =
                 mEstimatedFundamentalMatrix.getFundamentalMatrix();
 
-        //use all points used for fundamental matrix estimation
-        List<Sample2D> samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
-        List<Sample2D> samples2 = mEstimatedFundamentalMatrix.getRightSamples();
-        
-        List<Point2D> points1 = new ArrayList<>();
-        List<Point2D> points2 = new ArrayList<>();
-        int length = samples1.size();
+        // use all points used for fundamental matrix estimation
+        final List<Sample2D> samples1 = mEstimatedFundamentalMatrix.getLeftSamples();
+        final List<Sample2D> samples2 = mEstimatedFundamentalMatrix.getRightSamples();
+
+        final List<Point2D> points1 = new ArrayList<>();
+        final List<Point2D> points2 = new ArrayList<>();
+        final int length = samples1.size();
         for (int i = 0; i < length; i++) {
-            Sample2D sample1 = samples1.get(i);
-            Sample2D sample2 = samples2.get(i);
-                
-            Point2D point1 = sample1.getPoint();
-            Point2D point2 = sample2.getPoint();
-                
+            final Sample2D sample1 = samples1.get(i);
+            final Sample2D sample2 = samples2.get(i);
+
+            final Point2D point1 = sample1.getPoint();
+            final Point2D point2 = sample2.getPoint();
+
             points1.add(point1);
             points2.add(point2);
         }
 
         try {
-            EssentialMatrixInitialCamerasEstimator estimator =
+            final EssentialMatrixInitialCamerasEstimator estimator =
                     new EssentialMatrixInitialCamerasEstimator(
-                            fundamentalMatrix, intrinsic1, intrinsic2, 
+                            fundamentalMatrix, intrinsic1, intrinsic2,
                             points1, points2);
-            
+
             estimator.setCorrectorType(
                     mConfiguration.getInitialCamerasCorrectorType());
             estimator.setPointsTriangulated(true);
             estimator.setValidTriangulatedPointsMarked(
                     mConfiguration.getInitialCamerasMarkValidTriangulatedPoints());
-        
+
             estimator.estimate();
-        
-            //store cameras
-            PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            PinholeCamera camera2 = estimator.getEstimatedRightCamera();
-            
+
+            // store cameras
+            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
+            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+
             mEstimatedCamera1 = new EstimatedCamera();
             mEstimatedCamera1.setCamera(camera1);
-        
+
             mEstimatedCamera2 = new EstimatedCamera();
             mEstimatedCamera2.setCamera(camera2);
-            
-            //store points
-            List<Point3D> triangulatedPoints = 
+
+            // store points
+            final List<Point3D> triangulatedPoints =
                     estimator.getTriangulatedPoints();
-            BitSet validTriangulatedPoints =
+            final BitSet validTriangulatedPoints =
                     estimator.getValidTriangulatedPoints();
-            
+
             mReconstructedPoints = new ArrayList<>();
-            int size = triangulatedPoints.size();
+            final int size = triangulatedPoints.size();
             for (int i = 0; i < size; i++) {
-                ReconstructedPoint3D reconstructedPoint =
+                final ReconstructedPoint3D reconstructedPoint =
                         new ReconstructedPoint3D();
                 reconstructedPoint.setPoint(triangulatedPoints.get(i));
                 reconstructedPoint.setInlier(validTriangulatedPoints.get(i));
                 mReconstructedPoints.add(reconstructedPoint);
             }
-            
-            return true;        
-        } catch (Exception e) {
-            return false;          
+
+            return true;
+        } catch (final Exception e) {
+            return false;
         }
     }
-    
+
     /**
      * Fixes fundamental matrix to account for principal point different from
      * zero when using DAQ estimation.
-     * @param fundamentalMatrix fundamental matrix to be fixed.
-     * @param intrinsicZeroPrincipalPoint1 intrinsic parameters of camera 1 
-     * assuming zero principal point.
+     *
+     * @param fundamentalMatrix            fundamental matrix to be fixed.
+     * @param intrinsicZeroPrincipalPoint1 intrinsic parameters of camera 1
+     *                                     assuming zero principal point.
      * @param intrinsicZeroPrincipalPoint2 intrinsic parameters of camera 2
-     * assuming zero principal point.
-     * @param intrinsicPrincipalPoint1 intrinsic parameters of camera 1 using 
-     * proper principal point.
-     * @param intrinsicPrincipalPoint2 intrinsic parameters of camera 2 using
-     * proper principal point.
+     *                                     assuming zero principal point.
+     * @param intrinsicPrincipalPoint1     intrinsic parameters of camera 1 using
+     *                                     proper principal point.
+     * @param intrinsicPrincipalPoint2     intrinsic parameters of camera 2 using
+     *                                     proper principal point.
      * @throws EpipolarException if something fails.
      * @throws NotReadyException never happens.
      */
-    private void fixFundamentalMatrix(FundamentalMatrix fundamentalMatrix,
-            PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1, 
-            PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2,
-            PinholeCameraIntrinsicParameters intrinsicPrincipalPoint1,
-            PinholeCameraIntrinsicParameters intrinsicPrincipalPoint2) 
+    private void fixFundamentalMatrix(
+            final FundamentalMatrix fundamentalMatrix,
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1,
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2,
+            final PinholeCameraIntrinsicParameters intrinsicPrincipalPoint1,
+            final PinholeCameraIntrinsicParameters intrinsicPrincipalPoint2)
             throws EpipolarException, NotReadyException {
-        
-        //first compute essential matrix as E = K2a'F*K1a
-        EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix, 
+
+        // first compute essential matrix as E = K2a'F*K1a
+        final EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix,
                 intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2);
-        FundamentalMatrix fixedFundamentalMatrix = 
-                essential.toFundamentalMatrix(intrinsicPrincipalPoint1, 
-                intrinsicPrincipalPoint2);
+        final FundamentalMatrix fixedFundamentalMatrix =
+                essential.toFundamentalMatrix(intrinsicPrincipalPoint1,
+                        intrinsicPrincipalPoint2);
         fixedFundamentalMatrix.normalize();
         mEstimatedFundamentalMatrix.setFundamentalMatrix(
-                fixedFundamentalMatrix);        
+                fixedFundamentalMatrix);
         mEstimatedFundamentalMatrix.setCovariance(null);
-    }        
+    }
 }

@@ -16,32 +16,18 @@
 
 package com.irurueta.ar.sfm;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class KnownBaselineTwoViewsSparseReconstructorConfigurationTest {
-    
-    public KnownBaselineTwoViewsSparseReconstructorConfigurationTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
 
     @Test
     public void testConstructor() {
-        KnownBaselineTwoViewsSparseReconstructorConfiguration cfg =
+        final KnownBaselineTwoViewsSparseReconstructorConfiguration cfg =
                 new KnownBaselineTwoViewsSparseReconstructorConfiguration();
-        
-        //check default values
+
+        // check default values
         assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
@@ -75,7 +61,7 @@ public class KnownBaselineTwoViewsSparseReconstructorConfigurationTest {
         assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getInitialCamerasAspectRatio(), 
+        assertEquals(cfg.getInitialCamerasAspectRatio(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
         assertEquals(cfg.getPrincipalPointX(),
@@ -113,24 +99,24 @@ public class KnownBaselineTwoViewsSparseReconstructorConfigurationTest {
                         DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
         assertEquals(cfg.getPlanarHomographyThreshold(),
                 TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);        
+                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
         assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
                 TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);        
-        assertEquals(cfg.getBaseline(), 
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(cfg.getBaseline(),
                 KnownBaselineTwoViewsSparseReconstructorConfiguration.
                         DEFAULT_BASELINE, 0.0);
     }
-    
+
     @Test
     public void testMake() {
-        KnownBaselineTwoViewsSparseReconstructorConfiguration cfg =
+        final KnownBaselineTwoViewsSparseReconstructorConfiguration cfg =
                 KnownBaselineTwoViewsSparseReconstructorConfiguration.make();
-        
-        //check default values
+
+        // check default values
         assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
@@ -163,8 +149,8 @@ public class KnownBaselineTwoViewsSparseReconstructorConfigurationTest {
                         DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
         assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
                 TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);        
-        assertEquals(cfg.getInitialCamerasAspectRatio(), 
+                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
+        assertEquals(cfg.getInitialCamerasAspectRatio(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
         assertEquals(cfg.getPrincipalPointX(),
@@ -202,32 +188,32 @@ public class KnownBaselineTwoViewsSparseReconstructorConfigurationTest {
                         DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
         assertEquals(cfg.getPlanarHomographyThreshold(),
                 TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);        
+                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
         assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
                 TwoViewsSparseReconstructorConfiguration.
                         DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
                 TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);        
-        assertEquals(cfg.getBaseline(), 
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(cfg.getBaseline(),
                 KnownBaselineTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_BASELINE, 0.0);        
+                        DEFAULT_BASELINE, 0.0);
     }
-    
+
     @Test
     public void testGetSetBaseline() {
-        KnownBaselineTwoViewsSparseReconstructorConfiguration cfg =
+        final KnownBaselineTwoViewsSparseReconstructorConfiguration cfg =
                 new KnownBaselineTwoViewsSparseReconstructorConfiguration();
 
-        //check default value
-        assertEquals(cfg.getBaseline(), 
+        // check default value
+        assertEquals(cfg.getBaseline(),
                 KnownBaselineTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_BASELINE, 0.0);        
+                        DEFAULT_BASELINE, 0.0);
 
-        //set new value
+        // set new value
         assertSame(cfg.setBaseline(15.0), cfg);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(cfg.getBaseline(), 15.0, 0.0);
     }
 }

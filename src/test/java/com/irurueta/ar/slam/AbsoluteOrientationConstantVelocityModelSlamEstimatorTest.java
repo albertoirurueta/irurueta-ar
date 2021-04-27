@@ -25,7 +25,7 @@ import com.irurueta.geometry.Quaternion;
 import com.irurueta.numerical.signal.processing.KalmanFilter;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -34,111 +34,96 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
-public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest 
-        implements BaseSlamEstimatorListener {
+public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
+        implements BaseSlamEstimatorListener<AbsoluteOrientationConstantVelocityModelSlamCalibrationData> {
 
     private static final int TIMES = 50;
     private static final double ABSOLUTE_ERROR = 1e-8;
-    
-    //conversion from milliseconds to nanoseconds
+
+    // conversion from milliseconds to nanoseconds
     private static final int MILLIS_TO_NANOS = 1000000;
-    
-    //time between samples expressed in nanoseconds (a typical sensor in Android 
-    //delivers a sample every 20ms)
-    private static final int DELTA_NANOS = 20000000; //0.02 seconds
-    private static final double DELTA_SECONDS = 0.02; //0.2 seconds;
-    
-    //gain below is only valid when measure variance is 1e-8 and process noise
-    //variance is 1e-6. This is the gain component of the Kalman filter for 
-    //those error covariances. This gain will change for other values
+
+    // time between samples expressed in nanoseconds (a typical sensor in Android
+    // delivers a sample every 20ms)
+    private static final int DELTA_NANOS = 20000000; // 0.02 seconds
+    private static final double DELTA_SECONDS = 0.02; // 0.2 seconds;
+
+    // gain below is only valid when measure variance is 1e-8 and process noise
+    // variance is 1e-6. This is the gain component of the Kalman filter for
+    // those error covariances. This gain will change for other values
     private static final double VELOCITY_GAIN = 0.019991983014891204; //0.1923075055475187;
-    
+
     private static final int REPEAT_TIMES = 5;
     private static final int N_PREDICTION_SAMPLES = 10000;
-    
+
     private static final double ACCELERATION_NOISE_STANDARD_DEVIATION = 1e-4;
     private static final double ANGULAR_SPEED_NOISE_STANDARD_DEVIATION = 1e-4;
     private static final double ORIENTATION_NOISE_STANDARD_DEVIATION = 1e-4;
-    
+
     private static final double REQUIRED_PREDICTION_SUCCESS_RATE = 0.5;
     private static final double REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE = 0.3;
-    
+
     private static final float MIN_CALIBRATION_OFFSET = -1e-4f;
     private static final float MAX_CALIBRATION_OFFSET = 1e-4f;
-        
+
     private static final int MAX_CALIBRATION_SAMPLES = 10000;
-    
+
     private int fullSampleReceived;
     private int fullSampleProcessed;
     private int correctWithPositionMeasure;
-    private int correctedWithPositionMeasure;    
-    
-    public AbsoluteOrientationConstantVelocityModelSlamEstimatorTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
+    private int correctedWithPositionMeasure;
 
     @Test
     public void testConstructor() throws WrongSizeException {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        //check initial values  
-        assertNull(estimator.getListener());   
+
+        // check initial values
+        assertNull(estimator.getListener());
         assertNull(estimator.getCalibrationData());
         assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
         assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
         assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStatePosition(), 
-                new double[]{0.0,0.0,0.0}, 0.0);
-        double[] position = new double[3];
+        assertArrayEquals(estimator.getStatePosition(),
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+        final double[] position = new double[3];
         estimator.getStatePosition(position);
-        assertArrayEquals(position, new double[]{0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(position, new double[]{0.0, 0.0, 0.0}, 0.0);
+
         assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
         assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
         assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateVelocity(), 
-                new double[]{0.0,0.0,0.0},0.0);
-        double[] velocity = new double[3];
+        assertArrayEquals(estimator.getStateVelocity(),
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+        final double[] velocity = new double[3];
         estimator.getStateVelocity(velocity);
-        assertArrayEquals(velocity, new double[]{0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(velocity, new double[]{0.0, 0.0, 0.0}, 0.0);
+
         assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
         assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
         assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateAcceleration(), 
-                new double[]{0.0,0.0,0.0}, 0.0);
-        double[] acceleration = new double[3];
+        assertArrayEquals(estimator.getStateAcceleration(),
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+        final double[] acceleration = new double[3];
         estimator.getStateAcceleration(acceleration);
-        assertArrayEquals(acceleration, new double[]{0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(acceleration, new double[]{0.0, 0.0, 0.0}, 0.0);
+
         assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
         assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
         assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
         assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
         assertArrayEquals(estimator.getStateQuaternionArray(),
-                new double[]{1.0,0.0,0.0,0.0}, 0.0);
-        double[] quaternionArray = new double[4];
+                new double[]{1.0, 0.0, 0.0, 0.0}, 0.0);
+        final double[] quaternionArray = new double[4];
         estimator.getStateQuaternionArray(quaternionArray);
-        assertArrayEquals(quaternionArray, new double[]{1.0,0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(quaternionArray, new double[]{1.0, 0.0, 0.0, 0.0}, 0.0);
+
         Quaternion q = estimator.getStateQuaternion();
         assertEquals(q.getA(), 1.0, 0.0);
         assertEquals(q.getB(), 0.0, 0.0);
         assertEquals(q.getC(), 0.0, 0.0);
         assertEquals(q.getD(), 0.0, 0.0);
-        
+
         q = new Quaternion();
         estimator.getStateQuaternion(q);
         assertEquals(q.getA(), 1.0, 0.0);
@@ -149,12 +134,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
         assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
         assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateAngularSpeed(), 
-                new double[]{0.0,0.0,0.0}, 0.0);
-        double[] angularSpeed = new double[3];
+        assertArrayEquals(estimator.getStateAngularSpeed(),
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+        final double[] angularSpeed = new double[3];
         estimator.getStateAngularSpeed(angularSpeed);
-        assertArrayEquals(angularSpeed, new double[]{0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(angularSpeed, new double[]{0.0, 0.0, 0.0}, 0.0);
+
         assertFalse(estimator.hasError());
         assertTrue(estimator.isAccumulationEnabled());
         assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
@@ -164,35 +149,35 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertFalse(estimator.isAccelerometerSampleReceived());
         assertFalse(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
-        
+
         assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
         assertArrayEquals(estimator.getAccumulatedAccelerationSample(),
-                new double[]{0.0,0.0,0.0}, 0.0);
-        double[] accumAcc = new double[3];
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+        final double[] accumAcc = new double[3];
         estimator.getAccumulatedAccelerationSample(accumAcc);
-        assertArrayEquals(accumAcc, new double[]{0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(accumAcc, new double[]{0.0, 0.0, 0.0}, 0.0);
+
         assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
         assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(),
-                new double[]{0.0,0.0,0.0}, 0.0);
-        double[] accumAngularSpeed = new double[3];
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+        final double[] accumAngularSpeed = new double[3];
         estimator.getAccumulatedAngularSpeedSample(accumAngularSpeed);
-        assertArrayEquals(accumAngularSpeed, new double[]{0.0,0.0,0.0}, 0.0);
-        
+        assertArrayEquals(accumAngularSpeed, new double[]{0.0, 0.0, 0.0}, 0.0);
+
         assertEquals(estimator.getMostRecentTimestampNanos(), -1);
-        
-        assertEquals(estimator.getPositionCovarianceMatrix(), 
+
+        assertEquals(estimator.getPositionCovarianceMatrix(),
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         KalmanFilter.DEFAULT_MEASUREMENT_NOISE_VARIANCE));
-        
+
         assertEquals(estimator.getOrientationTimestampNanos(), -1);
         assertTrue(estimator.getAccumulatedOrientation() instanceof Quaternion);
-        Quaternion accumulatedOrientation = 
-                (Quaternion)estimator.getAccumulatedOrientation();
+        Quaternion accumulatedOrientation =
+                (Quaternion) estimator.getAccumulatedOrientation();
         assertEquals(accumulatedOrientation.getA(), 1.0, ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getB(), 0.0, ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getC(), 0.0, ABSOLUTE_ERROR);
@@ -203,47 +188,47 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertEquals(accumulatedOrientation.getB(), 0.0, ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getC(), 0.0, ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getD(), 0.0, ABSOLUTE_ERROR);
-        
+
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertFalse(estimator.isOrientationSampleReceived());
         assertNotNull(estimator.getStateCovariance());
     }
-    
+
     @Test
     public void testGetSetListener() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        //initial value
+
+        // initial value
         assertNull(estimator.getListener());
-        
-        //set new value
+
+        // set new value
         estimator.setListener(this);
-        
-        //check correctness
+
+        // check correctness
         assertSame(estimator.getListener(), this);
     }
-    
+
     @Test
     public void testGetSetCalibrationData() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        //initial value
+
+        // initial value
         assertNull(estimator.getCalibrationData());
-        
-        //set new value
-        AbsoluteOrientationConstantVelocityModelSlamCalibrationData data =
+
+        // set new value
+        final AbsoluteOrientationConstantVelocityModelSlamCalibrationData data =
                 new AbsoluteOrientationConstantVelocityModelSlamCalibrationData();
         estimator.setCalibrationData(data);
-        
-        //check correctness
+
+        // check correctness
         assertSame(estimator.getCalibrationData(), data);
     }
 
     @Test
     public void testResetPosition() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
         estimator.resetPosition();
@@ -257,7 +242,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
     @Test
     public void testResetVelocity() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
         estimator.resetVelocity();
@@ -271,7 +256,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
     @Test
     public void testResetPositionAndVelocity() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
         estimator.resetPositionAndVelocity();
@@ -289,7 +274,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
     @Test
     public void testResetAcceleration() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
         estimator.resetAcceleration();
@@ -303,7 +288,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
     @Test
     public void testResetOrientation() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
         estimator.resetOrientation();
@@ -318,7 +303,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
     @Test
     public void testResetAngularSpeed() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
         estimator.resetAngularSpeed();
@@ -332,11 +317,11 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
     @Test
     public void testReset() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         estimator.reset();
-        
+
         assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
         assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
         assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -344,673 +329,678 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
         assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
         assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-        
+
         assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
         assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
         assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-        
+
         assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
         assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
         assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
         assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-        
+
         assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
         assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
         assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
 
         assertEquals(estimator.getMostRecentTimestampNanos(), -1);
     }
-    
+
     @Test
     public void testGetStatePositionX() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStatePositionX = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStatePositionX(), value, 0.0);
-    }    
-    
+    }
+
     @Test
     public void testGetStatePositionY() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStatePositionY = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStatePositionY(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStatePositionZ() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStatePositionZ = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStatePositionZ(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStatePosition() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        double valueX = randomizer.nextDouble();
-        double valueY = randomizer.nextDouble();
-        double valueZ = randomizer.nextDouble();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double valueX = randomizer.nextDouble();
+        final double valueY = randomizer.nextDouble();
+        final double valueZ = randomizer.nextDouble();
         estimator.mStatePositionX = valueX;
         estimator.mStatePositionY = valueY;
         estimator.mStatePositionZ = valueZ;
-        
-        //check correctness
-        assertArrayEquals(estimator.getStatePosition(), 
-                new double[]{valueX,valueY,valueZ}, 0.0);
-        
-        double[] position = new double[3];
+
+        // check correctness
+        assertArrayEquals(estimator.getStatePosition(),
+                new double[]{valueX, valueY, valueZ}, 0.0);
+
+        final double[] position = new double[3];
         estimator.getStatePosition(position);
-        
-        //check correctness
-        assertArrayEquals(position, new double[]{valueX,valueY,valueZ}, 0.0);
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[4];
+
+        // check correctness
+        assertArrayEquals(position, new double[]{valueX, valueY, valueZ}, 0.0);
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[4];
         try {
             estimator.getStatePosition(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-    }    
-    
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
     @Test
     public void testGetStateVelocityX() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStateVelocityX = value;
-        
-        //check correctness
-        assertEquals(estimator.getStateVelocityX(), value, 0.0);        
+
+        // check correctness
+        assertEquals(estimator.getStateVelocityX(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateVelocityY() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStateVelocityY = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateVelocityY(), value, 0.0);
-    }    
-    
+    }
+
     @Test
     public void testGetStateVelocityZ() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStateVelocityZ = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateVelocityZ(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateVelocity() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        double valueX = randomizer.nextDouble();
-        double valueY = randomizer.nextDouble();
-        double valueZ = randomizer.nextDouble();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double valueX = randomizer.nextDouble();
+        final double valueY = randomizer.nextDouble();
+        final double valueZ = randomizer.nextDouble();
         estimator.mStateVelocityX = valueX;
         estimator.mStateVelocityY = valueY;
         estimator.mStateVelocityZ = valueZ;
-        
-        //check correctness
+
+        // check correctness
         assertArrayEquals(estimator.getStateVelocity(),
                 new double[]{valueX, valueY, valueZ}, 0.0);
-        
-        double[] velocity = new double[3];
+
+        final double[] velocity = new double[3];
         estimator.getStateVelocity(velocity);
-        
-        //check correctness
-        assertArrayEquals(velocity, new double[]{valueX,valueY,valueZ}, 0.0);        
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[4];
+
+        // check correctness
+        assertArrayEquals(velocity, new double[]{valueX, valueY, valueZ}, 0.0);
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[4];
         try {
             estimator.getStateVelocity(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetStateAccelerationX() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStateAccelerationX = value;
-        
-        //check correctness
-        assertEquals(estimator.getStateAccelerationX(), value, 0.0);    
+
+        // check correctness
+        assertEquals(estimator.getStateAccelerationX(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateAccelerationY() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStateAccelerationY = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateAccelerationY(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateAccelerationZ() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mStateAccelerationZ = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateAccelerationZ(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateAcceleration() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        double valueX = randomizer.nextDouble();
-        double valueY = randomizer.nextDouble();
-        double valueZ = randomizer.nextDouble();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double valueX = randomizer.nextDouble();
+        final double valueY = randomizer.nextDouble();
+        final double valueZ = randomizer.nextDouble();
         estimator.mStateAccelerationX = valueX;
         estimator.mStateAccelerationY = valueY;
         estimator.mStateAccelerationZ = valueZ;
-        
-        //check correctness
+
+        // check correctness
         assertArrayEquals(estimator.getStateAcceleration(),
                 new double[]{valueX, valueY, valueZ}, 0.0);
-        
-        double[] acceleration = new double[3];
+
+        final double[] acceleration = new double[3];
         estimator.getStateAcceleration(acceleration);
-        
-        //check correctness
-        assertArrayEquals(acceleration, new double[]{valueX,valueY,valueZ}, 
-                0.0);        
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[4];
+
+        // check correctness
+        assertArrayEquals(acceleration, new double[]{valueX, valueY, valueZ},
+                0.0);
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[4];
         try {
             estimator.getStateAcceleration(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetStateQuaternionA() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateQuaternionA = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateQuaternionA(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateQuaternionB() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateQuaternionB = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateQuaternionB(), value, 0.0);
-    }    
-    
+    }
+
     @Test
     public void testGetStateQuaternionC() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateQuaternionC = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateQuaternionC(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateQuaternionD() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateQuaternionD = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateQuaternionD(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateQuaternionArray() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
-        assertArrayEquals(estimator.getStateQuaternionArray(), 
-                new double[]{1.0,0.0,0.0,0.0}, 0.0);
-        
-        //set new values
-        double valueA = randomizer.nextDouble();
-        double valueB = randomizer.nextDouble();
-        double valueC = randomizer.nextDouble();
-        double valueD = randomizer.nextDouble();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
+        assertArrayEquals(estimator.getStateQuaternionArray(),
+                new double[]{1.0, 0.0, 0.0, 0.0}, 0.0);
+
+        // set new values
+        final double valueA = randomizer.nextDouble();
+        final double valueB = randomizer.nextDouble();
+        final double valueC = randomizer.nextDouble();
+        final double valueD = randomizer.nextDouble();
         estimator.mStateQuaternionA = valueA;
         estimator.mStateQuaternionB = valueB;
         estimator.mStateQuaternionC = valueC;
         estimator.mStateQuaternionD = valueD;
-        
-        //check correctness
+
+        // check correctness
         assertArrayEquals(estimator.getStateQuaternionArray(),
                 new double[]{valueA, valueB, valueC, valueD}, 0.0);
-        
-        double[] quaternion = new double[4];
+
+        final double[] quaternion = new double[4];
         estimator.getStateQuaternionArray(quaternion);
-        
-        assertArrayEquals(quaternion, 
+
+        assertArrayEquals(quaternion,
                 new double[]{valueA, valueB, valueC, valueD}, 0.0);
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[5];
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[5];
         try {
             estimator.getStateQuaternionArray(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetStateQuaternion() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         Quaternion q = estimator.getStateQuaternion();
-        
+
         assertEquals(q.getA(), 1.0, 0.0);
         assertEquals(q.getB(), 0.0, 0.0);
         assertEquals(q.getC(), 0.0, 0.0);
         assertEquals(q.getD(), 0.0, 0.0);
-        
-        //set new values
-        double valueA = randomizer.nextDouble();
-        double valueB = randomizer.nextDouble();
-        double valueC = randomizer.nextDouble();
-        double valueD = randomizer.nextDouble();
+
+        // set new values
+        final double valueA = randomizer.nextDouble();
+        final double valueB = randomizer.nextDouble();
+        final double valueC = randomizer.nextDouble();
+        final double valueD = randomizer.nextDouble();
         estimator.mStateQuaternionA = valueA;
         estimator.mStateQuaternionB = valueB;
         estimator.mStateQuaternionC = valueC;
         estimator.mStateQuaternionD = valueD;
-        
-        //check correctness
+
+        // check correctness
         q = estimator.getStateQuaternion();
-        
+
         assertEquals(q.getA(), valueA, 0.0);
         assertEquals(q.getB(), valueB, 0.0);
         assertEquals(q.getC(), valueC, 0.0);
         assertEquals(q.getD(), valueD, 0.0);
-        
+
         q = new Quaternion();
         estimator.getStateQuaternion(q);
-        
+
         assertEquals(q.getA(), valueA, 0.0);
         assertEquals(q.getB(), valueB, 0.0);
         assertEquals(q.getC(), valueC, 0.0);
-        assertEquals(q.getD(), valueD, 0.0);        
+        assertEquals(q.getD(), valueD, 0.0);
     }
-    
+
     @Test
     public void testGetStateAngularSpeedX() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateAngularSpeedX = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateAngularSpeedX(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateAngularSpeedY() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateAngularSpeedY = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateAngularSpeedY(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateAngularSpeedZ() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
         assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mStateAngularSpeedZ = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getStateAngularSpeedZ(), value, 0.0);
     }
-    
+
     @Test
     public void testGetStateAngularSpeed() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial value
-        assertArrayEquals(estimator.getStateAngularSpeed(), 
-                new double[]{0.0,0.0,0.0}, 0.0);
-        
-        //set new value
-        double valueX = randomizer.nextDouble();
-        double valueY = randomizer.nextDouble();
-        double valueZ = randomizer.nextDouble();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial value
+        assertArrayEquals(estimator.getStateAngularSpeed(),
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+
+        // set new value
+        final double valueX = randomizer.nextDouble();
+        final double valueY = randomizer.nextDouble();
+        final double valueZ = randomizer.nextDouble();
         estimator.mStateAngularSpeedX = valueX;
         estimator.mStateAngularSpeedY = valueY;
         estimator.mStateAngularSpeedZ = valueZ;
-        
-        //check correctness
+
+        // check correctness
         assertArrayEquals(estimator.getStateAngularSpeed(),
-                new double[]{valueX,valueY,valueZ}, 0.0);
-        
-        double[] angularSpeed = new double[3];
+                new double[]{valueX, valueY, valueZ}, 0.0);
+
+        final double[] angularSpeed = new double[3];
         estimator.getStateAngularSpeed(angularSpeed);
-        
-        //check correctness
-        assertArrayEquals(angularSpeed, new double[]{valueX,valueY,valueZ}, 
+
+        // check correctness
+        assertArrayEquals(angularSpeed, new double[]{valueX, valueY, valueZ},
                 0.0);
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[4];
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[4];
         try {
             estimator.getStateAngularSpeed(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testHasError() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertFalse(estimator.hasError());
-        
+
         estimator.mError = true;
-        
+
         assertTrue(estimator.hasError());
     }
-    
+
     @Test
     public void testIsAccumulationEnabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertTrue(estimator.isAccumulationEnabled());
-        
+
         estimator.setAccumulationEnabled(false);
-        
+
         assertFalse(estimator.isAccumulationEnabled());
-    }   
-    
+    }
+
     @Test
     public void testGetAccelerometerTimestampNanos() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
-        
-        //set new vlaue
+
+        // set new value
         estimator.mAccelerometerTimestampNanos = 1000;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccelerometerTimestampNanos(), 1000);
     }
-    
+
     @Test
     public void testGetGyroscopeTimestampNanos() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
-        
-        //set new value
+
+        // set new value
         estimator.mGyroscopeTimestampNanos = 2000;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getGyroscopeTimestampNanos(), 2000);
-    }    
-    
+    }
+
     @Test
     public void testGetOrientationTimestampNanos() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getOrientationTimestampNanos(), -1);
-        
-        //set new value
+
+        // set new value
         estimator.mOrientationTimestampNanos = 3000;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getOrientationTimestampNanos(), 3000);
     }
-    
+
     @Test
     public void testGetAccumulatedAccelerometerSamplesAndIsAccelerometerSampleReceived() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
         assertFalse(estimator.isAccelerometerSampleReceived());
-        
-        //set new value
+
+        // set new value
         estimator.mAccumulatedAccelerometerSamples = 10;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 10);
         assertTrue(estimator.isAccelerometerSampleReceived());
     }
-    
+
     @Test
     public void testGetAccumulatedGyroscopeSamplesAndIsGyroscopeSampleReceived() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
         assertFalse(estimator.isGyroscopeSampleReceived());
-        
-        //set new value
+
+        // set new value
         estimator.mAccumulatedGyroscopeSamples = 20;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 20);
         assertTrue(estimator.isGyroscopeSampleReceived());
     }
-    
+
     @Test
     public void testGetAccumulatedOrientationAndIsOrientationSampleReceived() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertFalse(estimator.isOrientationSampleReceived());
 
-        //set new value
-        Quaternion q = new Quaternion(randomizer.nextDouble(), 
-                randomizer.nextDouble(), randomizer.nextDouble(), 
+        // set new value
+        final Quaternion q = new Quaternion(randomizer.nextDouble(),
+                randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         estimator.mAccumulatedOrientation = q;
-        
-        //check correctness
-        Quaternion accumulatedOrientation = 
-                (Quaternion)estimator.getAccumulatedOrientation();
+
+        // check correctness
+        final Quaternion accumulatedOrientation =
+                (Quaternion) estimator.getAccumulatedOrientation();
         assertEquals(accumulatedOrientation.getA(), q.getA(), ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getB(), q.getB(), ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getC(), q.getC(), ABSOLUTE_ERROR);
         assertEquals(accumulatedOrientation.getD(), q.getD(), ABSOLUTE_ERROR);
-    }        
-    
+    }
+
     @Test
     public void testIsFullSampleAvailable() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
+
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertFalse(estimator.isAccelerometerSampleReceived());
         assertFalse(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
-        
+
         estimator.mAccumulatedAccelerometerSamples = 1;
-        
+
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertTrue(estimator.isAccelerometerSampleReceived());
         assertFalse(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
-        
+
         estimator.mAccumulatedGyroscopeSamples = 2;
-        
+
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 2);
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertTrue(estimator.isAccelerometerSampleReceived());
         assertTrue(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
-        
+
         estimator.mAccumulatedOrientationSamples = 3;
-        
+
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 2);
         assertEquals(estimator.getAccumulatedOrientationSamples(), 3);
@@ -1018,206 +1008,208 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertTrue(estimator.isGyroscopeSampleReceived());
         assertTrue(estimator.isFullSampleAvailable());
     }
-    
+
     @Test
     public void testGetAccumulatedAccelerationSampleX() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleX = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAccelerationSampleX(), value, 0.0);
     }
-    
+
     @Test
     public void testGetAccumulatedAccelerationSampleY() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleY = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAccelerationSampleY(), value, 0.0);
     }
-    
+
     @Test
     public void testGetAccumulatedAccelerationSampleZ() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        
-        double value = randomizer.nextDouble();
+
+        final double value = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleZ = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAccelerationSampleZ(), value, 0.0);
     }
-    
+
     @Test
     public void testGetAccumulatedAccelerationSample() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertArrayEquals(estimator.getAccumulatedAccelerationSample(),
-                new double[]{0.0,0.0,0.0}, 0.0);
-        
-        //set new values
-        double valueX = randomizer.nextDouble();
-        double valueY = randomizer.nextDouble();
-        double valueZ = randomizer.nextDouble();
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+
+        // set new values
+        final double valueX = randomizer.nextDouble();
+        final double valueY = randomizer.nextDouble();
+        final double valueZ = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleX = valueX;
         estimator.mAccumulatedAccelerationSampleY = valueY;
         estimator.mAccumulatedAccelerationSampleZ = valueZ;
-        
-        //check correctness
+
+        // check correctness
         assertArrayEquals(estimator.getAccumulatedAccelerationSample(),
-                new double[]{valueX,valueY,valueZ}, 0.0);
-        
-        double[] acceleration = new double[3];
+                new double[]{valueX, valueY, valueZ}, 0.0);
+
+        final double[] acceleration = new double[3];
         estimator.getAccumulatedAccelerationSample(acceleration);
-        
-        //check correctness
-        assertArrayEquals(acceleration, new double[]{valueX,valueY,valueZ}, 
+
+        // check correctness
+        assertArrayEquals(acceleration, new double[]{valueX, valueY, valueZ},
                 0.0);
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[4];
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[4];
         try {
             estimator.getAccumulatedAccelerationSample(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testGetAccumulatedAngularSpeedSampleX() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleX = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), value, 0.0);
     }
-    
+
     @Test
     public void testGetAccumulatedAngularSpeedSampleY() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleY = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), value, 0.0);
     }
-    
+
     @Test
     public void testGetAccumulatedAngularSpeedSampleZ() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        
-        //set new value
-        double value = randomizer.nextDouble();
+
+        // set new value
+        final double value = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleZ = value;
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), value, 0.0);
     }
-    
+
     @Test
     public void testGetAccumulatedAngularSpeedSample() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(), 
-                new double[]{0.0,0.0,0.0}, 0.0);
-        
-        //set new value
-        double valueX = randomizer.nextDouble();
-        double valueY = randomizer.nextDouble();
-        double valueZ = randomizer.nextDouble();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(),
+                new double[]{0.0, 0.0, 0.0}, 0.0);
+
+        // set new value
+        final double valueX = randomizer.nextDouble();
+        final double valueY = randomizer.nextDouble();
+        final double valueZ = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleX = valueX;
         estimator.mAccumulatedAngularSpeedSampleY = valueY;
         estimator.mAccumulatedAngularSpeedSampleZ = valueZ;
-        
-        //check correctness
+
+        // check correctness
         assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(),
-                new double[]{valueX,valueY,valueZ}, 0.0);
-        
-        double[] speed = new double[3];
+                new double[]{valueX, valueY, valueZ}, 0.0);
+
+        final double[] speed = new double[3];
         estimator.getAccumulatedAngularSpeedSample(speed);
-        
-        //check correctness
-        assertArrayEquals(speed, new double[]{valueX,valueY,valueZ}, 0.0);
-        
-        //Force IllegalArgumentException
-        double[] wrong = new double[4];
+
+        // check correctness
+        assertArrayEquals(speed, new double[]{valueX, valueY, valueZ}, 0.0);
+
+        // Force IllegalArgumentException
+        final double[] wrong = new double[4];
         try {
             estimator.getAccumulatedAngularSpeedSample(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testUpdateAccelerometerSampleWithAccumulationDisabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
         estimator.setAccumulationEnabled(false);
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         long timestamp = System.currentTimeMillis();
-        float accelerationX = randomizer.nextFloat();
-        float accelerationY = randomizer.nextFloat();
-        float accelerationZ = randomizer.nextFloat();
-        
-        //check initial values
+        final float accelerationX = randomizer.nextFloat();
+        final float accelerationY = randomizer.nextFloat();
+        final float accelerationZ = randomizer.nextFloat();
+
+        // check initial values
         assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
         assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);        
+        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        estimator.updateAccelerometerSample(timestamp, accelerationX, 
+
+        estimator.updateAccelerometerSample(timestamp, accelerationX,
                 accelerationY, accelerationZ);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), 
+        assertEquals(estimator.getAccumulatedAccelerationSampleX(),
                 accelerationX, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleY(),
                 accelerationY, 0.0);
@@ -1225,17 +1217,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 accelerationZ, 0.0);
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //test again but using an array
-        float[] acceleration = new float[3];
+
+        // test again but using an array
+        final float[] acceleration = new float[3];
         randomizer.fill(acceleration);
         timestamp += 1000;
-        
+
         estimator.updateAccelerometerSample(timestamp, acceleration);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), 
+        assertEquals(estimator.getAccumulatedAccelerationSampleX(),
                 acceleration[0], 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleY(),
                 acceleration[1], 0.0);
@@ -1243,51 +1235,55 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 acceleration[2], 0.0);
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), 2);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //Force IllegalArgumentException
-        float[] wrong = new float[4];
+
+        // Force IllegalArgumentException
+        final float[] wrong = new float[4];
         try {
             estimator.updateAccelerometerSample(timestamp, wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testUpdateAccelerometerSampleWithAccumulationEnabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
         estimator.setAccumulationEnabled(true);
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
         assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);        
+        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //update with several samples
+
+        // update with several samples
         long timestamp = System.currentTimeMillis();
-        float accelerationX, accelerationY, accelerationZ;
-        double avgAccelerationX = 0.0, avgAccelerationY = 0.0, 
-                avgAccelerationZ = 0.0;
+        float accelerationX;
+        float accelerationY;
+        float accelerationZ;
+        double avgAccelerationX = 0.0;
+        double avgAccelerationY = 0.0;
+        double avgAccelerationZ = 0.0;
         for (int i = 0; i < TIMES; i++) {
             timestamp += 1000;
             accelerationX = randomizer.nextFloat();
             accelerationY = randomizer.nextFloat();
             accelerationZ = randomizer.nextFloat();
-            
+
             avgAccelerationX += accelerationX / TIMES;
             avgAccelerationY += accelerationY / TIMES;
             avgAccelerationZ += accelerationZ / TIMES;
-            
-            estimator.updateAccelerometerSample(timestamp, accelerationX, 
-                    accelerationY, accelerationZ);             
+
+            estimator.updateAccelerometerSample(timestamp, accelerationX,
+                    accelerationY, accelerationZ);
         }
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getAccelerometerTimestampNanos(), timestamp);
         assertEquals(estimator.getAccumulatedAccelerationSampleX(),
                 avgAccelerationX, ABSOLUTE_ERROR);
@@ -1298,106 +1294,110 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertEquals(estimator.getAccumulatedAccelerometerSamples(), TIMES);
         assertFalse(estimator.isFullSampleAvailable());
     }
-    
+
     @Test
     public void testUpdateGyroscopeSampleWithAccumulationDisabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
         estimator.setAccumulationEnabled(false);
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
         long timestamp = System.currentTimeMillis();
-        float angularSpeedX = randomizer.nextFloat();
-        float angularSpeedY = randomizer.nextFloat();
-        float angularSpeedZ = randomizer.nextFloat();
-        
-        //check initial values
+        final float angularSpeedX = randomizer.nextFloat();
+        final float angularSpeedY = randomizer.nextFloat();
+        final float angularSpeedZ = randomizer.nextFloat();
+
+        // check initial values
         assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, 
+
+        estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY,
                 angularSpeedZ);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 
+        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(),
                 angularSpeedX, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 
+        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(),
                 angularSpeedY, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 
+        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(),
                 angularSpeedZ, 0.0);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 1);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //test again but using an array
-        float[] angularSpeed = new float[3];
+
+        // test again but using an array
+        final float[] angularSpeed = new float[3];
         randomizer.fill(angularSpeed);
         timestamp += 100;
-        
+
         estimator.updateGyroscopeSample(timestamp, angularSpeed);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 
+        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(),
                 angularSpeed[0], 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 
+        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(),
                 angularSpeed[1], 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(),
                 angularSpeed[2], 0.0);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 2);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //Force IllegalArgumentException
-        float[] wrong = new float[4];
+
+        // Force IllegalArgumentException
+        final float[] wrong = new float[4];
         try {
             estimator.updateGyroscopeSample(timestamp, wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testUpdateGyroscopeSampleWithAccumulationEnabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
         estimator.setAccumulationEnabled(true);
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //update with several samples
+
+        // update with several samples
         long timestamp = System.currentTimeMillis();
-        float angularSpeedX, angularSpeedY, angularSpeedZ;
-        double avgAngularSpeedX = 0.0, avgAngularSpeedY = 0.0, 
-                avgAngularSpeedZ = 0.0;
+        float angularSpeedX;
+        float angularSpeedY;
+        float angularSpeedZ;
+        double avgAngularSpeedX = 0.0;
+        double avgAngularSpeedY = 0.0;
+        double avgAngularSpeedZ = 0.0;
         for (int i = 0; i < TIMES; i++) {
             timestamp += 1000;
             angularSpeedX = randomizer.nextFloat();
             angularSpeedY = randomizer.nextFloat();
             angularSpeedZ = randomizer.nextFloat();
-            
+
             avgAngularSpeedX += angularSpeedX / TIMES;
             avgAngularSpeedY += angularSpeedY / TIMES;
             avgAngularSpeedZ += angularSpeedZ / TIMES;
-            
-            estimator.updateGyroscopeSample(timestamp, angularSpeedX, 
+
+            estimator.updateGyroscopeSample(timestamp, angularSpeedX,
                     angularSpeedY, angularSpeedZ);
         }
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 
+        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(),
                 avgAngularSpeedX, ABSOLUTE_ERROR);
         assertEquals(estimator.getAccumulatedAngularSpeedSampleY(),
                 avgAngularSpeedY, ABSOLUTE_ERROR);
@@ -1406,71 +1406,76 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
         assertEquals(estimator.getAccumulatedGyroscopeSamples(), TIMES);
         assertFalse(estimator.isFullSampleAvailable());
     }
-    
+
     @Test
     public void testUpdateOrientationSampleWithAccumulationDisabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
         estimator.setAccumulationEnabled(false);
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-        long timestamp = System.currentTimeMillis();
-        double orientationA = randomizer.nextDouble();
-        double orientationB = randomizer.nextDouble();
-        double orientationC = randomizer.nextDouble();
-        double orientationD = randomizer.nextDouble();
-        Quaternion orientation = new Quaternion(orientationA, orientationB, 
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final long timestamp = System.currentTimeMillis();
+        final double orientationA = randomizer.nextDouble();
+        final double orientationB = randomizer.nextDouble();
+        final double orientationC = randomizer.nextDouble();
+        final double orientationD = randomizer.nextDouble();
+        final Quaternion orientation = new Quaternion(orientationA, orientationB,
                 orientationC, orientationD);
-        
-        //check initial values
+
+        // check initial values
         assertEquals(estimator.getOrientationTimestampNanos(), -1);
-        Quaternion accumulatedOrientation = 
-                (Quaternion)estimator.getAccumulatedOrientation();
+        Quaternion accumulatedOrientation =
+                (Quaternion) estimator.getAccumulatedOrientation();
         assertEquals(accumulatedOrientation.getA(), 1.0, 0.0);
         assertEquals(accumulatedOrientation.getB(), 0.0, 0.0);
         assertEquals(accumulatedOrientation.getC(), 0.0, 0.0);
         assertEquals(accumulatedOrientation.getD(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertFalse(estimator.isFullSampleAvailable());
-        
+
         estimator.updateOrientationSample(timestamp, orientation);
-        
-        //check correctness
+
+        // check correctness
         assertEquals(estimator.getOrientationTimestampNanos(), timestamp);
-        accumulatedOrientation = 
-                (Quaternion)estimator.getAccumulatedOrientation();
+        accumulatedOrientation =
+                (Quaternion) estimator.getAccumulatedOrientation();
         assertEquals(accumulatedOrientation.getA(), orientationA, 0.0);
         assertEquals(accumulatedOrientation.getB(), orientationB, 0.0);
         assertEquals(accumulatedOrientation.getC(), orientationC, 0.0);
         assertEquals(accumulatedOrientation.getD(), orientationD, 0.0);
     }
-    
+
     @Test
     public void testUpdateOrientationSampleWithAccumulationEnabled() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
         estimator.setAccumulationEnabled(true);
-        
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-                
-        //check initial values
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        // check initial values
         assertEquals(estimator.getOrientationTimestampNanos(), -1);
-        Quaternion accumulatedOrientation = 
-                (Quaternion)estimator.getAccumulatedOrientation();
+        Quaternion accumulatedOrientation =
+                (Quaternion) estimator.getAccumulatedOrientation();
         assertEquals(accumulatedOrientation.getA(), 1.0, 0.0);
         assertEquals(accumulatedOrientation.getB(), 0.0, 0.0);
         assertEquals(accumulatedOrientation.getC(), 0.0, 0.0);
         assertEquals(accumulatedOrientation.getD(), 0.0, 0.0);
         assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
         assertFalse(estimator.isFullSampleAvailable());
-        
-        //update with several samples        
+
+        // update with several samples
         long timestamp = System.currentTimeMillis();
-        double orientationA, orientationB, orientationC, orientationD;
-        double avgOrientationA = 0.0, avgOrientationB = 0.0,
-                avgOrientationC = 0.0, avgOrientationD = 0.0;
-        Quaternion orientation = new Quaternion();
+        double orientationA;
+        double orientationB;
+        double orientationC;
+        double orientationD;
+        double avgOrientationA = 0.0;
+        double avgOrientationB = 0.0;
+        double avgOrientationC = 0.0;
+        double avgOrientationD = 0.0;
+        final Quaternion orientation = new Quaternion();
         double norm;
         for (int i = 0; i < TIMES; i++) {
             timestamp += 1000;
@@ -1479,81 +1484,81 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             orientationC = randomizer.nextDouble();
             orientationD = randomizer.nextDouble();
             norm = Math.sqrt(orientationA * orientationA +
-                orientationB * orientationB +
-                orientationC * orientationC +
-                orientationD * orientationD);
+                    orientationB * orientationB +
+                    orientationC * orientationC +
+                    orientationD * orientationD);
             orientationA /= norm;
             orientationB /= norm;
             orientationC /= norm;
-            orientationD /= norm;            
-            
+            orientationD /= norm;
+
             avgOrientationA += orientationA / TIMES;
             avgOrientationB += orientationB / TIMES;
             avgOrientationC += orientationC / TIMES;
             avgOrientationD += orientationD / TIMES;
-                                           
+
             orientation.setA(orientationA);
             orientation.setB(orientationB);
             orientation.setC(orientationC);
             orientation.setD(orientationD);
-            
+
             estimator.updateOrientationSample(timestamp, orientation);
-        }       
-                
-        //check correctness
+        }
+
+        // check correctness
         assertEquals(estimator.getOrientationTimestampNanos(), timestamp);
-        accumulatedOrientation = 
-                (Quaternion)estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), avgOrientationA, 
+        accumulatedOrientation =
+                (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(accumulatedOrientation.getA(), avgOrientationA,
                 ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getB(), avgOrientationB, 
+        assertEquals(accumulatedOrientation.getB(), avgOrientationB,
                 ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getC(), avgOrientationC, 
+        assertEquals(accumulatedOrientation.getC(), avgOrientationC,
                 ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getD(), avgOrientationD, 
+        assertEquals(accumulatedOrientation.getD(), avgOrientationD,
                 ABSOLUTE_ERROR);
     }
 
     @Test
     public void testGetMostRecentTimestampNanos() {
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        long timestamp = System.currentTimeMillis();
+
+        final long timestamp = System.currentTimeMillis();
         estimator.mAccelerometerTimestampNanos = timestamp;
         estimator.mGyroscopeTimestampNanos = timestamp + 1000;
-        
+
         assertEquals(estimator.getMostRecentTimestampNanos(), timestamp + 1000);
-        
+
         estimator.mAccelerometerTimestampNanos = timestamp + 2000;
-        
+
         assertEquals(estimator.getMostRecentTimestampNanos(), timestamp + 2000);
-        
+
         estimator.mOrientationTimestampNanos = timestamp + 3000;
-        
+
         assertEquals(estimator.getMostRecentTimestampNanos(), timestamp + 3000);
     }
-    
+
     @Test
     public void testCorrectWithPositionMeasureCoordinatesAndCovariance()
             throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
-            
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimator.setListener(this);
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            
-            double positionX = randomizer.nextDouble();
-            double positionY = randomizer.nextDouble();
-            double positionZ = randomizer.nextDouble();
-        
-            Matrix positionCovariance = Matrix.identity(3, 3).
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double positionX = randomizer.nextDouble();
+            final double positionY = randomizer.nextDouble();
+            final double positionZ = randomizer.nextDouble();
+
+            final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
-        
-            //check initial value
+
+            // check initial value
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1571,53 +1576,52 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
-        
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertEquals(fullSampleReceived, 0);
             assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
             assertEquals(correctedWithPositionMeasure, 0);
-            
-            
-            //predict
+
+            // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-        
+
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-        
+            assertEquals(correctedWithPositionMeasure, 0);
+
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
-        
+
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            Quaternion orientation = new Quaternion();
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
-            
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 1);
             assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-                
-            //correct has no effect until we predict again
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(
                     positionX, positionY, positionZ, positionCovariance);
-            
-            //check correctness
+
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1636,17 +1640,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
             assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);            
+            assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //predict again
+            // predict again
             timestamp += DELTA_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
-            //check correctness
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1667,23 +1671,23 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(fullSampleReceived, 2);
             assertEquals(fullSampleProcessed, 2);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-        
-            //correct providing a certain position (it is not ignored this time)
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct providing a certain position (it is not ignored this time)
             estimator.correctWithPositionMeasure(
-                    positionX, positionY, positionZ, positionCovariance);   
-            
-            //expected velocities
-            double vx = VELOCITY_GAIN * positionX;
-            double vy = VELOCITY_GAIN * positionY;
-            double vz = VELOCITY_GAIN * positionZ;
-        
-            //check correctness
-            assertEquals(estimator.getStatePositionX(), positionX, 
+                    positionX, positionY, positionZ, positionCovariance);
+
+            // expected velocities
+            final double vx = VELOCITY_GAIN * positionX;
+            final double vy = VELOCITY_GAIN * positionY;
+            final double vz = VELOCITY_GAIN * positionZ;
+
+            // check correctness
+            assertEquals(estimator.getStatePositionX(), positionX,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY, 
+            assertEquals(estimator.getStatePositionY(), positionY,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ, 
+            assertEquals(estimator.getStatePositionZ(), positionZ,
                     ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
@@ -1700,41 +1704,42 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-            assertFalse(estimator.hasError());  
+            assertFalse(estimator.hasError());
             assertEquals(correctWithPositionMeasure, 1);
             assertEquals(correctedWithPositionMeasure, 1);
-            
-            //Force IllegalArgumentException (wrong covariance matrix size)
-            Matrix wrong = new Matrix(4,4);
+
+            // Force IllegalArgumentException (wrong covariance matrix size)
+            final Matrix wrong = new Matrix(4, 4);
             try {
                 estimator.correctWithPositionMeasure(
                         positionX, positionY, positionZ, wrong);
                 fail("IllegalArgumentException expected but not thrown");
-            } catch (IllegalArgumentException ignore) { }
+            } catch (final IllegalArgumentException ignore) {
+            }
         }
     }
-    
+
     @Test
     public void testCorrectWithPositionMeasureArrayAndCovariance()
             throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
-            
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimator.setListener(this);
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            
-            double positionX = randomizer.nextDouble();
-            double positionY = randomizer.nextDouble();
-            double positionZ = randomizer.nextDouble();
-            double[] position = new double[]{ positionX, positionY, positionZ };
-        
-            Matrix positionCovariance = Matrix.identity(3, 3).
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double positionX = randomizer.nextDouble();
+            final double positionY = randomizer.nextDouble();
+            final double positionZ = randomizer.nextDouble();
+            final double[] position = new double[]{positionX, positionY, positionZ};
+
+            final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
-        
-            //check initial value
+
+            // check initial value
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1752,7 +1757,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
-        
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertEquals(fullSampleReceived, 0);
@@ -1760,44 +1765,43 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(correctWithPositionMeasure, 0);
             assertEquals(correctedWithPositionMeasure, 0);
 
-            
-            //predict
+            // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-        
+
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-        
+            assertEquals(correctedWithPositionMeasure, 0);
+
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
-        
+
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            Quaternion orientation = new Quaternion();
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
-            
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 1);
             assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-                
-            //correct has no effect until we predict again
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position, positionCovariance);
-            
-            //check correctness
+
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1816,17 +1820,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
             assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);            
+            assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //predict again
+            // predict again
             timestamp += DELTA_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
-            //check correctness
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1847,22 +1851,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(fullSampleReceived, 2);
             assertEquals(fullSampleProcessed, 2);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-        
-            //correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(position, positionCovariance);   
-            
-            //expected velocities
-            double vx = VELOCITY_GAIN * positionX;
-            double vy = VELOCITY_GAIN * positionY;
-            double vz = VELOCITY_GAIN * positionZ;
-        
-            //check correctness
-            assertEquals(estimator.getStatePositionX(), positionX, 
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct providing a certain position (it is not ignored this time)
+            estimator.correctWithPositionMeasure(position, positionCovariance);
+
+            // expected velocities
+            final double vx = VELOCITY_GAIN * positionX;
+            final double vy = VELOCITY_GAIN * positionY;
+            final double vz = VELOCITY_GAIN * positionZ;
+
+            // check correctness
+            assertEquals(estimator.getStatePositionX(), positionX,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY, 
+            assertEquals(estimator.getStatePositionY(), positionY,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ, 
+            assertEquals(estimator.getStatePositionZ(), positionZ,
                     ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
@@ -1870,7 +1874,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
             assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
             assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            Quaternion stateQuaternion = estimator.getStateQuaternion();
+            final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
             assertEquals(stateQuaternion.getA(), 1.0, 0.0);
             assertEquals(stateQuaternion.getB(), 0.0, 0.0);
@@ -1879,48 +1883,50 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-            assertFalse(estimator.hasError());  
+            assertFalse(estimator.hasError());
             assertEquals(correctWithPositionMeasure, 1);
             assertEquals(correctedWithPositionMeasure, 1);
-            
-            //Force IllegalArgumentException (wrong covariance matrix size)
-            Matrix wrongCov = new Matrix(4,4);
+
+            // Force IllegalArgumentException (wrong covariance matrix size)
+            final Matrix wrongCov = new Matrix(4, 4);
             try {
                 estimator.correctWithPositionMeasure(position, wrongCov);
                 fail("IllegalArgumentException expected but not thrown");
-            } catch (IllegalArgumentException ignore) { }
-            
-            //(wrong position length)
-            double[] wrongPos = new double[4];
+            } catch (final IllegalArgumentException ignore) {
+            }
+
+            // wrong position length
+            final double[] wrongPos = new double[4];
             try {
                 estimator.correctWithPositionMeasure(wrongPos, positionCovariance);
                 fail("IllegalArgumentException expected but not thrown");
-            } catch (IllegalArgumentException ignore) { }
+            } catch (final IllegalArgumentException ignore) {
+            }
         }
     }
-    
+
     @Test
     public void testCorrectWithPositionMeasurePointAndCovariance()
             throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
-            
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimator.setListener(this);
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            
-            double positionX = randomizer.nextDouble();
-            double positionY = randomizer.nextDouble();
-            double positionZ = randomizer.nextDouble();
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX, 
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double positionX = randomizer.nextDouble();
+            final double positionY = randomizer.nextDouble();
+            final double positionZ = randomizer.nextDouble();
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX,
                     positionY, positionZ);
-        
-            Matrix positionCovariance = Matrix.identity(3, 3).
+
+            final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
-        
-            //check initial value
+
+            // check initial value
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -1938,7 +1944,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
-        
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertEquals(fullSampleReceived, 0);
@@ -1946,44 +1952,43 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(correctWithPositionMeasure, 0);
             assertEquals(correctedWithPositionMeasure, 0);
 
-            
-            //predict
+            // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-        
+
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-        
+            assertEquals(correctedWithPositionMeasure, 0);
+
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
-        
+
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            Quaternion orientation = new Quaternion();
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
-            
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 1);
             assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-                
-            //correct has no effect until we predict again
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position, positionCovariance);
-            
-            //check correctness
+
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2002,17 +2007,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
             assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);            
+            assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //predict again
+            // predict again
             timestamp += DELTA_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
-            //check correctness
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2033,22 +2038,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(fullSampleReceived, 2);
             assertEquals(fullSampleProcessed, 2);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-        
-            //correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(position, positionCovariance);   
-            
-            //expected velocities
-            double vx = VELOCITY_GAIN * positionX;
-            double vy = VELOCITY_GAIN * positionY;
-            double vz = VELOCITY_GAIN * positionZ;
-        
-            //check correctness
-            assertEquals(estimator.getStatePositionX(), positionX, 
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct providing a certain position (it is not ignored this time)
+            estimator.correctWithPositionMeasure(position, positionCovariance);
+
+            // expected velocities
+            final double vx = VELOCITY_GAIN * positionX;
+            final double vy = VELOCITY_GAIN * positionY;
+            final double vz = VELOCITY_GAIN * positionZ;
+
+            // check correctness
+            assertEquals(estimator.getStatePositionX(), positionX,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY, 
+            assertEquals(estimator.getStatePositionY(), positionY,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ, 
+            assertEquals(estimator.getStatePositionZ(), positionZ,
                     ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
@@ -2065,69 +2070,71 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-            assertFalse(estimator.hasError());  
+            assertFalse(estimator.hasError());
             assertEquals(correctWithPositionMeasure, 1);
             assertEquals(correctedWithPositionMeasure, 1);
-            
-            //Force IllegalArgumentException (wrong covariance matrix size)
-            Matrix wrong = new Matrix(4,4);
+
+            // Force IllegalArgumentException (wrong covariance matrix size)
+            final Matrix wrong = new Matrix(4, 4);
             try {
                 estimator.correctWithPositionMeasure(position, wrong);
                 fail("IllegalArgumentException expected but not thrown");
-            } catch (IllegalArgumentException ignore) { }
+            } catch (final IllegalArgumentException ignore) {
+            }
         }
     }
-    
+
     @Test
     public void testGetSetPositionCovarianceMatrix() throws AlgebraException {
-        
-        AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+
+        final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                 new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-        //check initial value
-        assertEquals(estimator.getPositionCovarianceMatrix(), 
+
+        // check initial value
+        assertEquals(estimator.getPositionCovarianceMatrix(),
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         KalmanFilter.DEFAULT_MEASUREMENT_NOISE_VARIANCE));
-        
-        //set new value
-        Matrix positionCovariance = Matrix.identity(3, 3).
-                multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);        
-        
+
+        // set new value
+        final Matrix positionCovariance = Matrix.identity(3, 3).
+                multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
+
         estimator.setPositionCovarianceMatrix(positionCovariance);
-        
-        //check correctness
-        assertEquals(estimator.getPositionCovarianceMatrix(), 
+
+        // check correctness
+        assertEquals(estimator.getPositionCovarianceMatrix(),
                 positionCovariance);
-        
-        //Force IllegalArgumentException
-        Matrix wrong = new Matrix(4,4);
+
+        // Force IllegalArgumentException
+        final Matrix wrong = new Matrix(4, 4);
         try {
             estimator.setPositionCovarianceMatrix(wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
-    
+
     @Test
     public void testCorrectWithPositionMeasureCoordinatesWithoutCovariance()
             throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
-            
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimator.setListener(this);
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-            double positionX = randomizer.nextDouble();
-            double positionY = randomizer.nextDouble();
-            double positionZ = randomizer.nextDouble();
-        
-            Matrix positionCovariance = Matrix.identity(3, 3).
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double positionX = randomizer.nextDouble();
+            final double positionY = randomizer.nextDouble();
+            final double positionZ = randomizer.nextDouble();
+
+            final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
             estimator.setPositionCovarianceMatrix(positionCovariance);
-        
-            //check initial value
+
+            // check initial value
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2145,7 +2152,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
-        
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertEquals(fullSampleReceived, 0);
@@ -2153,8 +2160,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(correctWithPositionMeasure, 0);
             assertEquals(correctedWithPositionMeasure, 0);
 
-        
-            //predict
+            // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
 
@@ -2162,9 +2168,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
 
@@ -2172,26 +2178,26 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            Quaternion orientation = new Quaternion();
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
-            
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 1);
             assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            //correct has no effect until we predict again
-            estimator.correctWithPositionMeasure(positionX, positionY, 
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct has no effect until we predict again
+            estimator.correctWithPositionMeasure(positionX, positionY,
                     positionZ);
 
-            //check correctness
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2210,17 +2216,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
             assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);            
+            assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //predict again
+            // predict again
             timestamp += DELTA_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
-            
-            //check correctness
+
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2241,23 +2247,23 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(fullSampleReceived, 2);
             assertEquals(fullSampleProcessed, 2);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(positionX, positionY, 
-                    positionZ);   
+            // correct providing a certain position (it is not ignored this time)
+            estimator.correctWithPositionMeasure(positionX, positionY,
+                    positionZ);
 
-            //expected velocities
-            double vx = VELOCITY_GAIN * positionX;
-            double vy = VELOCITY_GAIN * positionY;
-            double vz = VELOCITY_GAIN * positionZ;
+            // expected velocities
+            final double vx = VELOCITY_GAIN * positionX;
+            final double vy = VELOCITY_GAIN * positionY;
+            final double vz = VELOCITY_GAIN * positionZ;
 
-            //check correctness
-            assertEquals(estimator.getStatePositionX(), positionX, 
+            // check correctness
+            assertEquals(estimator.getStatePositionX(), positionX,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY, 
+            assertEquals(estimator.getStatePositionY(), positionY,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ, 
+            assertEquals(estimator.getStatePositionZ(), positionZ,
                     ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
@@ -2265,43 +2271,43 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
             assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
             assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            Quaternion stateQuaternion = estimator.getStateQuaternion();
+            final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
             assertEquals(stateQuaternion.getA(), 1.0, 0.0);
             assertEquals(stateQuaternion.getB(), 0.0, 0.0);
             assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);            
+            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-            assertFalse(estimator.hasError());   
+            assertFalse(estimator.hasError());
             assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);            
+            assertEquals(correctedWithPositionMeasure, 1);
         }
     }
-    
+
     @Test
     public void testCorrectWithPositionMeasureArrayWithoutCovariance()
             throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
-            
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimator.setListener(this);
-        
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-            double positionX = randomizer.nextDouble();
-            double positionY = randomizer.nextDouble();
-            double positionZ = randomizer.nextDouble();
-            double[] position = new double[]{ positionX, positionY, positionZ };
-        
-            Matrix positionCovariance = Matrix.identity(3, 3).
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double positionX = randomizer.nextDouble();
+            final double positionY = randomizer.nextDouble();
+            final double positionZ = randomizer.nextDouble();
+            final double[] position = new double[]{positionX, positionY, positionZ};
+
+            final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
             estimator.setPositionCovarianceMatrix(positionCovariance);
-        
-            //check initial value
+
+            // check initial value
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2319,16 +2325,16 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
-        
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertEquals(fullSampleReceived, 0);
             assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
             assertEquals(correctedWithPositionMeasure, 0);
-        
-        
-            //predict
+
+
+            // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
 
@@ -2336,9 +2342,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
 
@@ -2346,25 +2352,25 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            Quaternion orientation = new Quaternion();
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
-            
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 1);
             assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            //correct has no effect until we predict again
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position);
 
-            //check correctness
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2383,17 +2389,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
             assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);            
+            assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //predict again
+            // predict again
             timestamp += DELTA_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
-            
-            //check correctness
+
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2414,22 +2420,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(fullSampleReceived, 2);
             assertEquals(fullSampleProcessed, 2);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(position);   
+            // correct providing a certain position (it is not ignored this time)
+            estimator.correctWithPositionMeasure(position);
 
-            //expected velocities
-            double vx = VELOCITY_GAIN * positionX;
-            double vy = VELOCITY_GAIN * positionY;
-            double vz = VELOCITY_GAIN * positionZ;
+            // expected velocities
+            final double vx = VELOCITY_GAIN * positionX;
+            final double vy = VELOCITY_GAIN * positionY;
+            final double vz = VELOCITY_GAIN * positionZ;
 
-            //check correctness
-            assertEquals(estimator.getStatePositionX(), positionX, 
+            // check correctness
+            assertEquals(estimator.getStatePositionX(), positionX,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY, 
+            assertEquals(estimator.getStatePositionY(), positionY,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ, 
+            assertEquals(estimator.getStatePositionZ(), positionZ,
                     ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
@@ -2442,46 +2448,47 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(stateQuaternion.getA(), 1.0, 0.0);
             assertEquals(stateQuaternion.getB(), 0.0, 0.0);
             assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);            
+            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-            assertFalse(estimator.hasError());          
+            assertFalse(estimator.hasError());
             assertEquals(correctWithPositionMeasure, 1);
             assertEquals(correctedWithPositionMeasure, 1);
-            
-            //Force IllegalArgumentException
-            double[] wrong = new double[4];
+
+            // Force IllegalArgumentException
+            final double[] wrong = new double[4];
             try {
                 estimator.correctWithPositionMeasure(wrong);
                 fail("IllegalArgumentException expected but not thrown");
-            } catch (IllegalArgumentException ignore) { }
+            } catch (final IllegalArgumentException ignore) {
+            }
         }
     }
-    
+
     @Test
     public void testCorrectWithPositionMeasurePointWithoutCovariance()
             throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
-            
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator = 
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimator.setListener(this);
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        
-            double positionX = randomizer.nextDouble();
-            double positionY = randomizer.nextDouble();
-            double positionZ = randomizer.nextDouble();
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX, 
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double positionX = randomizer.nextDouble();
+            final double positionY = randomizer.nextDouble();
+            final double positionZ = randomizer.nextDouble();
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX,
                     positionY, positionZ);
-        
-            Matrix positionCovariance = Matrix.identity(3, 3).
+
+            final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
             estimator.setPositionCovarianceMatrix(positionCovariance);
-        
-            //check initial value
+
+            // check initial value
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2499,16 +2506,15 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
-        
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertEquals(fullSampleReceived, 0);
             assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
             assertEquals(correctedWithPositionMeasure, 0);
-        
-        
-            //predict
+
+            // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
 
@@ -2516,9 +2522,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
 
@@ -2526,25 +2532,25 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0); 
+            assertEquals(fullSampleProcessed, 0);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            Quaternion orientation = new Quaternion();
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
-            
+
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
             assertEquals(fullSampleReceived, 1);
             assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
-            
-            //correct has no effect until we predict again
+            assertEquals(correctedWithPositionMeasure, 0);
+
+            // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position);
 
-            //check correctness
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2563,17 +2569,17 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
             assertFalse(estimator.hasError());
             assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);            
+            assertEquals(fullSampleProcessed, 1);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //predict again
+            // predict again
             timestamp += DELTA_NANOS;
             estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
-            
-            //check correctness
+
+            // check correctness
             assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
             assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
@@ -2594,22 +2600,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(fullSampleReceived, 2);
             assertEquals(fullSampleProcessed, 2);
             assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);            
+            assertEquals(correctedWithPositionMeasure, 0);
 
-            //correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(position);   
+            // correct providing a certain position (it is not ignored this time)
+            estimator.correctWithPositionMeasure(position);
 
-            //expected velocities
-            double vx = VELOCITY_GAIN * positionX;
-            double vy = VELOCITY_GAIN * positionY;
-            double vz = VELOCITY_GAIN * positionZ;
+            // expected velocities
+            final double vx = VELOCITY_GAIN * positionX;
+            final double vy = VELOCITY_GAIN * positionY;
+            final double vz = VELOCITY_GAIN * positionZ;
 
-            //check correctness
-            assertEquals(estimator.getStatePositionX(), positionX, 
+            // check correctness
+            assertEquals(estimator.getStatePositionX(), positionX,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY, 
+            assertEquals(estimator.getStatePositionY(), positionY,
                     ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ, 
+            assertEquals(estimator.getStatePositionZ(), positionZ,
                     ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
             assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
@@ -2617,98 +2623,129 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
             assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
             assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            Quaternion stateQuaternion = estimator.getStateQuaternion();
+            final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
             assertEquals(stateQuaternion.getA(), 1.0, 0.0);
             assertEquals(stateQuaternion.getB(), 0.0, 0.0);
             assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);            
+            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
             assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-            assertFalse(estimator.hasError());          
+            assertFalse(estimator.hasError());
             assertEquals(correctWithPositionMeasure, 1);
             assertEquals(correctedWithPositionMeasure, 1);
-            
-            //Force IllegalArgumentException (wrong covariance matrix size)
-            Matrix wrong = new Matrix(4,4);
+
+            // Force IllegalArgumentException (wrong covariance matrix size)
+            final Matrix wrong = new Matrix(4, 4);
             try {
                 estimator.correctWithPositionMeasure(
                         positionX, positionY, positionZ, wrong);
                 fail("IllegalArgumentException expected but not thrown");
-            } catch (IllegalArgumentException ignore) { }
+            } catch (final IllegalArgumentException ignore) {
+            }
         }
     }
-    
+
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testCreateCalibrator() {
-        //noinspection all
         assertTrue(AbsoluteOrientationConstantVelocityModelSlamEstimator.
                 createCalibrator() instanceof
                 AbsoluteOrientationConstantVelocityModelSlamCalibrator);
     }
-    
+
     @Test
     public void testPredictionNoMotionWithNoise() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = 0.0f, gtAccelerationY = 0.0f, 
-                    gtAccelerationZ = 0.0f;
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = 0.0f;
+            final float gtAccelerationY = 0.0f;
+            final float gtAccelerationZ = 0.0f;
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
+            final double[] x = new double[16];
+            final double[] u = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -2724,16 +2761,16 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
+            x[15] = gtAngularSpeedZ;
 
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -2754,31 +2791,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
@@ -2791,27 +2827,26 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
-                    
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -2820,37 +2855,37 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX - 
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
@@ -2870,8 +2905,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -2880,22 +2915,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -2911,10 +2946,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -2930,10 +2965,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -2947,117 +2982,145 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion filteredQuaternion = estimator.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(), 
-                    estimator.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimator.getStatePositionX(),
+                    estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
             if (rotationImproved && positionImproved) {
                 numSuccess++;
             }
         }
-        
+
         assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
     }
-    
+
     @Test
     public void testPredictionConstantSpeedWithNoise() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = randomizer.nextDouble();
-            double gtSpeedY = randomizer.nextDouble();
-            double gtSpeedZ = randomizer.nextDouble();
-            float gtAccelerationX = 0.0f, gtAccelerationY = 0.0f, 
-                    gtAccelerationZ = 0.0f;
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = randomizer.nextDouble();
+            final double gtSpeedY = randomizer.nextDouble();
+            final double gtSpeedZ = randomizer.nextDouble();
+            final float gtAccelerationX = 0.0f;
+            final float gtAccelerationY = 0.0f;
+            final float gtAccelerationZ = 0.0f;
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
+            final double[] x = new double[16];
+            final double[] u = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -3073,16 +3136,16 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
+            x[15] = gtAngularSpeedZ;
 
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -3103,31 +3166,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
@@ -3140,27 +3202,26 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
-                    
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -3169,44 +3230,44 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX - 
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
@@ -3219,8 +3280,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -3229,22 +3290,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -3260,10 +3321,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -3279,10 +3340,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -3296,116 +3357,145 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion filteredQuaternion = estimator.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(), 
-                    estimator.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimator.getStatePositionX(),
+                    estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
             if (rotationImproved && positionImproved) {
                 numSuccess++;
             }
         }
-        
+
         assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
     }
-    
+
     @Test
     public void testPredictionConstantAccelerationWithNoise() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = randomizer.nextFloat();
-            float gtAccelerationY = randomizer.nextFloat();
-            float gtAccelerationZ = randomizer.nextFloat();
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = randomizer.nextFloat();
+            final float gtAccelerationY = randomizer.nextFloat();
+            final float gtAccelerationZ = randomizer.nextFloat();
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
+            final double[] x = new double[16];
+            final double[] u = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -3421,16 +3511,16 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
+            x[15] = gtAngularSpeedZ;
 
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -3451,31 +3541,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
@@ -3488,27 +3577,26 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
-                    
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -3517,44 +3605,44 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX - 
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
@@ -3567,8 +3655,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -3577,22 +3665,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -3608,10 +3696,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -3627,10 +3715,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -3644,856 +3732,935 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion filteredQuaternion = estimator.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(), 
-                    estimator.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimator.getStatePositionX(),
+                    estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved || positionImproved) {
-                numSuccess++;
-            }
-        }
-        
-        assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
-    }
-    
-    @Test
-    public void testPredictionRotationOnlyWithNoise() {
-        int numSuccess = 0;
-        for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = randomizer.nextFloat();
-            float gtAccelerationY = randomizer.nextFloat();
-            float gtAccelerationZ = randomizer.nextFloat();
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
-
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
-                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-            GaussianRandomizer accelerationRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
-
-            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
-            x[0] = gtPositionX;
-            x[1] = gtPositionY;
-            x[2] = gtPositionZ;
-            x[3] = gtQuaternionA;
-            x[4] = gtQuaternionB;
-            x[5] = gtQuaternionC;
-            x[6] = gtQuaternionD;
-            x[7] = gtSpeedX;
-            x[8] = gtSpeedY;
-            x[9] = gtSpeedZ;
-            x[10] = gtAccelerationX;
-            x[11] = gtAccelerationY;
-            x[12] = gtAccelerationZ;
-            x[13] = gtAngularSpeedX;
-            x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
-
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-
-            String msg;
-            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
-                noiseAccelerationX = accelerationRandomizer.nextFloat();
-                noiseAccelerationY = accelerationRandomizer.nextFloat();
-                noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                accelerationX = gtAccelerationX + noiseAccelerationX;
-                accelerationY = gtAccelerationY + noiseAccelerationY;
-                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
-
-                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
-                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
-                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
-                noiseOrientationA = orientationRandomizer.nextDouble();
-                noiseOrientationB = orientationRandomizer.nextDouble();
-                noiseOrientationC = orientationRandomizer.nextDouble();
-                noiseOrientationD = orientationRandomizer.nextDouble();
-                
-                orientationA = gtQuaternionA + noiseOrientationA;
-                orientationB = gtQuaternionB + noiseOrientationB;
-                orientationC = gtQuaternionC + noiseOrientationC;
-                orientationD = gtQuaternionD + noiseOrientationD;
-                
-                orientation.setA(orientationA);
-                orientation.setB(orientationB);
-                orientation.setC(orientationC);
-                orientation.setD(orientationD);
-                
-                gtOrientation.setA(gtQuaternionA);
-                gtOrientation.setB(gtQuaternionB);
-                gtOrientation.setC(gtQuaternionC);
-                gtOrientation.setD(gtQuaternionD);
-                
-
-                estimator.updateAccelerometerSample(timestamp, 
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
-                estimator.updateOrientationSample(timestamp, orientation);
-
-                timestamp += DELTA_NANOS;
-
-                if (i == 0) {
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
-                    lastOrientation.setA(orientationA);
-                    lastOrientation.setB(orientationB);
-                    lastOrientation.setC(orientationC);
-                    lastOrientation.setD(orientationD);
-                    
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
-                    lastGtOrientation.setA(gtQuaternionA);
-                    lastGtOrientation.setB(gtQuaternionB);
-                    lastGtOrientation.setC(gtQuaternionC);
-                    lastGtOrientation.setD(gtQuaternionD);
-                    
-                } else {
-                    deltaAccelerationX = accelerationX - lastAccelerationX;
-                    deltaAccelerationY = accelerationY - lastAccelerationY;
-                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
-
-                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
-                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
-                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
-                    lastOrientation.inverse(deltaOrientation);
-                    deltaOrientation.combine(orientation);
-                    deltaOrientation.normalize();
-
-                    deltaGtAccelerationX = gtAccelerationX - 
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
-                    
-                    lastGtOrientation.inverse(deltaGtOrientation);
-                    deltaGtOrientation.combine(gtOrientation);
-                    deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
-                    u[0] = deltaOrientation.getA();
-                    u[1] = deltaOrientation.getB();
-                    u[2] = deltaOrientation.getC();
-                    u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
-                    u[7] = deltaAccelerationX;
-                    u[8] = deltaAccelerationY;
-                    u[9] = deltaAccelerationZ;
-                    u[10] = deltaAngularSpeedX;
-                    u[11] = deltaAngularSpeedY;
-                    u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
-                            DELTA_SECONDS, x);
-
-                    gtU[0] = deltaGtOrientation.getA();
-                    gtU[1] = deltaGtOrientation.getB();
-                    gtU[2] = deltaGtOrientation.getC();
-                    gtU[3] = deltaGtOrientation.getD();
-                    gtU[4] = gtU[5] = gtU[6] = 0.0;
-                    gtU[7] = deltaGtAccelerationX;
-                    gtU[8] = deltaGtAccelerationY;
-                    gtU[9] = deltaGtAccelerationZ;
-                    gtU[10] = deltaGtAngularSpeedX;
-                    gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
-                            DELTA_SECONDS, gtX);
-
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
-            }
-        
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
-                    ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
-                    ", velocityY: " + estimator.getStateVelocityY() +
-                    ", velocityZ: " + estimator.getStateVelocityZ() +
-                    ", accelerationX: " + estimator.getStateAccelerationX() +
-                    ", accelerationY: " + estimator.getStateAccelerationY() +
-                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
-                    ", quaternionA: " + estimator.getStateQuaternionA() +
-                    ", quaternionB: " + estimator.getStateQuaternionB() +
-                    ", quaternionC: " + estimator.getStateQuaternionC() +
-                    ", quaternionD: " + estimator.getStateQuaternionD() +
-                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
-                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
-                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Prediction - positionX: " + x[0] + 
-                    ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
-                    ", velocityY: " + x[8] +
-                    ", velocityZ: " + x[9] +
-                    ", accelerationX: " + x[10] +
-                    ", accelerationY: " + x[11] +
-                    ", accelerationZ: " + x[12] +
-                    ", quaternionA: " + x[3] +
-                    ", quaternionB: " + x[4] +
-                    ", quaternionC: " + x[5] +
-                    ", quaternionD: " + x[6] +
-                    ", angularSpeedX: " + x[13] +
-                    ", angularSpeedY: " + x[14] +
-                    ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Ground truth - positionX: " + gtX[0] + 
-                    ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
-                    ", velocityY: " + gtX[8] +
-                    ", velocityZ: " + gtX[9] +
-                    ", accelerationX: " + gtX[10] +
-                    ", accelerationY: " + gtX[11] +
-                    ", accelerationZ: " + gtX[12] +
-                    ", quaternionA: " + gtX[3] +
-                    ", quaternionB: " + gtX[4] +
-                    ", quaternionC: " + gtX[5] +
-                    ", quaternionD: " + gtX[6] +
-                    ", angularSpeedX: " + gtX[13] +
-                    ", angularSpeedY: " + gtX[14] +
-                    ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
-
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
-                    randomizer.nextDouble());
-
-            Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
-
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
-
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
-
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(), 
-                    estimator.getStatePositionY(), 
-                    estimator.getStatePositionZ());
-
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
-
-            InhomogeneousPoint3D groundTruthPos = 
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
-
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved || positionImproved) {
-                numSuccess++;
-            }
-        }
-        
-        assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
-    }
-    
-    @Test
-    public void testPredictionVariableAccelerationWithNoise() {
-        int numSuccess = 0;
-        for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = randomizer.nextDouble();
-            double gtSpeedY = randomizer.nextDouble();
-            double gtSpeedZ = randomizer.nextDouble();
-            int period = N_PREDICTION_SAMPLES / 2;
-            int offsetAccelerationX = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            int offsetAccelerationY = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            int offsetAccelerationZ = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            float amplitudeAccelerationX = randomizer.nextFloat();
-            float amplitudeAccelerationY = randomizer.nextFloat();
-            float amplitudeAccelerationZ = randomizer.nextFloat();
-            float gtAccelerationX = (float)(amplitudeAccelerationX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAccelerationX)));
-            float gtAccelerationY = (float)(amplitudeAccelerationY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAccelerationY)));
-            float gtAccelerationZ = (float)(amplitudeAccelerationZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAccelerationZ)));
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
-
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
-                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-            GaussianRandomizer accelerationRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
-
-            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
-            x[0] = gtPositionX;
-            x[1] = gtPositionY;
-            x[2] = gtPositionZ;
-            x[3] = gtQuaternionA;
-            x[4] = gtQuaternionB;
-            x[5] = gtQuaternionC;
-            x[6] = gtQuaternionD;
-            x[7] = gtSpeedX;
-            x[8] = gtSpeedY;
-            x[9] = gtSpeedZ;
-            x[10] = gtAccelerationX;
-            x[11] = gtAccelerationY;
-            x[12] = gtAccelerationZ;
-            x[13] = gtAngularSpeedX;
-            x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
-
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-
-            String msg;
-            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
-                noiseAccelerationX = accelerationRandomizer.nextFloat();
-                noiseAccelerationY = accelerationRandomizer.nextFloat();
-                noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                gtAccelerationX = (float)(amplitudeAccelerationX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAccelerationX)));
-                gtAccelerationY = (float)(amplitudeAccelerationY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAccelerationY)));
-                gtAccelerationZ = (float)(amplitudeAccelerationZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAccelerationZ)));
-                
-                accelerationX = gtAccelerationX + noiseAccelerationX;
-                accelerationY = gtAccelerationY + noiseAccelerationY;
-                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
-
-                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
-                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
-                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
-                noiseOrientationA = orientationRandomizer.nextDouble();
-                noiseOrientationB = orientationRandomizer.nextDouble();
-                noiseOrientationC = orientationRandomizer.nextDouble();
-                noiseOrientationD = orientationRandomizer.nextDouble();
-                
-                orientationA = gtQuaternionA + noiseOrientationA;
-                orientationB = gtQuaternionB + noiseOrientationB;
-                orientationC = gtQuaternionC + noiseOrientationC;
-                orientationD = gtQuaternionD + noiseOrientationD;
-                
-                orientation.setA(orientationA);
-                orientation.setB(orientationB);
-                orientation.setC(orientationC);
-                orientation.setD(orientationD);
-                
-                gtOrientation.setA(gtQuaternionA);
-                gtOrientation.setB(gtQuaternionB);
-                gtOrientation.setC(gtQuaternionC);
-                gtOrientation.setD(gtQuaternionD);
-                
-
-                estimator.updateAccelerometerSample(timestamp, 
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
-                estimator.updateOrientationSample(timestamp, orientation);
-
-                timestamp += DELTA_NANOS;
-
-                if (i == 0) {
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
-                    lastOrientation.setA(orientationA);
-                    lastOrientation.setB(orientationB);
-                    lastOrientation.setC(orientationC);
-                    lastOrientation.setD(orientationD);
-                    
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
-                    lastGtOrientation.setA(gtQuaternionA);
-                    lastGtOrientation.setB(gtQuaternionB);
-                    lastGtOrientation.setC(gtQuaternionC);
-                    lastGtOrientation.setD(gtQuaternionD);
-                    
-                } else {
-                    deltaAccelerationX = accelerationX - lastAccelerationX;
-                    deltaAccelerationY = accelerationY - lastAccelerationY;
-                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
-
-                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
-                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
-                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
-                    lastOrientation.inverse(deltaOrientation);
-                    deltaOrientation.combine(orientation);
-                    deltaOrientation.normalize();
-
-                    deltaGtAccelerationX = gtAccelerationX - 
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
-                    
-                    lastGtOrientation.inverse(deltaGtOrientation);
-                    deltaGtOrientation.combine(gtOrientation);
-                    deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
-                    u[0] = deltaOrientation.getA();
-                    u[1] = deltaOrientation.getB();
-                    u[2] = deltaOrientation.getC();
-                    u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
-                    u[7] = deltaAccelerationX;
-                    u[8] = deltaAccelerationY;
-                    u[9] = deltaAccelerationZ;
-                    u[10] = deltaAngularSpeedX;
-                    u[11] = deltaAngularSpeedY;
-                    u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
-                            DELTA_SECONDS, x);
-
-                    gtU[0] = deltaGtOrientation.getA();
-                    gtU[1] = deltaGtOrientation.getB();
-                    gtU[2] = deltaGtOrientation.getC();
-                    gtU[3] = deltaGtOrientation.getD();
-                    gtU[4] = gtU[5] = gtU[6] = 0.0;
-                    gtU[7] = deltaGtAccelerationX;
-                    gtU[8] = deltaGtAccelerationY;
-                    gtU[9] = deltaGtAccelerationZ;
-                    gtU[10] = deltaGtAngularSpeedX;
-                    gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
-                            DELTA_SECONDS, gtX);
-
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
-            }
-        
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
-                    ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
-                    ", velocityY: " + estimator.getStateVelocityY() +
-                    ", velocityZ: " + estimator.getStateVelocityZ() +
-                    ", accelerationX: " + estimator.getStateAccelerationX() +
-                    ", accelerationY: " + estimator.getStateAccelerationY() +
-                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
-                    ", quaternionA: " + estimator.getStateQuaternionA() +
-                    ", quaternionB: " + estimator.getStateQuaternionB() +
-                    ", quaternionC: " + estimator.getStateQuaternionC() +
-                    ", quaternionD: " + estimator.getStateQuaternionD() +
-                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
-                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
-                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Prediction - positionX: " + x[0] + 
-                    ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
-                    ", velocityY: " + x[8] +
-                    ", velocityZ: " + x[9] +
-                    ", accelerationX: " + x[10] +
-                    ", accelerationY: " + x[11] +
-                    ", accelerationZ: " + x[12] +
-                    ", quaternionA: " + x[3] +
-                    ", quaternionB: " + x[4] +
-                    ", quaternionC: " + x[5] +
-                    ", quaternionD: " + x[6] +
-                    ", angularSpeedX: " + x[13] +
-                    ", angularSpeedY: " + x[14] +
-                    ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Ground truth - positionX: " + gtX[0] + 
-                    ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
-                    ", velocityY: " + gtX[8] +
-                    ", velocityZ: " + gtX[9] +
-                    ", accelerationX: " + gtX[10] +
-                    ", accelerationY: " + gtX[11] +
-                    ", accelerationZ: " + gtX[12] +
-                    ", quaternionA: " + gtX[3] +
-                    ", quaternionB: " + gtX[4] +
-                    ", quaternionC: " + gtX[5] +
-                    ", quaternionD: " + gtX[6] +
-                    ", angularSpeedX: " + gtX[13] +
-                    ", angularSpeedY: " + gtX[14] +
-                    ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
-
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
-                    randomizer.nextDouble());
-
-            Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
-
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
-
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
-
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(), 
-                    estimator.getStatePositionY(), 
-                    estimator.getStatePositionZ());
-
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
-
-            InhomogeneousPoint3D groundTruthPos = 
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
-
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
             if (rotationImproved || positionImproved) {
                 numSuccess++;
             }
         }
-        
+
         assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
     }
-    
+
+    @Test
+    public void testPredictionRotationOnlyWithNoise() {
+        int numSuccess = 0;
+        for (int t = 0; t < REPEAT_TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = randomizer.nextFloat();
+            final float gtAccelerationY = randomizer.nextFloat();
+            final float gtAccelerationZ = randomizer.nextFloat();
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+
+            final GaussianRandomizer accelerationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer angularSpeedRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer orientationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+
+            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            x[0] = gtPositionX;
+            x[1] = gtPositionY;
+            x[2] = gtPositionZ;
+            x[3] = gtQuaternionA;
+            x[4] = gtQuaternionB;
+            x[5] = gtQuaternionC;
+            x[6] = gtQuaternionD;
+            x[7] = gtSpeedX;
+            x[8] = gtSpeedY;
+            x[9] = gtSpeedZ;
+            x[10] = gtAccelerationX;
+            x[11] = gtAccelerationY;
+            x[12] = gtAccelerationZ;
+            x[13] = gtAngularSpeedX;
+            x[14] = gtAngularSpeedY;
+            x[15] = gtAngularSpeedZ;
+
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
+                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+
+            String msg;
+            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
+                noiseAccelerationX = accelerationRandomizer.nextFloat();
+                noiseAccelerationY = accelerationRandomizer.nextFloat();
+                noiseAccelerationZ = accelerationRandomizer.nextFloat();
+
+                accelerationX = gtAccelerationX + noiseAccelerationX;
+                accelerationY = gtAccelerationY + noiseAccelerationY;
+                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
+
+                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
+
+                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
+                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
+                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
+
+                noiseOrientationA = orientationRandomizer.nextDouble();
+                noiseOrientationB = orientationRandomizer.nextDouble();
+                noiseOrientationC = orientationRandomizer.nextDouble();
+                noiseOrientationD = orientationRandomizer.nextDouble();
+
+                orientationA = gtQuaternionA + noiseOrientationA;
+                orientationB = gtQuaternionB + noiseOrientationB;
+                orientationC = gtQuaternionC + noiseOrientationC;
+                orientationD = gtQuaternionD + noiseOrientationD;
+
+                orientation.setA(orientationA);
+                orientation.setB(orientationB);
+                orientation.setC(orientationC);
+                orientation.setD(orientationD);
+
+                gtOrientation.setA(gtQuaternionA);
+                gtOrientation.setB(gtQuaternionB);
+                gtOrientation.setC(gtQuaternionC);
+                gtOrientation.setD(gtQuaternionD);
+
+                estimator.updateAccelerometerSample(timestamp,
+                        accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp,
+                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateOrientationSample(timestamp, orientation);
+
+                timestamp += DELTA_NANOS;
+
+                if (i == 0) {
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastOrientation.setA(orientationA);
+                    lastOrientation.setB(orientationB);
+                    lastOrientation.setC(orientationC);
+                    lastOrientation.setD(orientationD);
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+
+                    lastGtOrientation.setA(gtQuaternionA);
+                    lastGtOrientation.setB(gtQuaternionB);
+                    lastGtOrientation.setC(gtQuaternionC);
+                    lastGtOrientation.setD(gtQuaternionD);
+
+                } else {
+                    deltaAccelerationX = accelerationX - lastAccelerationX;
+                    deltaAccelerationY = accelerationY - lastAccelerationY;
+                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
+
+                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
+                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
+                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
+
+                    lastOrientation.inverse(deltaOrientation);
+                    deltaOrientation.combine(orientation);
+                    deltaOrientation.normalize();
+
+                    deltaGtAccelerationX = gtAccelerationX -
+                            lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY -
+                            lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ -
+                            lastGtAccelerationZ;
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
+                            lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY -
+                            lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
+                            lastGtAngularSpeedZ;
+
+                    lastGtOrientation.inverse(deltaGtOrientation);
+                    deltaGtOrientation.combine(gtOrientation);
+                    deltaGtOrientation.normalize();
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
+                    u[0] = deltaOrientation.getA();
+                    u[1] = deltaOrientation.getB();
+                    u[2] = deltaOrientation.getC();
+                    u[3] = deltaOrientation.getD();
+                    u[4] = u[5] = u[6] = 0.0;
+                    u[7] = deltaAccelerationX;
+                    u[8] = deltaAccelerationY;
+                    u[9] = deltaAccelerationZ;
+                    u[10] = deltaAngularSpeedX;
+                    u[11] = deltaAngularSpeedY;
+                    u[12] = deltaAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(x, u,
+                            DELTA_SECONDS, x);
+
+                    gtU[0] = deltaGtOrientation.getA();
+                    gtU[1] = deltaGtOrientation.getB();
+                    gtU[2] = deltaGtOrientation.getC();
+                    gtU[3] = deltaGtOrientation.getD();
+                    gtU[4] = gtU[5] = gtU[6] = 0.0;
+                    gtU[7] = deltaGtAccelerationX;
+                    gtU[8] = deltaGtAccelerationY;
+                    gtU[9] = deltaGtAccelerationZ;
+                    gtU[10] = deltaGtAngularSpeedX;
+                    gtU[11] = deltaGtAngularSpeedY;
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
+                            DELTA_SECONDS, gtX);
+
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
+            }
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
+                    ", positionY: " + estimator.getStatePositionY() +
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
+                    ", velocityY: " + estimator.getStateVelocityY() +
+                    ", velocityZ: " + estimator.getStateVelocityZ() +
+                    ", accelerationX: " + estimator.getStateAccelerationX() +
+                    ", accelerationY: " + estimator.getStateAccelerationY() +
+                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
+                    ", quaternionA: " + estimator.getStateQuaternionA() +
+                    ", quaternionB: " + estimator.getStateQuaternionB() +
+                    ", quaternionC: " + estimator.getStateQuaternionC() +
+                    ", quaternionD: " + estimator.getStateQuaternionD() +
+                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
+                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
+                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Prediction - positionX: " + x[0] +
+                    ", positionY: " + x[1] +
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
+                    ", velocityY: " + x[8] +
+                    ", velocityZ: " + x[9] +
+                    ", accelerationX: " + x[10] +
+                    ", accelerationY: " + x[11] +
+                    ", accelerationZ: " + x[12] +
+                    ", quaternionA: " + x[3] +
+                    ", quaternionB: " + x[4] +
+                    ", quaternionC: " + x[5] +
+                    ", quaternionD: " + x[6] +
+                    ", angularSpeedX: " + x[13] +
+                    ", angularSpeedY: " + x[14] +
+                    ", angularSpeedZ: " + x[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Ground truth - positionX: " + gtX[0] +
+                    ", positionY: " + gtX[1] +
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
+                    ", velocityY: " + gtX[8] +
+                    ", velocityZ: " + gtX[9] +
+                    ", accelerationX: " + gtX[10] +
+                    ", accelerationY: " + gtX[11] +
+                    ", accelerationZ: " + gtX[12] +
+                    ", quaternionA: " + gtX[3] +
+                    ", quaternionB: " + gtX[4] +
+                    ", quaternionC: " + gtX[5] +
+                    ", quaternionD: " + gtX[6] +
+                    ", angularSpeedX: " + gtX[13] +
+                    ", angularSpeedY: " + gtX[14] +
+                    ", angularSpeedZ: " + gtX[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
+                    randomizer.nextDouble());
+
+            final Quaternion filteredQuaternion = estimator.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
+                    x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(
+                    gtX[3], gtX[4], gtX[5], gtX[6]);
+
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+                    randomPoint);
+
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
+
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimator.getStatePositionX(),
+                    estimator.getStatePositionY(),
+                    estimator.getStatePositionZ());
+
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+                    x[0], x[1], x[2]);
+
+            final InhomogeneousPoint3D groundTruthPos =
+                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
+                numSuccess++;
+            }
+        }
+
+        assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
+    }
+
+    @Test
+    public void testPredictionVariableAccelerationWithNoise() {
+        int numSuccess = 0;
+        for (int t = 0; t < REPEAT_TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
+            final double gtSpeedX = randomizer.nextDouble();
+            final double gtSpeedY = randomizer.nextDouble();
+            final double gtSpeedZ = randomizer.nextDouble();
+            final int period = N_PREDICTION_SAMPLES / 2;
+            final int offsetAccelerationX = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationY = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationZ = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final float amplitudeAccelerationX = randomizer.nextFloat();
+            final float amplitudeAccelerationY = randomizer.nextFloat();
+            final float amplitudeAccelerationZ = randomizer.nextFloat();
+            float gtAccelerationX = (float) (amplitudeAccelerationX * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAccelerationX)));
+            float gtAccelerationY = (float) (amplitudeAccelerationY * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAccelerationY)));
+            float gtAccelerationZ = (float) (amplitudeAccelerationZ * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAccelerationZ)));
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+
+            final GaussianRandomizer accelerationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer angularSpeedRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer orientationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+
+            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            x[0] = gtPositionX;
+            x[1] = gtPositionY;
+            x[2] = gtPositionZ;
+            x[3] = gtQuaternionA;
+            x[4] = gtQuaternionB;
+            x[5] = gtQuaternionC;
+            x[6] = gtQuaternionD;
+            x[7] = gtSpeedX;
+            x[8] = gtSpeedY;
+            x[9] = gtSpeedZ;
+            x[10] = gtAccelerationX;
+            x[11] = gtAccelerationY;
+            x[12] = gtAccelerationZ;
+            x[13] = gtAngularSpeedX;
+            x[14] = gtAngularSpeedY;
+            x[15] = gtAngularSpeedZ;
+
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
+                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+
+            String msg;
+            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
+                noiseAccelerationX = accelerationRandomizer.nextFloat();
+                noiseAccelerationY = accelerationRandomizer.nextFloat();
+                noiseAccelerationZ = accelerationRandomizer.nextFloat();
+
+                gtAccelerationX = (float) (amplitudeAccelerationX * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAccelerationX)));
+                gtAccelerationY = (float) (amplitudeAccelerationY * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAccelerationY)));
+                gtAccelerationZ = (float) (amplitudeAccelerationZ * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAccelerationZ)));
+
+                accelerationX = gtAccelerationX + noiseAccelerationX;
+                accelerationY = gtAccelerationY + noiseAccelerationY;
+                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
+
+                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
+
+                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
+                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
+                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
+
+                noiseOrientationA = orientationRandomizer.nextDouble();
+                noiseOrientationB = orientationRandomizer.nextDouble();
+                noiseOrientationC = orientationRandomizer.nextDouble();
+                noiseOrientationD = orientationRandomizer.nextDouble();
+
+                orientationA = gtQuaternionA + noiseOrientationA;
+                orientationB = gtQuaternionB + noiseOrientationB;
+                orientationC = gtQuaternionC + noiseOrientationC;
+                orientationD = gtQuaternionD + noiseOrientationD;
+
+                orientation.setA(orientationA);
+                orientation.setB(orientationB);
+                orientation.setC(orientationC);
+                orientation.setD(orientationD);
+
+                gtOrientation.setA(gtQuaternionA);
+                gtOrientation.setB(gtQuaternionB);
+                gtOrientation.setC(gtQuaternionC);
+                gtOrientation.setD(gtQuaternionD);
+
+                estimator.updateAccelerometerSample(timestamp,
+                        accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp,
+                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateOrientationSample(timestamp, orientation);
+
+                timestamp += DELTA_NANOS;
+
+                if (i == 0) {
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastOrientation.setA(orientationA);
+                    lastOrientation.setB(orientationB);
+                    lastOrientation.setC(orientationC);
+                    lastOrientation.setD(orientationD);
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+
+                    lastGtOrientation.setA(gtQuaternionA);
+                    lastGtOrientation.setB(gtQuaternionB);
+                    lastGtOrientation.setC(gtQuaternionC);
+                    lastGtOrientation.setD(gtQuaternionD);
+
+                } else {
+                    deltaAccelerationX = accelerationX - lastAccelerationX;
+                    deltaAccelerationY = accelerationY - lastAccelerationY;
+                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
+
+                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
+                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
+                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
+
+                    lastOrientation.inverse(deltaOrientation);
+                    deltaOrientation.combine(orientation);
+                    deltaOrientation.normalize();
+
+                    deltaGtAccelerationX = gtAccelerationX -
+                            lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY -
+                            lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ -
+                            lastGtAccelerationZ;
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
+                            lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY -
+                            lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
+                            lastGtAngularSpeedZ;
+
+                    lastGtOrientation.inverse(deltaGtOrientation);
+                    deltaGtOrientation.combine(gtOrientation);
+                    deltaGtOrientation.normalize();
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
+                    u[0] = deltaOrientation.getA();
+                    u[1] = deltaOrientation.getB();
+                    u[2] = deltaOrientation.getC();
+                    u[3] = deltaOrientation.getD();
+                    u[4] = u[5] = u[6] = 0.0;
+                    u[7] = deltaAccelerationX;
+                    u[8] = deltaAccelerationY;
+                    u[9] = deltaAccelerationZ;
+                    u[10] = deltaAngularSpeedX;
+                    u[11] = deltaAngularSpeedY;
+                    u[12] = deltaAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(x, u,
+                            DELTA_SECONDS, x);
+
+                    gtU[0] = deltaGtOrientation.getA();
+                    gtU[1] = deltaGtOrientation.getB();
+                    gtU[2] = deltaGtOrientation.getC();
+                    gtU[3] = deltaGtOrientation.getD();
+                    gtU[4] = gtU[5] = gtU[6] = 0.0;
+                    gtU[7] = deltaGtAccelerationX;
+                    gtU[8] = deltaGtAccelerationY;
+                    gtU[9] = deltaGtAccelerationZ;
+                    gtU[10] = deltaGtAngularSpeedX;
+                    gtU[11] = deltaGtAngularSpeedY;
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
+                            DELTA_SECONDS, gtX);
+
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
+            }
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
+                    ", positionY: " + estimator.getStatePositionY() +
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
+                    ", velocityY: " + estimator.getStateVelocityY() +
+                    ", velocityZ: " + estimator.getStateVelocityZ() +
+                    ", accelerationX: " + estimator.getStateAccelerationX() +
+                    ", accelerationY: " + estimator.getStateAccelerationY() +
+                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
+                    ", quaternionA: " + estimator.getStateQuaternionA() +
+                    ", quaternionB: " + estimator.getStateQuaternionB() +
+                    ", quaternionC: " + estimator.getStateQuaternionC() +
+                    ", quaternionD: " + estimator.getStateQuaternionD() +
+                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
+                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
+                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Prediction - positionX: " + x[0] +
+                    ", positionY: " + x[1] +
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
+                    ", velocityY: " + x[8] +
+                    ", velocityZ: " + x[9] +
+                    ", accelerationX: " + x[10] +
+                    ", accelerationY: " + x[11] +
+                    ", accelerationZ: " + x[12] +
+                    ", quaternionA: " + x[3] +
+                    ", quaternionB: " + x[4] +
+                    ", quaternionC: " + x[5] +
+                    ", quaternionD: " + x[6] +
+                    ", angularSpeedX: " + x[13] +
+                    ", angularSpeedY: " + x[14] +
+                    ", angularSpeedZ: " + x[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Ground truth - positionX: " + gtX[0] +
+                    ", positionY: " + gtX[1] +
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
+                    ", velocityY: " + gtX[8] +
+                    ", velocityZ: " + gtX[9] +
+                    ", accelerationX: " + gtX[10] +
+                    ", accelerationY: " + gtX[11] +
+                    ", accelerationZ: " + gtX[12] +
+                    ", quaternionA: " + gtX[3] +
+                    ", quaternionB: " + gtX[4] +
+                    ", quaternionC: " + gtX[5] +
+                    ", quaternionD: " + gtX[6] +
+                    ", angularSpeedX: " + gtX[13] +
+                    ", angularSpeedY: " + gtX[14] +
+                    ", angularSpeedZ: " + gtX[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
+                    randomizer.nextDouble());
+
+            final Quaternion filteredQuaternion = estimator.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
+                    x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(
+                    gtX[3], gtX[4], gtX[5], gtX[6]);
+
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+                    randomPoint);
+
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
+
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimator.getStatePositionX(),
+                    estimator.getStatePositionY(),
+                    estimator.getStatePositionZ());
+
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+                    x[0], x[1], x[2]);
+
+            final InhomogeneousPoint3D groundTruthPos =
+                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
+                numSuccess++;
+            }
+        }
+
+        assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
+    }
+
     @Test
     public void testPredictionVariableAngularSpeedWithNoise() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = 0.0f, gtAccelerationY = 0.0f,
-                    gtAccelerationZ = 0.0f;
-            int period = N_PREDICTION_SAMPLES / 2;
-            int offsetAngularSpeedX = randomizer.nextInt(0, 
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = 0.0f;
+            final float gtAccelerationY = 0.0f;
+            final float gtAccelerationZ = 0.0f;
+            final int period = N_PREDICTION_SAMPLES / 2;
+            final int offsetAngularSpeedX = randomizer.nextInt(0,
                     N_PREDICTION_SAMPLES);
-            int offsetAngularSpeedY = randomizer.nextInt(0, 
+            final int offsetAngularSpeedY = randomizer.nextInt(0,
                     N_PREDICTION_SAMPLES);
-            int offsetAngularSpeedZ = randomizer.nextInt(0, 
+            final int offsetAngularSpeedZ = randomizer.nextInt(0,
                     N_PREDICTION_SAMPLES);
-            float amplitudeAngularSpeedX = randomizer.nextFloat();
-            float amplitudeAngularSpeedY = randomizer.nextFloat();
-            float amplitudeAngularSpeedZ = randomizer.nextFloat();
-            float gtAngularSpeedX = (float)(amplitudeAngularSpeedX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAngularSpeedX)));
-            float gtAngularSpeedY = (float)(amplitudeAngularSpeedY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAngularSpeedY)));
-            float gtAngularSpeedZ = (float)(amplitudeAngularSpeedZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAngularSpeedZ)));
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final float amplitudeAngularSpeedX = randomizer.nextFloat();
+            final float amplitudeAngularSpeedY = randomizer.nextFloat();
+            final float amplitudeAngularSpeedZ = randomizer.nextFloat();
+            float gtAngularSpeedX = (float) (amplitudeAngularSpeedX * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAngularSpeedX)));
+            float gtAngularSpeedY = (float) (amplitudeAngularSpeedY * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAngularSpeedY)));
+            float gtAngularSpeedZ = (float) (amplitudeAngularSpeedZ * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAngularSpeedZ)));
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-        
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
+            final double[] x = new double[16];
+            final double[] u = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -4509,16 +4676,16 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
+            x[15] = gtAngularSpeedZ;
 
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -4536,44 +4703,43 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                gtAngularSpeedX = (float)(amplitudeAngularSpeedX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAngularSpeedX)));
-                gtAngularSpeedY = (float)(amplitudeAngularSpeedY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAngularSpeedY)));
-                gtAngularSpeedZ = (float)(amplitudeAngularSpeedZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAngularSpeedZ)));
-                
+                gtAngularSpeedX = (float) (amplitudeAngularSpeedX * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAngularSpeedX)));
+                gtAngularSpeedY = (float) (amplitudeAngularSpeedY * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAngularSpeedY)));
+                gtAngularSpeedZ = (float) (amplitudeAngularSpeedZ * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAngularSpeedZ)));
+
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
@@ -4586,27 +4752,26 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
-                    
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -4615,44 +4780,44 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX - 
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
@@ -4665,8 +4830,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -4675,22 +4840,22 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -4706,10 +4871,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -4725,10 +4890,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -4742,647 +4907,196 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion filteredQuaternion = estimator.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(), 
-                    estimator.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimator.getStatePositionX(),
+                    estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved || positionImproved) {
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
                 numSuccess++;
             }
         }
-        
+
         assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_SUCCESS_RATE);
-    }    
+    }
 
     @Test
     public void testPredictionNoMotionWithNoiseAndCalibration() {
         int numSuccess = 0;
-        for (int t = 0; t < 5*REPEAT_TIMES; t++) {
-            UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
-            GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
-
-            float accelerationOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-        
-            float angularOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            
-            AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
-                    createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ, 
-                    angularOffsetX, angularOffsetY, angularOffsetZ, 
-                    noiseRandomizer);
-            AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration = 
-                    calibrator.getCalibrationData();
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = 0.0f, gtAccelerationY = 0.0f, 
-                    gtAccelerationZ = 0.0f;
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
-
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
-                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration = 
-                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-            estimatorWithCalibration.setCalibrationData(calibration);
-            
-            GaussianRandomizer accelerationRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
-
-            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            float accelerationWithOffsetX, accelerationWithOffsetY, 
-                    accelerationWithOffsetZ;
-            float angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                    angularSpeedWithOffsetZ;                    
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastAccelerationWithOffsetX = 0.0, 
-                    lastAccelerationWithOffsetY = 0.0, 
-                    lastAccelerationWithOffsetZ = 0.0;
-            double lastAngularSpeedWithOffsetX = 0.0, 
-                    lastAngularSpeedWithOffsetY = 0.0, 
-                    lastAngularSpeedWithOffsetZ = 0.0;
-            double deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-                    deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-                    deltaAngularSpeedWithOffsetZ;
-            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];   
-            double[] uWithOffset = new double[13];
-            x[0] = gtPositionX;
-            x[1] = gtPositionY;
-            x[2] = gtPositionZ;
-            x[3] = gtQuaternionA;
-            x[4] = gtQuaternionB;
-            x[5] = gtQuaternionC;
-            x[6] = gtQuaternionD;
-            x[7] = gtSpeedX;
-            x[8] = gtSpeedY;
-            x[9] = gtSpeedZ;
-            x[10] = gtAccelerationX;
-            x[11] = gtAccelerationY;
-            x[12] = gtAccelerationZ;
-            x[13] = gtAngularSpeedX;
-            x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
-
-            double[] xWithOffset = Arrays.copyOf(x, x.length);
-            
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-
-            String msg;
-            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
-                noiseAccelerationX = accelerationRandomizer.nextFloat();
-                noiseAccelerationY = accelerationRandomizer.nextFloat();
-                noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                accelerationX = gtAccelerationX + noiseAccelerationX;
-                accelerationY = gtAccelerationY + noiseAccelerationY;
-                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
-
-                accelerationWithOffsetX = accelerationX + accelerationOffsetX;
-                accelerationWithOffsetY = accelerationY + accelerationOffsetY;
-                accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-                
-                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
-                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
-                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
-                angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
-                angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
-                angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-                
-                noiseOrientationA = orientationRandomizer.nextDouble();
-                noiseOrientationB = orientationRandomizer.nextDouble();
-                noiseOrientationC = orientationRandomizer.nextDouble();
-                noiseOrientationD = orientationRandomizer.nextDouble();
-                
-                orientationA = gtQuaternionA + noiseOrientationA;
-                orientationB = gtQuaternionB + noiseOrientationB;
-                orientationC = gtQuaternionC + noiseOrientationC;
-                orientationD = gtQuaternionD + noiseOrientationD;
-                
-                orientation.setA(orientationA);
-                orientation.setB(orientationB);
-                orientation.setC(orientationC);
-                orientation.setD(orientationD);
-                
-                gtOrientation.setA(gtQuaternionA);
-                gtOrientation.setB(gtQuaternionB);
-                gtOrientation.setC(gtQuaternionC);
-                gtOrientation.setD(gtQuaternionD);
-                
-
-                estimator.updateAccelerometerSample(timestamp, 
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
-                estimator.updateOrientationSample(timestamp, orientation);
-
-                estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-                        accelerationWithOffsetX, accelerationWithOffsetY, 
-                        accelerationWithOffsetZ);
-                estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp, 
-                        orientation);
-                
-                timestamp += DELTA_NANOS;
-
-                if (i == 0) {
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
-                    lastOrientation.setA(orientationA);
-                    lastOrientation.setB(orientationB);
-                    lastOrientation.setC(orientationC);
-                    lastOrientation.setD(orientationD);
-                    
-                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
-                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
-                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-
-                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
-                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
-                    
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
-                    lastGtOrientation.setA(gtQuaternionA);
-                    lastGtOrientation.setB(gtQuaternionB);
-                    lastGtOrientation.setC(gtQuaternionC);
-                    lastGtOrientation.setD(gtQuaternionD);
-                    
-                } else {
-                    deltaAccelerationX = accelerationX - lastAccelerationX;
-                    deltaAccelerationY = accelerationY - lastAccelerationY;
-                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
-
-                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
-                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
-                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
-                    lastOrientation.inverse(deltaOrientation);
-                    deltaOrientation.combine(orientation);
-                    deltaOrientation.normalize();
-
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
-
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
-                    
-                    deltaGtAccelerationX = gtAccelerationX - 
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
-                    
-                    lastGtOrientation.inverse(deltaGtOrientation);
-                    deltaGtOrientation.combine(gtOrientation);
-                    deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
-                    u[0] = deltaOrientation.getA();
-                    u[1] = deltaOrientation.getB();
-                    u[2] = deltaOrientation.getC();
-                    u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
-                    u[7] = deltaAccelerationX;
-                    u[8] = deltaAccelerationY;
-                    u[9] = deltaAccelerationZ;
-                    u[10] = deltaAngularSpeedX;
-                    u[11] = deltaAngularSpeedY;
-                    u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
-                            DELTA_SECONDS, x);
-                    
-                    //we also take into account control signals with offset
-                    uWithOffset[0] = deltaOrientation.getA();
-                    uWithOffset[1] = deltaOrientation.getB();
-                    uWithOffset[2] = deltaOrientation.getC();
-                    uWithOffset[3] = deltaOrientation.getD();
-                    uWithOffset[4] = uWithOffset[5] = uWithOffset[6] = 0.0;
-                    uWithOffset[7] = deltaAccelerationWithOffsetX;
-                    uWithOffset[8] = deltaAccelerationWithOffsetY;
-                    uWithOffset[9] = deltaAccelerationWithOffsetZ;
-                    uWithOffset[10] = deltaAngularSpeedWithOffsetX;
-                    uWithOffset[11] = deltaAngularSpeedWithOffsetY;
-                    uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset, 
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
-
-                    gtU[0] = deltaGtOrientation.getA();
-                    gtU[1] = deltaGtOrientation.getB();
-                    gtU[2] = deltaGtOrientation.getC();
-                    gtU[3] = deltaGtOrientation.getD();
-                    gtU[4] = gtU[5] = gtU[6] = 0.0;
-                    gtU[7] = deltaGtAccelerationX;
-                    gtU[8] = deltaGtAccelerationY;
-                    gtU[9] = deltaGtAccelerationZ;
-                    gtU[10] = deltaGtAngularSpeedX;
-                    gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
-                            DELTA_SECONDS, gtX);
-
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
-                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
-                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
-                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-
-                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
-                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
-            }
-        
-            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() + 
-                    ", positionY: " + estimatorWithCalibration.getStatePositionY() +
-                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() + 
-                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() + 
-                    ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
-                    ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
-                    ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
-                    ", accelerationY: " + estimatorWithCalibration.getStateAccelerationY() +
-                    ", accelerationZ: " + estimatorWithCalibration.getStateAccelerationZ() +
-                    ", quaternionA: " + estimatorWithCalibration.getStateQuaternionA() +
-                    ", quaternionB: " + estimatorWithCalibration.getStateQuaternionB() +
-                    ", quaternionC: " + estimatorWithCalibration.getStateQuaternionC() +
-                    ", quaternionD: " + estimatorWithCalibration.getStateQuaternionD() +
-                    ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
-                    ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
-                    ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-            
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
-                    ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
-                    ", velocityY: " + estimator.getStateVelocityY() +
-                    ", velocityZ: " + estimator.getStateVelocityZ() +
-                    ", accelerationX: " + estimator.getStateAccelerationX() +
-                    ", accelerationY: " + estimator.getStateAccelerationY() +
-                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
-                    ", quaternionA: " + estimator.getStateQuaternionA() +
-                    ", quaternionB: " + estimator.getStateQuaternionB() +
-                    ", quaternionC: " + estimator.getStateQuaternionC() +
-                    ", quaternionD: " + estimator.getStateQuaternionD() +
-                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
-                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
-                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Prediction - positionX: " + x[0] + 
-                    ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
-                    ", velocityY: " + x[8] +
-                    ", velocityZ: " + x[9] +
-                    ", accelerationX: " + x[10] +
-                    ", accelerationY: " + x[11] +
-                    ", accelerationZ: " + x[12] +
-                    ", quaternionA: " + x[3] +
-                    ", quaternionB: " + x[4] +
-                    ", quaternionC: " + x[5] +
-                    ", quaternionD: " + x[6] +
-                    ", angularSpeedX: " + x[13] +
-                    ", angularSpeedY: " + x[14] +
-                    ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Ground truth - positionX: " + gtX[0] + 
-                    ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
-                    ", velocityY: " + gtX[8] +
-                    ", velocityZ: " + gtX[9] +
-                    ", accelerationX: " + gtX[10] +
-                    ", accelerationY: " + gtX[11] +
-                    ", accelerationZ: " + gtX[12] +
-                    ", quaternionA: " + gtX[3] +
-                    ", quaternionB: " + gtX[4] +
-                    ", quaternionC: " + gtX[5] +
-                    ", quaternionD: " + gtX[6] +
-                    ", angularSpeedX: " + gtX[13] +
-                    ", angularSpeedY: " + gtX[14] +
-                    ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
-
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
-                    randomizer.nextDouble());
-
-            Quaternion filteredQuaternion = 
-                    estimatorWithCalibration.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
-
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
-
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
-
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(), 
-                    estimatorWithCalibration.getStatePositionY(), 
-                    estimatorWithCalibration.getStatePositionZ());
-
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
-
-            InhomogeneousPoint3D groundTruthPos = 
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
-
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved && positionImproved) {
-                numSuccess++;
-            }
-        }
-        
-        assertTrue(numSuccess >= 5*REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
-    }
-    
-    @Test
-    public void testPredictionConstantSpeedWithNoiseAndCalibration() {
-        int numSuccess = 0;
         for (int t = 0; t < 5 * REPEAT_TIMES; t++) {
-            UniformRandomizer offsetRandomizer = new UniformRandomizer(
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
                     new Random());
-            GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
-            float accelerationOffsetX = offsetRandomizer.nextFloat(
+            final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetY = offsetRandomizer.nextFloat(
+            final float accelerationOffsetY = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetZ = offsetRandomizer.nextFloat(
+            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-        
-            float angularOffsetX = offsetRandomizer.nextFloat(
+
+            final float angularOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetY = offsetRandomizer.nextFloat(
+            final float angularOffsetY = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetZ = offsetRandomizer.nextFloat(
+            final float angularOffsetZ = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            
-            AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
-                    createFinishedCalibrator(accelerationOffsetX, 
-                    accelerationOffsetY, accelerationOffsetZ, 
-                    angularOffsetX, angularOffsetY, angularOffsetZ, 
-                    noiseRandomizer);
-            AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration = 
+
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
+                    createFinishedCalibrator(
+                            accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ,
+                            noiseRandomizer);
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration =
                     calibrator.getCalibrationData();
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = randomizer.nextDouble();
-            double gtSpeedY = randomizer.nextDouble();
-            double gtSpeedZ = randomizer.nextDouble();
-            float gtAccelerationX = 0.0f, gtAccelerationY = 0.0f, 
-                    gtAccelerationZ = 0.0f;
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = 0.0f;
+            final float gtAccelerationY = 0.0f;
+            final float gtAccelerationZ = 0.0f;
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration = 
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
-            
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            float accelerationWithOffsetX, accelerationWithOffsetY, 
-                    accelerationWithOffsetZ;
-            float angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                    angularSpeedWithOffsetZ;                                
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastAccelerationWithOffsetX = 0.0, 
-                    lastAccelerationWithOffsetY = 0.0, 
-                    lastAccelerationWithOffsetZ = 0.0;
-            double lastAngularSpeedWithOffsetX = 0.0, 
-                    lastAngularSpeedWithOffsetY = 0.0, 
-                    lastAngularSpeedWithOffsetZ = 0.0;    
-            double deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-                    deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-                    deltaAngularSpeedWithOffsetZ;
-            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            float accelerationWithOffsetX;
+            float accelerationWithOffsetY;
+            float accelerationWithOffsetZ;
+            float angularSpeedWithOffsetX;
+            float angularSpeedWithOffsetY;
+            float angularSpeedWithOffsetZ;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastAccelerationWithOffsetX = 0.0;
+            double lastAccelerationWithOffsetY = 0.0;
+            double lastAccelerationWithOffsetZ = 0.0;
+            double lastAngularSpeedWithOffsetX = 0.0;
+            double lastAngularSpeedWithOffsetY = 0.0;
+            double lastAngularSpeedWithOffsetZ = 0.0;
+            double deltaAccelerationWithOffsetX;
+            double deltaAccelerationWithOffsetY;
+            double deltaAccelerationWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX;
+            double deltaAngularSpeedWithOffsetY;
+            double deltaAngularSpeedWithOffsetZ;
+
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];    
-            double[] uWithOffset = new double[13];
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            final double[] uWithOffset = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -5398,23 +5112,23 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
-            
-            double[] xWithOffset = Arrays.copyOf(x, x.length);
+            x[15] = gtAngularSpeedZ;
 
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            final double[] xWithOffset = Arrays.copyOf(x, x.length);
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -5431,7 +5145,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 accelerationWithOffsetX = accelerationX + accelerationOffsetX;
                 accelerationWithOffsetY = accelerationY + accelerationOffsetY;
                 accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-                
+
                 noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
@@ -5439,529 +5153,46 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
                 angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
                 angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
-                estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-                        accelerationWithOffsetX, accelerationWithOffsetY, 
+                estimatorWithCalibration.updateAccelerometerSample(timestamp,
+                        accelerationWithOffsetX, accelerationWithOffsetY,
                         accelerationWithOffsetZ);
-                estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
+                estimatorWithCalibration.updateGyroscopeSample(timestamp,
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
                         angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
-                
-                timestamp += DELTA_NANOS;
-
-                if (i == 0) {
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
-                    lastOrientation.setA(orientationA);
-                    lastOrientation.setB(orientationB);
-                    lastOrientation.setC(orientationC);
-                    lastOrientation.setD(orientationD);
-                    
-                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
-                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
-                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-
-                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
-                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                    
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
-                    lastGtOrientation.setA(gtQuaternionA);
-                    lastGtOrientation.setB(gtQuaternionB);
-                    lastGtOrientation.setC(gtQuaternionC);
-                    lastGtOrientation.setD(gtQuaternionD);
-                    
-                } else {
-                    deltaAccelerationX = accelerationX - lastAccelerationX;
-                    deltaAccelerationY = accelerationY - lastAccelerationY;
-                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
-
-                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
-                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
-                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
-                    lastOrientation.inverse(deltaOrientation);
-                    deltaOrientation.combine(orientation);
-                    deltaOrientation.normalize();
-
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
-
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
-                    
-                    deltaGtAccelerationX = gtAccelerationX - 
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
-                    
-                    lastGtOrientation.inverse(deltaGtOrientation);
-                    deltaGtOrientation.combine(gtOrientation);
-                    deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
-                    u[0] = deltaOrientation.getA();
-                    u[1] = deltaOrientation.getB();
-                    u[2] = deltaOrientation.getC();
-                    u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
-                    u[7] = deltaAccelerationX;
-                    u[8] = deltaAccelerationY;
-                    u[9] = deltaAccelerationZ;
-                    u[10] = deltaAngularSpeedX;
-                    u[11] = deltaAngularSpeedY;
-                    u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
-                            DELTA_SECONDS, x);
-                    
-                    //we also take into account control signals with offset
-                    uWithOffset[0] = deltaOrientation.getA();
-                    uWithOffset[1] = deltaOrientation.getB();
-                    uWithOffset[2] = deltaOrientation.getC();
-                    uWithOffset[3] = deltaOrientation.getD();
-                    uWithOffset[4] = uWithOffset[5] = uWithOffset[6] = 0.0;
-                    uWithOffset[7] = deltaAccelerationWithOffsetX;
-                    uWithOffset[8] = deltaAccelerationWithOffsetY;
-                    uWithOffset[9] = deltaAccelerationWithOffsetZ;
-                    uWithOffset[10] = deltaAngularSpeedWithOffsetX;
-                    uWithOffset[11] = deltaAngularSpeedWithOffsetY;
-                    uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset, 
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
-
-                    gtU[0] = deltaGtOrientation.getA();
-                    gtU[1] = deltaGtOrientation.getB();
-                    gtU[2] = deltaGtOrientation.getC();
-                    gtU[3] = deltaGtOrientation.getD();
-                    gtU[4] = gtU[5] = gtU[6] = 0.0;
-                    gtU[7] = deltaGtAccelerationX;
-                    gtU[8] = deltaGtAccelerationY;
-                    gtU[9] = deltaGtAccelerationZ;
-                    gtU[10] = deltaGtAngularSpeedX;
-                    gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
-                            DELTA_SECONDS, gtX);
-
-                    lastAccelerationX = accelerationX;
-                    lastAccelerationY = accelerationY;
-                    lastAccelerationZ = accelerationZ;
-
-                    lastAngularSpeedX = angularSpeedX;
-                    lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
-                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
-                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
-                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-
-                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
-                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-                    
-                    lastGtAccelerationX = gtAccelerationX;
-                    lastGtAccelerationY = gtAccelerationY;
-                    lastGtAccelerationZ = gtAccelerationZ;
-                    
-                    lastGtAngularSpeedX = gtAngularSpeedX;
-                    lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
-            }
-        
-            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() + 
-                    ", positionY: " + estimatorWithCalibration.getStatePositionY() +
-                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() + 
-                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() + 
-                    ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
-                    ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
-                    ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
-                    ", accelerationY: " + estimatorWithCalibration.getStateAccelerationY() +
-                    ", accelerationZ: " + estimatorWithCalibration.getStateAccelerationZ() +
-                    ", quaternionA: " + estimatorWithCalibration.getStateQuaternionA() +
-                    ", quaternionB: " + estimatorWithCalibration.getStateQuaternionB() +
-                    ", quaternionC: " + estimatorWithCalibration.getStateQuaternionC() +
-                    ", quaternionD: " + estimatorWithCalibration.getStateQuaternionD() +
-                    ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
-                    ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
-                    ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-            
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
-                    ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
-                    ", velocityY: " + estimator.getStateVelocityY() +
-                    ", velocityZ: " + estimator.getStateVelocityZ() +
-                    ", accelerationX: " + estimator.getStateAccelerationX() +
-                    ", accelerationY: " + estimator.getStateAccelerationY() +
-                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
-                    ", quaternionA: " + estimator.getStateQuaternionA() +
-                    ", quaternionB: " + estimator.getStateQuaternionB() +
-                    ", quaternionC: " + estimator.getStateQuaternionC() +
-                    ", quaternionD: " + estimator.getStateQuaternionD() +
-                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
-                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
-                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Prediction - positionX: " + x[0] + 
-                    ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
-                    ", velocityY: " + x[8] +
-                    ", velocityZ: " + x[9] +
-                    ", accelerationX: " + x[10] +
-                    ", accelerationY: " + x[11] +
-                    ", accelerationZ: " + x[12] +
-                    ", quaternionA: " + x[3] +
-                    ", quaternionB: " + x[4] +
-                    ", quaternionC: " + x[5] +
-                    ", quaternionD: " + x[6] +
-                    ", angularSpeedX: " + x[13] +
-                    ", angularSpeedY: " + x[14] +
-                    ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
-
-            msg = "Ground truth - positionX: " + gtX[0] + 
-                    ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
-                    ", velocityY: " + gtX[8] +
-                    ", velocityZ: " + gtX[9] +
-                    ", accelerationX: " + gtX[10] +
-                    ", accelerationY: " + gtX[11] +
-                    ", accelerationZ: " + gtX[12] +
-                    ", quaternionA: " + gtX[3] +
-                    ", quaternionB: " + gtX[4] +
-                    ", quaternionC: " + gtX[5] +
-                    ", quaternionD: " + gtX[6] +
-                    ", angularSpeedX: " + gtX[13] +
-                    ", angularSpeedY: " + gtX[14] +
-                    ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
-
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
-                    randomizer.nextDouble());
-
-            Quaternion filteredQuaternion = 
-                    estimatorWithCalibration.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
-
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
-
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
-
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(), 
-                    estimatorWithCalibration.getStatePositionY(), 
-                    estimatorWithCalibration.getStatePositionZ());
-
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
-
-            InhomogeneousPoint3D groundTruthPos = 
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
-
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved && positionImproved) {
-                numSuccess++;
-            }
-        }
-        
-        assertTrue(numSuccess >= REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
-    }
-
-    @Test
-    public void testPredictionConstantAccelerationWithNoiseAndCalibration() {
-        int numSuccess = 0;
-        for (int t = 0; t < 5*REPEAT_TIMES; t++) {
-            UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
-            GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
-
-            float accelerationOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-        
-            float angularOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            
-            AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
-                    createFinishedCalibrator(accelerationOffsetX, 
-                    accelerationOffsetY, accelerationOffsetZ, 
-                    angularOffsetX, angularOffsetY, angularOffsetZ, 
-                    noiseRandomizer);
-            AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration = 
-                    calibrator.getCalibrationData();
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = randomizer.nextFloat();
-            float gtAccelerationY = randomizer.nextFloat();
-            float gtAccelerationZ = randomizer.nextFloat();
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
-
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
-                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration = 
-                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
-            estimatorWithCalibration.setCalibrationData(calibration);
-            
-            GaussianRandomizer accelerationRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
-
-            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            float accelerationWithOffsetX, accelerationWithOffsetY, 
-                    accelerationWithOffsetZ;
-            float angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                    angularSpeedWithOffsetZ;                        
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastAccelerationWithOffsetX = 0.0, 
-                    lastAccelerationWithOffsetY = 0.0, 
-                    lastAccelerationWithOffsetZ = 0.0;
-            double lastAngularSpeedWithOffsetX = 0.0, 
-                    lastAngularSpeedWithOffsetY = 0.0, 
-                    lastAngularSpeedWithOffsetZ = 0.0;    
-            double deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-                    deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-                    deltaAngularSpeedWithOffsetZ;
-            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];  
-            double[] uWithOffset = new double[13];
-            x[0] = gtPositionX;
-            x[1] = gtPositionY;
-            x[2] = gtPositionZ;
-            x[3] = gtQuaternionA;
-            x[4] = gtQuaternionB;
-            x[5] = gtQuaternionC;
-            x[6] = gtQuaternionD;
-            x[7] = gtSpeedX;
-            x[8] = gtSpeedY;
-            x[9] = gtSpeedZ;
-            x[10] = gtAccelerationX;
-            x[11] = gtAccelerationY;
-            x[12] = gtAccelerationZ;
-            x[13] = gtAngularSpeedX;
-            x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
-            
-            double[] xWithOffset = Arrays.copyOf(x, x.length);
-
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
-                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
-                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-
-            String msg;
-            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
-                noiseAccelerationX = accelerationRandomizer.nextFloat();
-                noiseAccelerationY = accelerationRandomizer.nextFloat();
-                noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                accelerationX = gtAccelerationX + noiseAccelerationX;
-                accelerationY = gtAccelerationY + noiseAccelerationY;
-                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
-
-                accelerationWithOffsetX = accelerationX + accelerationOffsetX;
-                accelerationWithOffsetY = accelerationY + accelerationOffsetY;
-                accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-                
-                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
-                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
-                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
-                angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
-                angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
-                angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-                
-                noiseOrientationA = orientationRandomizer.nextDouble();
-                noiseOrientationB = orientationRandomizer.nextDouble();
-                noiseOrientationC = orientationRandomizer.nextDouble();
-                noiseOrientationD = orientationRandomizer.nextDouble();
-                
-                orientationA = gtQuaternionA + noiseOrientationA;
-                orientationB = gtQuaternionB + noiseOrientationB;
-                orientationC = gtQuaternionC + noiseOrientationC;
-                orientationD = gtQuaternionD + noiseOrientationD;
-                
-                orientation.setA(orientationA);
-                orientation.setB(orientationB);
-                orientation.setC(orientationC);
-                orientation.setD(orientationD);
-                
-                gtOrientation.setA(gtQuaternionA);
-                gtOrientation.setB(gtQuaternionB);
-                gtOrientation.setC(gtQuaternionC);
-                gtOrientation.setD(gtQuaternionD);
-                
-
-                estimator.updateAccelerometerSample(timestamp, 
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
-                estimator.updateOrientationSample(timestamp, orientation);
-
-                estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-                        accelerationWithOffsetX, accelerationWithOffsetY, 
-                        accelerationWithOffsetZ);
-                estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp, 
+                estimatorWithCalibration.updateOrientationSample(timestamp,
                         orientation);
-                
+
                 timestamp += DELTA_NANOS;
 
                 if (i == 0) {
@@ -5971,35 +5202,35 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-                    
+
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
                     lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
-                    
-                    
+
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -6008,61 +5239,61 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
                             lastAccelerationWithOffsetX;
                     deltaAccelerationWithOffsetY = accelerationWithOffsetY -
                             lastAccelerationWithOffsetY;
                     deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
                             lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
                             lastAngularSpeedWithOffsetX;
                     deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
                             lastAngularSpeedWithOffsetY;
                     deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
                             lastAngularSpeedWithOffsetZ;
-                    
-                    deltaGtAccelerationX = gtAccelerationX - 
+
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
 
-                    //we also take into account control signals with offset
+                    // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
                     uWithOffset[1] = deltaOrientation.getB();
                     uWithOffset[2] = deltaOrientation.getC();
@@ -6076,7 +5307,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
                     StatePredictor.predictWithRotationAdjustment(xWithOffset,
                             uWithOffset, DELTA_SECONDS, xWithOffset);
-                    
+
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
                     gtU[2] = deltaGtOrientation.getC();
@@ -6087,8 +5318,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -6097,30 +5328,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
 
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-                    
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() + 
+
+            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() +
                     ", positionY: " + estimatorWithCalibration.getStatePositionY() +
-                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() + 
-                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() + 
+                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() +
+                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() +
                     ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
                     ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
                     ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
@@ -6135,11 +5366,11 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
-            
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -6155,10 +5386,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -6174,10 +5405,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -6191,164 +5422,197 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = 
+            final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(), 
-                    estimatorWithCalibration.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimatorWithCalibration.getStatePositionX(),
+                    estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if (rotationImproved || positionImproved) {
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved && positionImproved) {
                 numSuccess++;
             }
         }
-        
-        assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
+
+        assertTrue(numSuccess >= 5 * REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
     }
-    
+
     @Test
-    public void testPredictionRotationOnlyWithNoiseAndCalibration() {
+    public void testPredictionConstantSpeedWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < 5 * REPEAT_TIMES; t++) {
-            UniformRandomizer offsetRandomizer = new UniformRandomizer(
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
                     new Random());
-            GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
-            
-            float accelerationOffsetX = offsetRandomizer.nextFloat(
+
+            final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetY = offsetRandomizer.nextFloat(
+            final float accelerationOffsetY = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetZ = offsetRandomizer.nextFloat(
+            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-        
-            float angularOffsetX = offsetRandomizer.nextFloat(
+
+            final float angularOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetY = offsetRandomizer.nextFloat(
+            final float angularOffsetY = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetZ = offsetRandomizer.nextFloat(
+            final float angularOffsetZ = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            
-            AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
-                    createFinishedCalibrator(accelerationOffsetX, 
-                    accelerationOffsetY, accelerationOffsetZ, 
-                    angularOffsetX, angularOffsetY, angularOffsetZ, 
-                    noiseRandomizer);
-            AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration = 
+
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
+                    createFinishedCalibrator(accelerationOffsetX,
+                            accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ,
+                            noiseRandomizer);
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration =
                     calibrator.getCalibrationData();
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = randomizer.nextFloat();
-            float gtAccelerationY = randomizer.nextFloat();
-            float gtAccelerationZ = randomizer.nextFloat();
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = randomizer.nextDouble();
+            final double gtSpeedY = randomizer.nextDouble();
+            final double gtSpeedZ = randomizer.nextDouble();
+            final float gtAccelerationX = 0.0f;
+            final float gtAccelerationY = 0.0f;
+            final float gtAccelerationZ = 0.0f;
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration = 
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
-            
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float accelerationWithOffsetX, accelerationWithOffsetY, 
-                    accelerationWithOffsetZ;
-            float angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                    angularSpeedWithOffsetZ;                                
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastAccelerationWithOffsetX = 0.0, 
-                    lastAccelerationWithOffsetY = 0.0, 
-                    lastAccelerationWithOffsetZ = 0.0;
-            double lastAngularSpeedWithOffsetX = 0.0, 
-                    lastAngularSpeedWithOffsetY = 0.0, 
-                    lastAngularSpeedWithOffsetZ = 0.0;
-            double deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-                    deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-                    deltaAngularSpeedWithOffsetZ;
-            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            float accelerationWithOffsetX;
+            float accelerationWithOffsetY;
+            float accelerationWithOffsetZ;
+            float angularSpeedWithOffsetX;
+            float angularSpeedWithOffsetY;
+            float angularSpeedWithOffsetZ;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastAccelerationWithOffsetX = 0.0;
+            double lastAccelerationWithOffsetY = 0.0;
+            double lastAccelerationWithOffsetZ = 0.0;
+            double lastAngularSpeedWithOffsetX = 0.0;
+            double lastAngularSpeedWithOffsetY = 0.0;
+            double lastAngularSpeedWithOffsetZ = 0.0;
+            double deltaAccelerationWithOffsetX;
+            double deltaAccelerationWithOffsetY;
+            double deltaAccelerationWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX;
+            double deltaAngularSpeedWithOffsetY;
+            double deltaAngularSpeedWithOffsetZ;
+
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];            
-            double[] uWithOffset = new double[13];
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            final double[] uWithOffset = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -6364,23 +5628,23 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
+            x[15] = gtAngularSpeedZ;
 
-            double[] xWithOffset = Arrays.copyOf(x, x.length);
-            
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            final double[] xWithOffset = Arrays.copyOf(x, x.length);
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -6397,7 +5661,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 accelerationWithOffsetX = accelerationX + accelerationOffsetX;
                 accelerationWithOffsetY = accelerationY + accelerationOffsetY;
                 accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-                
+
                 noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
@@ -6405,47 +5669,45 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
                 angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
                 angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
-                estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-                        accelerationWithOffsetX, accelerationWithOffsetY, 
+                estimatorWithCalibration.updateAccelerometerSample(timestamp,
+                        accelerationWithOffsetX, accelerationWithOffsetY,
                         accelerationWithOffsetZ);
-                estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
+                estimatorWithCalibration.updateGyroscopeSample(timestamp,
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
                         angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp, 
-                        orientation);
-                
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
+
                 timestamp += DELTA_NANOS;
 
                 if (i == 0) {
@@ -6455,34 +5717,34 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
 
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                    
-                    
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -6491,61 +5753,61 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
                             lastAccelerationWithOffsetX;
                     deltaAccelerationWithOffsetY = accelerationWithOffsetY -
                             lastAccelerationWithOffsetY;
                     deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
                             lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
                             lastAngularSpeedWithOffsetX;
                     deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
                             lastAngularSpeedWithOffsetY;
                     deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
                             lastAngularSpeedWithOffsetZ;
-                    
-                    deltaGtAccelerationX = gtAccelerationX - 
+
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
 
-                    //we also take into account control signals with offset
+                    // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
                     uWithOffset[1] = deltaOrientation.getB();
                     uWithOffset[2] = deltaOrientation.getC();
@@ -6557,9 +5819,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset, 
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
                             uWithOffset, DELTA_SECONDS, xWithOffset);
-                    
+
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
                     gtU[2] = deltaGtOrientation.getC();
@@ -6570,8 +5832,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -6580,30 +5842,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
 
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-                    
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() + 
+
+            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() +
                     ", positionY: " + estimatorWithCalibration.getStatePositionY() +
-                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() + 
-                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() + 
+                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() +
+                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() +
                     ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
                     ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
                     ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
@@ -6618,11 +5880,11 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
-            
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -6638,10 +5900,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -6657,10 +5919,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -6674,52 +5936,1082 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = 
+            final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(), 
-                    estimatorWithCalibration.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimatorWithCalibration.getStatePositionX(),
+                    estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved || positionImproved) {
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved && positionImproved) {
                 numSuccess++;
             }
         }
-        
+
+        assertTrue(numSuccess >= REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
+    }
+
+    @Test
+    public void testPredictionConstantAccelerationWithNoiseAndCalibration() {
+        int numSuccess = 0;
+        for (int t = 0; t < 5 * REPEAT_TIMES; t++) {
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
+                    new Random());
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+
+            final float accelerationOffsetX = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float accelerationOffsetY = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final float angularOffsetX = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetY = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetZ = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
+                    createFinishedCalibrator(accelerationOffsetX,
+                            accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ,
+                            noiseRandomizer);
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration =
+                    calibrator.getCalibrationData();
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = randomizer.nextFloat();
+            final float gtAccelerationY = randomizer.nextFloat();
+            final float gtAccelerationZ = randomizer.nextFloat();
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration =
+                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+            estimatorWithCalibration.setCalibrationData(calibration);
+
+            final GaussianRandomizer accelerationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer angularSpeedRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer orientationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+
+            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            float accelerationWithOffsetX;
+            float accelerationWithOffsetY;
+            float accelerationWithOffsetZ;
+            float angularSpeedWithOffsetX;
+            float angularSpeedWithOffsetY;
+            float angularSpeedWithOffsetZ;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastAccelerationWithOffsetX = 0.0;
+            double lastAccelerationWithOffsetY = 0.0;
+            double lastAccelerationWithOffsetZ = 0.0;
+            double lastAngularSpeedWithOffsetX = 0.0;
+            double lastAngularSpeedWithOffsetY = 0.0;
+            double lastAngularSpeedWithOffsetZ = 0.0;
+            double deltaAccelerationWithOffsetX;
+            double deltaAccelerationWithOffsetY;
+            double deltaAccelerationWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX;
+            double deltaAngularSpeedWithOffsetY;
+            double deltaAngularSpeedWithOffsetZ;
+
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            final double[] uWithOffset = new double[13];
+            x[0] = gtPositionX;
+            x[1] = gtPositionY;
+            x[2] = gtPositionZ;
+            x[3] = gtQuaternionA;
+            x[4] = gtQuaternionB;
+            x[5] = gtQuaternionC;
+            x[6] = gtQuaternionD;
+            x[7] = gtSpeedX;
+            x[8] = gtSpeedY;
+            x[9] = gtSpeedZ;
+            x[10] = gtAccelerationX;
+            x[11] = gtAccelerationY;
+            x[12] = gtAccelerationZ;
+            x[13] = gtAngularSpeedX;
+            x[14] = gtAngularSpeedY;
+            x[15] = gtAngularSpeedZ;
+
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            final double[] xWithOffset = Arrays.copyOf(x, x.length);
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
+                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
+                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+
+            String msg;
+            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
+                noiseAccelerationX = accelerationRandomizer.nextFloat();
+                noiseAccelerationY = accelerationRandomizer.nextFloat();
+                noiseAccelerationZ = accelerationRandomizer.nextFloat();
+
+                accelerationX = gtAccelerationX + noiseAccelerationX;
+                accelerationY = gtAccelerationY + noiseAccelerationY;
+                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
+
+                accelerationWithOffsetX = accelerationX + accelerationOffsetX;
+                accelerationWithOffsetY = accelerationY + accelerationOffsetY;
+                accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
+
+                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
+
+                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
+                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
+                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
+
+                angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
+                angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
+                angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
+
+                noiseOrientationA = orientationRandomizer.nextDouble();
+                noiseOrientationB = orientationRandomizer.nextDouble();
+                noiseOrientationC = orientationRandomizer.nextDouble();
+                noiseOrientationD = orientationRandomizer.nextDouble();
+
+                orientationA = gtQuaternionA + noiseOrientationA;
+                orientationB = gtQuaternionB + noiseOrientationB;
+                orientationC = gtQuaternionC + noiseOrientationC;
+                orientationD = gtQuaternionD + noiseOrientationD;
+
+                orientation.setA(orientationA);
+                orientation.setB(orientationB);
+                orientation.setC(orientationC);
+                orientation.setD(orientationD);
+
+                gtOrientation.setA(gtQuaternionA);
+                gtOrientation.setB(gtQuaternionB);
+                gtOrientation.setC(gtQuaternionC);
+                gtOrientation.setD(gtQuaternionD);
+
+                estimator.updateAccelerometerSample(timestamp,
+                        accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp,
+                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateOrientationSample(timestamp, orientation);
+
+                estimatorWithCalibration.updateAccelerometerSample(timestamp,
+                        accelerationWithOffsetX, accelerationWithOffsetY,
+                        accelerationWithOffsetZ);
+                estimatorWithCalibration.updateGyroscopeSample(timestamp,
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
+                        angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp,
+                        orientation);
+
+                timestamp += DELTA_NANOS;
+
+                if (i == 0) {
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastOrientation.setA(orientationA);
+                    lastOrientation.setB(orientationB);
+                    lastOrientation.setC(orientationC);
+                    lastOrientation.setD(orientationD);
+
+                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
+                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
+                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
+
+                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
+                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+
+                    lastGtOrientation.setA(gtQuaternionA);
+                    lastGtOrientation.setB(gtQuaternionB);
+                    lastGtOrientation.setC(gtQuaternionC);
+                    lastGtOrientation.setD(gtQuaternionD);
+
+                } else {
+                    deltaAccelerationX = accelerationX - lastAccelerationX;
+                    deltaAccelerationY = accelerationY - lastAccelerationY;
+                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
+
+                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
+                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
+                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
+
+                    lastOrientation.inverse(deltaOrientation);
+                    deltaOrientation.combine(orientation);
+                    deltaOrientation.normalize();
+
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
+                            lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
+                            lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
+                            lastAccelerationWithOffsetZ;
+
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
+                            lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
+                            lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
+                            lastAngularSpeedWithOffsetZ;
+
+                    deltaGtAccelerationX = gtAccelerationX -
+                            lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY -
+                            lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ -
+                            lastGtAccelerationZ;
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
+                            lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY -
+                            lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
+                            lastGtAngularSpeedZ;
+
+                    lastGtOrientation.inverse(deltaGtOrientation);
+                    deltaGtOrientation.combine(gtOrientation);
+                    deltaGtOrientation.normalize();
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
+                    u[0] = deltaOrientation.getA();
+                    u[1] = deltaOrientation.getB();
+                    u[2] = deltaOrientation.getC();
+                    u[3] = deltaOrientation.getD();
+                    u[4] = u[5] = u[6] = 0.0;
+                    u[7] = deltaAccelerationX;
+                    u[8] = deltaAccelerationY;
+                    u[9] = deltaAccelerationZ;
+                    u[10] = deltaAngularSpeedX;
+                    u[11] = deltaAngularSpeedY;
+                    u[12] = deltaAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(x, u,
+                            DELTA_SECONDS, x);
+
+                    // we also take into account control signals with offset
+                    uWithOffset[0] = deltaOrientation.getA();
+                    uWithOffset[1] = deltaOrientation.getB();
+                    uWithOffset[2] = deltaOrientation.getC();
+                    uWithOffset[3] = deltaOrientation.getD();
+                    uWithOffset[4] = uWithOffset[5] = uWithOffset[6] = 0.0;
+                    uWithOffset[7] = deltaAccelerationWithOffsetX;
+                    uWithOffset[8] = deltaAccelerationWithOffsetY;
+                    uWithOffset[9] = deltaAccelerationWithOffsetZ;
+                    uWithOffset[10] = deltaAngularSpeedWithOffsetX;
+                    uWithOffset[11] = deltaAngularSpeedWithOffsetY;
+                    uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
+                            uWithOffset, DELTA_SECONDS, xWithOffset);
+
+                    gtU[0] = deltaGtOrientation.getA();
+                    gtU[1] = deltaGtOrientation.getB();
+                    gtU[2] = deltaGtOrientation.getC();
+                    gtU[3] = deltaGtOrientation.getD();
+                    gtU[4] = gtU[5] = gtU[6] = 0.0;
+                    gtU[7] = deltaGtAccelerationX;
+                    gtU[8] = deltaGtAccelerationY;
+                    gtU[9] = deltaGtAccelerationZ;
+                    gtU[10] = deltaGtAngularSpeedX;
+                    gtU[11] = deltaGtAngularSpeedY;
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
+                            DELTA_SECONDS, gtX);
+
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
+                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
+                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
+
+                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
+                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
+            }
+
+            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() +
+                    ", positionY: " + estimatorWithCalibration.getStatePositionY() +
+                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() +
+                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() +
+                    ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
+                    ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
+                    ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
+                    ", accelerationY: " + estimatorWithCalibration.getStateAccelerationY() +
+                    ", accelerationZ: " + estimatorWithCalibration.getStateAccelerationZ() +
+                    ", quaternionA: " + estimatorWithCalibration.getStateQuaternionA() +
+                    ", quaternionB: " + estimatorWithCalibration.getStateQuaternionB() +
+                    ", quaternionC: " + estimatorWithCalibration.getStateQuaternionC() +
+                    ", quaternionD: " + estimatorWithCalibration.getStateQuaternionD() +
+                    ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
+                    ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
+                    ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
+                    ", positionY: " + estimator.getStatePositionY() +
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
+                    ", velocityY: " + estimator.getStateVelocityY() +
+                    ", velocityZ: " + estimator.getStateVelocityZ() +
+                    ", accelerationX: " + estimator.getStateAccelerationX() +
+                    ", accelerationY: " + estimator.getStateAccelerationY() +
+                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
+                    ", quaternionA: " + estimator.getStateQuaternionA() +
+                    ", quaternionB: " + estimator.getStateQuaternionB() +
+                    ", quaternionC: " + estimator.getStateQuaternionC() +
+                    ", quaternionD: " + estimator.getStateQuaternionD() +
+                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
+                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
+                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Prediction - positionX: " + x[0] +
+                    ", positionY: " + x[1] +
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
+                    ", velocityY: " + x[8] +
+                    ", velocityZ: " + x[9] +
+                    ", accelerationX: " + x[10] +
+                    ", accelerationY: " + x[11] +
+                    ", accelerationZ: " + x[12] +
+                    ", quaternionA: " + x[3] +
+                    ", quaternionB: " + x[4] +
+                    ", quaternionC: " + x[5] +
+                    ", quaternionD: " + x[6] +
+                    ", angularSpeedX: " + x[13] +
+                    ", angularSpeedY: " + x[14] +
+                    ", angularSpeedZ: " + x[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Ground truth - positionX: " + gtX[0] +
+                    ", positionY: " + gtX[1] +
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
+                    ", velocityY: " + gtX[8] +
+                    ", velocityZ: " + gtX[9] +
+                    ", accelerationX: " + gtX[10] +
+                    ", accelerationY: " + gtX[11] +
+                    ", accelerationZ: " + gtX[12] +
+                    ", quaternionA: " + gtX[3] +
+                    ", quaternionB: " + gtX[4] +
+                    ", quaternionC: " + gtX[5] +
+                    ", quaternionD: " + gtX[6] +
+                    ", angularSpeedX: " + gtX[13] +
+                    ", angularSpeedY: " + gtX[14] +
+                    ", angularSpeedZ: " + gtX[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
+                    randomizer.nextDouble());
+
+            final Quaternion filteredQuaternion =
+                    estimatorWithCalibration.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
+                    x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(
+                    gtX[3], gtX[4], gtX[5], gtX[6]);
+
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+                    randomPoint);
+
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
+
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimatorWithCalibration.getStatePositionX(),
+                    estimatorWithCalibration.getStatePositionY(),
+                    estimatorWithCalibration.getStatePositionZ());
+
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+                    x[0], x[1], x[2]);
+
+            final InhomogeneousPoint3D groundTruthPos =
+                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
+                numSuccess++;
+            }
+        }
+
+        assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
+    }
+
+    @Test
+    public void testPredictionRotationOnlyWithNoiseAndCalibration() {
+        int numSuccess = 0;
+        for (int t = 0; t < 5 * REPEAT_TIMES; t++) {
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
+                    new Random());
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+
+            final float accelerationOffsetX = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float accelerationOffsetY = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final float angularOffsetX = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetY = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetZ = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
+                    createFinishedCalibrator(accelerationOffsetX,
+                            accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ,
+                            noiseRandomizer);
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration =
+                    calibrator.getCalibrationData();
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = randomizer.nextFloat();
+            final float gtAccelerationY = randomizer.nextFloat();
+            final float gtAccelerationZ = randomizer.nextFloat();
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f;
+            final float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration =
+                    new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+            estimatorWithCalibration.setCalibrationData(calibration);
+
+            final GaussianRandomizer accelerationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer angularSpeedRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+            final GaussianRandomizer orientationRandomizer =
+                    new GaussianRandomizer(new Random(), 0.0,
+                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+
+            long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float accelerationWithOffsetX;
+            float accelerationWithOffsetY;
+            float accelerationWithOffsetZ;
+            float angularSpeedWithOffsetX;
+            float angularSpeedWithOffsetY;
+            float angularSpeedWithOffsetZ;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastAccelerationWithOffsetX = 0.0;
+            double lastAccelerationWithOffsetY = 0.0;
+            double lastAccelerationWithOffsetZ = 0.0;
+            double lastAngularSpeedWithOffsetX = 0.0;
+            double lastAngularSpeedWithOffsetY = 0.0;
+            double lastAngularSpeedWithOffsetZ = 0.0;
+            double deltaAccelerationWithOffsetX;
+            double deltaAccelerationWithOffsetY;
+            double deltaAccelerationWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX;
+            double deltaAngularSpeedWithOffsetY;
+            double deltaAngularSpeedWithOffsetZ;
+
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
+                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            final double[] uWithOffset = new double[13];
+            x[0] = gtPositionX;
+            x[1] = gtPositionY;
+            x[2] = gtPositionZ;
+            x[3] = gtQuaternionA;
+            x[4] = gtQuaternionB;
+            x[5] = gtQuaternionC;
+            x[6] = gtQuaternionD;
+            x[7] = gtSpeedX;
+            x[8] = gtSpeedY;
+            x[9] = gtSpeedZ;
+            x[10] = gtAccelerationX;
+            x[11] = gtAccelerationY;
+            x[12] = gtAccelerationZ;
+            x[13] = gtAngularSpeedX;
+            x[14] = gtAngularSpeedY;
+            x[15] = gtAngularSpeedZ;
+
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            final double[] xWithOffset = Arrays.copyOf(x, x.length);
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
+                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
+                    gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
+                    gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
+
+            String msg;
+            for (int i = 0; i < N_PREDICTION_SAMPLES; i++) {
+                noiseAccelerationX = accelerationRandomizer.nextFloat();
+                noiseAccelerationY = accelerationRandomizer.nextFloat();
+                noiseAccelerationZ = accelerationRandomizer.nextFloat();
+
+                accelerationX = gtAccelerationX + noiseAccelerationX;
+                accelerationY = gtAccelerationY + noiseAccelerationY;
+                accelerationZ = gtAccelerationZ + noiseAccelerationZ;
+
+                accelerationWithOffsetX = accelerationX + accelerationOffsetX;
+                accelerationWithOffsetY = accelerationY + accelerationOffsetY;
+                accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
+
+                noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
+
+                angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
+                angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
+                angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
+
+                angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
+                angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
+                angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
+
+                noiseOrientationA = orientationRandomizer.nextDouble();
+                noiseOrientationB = orientationRandomizer.nextDouble();
+                noiseOrientationC = orientationRandomizer.nextDouble();
+                noiseOrientationD = orientationRandomizer.nextDouble();
+
+                orientationA = gtQuaternionA + noiseOrientationA;
+                orientationB = gtQuaternionB + noiseOrientationB;
+                orientationC = gtQuaternionC + noiseOrientationC;
+                orientationD = gtQuaternionD + noiseOrientationD;
+
+                orientation.setA(orientationA);
+                orientation.setB(orientationB);
+                orientation.setC(orientationC);
+                orientation.setD(orientationD);
+
+                gtOrientation.setA(gtQuaternionA);
+                gtOrientation.setB(gtQuaternionB);
+                gtOrientation.setC(gtQuaternionC);
+                gtOrientation.setD(gtQuaternionD);
+
+                estimator.updateAccelerometerSample(timestamp,
+                        accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp,
+                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateOrientationSample(timestamp, orientation);
+
+                estimatorWithCalibration.updateAccelerometerSample(timestamp,
+                        accelerationWithOffsetX, accelerationWithOffsetY,
+                        accelerationWithOffsetZ);
+                estimatorWithCalibration.updateGyroscopeSample(timestamp,
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
+                        angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp,
+                        orientation);
+
+                timestamp += DELTA_NANOS;
+
+                if (i == 0) {
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastOrientation.setA(orientationA);
+                    lastOrientation.setB(orientationB);
+                    lastOrientation.setC(orientationC);
+                    lastOrientation.setD(orientationD);
+
+                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
+                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
+                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
+
+                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
+                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+
+                    lastGtOrientation.setA(gtQuaternionA);
+                    lastGtOrientation.setB(gtQuaternionB);
+                    lastGtOrientation.setC(gtQuaternionC);
+                    lastGtOrientation.setD(gtQuaternionD);
+
+                } else {
+                    deltaAccelerationX = accelerationX - lastAccelerationX;
+                    deltaAccelerationY = accelerationY - lastAccelerationY;
+                    deltaAccelerationZ = accelerationZ - lastAccelerationZ;
+
+                    deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
+                    deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
+                    deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
+
+                    lastOrientation.inverse(deltaOrientation);
+                    deltaOrientation.combine(orientation);
+                    deltaOrientation.normalize();
+
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
+                            lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
+                            lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
+                            lastAccelerationWithOffsetZ;
+
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
+                            lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
+                            lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
+                            lastAngularSpeedWithOffsetZ;
+
+                    deltaGtAccelerationX = gtAccelerationX -
+                            lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY -
+                            lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ -
+                            lastGtAccelerationZ;
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
+                            lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY -
+                            lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
+                            lastGtAngularSpeedZ;
+
+                    lastGtOrientation.inverse(deltaGtOrientation);
+                    deltaGtOrientation.combine(gtOrientation);
+                    deltaGtOrientation.normalize();
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
+                    u[0] = deltaOrientation.getA();
+                    u[1] = deltaOrientation.getB();
+                    u[2] = deltaOrientation.getC();
+                    u[3] = deltaOrientation.getD();
+                    u[4] = u[5] = u[6] = 0.0;
+                    u[7] = deltaAccelerationX;
+                    u[8] = deltaAccelerationY;
+                    u[9] = deltaAccelerationZ;
+                    u[10] = deltaAngularSpeedX;
+                    u[11] = deltaAngularSpeedY;
+                    u[12] = deltaAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(x, u,
+                            DELTA_SECONDS, x);
+
+                    // we also take into account control signals with offset
+                    uWithOffset[0] = deltaOrientation.getA();
+                    uWithOffset[1] = deltaOrientation.getB();
+                    uWithOffset[2] = deltaOrientation.getC();
+                    uWithOffset[3] = deltaOrientation.getD();
+                    uWithOffset[4] = uWithOffset[5] = uWithOffset[6] = 0.0;
+                    uWithOffset[7] = deltaAccelerationWithOffsetX;
+                    uWithOffset[8] = deltaAccelerationWithOffsetY;
+                    uWithOffset[9] = deltaAccelerationWithOffsetZ;
+                    uWithOffset[10] = deltaAngularSpeedWithOffsetX;
+                    uWithOffset[11] = deltaAngularSpeedWithOffsetY;
+                    uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
+                            uWithOffset, DELTA_SECONDS, xWithOffset);
+
+                    gtU[0] = deltaGtOrientation.getA();
+                    gtU[1] = deltaGtOrientation.getB();
+                    gtU[2] = deltaGtOrientation.getC();
+                    gtU[3] = deltaGtOrientation.getD();
+                    gtU[4] = gtU[5] = gtU[6] = 0.0;
+                    gtU[7] = deltaGtAccelerationX;
+                    gtU[8] = deltaGtAccelerationY;
+                    gtU[9] = deltaGtAccelerationZ;
+                    gtU[10] = deltaGtAngularSpeedX;
+                    gtU[11] = deltaGtAngularSpeedY;
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
+                            DELTA_SECONDS, gtX);
+
+                    lastAccelerationX = accelerationX;
+                    lastAccelerationY = accelerationY;
+                    lastAccelerationZ = accelerationZ;
+
+                    lastAngularSpeedX = angularSpeedX;
+                    lastAngularSpeedY = angularSpeedY;
+                    lastAngularSpeedZ = angularSpeedZ;
+
+                    lastAccelerationWithOffsetX = accelerationWithOffsetX;
+                    lastAccelerationWithOffsetY = accelerationWithOffsetY;
+                    lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
+
+                    lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
+                    lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
+                    lastGtAccelerationX = gtAccelerationX;
+                    lastGtAccelerationY = gtAccelerationY;
+                    lastGtAccelerationZ = gtAccelerationZ;
+
+                    lastGtAngularSpeedX = gtAngularSpeedX;
+                    lastGtAngularSpeedY = gtAngularSpeedY;
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
+            }
+
+            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() +
+                    ", positionY: " + estimatorWithCalibration.getStatePositionY() +
+                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() +
+                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() +
+                    ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
+                    ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
+                    ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
+                    ", accelerationY: " + estimatorWithCalibration.getStateAccelerationY() +
+                    ", accelerationZ: " + estimatorWithCalibration.getStateAccelerationZ() +
+                    ", quaternionA: " + estimatorWithCalibration.getStateQuaternionA() +
+                    ", quaternionB: " + estimatorWithCalibration.getStateQuaternionB() +
+                    ", quaternionC: " + estimatorWithCalibration.getStateQuaternionC() +
+                    ", quaternionD: " + estimatorWithCalibration.getStateQuaternionD() +
+                    ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
+                    ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
+                    ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
+                    ", positionY: " + estimator.getStatePositionY() +
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
+                    ", velocityY: " + estimator.getStateVelocityY() +
+                    ", velocityZ: " + estimator.getStateVelocityZ() +
+                    ", accelerationX: " + estimator.getStateAccelerationX() +
+                    ", accelerationY: " + estimator.getStateAccelerationY() +
+                    ", accelerationZ: " + estimator.getStateAccelerationZ() +
+                    ", quaternionA: " + estimator.getStateQuaternionA() +
+                    ", quaternionB: " + estimator.getStateQuaternionB() +
+                    ", quaternionC: " + estimator.getStateQuaternionC() +
+                    ", quaternionD: " + estimator.getStateQuaternionD() +
+                    ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
+                    ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
+                    ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Prediction - positionX: " + x[0] +
+                    ", positionY: " + x[1] +
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
+                    ", velocityY: " + x[8] +
+                    ", velocityZ: " + x[9] +
+                    ", accelerationX: " + x[10] +
+                    ", accelerationY: " + x[11] +
+                    ", accelerationZ: " + x[12] +
+                    ", quaternionA: " + x[3] +
+                    ", quaternionB: " + x[4] +
+                    ", quaternionC: " + x[5] +
+                    ", quaternionD: " + x[6] +
+                    ", angularSpeedX: " + x[13] +
+                    ", angularSpeedY: " + x[14] +
+                    ", angularSpeedZ: " + x[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            msg = "Ground truth - positionX: " + gtX[0] +
+                    ", positionY: " + gtX[1] +
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
+                    ", velocityY: " + gtX[8] +
+                    ", velocityZ: " + gtX[9] +
+                    ", accelerationX: " + gtX[10] +
+                    ", accelerationY: " + gtX[11] +
+                    ", accelerationZ: " + gtX[12] +
+                    ", quaternionA: " + gtX[3] +
+                    ", quaternionB: " + gtX[4] +
+                    ", quaternionC: " + gtX[5] +
+                    ", quaternionD: " + gtX[6] +
+                    ", angularSpeedX: " + gtX[13] +
+                    ", angularSpeedY: " + gtX[14] +
+                    ", angularSpeedZ: " + gtX[15];
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
+                    Level.INFO, msg);
+
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
+                    randomizer.nextDouble());
+
+            final Quaternion filteredQuaternion =
+                    estimatorWithCalibration.getStateQuaternion();
+            final Quaternion predictedQuaternion = new Quaternion(
+                    x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(
+                    gtX[3], gtX[4], gtX[5], gtX[6]);
+
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+                    randomPoint);
+
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
+
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimatorWithCalibration.getStatePositionX(),
+                    estimatorWithCalibration.getStatePositionY(),
+                    estimatorWithCalibration.getStatePositionZ());
+
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+                    x[0], x[1], x[2]);
+
+            final InhomogeneousPoint3D groundTruthPos =
+                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
+                numSuccess++;
+            }
+        }
+
         assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
     }
 
@@ -6727,129 +7019,160 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
     public void testPredictionVariableAccelerationWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer offsetRandomizer = new UniformRandomizer(
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
                     new Random());
-            GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
-            
-            float accelerationOffsetX = offsetRandomizer.nextFloat(
+
+            final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetY = offsetRandomizer.nextFloat(
+            final float accelerationOffsetY = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-        
-            float angularOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetZ = offsetRandomizer.nextFloat(
+            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
-            AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
-                    createFinishedCalibrator(accelerationOffsetX, 
-                    accelerationOffsetY, accelerationOffsetZ, 
-                    angularOffsetX, angularOffsetY, angularOffsetZ, 
-                    noiseRandomizer);
-            AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration = 
+            final float angularOffsetX = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetY = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetZ = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
+                    createFinishedCalibrator(accelerationOffsetX,
+                            accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ,
+                            noiseRandomizer);
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration =
                     calibrator.getCalibrationData();
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = randomizer.nextDouble();
-            double gtSpeedY = randomizer.nextDouble();
-            double gtSpeedZ = randomizer.nextDouble();
-            int period = N_PREDICTION_SAMPLES / 2;
-            int offsetAccelerationX = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            int offsetAccelerationY = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            int offsetAccelerationZ = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            float amplitudeAccelerationX = randomizer.nextFloat();
-            float amplitudeAccelerationY = randomizer.nextFloat();
-            float amplitudeAccelerationZ = randomizer.nextFloat();
-            float gtAccelerationX = (float)(amplitudeAccelerationX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAccelerationX)));
-            float gtAccelerationY = (float)(amplitudeAccelerationY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAccelerationY)));
-            float gtAccelerationZ = (float)(amplitudeAccelerationZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAccelerationZ)));
-            float gtAngularSpeedX = 0.0f, gtAngularSpeedY = 0.0f, 
-                    gtAngularSpeedZ = 0.0f;
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = randomizer.nextDouble();
+            final double gtSpeedY = randomizer.nextDouble();
+            final double gtSpeedZ = randomizer.nextDouble();
+            final int period = N_PREDICTION_SAMPLES / 2;
+            final int offsetAccelerationX = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationY = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationZ = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final float amplitudeAccelerationX = randomizer.nextFloat();
+            final float amplitudeAccelerationY = randomizer.nextFloat();
+            final float amplitudeAccelerationZ = randomizer.nextFloat();
+            float gtAccelerationX = (float) (amplitudeAccelerationX * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAccelerationX)));
+            float gtAccelerationY = (float) (amplitudeAccelerationY * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAccelerationY)));
+            float gtAccelerationZ = (float) (amplitudeAccelerationZ * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAccelerationZ)));
+            final float gtAngularSpeedX = 0.0f;
+            final float gtAngularSpeedY = 0.0f;
+            final float gtAngularSpeedZ = 0.0f;
+            float gtQuaternionA = 1.0f;
+            float gtQuaternionB = 0.0f;
+            float gtQuaternionC = 0.0f;
+            float gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration = 
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
-            
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            float accelerationWithOffsetX, accelerationWithOffsetY, 
-                    accelerationWithOffsetZ;
-            float angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                    angularSpeedWithOffsetZ;                                
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            double lastAccelerationWithOffsetX = 0.0, 
-                    lastAccelerationWithOffsetY = 0.0, 
-                    lastAccelerationWithOffsetZ = 0.0;
-            double lastAngularSpeedWithOffsetX = 0.0, 
-                    lastAngularSpeedWithOffsetY = 0.0, 
-                    lastAngularSpeedWithOffsetZ = 0.0;
-            double deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-                    deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-                    deltaAngularSpeedWithOffsetZ;
-            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            float accelerationWithOffsetX;
+            float accelerationWithOffsetY;
+            float accelerationWithOffsetZ;
+            float angularSpeedWithOffsetX;
+            float angularSpeedWithOffsetY;
+            float angularSpeedWithOffsetZ;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            double lastAccelerationWithOffsetX = 0.0;
+            double lastAccelerationWithOffsetY = 0.0;
+            double lastAccelerationWithOffsetZ = 0.0;
+            double lastAngularSpeedWithOffsetX = 0.0;
+            double lastAngularSpeedWithOffsetY = 0.0;
+            double lastAngularSpeedWithOffsetZ = 0.0;
+            double deltaAccelerationWithOffsetX;
+            double deltaAccelerationWithOffsetY;
+            double deltaAccelerationWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX;
+            double deltaAngularSpeedWithOffsetY;
+            double deltaAngularSpeedWithOffsetZ;
+
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];    
-            double[] uWithOffset = new double[13];
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            final double[] uWithOffset = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -6865,23 +7188,23 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
+            x[15] = gtAngularSpeedZ;
 
-            double[] xWithOffset = Arrays.copyOf(x, x.length);
-            
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            final double[] xWithOffset = Arrays.copyOf(x, x.length);
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -6891,16 +7214,16 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 noiseAccelerationY = accelerationRandomizer.nextFloat();
                 noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                gtAccelerationX = (float)(amplitudeAccelerationX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAccelerationX)));
-                gtAccelerationY = (float)(amplitudeAccelerationY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAccelerationY)));
-                gtAccelerationZ = (float)(amplitudeAccelerationZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAccelerationZ)));
-                
+                gtAccelerationX = (float) (amplitudeAccelerationX * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAccelerationX)));
+                gtAccelerationY = (float) (amplitudeAccelerationY * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAccelerationY)));
+                gtAccelerationZ = (float) (amplitudeAccelerationZ * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAccelerationZ)));
+
                 accelerationX = gtAccelerationX + noiseAccelerationX;
                 accelerationY = gtAccelerationY + noiseAccelerationY;
                 accelerationZ = gtAccelerationZ + noiseAccelerationZ;
@@ -6912,51 +7235,50 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 accelerationWithOffsetX = accelerationX + accelerationOffsetX;
                 accelerationWithOffsetY = accelerationY + accelerationOffsetY;
                 accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-                
+
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
                 angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
                 angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
-                estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-                        accelerationWithOffsetX, accelerationWithOffsetY, 
+                estimatorWithCalibration.updateAccelerometerSample(timestamp,
+                        accelerationWithOffsetX, accelerationWithOffsetY,
                         accelerationWithOffsetZ);
-                estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
+                estimatorWithCalibration.updateGyroscopeSample(timestamp,
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
                         angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp, 
+                estimatorWithCalibration.updateOrientationSample(timestamp,
                         orientation);
-                
+
                 timestamp += DELTA_NANOS;
 
                 if (i == 0) {
@@ -6966,35 +7288,34 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
-                    
+
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
                     lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
-                    
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
-                    
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -7003,61 +7324,61 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
                             lastAccelerationWithOffsetX;
                     deltaAccelerationWithOffsetY = accelerationWithOffsetY -
                             lastAccelerationWithOffsetY;
                     deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
                             lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
                             lastAngularSpeedWithOffsetX;
                     deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
                             lastAngularSpeedWithOffsetY;
                     deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
                             lastAngularSpeedWithOffsetZ;
-                    
-                    deltaGtAccelerationX = gtAccelerationX - 
+
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
-                    
-                    //we also take into account control signals with offset
+
+                    // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
                     uWithOffset[1] = deltaOrientation.getB();
                     uWithOffset[2] = deltaOrientation.getC();
@@ -7069,7 +7390,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset, 
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
                             uWithOffset, DELTA_SECONDS, xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
@@ -7082,8 +7403,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -7092,30 +7413,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
 
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-                    
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() + 
+
+            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() +
                     ", positionY: " + estimatorWithCalibration.getStatePositionY() +
-                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() + 
-                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() + 
+                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() +
+                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() +
                     ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
                     ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
                     ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
@@ -7130,11 +7451,11 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
-            
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -7150,10 +7471,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -7169,10 +7490,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -7186,48 +7507,48 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = 
+            final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(), 
-                    estimatorWithCalibration.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimatorWithCalibration.getStatePositionX(),
+                    estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved || positionImproved) {
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
                 numSuccess++;
                 break;
             }
@@ -7235,132 +7556,164 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
         assertTrue(numSuccess > 0);
     }
-    
+
     @Test
     public void testPredictionVariableAngularSpeedWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            UniformRandomizer offsetRandomizer = new UniformRandomizer(
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
                     new Random());
-            GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
-            float accelerationOffsetX = offsetRandomizer.nextFloat(
+            final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetY = offsetRandomizer.nextFloat(
+            final float accelerationOffsetY = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float accelerationOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-        
-            float angularOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            float angularOffsetZ = offsetRandomizer.nextFloat(
+            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
-            AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
-                    createFinishedCalibrator(accelerationOffsetX, 
-                    accelerationOffsetY, accelerationOffsetZ, 
-                    angularOffsetX, angularOffsetY, angularOffsetZ, 
-                    noiseRandomizer);
-            AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration = 
+            final float angularOffsetX = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetY = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final float angularOffsetZ = offsetRandomizer.nextFloat(
+                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
+                    createFinishedCalibrator(accelerationOffsetX,
+                            accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ,
+                            noiseRandomizer);
+            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibration =
                     calibrator.getCalibrationData();
-            
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double gtPositionX = 0.0, gtPositionY = 0.0, gtPositionZ = 0.0;
-            double gtSpeedX = 0.0, gtSpeedY = 0.0, gtSpeedZ = 0.0;
-            float gtAccelerationX = 0.0f, gtAccelerationY = 0.0f,
-                    gtAccelerationZ = 0.0f;
-            int period = N_PREDICTION_SAMPLES / 2;
-            int offsetAngularSpeedX = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            int offsetAngularSpeedY = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            int offsetAngularSpeedZ = randomizer.nextInt(0, 
-                    N_PREDICTION_SAMPLES);
-            float amplitudeAngularSpeedX = randomizer.nextFloat();
-            float amplitudeAngularSpeedY = randomizer.nextFloat();
-            float amplitudeAngularSpeedZ = randomizer.nextFloat();
-            float gtAngularSpeedX = (float)(amplitudeAngularSpeedX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAngularSpeedX)));
-            float gtAngularSpeedY = (float)(amplitudeAngularSpeedY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAngularSpeedY)));
-            float gtAngularSpeedZ = (float)(amplitudeAngularSpeedZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(0 - offsetAngularSpeedZ)));
-            float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f, 
-                    gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
+            final double gtPositionX = 0.0;
+            final double gtPositionY = 0.0;
+            final double gtPositionZ = 0.0;
+            final double gtSpeedX = 0.0;
+            final double gtSpeedY = 0.0;
+            final double gtSpeedZ = 0.0;
+            final float gtAccelerationX = 0.0f;
+            final float gtAccelerationY = 0.0f;
+            final float gtAccelerationZ = 0.0f;
+            final int period = N_PREDICTION_SAMPLES / 2;
+            final int offsetAngularSpeedX = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedY = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedZ = randomizer.nextInt(0,
+                    N_PREDICTION_SAMPLES);
+            final float amplitudeAngularSpeedX = randomizer.nextFloat();
+            final float amplitudeAngularSpeedY = randomizer.nextFloat();
+            final float amplitudeAngularSpeedZ = randomizer.nextFloat();
+            float gtAngularSpeedX = (float) (amplitudeAngularSpeedX * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAngularSpeedX)));
+            float gtAngularSpeedY = (float) (amplitudeAngularSpeedY * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAngularSpeedY)));
+            float gtAngularSpeedZ = (float) (amplitudeAngularSpeedZ * Math.sin(
+                    2.0 * Math.PI / (double) period *
+                            (double) (-offsetAngularSpeedZ)));
+            final float gtQuaternionA = 1.0f;
+            final float gtQuaternionB = 0.0f;
+            final float gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
+
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimator =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
 
-            AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration = 
+            final AbsoluteOrientationConstantVelocityModelSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
-            
-            GaussianRandomizer accelerationRandomizer = 
+
+            final GaussianRandomizer accelerationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ACCELERATION_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer angularSpeedRandomizer = 
+            final GaussianRandomizer angularSpeedRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
-            GaussianRandomizer orientationRandomizer =
+            final GaussianRandomizer orientationRandomizer =
                     new GaussianRandomizer(new Random(), 0.0,
                             ORIENTATION_NOISE_STANDARD_DEVIATION);
-                            
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            float accelerationX, accelerationY, accelerationZ;
-            float angularSpeedX, angularSpeedY, angularSpeedZ;
-            double orientationA, orientationB, orientationC, orientationD;
-            float accelerationWithOffsetX, accelerationWithOffsetY, 
-                    accelerationWithOffsetZ;
-            float angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
-                    angularSpeedWithOffsetZ;                                
-            double noiseOrientationA, noiseOrientationB, noiseOrientationC, 
-                    noiseOrientationD;
-            float noiseAccelerationX, noiseAccelerationY, noiseAccelerationZ;
-            float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
-            double lastAccelerationX = 0.0, lastAccelerationY = 0.0, 
-                    lastAccelerationZ = 0.0;
-            double lastAngularSpeedX = 0.0, lastAngularSpeedY = 0.0, 
-                    lastAngularSpeedZ = 0.0;
-            double deltaAccelerationX, deltaAccelerationY, deltaAccelerationZ;
-            double deltaAngularSpeedX, deltaAngularSpeedY, deltaAngularSpeedZ;
-            Quaternion lastOrientation = new Quaternion();
-            Quaternion deltaOrientation = new Quaternion();            
-            double lastAccelerationWithOffsetX = 0.0, 
-                    lastAccelerationWithOffsetY = 0.0, 
-                    lastAccelerationWithOffsetZ = 0.0;
-            double lastAngularSpeedWithOffsetX = 0.0, 
-                    lastAngularSpeedWithOffsetY = 0.0, 
-                    lastAngularSpeedWithOffsetZ = 0.0;
-            double deltaAccelerationWithOffsetX, deltaAccelerationWithOffsetY, 
-                    deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, 
-                    deltaAngularSpeedWithOffsetZ;
-            
-            double lastGtAccelerationX = 0.0, lastGtAccelerationY = 0.0,
-                    lastGtAccelerationZ = 0.0;
-            double lastGtAngularSpeedX = 0.0, lastGtAngularSpeedY = 0.0,
-                    lastGtAngularSpeedZ = 0.0;
-            double deltaGtAccelerationX, deltaGtAccelerationY, 
-                    deltaGtAccelerationZ;
-            double deltaGtAngularSpeedX, deltaGtAngularSpeedY, 
-                    deltaGtAngularSpeedZ;            
-            Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, 
+            float accelerationX;
+            float accelerationY;
+            float accelerationZ;
+            float angularSpeedX;
+            float angularSpeedY;
+            float angularSpeedZ;
+            double orientationA;
+            double orientationB;
+            double orientationC;
+            double orientationD;
+            float accelerationWithOffsetX;
+            float accelerationWithOffsetY;
+            float accelerationWithOffsetZ;
+            float angularSpeedWithOffsetX;
+            float angularSpeedWithOffsetY;
+            float angularSpeedWithOffsetZ;
+            double noiseOrientationA;
+            double noiseOrientationB;
+            double noiseOrientationC;
+            double noiseOrientationD;
+            float noiseAccelerationX;
+            float noiseAccelerationY;
+            float noiseAccelerationZ;
+            float noiseAngularSpeedX;
+            float noiseAngularSpeedY;
+            float noiseAngularSpeedZ;
+            double lastAccelerationX = 0.0;
+            double lastAccelerationY = 0.0;
+            double lastAccelerationZ = 0.0;
+            double lastAngularSpeedX = 0.0;
+            double lastAngularSpeedY = 0.0;
+            double lastAngularSpeedZ = 0.0;
+            double deltaAccelerationX;
+            double deltaAccelerationY;
+            double deltaAccelerationZ;
+            double deltaAngularSpeedX;
+            double deltaAngularSpeedY;
+            double deltaAngularSpeedZ;
+            final Quaternion lastOrientation = new Quaternion();
+            final Quaternion deltaOrientation = new Quaternion();
+            double lastAccelerationWithOffsetX = 0.0;
+            double lastAccelerationWithOffsetY = 0.0;
+            double lastAccelerationWithOffsetZ = 0.0;
+            double lastAngularSpeedWithOffsetX = 0.0;
+            double lastAngularSpeedWithOffsetY = 0.0;
+            double lastAngularSpeedWithOffsetZ = 0.0;
+            double deltaAccelerationWithOffsetX;
+            double deltaAccelerationWithOffsetY;
+            double deltaAccelerationWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX;
+            double deltaAngularSpeedWithOffsetY;
+            double deltaAngularSpeedWithOffsetZ;
+
+            double lastGtAccelerationX = 0.0;
+            double lastGtAccelerationY = 0.0;
+            double lastGtAccelerationZ = 0.0;
+            double lastGtAngularSpeedX = 0.0;
+            double lastGtAngularSpeedY = 0.0;
+            double lastGtAngularSpeedZ = 0.0;
+            double deltaGtAccelerationX;
+            double deltaGtAccelerationY;
+            double deltaGtAccelerationZ;
+            double deltaGtAngularSpeedX;
+            double deltaGtAngularSpeedY;
+            double deltaGtAngularSpeedZ;
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            Quaternion deltaGtOrientation = new Quaternion();
-            Quaternion orientation = new Quaternion();
-            Quaternion gtOrientation = new Quaternion(gtQuaternionA, 
+            final Quaternion deltaGtOrientation = new Quaternion();
+            final Quaternion orientation = new Quaternion();
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
                     gtQuaternionB, gtQuaternionC, gtQuaternionD);
-            double[] x = new double[16];
-            double[] u = new double[13];  
-            double[] uWithOffset = new double[13];
+            final double[] x = new double[16];
+            final double[] u = new double[13];
+            final double[] uWithOffset = new double[13];
             x[0] = gtPositionX;
             x[1] = gtPositionY;
             x[2] = gtPositionZ;
@@ -7376,23 +7729,23 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             x[12] = gtAccelerationZ;
             x[13] = gtAngularSpeedX;
             x[14] = gtAngularSpeedY;
-            x[15] = gtAngularSpeedZ;            
-        
-            //ground truth state and control
-            double[] gtX = Arrays.copyOf(x, x.length);
-            double[] gtU = new double[13];
-            
-            double[] xWithOffset = Arrays.copyOf(x, x.length);
+            x[15] = gtAngularSpeedZ;
 
-            //set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            // ground truth state and control
+            final double[] gtX = Arrays.copyOf(x, x.length);
+            final double[] gtU = new double[13];
+
+            final double[] xWithOffset = Arrays.copyOf(x, x.length);
+
+            // set initial state
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, 
-                    gtSpeedX, gtSpeedY, gtSpeedZ, 
-                    gtAccelerationX, gtAccelerationY, gtAccelerationZ, 
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
+                    gtSpeedX, gtSpeedY, gtSpeedZ,
+                    gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
 
@@ -7409,65 +7762,64 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 accelerationWithOffsetX = accelerationX + accelerationOffsetX;
                 accelerationWithOffsetY = accelerationY + accelerationOffsetY;
                 accelerationWithOffsetZ = accelerationZ + accelerationOffsetZ;
-                
+
                 noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
                 noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                gtAngularSpeedX = (float)(amplitudeAngularSpeedX * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAngularSpeedX)));
-                gtAngularSpeedY = (float)(amplitudeAngularSpeedY * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAngularSpeedY)));
-                gtAngularSpeedZ = (float)(amplitudeAngularSpeedZ * Math.sin(
-                    2.0 * Math.PI / (double)period * 
-                    (double)(i - offsetAngularSpeedZ)));
-                
+                gtAngularSpeedX = (float) (amplitudeAngularSpeedX * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAngularSpeedX)));
+                gtAngularSpeedY = (float) (amplitudeAngularSpeedY * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAngularSpeedY)));
+                gtAngularSpeedZ = (float) (amplitudeAngularSpeedZ * Math.sin(
+                        2.0 * Math.PI / (double) period *
+                                (double) (i - offsetAngularSpeedZ)));
+
                 angularSpeedX = gtAngularSpeedX + noiseAngularSpeedX;
                 angularSpeedY = gtAngularSpeedY + noiseAngularSpeedY;
                 angularSpeedZ = gtAngularSpeedZ + noiseAngularSpeedZ;
-                
+
                 angularSpeedWithOffsetX = angularSpeedX + angularOffsetX;
                 angularSpeedWithOffsetY = angularSpeedY + angularOffsetY;
                 angularSpeedWithOffsetZ = angularSpeedZ + angularOffsetZ;
-                
+
                 noiseOrientationA = orientationRandomizer.nextDouble();
                 noiseOrientationB = orientationRandomizer.nextDouble();
                 noiseOrientationC = orientationRandomizer.nextDouble();
                 noiseOrientationD = orientationRandomizer.nextDouble();
-                
+
                 orientationA = gtQuaternionA + noiseOrientationA;
                 orientationB = gtQuaternionB + noiseOrientationB;
                 orientationC = gtQuaternionC + noiseOrientationC;
                 orientationD = gtQuaternionD + noiseOrientationD;
-                
+
                 orientation.setA(orientationA);
                 orientation.setB(orientationB);
                 orientation.setC(orientationC);
                 orientation.setD(orientationD);
-                
+
                 gtOrientation.setA(gtQuaternionA);
                 gtOrientation.setB(gtQuaternionB);
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
-                
 
-                estimator.updateAccelerometerSample(timestamp, 
+                estimator.updateAccelerometerSample(timestamp,
                         accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp, 
+                estimator.updateGyroscopeSample(timestamp,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
-                estimatorWithCalibration.updateAccelerometerSample(timestamp, 
-                        accelerationWithOffsetX, accelerationWithOffsetY, 
+                estimatorWithCalibration.updateAccelerometerSample(timestamp,
+                        accelerationWithOffsetX, accelerationWithOffsetY,
                         accelerationWithOffsetZ);
-                estimatorWithCalibration.updateGyroscopeSample(timestamp, 
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, 
+                estimatorWithCalibration.updateGyroscopeSample(timestamp,
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
                         angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp, 
+                estimatorWithCalibration.updateOrientationSample(timestamp,
                         orientation);
-                
+
                 timestamp += DELTA_NANOS;
 
                 if (i == 0) {
@@ -7477,34 +7829,34 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ; 
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastOrientation.setA(orientationA);
                     lastOrientation.setB(orientationB);
                     lastOrientation.setC(orientationC);
                     lastOrientation.setD(orientationD);
-                    
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
 
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                    
-                    
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
                     lastGtAngularSpeedZ = gtAngularSpeedZ;
-                    
+
                     lastGtOrientation.setA(gtQuaternionA);
                     lastGtOrientation.setB(gtQuaternionB);
                     lastGtOrientation.setC(gtQuaternionC);
                     lastGtOrientation.setD(gtQuaternionD);
-                    
+
                 } else {
                     deltaAccelerationX = accelerationX - lastAccelerationX;
                     deltaAccelerationY = accelerationY - lastAccelerationY;
@@ -7513,61 +7865,61 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     deltaAngularSpeedX = angularSpeedX - lastAngularSpeedX;
                     deltaAngularSpeedY = angularSpeedY - lastAngularSpeedY;
                     deltaAngularSpeedZ = angularSpeedZ - lastAngularSpeedZ;
-                    
+
                     lastOrientation.inverse(deltaOrientation);
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - 
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
                             lastAccelerationWithOffsetX;
                     deltaAccelerationWithOffsetY = accelerationWithOffsetY -
                             lastAccelerationWithOffsetY;
                     deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
                             lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - 
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
                             lastAngularSpeedWithOffsetX;
                     deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
                             lastAngularSpeedWithOffsetY;
                     deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
                             lastAngularSpeedWithOffsetZ;
-                    
-                    deltaGtAccelerationX = gtAccelerationX - 
+
+                    deltaGtAccelerationX = gtAccelerationX -
                             lastGtAccelerationX;
                     deltaGtAccelerationY = gtAccelerationY -
                             lastGtAccelerationY;
                     deltaGtAccelerationZ = gtAccelerationZ -
                             lastGtAccelerationZ;
-                    
-                    deltaGtAngularSpeedX = gtAngularSpeedX - 
+
+                    deltaGtAngularSpeedX = gtAngularSpeedX -
                             lastGtAngularSpeedX;
                     deltaGtAngularSpeedY = gtAngularSpeedY -
                             lastGtAngularSpeedY;
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
-                    
+
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
-                    
-                    //delta acceleration and angular speed only cointain noise, 
-                    //since no real change in those values is present on a 
-                    //constant speed movement
+
+                    // delta acceleration and angular speed only cointain noise,
+                    // since no real change in those values is present on a
+                    // constant speed movement
                     u[0] = deltaOrientation.getA();
                     u[1] = deltaOrientation.getB();
                     u[2] = deltaOrientation.getC();
                     u[3] = deltaOrientation.getD();
-                    u[4] = u[5] = u[6] = 0.0;                
+                    u[4] = u[5] = u[6] = 0.0;
                     u[7] = deltaAccelerationX;
                     u[8] = deltaAccelerationY;
                     u[9] = deltaAccelerationZ;
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u, 
+                    StatePredictor.predictWithRotationAdjustment(x, u,
                             DELTA_SECONDS, x);
-                    
-                    //we also take into account control signals with offset
+
+                    // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
                     uWithOffset[1] = deltaOrientation.getB();
                     uWithOffset[2] = deltaOrientation.getC();
@@ -7579,7 +7931,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset, 
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
                             uWithOffset, DELTA_SECONDS, xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
@@ -7592,8 +7944,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     gtU[9] = deltaGtAccelerationZ;
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
-                    gtU[12] = deltaGtAngularSpeedZ;                    
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, 
+                    gtU[12] = deltaGtAngularSpeedZ;
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
                             DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
@@ -7602,30 +7954,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
 
                     lastAngularSpeedX = angularSpeedX;
                     lastAngularSpeedY = angularSpeedY;
-                    lastAngularSpeedZ = angularSpeedZ;  
-                    
+                    lastAngularSpeedZ = angularSpeedZ;
+
                     lastAccelerationWithOffsetX = accelerationWithOffsetX;
                     lastAccelerationWithOffsetY = accelerationWithOffsetY;
                     lastAccelerationWithOffsetZ = accelerationWithOffsetZ;
 
                     lastAngularSpeedWithOffsetX = angularSpeedWithOffsetX;
                     lastAngularSpeedWithOffsetY = angularSpeedWithOffsetY;
-                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;                
-                    
+                    lastAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ;
+
                     lastGtAccelerationX = gtAccelerationX;
                     lastGtAccelerationY = gtAccelerationY;
                     lastGtAccelerationZ = gtAccelerationZ;
-                    
+
                     lastGtAngularSpeedX = gtAngularSpeedX;
                     lastGtAngularSpeedY = gtAngularSpeedY;
-                    lastGtAngularSpeedZ = gtAngularSpeedZ;                    
-                }                  
+                    lastGtAngularSpeedZ = gtAngularSpeedZ;
+                }
             }
-        
-            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() + 
+
+            msg = "Filtered with calibrator - positionX: " + estimatorWithCalibration.getStatePositionX() +
                     ", positionY: " + estimatorWithCalibration.getStatePositionY() +
-                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() + 
-                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() + 
+                    ", positionZ: " + estimatorWithCalibration.getStatePositionZ() +
+                    ", velocityX: " + estimatorWithCalibration.getStateVelocityX() +
                     ", velocityY: " + estimatorWithCalibration.getStateVelocityY() +
                     ", velocityZ: " + estimatorWithCalibration.getStateVelocityZ() +
                     ", accelerationX: " + estimatorWithCalibration.getStateAccelerationX() +
@@ -7640,11 +7992,11 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
-            
-            msg = "Filtered - positionX: " + estimator.getStatePositionX() + 
+
+            msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
-                    ", positionZ: " + estimator.getStatePositionZ() + 
-                    ", velocityX: " + estimator.getStateVelocityX() + 
+                    ", positionZ: " + estimator.getStatePositionZ() +
+                    ", velocityX: " + estimator.getStateVelocityX() +
                     ", velocityY: " + estimator.getStateVelocityY() +
                     ", velocityZ: " + estimator.getStateVelocityZ() +
                     ", accelerationX: " + estimator.getStateAccelerationX() +
@@ -7660,10 +8012,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Prediction - positionX: " + x[0] + 
+            msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
-                    ", positionZ: " + x[2] + 
-                    ", velocityX: " + x[7] + 
+                    ", positionZ: " + x[2] +
+                    ", velocityX: " + x[7] +
                     ", velocityY: " + x[8] +
                     ", velocityZ: " + x[9] +
                     ", accelerationX: " + x[10] +
@@ -7679,10 +8031,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
                     Level.INFO, msg);
 
-            msg = "Ground truth - positionX: " + gtX[0] + 
+            msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
-                    ", positionZ: " + gtX[2] + 
-                    ", velocityX: " + gtX[7] + 
+                    ", positionZ: " + gtX[2] +
+                    ", velocityX: " + gtX[7] +
                     ", velocityY: " + gtX[8] +
                     ", velocityZ: " + gtX[9] +
                     ", accelerationX: " + gtX[10] +
@@ -7696,73 +8048,77 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
             Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);  
+                    Level.INFO, msg);
 
-            //rotate random point with quaternions and check that filtered 
-            //quaternion is closer to ground truth than predicted quaternion
-            InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(), 
+            // rotate random point with quaternions and check that filtered
+            // quaternion is closer to ground truth than predicted quaternion
+            final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(), randomizer.nextDouble(),
                     randomizer.nextDouble());
 
-            Quaternion filteredQuaternion = 
+            final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            Quaternion predictedQuaternion = new Quaternion(
+            final Quaternion predictedQuaternion = new Quaternion(
                     x[3], x[4], x[5], x[6]);
-            Quaternion groundTruthQuaternion = new Quaternion(
+            final Quaternion groundTruthQuaternion = new Quaternion(
                     gtX[3], gtX[4], gtX[5], gtX[6]);
 
-            Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
-            Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            Point3D groundTruthRotated = groundTruthQuaternion.rotate(
+            final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
+            final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
                     randomPoint);
 
-            boolean rotationImproved = 
-                    filteredRotated.distanceTo(groundTruthRotated) < 
-                    predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved =
+                    filteredRotated.distanceTo(groundTruthRotated) <
+                            predictedRotated.distanceTo(groundTruthRotated);
 
-            //check that filtered position is closer to ground truth than 
-            //predicted position, and hence Kalman filter improves results
-            InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(), 
-                    estimatorWithCalibration.getStatePositionY(), 
+            // check that filtered position is closer to ground truth than
+            // predicted position, and hence Kalman filter improves results
+            final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
+                    estimatorWithCalibration.getStatePositionX(),
+                    estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
                     x[0], x[1], x[2]);
 
-            InhomogeneousPoint3D groundTruthPos = 
+            final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            boolean positionImproved = 
-                    filteredPos.distanceTo(groundTruthPos) < 
-                    predictedPos.distanceTo(groundTruthPos);
-            
-            if(rotationImproved || positionImproved) {
+            final boolean positionImproved =
+                    filteredPos.distanceTo(groundTruthPos) <
+                            predictedPos.distanceTo(groundTruthPos);
+
+            if (rotationImproved || positionImproved) {
                 numSuccess++;
                 break;
             }
         }
 
         assertTrue(numSuccess > 0);
-    }    
+    }
 
     @Override
-    public void onFullSampleReceived(BaseSlamEstimator estimator) {
+    public void onFullSampleReceived(
+            final BaseSlamEstimator<AbsoluteOrientationConstantVelocityModelSlamCalibrationData> estimator) {
         fullSampleReceived++;
     }
 
     @Override
-    public void onFullSampleProcessed(BaseSlamEstimator estimator) {
+    public void onFullSampleProcessed(
+            final BaseSlamEstimator<AbsoluteOrientationConstantVelocityModelSlamCalibrationData> estimator) {
         fullSampleProcessed++;
     }
 
     @Override
-    public void onCorrectWithPositionMeasure(BaseSlamEstimator estimator) {
+    public void onCorrectWithPositionMeasure(
+            final BaseSlamEstimator<AbsoluteOrientationConstantVelocityModelSlamCalibrationData> estimator) {
         correctWithPositionMeasure++;
     }
 
     @Override
-    public void onCorrectedWithPositionMeasure(BaseSlamEstimator estimator) {
+    public void onCorrectedWithPositionMeasure(
+            final BaseSlamEstimator<AbsoluteOrientationConstantVelocityModelSlamCalibrationData> estimator) {
         correctedWithPositionMeasure++;
     }
 
@@ -7771,55 +8127,63 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
                 correctedWithPositionMeasure = 0;
     }
 
-    private AbsoluteOrientationConstantVelocityModelSlamCalibrator 
-        createFinishedCalibrator(float accelerationOffsetX,
-        float accelerationOffsetY, float accelerationOffsetZ, 
-        float angularOffsetX, float angularOffsetY, float angularOffsetZ,
-        GaussianRandomizer noiseRandomizer) {
-        AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = 
+    private AbsoluteOrientationConstantVelocityModelSlamCalibrator createFinishedCalibrator(
+            final float accelerationOffsetX, final float accelerationOffsetY, final float accelerationOffsetZ,
+            final float angularOffsetX, final float angularOffsetY, final float angularOffsetZ,
+            final GaussianRandomizer noiseRandomizer) {
+        final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
                 AbsoluteOrientationConstantVelocityModelSlamEstimator.
                         createCalibrator();
         calibrator.setConvergenceThreshold(ABSOLUTE_ERROR);
         calibrator.setMaxNumSamples(MAX_CALIBRATION_SAMPLES);
-        
+
         long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-        
-        float accelerationNoiseX, accelerationNoiseY, accelerationNoiseZ;
-        float angularNoiseX, angularNoiseY, angularNoiseZ;
-        
-        double accelerationX, accelerationY, accelerationZ;
-        double angularX, angularY, angularZ;
-        Quaternion orientation = new Quaternion();
+
+        float accelerationNoiseX;
+        float accelerationNoiseY;
+        float accelerationNoiseZ;
+        float angularNoiseX;
+        float angularNoiseY;
+        float angularNoiseZ;
+
+        double accelerationX;
+        double accelerationY;
+        double accelerationZ;
+        double angularX;
+        double angularY;
+        double angularZ;
+        final Quaternion orientation = new Quaternion();
 
         for (int i = 0; i < MAX_CALIBRATION_SAMPLES; i++) {
             accelerationNoiseX = noiseRandomizer.nextFloat();
             accelerationNoiseY = noiseRandomizer.nextFloat();
             accelerationNoiseZ = noiseRandomizer.nextFloat();
-            
+
             angularNoiseX = noiseRandomizer.nextFloat();
             angularNoiseY = noiseRandomizer.nextFloat();
             angularNoiseZ = noiseRandomizer.nextFloat();
-            
+
             accelerationX = accelerationOffsetX + accelerationNoiseX;
             accelerationY = accelerationOffsetY + accelerationNoiseY;
             accelerationZ = accelerationOffsetZ + accelerationNoiseZ;
-            
+
             angularX = angularOffsetX + angularNoiseX;
             angularY = angularOffsetY + angularNoiseY;
-            angularZ = angularOffsetZ + angularNoiseZ;            
-            
-            calibrator.updateAccelerometerSample(timestamp, (float)accelerationX, 
-                    (float)accelerationY, (float)accelerationZ);
-            calibrator.updateGyroscopeSample(timestamp, (float)angularX, (float)angularY, 
-                    (float)angularZ);
+            angularZ = angularOffsetZ + angularNoiseZ;
+
+            calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
+                    (float) accelerationY, (float) accelerationZ);
+            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY,
+                    (float) angularZ);
             calibrator.updateOrientationSample(timestamp, orientation);
-            
-            if(calibrator.isFinished()) break;
-            
+
+            if (calibrator.isFinished()) {
+                break;
+            }
+
             timestamp += DELTA_NANOS;
         }
-        
+
         return calibrator;
-    }    
-    
+    }
 }

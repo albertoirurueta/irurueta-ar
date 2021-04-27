@@ -15,26 +15,12 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
 public class Point3DTriangulationExceptionTest {
-    
-    public Point3DTriangulationExceptionTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
-    
+
     @Test
     public void testConstructor() {
         Point3DTriangulationException ex = new Point3DTriangulationException();

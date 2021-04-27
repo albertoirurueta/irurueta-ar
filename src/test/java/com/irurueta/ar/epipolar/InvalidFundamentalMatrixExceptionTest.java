@@ -15,28 +15,14 @@
  */
 package com.irurueta.ar.epipolar;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
 public class InvalidFundamentalMatrixExceptionTest {
-    
-    public InvalidFundamentalMatrixExceptionTest() { }
-    
-    @BeforeClass
-    public static void setUpClass() { }
-    
-    @AfterClass
-    public static void tearDownClass() { }
-    
-    @Before
-    public void setUp() { }
-    
-    @After
-    public void tearDown() { }
 
     @Test
-    public void testConstructor(){
+    public void testConstructor() {
         InvalidFundamentalMatrixException ex = new InvalidFundamentalMatrixException();
         assertNotNull(ex);
 

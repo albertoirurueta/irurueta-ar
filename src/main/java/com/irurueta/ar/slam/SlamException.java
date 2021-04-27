@@ -20,38 +20,40 @@ import com.irurueta.ar.ARException;
 /**
  * Base exception for all exceptions related to SLAM.
  */
-@SuppressWarnings("WeakerAccess")
 public class SlamException extends ARException {
-    
+
     /**
      * Constructor.
      */
     public SlamException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public SlamException(String message) {
+    public SlamException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause
+     * @param cause   instance containing the cause
      */
-    public SlamException(String message, Throwable cause) {
+    public SlamException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public SlamException(Throwable cause) {
+    public SlamException(final Throwable cause) {
         super(cause);
     }
 }

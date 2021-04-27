@@ -19,39 +19,41 @@ package com.irurueta.ar.epipolar;
  * Raised if given rotation or translation are not valid to define an essential
  * matrix.
  */
-@SuppressWarnings("WeakerAccess")
 public class InvalidRotationAndTranslationException extends EpipolarException {
-    
+
     /**
      * Constructor.
      */
     public InvalidRotationAndTranslationException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public InvalidRotationAndTranslationException(String message) {
+    public InvalidRotationAndTranslationException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public InvalidRotationAndTranslationException(String message, 
-            Throwable cause) {
+    public InvalidRotationAndTranslationException(final String message,
+                                                  final Throwable cause) {
         super(message, cause);
     }
-        
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public InvalidRotationAndTranslationException(Throwable cause) {
+    public InvalidRotationAndTranslationException(final Throwable cause) {
         super(cause);
     }
 }

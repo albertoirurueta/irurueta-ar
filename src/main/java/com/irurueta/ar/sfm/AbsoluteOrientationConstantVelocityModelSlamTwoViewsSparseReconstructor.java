@@ -15,6 +15,7 @@
  */
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrationData;
 import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimator;
 
 /**
@@ -23,39 +24,41 @@ import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimato
  * data) with absolute orientation for overall scale and orientation estimation.
  * NOTE: This implementation does not seem to be very reliable because the SLAM
  * estimator is not accurate at all on position or orientation estimator.
- * Use AbsoluteOrientationSlamTwoViewsSparseReconstructor if absolute 
+ * Use AbsoluteOrientationSlamTwoViewsSparseReconstructor if absolute
  * orientation is needed, or SlamTwoViewsSparseReconstructor otherwise to get
  * better accuracy.
  */
-@SuppressWarnings("WeakerAccess")
-public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor 
+public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor
         extends BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor<
+        AbsoluteOrientationConstantVelocityModelSlamCalibrationData,
         AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration,
         AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor,
         AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener,
         AbsoluteOrientationConstantVelocityModelSlamEstimator> {
-    
+
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
-     * @throws NullPointerException if listener or configuration is not 
-     * provided.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration configuration,
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
+            final AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration configuration,
+            final AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
-    
+
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
-            AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
-        this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(), 
+            final AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
+        this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(),
                 listener);
     }
 
@@ -63,6 +66,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      * Process one view of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
      * one view at a time.
+     *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     @Override
@@ -79,6 +83,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @return true if post processing succeeded, false otherwise.
      */
     @Override

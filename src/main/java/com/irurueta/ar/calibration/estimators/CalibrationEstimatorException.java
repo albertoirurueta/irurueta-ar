@@ -20,7 +20,6 @@ import com.irurueta.ar.calibration.CalibrationException;
 /**
  * Base class for calibration estimators.
  */
-@SuppressWarnings("WeakerAccess")
 public class CalibrationEstimatorException extends CalibrationException {
 
     /**
@@ -32,26 +31,29 @@ public class CalibrationEstimatorException extends CalibrationException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message Message indicating the cause of the exception.
      */
-    public CalibrationEstimatorException(String message) {
+    public CalibrationEstimatorException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
+     *
      * @param message Message describing the cause of the exception.
-     * @param cause Instance containing the cause of the exception.
+     * @param cause   Instance containing the cause of the exception.
      */
-    public CalibrationEstimatorException(String message, Throwable cause) {
+    public CalibrationEstimatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * Constructor with cause.
+     *
      * @param cause Instance containing the cause of the exception.
      */
-    public CalibrationEstimatorException(Throwable cause) {
+    public CalibrationEstimatorException(final Throwable cause) {
         super(cause);
     }
 }

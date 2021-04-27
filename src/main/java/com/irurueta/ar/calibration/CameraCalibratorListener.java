@@ -24,64 +24,71 @@ import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 public interface CameraCalibratorListener {
     /**
      * Called when a calibrator starts the camera calibration process.
+     *
      * @param calibrator reference to a camera calibrator.
      */
-    void onCalibrateStart(CameraCalibrator calibrator);
-    
+    void onCalibrateStart(final CameraCalibrator calibrator);
+
     /**
      * Called when a calibrator ends the camera calibration process.
+     *
      * @param calibrator reference to a camera calibrator.
      */
-    void onCalibrateEnd(CameraCalibrator calibrator);
-    
+    void onCalibrateEnd(final CameraCalibrator calibrator);
+
     /**
      * Called to notify changes in the camera calibration progress.
+     *
      * @param calibrator reference to a camera calibrator.
-     * @param progress current percentage of progress expressed as a value
-     * between 0.0f and 1.0f.
+     * @param progress   current percentage of progress expressed as a value
+     *                   between 0.0f and 1.0f.
      */
-    void onCalibrateProgressChange(CameraCalibrator calibrator,
-            float progress);
-    
+    void onCalibrateProgressChange(final CameraCalibrator calibrator,
+                                   final float progress);
+
     /**
      * Called when a calibrator starts the estimation of intrinsic parameters
      * of a pinhole camera.
      * Depending on the calibrator implementation, this method might be called
      * multiple times while the distortion parameters are being refined.
+     *
      * @param calibrator reference to a camera calibrator.
      */
     void onIntrinsicParametersEstimationStarts(
-            CameraCalibrator calibrator);
-    
+            final CameraCalibrator calibrator);
+
     /**
      * Called when a calibrator finishes the estimation of intrinsic parameters
      * of a pinhole camera.
      * Depending on the calibrator implementation, this method might be called
      * multiple times while the distortion parameters are being refined.
-     * @param calibrator reference to a camera calibrator.
+     *
+     * @param calibrator          reference to a camera calibrator.
      * @param intrinsicParameters intrinsic parameters that have been estimated
-     * so far.
+     *                            so far.
      */
-    void onIntrinsicParametersEstimationEnds(CameraCalibrator calibrator,
-            PinholeCameraIntrinsicParameters intrinsicParameters);
-    
+    void onIntrinsicParametersEstimationEnds(final CameraCalibrator calibrator,
+                                             final PinholeCameraIntrinsicParameters intrinsicParameters);
+
     /**
      * Called when a calibrator starts the estimation of radial distortion of
      * the camera lens.
      * Depending on the calibrator implementation, this method might be called
      * multiple times while the distortion parameters are being refined.
+     *
      * @param calibrator reference to a camera calibrator.
      */
-    void onRadialDistortionEstimationStarts(CameraCalibrator calibrator);
-    
+    void onRadialDistortionEstimationStarts(final CameraCalibrator calibrator);
+
     /**
      * Called when a calibrator finishes the estimation of radial distortion of
      * the camera lens.
      * Depending on the calibrator implementation, this method might be called
      * multiple times while the distortion parameters are being refined.
+     *
      * @param calibrator reference to a camera calibrator.
      * @param distortion radial distortion that has been estimated so far.
      */
-    void onRadialDistortionEstimationEnds(CameraCalibrator calibrator,
-            RadialDistortion distortion);
+    void onRadialDistortionEstimationEnds(final CameraCalibrator calibrator,
+                                          final RadialDistortion distortion);
 }

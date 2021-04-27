@@ -19,44 +19,46 @@ package com.irurueta.ar.sfm;
  * Class in charge of estimating cameras and 3D reconstructed points from sparse
  * image point correspondences in two views.
  */
-@SuppressWarnings("WeakerAccess")
-public class TwoViewsSparseReconstructor extends 
+public class TwoViewsSparseReconstructor extends
         BaseTwoViewsSparseReconstructor<
-        TwoViewsSparseReconstructorConfiguration,
-        TwoViewsSparseReconstructor,
-        TwoViewsSparseReconstructorListener> {
-    
+                TwoViewsSparseReconstructorConfiguration,
+                TwoViewsSparseReconstructor,
+                TwoViewsSparseReconstructorListener> {
+
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
-     * @throws NullPointerException if listener or configuration is not 
-     * provided.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
      */
     public TwoViewsSparseReconstructor(
-            TwoViewsSparseReconstructorConfiguration configuration,
-            TwoViewsSparseReconstructorListener listener) {
+            final TwoViewsSparseReconstructorConfiguration configuration,
+            final TwoViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
-    
+
     /**
      * Constructor with default configuration.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
     public TwoViewsSparseReconstructor(
-            TwoViewsSparseReconstructorListener listener) {
+            final TwoViewsSparseReconstructorListener listener) {
         this(new TwoViewsSparseReconstructorConfiguration(), listener);
     }
 
     /**
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
+     *
      * @return true if post processing succeeded, false otherwise.
      */
     @Override
     protected boolean postProcessOne() {
-        //no need for post processing when computing metric reconstruction
+        // no need for post processing when computing metric reconstruction
         return true;
     }
 }

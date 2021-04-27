@@ -35,6 +35,7 @@ public class AbsoluteOrientationSlamSparseReconstructorConfiguration extends
     /**
      * Creates an instance of a multiple views sparse reconstructor configuration with
      * slam estimation and absolute orientation.
+     *
      * @return configuration instance.
      */
     public static AbsoluteOrientationSlamSparseReconstructorConfiguration make() {

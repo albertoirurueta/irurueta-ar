@@ -28,31 +28,30 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class defines an LMSE (Least Mean Square Error) estimator of radial 
+ * This class defines an LMSE (Least Mean Square Error) estimator of radial
  * distorsion.
- * Equations to determine a RadialDistortion instance for a single point are 
- * linear dependent, for that reason, at least 2 points are required for the 
+ * Equations to determine a RadialDistortion instance for a single point are
+ * linear dependent, for that reason, at least 2 points are required for the
  * estimation.
  * Even though x and y equations are linear dependent, both equations are taken
  * into account in case that sampled data contains errors, so that an LMSE error
  * can be obtained.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     /**
      * Indicates if by default an LMSE (Least Mean Square Error) solution is
      * allowed if more correspondences than the minimum are provided.
      */
     public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
-            
+
     /**
      * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
-     * more correspondences than the minimum are provided. If false, the 
-     * exceeding correspondences will be ignored and only the 6 first 
+     * more correspondences than the minimum are provided. If false, the
+     * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
      */
     private boolean mAllowLMSESolution;
-        
+
     /**
      * Constructor.
      */
@@ -60,144 +59,157 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
         super();
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
-    
+
     /**
      * Constructor with listener.
+     *
      * @param listener listener to be notified of events such as when estimation
-     * starts, ends or estimation progress changes.
+     *                 starts, ends or estimation progress changes.
      */
     public LMSERadialDistortionEstimator(
-            RadialDistortionEstimatorListener listener) {
+            final RadialDistortionEstimatorListener listener) {
         super(listener);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
-    
+
     /**
      * Constructor.
-     * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distorsion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
-     * @throws IllegalArgumentException if provided lists of points don't have 
-     * the same size.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
      */
-    public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints) {
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
+                                         final List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
-   
+
     /**
      * Constructor.
-     * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distorsion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
-     * @param listener listener to be notified of events such as when estimation
-     * starts, ends or estimation progress changes.
-     * @throws IllegalArgumentException if provided lists of points don't have 
-     * the same size.
+     * @param listener          listener to be notified of events such as when estimation
+     *                          starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
      */
-    
-    public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints, 
-            RadialDistortionEstimatorListener listener) {
+
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
+                                         final List<Point2D> undistortedPoints,
+                                         final RadialDistortionEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
         mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
      * Constructor with distortion center.
-     * @param distortionCenter Distortion center. This is usually equal to the 
-     * principal point of an estimated camera. If not set it is assumed to be at
-     * the origin of coordinates (0,0).
+     *
+     * @param distortionCenter Distortion center. This is usually equal to the
+     *                         principal point of an estimated camera. If not set it is assumed to be at
+     *                         the origin of coordinates (0,0).
      */
-    public LMSERadialDistortionEstimator(Point2D distortionCenter) {
+    public LMSERadialDistortionEstimator(final Point2D distortionCenter) {
         super(distortionCenter);
     }
-    
+
     /**
      * Constructor with listener and distortion center.
-     * @param distortionCenter Distortion center. This is usually equal to the 
-     * principal point of an estimated camera. If not set it is assumed to be at
-     * the origin of coordinates (0,0).
-     * @param listener listener to be notified of events such as when estimation
-     * starts, ends or estimation progress changes.
+     *
+     * @param distortionCenter Distortion center. This is usually equal to the
+     *                         principal point of an estimated camera. If not set it is assumed to be at
+     *                         the origin of coordinates (0,0).
+     * @param listener         listener to be notified of events such as when estimation
+     *                         starts, ends or estimation progress changes.
      */
-    public LMSERadialDistortionEstimator(Point2D distortionCenter,
-            RadialDistortionEstimatorListener listener) {
+    public LMSERadialDistortionEstimator(final Point2D distortionCenter,
+                                         final RadialDistortionEstimatorListener listener) {
         super(distortionCenter, listener);
     }
-    
+
     /**
      * Constructor with points and distortion center.
-     * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distorsion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
-     * @param distortionCenter Distortion center. This is usually equal to the 
-     * principal point of an estimated camera. If not set it is assumed to be at
-     * the origin of coordinates (0,0).
-     * @throws IllegalArgumentException if provided lists of points don't have 
-     * the same size.
+     * @param distortionCenter  Distortion center. This is usually equal to the
+     *                          principal point of an estimated camera. If not set it is assumed to be at
+     *                          the origin of coordinates (0,0).
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
      */
-    public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints, Point2D distortionCenter) {
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
+                                         final List<Point2D> undistortedPoints,
+                                         final Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
     }
-   
+
     /**
      * Constructor
-     * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distorsion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
-     * @param distortionCenter Distortion center. This is usually equal to the 
-     * principal point of an estimated camera. If not set it is assumed to be at
-     * the origin of coordinates (0,0).
-     * @param listener listener to be notified of events such as when estimation
-     * starts, ends or estimation progress changes.
-     * @throws IllegalArgumentException if provided lists of points don't have 
-     * the same size.
-     */ 
-    public LMSERadialDistortionEstimator(List<Point2D> distortedPoints, 
-            List<Point2D> undistortedPoints, Point2D distortionCenter,
-            RadialDistortionEstimatorListener listener) {
+     * @param distortionCenter  Distortion center. This is usually equal to the
+     *                          principal point of an estimated camera. If not set it is assumed to be at
+     *                          the origin of coordinates (0,0).
+     * @param listener          listener to be notified of events such as when estimation
+     *                          starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
+                                         final List<Point2D> undistortedPoints,
+                                         final Point2D distortionCenter,
+                                         final RadialDistortionEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
     }
-        
+
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if 
-     * more correspondences than the minimum are provided. If false, the 
-     * exceeding correspondences will be ignored and only the 6 first 
+     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * more correspondences than the minimum are provided. If false, the
+     * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
+     *
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
         return mAllowLMSESolution;
     }
-    
+
     /**
      * Specifies if an LMSE (Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
-     * exceeding correspondences will be ignored and only the 6 first 
+     * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
+     *
      * @param allowed true if LMSE solution is allowed, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setLMSESolutionAllowed(boolean allowed) throws LockedException {
+    public void setLMSESolutionAllowed(final boolean allowed) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         mAllowLMSESolution = allowed;
-    }    
-        
+    }
+
     /**
      * Estimates a radial distortion.
+     *
      * @return estimated radial distortion.
-     * @throws LockedException if estimator is loked.
-     * @throws NotReadyException if input has not yet been provided.
+     * @throws LockedException                    if estimator is loked.
+     * @throws NotReadyException                  if input has not yet been provided.
      * @throws RadialDistortionEstimatorException if an error occurs during
-     * estimation, usually because input data is not valid.
-     */    
+     *                                            estimation, usually because input data is not valid.
+     */
+    @SuppressWarnings("DuplicatedCode")
     @Override
-    public RadialDistortion estimate() throws LockedException, 
+    public RadialDistortion estimate() throws LockedException,
             NotReadyException, RadialDistortionEstimatorException {
         if (isLocked()) {
             throw new LockedException();
@@ -205,85 +217,84 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
         if (!isReady()) {
             throw new NotReadyException();
         }
-        
+
         try {
             mLocked = true;
             if (mListener != null) {
                 mListener.onEstimateStart(this);
             }
-            
-            int nPoints = mDistortedPoints.size();
-            
+
+            final int nPoints = mDistortedPoints.size();
+
             int numRows;
             if (isLMSESolutionAllowed()) {
-                //initialize new matrix having two rows per point
+                // initialize new matrix having two rows per point
                 numRows = 2 * nPoints;
             } else {
-                //when LMSE is not allowed, restrict matrix to two rows (minimum
-                //value required for a solution)
+                // when LMSE is not allowed, restrict matrix to two rows (minimum
+                // value required for a solution)
                 numRows = 2 * getMinNumberOfMatchedPoints();
             }
-            
-            Matrix aMatrix = new Matrix(numRows, mNumKParams);
-            double[] b = new double[numRows];
-            
-            
-            Iterator<Point2D> iteratorDistorted = mDistortedPoints.iterator();
-            Iterator<Point2D> iteratorUndistorted = 
+
+            final Matrix aMatrix = new Matrix(numRows, mNumKParams);
+            final double[] b = new double[numRows];
+
+            final Iterator<Point2D> iteratorDistorted = mDistortedPoints.iterator();
+            final Iterator<Point2D> iteratorUndistorted =
                     mUndistortedPoints.iterator();
-            
+
             Point2D distorted;
             Point2D undistorted;
             int counter = 0;
-            
-            //undistorted normalized homogeneous coordinates
+
+            // undistorted normalized homogeneous coordinates
             double uNormHomX;
             double uNormHomY;
             double uNormHomW;
-            //undistorted normalized inhomogeneous coordinates
+            // undistorted normalized inhomogeneous coordinates
             double uNormInhomX;
             double uNormInhomY;
-            //undistorted denormalized homogeneous coordinates
+            // undistorted denormalized homogeneous coordinates
             double uDenormHomX;
             double uDenormHomY;
             double uDenormHomW;
-            //undistorted denormalized inhomogeneous coordinates
+            // undistorted denormalized inhomogeneous coordinates
             double uDenormInhomX;
             double uDenormInhomY;
-            //distorted inhomogeneous coordinates
+            // distorted inhomogeneous coordinates
             double dInhomX;
             double dInhomY;
             double rowNormX;
             double rowNormY;
-            
-            //radial distortion center
+
+            // radial distortion center
             double centerX = 0.0;
             double centerY = 0.0;
             if (mDistortionCenter != null) {
                 centerX = mDistortionCenter.getInhomX();
                 centerY = mDistortionCenter.getInhomY();
             }
-            
-            //radial distance of undistorted normalized (calibration independent) 
-            //coordinates
-            double r2; 
+
+            // radial distance of undistorted normalized (calibration independent)
+            // coordinates
+            double r2;
             double a;
             double value;
-            
+
             while (iteratorDistorted.hasNext() && iteratorUndistorted.hasNext()) {
                 distorted = iteratorDistorted.next();
                 undistorted = iteratorUndistorted.next();
-                
+
                 undistorted.normalize();
-                
+
                 uDenormHomX = undistorted.getHomX();
                 uDenormHomY = undistorted.getHomY();
                 uDenormHomW = undistorted.getHomW();
-                
+
                 uDenormInhomX = uDenormHomX / uDenormHomW;
                 uDenormInhomY = uDenormHomY / uDenormHomW;
-                
-                //multiply intrinsic parameters by undistorted point
+
+                // multiply intrinsic parameters by undistorted point
                 uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +
                         mKinv.getElementAt(0, 1) * uDenormHomY +
                         mKinv.getElementAt(0, 2) * uDenormHomW;
@@ -293,78 +304,78 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +
                         mKinv.getElementAt(2, 1) * uDenormHomY +
                         mKinv.getElementAt(2, 2) * uDenormHomW;
-                
+
                 uNormInhomX = uNormHomX / uNormHomW;
                 uNormInhomY = uNormHomY / uNormHomW;
-                
+
                 r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;
-                
+
                 dInhomX = distorted.getInhomX();
                 dInhomY = distorted.getInhomY();
-                
+
                 a = 1.0;
                 rowNormX = rowNormY = 0.0;
                 for (int i = 0; i < mNumKParams; i++) {
                     a *= r2;
-                    
-                    //x and y coordinates generate linear dependent equations, for 
-                    //that reason we need more than one point
-                    
-                    //x coordinates
+
+                    // x and y coordinates generate linear dependent equations, for
+                    // that reason we need more than one point
+
+                    // x coordinates
                     value = (uDenormInhomX - centerX) * a;
                     aMatrix.setElementAt(2 * counter, i, value);
-                    
+
                     rowNormX += Math.pow(value, 2.0);
-                    
-                    //y coordinates
+
+                    // y coordinates
                     value = (uDenormInhomY - centerY) * a;
                     aMatrix.setElementAt(2 * counter + 1, i, value);
-                    
+
                     rowNormY += Math.pow(value, 2.0);
                 }
-                
-                //x coordinates
+
+                // x coordinates
                 value = dInhomX - uDenormInhomX;
                 b[2 * counter] = value;
-                
+
                 rowNormX += Math.pow(value, 2.0);
-                
-                //y coordinates
+
+                // y coordinates
                 value = dInhomY - uDenormInhomY;
                 b[2 * counter + 1] = value;
-                
+
                 rowNormY += Math.pow(value, 2.0);
-                
-                //normalize rows to increase accuracy
+
+                // normalize rows to increase accuracy
                 for (int i = 0; i < mNumKParams; i++) {
                     aMatrix.setElementAt(2 * counter, i,
                             aMatrix.getElementAt(2 * counter, i) / rowNormX);
                     aMatrix.setElementAt(2 * counter + 1, i,
                             aMatrix.getElementAt(2 * counter + 1, i) / rowNormY);
                 }
-                
+
                 b[2 * counter] /= rowNormX;
                 b[2 * counter + 1] /= rowNormY;
-                                
+
                 counter++;
-                
+
                 if (!isLMSESolutionAllowed() && (counter >= getMinNumberOfMatchedPoints())) {
                     break;
                 }
             }
-            
-            double[] params = Utils.solve(aMatrix, b);
-            
-            RadialDistortion distortion = 
-                    new RadialDistortion(params, mDistortionCenter, 
-                    mHorizontalFocalLength, mVerticalFocalLength, mSkew);
-            
+
+            final double[] params = Utils.solve(aMatrix, b);
+
+            final RadialDistortion distortion =
+                    new RadialDistortion(params, mDistortionCenter,
+                            mHorizontalFocalLength, mVerticalFocalLength, mSkew);
+
             if (mListener != null) {
                 mListener.onEstimateEnd(this);
             }
-            
+
             return distortion;
-        } catch (AlgebraException | RadialDistortionException e) {
+        } catch (final AlgebraException | RadialDistortionException e) {
             throw new RadialDistortionEstimatorException(e);
         } finally {
             mLocked = false;
@@ -373,8 +384,9 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
 
     /**
      * Returns type of radial distortion estimator.
+     *
      * @return type of radial distortion estimator.
-     */    
+     */
     @Override
     public RadialDistortionEstimatorType getType() {
         return RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR;

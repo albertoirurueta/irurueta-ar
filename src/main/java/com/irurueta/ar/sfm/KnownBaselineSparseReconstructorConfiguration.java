@@ -22,7 +22,6 @@ import java.io.Serializable;
  * Contains configuration for a multiple view sparse reconstructor assuming that the
  * initial baseline (separation between initial cameras) is known.
  */
-@SuppressWarnings("WeakerAccess")
 public class KnownBaselineSparseReconstructorConfiguration extends
         BaseSparseReconstructorConfiguration<KnownBaselineSparseReconstructorConfiguration>
         implements Serializable {
@@ -44,6 +43,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
     /**
      * Creates an instance of a multiple view sparse reconstructor configuration with
      * known camera baseline.
+     *
      * @return configuration instance.
      */
     public static KnownBaselineSparseReconstructorConfiguration make() {
@@ -54,6 +54,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * Gets camera baseline (expressed in a unit of distance such as meters).
      * Contains the real separation between camera centers so that the real scale of
      * cameras and reconstructed points can be retrieved.
+     *
      * @return camera baseline.
      */
     public double getBaseline() {
@@ -64,10 +65,11 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * Sets camera baseline (expressed in a unit of distance such as meters).
      * Contains the real separation between camera centers so that the real scale
      * of cameras and reconstructed points can be retrieved.
+     *
      * @param baseline camera baseline.
      * @return this instance so that methods can be easily chained.
      */
-    public KnownBaselineSparseReconstructorConfiguration setBaseline(double baseline) {
+    public KnownBaselineSparseReconstructorConfiguration setBaseline(final double baseline) {
         mBaseline = baseline;
         return this;
     }

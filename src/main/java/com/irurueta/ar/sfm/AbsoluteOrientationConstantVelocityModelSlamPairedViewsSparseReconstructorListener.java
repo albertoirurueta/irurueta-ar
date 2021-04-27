@@ -21,7 +21,6 @@ package com.irurueta.ar.sfm;
  * sparse image point correspondences in multiple view pairs and using SLAM with
  * absolute orientation and constant velocity model for scale and orientation estimation.
  */
-@SuppressWarnings("WeakerAccess")
 public interface AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorListener
         extends BaseSlamPairedViewsSparseReconstructorListener<
         AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructor> {

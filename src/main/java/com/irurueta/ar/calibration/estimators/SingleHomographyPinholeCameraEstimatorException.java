@@ -18,40 +18,42 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when camera estimation fails.
  */
-@SuppressWarnings("WeakerAccess")
 public class SingleHomographyPinholeCameraEstimatorException extends
         CalibrationEstimatorException {
-    
+
     /**
      * Constructor.
      */
     public SingleHomographyPinholeCameraEstimatorException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message messagen indicating the cause of the exception.
      */
-    public SingleHomographyPinholeCameraEstimatorException(String message) {
+    public SingleHomographyPinholeCameraEstimatorException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public SingleHomographyPinholeCameraEstimatorException(String message,
-            Throwable cause) {
+    public SingleHomographyPinholeCameraEstimatorException(final String message,
+                                                           final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public SingleHomographyPinholeCameraEstimatorException(Throwable cause) {
+    public SingleHomographyPinholeCameraEstimatorException(final Throwable cause) {
         super(cause);
     }
 }

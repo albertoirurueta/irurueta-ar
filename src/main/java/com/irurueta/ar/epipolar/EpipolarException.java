@@ -22,36 +22,39 @@ import com.irurueta.geometry.GeometryException;
  * package.
  */
 public class EpipolarException extends GeometryException {
-    
+
     /**
      * Constructor.
      */
     public EpipolarException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public EpipolarException(String message) {
+    public EpipolarException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public EpipolarException(String message, Throwable cause) {
+    public EpipolarException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public EpipolarException(Throwable cause) {
+    public EpipolarException(final Throwable cause) {
         super(cause);
     }
 }

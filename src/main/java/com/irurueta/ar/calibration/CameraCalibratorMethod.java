@@ -26,7 +26,7 @@ public enum CameraCalibratorMethod {
      * more numerically stable.
      */
     ALTERNATING_CALIBRATOR,
-    
+
     /**
      * Optimizes radial distortion and intrinsic parameters after an initial
      * guess is found until the solution converges.

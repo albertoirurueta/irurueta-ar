@@ -16,6 +16,7 @@
 
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.slam.SlamCalibrationData;
 import com.irurueta.ar.slam.SlamEstimator;
 
 /**
@@ -23,31 +24,33 @@ import com.irurueta.ar.slam.SlamEstimator;
  * in multiple view pairs and using SLAM (with accelerometer and gyroscope data) for overall
  * scale estimation.
  */
-@SuppressWarnings("WeakerAccess")
 public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSparseReconstructor<
+        SlamCalibrationData,
         SlamPairedViewsSparseReconstructorConfiguration,
         SlamPairedViewsSparseReconstructor, SlamPairedViewsSparseReconstructorListener, SlamEstimator> {
 
     /**
      * Constructor.
+     *
      * @param configuration configuration for this reconstructor.
-     * @param listener listener in charge of handling events.
+     * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
     public SlamPairedViewsSparseReconstructor(
-            SlamPairedViewsSparseReconstructorConfiguration configuration,
-            SlamPairedViewsSparseReconstructorListener listener) {
+            final SlamPairedViewsSparseReconstructorConfiguration configuration,
+            final SlamPairedViewsSparseReconstructorListener listener) {
         super(configuration, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
-     * provided.
+     *                              provided.
      */
-    public SlamPairedViewsSparseReconstructor(SlamPairedViewsSparseReconstructorListener listener) {
+    public SlamPairedViewsSparseReconstructor(final SlamPairedViewsSparseReconstructorListener listener) {
         super(new SlamPairedViewsSparseReconstructorConfiguration(), listener);
     }
 
@@ -55,6 +58,7 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      * Process one view of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
      * one view at a time.
+     *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     @Override

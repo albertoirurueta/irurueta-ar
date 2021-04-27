@@ -27,14 +27,15 @@ import java.io.Serializable;
  * This configuration assumes a constant velocity model and that an orientation
  * relative to the first view will be estimated.
  */
-public class ConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration 
+public class ConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration
         extends BaseSlamTwoViewsSparseReconstructorConfiguration<
-        ConstantVelocityModelSlamCalibrationData, 
+        ConstantVelocityModelSlamCalibrationData,
         ConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration> implements Serializable {
-    
+
     /**
      * Creates an instance of a two views sparse reconstructor configuration with
      * constant velocity model in slam estimation.
+     *
      * @return configuration instance.
      */
     public static ConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration make() {

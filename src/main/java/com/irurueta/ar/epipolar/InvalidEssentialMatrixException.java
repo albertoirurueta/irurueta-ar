@@ -18,40 +18,42 @@ package com.irurueta.ar.epipolar;
 /**
  * Raised when an essential matrix is not well defined.
  */
-@SuppressWarnings("WeakerAccess")
-public class InvalidEssentialMatrixException extends 
+public class InvalidEssentialMatrixException extends
         InvalidFundamentalMatrixException {
-    
+
     /**
      * Constructor
      */
     public InvalidEssentialMatrixException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public InvalidEssentialMatrixException(String message) {
+    public InvalidEssentialMatrixException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public InvalidEssentialMatrixException(String message, 
-            Throwable cause) {
+    public InvalidEssentialMatrixException(final String message,
+                                           final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public InvalidEssentialMatrixException(Throwable cause) {
+    public InvalidEssentialMatrixException(final Throwable cause) {
         super(cause);
-    }    
+    }
 }

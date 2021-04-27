@@ -27,52 +27,57 @@ import com.irurueta.geometry.PinholeCamera;
  * Listener to retrieve and store required data to compute a 3D reconstruction from sparse
  * image point correspondences in multiple views.
  * Implementations of this interface
+ *
  * @param <R> reconstructor type.
  */
-public interface BaseSlamPairedViewsSparseReconstructorListener<R extends BaseSlamPairedViewsSparseReconstructor>
+public interface BaseSlamPairedViewsSparseReconstructorListener<R
+        extends BaseSlamPairedViewsSparseReconstructor<?, ?, ?, ?, ?>>
         extends BasePairedViewsSparseReconstructorListener<R> {
 
     /**
      * Called whenever slam data notification is enabled and each time all required samples (accelerometer,
      * gyroscope or orientation) are received in order to update SLAM system state to notify
      * new position, velocity, acceleration, orientation and angular speed.
+     *
      * @param reconstructor reconstructor raising this event.
-     * @param positionX x position coordinate expressed in meters (m).
-     * @param positionY y position coordinate expressed in meters (m).
-     * @param positionZ z position coordinate expressed in meters (m).
-     * @param velocityX x velocity coordinate expressed in meters per second (m/s).
-     * @param velocityY y velocity coordinate expressed in meters per second (m/s).
-     * @param velocityZ z velocity coordinate expressed in meters per second (m/s).
+     * @param positionX     x position coordinate expressed in meters (m).
+     * @param positionY     y position coordinate expressed in meters (m).
+     * @param positionZ     z position coordinate expressed in meters (m).
+     * @param velocityX     x velocity coordinate expressed in meters per second (m/s).
+     * @param velocityY     y velocity coordinate expressed in meters per second (m/s).
+     * @param velocityZ     z velocity coordinate expressed in meters per second (m/s).
      * @param accelerationX x linear acceleration coordinate expressed in meters per squared second (m/s^2).
      * @param accelerationY y linear acceleration coordinate expressed in meters per squared second (m/s^2).
      * @param accelerationZ z linear acceleration coordinate expressed in meters per squared second (m/s^2).
-     * @param quaternionA a component of quaternion expressing current orientation.
-     * @param quaternionB b component of quaternion expressing current orientation.
-     * @param quaternionC c component of quaternion expressing current orientation.
-     * @param quaternionD d component of quaternion expressing current orientation.
+     * @param quaternionA   a component of quaternion expressing current orientation.
+     * @param quaternionB   b component of quaternion expressing current orientation.
+     * @param quaternionC   c component of quaternion expressing current orientation.
+     * @param quaternionD   d component of quaternion expressing current orientation.
      * @param angularSpeedX x coordinate of angular speed expressed in radians per second (rad/s).
      * @param angularSpeedY y coordinate of angular speed expressed in radians per second (rad/s).
      * @param angularSpeedZ z coordinate of angular speed expressed in radians per second (rad/s).
-     * @param covariance contains covariance matrix of estimated SLAM state. Matrix meaning will change depending
-     *                       on slam implementation. See: {@link SlamEstimator#getStateCovariance()},
-     *                       {@link ConstantVelocityModelSlamEstimator#getStateCovariance()},
-     *                       {@link AbsoluteOrientationSlamEstimator#getStateCovariance()} or
-     *                       {@link AbsoluteOrientationConstantVelocityModelSlamEstimator#getStateCovariance()}.
+     * @param covariance    contains covariance matrix of estimated SLAM state. Matrix meaning will change depending
+     *                      on slam implementation. See: {@link SlamEstimator#getStateCovariance()},
+     *                      {@link ConstantVelocityModelSlamEstimator#getStateCovariance()},
+     *                      {@link AbsoluteOrientationSlamEstimator#getStateCovariance()} or
+     *                      {@link AbsoluteOrientationConstantVelocityModelSlamEstimator#getStateCovariance()}.
      */
-    void onSlamDataAvailable(R reconstructor, double positionX, double positionY, double positionZ,
-                             double velocityX, double velocityY, double velocityZ,
-                             double accelerationX, double accelerationY, double accelerationZ,
-                             double quaternionA, double quaternionB, double quaternionC, double quaternionD,
-                             double angularSpeedX, double angularSpeedY, double angularSpeedZ, Matrix covariance);
+    void onSlamDataAvailable(final R reconstructor, final double positionX, final double positionY,
+                             final double positionZ, final double velocityX, final double velocityY,
+                             final double velocityZ, final double accelerationX, final double accelerationY,
+                             final double accelerationZ, final double quaternionA, final double quaternionB,
+                             final double quaternionC, final double quaternionD, final double angularSpeedX,
+                             final double angularSpeedY, final double angularSpeedZ, final Matrix covariance);
 
     /**
      * Called whenever estimated SLAM camera notification is enabled.
      * This method is called each time all required samples (accelerometer, gyroscope or orientation) are
      * received in order to update SLAM system state to notify a new camera containing
      * current intrinsic parameters, position and orientation.
+     *
      * @param reconstructor reconstructor raising this event.
-     * @param camera current camera estimated using IMU data. This instance and its associated instances (camera center,
-     *               rotation and intrinsic parameters) will be reused between consecutive calls to this method.
+     * @param camera        current camera estimated using IMU data. This instance and its associated instances (camera center,
+     *                      rotation and intrinsic parameters) will be reused between consecutive calls to this method.
      */
-    void onSlamCameraEstimated(R reconstructor, PinholeCamera camera);
+    void onSlamCameraEstimated(final R reconstructor, final PinholeCamera camera);
 }

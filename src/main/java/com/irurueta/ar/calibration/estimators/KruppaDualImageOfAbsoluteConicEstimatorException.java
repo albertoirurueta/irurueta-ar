@@ -18,40 +18,42 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when DIAC estimation fails.
  */
-@SuppressWarnings("WeakerAccess")
 public class KruppaDualImageOfAbsoluteConicEstimatorException extends
         CalibrationEstimatorException {
-    
+
     /**
      * Constructor.
      */
     public KruppaDualImageOfAbsoluteConicEstimatorException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public KruppaDualImageOfAbsoluteConicEstimatorException(String message) {
+    public KruppaDualImageOfAbsoluteConicEstimatorException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public KruppaDualImageOfAbsoluteConicEstimatorException(String message, 
-            Throwable cause) {
+    public KruppaDualImageOfAbsoluteConicEstimatorException(final String message,
+                                                            final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public KruppaDualImageOfAbsoluteConicEstimatorException(Throwable cause) {
+    public KruppaDualImageOfAbsoluteConicEstimatorException(final Throwable cause) {
         super(cause);
     }
 }

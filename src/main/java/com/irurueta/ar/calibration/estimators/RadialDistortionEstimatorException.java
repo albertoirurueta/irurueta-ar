@@ -18,39 +18,41 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when radial distortion estimation fails.
  */
-@SuppressWarnings("WeakerAccess")
 public class RadialDistortionEstimatorException extends
         CalibrationEstimatorException {
-    
+
     /**
      * Constructor.
      */
     public RadialDistortionEstimatorException() {
         super();
     }
-    
+
     /**
      * Constructor with String containing message.
+     *
      * @param message Message indicating the cause of the exception.
      */
-    public RadialDistortionEstimatorException(String message) {
+    public RadialDistortionEstimatorException(final String message) {
         super(message);
     }
-    
+
     /**
      * Constructor with message and cause.
+     *
      * @param message Message describing the cause of the exception.
-     * @param cause Instance containing the cause of the exception.
+     * @param cause   Instance containing the cause of the exception.
      */
-    public RadialDistortionEstimatorException(String message, Throwable cause) {
+    public RadialDistortionEstimatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * Constructor with cause.
+     *
      * @param cause Instance containing the cause of the exception.
      */
-    public RadialDistortionEstimatorException(Throwable cause) {
+    public RadialDistortionEstimatorException(final Throwable cause) {
         super(cause);
-    }    
+    }
 }

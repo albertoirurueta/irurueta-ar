@@ -33,28 +33,32 @@ public abstract class Pattern2D {
     /**
      * Returns ideal points coordinates contained in a pattern and expressed
      * in meters. These values are use for calibration purposes.
+     *
      * @return ideal points coordinates.
      */
     public abstract List<Point2D> getIdealPoints();
-    
+
     /**
      * Returns number of 2D points used by this pattern.
+     *
      * @return number of 2D points used by this pattern.
      */
     public abstract int getNumberOfPoints();
-    
+
     /**
      * Returns type of pattern.
+     *
      * @return type of pattern.
      */
     public abstract Pattern2DType getType();
-    
+
     /**
      * Creates an instance of a 2D pattern using provided type.
+     *
      * @param type type of 2D pattern to create.
      * @return an instance of a 2D pattern.
      */
-    public static Pattern2D create(Pattern2DType type) {
+    public static Pattern2D create(final Pattern2DType type) {
         switch (type) {
             case QR:
                 return new QRPattern2D();

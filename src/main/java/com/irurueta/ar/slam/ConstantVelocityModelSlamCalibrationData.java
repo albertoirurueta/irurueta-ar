@@ -21,9 +21,9 @@ import java.io.Serializable;
  * Contains control calibration data for constant velocity model SLAM estimator
  * during Kalman filtering prediction stage.
  */
-public class ConstantVelocityModelSlamCalibrationData 
+public class ConstantVelocityModelSlamCalibrationData
         extends BaseCalibrationData implements Serializable {
-    
+
     /**
      * Constructor.
      */
@@ -31,5 +31,5 @@ public class ConstantVelocityModelSlamCalibrationData
         super(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
                 ConstantVelocityModelSlamEstimator.STATE_LENGTH);
     }
-    
+
 }

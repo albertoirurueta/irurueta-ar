@@ -26,11 +26,11 @@ import java.io.Serializable;
 
 /**
  * Base class containing configuration for a paired view based sparse reconstructor.
+ *
  * @param <T> an actual implementation of a configuration class.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class BasePairedViewsSparseReconstructorConfiguration<
-        T extends BasePairedViewsSparseReconstructorConfiguration> implements Serializable {
+        T extends BasePairedViewsSparseReconstructorConfiguration<T>> implements Serializable {
 
     /**
      * Default robust fundamental matrix estimator method.
@@ -429,11 +429,13 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Constructor.
      */
-    public BasePairedViewsSparseReconstructorConfiguration() { }
+    protected BasePairedViewsSparseReconstructorConfiguration() {
+    }
 
     /**
      * Gets method to use for non robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
+     *
      * @return method to use for non robust fundamental matrix estimation.
      */
     public FundamentalMatrixEstimatorMethod getNonRobustFundamentalMatrixEstimatorMethod() {
@@ -443,18 +445,20 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets method to use for non robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
+     *
      * @param method method to use for non robust fundamental matrix estimation.
      * @return this instance so that method can be easily chained.
      */
-    public T setNonRobustFundamentalMatrixEstimatorMethod(FundamentalMatrixEstimatorMethod method) {
+    public T setNonRobustFundamentalMatrixEstimatorMethod(final FundamentalMatrixEstimatorMethod method) {
         mNonRobustFundamentalMatrixEstimatorMethod = method;
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 
     /**
      * Gets method to use for robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
+     *
      * @return method to use for robust fundamental matrix estimation.
      */
     public RobustEstimatorMethod getRobustFundamentalMatrixEstimatorMethod() {
@@ -464,18 +468,20 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets method to use for robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
+     *
      * @param method method to use for robust fundamental matrix estimation.
      * @return this instance so that method can be easily chained.
      */
-    public T setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod method) {
+    public T setRobustFundamentalMatrixEstimatorMethod(final RobustEstimatorMethod method) {
         mRobustFundamentalMatrixEstimatorMethod = method;
         //noinspection all
-        return (T)this;
+        return (T) this;
     }
 
     /**
      * Indicates whether estimated fundamental matrix is refined among all found inliers.
      * This is only used when general scenes are allowed.
+     *
      * @return true if fundamental matrix is refined, false otherwise.
      */
     public boolean isFundamentalMatrixRefined() {
@@ -485,19 +491,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Specifies whether estimated fundamental matrix is refined among all found inliers.
      * This is only used when general scenes are allowed.
+     *
      * @param refineFundamentalMatrix true if fundamental matrix is refined, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixRefined(boolean refineFundamentalMatrix) {
+    public T setFundamentalMatrixRefined(final boolean refineFundamentalMatrix) {
         mRefineFundamentalMatrix = refineFundamentalMatrix;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether covariance of estimated fundamental matrix is kept after the
      * estimation.
      * This is only used when general scenes are allowed.
+     *
      * @return true if covariance is kept, false otherwise.
      */
     public boolean isFundamentalMatrixCovarianceKept() {
@@ -508,20 +516,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Specifies whether covariance of estimated fundamental matrix is kept after the
      * estimation.
      * This is only used when general scenes are allowed.
+     *
      * @param keepFundamentalMatrixCovariance true if covariance is kept, false
      *                                        otherwise.
      * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixCovarianceKept(
-            boolean keepFundamentalMatrixCovariance) {
+            final boolean keepFundamentalMatrixCovariance) {
         mKeepFundamentalMatrixCovariance = keepFundamentalMatrixCovariance;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets confidence of robustly estimated fundamental matrix.
      * This is only used when general scenes are allowed.
+     *
      * @return confidence of robustly estimated fundamental matrix.
      */
     public double getFundamentalMatrixConfidence() {
@@ -531,19 +541,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets confidence of robustly estimated fundamental matrix.
      * This is only used when general scenes are allowed.
+     *
      * @param fundamentalMatrixConfidence confidence of robustly estimated fundamental
      *                                    matrix.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixConfidence(double fundamentalMatrixConfidence) {
+    public T setFundamentalMatrixConfidence(final double fundamentalMatrixConfidence) {
         mFundamentalMatrixConfidence = fundamentalMatrixConfidence;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets maximum number of iterations to robustly estimate fundamental matrix.
      * This is only used when general scenes are allowed.
+     *
      * @return maximum number of iterations to robustly estimate fundamental matrix.
      */
     public int getFundamentalMatrixMaxIterations() {
@@ -553,20 +565,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets maximum number of iterations to robustly estimate fundamental matrix.
      * This is only used when general scenes are allowed.
+     *
      * @param fundamentalMatrixMaxIterations maximum number of iterations to robustly
      *                                       estimate fundamental matrix.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixMaxIterations(int fundamentalMatrixMaxIterations) {
+    public T setFundamentalMatrixMaxIterations(final int fundamentalMatrixMaxIterations) {
         mFundamentalMatrixMaxIterations = fundamentalMatrixMaxIterations;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets threshold to determine whether samples for robust fundamental matrix
      * estimation are inliers or not.
      * This is only used when general scenes are allowed.
+     *
      * @return threshold to determine whether samples for robust fundamental matrix
      * estimation are inliers or not.
      */
@@ -578,21 +592,23 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Sets threshold to determine whether samples for robust fundamental matrix
      * estimation are inliers or not.
      * This is only used when general scenes are allowed.
+     *
      * @param fundamentalMatrixThreshold threshold to determine whether samples for
      *                                   robust fundamental matrix estimation are inliers
      *                                   or not.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixThreshold(double fundamentalMatrixThreshold) {
+    public T setFundamentalMatrixThreshold(final double fundamentalMatrixThreshold) {
         mFundamentalMatrixThreshold = fundamentalMatrixThreshold;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether inliers must be kept during robust fundamental matrix
      * estimation.
      * This is only used when general scenes are allowed.
+     *
      * @return true if inliers must be kept during robust fundamental matrix estimation,
      * false otherwise.
      */
@@ -604,23 +620,25 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Specifies whether inliers must be kept during robust fundamental matrix
      * estimation.
      * This is only used when general scenes are allowed.
+     *
      * @param fundamentalMatrixComputeAndKeepInliers true if inliers must be kept
      *                                               during robust fundamental matrix
      *                                               estimation, false otherwise.
      * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixComputeAndKeepInliers(
-            boolean fundamentalMatrixComputeAndKeepInliers) {
+            final boolean fundamentalMatrixComputeAndKeepInliers) {
         mFundamentalMatrixComputeAndKeepInliers =
                 fundamentalMatrixComputeAndKeepInliers;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether residuals must be computed and kept during robust fundamental
      * matrix estimation.
      * This is only used when general scenes are allowed.
+     *
      * @return true if residuals must be computed and kept, false otherwise.
      */
     public boolean getFundamentalMatrixComputeAndKeepResiduals() {
@@ -631,20 +649,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Specifies whether residuals must be computed and kept during robust fundamental
      * matrix estimation.
      * This is only used when general scenes are allowed.
+     *
      * @param fundamentalMatrixComputeAndKeepResiduals true if residuals must be computed
      *                                                 and kept, false otherwise.
      * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixComputeAndKeepResiduals(
-            boolean fundamentalMatrixComputeAndKeepResiduals) {
+            final boolean fundamentalMatrixComputeAndKeepResiduals) {
         mFundamentalMatrixComputeAndKeepResiduals =
                 fundamentalMatrixComputeAndKeepResiduals;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets method to use for paired cameras estimation.
+     *
      * @return method to use for paired cameras estimation.
      */
     public InitialCamerasEstimatorMethod getPairedCamerasEstimatorMethod() {
@@ -653,19 +673,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
 
     /**
      * Sets method to use for paired cameras estimation.
+     *
      * @param method method to use for paired cameras estimation.
      * @return this instance so that method can be easily chained.
      */
-    public T setPairedCamerasEstimatorMethod(InitialCamerasEstimatorMethod method) {
+    public T setPairedCamerasEstimatorMethod(final InitialCamerasEstimatorMethod method) {
         mPairedCamerasEstimatorMethod = method;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether an homogeneous point triangulator is used for point
      * triangulation when Dual Absolute Quadric (DAQ) camera initialization is
      * used.
+     *
      * @return true if homogeneous point triangulator is used, false if an
      * inhomogeneous point triangulator is used instead.
      */
@@ -676,20 +698,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Specifies whether an homogeneous point triangulator is used for point
      * triangulation when Dual Absolute Quadric (DAQ) camera initialization is used.
+     *
      * @param daqUseHomogeneousPointTriangulator true if homogeneous point triangulator
      *                                           is used, false if an inhomogeneous point
      *                                           triangulator is used instead.
      * @return this instance so that method can be easily chained.
      */
     public T setDaqUseHomogeneousPointTriangulator(
-            boolean daqUseHomogeneousPointTriangulator) {
+            final boolean daqUseHomogeneousPointTriangulator) {
         mDaqUseHomogeneousPointTriangulator = daqUseHomogeneousPointTriangulator;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets aspect ratio for paired cameras estimation using DAQ or DIAC methods.
+     *
      * @return aspect ratio for initial cameras using DAQ or DIAC methods.
      */
     public double getPairedCamerasAspectRatio() {
@@ -698,19 +722,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
 
     /**
      * Sets aspect ratio for paired cameras estimation using DAQ or DIAC methods.
+     *
      * @param pairedCamerasAspectRatio aspect ratio for paired cameras using DAQ or
      *                                 DIAC methods.
      * @return this instance so that method can be easily chained.
      */
-    public T setPairedCamerasAspectRatio(double pairedCamerasAspectRatio) {
+    public T setPairedCamerasAspectRatio(final double pairedCamerasAspectRatio) {
         mPairedCamerasAspectRatio = pairedCamerasAspectRatio;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets horizontal principal point value to use for paired cameras estimation using
      * Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ) methods.
+     *
      * @return horizontal principal point value to use for paired cameras estimation
      * using DIAC or DAQ methods.
      */
@@ -721,19 +747,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets horizontal principal point value to use for paired cameras estimation using
      * DIAC or DAQ methods.
+     *
      * @param principalPointX horizontal principal point vlaue to use for paired cameras
      *                        estimation using DIAC or DAQ methods.
      * @return this instance so that method can be easily chained.
      */
-    public T setPrincipalPointX(double principalPointX) {
+    public T setPrincipalPointX(final double principalPointX) {
         mPrincipalPointX = principalPointX;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets vertical principal point value to use for paired cameras estimation
      * using DIAC or DAQ methods.
+     *
      * @return vertical principal point value to use for paired cameras estimation
      * using DIAC or DAQ methods.
      */
@@ -744,20 +772,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets vertical principal point value to use for paired cameras estimation using
      * DIAC or DAQ methods.
+     *
      * @param principalPointY vertical principal point value to use for initial cameras
      *                        estimation using DIAC or DAQ methods.
      * @return this instance so that method can be easily chained.
      */
-    public T setPrincipalPointY(double principalPointY) {
+    public T setPrincipalPointY(final double principalPointY) {
         mPrincipalPointY = principalPointY;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets corrector type to use for point triangulation when pairs of cameras are
      * being estimated using either DIAC or essential matrix methods or null if no
      * corrector is used.
+     *
      * @return corrector type to use for point triangulation when initial cameras are
      * being estimated using either DIAC or essential matrix methods or null if no
      * corrector is used.
@@ -770,20 +800,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Sets corrector type to use for point triangulation when pairs of cameras are
      * being estimated using either DIAC or essential matrix methods or null if no
      * corrector is used.
+     *
      * @param type corrector type to use for point triangulation when pairs of cameras
      *             are being estimated using either DIAC or essential matrix methods
      *             or null if no corrector is used.
      * @return this instance so that method can be easily chained.
      */
-    public T setPairedCamerasCorrectorType(CorrectorType type) {
+    public T setPairedCamerasCorrectorType(final CorrectorType type) {
         mPairedCamerasCorrectorType = type;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets value indicating whether valid triangulated points are marked during paired
      * cameras estimation using either DIAC or essential matrix methods.
+     *
      * @return value indicating whether valid triangulated points are marked during
      * paired cameras estimation using either DIAC or essential matrix methods.
      */
@@ -794,6 +826,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets value indicating whether valid triangulated points are marked during paired
      * cameras estimation using either DIAC or essential matrix methods.
+     *
      * @param pairedCamerasMarkValidTriangulatedPoints value indicating whether valid
      *                                                 triangulated points are marked during
      *                                                 paired cameras estimation using either
@@ -801,11 +834,11 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPairedCamerasMarkValidTriangulatedPoints(
-            boolean pairedCamerasMarkValidTriangulatedPoints) {
+            final boolean pairedCamerasMarkValidTriangulatedPoints) {
         mPairedCamerasMarkValidTriangulatedPoints =
                 pairedCamerasMarkValidTriangulatedPoints;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
@@ -815,6 +848,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * If intrinsic parameters are unknown, pairs of cameras should be autocalibrated
      * using either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic)
      * methods.
+     *
      * @return true if intrinsic parameters are known, false otherwise.
      */
     public boolean areIntrinsicParametersKnown() {
@@ -828,20 +862,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * If intrinsic parameters are unknown, pairs of cameras should be autocalibrated
      * using either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic)
      * methods.
+     *
      * @param intrinsicParametersKnown true if intrinsic parameters are known, false
      *                                 otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setIntrinsicParametersKnown(boolean intrinsicParametersKnown) {
+    public T setIntrinsicParametersKnown(final boolean intrinsicParametersKnown) {
         mKnownIntrinsicParameters = intrinsicParametersKnown;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether a general scene (points laying in a general 3D position) is
      * allowed.
      * When true, an initial geometry estimation is attempted for general points.
+     *
      * @return true if general scene is allowed, false otherwise.
      */
     public boolean isGeneralSceneAllowed() {
@@ -852,19 +888,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Specifies whether a general scene (points laying in a general 3D position) is
      * allowed.
      * When true, an initial geometry estimation is attempted for general points.
+     *
      * @param allowGeneralScene true if general scene is allowed, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setGeneralSceneAllowed(boolean allowGeneralScene) {
+    public T setGeneralSceneAllowed(final boolean allowGeneralScene) {
         mAllowGeneralScene = allowGeneralScene;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether a planar scene (points laying in a 3D plane) is allowed or
      * not.
      * When true, an initial geometry estimation is attempted for planar points.
+     *
      * @return true if planar scene is allowed, false otherwise.
      */
     public boolean isPlanarSceneAllowed() {
@@ -875,18 +913,20 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * specifies whether a planar scene (points laying in a 3D plane) is allowed or
      * not.
      * When true, an initial geometry estimation is attempted for planar points.
+     *
      * @param allowPlanarScene true if planar scene is allowed, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarSceneAllowed(boolean allowPlanarScene) {
+    public T setPlanarSceneAllowed(final boolean allowPlanarScene) {
         mAllowPlanarScene = allowPlanarScene;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets robust method to use for planar homography estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @return robust method to use for planar homography estimation.
      */
     public RobustEstimatorMethod getRobustPlanarHomographyEstimatorMethod() {
@@ -896,20 +936,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets robust method to use for planar homography estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @param robustPlanarHomographyEstimatorMethod robust method to use for planar
      *                                              homography estimation.
      * @return this instance so that method can be easily chained.
      */
     public T setRobustPlanarHomographyEstimatorMethod(
-            RobustEstimatorMethod robustPlanarHomographyEstimatorMethod) {
+            final RobustEstimatorMethod robustPlanarHomographyEstimatorMethod) {
         mRobustPlanarHomographyEstimatorMethod = robustPlanarHomographyEstimatorMethod;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether planar homography is refined using all found inliers or not.
      * This is only used when planar scenes are allowed.
+     *
      * @return true if planar homography is refined, false otherwise.
      */
     public boolean isPlanarHomographyRefined() {
@@ -919,19 +961,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Specifies whether planar homography is refined using all found inliers or not.
      * This is only used when planar scenes are allowed.
+     *
      * @param refinePlanarHomography true if planar homography must be refined, false
      *                               otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyRefined(boolean refinePlanarHomography) {
+    public T setPlanarHomographyRefined(final boolean refinePlanarHomography) {
         mRefinePlanarHomography = refinePlanarHomography;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Indicates whether planar homography covariance is kept after estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @return true if planar homography covariance is kept, false otherwise.
      */
     public boolean isPlanarHomographyCovarianceKept() {
@@ -941,19 +985,21 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Specifies whether planar homography covariance is kept after estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @param keepPlanarHomographyCovariance true if planar homography covariance is
      *                                       kept, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyCovarianceKept(boolean keepPlanarHomographyCovariance) {
+    public T setPlanarHomographyCovarianceKept(final boolean keepPlanarHomographyCovariance) {
         mKeepPlanarHomographyCovariance = keepPlanarHomographyCovariance;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets confidence of robustly estimated planar homography. By default this is 99%.
      * This is only used when planar scenes are allowed.
+     *
      * @return confidence of robustly estimated planar homography.
      */
     public double getPlanarHomographyConfidence() {
@@ -963,20 +1009,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Sets confidence of robustly estimated planar homography. By default this is 99%.
      * This is only used when planar scenes are allowed.
+     *
      * @param planarHomographyConfidence confidence of robustly estimated planar
      *                                   homography.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyConfidence(double planarHomographyConfidence) {
+    public T setPlanarHomographyConfidence(final double planarHomographyConfidence) {
         mPlanarHomographyConfidence = planarHomographyConfidence;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets maximum number of iterations to make while robustly estimating planar
      * homography. By default this is 5000.
      * This is only used when planar scenes are allowed.
+     *
      * @return maximum number of iterations to make while robustly estimating planar
      * homography.
      */
@@ -988,20 +1036,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Sets maximum number of iterations to make while robustly estimating planar
      * homography. By default this is 5000.
      * This is only used when planar scenes are allowed.
+     *
      * @param planarHomographyMaxIterations maximum number of iterations to make while
      *                                      robustly estimating planar homography.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyMaxIterations(int planarHomographyMaxIterations) {
+    public T setPlanarHomographyMaxIterations(final int planarHomographyMaxIterations) {
         mPlanarHomographyMaxIterations = planarHomographyMaxIterations;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets threshold to determine whether samples for robust projective 2D
      * transformation estimation are inliers or not.
      * This is only used when planar scenes are allowed.
+     *
      * @return threshold to robustly estimate projective 2D transformation.
      */
     public double getPlanarHomographyThreshold() {
@@ -1012,20 +1062,22 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Sets threshold to determine whether samples for robust projective 2D
      * transformation estimation are inliers or not.
      * This is only used when planar scenes are allowed.
+     *
      * @param planarHomographyThreshold threshold to robustly estimate projective 2D
      *                                  transformation.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyThreshold(double planarHomographyThreshold) {
+    public T setPlanarHomographyThreshold(final double planarHomographyThreshold) {
         mPlanarHomographyThreshold = planarHomographyThreshold;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets value indicating that inlier data is kept after robust planar homography
      * estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @return true if inlier data is kept, false otherwise.
      */
     public boolean getPlanarHomographyComputeAndKeepInliers() {
@@ -1035,21 +1087,23 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     /**
      * Specifies whether inlier data is kept after robust planar homography estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @param planarHomographyComputeAndKeepInliers true if inlier data is kept, false
      *                                              otherwise.
      * @return this instance so that method can be easily chained.
      */
     public T setPlanarHomographyComputeAndKeepInliers(
-            boolean planarHomographyComputeAndKeepInliers) {
+            final boolean planarHomographyComputeAndKeepInliers) {
         mPlanarHomographyComputeAndKeepInliers = planarHomographyComputeAndKeepInliers;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 
     /**
      * Gets value indicating that residual data is kept after robust planar homography
      * estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @return true if residual data is kept, false otherwise.
      */
     public boolean getPlanarHomographyComputeAndKeepResiduals() {
@@ -1060,15 +1114,16 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Sets value indicating that residual data is kept after robust planar homography
      * estimation.
      * This is only used when planar scenes are allowed.
+     *
      * @param planarHomographyComputeAndKeepResiduals true if residual data is kept, false
      *                                                otherwise.
      * @return this instance so that method can be easily chained.
      */
     public T setPlanarHomographyComputeAndKeepResiduals(
-            boolean planarHomographyComputeAndKeepResiduals) {
+            final boolean planarHomographyComputeAndKeepResiduals) {
         mPlanarHomographyComputeAndKeepResiduals =
                 planarHomographyComputeAndKeepResiduals;
-        //noinspection all
-        return (T)this;
+        //noinspection unchecked
+        return (T) this;
     }
 }
