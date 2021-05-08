@@ -828,7 +828,7 @@ public class EssentialMatrixTest {
     }
 
     @Test
-    public void testSetFromPairOfCameras2() throws InvalidPairOfCamerasException,
+    public void testSetFromPairOfCamerasAndIntrinsicsNotAvailable() throws InvalidPairOfCamerasException,
             WrongSizeException, RankDeficientMatrixException,
             DecomposerException,
             com.irurueta.geometry.estimators.NotReadyException,
@@ -954,6 +954,151 @@ public class EssentialMatrixTest {
         }
     }
 
+    @Test
+    public void testSetFromPairOfCamerasAndCameraSignFixed() throws InvalidPairOfCamerasException,
+            WrongSizeException, RankDeficientMatrixException,
+            DecomposerException,
+            com.irurueta.geometry.estimators.NotReadyException,
+            NotAvailableException, CameraException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double alphaEuler1 = 0.0;
+        final double betaEuler1 = 0.0;
+        final double gammaEuler1 = 0.0;
+        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+
+        final Point3D center1 = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+        final Point3D center2 = new InhomogeneousPoint3D(
+                center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation,
+                center1.getInhomZ() + cameraSeparation);
+
+        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
+                betaEuler1, gammaEuler1);
+        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
+                betaEuler2, gammaEuler2);
+
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
+
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
+                center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
+                center2);
+        camera1.fixCameraSign();
+        camera2.fixCameraSign();
+
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+
+        // set from pair of cameras
+        essentialMatrix.setFromPairOfCameras(camera1, camera2);
+
+        // check correctness
+        final Matrix cam1InternalMatrix = camera1.getInternalMatrix();
+        final Matrix cam1IntrinsicParameters = intrinsic1.getInternalMatrix();
+        final Matrix inverseCam1IntrinsicParameters = Utils.inverse(
+                cam1IntrinsicParameters);
+        final Matrix newCam1InternalMatrix = inverseCam1IntrinsicParameters.
+                multiplyAndReturnNew(cam1InternalMatrix);
+
+        camera1.setInternalMatrix(newCam1InternalMatrix);
+
+        final Matrix cam2InternalMatrix = camera2.getInternalMatrix();
+        final Matrix cam2IntrinsicParameters = intrinsic2.getInternalMatrix();
+        final Matrix inverseCam2IntrinsicParameters = Utils.inverse(
+                cam2IntrinsicParameters);
+        final Matrix newCam2InternalMatrix = inverseCam2IntrinsicParameters.
+                multiplyAndReturnNew(cam2InternalMatrix);
+
+        camera2.setInternalMatrix(newCam2InternalMatrix);
+
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
+                camera2);
+
+        // check equality up to scale
+        fundamentalMatrix.normalize();
+        essentialMatrix.normalize();
+
+        final Matrix fInternal = fundamentalMatrix.getInternalMatrix();
+        final Matrix eInternal = essentialMatrix.getInternalMatrix();
+        final double firstScale = fInternal.getElementAtIndex(0) /
+                eInternal.getElementAtIndex(0);
+        double previousScale = firstScale, currentScale = 0.0;
+        for (int i = 0; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
+            currentScale = fInternal.getElementAtIndex(i) /
+                    eInternal.getElementAtIndex(i);
+            assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
+            previousScale = currentScale;
+        }
+        assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
+
+        // Force IllegalArgumentException
+        try {
+            essentialMatrix.setFromPairOfCameras(camera1, camera2, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test(expected = InvalidPairOfCamerasException.class)
+    public void testSetFromPairOfCamerasWhenNumericallyUnstable() throws InvalidPairOfCamerasException,
+            WrongSizeException {
+
+        final Matrix matrix1 = new Matrix(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+                PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
+        final Matrix matrix2 = new Matrix(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+                PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
+        Arrays.fill(matrix1.getBuffer(), Double.NaN);
+        Arrays.fill(matrix2.getBuffer(), Double.NaN);
+
+        final PinholeCamera camera1 = new PinholeCamera(matrix1);
+        final PinholeCamera camera2 = new PinholeCamera(matrix2);
+
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+
+        // set from pair of cameras
+        essentialMatrix.setFromPairOfCameras(camera1, camera2);
+    }
 
     @Test
     public void testSetFromRotationAndTranslation() throws
