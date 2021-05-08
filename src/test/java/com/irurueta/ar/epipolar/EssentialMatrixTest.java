@@ -1897,6 +1897,14 @@ public class EssentialMatrixTest {
             assertTrue(valid1 || valid2 || valid3 || valid4);
         }
         assertTrue(numValid > TIMES / 4);
+
+        // Force InvalidEssentialMatrixException
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+        try {
+            essentialMatrix.computePossibleRotationAndTranslations();
+            fail("InvalidEssentialMatrixException expected but not thrown");
+        } catch (final InvalidEssentialMatrixException ignore) {
+        }
     }
 
     @Test
@@ -1930,6 +1938,12 @@ public class EssentialMatrixTest {
         // testing invalid essential matrix with more than 3 columns and rows
         internalMatrix = Matrix.createWithUniformRandomValues(
                 ESSENTIAL_MATRIX_ROWS + 1, ESSENTIAL_MATRIX_COLS + 1,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+
+        assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
+
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS + 1,
                 MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
