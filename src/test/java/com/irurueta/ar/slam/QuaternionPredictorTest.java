@@ -89,7 +89,7 @@ public class QuaternionPredictorTest {
         assertTrue(jacobianQ.equals(jacobianQ2, ABSOLUTE_ERROR));
         assertTrue(jacobianW.equals(jacobianW2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
@@ -146,7 +146,7 @@ public class QuaternionPredictorTest {
         assertTrue(jacobianQ.equals(jacobianQ2, ABSOLUTE_ERROR));
         assertTrue(jacobianW.equals(jacobianW2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         QuaternionPredictor.predict(q, w, dt, false, result, jacobianQ,
                 jacobianW);
 
@@ -205,7 +205,7 @@ public class QuaternionPredictorTest {
         } catch (final IllegalArgumentException ignore) {
         }
 
-        // test with array, tustin method and jacobians
+        // test with array, Tustin method and jacobians
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
@@ -248,7 +248,7 @@ public class QuaternionPredictorTest {
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         result = new Quaternion();
         QuaternionPredictor.predict(q, wx, wy, wz, dt, false, result);
 
@@ -272,7 +272,7 @@ public class QuaternionPredictorTest {
         } catch (final IllegalArgumentException ignore) {
         }
 
-        // test tustin method
+        // test Tustin method
         result = new Quaternion();
         QuaternionPredictor.predict(q, w, dt, false, result);
 
@@ -339,7 +339,7 @@ public class QuaternionPredictorTest {
         }
         assertNull(result);
 
-        // test tustin method
+        // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
         result = QuaternionPredictor.predict(q, wx, wy, wz, dt, false,
@@ -404,7 +404,7 @@ public class QuaternionPredictorTest {
         }
         assertNull(result);
 
-        // test tustin method
+        // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
         result = QuaternionPredictor.predict(q, w, dt, false, jacobianQ,
@@ -511,7 +511,7 @@ public class QuaternionPredictorTest {
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         result = QuaternionPredictor.predict(q, wx, wy, wz, dt, false);
 
         // check correctness
@@ -535,7 +535,7 @@ public class QuaternionPredictorTest {
         }
         assertNull(result);
 
-        // test tustin method
+        // test Tustin method
         result = QuaternionPredictor.predict(q, w, dt, false);
 
         // check correctness
@@ -663,7 +663,7 @@ public class QuaternionPredictorTest {
         assertTrue(jacobianQ.equals(jacobianQ2, ABSOLUTE_ERROR));
         assertTrue(jacobianW.equals(jacobianW2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
@@ -720,7 +720,7 @@ public class QuaternionPredictorTest {
         assertTrue(jacobianQ.equals(jacobianQ2, ABSOLUTE_ERROR));
         assertTrue(jacobianW.equals(jacobianW2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         QuaternionPredictor.predict(q, w, false, result, jacobianQ,
                 jacobianW);
 
@@ -822,7 +822,7 @@ public class QuaternionPredictorTest {
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         result = new Quaternion();
         QuaternionPredictor.predict(q, wx, wy, wz, false, result);
 
@@ -846,7 +846,7 @@ public class QuaternionPredictorTest {
         } catch (final IllegalArgumentException ignore) {
         }
 
-        // test tustin method
+        // test Tustin method
         result = new Quaternion();
         QuaternionPredictor.predict(q, w, false, result);
 
@@ -913,7 +913,7 @@ public class QuaternionPredictorTest {
         }
         assertNull(result);
 
-        // test tustin method
+        // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
         result = QuaternionPredictor.predict(q, wx, wy, wz, false,
@@ -978,7 +978,7 @@ public class QuaternionPredictorTest {
         }
         assertNull(result);
 
-        // test tustin method
+        // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
         result = QuaternionPredictor.predict(q, w, false, jacobianQ,
@@ -1085,7 +1085,7 @@ public class QuaternionPredictorTest {
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
-        // test tustin method
+        // test Tustin method
         result = QuaternionPredictor.predict(q, wx, wy, wz, false);
 
         // check correctness
@@ -1108,7 +1108,7 @@ public class QuaternionPredictorTest {
         }
         assertNull(result);
 
-        // test tustin method
+        // test Tustin method
         result = QuaternionPredictor.predict(q, w, false);
 
         // check correctness

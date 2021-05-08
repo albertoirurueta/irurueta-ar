@@ -37,7 +37,7 @@ import java.util.List;
  *
  * @param <D> type of calibration data.
  * @param <C> type of configuration.
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  * @param <L> type of listener.
  * @param <S> type of SLAM estimator.
  */
@@ -57,7 +57,7 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor<
     /**
      * Constructor.
      *
-     * @param configuration configuration for this reconstructor.
+     * @param configuration configuration for this re-constructor.
      * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
      *                              provided.
@@ -69,7 +69,7 @@ public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor<
 
     /**
      * Provides a new orientation sample to update SLAM estimator.
-     * If reconstructor is not running, calling this method has no effect.
+     * If re-constructor is not running, calling this method has no effect.
      *
      * @param timestamp   timestamp of accelerometer sample since epoch time and
      *                    expressed in nanoseconds.

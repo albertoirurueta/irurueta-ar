@@ -99,7 +99,7 @@ public abstract class RadialDistortionEstimator {
 
     /**
      * List of distorted points. Distorted points are obtained after radial
-     * distorsion is applied to an undistorted point.
+     * distortion is applied to an undistorted point.
      */
     protected List<Point2D> mDistortedPoints;
 
@@ -151,7 +151,7 @@ public abstract class RadialDistortionEstimator {
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
@@ -167,7 +167,7 @@ public abstract class RadialDistortionEstimator {
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param listener          listener to be notified of events such as when estimation
      *                          starts, ends or estimation progress changes.
@@ -227,7 +227,7 @@ public abstract class RadialDistortionEstimator {
      * Constructor with points and distortion center.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  Distortion center. This is usually equal to the
      *                          principal point of an estimated camera. If not set it is assumed to be at
@@ -252,7 +252,7 @@ public abstract class RadialDistortionEstimator {
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  Distortion center. This is usually equal to the
      *                          principal point of an estimated camera. If not set it is assumed to be at
@@ -315,7 +315,7 @@ public abstract class RadialDistortionEstimator {
      * Sets list of corresponding distorted and undistorted points.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided lists of points don't have
@@ -333,7 +333,7 @@ public abstract class RadialDistortionEstimator {
 
     /**
      * Returns list of distorted points. Distorted points are obtained after
-     * radial distorsion is applied to an undistorted point.
+     * radial distortion is applied to an undistorted point.
      *
      * @return list of distorted points.
      */
@@ -571,7 +571,7 @@ public abstract class RadialDistortionEstimator {
      * both have more than the required minimum of correspondences (which is 2)
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @return true if lists of points are valid, false otherwise.
      */
@@ -705,7 +705,7 @@ public abstract class RadialDistortionEstimator {
      * This method does not check whether estimator is locked.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.

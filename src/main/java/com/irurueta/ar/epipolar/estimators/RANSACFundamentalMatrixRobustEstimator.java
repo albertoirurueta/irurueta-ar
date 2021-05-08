@@ -214,7 +214,7 @@ public class RANSACFundamentalMatrixRobustEstimator extends
     }
 
     /**
-     * Sets threshodl to determine whether matched pairs of points are inliers
+     * Sets threshold to determine whether matched pairs of points are inliers
      * or not when testing possible estimation solutions.
      *
      * @param threshold threshold to be set.

@@ -232,9 +232,10 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or cameras
-     *                                               corresponding to critical motion sequences such as pure paraller
-     *                                               translations are provided, where no additional data is really provided.
+     *                                               estimation, usually because repeated cameras are provided, or
+     *                                               cameras corresponding to critical motion sequences such as pure
+     *                                               parallel translations are provided, where no additional data is
+     *                                               really provided.
      */
     private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
             final DualAbsoluteQuadric result)
@@ -426,15 +427,16 @@ public class LMSEDualAbsoluteQuadricEstimator extends
     }
 
     /**
-     * Estimates Dual Absolute Quadric (DAQ) assumint that principal point is
+     * Estimates Dual Absolute Quadric (DAQ) assuming that principal point is
      * zero.
      *
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or cameras
-     *                                               corresponding to critical motion sequences such as pure paraller
-     *                                               translations are provided, where no additional data is really provided.
+     *                                               estimation, usually because repeated cameras are provided, or
+     *                                               cameras corresponding to critical motion sequences such as pure
+     *                                               parallel translations are provided, where no additional data is
+     *                                               really provided.
      */
     private void estimatePrincipalPointAtOrigin(
             final DualAbsoluteQuadric result)

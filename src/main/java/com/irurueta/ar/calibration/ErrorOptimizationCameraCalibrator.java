@@ -538,7 +538,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     }
 
     /**
-     * Estimates radial distortion by minimizing the reprojection error by
+     * Estimates radial distortion by minimizing the re-projection error by
      * adjusting the camera pose and radial distortion parameters using an
      * optimization algorithm.
      * The initial solution for the optimization algorithm is the estimated
@@ -762,7 +762,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             // updates camera poses from estimated parameters
             dataFromParams(estimatedParams);
 
-            // computes reprojection errors between sampled and ideal data using
+            // computes re-projection errors between sampled and ideal data using
             // fitted parameters
             final double error = computeReprojectionError(
                     idealFallbackPatternMarkers);
@@ -1144,14 +1144,14 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     }
 
     /**
-     * Computes reprojection error taking into account ideal pattern marker
+     * Computes re-projection error taking into account ideal pattern marker
      * points, transforming them using estimated homography, adding to them
      * distortion and comparing them with sampled points.
      *
      * @param idealFallbackPatternMarkers ideal 2D pattern marker points used
      *                                    as fallback in case that a given sample does not have an associated
      *                                    pattern.
-     * @return average reprojection error.
+     * @return average re-projection error.
      */
     private double computeReprojectionError(
             final List<Point2D> idealFallbackPatternMarkers) {
@@ -1282,7 +1282,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */
     private int numIntrinsicParameters() {
         // if no constraints, there are 5 intrinsic parameters (horizontal
-        // focal length, verticla focal length, skewness, horizontal principal
+        // focal length, vertical focal length, skewness, horizontal principal
         // point and vertical principal point
         int num = 5;
         if (isZeroSkewness()) {

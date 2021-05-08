@@ -24,7 +24,7 @@ import java.util.List;
  * Listener to retrieve and store required data to compute a 3D reconstruction from
  * sparse image point correspondences in multiple views.
  *
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  */
 public interface BasePairedViewsSparseReconstructorListener<
         R extends BasePairedViewsSparseReconstructor<?, ?, ?>> {
@@ -42,7 +42,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * Called when samples containing points of interest for current view must be
      * retrieved.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of 1st view where points will be used in current view pair.
      * @param viewId2       id of 2nd view where points will be used in current view pair.
      * @param samples1      samples containing points of interest for 1st view to test in
@@ -58,7 +58,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * This method can be used to determine whether samples can be stored or
      * not.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of 1st view whose samples have been accepted in current view pair.
      * @param viewId2       id of 2nd view whose samples have been accepted in current view pair.
      * @param samples1      accepted samples on 1st view in current view pair.
@@ -71,7 +71,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * Called when requested samples have been rejected.
      * This method can be used to remove provided samples.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of 1st view whose samples have been rejected in current view pair.
      * @param viewId2       id of 2nd view whose samples have been rejected in current view pair.
      * @param samples1      rejected samples on 1st view in current view pair.
@@ -83,7 +83,7 @@ public interface BasePairedViewsSparseReconstructorListener<
     /**
      * Finds matches for provided samples.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of 1st view where points will be used in current view pair.
      * @param viewId2       id of 2nd view where points will be used in current view pair.
      * @param samples1      samples containing points of interest for 1st view to test in
@@ -100,7 +100,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * Called when a fundamental matrix relating a pair of views has been estimated.
      * This event can be used to store estimated fundamental matrix relating two views.
      *
-     * @param reconstructor              reconstructor raising this event.
+     * @param reconstructor              re-constructor raising this event.
      * @param viewId1                    id of 1st view where points will be used in current view pair.
      * @param viewId2                    id of 2nd view where points will be used in current view pair.
      * @param estimatedFundamentalMatrix estimated fundamental matrix.
@@ -115,7 +115,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * gyroscope and accelerometer) to estimate scale of each view pair, might also have
      * some inaccuracies in estimated scale.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of previous view (i.e. 1st view).
      * @param viewId2       id of current view (i.e. 2nd view).
      * @param scale         estimated scale. When using SLAM this is estimated up to a certain
@@ -131,7 +131,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * Called when reconstructed points have been estimated from a series of 2D matches in a
      * pair of views in an euclidean stratum (up to certain translation and rotation).
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of previous view (i.e. 1st view).
      * @param viewId2       id of current view (i.e. 2nd view).
      * @param scale         estimated scale. When using SLAM this is estimated up to a certain
@@ -148,7 +148,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * known, so that essential matrix method can be used for scene reconstruction.
      * If intrinsic parameters are unknown, DIAC or DAQ method will be attempted if possible.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId        id of view whose parameters are requested.
      * @return intrinsic parameters if known, false otherwise.
      */
@@ -157,28 +157,28 @@ public interface BasePairedViewsSparseReconstructorListener<
     /**
      * Called when reconstruction starts.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onStart(final R reconstructor);
 
     /**
      * Called when reconstruction stops.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onFinish(final R reconstructor);
 
     /**
      * Called when reconstruction is cancelled before it has finished.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onCancel(final R reconstructor);
 
     /**
      * Called when reconstruction fails.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onFail(final R reconstructor);
 }

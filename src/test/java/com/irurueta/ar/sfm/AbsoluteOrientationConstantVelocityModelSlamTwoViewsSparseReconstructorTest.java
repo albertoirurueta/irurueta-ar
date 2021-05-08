@@ -1142,7 +1142,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
                                             angularSpeedWithNoise);
                                     reconstructor.updateOrientationSample(timestamp,
                                             orientation);
-                                    // actualizamos orientación
+                                    // update orientation
                                     orientation.combine(diffQuaternion);
                                     timestamp += DELTA_NANOS;
                                 }

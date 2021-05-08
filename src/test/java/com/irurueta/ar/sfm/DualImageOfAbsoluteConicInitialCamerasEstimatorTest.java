@@ -770,7 +770,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 //noinspection ConstantConditions
                 assertTrue(rightFront);
 
-                // projct world point into both cameras
+                // project world point into both cameras
                 leftPoint = camera1.project(worldPoint);
                 leftPoints.add(leftPoint);
 
@@ -944,7 +944,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -1397,7 +1397,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -1828,7 +1828,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -2271,7 +2271,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -2725,7 +2725,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -3145,7 +3145,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -3574,7 +3574,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -3990,7 +3990,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -4435,7 +4435,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);

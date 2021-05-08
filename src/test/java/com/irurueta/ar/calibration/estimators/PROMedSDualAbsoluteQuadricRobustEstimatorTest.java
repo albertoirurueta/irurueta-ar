@@ -518,7 +518,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsSetEnforcedsingularityValidated() throws LockedException {
+    public void testIsSetEnforcedSingularityValidated() throws LockedException {
         final PROMedSDualAbsoluteQuadricRobustEstimator estimator =
                 new PROMedSDualAbsoluteQuadricRobustEstimator();
 

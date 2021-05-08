@@ -383,7 +383,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
     }
 
     @Test
-    public void testGetsetHomographyEstimator() throws LockedException {
+    public void testGetSetHomographyEstimator() throws LockedException {
         final PlanarBestFundamentalMatrixEstimatorAndReconstructor er =
                 new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
 

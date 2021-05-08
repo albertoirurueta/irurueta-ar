@@ -359,7 +359,7 @@ public class LMSEImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testEstimateNoContraintsAndNoLMSE()
+    public void testEstimateNoConstraintsAndNoLMSE()
             throws InvalidPinholeCameraIntrinsicParametersException,
             LockedException, NotReadyException, RobustEstimatorException,
             ImageOfAbsoluteConicEstimatorException {
@@ -643,7 +643,7 @@ public class LMSEImageOfAbsoluteConicEstimatorTest implements
         assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
         assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "NO LMSE, No contraints - failed: " +
+        final String msg = "NO LMSE, No constraints - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
                 "% avg horizontal focal distance error: " +
                 avgHorizontalFocalDistanceError +
@@ -678,7 +678,7 @@ public class LMSEImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testEstimateNoContraintsAndLMSE()
+    public void testEstimateNoConstraintsAndLMSE()
             throws InvalidPinholeCameraIntrinsicParametersException,
             LockedException, NotReadyException, RobustEstimatorException,
             ImageOfAbsoluteConicEstimatorException {
@@ -929,7 +929,7 @@ public class LMSEImageOfAbsoluteConicEstimatorTest implements
                 LARGE_ABSOLUTE_ERROR);
         assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "LMSE, No contraints - failed: " +
+        final String msg = "LMSE, No constraints - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
                 "% avg horizontal focal distance error: " +
                 avgHorizontalFocalDistanceError +

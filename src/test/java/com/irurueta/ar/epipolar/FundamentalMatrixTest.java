@@ -257,7 +257,7 @@ public class FundamentalMatrixTest {
             // check that 2D point on right view belongs to right epipolar line
             assertTrue(line2.isLocus(point2D2, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines and check that both produce the same
+            // back-project epipolar lines and check that both produce the same
             // epipolar plane
             final Plane epipolarPlane1 = camera1.backProject(line1);
             final Plane epipolarPlane2 = camera2.backProject(line2);
@@ -350,7 +350,7 @@ public class FundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetInternalmatrixAndAvailability()
+    public void testGetSetInternalMatrixAndAvailability()
             throws WrongSizeException, NotReadyException, LockedException,
             DecomposerException, com.irurueta.algebra.NotAvailableException,
             InvalidFundamentalMatrixException, NotAvailableException {
@@ -544,7 +544,7 @@ public class FundamentalMatrixTest {
             // check that 2D point on right view belongs to right epipolar line
             assertTrue(line2.isLocus(point2D2, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines and check that both produce the same
+            // back-project epipolar lines and check that both produce the same
             // epipolar plane
             final Plane epipolarPlane1 = camera1.backProject(line1);
             final Plane epipolarPlane2 = camera2.backProject(line2);
@@ -762,7 +762,7 @@ public class FundamentalMatrixTest {
             // check that both lines are equal
             assertTrue(line2.equals(line2b, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines and check that both produce the same
+            // back-project epipolar lines and check that both produce the same
             // epipolar plane
             final Plane epipolarPlane1 = camera1.backProject(line1);
             final Plane epipolarPlane2 = camera2.backProject(line2);
@@ -883,7 +883,7 @@ public class FundamentalMatrixTest {
         // check correctness
         assertTrue(fundMatrix.isNormalized());
 
-        // check that internal matrix has frobenius norm equal to 1
+        // check that internal matrix has Frobenius norm equal to 1
         final Matrix internalMatrix = fundMatrix.getInternalMatrix();
 
         assertEquals(Utils.normF(internalMatrix), 1.0, ABSOLUTE_ERROR);
@@ -1163,7 +1163,7 @@ public class FundamentalMatrixTest {
             }
             assertTrue(line2c.isLocus(point2D2c, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines for each pair of cameras and check that
+            // back-project epipolar lines for each pair of cameras and check that
             // each pair of lines correspond to the same epipolar plane
             final Plane epipolarPlane1a = camera1.backProject(line1a);
             final Plane epipolarPlane2a = camera2.backProject(line2a);

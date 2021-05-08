@@ -30,7 +30,7 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.io.Serializable;
 
 /**
- * Base class containing configuration for a sparse reconstructor suporting multiple views.
+ * Base class containing configuration for a sparse re-constructor supporting multiple views.
  *
  * @param <T> an actual implementation of a configuration class.
  */
@@ -121,7 +121,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Default vertical principal point value to use for initial cameras estimation using
-     * Dual Image of Absolute COnic (DIAC) or Dual Absolute Quadric (DAQ) methods.
+     * Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ) methods.
      */
     public static final double DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y = 0.0;
 
@@ -261,7 +261,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             false;
 
     /**
-     * Indicates that by default UPnP (Uncalibrated PErspective-n-Point) method is
+     * Indicates that by default UPnP (Uncalibrated Perspective-n-Point) method is
      * used for additional cameras estimation.
      */
     public static final boolean DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION =
@@ -283,7 +283,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
                     DEFAULT_PLANAR_CONFIGURATION_ALLOWED;
 
     /**
-     * Default value indicating that dimension 2 nullspace is allowed while estimating
+     * Default value indicating that dimension 2 null-space is allowed while estimating
      * additional cameras using either EPnP or UPnP.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2 =
@@ -291,7 +291,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
                     DEFAULT_NULLSPACE_DIMENSION2_ALLOWED;
 
     /**
-     * Default value indicating that dimension 3 nullspace is allowed while estimating
+     * Default value indicating that dimension 3 null-space is allowed while estimating
      * additional cameras using EPnP.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3 =
@@ -314,7 +314,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Default value indicating that covariance is kept after refining results of
-     * additonal cameras estimation.
+     * additional cameras estimation.
      */
     public static final boolean DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS = true;
 
@@ -327,7 +327,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Default confidence of estimated additional cameras, which is 99%. This means
      * that with a probability of 99% estimation will be accurate because chosen
-     * subsamples will be inliers.
+     * sub-samples will be inliers.
      */
     public static final double DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE =
             PinholeCameraRobustEstimator.DEFAULT_CONFIDENCE;
@@ -631,7 +631,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates that additional cameras intrinsics are estimated using the Dual Image of Absolute
-     * Concic (DIAC).
+     * Conic (DIAC).
      */
     private boolean mUseDIACForAdditionalCamerasIntrinsics =
             DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS;
@@ -661,7 +661,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Vertical coordinate of principal point for additional cameras when UPnP (Uncalibrated
      * Perspective-n-Point) method is used for additional cameras estimation and neither Dual
-     * Image of Absolute Conic (DIAC) nor Dual Absolute Quadrid (DAQ) are estimated to find
+     * Image of Absolute Conic (DIAC) nor Dual Absolute Quadric (DAQ) are estimated to find
      * intrinsic parameters when adding new cameras.
      */
     private double mAdditionalCamerasVerticalPrincipalPoint =
@@ -702,14 +702,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION;
 
     /**
-     * Indicates whether dimension 2 nullspace is allowed while estimating additional
+     * Indicates whether dimension 2 null-space is allowed while estimating additional
      * cameras using either EPnP or UPnP.
      */
     private boolean mAdditionalCamerasAllowNullspaceDimension2 =
             DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2;
 
     /**
-     * Indicates whether dimension 3 nullspace is allowed while estimating additional
+     * Indicates whether dimension 3 null-space is allowed while estimating additional
      * cameras using EPnP.
      */
     private boolean mAdditionalCamerasAllowNullspaceDimension3 =
@@ -807,7 +807,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Value indicating whether aspect ratio is suggested or not during
-     * additional cameras estimaton.
+     * additional cameras estimation.
      */
     private boolean mAdditionalCamerasSuggestAspectRatioEnabled =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED;
@@ -1085,7 +1085,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      *
      * @param fundamentalMatrixComputeAndKeepResiduals true if residuals must be
      *                                                 computed and kept, false otherwise.
-     * @return this instance so that method can be eaisly chained.
+     * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixComputeAndKeepResiduals(
             final boolean fundamentalMatrixComputeAndKeepResiduals) {
@@ -1603,7 +1603,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      * Indicates that additional cameras intrinsics are estimated using the Dual Image of Absolute
      * Conic (DIAC).
      *
-     * @return true if additional cameras instrinsics are estimated using the Dual Image of Absolute Conic
+     * @return true if additional cameras intrinsics are estimated using the Dual Image of Absolute Conic
      * (DIAC), false otherwise.
      */
     public boolean getUseDIACForAdditionalCamerasIntrinsics() {
@@ -1872,10 +1872,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Indicates whether dimension 2 nullspace is allowed while estimating additional
+     * Indicates whether dimension 2 null-space is allowed while estimating additional
      * cameras using either EPnP or UPnP.
      *
-     * @return true if dimension 2 nullspace is allowed while estimating additional
+     * @return true if dimension 2 null-space is allowed while estimating additional
      * cameras, false otherwise.
      */
     public boolean getAdditionalCamerasAllowNullspaceDimension2() {
@@ -1883,12 +1883,12 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Specifies whether dimension 2 nullspace is allowed while estimating additional
+     * Specifies whether dimension 2 null-space is allowed while estimating additional
      * cameras using either EPnP or UPnP.
      *
-     * @param allowNullspaceDimension2 true if dimension 2 nullspace is allowed while
+     * @param allowNullspaceDimension2 true if dimension 2 null-space is allowed while
      *                                 estimating additional cameras, false otherwise.
-     * @return this instance so that method can be eaisly chained.
+     * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasAllowNullspaceDimension2(
             final boolean allowNullspaceDimension2) {
@@ -1898,10 +1898,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Indicates whether dimension 3 nullspace is allowed while estimating additional
+     * Indicates whether dimension 3 null-space is allowed while estimating additional
      * cameras using EPnP.
      *
-     * @return true if dimension 3 nullspace is allowed while estimating additional
+     * @return true if dimension 3 null-space is allowed while estimating additional
      * cameras, false otherwise.
      */
     public boolean getAdditionalCamerasAllowNullspaceDimension3() {
@@ -1909,10 +1909,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Specifies whether dimension 3 nullspace is allowed while estimating additional
+     * Specifies whether dimension 3 null-space is allowed while estimating additional
      * cameras using either EPnP or UPnP.
      *
-     * @param allowNullspaceDimension3 true if dimension 3 nullspace is allowed while
+     * @param allowNullspaceDimension3 true if dimension 3 null-space is allowed while
      *                                 estimating additional cameras, false otherwise.
      * @return this instance so that method can be easily chained.
      */

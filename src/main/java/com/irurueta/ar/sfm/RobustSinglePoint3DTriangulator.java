@@ -58,7 +58,7 @@ public abstract class RobustSinglePoint3DTriangulator {
     /**
      * Constant defining default confidence of the estimated result, which is
      * 99%. This means that with a probability of 99% estimation will be
-     * accurate because chose subsamples will be inliers.
+     * accurate because chose sub-samples will be inliers.
      */
     public static final double DEFAULT_CONFIDENCE = 0.99;
 
@@ -306,7 +306,6 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException          if this estimator is locked because an estimation
      *                                  is being computed.
      */
-    @SuppressWarnings("Duplicates")
     public void setProgressDelta(final float progressDelta)
             throws LockedException {
         if (isLocked()) {
@@ -343,7 +342,6 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException          if this estimator is locked because an estimator
      *                                  is being computed.
      */
-    @SuppressWarnings("Duplicates")
     public void setConfidence(final double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();

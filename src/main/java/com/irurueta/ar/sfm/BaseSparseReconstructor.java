@@ -54,10 +54,9 @@ import java.util.List;
  * image point correspondences for multiple views.
  *
  * @param <C> type of configuration.
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  * @param <L> type of listener.
  */
-@SuppressWarnings("DuplicatedCode")
 public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorConfiguration<C>,
         R extends BaseSparseReconstructor<C, R, L>, L extends BaseSparseReconstructorListener<R>> {
 
@@ -109,7 +108,7 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
     protected List<ReconstructedPoint3D> mActiveEuclideanReconstructedPoints;
 
     /**
-     * Configuration for this reconstructor.
+     * Configuration for this re-constructor.
      */
     protected C mConfiguration;
 
@@ -187,7 +186,7 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
     /**
      * Constructor.
      *
-     * @param configuration configuration for this reconstructor.
+     * @param configuration configuration for this re-constructor.
      * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not provided.
      */
@@ -201,9 +200,9 @@ public abstract class BaseSparseReconstructor<C extends BaseSparseReconstructorC
     }
 
     /**
-     * Gets configuration for this reconstructor.
+     * Gets configuration for this re-constructor.
      *
-     * @return configuration for this reconstructor.
+     * @return configuration for this re-constructor.
      */
     public C getConfiguration() {
         return mConfiguration;

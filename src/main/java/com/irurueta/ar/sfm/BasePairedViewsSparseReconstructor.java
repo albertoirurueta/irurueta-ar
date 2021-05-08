@@ -57,7 +57,7 @@ import java.util.List;
  * estimated individually, hence the scale will need to be
  *
  * @param <C> type of configuration.
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  * @param <L> type of listener.
  */
 @SuppressWarnings("DuplicatedCode")
@@ -94,7 +94,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     /**
      * Transformation to set reference frame on estimated pair of euclidean cameras.
      * This is used when estimating new pair of euclidean cameras to transform such pair to
-     * the location and rotation of last estimasted euclidean camera so that the first camera
+     * the location and rotation of last estimated euclidean camera so that the first camera
      * of the pair is not referred to the world origin.
      */
     protected MetricTransformation3D mReferenceEuclideanTransformation;
@@ -122,7 +122,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     protected List<ReconstructedPoint3D> mEuclideanReconstructedPoints;
 
     /**
-     * Configuration for this reconstructor.
+     * Configuration for this re-constructor.
      */
     protected C mConfiguration;
 
@@ -225,7 +225,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     /**
      * Constructor.
      *
-     * @param configuration configuration for this reconstructor.
+     * @param configuration configuration for this re-constructor.
      * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
      *                              provided.
@@ -239,7 +239,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Gets configuration for this reconstructor.
+     * Gets configuration for this re-constructor.
      *
      * @return configuration for this reconstructor.
      */
@@ -679,7 +679,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Indicates whether implementations of a reconstructor uses absolute orientation or
+     * Indicates whether implementations of a re-constructor uses absolute orientation or
      * not.
      *
      * @return true if absolute orientation is used, false, otherwise.
@@ -899,7 +899,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @param matches pairs of matches to find fundamental matrix.
      * @param viewId1 id of first view.
      * @param viewId2 id of second view.
-     * @return true if estimation succeeeded, false otherwise.
+     * @return true if estimation succeeded, false otherwise.
      */
     private boolean estimatePlanarFundamentalMatrix(
             final List<MatchedSamples> matches, final int viewId1, final int viewId2) {

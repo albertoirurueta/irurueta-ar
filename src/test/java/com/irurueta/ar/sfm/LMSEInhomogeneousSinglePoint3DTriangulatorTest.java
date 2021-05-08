@@ -161,7 +161,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
         assertTrue(triangulator.isReady());
         assertSame(triangulator.getListener(), this);
 
-        // sforce IllegalArgumentException
+        // Force IllegalArgumentException
         triangulator = null;
         try {
             triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(

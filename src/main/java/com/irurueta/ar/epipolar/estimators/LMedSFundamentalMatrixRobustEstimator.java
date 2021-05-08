@@ -287,7 +287,6 @@ public class LMedSFundamentalMatrixRobustEstimator extends
                                 return getMinRequiredPoints();
                             }
 
-                            @SuppressWarnings("DuplicatedCode")
                             @Override
                             public void estimatePreliminarSolutions(final int[] samplesIndices,
                                                                     final List<FundamentalMatrix> solutions) {

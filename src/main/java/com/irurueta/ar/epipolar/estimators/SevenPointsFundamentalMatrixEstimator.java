@@ -193,7 +193,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * (and 2 imaginary ones which are discarded), 3 real solutions, or 1 real
      * solution with triple multiplicity.
      *
-     * @return all posible fundamental matrices found using provided points.
+     * @return all possible fundamental matrices found using provided points.
      * @throws LockedException                     if estimator is locked doing an estimation.
      * @throws NotReadyException                   if estimator is not ready because required
      *                                             input points have not already been provided.
@@ -360,7 +360,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
             // 7, and nullity must be 2, so that the final fundamental matrix
             // can be found as a linear combination of the null-space.
             // If nullity is bigger than 2, then geometry is degenerate, usually
-            // due to colinearities or coplanarities on projected image points.
+            // due to co-linearities or co-planarities on projected image points.
             // In this case we throw an exception
             if (decomposer.getNullity() > 2) {
                 throw new FundamentalMatrixEstimatorException();
@@ -412,8 +412,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 fundMatrix1 = transposedRightTransformationMatrix.
                         multiplyAndReturnNew(fundMatrix1);
 
-                // normalize by frobenius norm to increase accuracy after point
-                // denormalization
+                // normalize by Frobenius norm to increase accuracy after point
+                // de-normalization
                 double norm = Utils.normF(fundMatrix1);
                 fundMatrix1.multiplyByScalar(1.0 / norm);
 
@@ -423,16 +423,16 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 transposedRightTransformationMatrix.multiply(fundMatrix2);
                 fundMatrix2 = transposedRightTransformationMatrix;
 
-                // normalize by frobenius norm to increase accuracy after point
-                // denormalization
+                // normalize by Frobenius norm to increase accuracy after point
+                // de-normalization
                 norm = Utils.normF(fundMatrix2);
                 fundMatrix2.multiplyByScalar(1.0 / norm);
             }
 
             // because fundMatrix1, and fundMatrix2 have been obtained as
-            // columns of V, then its frobenius norm will be 1 because SVD
+            // columns of V, then its Frobenius norm will be 1 because SVD
             // already returns normalized singular vectors, and there is no need
-            // to normalize by frobenius norm if points are NOT normalized
+            // to normalize by Frobenius norm if points are NOT normalized
 
             // The last thing we need to do is to enforce rank 2 on fundamental
             // matrix, since we know it always is a rank 2 matrix. For that
@@ -760,7 +760,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
         } else {
             // if rank is 2, rank is ok, otherwise rank is lower than fundamental
             // matrix rank (rank 1) and estimation has failed because of
-            // coplanarities
+            // co-planarities
             return rank != FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK;
         }
     }

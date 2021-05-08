@@ -16,7 +16,7 @@
 package com.irurueta.ar.sfm;
 
 /**
- * Exception raised if a reconstructor fails or is cancelled.
+ * Exception raised if a re-constructor fails or is cancelled.
  */
 public class ReconstructionException extends StructureFromMotionException {
 

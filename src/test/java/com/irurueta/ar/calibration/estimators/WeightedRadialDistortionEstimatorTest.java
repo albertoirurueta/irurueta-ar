@@ -424,7 +424,7 @@ public class WeightedRadialDistortionEstimatorTest implements
                 RadialDistortionEstimatorType.
                         WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
 
-        // Force IllegalArgumentExcpetion
+        // Force IllegalArgumentException
         estimator = null;
         try {
             estimator = new WeightedRadialDistortionEstimator(emptyPoints,
@@ -562,7 +562,7 @@ public class WeightedRadialDistortionEstimatorTest implements
         assertSame(estimator.getUndistortedPoints(), undistortedPoints);
         assertSame(estimator.getWeights(), weights);
 
-        // Force IllegalArgumentExcpetion
+        // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
         final double[] shortWeights = new double[1];
         try {

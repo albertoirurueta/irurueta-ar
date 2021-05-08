@@ -20,7 +20,7 @@ import com.irurueta.geometry.Quaternion;
 import java.io.Serializable;
 
 /**
- * Processes data to estimate calibration for absolute orientation with contant
+ * Processes data to estimate calibration for absolute orientation with constant
  * velocity model SLAM estimator.
  * This class must be used while gathering data for a system being kept constant
  * (under no motion).

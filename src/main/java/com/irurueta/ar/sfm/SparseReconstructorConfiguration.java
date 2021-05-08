@@ -19,13 +19,13 @@ package com.irurueta.ar.sfm;
 import java.io.Serializable;
 
 /**
- * Contains configuration for a multiple view sparse reconstructor.
+ * Contains configuration for a multiple view sparse re-constructor.
  */
 public class SparseReconstructorConfiguration extends
         BaseSparseReconstructorConfiguration<SparseReconstructorConfiguration> implements Serializable {
 
     /**
-     * Creates an instance of a sparse reconstructor configuration.
+     * Creates an instance of a sparse re-constructor configuration.
      *
      * @return configuration instance.
      */

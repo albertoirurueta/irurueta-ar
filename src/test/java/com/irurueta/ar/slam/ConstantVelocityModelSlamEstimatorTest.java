@@ -2498,7 +2498,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -2785,7 +2785,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -3072,7 +3072,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -3357,7 +3357,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a constant
                     // speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -3668,7 +3668,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -3980,7 +3980,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -4269,7 +4269,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -4584,7 +4584,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -4899,7 +4899,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -5199,7 +5199,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -5572,7 +5572,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -5982,7 +5982,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -6394,7 +6394,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -6805,7 +6805,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a constant
                     // speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -7239,7 +7239,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;
@@ -7673,7 +7673,7 @@ public class ConstantVelocityModelSlamEstimatorTest implements
                     deltaGtAngularSpeedZ = gtAngularSpeedZ -
                             lastGtAngularSpeedZ;
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = u[1] = u[2] = 0.0;

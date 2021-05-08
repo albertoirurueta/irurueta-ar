@@ -105,7 +105,7 @@ public abstract class CameraCalibrator {
      * Quality scores for samples. This can be used on certain
      * robust estimation methods of the IAC such as PROSAC and PROMedS.
      * If not provided, homography quality scores will be estimated based on
-     * reprojection error and this value will be ignored.
+     * re-projection error and this value will be ignored.
      * Typically this will not be provided, but it can be used in case that it
      * can be assured by some means that one sample is better than another.
      */
@@ -121,7 +121,7 @@ public abstract class CameraCalibrator {
      * Quality scores for estimated homographies to be used during IAC
      * estimation when PROSAC or PROMedS robust method is used. This value
      * is only computed when no samples quality scores are provided.
-     * Homography quality scores are obtained based on reprojection error of
+     * Homography quality scores are obtained based on re-projection error of
      * marker coordinates.
      */
     protected double[] mHomographyQualityScores;
@@ -385,7 +385,7 @@ public abstract class CameraCalibrator {
      * Returns quality scores assigned to each provided sample. This can be used
      * on certain robust estimation methods of the IAC such as PROSAC and
      * PROMedS. If not provided, homography quality scores will be estimated
-     * based on reprojection error and this value will be ignored.
+     * based on re-projection error and this value will be ignored.
      * Typically this will not be provided, but it can be used in case that it
      * can be assured by some means that one sample is better than another
      *
@@ -399,7 +399,7 @@ public abstract class CameraCalibrator {
      * Sets quality scores assigned to each provided sample. This can be used on
      * certain robust estimation methods of the IAC such as PROSAC and PROMedS.
      * If not provided, homography quality scores will be estimated based on
-     * reprojection error and this value will be ignored.
+     * re-projection error and this value will be ignored.
      *
      * @param samplesQualityScores quality scores assigned to each provided
      *                             sample.
@@ -1347,7 +1347,7 @@ public abstract class CameraCalibrator {
                         tmpHomographyQualityScores[counter] =
                                 mSamplesQualityScores[index];
                     } else {
-                        // compute reprojection error
+                        // compute re-projection error
                         error = homographyTransformationError(homography,
                                 idealPatternMarkers, sampledPatternMarkers);
                         tmpHomographyQualityScores[counter] =
@@ -1403,7 +1403,7 @@ public abstract class CameraCalibrator {
      * @param homography            estimated homography.
      * @param idealPatternMarkers   ideal pattern markers.
      * @param sampledPatternMarkers sampled pattern markers.
-     * @return average reprojection error.
+     * @return average re-projection error.
      */
     protected static double homographyTransformationError(
             final Transformation2D homography,
@@ -1555,7 +1555,7 @@ public abstract class CameraCalibrator {
      * Sets quality scores assigned to each provided sample. This can be used on
      * certain robust estimation methods of the IAC such as PROSAC and PROMedS.
      * If not provided, homography quality scores will be estimated based on
-     * reprojection error and this value will be ignored.
+     * re-projection error and this value will be ignored.
      * This method is for internal use only and does not check whether this
      * instance is locked or not.
      *

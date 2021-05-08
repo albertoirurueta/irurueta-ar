@@ -870,7 +870,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimatorTest implements
                 // hence quality scores must be computed in a different way
                 // (for instance using projectedPatternPointsWithError, or
                 // distance from center of image, where supposedly center of
-                // radial distorsion is expected to be, and hence the farther
+                // radial distortion is expected to be, and hence the farther
                 // measures are from the center more distorted will be) or
                 // quality of the features used to detect calibration markers
                 final double avgHomographyResidual = avgHomographyResidual(homography,

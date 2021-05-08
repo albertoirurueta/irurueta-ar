@@ -23,12 +23,12 @@ import com.irurueta.geometry.estimators.NotReadyException;
 /**
  * Fixes a single matched pair of points so that they perfectly follow a given
  * epipolar geometry using the Sampson approximation.
- * When matching points typically the matching precission is about 1 pixel,
+ * When matching points typically the matching precision is about 1 pixel,
  * however this makes that matched points under a given epipolar geometry (i.e.
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar lines.
  * The consequence is that triangularization of these matches will fail or
- * produce innaccurate results.
+ * produce inaccurate results.
  * By fixing matched points using a corrector following a given epipolar
  * geometry, this effect is alleviated.
  * This corrector uses the Sampson approximation which is capable to remove

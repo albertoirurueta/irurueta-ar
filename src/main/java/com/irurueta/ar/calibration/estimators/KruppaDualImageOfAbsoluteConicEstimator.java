@@ -34,9 +34,9 @@ import com.irurueta.numerical.polynomials.Polynomial;
  * This estimator allows enforcing a known aspect ratio as well.
  * The DIAC can be used to obtain the intrinsic parameters of a pair of
  * cameras related by a fundamental matrix.
- * Hence this class can be used for autocalibration purposes.
- * Notice that the DualAbsoluteQuadricEstimator is a more robust method of
- * autocalibration.
+ * Hence this class can be used for auto-calibration purposes.
+ * Notice that the {@link DualAbsoluteQuadricEstimator} is a more robust method of
+ * auto-calibration.
  * This class is based on:
  * S.D. Hippisley-Cox &amp; J.Porrill. Auto-calibration - Kruppa's equations and the
  * intrinsic parameters of a camera. AI Vision Research Unit. University of
@@ -96,8 +96,8 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     /**
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
      * distance divided by horizontal focal distance) is known or not.
-     * Notic that focal distance aspect ratio is not related to image aspect
-     * ratio. Typically LCD sensor cells are square and hence aspectratio of
+     * Notice that focal distance aspect ratio is not related to image aspect
+     * ratio. Typically LCD sensor cells are square and hence aspect ratio of
      * focal distances is known and equal to 1.
      */
     private boolean mFocalDistanceAspectRatioKnown;
@@ -304,7 +304,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * graphics typically image vertical coordinates go downwards, while in
      * physical world they go upwards).
      *
-     * @param focalDistanceAspectRatio aspect raito of focal distances to be
+     * @param focalDistanceAspectRatio aspect ratio of focal distances to be
      *                                 set.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if focal distance aspect ratio is too
@@ -401,8 +401,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @throws LockedException                                  if estimator is locked.
      * @throws NotReadyException                                if input has not yet been provided.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental matrix corresponds
-     *                                                          to degenerate camera movements, or because of numerical unstabilities.
+     *                                                          occurs during estimation, usually because fundamental
+     *                                                          matrix corresponds to degenerate camera movements, or
+     *                                                          because of numerical instabilities.
      */
     public DualImageOfAbsoluteConic estimate() throws LockedException,
             NotReadyException,
@@ -420,8 +421,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @throws LockedException                                  if estimator is locked.
      * @throws NotReadyException                                if input has not yet been provided.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental matrix corresponds
-     *                                                          to degenerate camera movements, or because of numerical unstabilities.
+     *                                                          occurs during estimation, usually because fundamental
+     *                                                          matrix corresponds to degenerate camera movements, or
+     *                                                          because of numerical instabilities.
      */
     public void estimate(final DualImageOfAbsoluteConic result)
             throws LockedException, NotReadyException,
@@ -488,8 +490,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *
      * @param result instance where estimated DIAC will be stored.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental matrix corresponds
-     *                                                          to degenerate camera movements, or because of numerical unstabilities.
+     *                                                          occurs during estimation, usually because fundamental
+     *                                                          matrix corresponds to degenerate camera movements, or
+     *                                                          because of numerical instabilities.
      */
     private void estimateUnknownAspectRatio(final DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
@@ -657,11 +660,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
 
     /**
      * Gets x value from current y value.
-     * X and y values are the squared values of estimated focal lngth
+     * X and y values are the squared values of estimated focal length
      * components.
      * This method is used internally when aspect ratio is not known.
      *
-     * @param y y value to obtian x value from.
+     * @param y y value to obtain x value from.
      * @param s internal value from Kruppa's equations.
      * @param t internal value from Kruppa's equations.
      * @param u internal value from Kruppa's equations.
@@ -851,8 +854,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *
      * @param result instance where estimated DIAC will be stored.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental matrix corresponds
-     *                                                          to degenerate camera movements, or because of numerical unstabilities.
+     *                                                          occurs during estimation, usually because fundamental
+     *                                                          matrix corresponds to degenerate camera movements, or
+     *                                                          because of numerical instabilities.
      */
     private void estimateKnownAspectRatio(final DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {

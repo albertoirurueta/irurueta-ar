@@ -245,7 +245,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      * @throws IllegalArgumentException if list of cameras is null or invalid
-     *                                  for default contraints.
+     *                                  for default constraints.
      */
     protected DualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras,
                                            final DualAbsoluteQuadricEstimatorListener listener) {
@@ -460,7 +460,7 @@ public abstract class DualAbsoluteQuadricEstimator {
 
     /**
      * Specifies whether enforced singularity will be validated by checking that
-     * detemrinant of estimated Dual Absolute Quadric (DAQ) is below a certain
+     * determinant of estimated Dual Absolute Quadric (DAQ) is below a certain
      * threshold.
      *
      * @param validateEnforcedSingularity true if enforced singularity is
@@ -1028,7 +1028,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * linear combination solution.
      *
      * @param decomposer decomposer containing possible solutions after
-     *                   decomsition.
+     *                   decomposition.
      * @param result     instance where estimated Dual Absolute Quadrics (DAQs) with
      *                   rank 3 enforced will be stored.
      * @throws AlgebraException                      if there are numerical instabilities

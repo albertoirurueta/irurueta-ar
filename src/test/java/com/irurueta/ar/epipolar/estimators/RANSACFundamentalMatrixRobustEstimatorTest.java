@@ -1712,7 +1712,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertTrue(epipolarPlane1.equals(epipolarPlane2,
                     ABSOLUTE_ERROR));
 
-            // check that poin3D and camera centers belong to epipolar plane
+            // check that point3D and camera centers belong to epipolar plane
             assertTrue(epipolarPlane1.isLocus(point3D,
                     ABSOLUTE_ERROR));
             assertTrue(epipolarPlane1.isLocus(center1,
@@ -1839,7 +1839,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                                 MAX_RANDOM_VALUE)));
             }
 
-            // project 3D ponits with both cameras
+            // project 3D points with both cameras
             final List<Point2D> leftPoints = camera1.project(points3D);
             final List<Point2D> rightPoints = camera2.project(points3D);
 

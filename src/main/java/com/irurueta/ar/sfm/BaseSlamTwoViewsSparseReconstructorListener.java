@@ -27,10 +27,10 @@ import com.irurueta.geometry.PinholeCamera;
  * Listener to retrieve and store required data to compute a 3D reconstruction
  * from sparse image point correspondences in two views.
  * Implementations of this interface also notify when cameras are estimated due to
- * received IMU (Intertial Measurement Unit) data, which contains accelerometer and
+ * received IMU (Inertial Measurement Unit) data, which contains accelerometer and
  * gyroscope data and uses a SLAM estimator.
  *
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  */
 public interface BaseSlamTwoViewsSparseReconstructorListener<
         R extends BaseSlamTwoViewsSparseReconstructor<?, ?, ?, ?, ?>>
@@ -41,7 +41,7 @@ public interface BaseSlamTwoViewsSparseReconstructorListener<
      * gyroscope or orientation) are received in order to update SLAM system state to notify
      * new position, velocity, acceleration, orientation and angular speed.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param positionX     x position coordinate expressed in meters (m).
      * @param positionY     y position coordinate expressed in meters (m).
      * @param positionZ     z position coordinate expressed in meters (m).
@@ -79,7 +79,7 @@ public interface BaseSlamTwoViewsSparseReconstructorListener<
      * This method will only be called when using essential method for scene reconstruction and
      * initial intrinsic parameters are known.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param camera        current camera estimated using IMU data. This instance and its associated instances (camera center,
      *                      rotation and intrinsic parameters) will be reused between consecutive calls to this method.
      */

@@ -56,7 +56,7 @@ public class EssentialMatrixTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testEmptyContructor() {
+    public void testEmptyConstructor() {
         final EssentialMatrix essentialMatrix = new EssentialMatrix();
 
         assertFalse(essentialMatrix.isInternalMatrixAvailable());
@@ -119,7 +119,7 @@ public class EssentialMatrixTest {
             v = decomposer.getV();
             transV = v.transposeAndReturnNew();
 
-            // set non equal singular vlaues
+            // set non equal singular values
             w.setElementAt(0, 0, 1.0);
             w.setElementAt(1, 1, 2.0);
             w.setElementAt(2, 2, 3.0);

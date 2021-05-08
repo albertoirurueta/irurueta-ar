@@ -243,7 +243,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
         // DAQ = (U*S*V^t)*(U*S*V^t)^t = U*S*V^t*V*S*U^t = U*S*S*U^t
         // where S is diagonal and contains the singular values of M
         // and U are the singular vectors of M
-        // Since S is diagonal, then S*S contains the squared singular vlaues on
+        // Since S is diagonal, then S*S contains the squared singular values on
         // its diagonal and matrix S*S can be seen as the eigen values of DAQ,
         // while U are the eigen vectors of DAQ
         // Since we don't care about scale, we can normalize the eigen values of
@@ -329,7 +329,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
     }
 
     /**
-     * Gets dual iamge of absolute conic associated to this dual absolute
+     * Gets dual image of absolute conic associated to this dual absolute
      * quadric in an arbitrary projective stratum and stores the result into
      * provided instance.
      *

@@ -25,8 +25,8 @@ import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimato
  * data) with absolute orientation for overall scale and orientation estimation.
  * NOTE: This implementation does not seem to be very reliable because the SLAM
  * estimator is not accurate at all on position or orientation estimator.
- * Use AbsoluteOrientationSlamSparseReconstructor if absolute orientation is needed,
- * or SlamSparseReconstructor otherwise to get better accuracy.
+ * Use {@link AbsoluteOrientationSlamSparseReconstructor} if absolute orientation is needed,
+ * or {@link SlamSparseReconstructor} otherwise to get better accuracy.
  */
 public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor extends
         BaseAbsoluteOrientationSlamSparseReconstructor<
@@ -39,7 +39,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
     /**
      * Constructor.
      *
-     * @param configuration configuration for this reconstructor.
+     * @param configuration configuration for this re-constructor.
      * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
      *                              provided.

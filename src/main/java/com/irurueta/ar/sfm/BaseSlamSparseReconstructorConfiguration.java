@@ -24,7 +24,7 @@ import com.irurueta.geometry.Point3D;
 import java.io.Serializable;
 
 /**
- * Contains base configuration for a multiple view sparse reconstructor using SLAM (Simultaneous
+ * Contains base configuration for a multiple view sparse re-constructor using SLAM (Simultaneous
  * Location And Mapping) to determine the scale of the scene (i.e. the baseline or separation
  * between cameras) by fusing both camera data and data from sensors like an accelerometer or
  * gyroscope.
@@ -205,7 +205,7 @@ public class BaseSlamSparseReconstructorConfiguration<C extends BaseCalibrationD
      * Specifies whether new available SLAM state is notified each time that a whole set of IMU (Inertial Measurement
      * Unit) data is received. IMU data contains accelerometer, gyroscope and orientation samples.
      *
-     * @param notifyAvailableSlamData true if new availabla SLAM state is notified each time that a whole set of IMU
+     * @param notifyAvailableSlamData true if new available SLAM state is notified each time that a whole set of IMU
      *                                data is received, false otherwise.
      * @return this instance so that method can be easily chained.
      */

@@ -31,7 +31,7 @@ public class SingleHomographyPinholeCameraEstimatorException extends
     /**
      * Constructor with String containing message.
      *
-     * @param message messagen indicating the cause of the exception.
+     * @param message message indicating the cause of the exception.
      */
     public SingleHomographyPinholeCameraEstimatorException(final String message) {
         super(message);

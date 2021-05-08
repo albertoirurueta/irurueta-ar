@@ -22,7 +22,7 @@ import java.util.List;
  * Listener to retrieve and store required data to compute a 3D reconstruction
  * from sparse image point correspondences in two views.
  *
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  */
 public interface BaseTwoViewsSparseReconstructorListener<
         R extends BaseTwoViewsSparseReconstructor<?, ?, ?>> {
@@ -30,7 +30,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * Called to determine whether there are more views available to attempt to
      * use for the reconstruction.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @return true if there are more views available, false otherwise.
      */
     boolean hasMoreViewsAvailable(final R reconstructor);
@@ -39,7 +39,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * Called when samples containing points of interest for current view must
      * be retrieved.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId        id of view where points will be used.
      * @param samples       samples containing points of interest for current view to
      *                      test.
@@ -52,7 +52,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * This method can be used to determine whether samples can be stored or
      * not.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId        id of view whose samples have been accepted.
      * @param samples       accepted samples.
      */
@@ -62,7 +62,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * Called when requested samples have been rejected.
      * This method can be used to remove provided samples.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId        id of view whose samples have been rejected.
      * @param samples       rejected samples.
      */
@@ -71,7 +71,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
     /**
      * Finds matches for provided samples.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param samples1      samples on first view.
      * @param samples2      samples on second view.
      * @param viewId1       id of first view.
@@ -87,7 +87,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * This event can be used to store estimated fundamental matrix relating
      * two views.
      *
-     * @param reconstructor              reconstructor raising this event.
+     * @param reconstructor              re-constructor raising this event.
      * @param estimatedFundamentalMatrix estimated fundamental matrix.
      */
     void onFundamentalMatrixEstimated(final R reconstructor,
@@ -98,7 +98,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * estimated. This event can be used to store points associated to such
      * view.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of first view.
      * @param viewId2       id of second view.
      * @param camera1       estimated camera for first view.
@@ -112,7 +112,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * matches. This event can be used to store reconstructed points and their
      * associated data.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param matches       2D matches associated to estimated reconstructed points.
      * @param points        reconstructed 3D points.
      */
@@ -123,28 +123,28 @@ public interface BaseTwoViewsSparseReconstructorListener<
     /**
      * Called when reconstruction starts.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onStart(final R reconstructor);
 
     /**
      * Called when reconstruction stops.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onFinish(final R reconstructor);
 
     /**
      * Called when reconstruction is cancelled before it has finished.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onCancel(final R reconstructor);
 
     /**
      * Called when reconstruction fails.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onFail(final R reconstructor);
 }

@@ -28,7 +28,7 @@ import com.irurueta.geometry.PinholeCamera;
  * image point correspondences in multiple views.
  * Implementations of this interface
  *
- * @param <R> reconstructor type.
+ * @param <R> re-constructor type.
  */
 public interface BaseSlamPairedViewsSparseReconstructorListener<R
         extends BaseSlamPairedViewsSparseReconstructor<?, ?, ?, ?, ?>>
@@ -39,7 +39,7 @@ public interface BaseSlamPairedViewsSparseReconstructorListener<R
      * gyroscope or orientation) are received in order to update SLAM system state to notify
      * new position, velocity, acceleration, orientation and angular speed.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param positionX     x position coordinate expressed in meters (m).
      * @param positionY     y position coordinate expressed in meters (m).
      * @param positionZ     z position coordinate expressed in meters (m).
@@ -75,7 +75,7 @@ public interface BaseSlamPairedViewsSparseReconstructorListener<R
      * received in order to update SLAM system state to notify a new camera containing
      * current intrinsic parameters, position and orientation.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param camera        current camera estimated using IMU data. This instance and its associated instances (camera center,
      *                      rotation and intrinsic parameters) will be reused between consecutive calls to this method.
      */

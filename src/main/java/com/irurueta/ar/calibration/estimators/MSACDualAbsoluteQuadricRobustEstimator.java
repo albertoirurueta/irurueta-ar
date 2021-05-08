@@ -83,7 +83,7 @@ public class MSACDualAbsoluteQuadricRobustEstimator extends
      * @param cameras list of cameras used to estimate the dual absolute quadric
      *                (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
      * @throws IllegalArgumentException if not enough cameras are provided for
-     *                                  dfault settings. Hence, at least 2 cameras must be provided.
+     *                                  default settings. Hence, at least 2 cameras must be provided.
      */
     public MSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras) {
         super(cameras);
@@ -98,7 +98,7 @@ public class MSACDualAbsoluteQuadricRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if not enough cameras are provided for
-     *                                  dfault settings. Hence, at least 2 cameras must be provided.
+     *                                  default settings. Hence, at least 2 cameras must be provided.
      */
     public MSACDualAbsoluteQuadricRobustEstimator(
             final List<PinholeCamera> cameras,

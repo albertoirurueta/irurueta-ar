@@ -354,7 +354,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
     }
 
     /**
-     * Estimates Image of Absolute Conic (IAC) without contraints.
+     * Estimates Image of Absolute Conic (IAC) without constraints.
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during

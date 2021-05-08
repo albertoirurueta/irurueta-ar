@@ -31,7 +31,7 @@ import com.irurueta.geometry.Rotation3D;
  * @param <D> calibrator type associated to implementations of SLAM calibration
  *            data.
  * @param <C> type of configuration.
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  * @param <L> type of listener.
  * @param <S> type of SLAM estimator.
  */
@@ -51,7 +51,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
     /**
      * Constructor.
      *
-     * @param configuration configuration for this reconstructor.
+     * @param configuration configuration for this re-constructor.
      * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not
      *                              provided.
@@ -63,7 +63,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
 
     /**
      * Provides a new orientation sample to update SLAM estimator.
-     * If reconstructor is not running, calling this method has no effect.
+     * If re-constructor is not running, calling this method has no effect.
      *
      * @param timestamp   timestamp of accelerometer sample since epoch time and
      *                    expressed in nanoseconds.
@@ -81,7 +81,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
     }
 
     /**
-     * Indicates whether implementations of a reconstructor uses absolute orientation or
+     * Indicates whether implementations of a re-constructor uses absolute orientation or
      * not.
      *
      * @return true if absolute orientation is used, false, otherwise.

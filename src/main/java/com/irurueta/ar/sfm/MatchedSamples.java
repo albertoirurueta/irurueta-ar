@@ -59,7 +59,7 @@ public class MatchedSamples implements Serializable {
      * Indicates whether match between a pair of views has been considered an
      * inlier or not.
      * Position 0 of this bitset corresponds to viewIds in positions 0 and 1,
-     * position 1 of bitset corresponts to viewIds in positions 1 and 2, and so
+     * position 1 of bitset corresponds to viewIds in positions 1 and 2, and so
      * on.
      */
     private BitSet mInliers;

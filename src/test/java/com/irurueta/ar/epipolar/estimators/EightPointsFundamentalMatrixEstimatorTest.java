@@ -616,7 +616,7 @@ public class EightPointsFundamentalMatrixEstimatorTest implements
                 assertTrue(epipolarPlane1.equals(epipolarPlane2,
                         VERY_LARGE_ABSOLUTE_ERROR));
 
-                // check that poin3D and camera centers belong to epipolar plane
+                // check that point3D and camera centers belong to epipolar plane
                 assertTrue(epipolarPlane1.isLocus(point3D,
                         ULTRA_LARGE_ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane1.isLocus(center1,

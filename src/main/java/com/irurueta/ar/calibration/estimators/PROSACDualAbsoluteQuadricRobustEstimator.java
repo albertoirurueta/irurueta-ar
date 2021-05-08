@@ -86,7 +86,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     /**
      * Constructor.
      *
-     * @param cameras list of cameras used to estimate de fual absolute quadric
+     * @param cameras list of cameras used to estimate the Dual Absolute Quadric
      *                (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
      * @throws IllegalArgumentException if not enough cameras are provided for
      *                                  default settings. Hence, at least 2 cameras must be provided.
@@ -99,7 +99,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     /**
      * Constructor.
      *
-     * @param cameras  list of cameras used to estimate de fual absolute quadric
+     * @param cameras  list of cameras used to estimate the Dual Absolute Quadric
      *                 (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
@@ -146,7 +146,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     /**
      * Constructor.
      *
-     * @param cameras       list of cameras used to estimate the dual absolute quadric
+     * @param cameras       list of cameras used to estimate the Dual Absolute Quadric
      *                      (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
      * @param qualityScores quality scores corresponding to each provided
      *                      camera.
@@ -163,7 +163,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     /**
      * Constructor.
      *
-     * @param cameras       list of cameras used to estimate the dual absolute quadric
+     * @param cameras       list of cameras used to estimate the Dual Absolute Quadric
      *                      (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
      * @param qualityScores quality scores corresponding to each provided
      *                      camera.
@@ -202,7 +202,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if provided value is equal or less than
      *                                  zero.
      * @throws LockedException          if robust estimator is locked because an
-     *                                  estimation is already in progres.
+     *                                  estimation is already in progress.
      */
     public void setThreshold(final double threshold) throws LockedException {
         if (isLocked()) {
@@ -227,7 +227,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
 
     /**
      * Sets quality scores corresponding to each provided camera.
-     * The larger the score value the better the quality of the smapled camera.
+     * The larger the score value the better the quality of the sampled camera.
      *
      * @param qualityScores quality scores corresponding to each camera.
      * @throws LockedException          if robust estimator is locked because an

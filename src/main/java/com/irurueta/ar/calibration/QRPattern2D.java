@@ -156,7 +156,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
         final List<Point2D> points = new ArrayList<>();
 
         // The size of a QR code (expressed in modules, i.e. each small square)
-        // can be calculated with the fomula (((V-1)*4)+21), where V is the QR
+        // can be calculated with the formula (((V-1)*4)+21), where V is the QR
         // code version.
         // For version 2, then the size will be 25 modules by 25 modules, where
         // each module will be the smallest square that can be represented in the

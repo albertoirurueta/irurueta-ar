@@ -30,7 +30,6 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class SlamCalibratorTest implements BaseSlamCalibratorListener<SlamCalibrationData> {
 
     private static final int TIMES = 50;

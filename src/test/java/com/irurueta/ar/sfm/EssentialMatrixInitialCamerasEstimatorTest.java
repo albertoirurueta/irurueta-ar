@@ -34,7 +34,6 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class EssentialMatrixInitialCamerasEstimatorTest implements
         InitialCamerasEstimatorListener {
 
@@ -1169,7 +1168,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -1549,7 +1548,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -1910,7 +1909,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -2279,7 +2278,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -2661,7 +2660,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(line1b.isLocus(leftPoint, ABSOLUTE_ERROR));
                 assertTrue(line2b.isLocus(rightPoint, ABSOLUTE_ERROR));
 
-                // backproject epipolar lines for each pair of cameras and check
+                // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
                 final Plane epipolarPlane1a = camera1.backProject(line1a);
                 final Plane epipolarPlane2a = camera2.backProject(line2a);

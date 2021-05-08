@@ -316,7 +316,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsSetEnforcedsingularityValidated() throws LockedException {
+    public void testIsSetEnforcedSingularityValidated() throws LockedException {
         final RANSACDualAbsoluteQuadricRobustEstimator estimator =
                 new RANSACDualAbsoluteQuadricRobustEstimator();
 

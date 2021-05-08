@@ -251,7 +251,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @throws LockedException                         if estimator is locked.
      * @throws NotReadyException                       if estimator is not ready.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
@@ -575,7 +575,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -607,7 +607,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -624,7 +624,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -660,7 +660,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical unstabilities.
+     *                                                 cameras fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -678,7 +678,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -714,7 +714,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -734,7 +734,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -774,7 +774,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -796,7 +796,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -831,7 +831,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -849,7 +849,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -888,7 +888,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical unstabilities.
+     *                                                 cameras fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -907,7 +907,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -946,7 +946,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -966,7 +966,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Generates a pair of metric cameras (up to an arbitrary space) by
-     * estimting the intrinsic parameters of the views by solving the Kruppa
+     * estimating the intrinsic parameters of the views by solving the Kruppa
      * equations to obtain the Dual Image of Absolute Conic (DIAC).
      * The estimated intrinsic parameters can later be used to find the
      * essential matrix (assuming that both views have the same intrinsic
@@ -1008,7 +1008,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */

@@ -83,7 +83,7 @@ public class FundamentalMatrixRefinerTest implements
     public void testConstructor() throws LockedException, NotReadyException,
             RobustEstimatorException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
         final FundamentalMatrix fundamentalMatrix = estimator.estimate();
         final InliersData inliersData = estimator.getInliersData();
         final BitSet inliers = inliersData.getInliers();
@@ -191,7 +191,7 @@ public class FundamentalMatrixRefinerTest implements
     @Test
     public void testGetSetSamples1() throws LockedException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
         final List<Point2D> samples1 = estimator.getLeftPoints();
 
         final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
@@ -209,7 +209,7 @@ public class FundamentalMatrixRefinerTest implements
     @Test
     public void testGetSetSamples2() throws LockedException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
         final List<Point2D> samples2 = estimator.getRightPoints();
 
         final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
@@ -228,7 +228,7 @@ public class FundamentalMatrixRefinerTest implements
     public void testGetSetInliers() throws LockedException, NotReadyException,
             RobustEstimatorException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -250,7 +250,7 @@ public class FundamentalMatrixRefinerTest implements
     public void testGetSetResiduals() throws LockedException, NotReadyException,
             RobustEstimatorException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -272,7 +272,7 @@ public class FundamentalMatrixRefinerTest implements
     public void testGetSetNumInliers() throws LockedException, NotReadyException,
             RobustEstimatorException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -301,7 +301,7 @@ public class FundamentalMatrixRefinerTest implements
     public void testSetInliersData() throws LockedException, NotReadyException,
             RobustEstimatorException {
         final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimtor();
+                createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -357,7 +357,7 @@ public class FundamentalMatrixRefinerTest implements
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final RANSACFundamentalMatrixRobustEstimator estimator =
-                    createRobustEstimtor();
+                    createRobustEstimator();
 
             final FundamentalMatrix fundamentalMatrix = estimator.estimate();
             final InliersData inliersData = estimator.getInliersData();
@@ -399,7 +399,7 @@ public class FundamentalMatrixRefinerTest implements
     }
 
 
-    private RANSACFundamentalMatrixRobustEstimator createRobustEstimtor()
+    private RANSACFundamentalMatrixRobustEstimator createRobustEstimator()
             throws LockedException {
         // randomly create two pinhole cameras
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());

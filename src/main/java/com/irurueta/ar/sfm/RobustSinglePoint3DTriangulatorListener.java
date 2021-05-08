@@ -32,7 +32,7 @@ public interface RobustSinglePoint3DTriangulatorListener {
     /**
      * Called when triangulation ends.
      *
-     * @param triangulator reøference to robust triangulator.
+     * @param triangulator reference to robust triangulator.
      */
     void onTriangulateEnd(final RobustSinglePoint3DTriangulator triangulator);
 

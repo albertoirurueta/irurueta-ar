@@ -30,7 +30,7 @@ public enum FundamentalMatrixEstimatorMethod {
     EIGHT_POINTS_ALGORITHM,
 
     /**
-     * Algorhtm used for Affine geometry. This method should only be used
+     * Algorithm used for Affine geometry. This method should only be used
      * on specific cases where cameras ore geometry are known to be affine.
      */
     AFFINE_ALGORITHM

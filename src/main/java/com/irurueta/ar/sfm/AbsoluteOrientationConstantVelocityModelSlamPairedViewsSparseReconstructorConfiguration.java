@@ -21,7 +21,7 @@ import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrat
 import java.io.Serializable;
 
 /**
- * Contains configuration for a paired view sparse reconstructor using SLAM (Simultaneous
+ * Contains configuration for a paired view sparse re-constructor using SLAM (Simultaneous
  * LocationAnd Mapping) to determine the scale of the scene (i.e. the baseline or separation
  * between cameras) by fusing both camera data and data from sensors like an accelerometer
  * or gyroscope.
@@ -35,7 +35,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         Serializable {
 
     /**
-     * Creates an instance of a multiple views sparse reconstructor configuration with
+     * Creates an instance of a multiple views sparse re-constructor configuration with
      * constant velocity model in slam estimation and absolute orientation.
      *
      * @return configuration instance.

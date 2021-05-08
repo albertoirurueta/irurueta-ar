@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * This class defines an LMSE (Least Mean Square Error) estimator of radial
- * distorsion.
+ * distortion.
  * Equations to determine a RadialDistortion instance for a single point are
  * linear dependent, for that reason, at least 2 points are required for the
  * estimation.
@@ -76,7 +76,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
@@ -91,7 +91,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param listener          listener to be notified of events such as when estimation
      *                          starts, ends or estimation progress changes.
@@ -135,7 +135,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * Constructor with points and distortion center.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  Distortion center. This is usually equal to the
      *                          principal point of an estimated camera. If not set it is assumed to be at
@@ -153,7 +153,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * Constructor
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  Distortion center. This is usually equal to the
      *                          principal point of an estimated camera. If not set it is assumed to be at

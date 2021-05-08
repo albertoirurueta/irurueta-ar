@@ -37,7 +37,7 @@ public interface FundamentalMatrixComparatorListener {
     /**
      * Called when progress of comparison significantly changes.
      *
-     * @param comparator instance that riased the event.
+     * @param comparator instance that raised the event.
      * @param progress   progress of comparison expressed as a value between 0.0
      *                   and 1.0.
      */

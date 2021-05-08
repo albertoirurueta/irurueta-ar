@@ -209,13 +209,14 @@ public class LMSEImageOfAbsoluteConicEstimator extends
     }
 
     /**
-     * Estimates Image of Absolute Conic (IAC) without contraints.
+     * Estimates Image of Absolute Conic (IAC) without constraints.
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
      *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                homographies corresponding to degenerate camera movements such as
+     *                                                pure parallel translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimateNoConstraints()
             throws ImageOfAbsoluteConicEstimatorException {

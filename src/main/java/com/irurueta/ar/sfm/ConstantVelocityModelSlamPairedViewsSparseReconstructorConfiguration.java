@@ -21,7 +21,7 @@ import com.irurueta.ar.slam.ConstantVelocityModelSlamCalibrationData;
 import java.io.Serializable;
 
 /**
- * Contains configuration for a paired view sparse reconstructor using SLAM (Simultaneous
+ * Contains configuration for a paired view sparse re-constructor using SLAM (Simultaneous
  * Location And Mapping) to determine the scale of the scene (i.e. the baseline or separation
  * between cameras) by fusing both camera data and data from sensors like and accelerometer or
  * gyroscope.
@@ -33,7 +33,7 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguratio
                 ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration> implements Serializable {
 
     /**
-     * Creates an instance of a paired view sparse reconstructor configuration with constant
+     * Creates an instance of a paired view sparse re-constructor configuration with constant
      * velocity model in slam estimation.
      *
      * @return configuration instance.

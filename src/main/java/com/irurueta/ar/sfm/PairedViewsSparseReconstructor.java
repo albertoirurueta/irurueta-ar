@@ -35,7 +35,7 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
     /**
      * Constructor.
      *
-     * @param configuration configuration for this reconstructor.
+     * @param configuration configuration for this re-constructor.
      * @param listener      listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not provided.
      */
@@ -57,7 +57,7 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
     }
 
     /**
-     * Indicates whether implementations of a reconstructor uses absolute orientation or
+     * Indicates whether implementations of a re-constructor uses absolute orientation or
      * not.
      *
      * @return true if absolute orientation is used, false, otherwise.

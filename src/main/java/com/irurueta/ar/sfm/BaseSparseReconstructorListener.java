@@ -22,7 +22,7 @@ import java.util.List;
  * Listener to retrieve and store required data to compute a 3D reconstruction from
  * sparse image point correspondences in multiple views.
  *
- * @param <R> type of reconstructor.
+ * @param <R> type of re-constructor.
  */
 public interface BaseSparseReconstructorListener<R extends BaseSparseReconstructor<?, ?, ?>> {
 
@@ -30,7 +30,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * Called to determine whether there are more views available to attempt to use for
      * the reconstruction.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @return true if there are more views available, false otherwise.
      */
     boolean hasMoreViewsAvailable(final R reconstructor);
@@ -38,7 +38,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
     /**
      * Called when samples containing points of interest for current view must be retrieved.
      *
-     * @param reconstructor                  reconstructor raising this event.
+     * @param reconstructor                  re-constructor raising this event.
      * @param previousViewId                 id of previous view.
      * @param currentViewId                  id of current view.
      * @param previousViewTrackedSamples     tracked samples from previous view.
@@ -56,7 +56,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * This method can be used to determine whether samples can be stored or
      * not.
      *
-     * @param reconstructor              reconstructor raising this event.
+     * @param reconstructor              re-constructor raising this event.
      * @param viewId                     id of view whose samples have been accepted.
      * @param previousViewTrackedSamples accepted tracked samples on previous view.
      *                                   Might be null on first view.
@@ -70,7 +70,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * Called when requested samples have been rejected.
      * This method can be used to remove provided samples.
      *
-     * @param reconstructor              reconstructor raising this event.
+     * @param reconstructor              re-constructor raising this event.
      * @param viewId                     id of view whose samples have been rejected.
      * @param previousViewTrackedSamples rejected samples on previous view.
      *                                   Might be null on first view.
@@ -88,7 +88,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * samples from previous views to increase the accuracy of reconstructed
      * points.
      *
-     * @param reconstructor              reconstructor raising this event.
+     * @param reconstructor              re-constructor raising this event.
      * @param allPreviousViewSamples     all samples on previous views.
      * @param previousViewTrackedSamples tracked samples on previous view.
      * @param currentViewTrackedSamples  tracked samples on current view.
@@ -108,7 +108,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * This event can be used to store estimated fundamental matrix relating
      * two views.
      *
-     * @param reconstructor              reconstructor raising this event.
+     * @param reconstructor              re-constructor raising this event.
      * @param estimatedFundamentalMatrix estimated fundamental matrix.
      */
     void onFundamentalMatrixEstimated(final R reconstructor,
@@ -119,7 +119,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * estimated. Cameras returned on this event are defined in a metric stratum (i.e. up to scale).
      * This event can be used to store cameras associated to such view.
      *
-     * @param reconstructor  reconstructor raising this event.
+     * @param reconstructor  re-constructor raising this event.
      * @param previousViewId id of previous view (i.e. first view).
      * @param currentViewId  id of current view (i.e. second view).
      * @param previousCamera estimated camera for previous view.
@@ -133,7 +133,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * matches. Reconstructed points returned on this event are defined in a metric stratum (i.e. up to scale).
      * This event can be used to store reconstructed points and their associated data.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param matches       2D matches associated to estimated reconstructed points.
      * @param points        reconstructed 3D points.
      */
@@ -143,15 +143,16 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
     /**
      * Called when cameras for provided matched pair of views have been estimated in an euclidean stratum (when possible
      * and up to a certain accuracy).
-     * Except SparseReconstructor, which can only make estimations in a metric stratum, other reconstructor
+     * Except {@link SparseReconstructor}, which can only make estimations in a metric stratum, other rec-onstructor
      * implementations either have calibration knowledge to estimate scale, or use SLAM techniques by mixing additional
      * sensor data (i.e. gyroscope and accelerometer) to estimate such scale.
      *
-     * @param reconstructor  reconstructor raising this event.
+     * @param reconstructor  re-constructor raising this event.
      * @param previousViewId id of previous view (i.e. first view).
      * @param currentViewId  id of current view (i.e. second view).
-     * @param scale          estimated scale. This will typically converge to a constant value as more views are processed.
-     *                       The smaller the variance of estimated scale, the more accurate the scale will be.
+     * @param scale          estimated scale. This will typically converge to a constant value as more views are
+     *                       processed. The smaller the variance of estimated scale, the more accurate the scale will
+     *                       be.
      * @param previousCamera estimated camera for previous view.
      * @param currentCamera  estimated camera for current view.
      */
@@ -161,13 +162,13 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
 
     /**
      * Called when reconstructed points have been estimated from a series of 2D matches.
-     * Except SparseReconstructor, which can only make estimations in a metric stratum, other reconstructor
+     * Except {@link SparseReconstructor}, which can only make estimations in a metric stratum, other re-constructor
      * implementations either have calibration knowledge to estimate scale, or use SLAM techniques by mixing additional
      * sensor data (i.e. gyroscope and accelerometer) to estimate such scale.
      *
-     * @param reconstructor reconstructor raising this event.
-     * @param scale         estimated scale. This will typically converge to a constant value as more views are processed.
-     *                      The smaller the variance of estimated scale, the more accurate the scale will be.
+     * @param reconstructor re-constructor raising this event.
+     * @param scale         estimated scale. This will typically converge to a constant value as more views are
+     *                      processed. The smaller the variance of estimated scale, the more accurate the scale will be.
      * @param points        reconstructed 3D points.
      */
     void onEuclideanReconstructedPointsEstimated(final R reconstructor, final double scale,
@@ -176,28 +177,28 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
     /**
      * Called when reconstruction starts.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onStart(final R reconstructor);
 
     /**
      * Called when reconstruction stops.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onFinish(final R reconstructor);
 
     /**
      * Called when reconstruction is cancelled before it has finished.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onCancel(final R reconstructor);
 
     /**
      * Called when reconstruction fails.
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      */
     void onFail(final R reconstructor);
 

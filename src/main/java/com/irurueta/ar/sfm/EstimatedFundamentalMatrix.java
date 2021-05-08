@@ -39,7 +39,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
     private String mId;
 
     /**
-     * Estimted fundamental matrix.
+     * Estimated fundamental matrix.
      */
     private FundamentalMatrix mFundamentalMatrix;
 

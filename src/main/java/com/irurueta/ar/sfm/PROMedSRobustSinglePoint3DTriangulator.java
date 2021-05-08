@@ -146,7 +146,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      *
      * @param qualityScores quality scores corresponding to each provided view.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than requiredsize (i.e. 2 views).
+     *                                  smaller than required size (i.e. 2 views).
      */
     public PROMedSRobustSinglePoint3DTriangulator(final double[] qualityScores) {
         this();
@@ -160,7 +160,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than requiredsize (i.e. 2 views).
+     *                                  smaller than required size (i.e. 2 views).
      */
     public PROMedSRobustSinglePoint3DTriangulator(final double[] qualityScores,
                                                   final RobustSinglePoint3DTriangulatorListener listener) {

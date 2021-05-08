@@ -109,7 +109,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
     /**
      * Returns threshold to determine whether cameras are inliers or not
      * when testing possible estimation solutions.
-     * The threshold refers to the amoung of error a possible solution has.
+     * The threshold refers to the amount of error a possible solution has.
      *
      * @return threshold to determine whether cameras are inliers or not.
      */

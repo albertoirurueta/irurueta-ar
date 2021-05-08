@@ -39,7 +39,7 @@ import java.util.List;
  * correspondences generating fundamental matrix F are reduced.
  * This class is especially useful in cases where geometry of the scene is
  * degenerate (e.g. planar scene) and provided point correspondences would
- * generate an inccurate fundamental matrix.
+ * generate an inaccurate fundamental matrix.
  */
 @SuppressWarnings("DuplicatedCode")
 public abstract class RightEpipoleRefiner extends

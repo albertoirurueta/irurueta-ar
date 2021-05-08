@@ -84,7 +84,7 @@ public class RANSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
@@ -99,7 +99,7 @@ public class RANSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param listener          listener to be notified of events such as when
      *                          estimation starts, ends or its progress significantly changes.
@@ -117,7 +117,7 @@ public class RANSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -136,7 +136,7 @@ public class RANSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -170,7 +170,7 @@ public class RANSACRadialDistortionRobustEstimator extends
     /**
      * Sets threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * Thre threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @param threshold threshold to be set.

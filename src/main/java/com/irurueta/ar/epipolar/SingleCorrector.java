@@ -21,7 +21,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
 /**
  * Fixes a single matched pair of points so that they perfectly follow a given
  * epipolar geometry.
- * When matching points typically the matching precission is about 1 pixel,
+ * When matching points typically the matching precision is about 1 pixel,
  * however this makes that matched points under a given epipolar geometry (i.e.
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar lines.

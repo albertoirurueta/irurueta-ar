@@ -105,7 +105,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: linear-velocity-change-x,
      *                  linear-velocity-change-y, linear-velocity-change-z,
@@ -307,7 +307,7 @@ public class StatePredictor {
      *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *               angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *               length 16.
      * @param u      perturbations or control signals: linear-velocity-change-x,
      *               linear-velocity-change-y, linear-velocity-change-z,
@@ -335,7 +335,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: linear-velocity-change-x,
      *                  linear-velocity-change-y, linear-velocity-change-z,
@@ -367,7 +367,7 @@ public class StatePredictor {
      *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *           angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *           length 16.
      * @param u  perturbations or control signals: linear-velocity-change-x,
      *           linear-velocity-change-y, linear-velocity-change-z,
@@ -396,7 +396,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: position-change-x,
      *                  position-change-y, position-change-z, linear-velocity-change-x,
@@ -610,7 +610,7 @@ public class StatePredictor {
      *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *               angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *               length 16.
      * @param u      perturbations or control signals: position-change-x,
      *               position-change-y, position-change-z, linear-velocity-change-x,
@@ -640,7 +640,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: position-change-x,
      *                  position-change-y, position-change-z, linear-velocity-change-x,
@@ -674,7 +674,7 @@ public class StatePredictor {
      *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *           angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *           length 16.
      * @param u  perturbations or control signals: position-change-x,
      *           position-change-y, position-change-z, linear-velocity-change-x,
@@ -705,7 +705,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: quaternion-change-a,
      *                  quaternion-change-b, quaternion-change-c, quaternion-change-d,
@@ -917,7 +917,7 @@ public class StatePredictor {
      *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *               angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *               length 16.
      * @param u      perturbations or control signals: quaternion-change-a,
      *               quaternion-change-b, quaternion-change-c, quaternion-change-d,
@@ -947,7 +947,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: quaternion-change-a,
      *                  quaternion-change-b, quaternion-change-c, quaternion-change-d,
@@ -981,7 +981,7 @@ public class StatePredictor {
      *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *           angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *           length 16.
      * @param u  perturbations or control signals: quaternion-change-a,
      *           quaternion-change-b, quaternion-change-c, quaternion-change-d,
@@ -1012,7 +1012,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: position-change-x,
      *                  position-change-y, position-change-z, quaternion-change-a,
@@ -1064,7 +1064,7 @@ public class StatePredictor {
         double vy = x[8];
         double vz = x[9];
 
-        // linear accelertion
+        // linear acceleration
         double ax = x[10];
         double ay = x[11];
         double az = x[12];
@@ -1234,7 +1234,7 @@ public class StatePredictor {
      *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *               angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *               length 16.
      * @param u      perturbations or control signals: position-change-x,
      *               position-change-y, position-change-z, quaternion-change-a,
@@ -1265,7 +1265,7 @@ public class StatePredictor {
      *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *                  angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *                  length 16.
      * @param u         perturbations or control signals: position-change-x,
      *                  position-change-y, position-change-z, quaternion-change-a,
@@ -1301,7 +1301,7 @@ public class StatePredictor {
      *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
      *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
      *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
-     *           angular-velocity-x, angular-velocity-y, ancular-velocity-z. Must have
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
      *           length 16.
      * @param u  perturbations or control signals: position-change-x,
      *           position-change-y, position-change-z, quaternion-change-a,

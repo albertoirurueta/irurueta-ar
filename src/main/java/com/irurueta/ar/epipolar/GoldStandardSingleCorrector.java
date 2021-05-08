@@ -31,7 +31,7 @@ import com.irurueta.numerical.roots.LaguerrePolynomialRootsEstimator;
  * Fixes a single matched pair of points so that they perfectly follow a given
  * epipolar geometry using the Gold Standard method, which is capable to
  * completely remove errors assuming their gaussianity.
- * When matching points typically the matching precission is about 1 pixel,
+ * When matching points typically the matching precision is about 1 pixel,
  * however this makes that matched points under a given epipolar geometry (i.e.
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar lines.
@@ -97,7 +97,7 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
      * Corrects the pair of provided matched points to be corrected.
      *
      * @throws NotReadyException   if this instance is not ready (either points or
-     *                             fundamntal matrix has not been provided yet).
+     *                             fundamental matrix has not been provided yet).
      * @throws CorrectionException if correction fails.
      */
     @Override

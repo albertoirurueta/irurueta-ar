@@ -57,7 +57,6 @@ public abstract class Distortion {
      *                               not support distorting points.
      * @throws DistortionException   raised if distortion computation failed.
      */
-    @SuppressWarnings("Duplicates")
     public List<Point2D> distort(final List<Point2D> undistortedPoints)
             throws NotSupportedException, DistortionException {
         final int size = undistortedPoints.size();
@@ -98,13 +97,13 @@ public abstract class Distortion {
     }
 
     /**
-     * Undistorts provided 2D point.
+     * Un-distorts provided 2D point.
      *
      * @param distortedPoint distorted point to be undistorted
      * @return undistorted point.
-     * @throws NotSupportedException riased if distortion implementation does
-     *                               not support undistorting points.
-     * @throws DistortionException   raised if undistortion computation failed.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support un-distorting points.
+     * @throws DistortionException   raised if un-distortion computation failed.
      */
     public Point2D undistort(final Point2D distortedPoint)
             throws NotSupportedException, DistortionException {
@@ -114,15 +113,14 @@ public abstract class Distortion {
     }
 
     /**
-     * Undistorts provided 2D points.
+     * Un-distorts provided 2D points.
      *
      * @param distortedPoints list of distorted points to be undistorted
      * @return undistorted points.
      * @throws NotSupportedException raised if distortion implementation does
-     *                               not support undistorting points.
-     * @throws DistortionException   raised if undistortion computation failed.
+     *                               not support un-distorting points.
+     * @throws DistortionException   raised if un-distortion computation failed.
      */
-    @SuppressWarnings("Duplicates")
     public List<Point2D> undistort(final List<Point2D> distortedPoints)
             throws NotSupportedException, DistortionException {
         final int size = distortedPoints.size();
@@ -135,15 +133,15 @@ public abstract class Distortion {
     }
 
     /**
-     * Undistorts provided 2D points and stores them into provided undistorted
+     * Un-distorts provided 2D points and stores them into provided undistorted
      * points list.
      *
      * @param distortedPoints   list of distorted points to be undistorted.
      * @param undistortedPoints undistorted points where result is stored.
      * @throws IllegalArgumentException if both lists don't have the same size.
-     * @throws NotSupportedException    riased if distortion implementation does
-     *                                  not support undistorting points.
-     * @throws DistortionException      raised if undistortion computation failed.
+     * @throws NotSupportedException    raised if distortion implementation does
+     *                                  not support un-distorting points.
+     * @throws DistortionException      raised if un-distortion computation failed.
      */
     public void undistort(
             final List<Point2D> distortedPoints,
@@ -178,14 +176,14 @@ public abstract class Distortion {
             DistortionException;
 
     /**
-     * Undistorts provided 2D point and stores result into provided undistorted
+     * Un-distorts provided 2D point and stores result into provided undistorted
      * point.
      *
      * @param distortedPoint   distorted point to be undistorted.
      * @param undistortedPoint undistorted point where result is stored.
-     * @throws NotSupportedException riased if distortion implementation does
-     *                               not support undistorting points.
-     * @throws DistortionException   raised if undistortion computation failed.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support un-distorting points.
+     * @throws DistortionException   raised if un-distortion computation failed.
      */
     public abstract void undistort(
             final Point2D distortedPoint,
@@ -200,14 +198,14 @@ public abstract class Distortion {
     public abstract boolean canDistort();
 
     /**
-     * Indicates whether this instance can undistort points.
+     * Indicates whether this instance can un-distort points.
      *
      * @return true if points can be undistorted, false otherwise.
      */
     public abstract boolean canUndistort();
 
     /**
-     * Returnds kind of distortion.
+     * Returns kind of distortion.
      *
      * @return kind of distortion.
      */

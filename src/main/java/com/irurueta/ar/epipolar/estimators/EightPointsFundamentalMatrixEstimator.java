@@ -315,7 +315,7 @@ public class EightPointsFundamentalMatrixEstimator extends
             // if nullity of provided a matrix is not of dimension 1 (number of
             // dimensions of null-space), then epipolar geometry is degenerate
             // because there is more than one possible solution (up to scale).
-            // This is typically due to colinearities or coplanarities on
+            // This is typically due to co-linearities or co-planarities on
             // projected 2D points. In this case we throw an exception
             if (decomposer.getNullity() > 1) {
                 throw new FundamentalMatrixEstimatorException();
@@ -350,8 +350,8 @@ public class EightPointsFundamentalMatrixEstimator extends
                 transposedRightTransformationMatrix.multiply(fundMatrix);
                 fundMatrix = transposedRightTransformationMatrix;
 
-                // normalize by frobenius norm to increase accuracy after point
-                // denormalization
+                // normalize by Frobenius norm to increase accuracy after point
+                // de-normalization
                 final double norm = Utils.normF(fundMatrix);
                 fundMatrix.multiplyByScalar(1.0 / norm);
             }

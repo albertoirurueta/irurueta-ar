@@ -200,12 +200,12 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
 
     /**
      * Average of angular speed along y-axis accumulated since last full sample.
-     * Expressed in radians per seoncd (rad/s).
+     * Expressed in radians per second (rad/s).
      */
     protected double mAccumulatedAngularSpeedSampleY;
 
     /**
-     * Acerage of angular speed along z-axis accumulated since last full sample.
+     * Average of angular speed along z-axis accumulated since last full sample.
      * Expressed in radians per second (red/s).
      */
     protected double mAccumulatedAngularSpeedSampleZ;
@@ -716,7 +716,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
 
     /**
      * Indicates whether the gyroscope sample has been received since the last
-     * full sample (acceleromter + gyroscope).
+     * full sample (accelerometer + gyroscope).
      *
      * @return true if gyroscope sample has been received, false otherwise.
      */
@@ -1035,7 +1035,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      *                           Must have length 3.
      * @param positionCovariance new position covariance matrix determining new
      *                           position accuracy or null if last available covariance does not need to
-     *                           be udpated.
+     *                           be updated.
      * @throws IllegalArgumentException if provided covariance matrix is not
      *                                  3x3 or if provided position array does not have length 3.
      */
@@ -1253,7 +1253,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
         void onFullSampleReceived(final BaseSlamEstimator<D> estimator);
 
         /**
-         * Callen when a full sample (accelerometer + gyroscope, etc) has been
+         * Called when a full sample (accelerometer + gyroscope, etc) has been
          * received and has already been processed, and hence internal state has
          * also been updated.
          *

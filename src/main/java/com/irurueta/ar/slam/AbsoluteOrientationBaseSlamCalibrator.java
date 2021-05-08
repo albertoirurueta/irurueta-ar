@@ -49,7 +49,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
     protected final Quaternion mAccumulatedOrientation;
 
     /**
-     * termporary quaternion. For memory reuse.
+     * Temporary quaternion. For memory reuse.
      */
     private Quaternion mTempQ;
 
@@ -129,7 +129,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * Provides a new orientation sample.
      * If accumulation is enabled, samples are averaged until a full sample is
      * received.
-     * When a full sample (acceleromteter + gyroscope + orientation) is
+     * When a full sample (accelerometer + gyroscope + orientation) is
      * received, internal state gets also updated.
      *
      * @param timestamp   timestamp of accelerometer sample since epoch time and

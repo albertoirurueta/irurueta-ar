@@ -2874,7 +2874,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -3249,7 +3249,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -3624,7 +3624,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -3999,7 +3999,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -4400,7 +4400,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -4799,7 +4799,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -5177,7 +5177,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -5581,7 +5581,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -5985,7 +5985,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -6371,7 +6371,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -6843,7 +6843,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -7357,7 +7357,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -7872,7 +7872,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -8387,7 +8387,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contain noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -8911,7 +8911,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();
@@ -9445,7 +9445,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaGtOrientation.combine(gtOrientation);
                     deltaGtOrientation.normalize();
 
-                    // delta acceleration and angular speed only cointain noise,
+                    // delta acceleration and angular speed only contains noise,
                     // since no real change in those values is present on a
                     // constant speed movement
                     u[0] = deltaOrientation.getA();

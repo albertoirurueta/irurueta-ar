@@ -41,7 +41,7 @@ public class PROSACRadialDistortionRobustEstimator extends
     /**
      * Constant defining default threshold to determine whether points are
      * inliers or not.
-     * By defaul 1.0 is considered a good value for cases where measures are
+     * By default 1.0 is considered a good value for cases where measures are
      * done on pixels, since typically the minimum resolution is 1 pixel.
      */
     public static final double DEFAULT_THRESHOLD = 1.0;
@@ -62,7 +62,7 @@ public class PROSACRadialDistortionRobustEstimator extends
 
     /**
      * Quality scores corresponding to each provided point.
-     * The larger the score value the betther the quality of the sample.
+     * The larger the score value the better the quality of the sample.
      */
     private double[] mQualityScores;
 
@@ -90,7 +90,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
@@ -105,7 +105,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param listener          listener to be notified of events such as when
      *                          estimation starts, ends or its progress significantly changes.
@@ -123,7 +123,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -142,7 +142,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -191,7 +191,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @throws IllegalArgumentException if provided lists of points and quality
@@ -209,7 +209,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @param listener          listener to be notified of events such as when
@@ -230,7 +230,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @param distortionCenter  radial distortion center. If null it is assumed
@@ -252,7 +252,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @param distortionCenter  radial distortion center. If null it is assumed
@@ -289,7 +289,7 @@ public class PROSACRadialDistortionRobustEstimator extends
     /**
      * Sets threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * Thre threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @param threshold threshold to be set.

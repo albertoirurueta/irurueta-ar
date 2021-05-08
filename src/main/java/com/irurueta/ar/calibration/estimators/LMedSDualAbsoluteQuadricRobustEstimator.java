@@ -128,7 +128,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * algorithm will stop.
      * The stop threshold can be used to prevent the LMedS algorithm iterating
      * too many times in cases where samples have a very similar accuracy.
-     * For instanc,e in cases where proportion of outliers is very small (close
+     * For instance, in cases where proportion of outliers is very small (close
      * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
      * iterate for a long time trying to find the best solution when indeed
      * there is no need to do that if a reasonable threshold has already been

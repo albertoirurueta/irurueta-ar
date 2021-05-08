@@ -487,7 +487,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
                 }
 
                 // estimate radial distortion using estimated intrinsic
-                // parameters and camera poses and obtain average reprojection
+                // parameters and camera poses and obtain average re-projection
                 // error
                 currentError = estimateRadialDistortion(
                         idealFallbackPatternMarkers);
@@ -528,7 +528,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @param idealFallbackPatternMarkers ideal pattern markers coordinates
      *                                    These coordinates are used as fallback when a given sample does not have
      *                                    an associated pattern.
-     * @return average reprojection error, obtained after projecting ideal
+     * @return average re-projection error, obtained after projecting ideal
      * pattern markers using estimated camera poses and then doing a comparison
      * with sampled points taking into account estimated distortion to undo
      * their corresponding distortion.
@@ -637,7 +637,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             final List<Point2D> distortedPoints2 = distortion.distort(
                     undistortedPoints);
 
-            // set undistorted points obtained after undistorting sampled points
+            // set undistorted points obtained after un-distorting sampled points
             // to refine homography on next iteration
             for (final CameraCalibratorSample sample : mSamples) {
                 if (sample.getHomography() == null) {

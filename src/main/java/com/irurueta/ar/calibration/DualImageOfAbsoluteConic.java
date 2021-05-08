@@ -122,7 +122,7 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
 
     /**
      * Sets DIAC parameters from pinhole camera intrinsic parameters when we
-     * are working in a matric stratum, which is equal to C^-1=K*K'.
+     * are working in a metric stratum, which is equal to C^-1=K*K'.
      *
      * @param k pinhole camera intrinsic parameters.
      */
@@ -152,9 +152,9 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
 
     /**
      * Assuming that we are working in a metric stratum this method obtains the
-     * internal parameters of a pinhole camera by means of cholesky
+     * internal parameters of a pinhole camera by means of Cholesky
      * decomposition.
-     * To avoid numerical inestabilities it is preferred to obtain the
+     * To avoid numerical instabilities it is preferred to obtain the
      * ImageOfAbsoluteConic corresponding to this instance (using #getConic()
      * method), and from there using
      * ImageOfAbsoluteConic#getIntrinsicParameters() method, since it is more

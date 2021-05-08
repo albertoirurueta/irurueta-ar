@@ -453,7 +453,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testEstimateNoContraints()
+    public void testEstimateNoConstraints()
             throws InvalidPinholeCameraIntrinsicParametersException,
             LockedException, NotReadyException, RobustEstimatorException,
             ImageOfAbsoluteConicEstimatorException {
@@ -713,7 +713,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                     LARGE_ABSOLUTE_ERROR);
             assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
 
-            final String msg = "No contraints - failed: " +
+            final String msg = "No constraints - failed: " +
                     failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
                     "% avg horizontal focal distance error: " +
                     avgHorizontalFocalDistanceError +
@@ -1616,7 +1616,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testEstimateZeroSkewnessAspectRatioKnwon()
+    public void testEstimateZeroSkewnessAspectRatioKnown()
             throws InvalidPinholeCameraIntrinsicParametersException,
             LockedException, NotReadyException, RobustEstimatorException,
             ImageOfAbsoluteConicEstimatorException {

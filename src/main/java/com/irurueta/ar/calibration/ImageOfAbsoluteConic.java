@@ -136,8 +136,8 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
 
     /**
      * Assuming that we are working in a metric stratum this method obtains the
-     * internal parameters of a pinhole camera analitically from IAC.
-     * This method should be preferred over cholesky decomposition as it is
+     * internal parameters of a pinhole camera analytically from IAC.
+     * This method should be preferred over Cholesky decomposition as it is
      * more numerically stable.
      *
      * @return the internal parameters of a pinhole camera.
@@ -212,7 +212,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
 
     /**
      * Assuming that we are working in a metric stratum this method obtains the
-     * internal parameters of a pinhole camera by means of cholesky
+     * internal parameters of a pinhole camera by means of Cholesky
      * decomposition.
      *
      * @return the internal parameters of a pinhole camera.

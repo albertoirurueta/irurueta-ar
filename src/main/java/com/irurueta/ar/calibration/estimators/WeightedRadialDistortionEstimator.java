@@ -89,7 +89,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     /**
      * Constructor.
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the
@@ -109,7 +109,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     /**
      * Constructor.
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the
@@ -160,7 +160,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     /**
      * Constructor with points and distortion center.
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the
@@ -186,7 +186,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     /**
      * Constructor.
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the
@@ -213,7 +213,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
     /**
      * Sets lists of corresponding distorted and undistorted points.
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the
@@ -240,7 +240,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * Lists are considered valid if they have the same number of points and
      * both have more than the required minimum of correspondences (which is 2).
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the
@@ -535,7 +535,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * Internal method to set list of corresponding points (it does not check
      * if estimator is locked).
      * @param distortedPoints list of distorted points. Distorted points are
-     * obtained after radial distorsion is applied to an undistorted point.
+     * obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param weights array containing a weight amount for each correspondence.
      * The larger the value of a weight, the most significant the

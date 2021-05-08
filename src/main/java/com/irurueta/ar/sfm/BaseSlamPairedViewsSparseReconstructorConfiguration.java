@@ -24,7 +24,7 @@ import com.irurueta.geometry.Point3D;
 import java.io.Serializable;
 
 /**
- * Contains base configuration for a paired view sparse reconstructor using SLAM (Simultaneous
+ * Contains base configuration for a paired view sparse re-constructor using SLAM (Simultaneous
  * Location And Mapping) to determine the scale of the scene (i.e. the baseline or separation
  * between cameras) by fusing both camera data and data from sensors like an accelerometer or
  * gyroscope.
@@ -60,7 +60,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * actual scene reconstruction.
      * Calibration data is usually obtained by keeping the system in a constant state of
      * motion (e.g. acceleration and rotation).
-     * If this is null, no claibration data will be used.
+     * If this is null, no calibration data will be used.
      */
     private C mCalibrationData;
 

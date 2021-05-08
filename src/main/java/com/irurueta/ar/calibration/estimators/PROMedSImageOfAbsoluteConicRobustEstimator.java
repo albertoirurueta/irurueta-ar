@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Finds the best image of absolute conic (IAC) for provided collection of
- * homographies (2D transformaitons) using PROMedS algorithm.
+ * homographies (2D transformations) using PROMedS algorithm.
  */
 public class PROMedSImageOfAbsoluteConicRobustEstimator extends
         ImageOfAbsoluteConicRobustEstimator {
@@ -311,7 +311,7 @@ public class PROMedSImageOfAbsoluteConicRobustEstimator extends
      * @throws NotReadyException        if provided input data is not enough to start
      *                                  the estimation
      * @throws RobustEstimatorException if estimation fails for any reason
-     *                                  (i.e. numberical instability, no solution available, etc)
+     *                                  (i.e. numerical instability, no solution available, etc)
      */
     @SuppressWarnings("DuplicatedCode")
     @Override

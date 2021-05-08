@@ -81,7 +81,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
 
     /**
      * Quality scores corresponding to each provided point.
-     * The larger the score value the betther the quality of the sample.
+     * The larger the score value the better the quality of the sample.
      */
     private double[] mQualityScores;
 
@@ -109,7 +109,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
@@ -124,7 +124,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param listener          listener to be notified of events such as when
      *                          estimation starts, ends or its progress significantly changes.
@@ -142,7 +142,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -161,7 +161,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -210,7 +210,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @throws IllegalArgumentException if provided lists of points and quality
@@ -228,7 +228,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @param listener          listener to be notified of events such as when
@@ -249,7 +249,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @param distortionCenter  radial distortion center. If null it is assumed
@@ -271,7 +271,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each provided point.
      * @param distortionCenter  radial distortion center. If null it is assumed
@@ -350,7 +350,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
 
     /**
      * Returns quality scores corresponding to each provided point.
-     * The larger the score value the betther the quality of the sampled point.
+     * The larger the score value the better the quality of the sampled point.
      *
      * @return quality scores corresponding to each point.
      */
@@ -378,7 +378,7 @@ public class PROMedSRadialDistortionRobustEstimator extends
     }
 
     /**
-     * Indicates if eatimator is ready to start the radial distortion
+     * Indicates if estimator is ready to start the radial distortion
      * estimation.
      * This is true when input data (i.e. 2D points and quality scores) are
      * provided and a minimum of 2 points are available.

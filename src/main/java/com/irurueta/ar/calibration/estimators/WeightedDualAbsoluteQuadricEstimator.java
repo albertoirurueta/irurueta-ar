@@ -135,7 +135,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param cameras list of cameras used to estimate the Dual Absolute Quadric
      *                (DAQ).
      * @param weights array containing a weight amount for each corresponding
-     *                camera. The larget the value of a weight, the most significant the
+     *                camera. The larger the value of a weight, the most significant the
      *                corresponding camera data will be.
      * @throws IllegalArgumentException if provided lists of cameras and weights
      *                                  don't have the same size or enough cameras.
@@ -410,9 +410,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or cameras
-     *                                               corresponding to critical motion sequences such as pure paraller
-     *                                               translations are provided, where no additional data is really provided.
+     *                                               estimation, usually because repeated cameras are provided, or
+     *                                               cameras corresponding to critical motion sequences such as pure
+     *                                               parallel translations are provided, where no additional data is
+     *                                               really provided.
      */
     private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
             DualAbsoluteQuadric result)
@@ -539,9 +540,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadrics
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or cameras
-     *                                               corresponding to critical motion sequences such as pure paraller
-     *                                               translations are provided, where no additional data is really provided.
+     *                                               estimation, usually because repeated cameras are provided, or
+     *                                               cameras corresponding to critical motion sequences such as pure
+     *                                               parallel translations are provided, where no additional data is
+     *                                               really provided.
      */
     private void estimateZeroSkewnessAndPrincipalPointAtOrigin(
             final DualAbsoluteQuadric result)
@@ -653,15 +655,16 @@ public class WeightedDualAbsoluteQuadricEstimator extends
     }
 
     /**
-     * Estimates Dual Absolute Quadric (DAQ) assumint that principal point is
+     * Estimates Dual Absolute Quadric (DAQ) assuming that principal point is
      * zero.
      *
      * @param result instance where resulting estimated Dual Absolute Quadrics
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or cameras
-     *                                               corresponding to critical motion sequences such as pure paraller
-     *                                               translations are provided, where no additional data is really provided.
+     *                                               estimation, usually because repeated cameras are provided, or
+     *                                               cameras corresponding to critical motion sequences such as pure
+     *                                               parallel translations are provided, where no additional data is
+     *                                               really provided.
      */
     private void estimatePrincipalPointAtOrigin(
             DualAbsoluteQuadric result)

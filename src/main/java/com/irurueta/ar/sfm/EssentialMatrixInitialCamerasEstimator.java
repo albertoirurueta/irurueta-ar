@@ -403,7 +403,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws LockedException                         if estimator is locked.
      * @throws NotReadyException                       if estimator is not ready.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      */
     @Override
     public void estimate() throws LockedException, NotReadyException,
@@ -733,7 +733,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -779,7 +779,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical unstabilities.
+     *                                                 cameras fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -826,7 +827,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical unstabilities.
+     *                                                 fails for some reason, typically due to numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -878,7 +879,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical unstabilities.
+     *                                                 cameras fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -994,7 +996,7 @@ public class EssentialMatrixInitialCamerasEstimator
             }
 
             if (attemptNumValidTriangulatedPoints > numValidTriangulatedPoints) {
-                // a better solution containing more valid points has been foound
+                // a better solution containing more valid points has been found
 
                 // keep better solution
                 updateBestSolutionData(leftCamera, rightCamera,
@@ -1027,7 +1029,7 @@ public class EssentialMatrixInitialCamerasEstimator
             }
 
             if (attemptNumValidTriangulatedPoints > numValidTriangulatedPoints) {
-                // a better solution containing more valid points has been foound
+                // a better solution containing more valid points has been found
 
                 // keep better solution
                 updateBestSolutionData(leftCamera, rightCamera,
@@ -1054,7 +1056,7 @@ public class EssentialMatrixInitialCamerasEstimator
             }
 
             if (attemptNumValidTriangulatedPoints > numValidTriangulatedPoints) {
-                // a better solution containing more valid points has been foound
+                // a better solution containing more valid points has been found
 
                 // keep better solution
                 updateBestSolutionData(leftCamera, rightCamera,
@@ -1179,7 +1181,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws LockedException               never occurs.
      * @throws NotReadyException             never occurs.
      * @throws Point3DTriangulationException if points cannot be triangulated
-     *                                       because of numerical unstabilities.
+     *                                       because of numerical instabilities.
      */
     private static int computeCamerasAndTriangulation(
             final Rotation3D rotation,

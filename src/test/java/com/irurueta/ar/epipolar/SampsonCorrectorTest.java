@@ -469,8 +469,8 @@ public class SampsonCorrectorTest implements CorrectorListener {
     }
 
     @Test
-    public void testCorrect() throws InvalidPairOfCamerasException,
-            com.irurueta.geometry.estimators.NotReadyException, LockedException {
+    public void testCorrect() throws com.irurueta.geometry.estimators.NotReadyException,
+            LockedException {
 
         int improved = 0;
         int total = 0;

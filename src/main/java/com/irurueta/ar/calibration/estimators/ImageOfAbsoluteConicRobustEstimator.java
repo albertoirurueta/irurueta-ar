@@ -62,7 +62,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     /**
      * Constant defining default confidence of the estimated result, which is
      * 99%. This means that with a probability of 99% estimation will be
-     * accurate because chosen subsamples will be inliers.
+     * accurate because chosen sub-samples will be inliers.
      */
     public static final double DEFAULT_CONFIDENCE = 0.99;
 
@@ -146,14 +146,14 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     private Matrix mHomMatrix;
 
     /**
-     * Submatrix of homography used as the left term on a matrix multiplication.
+     * Sub-matrix of homography used as the left term on a matrix multiplication.
      * This is used during residuals estimation.
      * This instance is reused for performance reasons.
      */
     private double[] mSubMatrixLeft;
 
     /**
-     * Submatrix of homography used as the right term on a matrix
+     * Sub-matrix of homography used as the right term on a matrix
      * multiplication.
      * This is used during residuals estimation.
      * This instance is reused for performance reasons.

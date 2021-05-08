@@ -28,7 +28,7 @@ public interface PairedViewsSparseReconstructorListener extends
      * to obtain cameras an reconstructed points in an euclidean space (up to certain rotation and
      * translation).
      *
-     * @param reconstructor reconstructor raising this event.
+     * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of previous view (i.e. 1st view).
      * @param viewId2       id of current view (i.e. 2nd view).
      * @param metricCamera1 estimated first metric camera.

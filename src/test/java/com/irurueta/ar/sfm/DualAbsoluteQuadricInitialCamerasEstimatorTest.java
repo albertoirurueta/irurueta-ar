@@ -371,7 +371,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             }
             assertTrue(line2b.isLocus(point2D2b, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines for each pair of cameras and check that
+            // back-project epipolar lines for each pair of cameras and check that
             // each pair of lines correspond to the same epipolar plane
             final Plane epipolarPlane1a = camera1.backProject(line1a);
             final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -649,7 +649,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             assertTrue(line1b.isLocus(point2D1b, ABSOLUTE_ERROR));
             assertTrue(line2b.isLocus(point2D2b, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines for each pair of cameras and check that
+            // back-project epipolar lines for each pair of cameras and check that
             // each pair of lines correspond to the same epipolar plane
             final Plane epipolarPlane1a = camera1.backProject(line1a);
             final Plane epipolarPlane2a = camera2.backProject(line2a);
@@ -886,7 +886,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             assertTrue(line1b.isLocus(point2D1b, ABSOLUTE_ERROR));
             assertTrue(line2b.isLocus(point2D2b, ABSOLUTE_ERROR));
 
-            // backproject epipolar lines for each pair of cameras and check that
+            // back-project epipolar lines for each pair of cameras and check that
             // each pair of lines correspond to the same epipolar plane
             final Plane epipolarPlane1a = camera1.backProject(line1a);
             final Plane epipolarPlane2a = camera2.backProject(line2a);

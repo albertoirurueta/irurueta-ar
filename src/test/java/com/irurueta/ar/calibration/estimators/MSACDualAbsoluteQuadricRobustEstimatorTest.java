@@ -599,7 +599,6 @@ public class MSACDualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    @SuppressWarnings("Duplicates")
     public void testEstimate() throws AlgebraException,
             InvalidTransformationException, LockedException, NotReadyException,
             CameraException, NotAvailableException {

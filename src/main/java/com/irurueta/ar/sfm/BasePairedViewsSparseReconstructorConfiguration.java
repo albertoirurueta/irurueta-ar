@@ -25,7 +25,7 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.io.Serializable;
 
 /**
- * Base class containing configuration for a paired view based sparse reconstructor.
+ * Base class containing configuration for a paired view based sparse re-constructor.
  *
  * @param <T> an actual implementation of a configuration class.
  */
@@ -109,7 +109,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
             InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX;
 
     /**
-     * Indicates whether an homogeneous point triangulator is used for point triangulastion when
+     * Indicates whether an homogeneous point triangulator is used for point triangulation when
      * Dual Absolute Quadric (DAQ) camera initialization is used.
      */
     public static final boolean DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR = true;
@@ -126,7 +126,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     public static final double DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X = 0.0;
 
     /**
-     * Default verticla principal point value to use for paired cameras estimation
+     * Default vertical principal point value to use for paired cameras estimation
      * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ) methods.
      */
     public static final double DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y = 0.0;
@@ -154,8 +154,8 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     public static final boolean DEFAULT_ALLOW_GENERAL_SCENE = true;
 
     /**
-     * Indicates whether a planr (points laying in a 3D plane) scene is allowed.
-     * When true, an initial geometry estimastion is attempted for planar points.
+     * Indicates whether a planar (points laying in a 3D plane) scene is allowed.
+     * When true, an initial geometry estimation is attempted for planar points.
      */
     public static final boolean DEFAULT_ALLOW_PLANAR_SCENE = true;
 
@@ -201,7 +201,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     public static final double DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD = 1e-3;
 
     /**
-     * Default value indicating that inlier data is kept after robust planasr homography
+     * Default value indicating that inlier data is kept after robust planar homography
      * estimation.
      * This is only used when planar scenes are allowed.
      */
@@ -218,7 +218,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Indicates whether intrinsic parameters are known by default.
      * When intrinsic parameters are known, essential matrix method is used for paired
      * camera estimation.
-     * If intrinsic parameters are unknown, pairs of cameras are autocalibrated using
+     * If intrinsic parameters are unknown, pairs of cameras are auto-calibrated using
      * either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic) methods.
      */
     public static final boolean DEFAULT_KNOWN_INTRINSIC_PARAMETERS = false;
@@ -347,7 +347,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Indicates whether intrinsic parameters are known.
      * When intrinsic parameters are known, essential matrix method is used for paired
      * camera estimation.
-     * If intrinsic parameters are unknown, pairs of cameras are autocalibrated using
+     * If intrinsic parameters are unknown, pairs of cameras are auto-calibrated using
      * either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic) methods.
      */
     private boolean mKnownIntrinsicParameters = DEFAULT_KNOWN_INTRINSIC_PARAMETERS;
@@ -748,7 +748,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Sets horizontal principal point value to use for paired cameras estimation using
      * DIAC or DAQ methods.
      *
-     * @param principalPointX horizontal principal point vlaue to use for paired cameras
+     * @param principalPointX horizontal principal point value to use for paired cameras
      *                        estimation using DIAC or DAQ methods.
      * @return this instance so that method can be easily chained.
      */
@@ -842,10 +842,10 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
     }
 
     /**
-     * Indicates whether instrinsic parameters are known.
+     * Indicates whether intrinsic parameters are known.
      * When instrinsic parameters are known, essential matrix method can be used for
      * paired camera estimation.
-     * If intrinsic parameters are unknown, pairs of cameras should be autocalibrated
+     * If intrinsic parameters are unknown, pairs of cameras should be auto-calibrated
      * using either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic)
      * methods.
      *
@@ -859,7 +859,7 @@ public abstract class BasePairedViewsSparseReconstructorConfiguration<
      * Specifies whether intrinsic parameters are known.
      * When intrinsic parameters are known, essential matrix method can be used for
      * paired camera estimation.
-     * If intrinsic parameters are unknown, pairs of cameras should be autocalibrated
+     * If intrinsic parameters are unknown, pairs of cameras should be auto-calibrated
      * using either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic)
      * methods.
      *

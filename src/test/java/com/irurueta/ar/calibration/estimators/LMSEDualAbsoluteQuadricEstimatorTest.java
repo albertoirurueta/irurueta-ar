@@ -1164,7 +1164,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -1458,7 +1458,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -1725,7 +1725,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -2006,7 +2006,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -2382,7 +2382,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -2777,7 +2777,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -3149,7 +3149,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }

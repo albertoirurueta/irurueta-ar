@@ -141,7 +141,7 @@ public abstract class BaseCalibrationData implements Serializable {
     }
 
     /**
-     * Sets control signal mean and covariange to correct biases in control
+     * Sets control signal mean and covariance to correct biases in control
      * signal and to take into account for estimation process noise during
      * Kalman prediction stage.
      *

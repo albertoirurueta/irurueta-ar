@@ -394,7 +394,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * plane size defined by minimum and maximum samples coordinates. When
      * computing residuals, matched samples are created along the corresponding
      * epipolar lines with a random disparity within provided range of
-     * disparites, and then the epipolar line for the randomly generated matched
+     * disparities, and then the epipolar line for the randomly generated matched
      * sample is generated on the original view to determine the distance to
      * such line and the original sample.
      *
@@ -453,7 +453,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * plane size defined by minimum and maximum samples coordinates. When
      * computing residuals, matched samples are created along the corresponding
      * epipolar lines with a random disparity within provided range of
-     * disparites, and then the epipolar line for the randomly generated matched
+     * disparities, and then the epipolar line for the randomly generated matched
      * sample is generated on the original view to determine the distance to
      * such line and the original sample.
      *

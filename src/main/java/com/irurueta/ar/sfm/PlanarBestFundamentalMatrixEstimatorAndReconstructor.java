@@ -125,7 +125,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     private List<Point3D> mTriangulatedPoints;
 
     /**
-     * Contains booleans indicathing which of the best triangulated points are
+     * Contains booleans indicating which of the best triangulated points are
      * valid (i.e. lie in front of both estimated cameras) or not.
      */
     private BitSet mValidTriangulatedPoints;

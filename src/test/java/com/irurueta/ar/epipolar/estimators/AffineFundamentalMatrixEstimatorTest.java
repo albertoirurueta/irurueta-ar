@@ -155,7 +155,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testAresetPointsNormalized() throws LockedException {
+    public void testAreSetPointsNormalized() throws LockedException {
         final AffineFundamentalMatrixEstimator estimator =
                 new AffineFundamentalMatrixEstimator();
 
@@ -665,7 +665,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 assertTrue(epipolarPlane1.equals(epipolarPlane2,
                         VERY_LARGE_ABSOLUTE_ERROR));
 
-                // check that poin3D and camera centers belong to epipolar plane
+                // check that point3D and camera centers belong to epipolar plane
                 if (!epipolarPlane1.isLocus(point3D,
                         ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
@@ -915,7 +915,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 assertTrue(epipolarPlane1.equals(epipolarPlane2,
                         ULTRA_LARGE_ABSOLUTE_ERROR));
 
-                // check that poin3D and camera centers belong to epipolar plane
+                // check that point3D and camera centers belong to epipolar plane
                 if (!epipolarPlane1.isLocus(point3D,
                         ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;

@@ -66,13 +66,13 @@ public class RadialDistortion extends Distortion implements Serializable {
     public static final double DEFAULT_SKEW = 0.0;
 
     /**
-     * Default maximum number of iterations to do when attempting to undistort
+     * Default maximum number of iterations to do when attempting to un-distort
      * a point if convergence is not reached.
      */
     public static final int DEFAULT_MAX_ITERS = 20;
 
     /**
-     * Default tolerance to consider point convergence when undistorting a point.
+     * Default tolerance to consider point convergence when un-distorting a point.
      */
     public static final double DEFAULT_TOLERANCE = 1e-5;
 
@@ -577,7 +577,7 @@ public class RadialDistortion extends Distortion implements Serializable {
     }
 
     /**
-     * Undistorts provided 2D point and stores result into provided undistorted
+     * Un-distorts provided 2D point and stores result into provided undistorted
      * point
      *
      * @param distortedPoint   distorted point to be undistorted
@@ -590,12 +590,12 @@ public class RadialDistortion extends Distortion implements Serializable {
     }
 
     /**
-     * Undistorts provided 2D point and stores result into provided undistorted
+     * Un-distorts provided 2D point and stores result into provided undistorted
      * point.
      *
      * @param distortedPoint   distorted point to be undistorted.
      * @param undistortedPoint undistorted point where result is stored.
-     * @param maxIters         maximum number of iterations to undistort a point in case
+     * @param maxIters         maximum number of iterations to un-distort a point in case
      *                         that convergence is not reached.
      * @param tolerance        tolerance to indicate that convergence has been reached.
      */
@@ -692,7 +692,7 @@ public class RadialDistortion extends Distortion implements Serializable {
     }
 
     /**
-     * Indicates whether this instance can undistort points.
+     * Indicates whether this instance can un-distort points.
      * This implementation always returns true.
      *
      * @return true if points can be undistorted, false otherwise.
@@ -704,7 +704,7 @@ public class RadialDistortion extends Distortion implements Serializable {
 
 
     /**
-     * Returnds kind of distortion.
+     * Returns kind of distortion.
      *
      * @return kind of distortion.
      */

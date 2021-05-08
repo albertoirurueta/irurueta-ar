@@ -27,7 +27,7 @@ import java.io.Serializable;
  * The essential matrix defines the relation between two views in a similar way
  * that the fundamental matrix does, but taking into account the intrinsic
  * parameters of the cameras associated to both views. That ways the relation
- * between their extrinsic parameters (rotation and translation) can be prcisely
+ * between their extrinsic parameters (rotation and translation) can be precisely
  * obtained.
  */
 public class EssentialMatrix extends FundamentalMatrix implements Serializable {
@@ -577,19 +577,19 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * camera parameters.
      *
      * @param fundamentalMatrix        a fundamental matrix.
-     * @param leftInstrinsicParameters intrinsic camera parameters of left view.
+     * @param leftIntrinsicParameters  intrinsic camera parameters of left view.
      * @param rightIntrinsicParameters intrinsic camera parameters of right view.
      * @throws InvalidPairOfIntrinsicParametersException if provided intrinsic
      *                                                   parameters generate an invalid essential matrix.
      */
     public final void setFromFundamentalMatrixAndIntrinsics(
             final FundamentalMatrix fundamentalMatrix,
-            final PinholeCameraIntrinsicParameters leftInstrinsicParameters,
+            final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
             final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
             throws InvalidPairOfIntrinsicParametersException {
 
         try {
-            final Matrix k1 = leftInstrinsicParameters.getInternalMatrix();
+            final Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
             final double normK1 = Utils.normF(k1);
             k1.multiplyByScalar(1.0 / normK1);
 
@@ -621,7 +621,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
     /**
      * Converts this essential matrix into a fundamental matrix by applying
      * provided intrinsic parameters on left and right views.
-     * The essential matrix only contains information abour rotation and
+     * The essential matrix only contains information about rotation and
      * translation relating two views, while fundamental matrix also contains
      * information about the intrinsic parameters in both views.
      * NOTE: although essential matrix is a subclass of fundamental matrix, it

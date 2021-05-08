@@ -437,7 +437,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * Returns minimum number of required homographies needed to estimate the
      * Image of Absolute Conic (IAC).
      * If no constraints are imposed, then at least 3 homographies are required.
-     * For each contraint imposed, one less equation will be required,  hence
+     * For each constraint imposed, one less equation will be required,  hence
      * if skewness is assumed to be known (by using its typical value of zero),
      * then only 4 equations will be needed (2 homographies).
      * If also the horizontal and vertical coordinates of the principal point

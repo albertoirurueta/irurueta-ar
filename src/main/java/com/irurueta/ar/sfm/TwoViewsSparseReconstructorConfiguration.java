@@ -18,7 +18,7 @@ package com.irurueta.ar.sfm;
 import java.io.Serializable;
 
 /**
- * Contains configuration for a two view sparse reconstructor.
+ * Contains configuration for a two view sparse re-constructor.
  */
 public class TwoViewsSparseReconstructorConfiguration extends
         BaseTwoViewsSparseReconstructorConfiguration<
@@ -26,7 +26,7 @@ public class TwoViewsSparseReconstructorConfiguration extends
 
 
     /**
-     * Creates an instance of a two views sparse reconstructor configuration.
+     * Creates an instance of a two views sparse re-constructor configuration.
      *
      * @return configuration instance.
      */

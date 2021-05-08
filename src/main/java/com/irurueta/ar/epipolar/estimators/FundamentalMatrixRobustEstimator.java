@@ -52,7 +52,7 @@ public abstract class FundamentalMatrixRobustEstimator {
 
     /**
      * Indicates that result is refined by default using Levenberg-Marquardt
-     * fittin algorithm over found inliers.
+     * fitting algorithm over found inliers.
      */
     public static final boolean DEFAULT_REFINE_RESULT = true;
 
@@ -80,7 +80,7 @@ public abstract class FundamentalMatrixRobustEstimator {
     /**
      * Constant defining default confidence of the estimated result, which is
      * 99%. This means that with a probability of 99% estimation will be
-     * accurate because chosen subsamples will be inliers.
+     * accurate because chosen sub-samples will be inliers.
      */
     public static final double DEFAULT_CONFIDENCE = 0.99;
 
@@ -440,7 +440,7 @@ public abstract class FundamentalMatrixRobustEstimator {
 
     /**
      * Returns maximum allowed number of iterations. If maximum allowed number
-     * of iterations is achieved without convering to a result when calling
+     * of iterations is achieved without converting to a result when calling
      * estimate(), a RobustEstimatorException will be raised.
      *
      * @return maximum allowed number of iterations.
@@ -608,7 +608,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      *                                  estimation is already in progress.
      * @throws NotReadyException        if provided input data is not enough to start
      *                                  the estimation.
-     * @throws RobustEstimatorException if estimation fails for any readon
+     * @throws RobustEstimatorException if estimation fails for any reason
      *                                  (i.e. numerical instability, no solution available, etc).
      */
     public abstract FundamentalMatrix estimate() throws LockedException,

@@ -19,7 +19,7 @@ package com.irurueta.ar.sfm;
 import java.io.Serializable;
 
 /**
- * Contains configuration for a multiple view sparse reconstructor assuming that the
+ * Contains configuration for a multiple view sparse re-constructor assuming that the
  * initial baseline (separation between initial cameras) is known.
  */
 public class KnownBaselineSparseReconstructorConfiguration extends
@@ -41,7 +41,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
     private double mBaseline = DEFAULT_BASELINE;
 
     /**
-     * Creates an instance of a multiple view sparse reconstructor configuration with
+     * Creates an instance of a multiple view sparse re-constructor configuration with
      * known camera baseline.
      *
      * @return configuration instance.

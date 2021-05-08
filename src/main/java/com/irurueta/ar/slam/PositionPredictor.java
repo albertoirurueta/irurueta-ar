@@ -125,7 +125,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position.
      *
-     * @param r      current position. Expresed in meters.
+     * @param r      current position. Expressed in meters.
      * @param vx     velocity in x-axis. Expressed in m/s.
      * @param vy     velocity in y-axis. Expressed in m/s.
      * @param vz     velocity in z-axis. Expressed in m/s.
@@ -223,7 +223,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position assuming no acceleration.
      *
-     * @param r      current position. Expresed in meters.
+     * @param r      current position. Expressed in meters.
      * @param vx     velocity in x-axis. Expressed in m/s.
      * @param vy     velocity in y-axis. Expressed in m/s.
      * @param vz     velocity in z-axis. Expressed in m/s.
@@ -314,7 +314,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position.
      *
-     * @param r  current position. Expresed in meters.
+     * @param r  current position. Expressed in meters.
      * @param vx velocity in x-axis. Expressed in m/s.
      * @param vy velocity in y-axis. Expressed in m/s.
      * @param vz velocity in z-axis. Expressed in m/s.
@@ -380,7 +380,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position assuming no acceleration.
      *
-     * @param r         current position. Expresed in meters.
+     * @param r         current position. Expressed in meters.
      * @param vx        velocity in x-axis. Expressed in m/s.
      * @param vy        velocity in y-axis. Expressed in m/s.
      * @param vz        velocity in z-axis. Expressed in m/s.
@@ -404,7 +404,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position assuming no acceleration.
      *
-     * @param r  current position. Expresed in meters.
+     * @param r  current position. Expressed in meters.
      * @param vx velocity in x-axis. Expressed in m/s.
      * @param vy velocity in y-axis. Expressed in m/s.
      * @param vz velocity in z-axis. Expressed in m/s.
@@ -422,7 +422,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position assuming no acceleration.
      *
-     * @param r         current position. Expresed in meters.
+     * @param r         current position. Expressed in meters.
      * @param v         array containing 3 components of velocity. Expressed in m/s.
      *                  Must have length 3.
      * @param dt        time interval to compute prediction expressed in seconds.
@@ -445,7 +445,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position assuming no acceleration.
      *
-     * @param r  current position. Expresed in meters.
+     * @param r  current position. Expressed in meters.
      * @param v  array containing 3 components of velocity. Expressed in m/s.
      *           Must have length 3.
      * @param dt time interval to compute prediction expressed in seconds.

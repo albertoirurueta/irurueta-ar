@@ -189,7 +189,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * @throws NotReadyException        if provided input data is not enough to start
      *                                  the estimation.
      * @throws RobustEstimatorException if estimation fails for any reason
-     *                                  (i.e. numberical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @SuppressWarnings("DuplicatedCode")
     @Override

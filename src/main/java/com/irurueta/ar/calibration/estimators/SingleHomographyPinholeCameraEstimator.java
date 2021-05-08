@@ -152,7 +152,7 @@ public class SingleHomographyPinholeCameraEstimator {
     /**
      * Indicates whether this instance is locked.
      *
-     * @return true if this estimator is budy doing the estimation, false
+     * @return true if this estimator is busy doing the estimation, false
      * otherwise.
      */
     public boolean isReady() {

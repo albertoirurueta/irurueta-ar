@@ -20,7 +20,7 @@ import com.irurueta.ar.slam.SlamCalibrationData;
 import java.io.Serializable;
 
 /**
- * Contains configuration for a two view sparse reconstructor using SLAM
+ * Contains configuration for a two view sparse re-constructor using SLAM
  * (Simultaneous Location And Mapping) to determine the scale of the scene
  * (i.e. the baseline or separation between cameras) by fusing both camera data
  * and data from sensors like an accelerometer or gyroscope.
@@ -32,7 +32,7 @@ public class SlamTwoViewsSparseReconstructorConfiguration extends
                 SlamTwoViewsSparseReconstructorConfiguration> implements Serializable {
 
     /**
-     * Creates an instance of a two views sparse reconstructor configuration with
+     * Creates an instance of a two views sparse re-constructor configuration with
      * slam estimation.
      *
      * @return configuration instance.

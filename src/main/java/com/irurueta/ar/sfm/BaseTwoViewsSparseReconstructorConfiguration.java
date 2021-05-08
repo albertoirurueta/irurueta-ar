@@ -26,7 +26,7 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.io.Serializable;
 
 /**
- * Base class containing configuration for a two view sparse reconstructor.
+ * Base class containing configuration for a two view sparse re-constructor.
  *
  * @param <T> an actual implementation of a configuration class.
  */
@@ -382,7 +382,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
     private boolean mAllowPlanarScene = DEFAULT_ALLOW_PLANAR_SCENE;
 
     /**
-     * Robust method to use for planar homograpy estimation.
+     * Robust method to use for planar homography estimation.
      * This is only used when planar scenes are allowed.
      */
     private RobustEstimatorMethod mRobustPlanarHomographyEstimatorMethod =

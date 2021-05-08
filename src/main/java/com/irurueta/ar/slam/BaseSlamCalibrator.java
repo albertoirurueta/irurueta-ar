@@ -271,7 +271,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
     /**
      * Indicates whether calibrator has finished taking samples or not.
      *
-     * @return true if calibrator has finished taing samples, false otherwise.
+     * @return true if calibrator has finished taking samples, false otherwise.
      */
     public boolean isFinished() {
         return mFinished;
@@ -500,7 +500,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
     }
 
     /**
-     * Gets acerage acceleration along z-axis accumulated since last full
+     * Gets average acceleration along z-axis accumulated since last full
      * sample. Expressed in meters per squared second (m/s^2).
      *
      * @return average acceleration along z-axis accumulated since last full
@@ -775,7 +775,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
 
     /**
      * Obtains mean values of control signal used for SLAM estimation during
-     * prediction stage of Kalman filter in order to corect possible biases
+     * prediction stage of Kalman filter in order to correct possible biases
      * and offsets.
      *
      * @return mean values of control signal.
@@ -796,7 +796,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
     public void getControlMean(final double[] result) {
         final double[] src = getControlMean();
         if (result.length != src.length) {
-            throw new IllegalArgumentException("wrong legnth");
+            throw new IllegalArgumentException("wrong length");
         }
 
         System.arraycopy(src, 0, result, 0, src.length);
@@ -942,7 +942,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
     protected abstract void processFullSample();
 
     /**
-     * Updates internal mean and covariance values and checkes whether
+     * Updates internal mean and covariance values and checks whether
      * convergence has been reached and calibrator has finished or failed.
      */
     protected void updateSample() {

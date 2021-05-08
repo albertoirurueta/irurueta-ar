@@ -103,7 +103,7 @@ public class ConstantVelocityModelStatePredictor {
      *                  length 13.
      * @param u         linear and angular velocity perturbations or controls:
      *                  linear-velocity-change-x, linear-velocity-change-y,
-     *                  linear-velocity-change-z, angulat-velocity-change-x,
+     *                  linear-velocity-change-z, angular-velocity-change-x,
      *                  angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
      * @param dt        time interval to compute prediction expressed in seconds.
      * @param result    instance where updated system model will be stored. Must
@@ -262,7 +262,7 @@ public class ConstantVelocityModelStatePredictor {
      *               length 13.
      * @param u      linear and angular velocity perturbations or controls:
      *               linear-velocity-change-x, linear-velocity-change-y,
-     *               linear-velocity-change-z, angulat-velocity-change-x,
+     *               linear-velocity-change-z, angular-velocity-change-x,
      *               angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
      * @param dt     time interval to compute prediction expressed in seconds.
      * @param result instance where updated system model will be stored. Must
@@ -288,7 +288,7 @@ public class ConstantVelocityModelStatePredictor {
      *                  length 13.
      * @param u         linear and angular velocity perturbations or controls:
      *                  linear-velocity-change-x, linear-velocity-change-y,
-     *                  linear-velocity-change-z, angulat-velocity-change-x,
+     *                  linear-velocity-change-z, angular-velocity-change-x,
      *                  angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
      * @param dt        time interval to compute prediction expressed in seconds.
      * @param jacobianX jacobian wrt system state. Must be 13x13.
@@ -317,7 +317,7 @@ public class ConstantVelocityModelStatePredictor {
      *           length 13.
      * @param u  linear and angular velocity perturbations or controls:
      *           linear-velocity-change-x, linear-velocity-change-y,
-     *           linear-velocity-change-z, angulat-velocity-change-x,
+     *           linear-velocity-change-z, angular-velocity-change-x,
      *           angular-velocity-change-y, angular-velocity-change-z. Must have length 6.
      * @param dt time interval to compute prediction expressed in seconds.
      * @return a new instance containing the updated system state.

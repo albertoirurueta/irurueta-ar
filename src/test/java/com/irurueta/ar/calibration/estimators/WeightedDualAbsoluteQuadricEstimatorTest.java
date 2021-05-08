@@ -388,7 +388,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     }
 
     @Test
-    public void testGetSetfocalDistanceAspectRatio() throws LockedException {
+    public void testGetSetFocalDistanceAspectRatio() throws LockedException {
         final WeightedDualAbsoluteQuadricEstimator estimator =
                 new WeightedDualAbsoluteQuadricEstimator();
 
@@ -809,7 +809,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -1086,7 +1086,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }
@@ -1353,7 +1353,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         }
 
         // sometimes if cameras are in degenerate configurations, DAQ estimation
-        // can fail, for that reason we check that algorithm at least workes once
+        // can fail, for that reason we check that algorithm at least works once
         // if we retry multiple times
         assertTrue(numSucceeded > 0);
     }

@@ -103,7 +103,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
@@ -118,7 +118,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param listener          listener to be notified of events such as when
      *                          estimation starts, ends or its progress significantly changes.
@@ -136,7 +136,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to
@@ -155,7 +155,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * Constructor.
      *
      * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distorsion is applied to an undistorted point.
+     *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param distortionCenter  radial distortion center. If null it is assumed
      *                          to be the origin of coordinates, otherwise this is typically equal to

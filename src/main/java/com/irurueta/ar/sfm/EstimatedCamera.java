@@ -129,7 +129,7 @@ public class EstimatedCamera implements Serializable {
     }
 
     /**
-     * Sets quality score of estimated camera. The larger the vaule, the better
+     * Sets quality score of estimated camera. The larger the value, the better
      * the quality. This is used for robust estimators such as PROSAC or
      * PROMedS.
      * This value is typically obtained from algorithms determining point

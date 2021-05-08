@@ -57,7 +57,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * Threshold to determine whether homographies are inliers or not when
      * testing possible estimation solutions.
      * The threshold refers to the amount of error a possible solution has on
-     * the orthonormality assumption of rotation matrices.
+     * the ortho-normality assumption of rotation matrices.
      */
     private double mThreshold;
 
@@ -194,7 +194,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * Returns threshold to determine whether homographies are inliers or not
      * when testing possible estimation solutions.
      * The threshold refers to the amount of error a possible solution has on
-     * the orthonormality assumption of rotation matrices.
+     * the ortho-normality assumption of rotation matrices.
      *
      * @return threshold to determine whether homographies are inliers or not
      * when testing possible estimation solutions.
@@ -204,10 +204,10 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
     }
 
     /**
-     * Sets threshold to determine whether homographies are iliers or not when
+     * Sets threshold to determine whether homographies are inliers or not when
      * testing possible estimation solutions.
      * The threshold refers to the amount of error a possible solution has on
-     * the orthonormality assumption of rotation matrices.
+     * the ortho-normality assumption of rotation matrices.
      *
      * @param threshold threshold to determine whether homographies are inliers
      *                  or not when testing possible estimation solutions.
@@ -280,7 +280,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * @throws NotReadyException        if provided input data is not enough to start
      *                                  the estimation.
      * @throws RobustEstimatorException if estimation fails for any reason
-     *                                  (i.e. numberical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
