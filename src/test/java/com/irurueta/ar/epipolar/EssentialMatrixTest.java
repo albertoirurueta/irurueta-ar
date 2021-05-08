@@ -1202,6 +1202,32 @@ public class EssentialMatrixTest {
         assertTrue(numValid > 2 * TIMES / 4);
     }
 
+    @Test(expected = InvalidRotationAndTranslationException.class)
+    public void testSetFromRotationAndTranslationInvalid() throws
+            InvalidRotationAndTranslationException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+
+        final Point2D translation = new InhomogeneousPoint2D(Double.NaN,
+                Double.NaN);
+
+        final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
+                betaEuler, gammaEuler);
+
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+
+        // set from rotation and translation
+        essentialMatrix.setFromRotationAndTranslation(rotation,
+                translation);
+    }
+
     @Test
     public void testSetFromFundamentalMatrixAndIntrinsics() throws
             WrongSizeException, NotReadyException, LockedException,
@@ -1302,6 +1328,53 @@ public class EssentialMatrixTest {
         assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
     }
 
+    @Test(expected = InvalidPairOfIntrinsicParametersException.class)
+    public void testSetFromFundamentalMatrixAndIntrinsicsInvalid() throws
+            InvalidPairOfIntrinsicParametersException {
+
+        // create intrinsic parameters
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
+
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+
+        // set from fundamental matrix and intrinsics
+        essentialMatrix.setFromFundamentalMatrixAndIntrinsics(
+                fundamentalMatrix, intrinsic1, intrinsic2);
+    }
+
     @Test
     public void testToFundamentalMatrix() throws
             EpipolarException,
@@ -1383,6 +1456,46 @@ public class EssentialMatrixTest {
         }
 
         assertTrue(numValid > 0);
+    }
+
+    @Test(expected = EpipolarException.class)
+    public void testToFundamentalMatrixInvalid() throws
+            EpipolarException, WrongSizeException, NotReadyException,
+            LockedException, DecomposerException,
+            com.irurueta.algebra.NotAvailableException {
+
+        final Matrix a = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+        decomposer.decompose();
+        final Matrix u = decomposer.getU();
+        final Matrix w = decomposer.getW();
+        final Matrix v = decomposer.getV();
+
+        final Matrix transV = v.transposeAndReturnNew();
+
+        // set last singular value to zero to enforce rank 2
+        w.setElementAt(2, 2, 0.0);
+        final Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
+                w.multiplyAndReturnNew(transV));
+
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(Double.NaN,
+                        Double.NaN, Double.NaN,
+                        Double.NaN, Double.NaN);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(Double.NaN,
+                        Double.NaN, Double.NaN,
+                        Double.NaN, Double.NaN);
+
+        final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
+                fundamentalInternalMatrix);
+
+        final EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix1,
+                intrinsic1, intrinsic2);
+
+        essential.toFundamentalMatrix(intrinsic1, intrinsic2);
     }
 
     @Test
@@ -1521,6 +1634,28 @@ public class EssentialMatrixTest {
             }
         }
         assertTrue(numValid > TIMES / 4);
+    }
+
+    @Test(expected = InvalidRotationAndTranslationException.class)
+    public void testSetFromRotationAndCameraCenterInvalid()
+            throws InvalidRotationAndTranslationException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+
+        final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
+                betaEuler, gammaEuler);
+        final Point3D center = new InhomogeneousPoint3D(Double.NaN,
+                Double.NaN, Double.NaN);
+
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+
+        // set from rotation and camera center
+        essentialMatrix.setFromRotationAndCameraCenter(rotation, center);
     }
 
     @Test
