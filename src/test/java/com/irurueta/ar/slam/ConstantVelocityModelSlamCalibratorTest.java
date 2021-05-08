@@ -195,6 +195,13 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
         // check correctness
         assertEquals(calibrator.getMinNumSamples(), 50);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setMinNumSamples(-1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -211,6 +218,13 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
         // check correctness
         assertEquals(calibrator.getMaxNumSamples(), 1000);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setMaxNumSamples(-1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -478,6 +492,13 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
         // check correctness
         assertArrayEquals(sample, new double[]{1.0, 2.0, 3.0}, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.getAccumulatedAccelerationSample(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -548,6 +569,13 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
         // check correctness
         assertArrayEquals(sample, new double[]{1.0, 2.0, 3.0}, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.getAccumulatedAngularSpeedSample(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test

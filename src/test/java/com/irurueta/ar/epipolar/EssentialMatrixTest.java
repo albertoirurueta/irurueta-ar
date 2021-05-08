@@ -27,6 +27,7 @@ import com.irurueta.geometry.*;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -72,69 +73,67 @@ public class EssentialMatrixTest {
             NotReadyException, LockedException, DecomposerException,
             com.irurueta.algebra.NotAvailableException,
             InvalidEssentialMatrixException, NotAvailableException {
-        for (int t = 0; t < TIMES; t++) {
-            Matrix internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
-            decomposer.decompose();
+        Matrix internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                internalMatrix);
+        decomposer.decompose();
 
-            Matrix u = decomposer.getU();
-            Matrix w = decomposer.getW();
-            Matrix v = decomposer.getV();
-            Matrix transV = v.transposeAndReturnNew();
+        Matrix u = decomposer.getU();
+        Matrix w = decomposer.getW();
+        Matrix v = decomposer.getV();
+        Matrix transV = v.transposeAndReturnNew();
 
-            // Set last singular value to zero to enforce rank 2, and set equal
-            // singular values for non-zero ones
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 1.0);
-            w.setElementAt(2, 2, 0.0);
+        // Set last singular value to zero to enforce rank 2, and set equal
+        // singular values for non-zero ones
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 1.0);
+        w.setElementAt(2, 2, 0.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
 
-            EssentialMatrix essentialMatrix = new EssentialMatrix(internalMatrix);
-            assertTrue(essentialMatrix.isInternalMatrixAvailable());
-            assertEquals(essentialMatrix.getInternalMatrix(), internalMatrix);
+        EssentialMatrix essentialMatrix = new EssentialMatrix(internalMatrix);
+        assertTrue(essentialMatrix.isInternalMatrixAvailable());
+        assertEquals(essentialMatrix.getInternalMatrix(), internalMatrix);
 
-            // Force IllegalArgumentException
-            essentialMatrix = null;
-            try {
-                essentialMatrix = new EssentialMatrix(internalMatrix, -1.0);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(essentialMatrix);
-
-            // Force InvalidEssentialMatrixException
-            internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            decomposer = new SingularValueDecomposer(internalMatrix);
-            decomposer.decompose();
-
-            u = decomposer.getU();
-            w = decomposer.getW();
-            v = decomposer.getV();
-            transV = v.transposeAndReturnNew();
-
-            // set non equal singular values
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 2.0);
-            w.setElementAt(2, 2, 3.0);
-
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
-
-            essentialMatrix = null;
-            try {
-                essentialMatrix = new EssentialMatrix(internalMatrix);
-                fail("InvalidEssentialMatrixException expected but not thrown");
-            } catch (final InvalidEssentialMatrixException ignore) {
-            }
-            assertNull(essentialMatrix);
+        // Force IllegalArgumentException
+        essentialMatrix = null;
+        try {
+            essentialMatrix = new EssentialMatrix(internalMatrix, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
         }
+        assertNull(essentialMatrix);
+
+        // Force InvalidEssentialMatrixException
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        decomposer = new SingularValueDecomposer(internalMatrix);
+        decomposer.decompose();
+
+        u = decomposer.getU();
+        w = decomposer.getW();
+        v = decomposer.getV();
+        transV = v.transposeAndReturnNew();
+
+        // set non equal singular values
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 2.0);
+        w.setElementAt(2, 2, 3.0);
+
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
+
+        essentialMatrix = null;
+        try {
+            essentialMatrix = new EssentialMatrix(internalMatrix);
+            fail("InvalidEssentialMatrixException expected but not thrown");
+        } catch (final InvalidEssentialMatrixException ignore) {
+        }
+        assertNull(essentialMatrix);
     }
 
     @Test
@@ -143,128 +142,126 @@ public class EssentialMatrixTest {
             RankDeficientMatrixException, DecomposerException,
             com.irurueta.geometry.estimators.NotReadyException,
             NotAvailableException {
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double alphaEuler1 = 0.0;
+        final double betaEuler1 = 0.0;
+        final double gammaEuler1 = 0.0;
+        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D cameraCenter1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+        final Point3D cameraCenter1 = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-            final Point3D cameraCenter2 = new InhomogeneousPoint3D(
-                    cameraCenter1.getInhomX() + cameraSeparation,
-                    cameraCenter1.getInhomY() + cameraSeparation,
-                    cameraCenter1.getInhomZ() + cameraSeparation);
+        final Point3D cameraCenter2 = new InhomogeneousPoint3D(
+                cameraCenter1.getInhomX() + cameraSeparation,
+                cameraCenter1.getInhomY() + cameraSeparation,
+                cameraCenter1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
+                gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
+                gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    cameraCenter1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    cameraCenter2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
+                cameraCenter1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
+                cameraCenter2);
 
-            // estimate essential matrix using provided cameras
-            EssentialMatrix essentialMatrix = new EssentialMatrix(camera1,
-                    camera2);
+        // estimate essential matrix using provided cameras
+        EssentialMatrix essentialMatrix = new EssentialMatrix(camera1,
+                camera2);
 
-            // now normalize cameras by their intrinsic parameters and compute
-            // their fundamental matrix
-            final Matrix cam1InternalMatrix = camera1.getInternalMatrix();
-            final Matrix cam1IntrinsicParameters = intrinsic1.getInternalMatrix();
-            final Matrix inverseCam1IntrinsicParameters = Utils.inverse(
-                    cam1IntrinsicParameters);
-            final Matrix newCam1InternalMatrix = inverseCam1IntrinsicParameters.
-                    multiplyAndReturnNew(cam1InternalMatrix);
-            camera1.setInternalMatrix(newCam1InternalMatrix);
+        // now normalize cameras by their intrinsic parameters and compute
+        // their fundamental matrix
+        final Matrix cam1InternalMatrix = camera1.getInternalMatrix();
+        final Matrix cam1IntrinsicParameters = intrinsic1.getInternalMatrix();
+        final Matrix inverseCam1IntrinsicParameters = Utils.inverse(
+                cam1IntrinsicParameters);
+        final Matrix newCam1InternalMatrix = inverseCam1IntrinsicParameters.
+                multiplyAndReturnNew(cam1InternalMatrix);
+        camera1.setInternalMatrix(newCam1InternalMatrix);
 
-            final Matrix cam2InternalMatrix = camera2.getInternalMatrix();
-            final Matrix cam2IntrinsicParameters = intrinsic2.getInternalMatrix();
-            final Matrix inverseCam2IntrinsicParameters = Utils.inverse(
-                    cam2IntrinsicParameters);
-            final Matrix newCam2InternalMatrix = inverseCam2IntrinsicParameters.
-                    multiplyAndReturnNew(cam2InternalMatrix);
-            camera2.setInternalMatrix(newCam2InternalMatrix);
+        final Matrix cam2InternalMatrix = camera2.getInternalMatrix();
+        final Matrix cam2IntrinsicParameters = intrinsic2.getInternalMatrix();
+        final Matrix inverseCam2IntrinsicParameters = Utils.inverse(
+                cam2IntrinsicParameters);
+        final Matrix newCam2InternalMatrix = inverseCam2IntrinsicParameters.
+                multiplyAndReturnNew(cam2InternalMatrix);
+        camera2.setInternalMatrix(newCam2InternalMatrix);
 
-            // normalize cameras to increase accuracy
-            camera1.normalize();
-            camera2.normalize();
+        // normalize cameras to increase accuracy
+        camera1.normalize();
+        camera2.normalize();
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
+                camera2);
 
-            // check equality up to scale
-            fundamentalMatrix.normalize();
-            essentialMatrix.normalize();
+        // check equality up to scale
+        fundamentalMatrix.normalize();
+        essentialMatrix.normalize();
 
-            final Matrix fInternal = fundamentalMatrix.getInternalMatrix();
-            final Matrix eInternal = essentialMatrix.getInternalMatrix();
-            double previousScale = fInternal.getElementAtIndex(0) /
-                    eInternal.getElementAtIndex(0);
-            double currentScale = 0.0;
-            for (int i = 1; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
-                currentScale = fInternal.getElementAtIndex(i) /
-                        eInternal.getElementAtIndex(i);
-                assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
-                previousScale = currentScale;
-            }
+        final Matrix fInternal = fundamentalMatrix.getInternalMatrix();
+        final Matrix eInternal = essentialMatrix.getInternalMatrix();
+        double previousScale = fInternal.getElementAtIndex(0) /
+                eInternal.getElementAtIndex(0);
+        double currentScale = 0.0;
+        for (int i = 1; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
+            currentScale = fInternal.getElementAtIndex(i) /
+                    eInternal.getElementAtIndex(i);
             assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
-
-            // Force IllegalArgumentException
-            essentialMatrix = null;
-            try {
-                essentialMatrix = new EssentialMatrix(camera1, camera2, -1.0);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-            assertNull(essentialMatrix);
+            previousScale = currentScale;
         }
+        assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
+
+        // Force IllegalArgumentException
+        essentialMatrix = null;
+        try {
+            essentialMatrix = new EssentialMatrix(camera1, camera2, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(essentialMatrix);
     }
 
     @Test
@@ -507,95 +504,94 @@ public class EssentialMatrixTest {
             DecomposerException, com.irurueta.algebra.NotAvailableException,
             InvalidFundamentalMatrixException,
             InvalidPairOfIntrinsicParametersException, NotAvailableException {
-        for (int t = 0; t < TIMES; t++) {
-            final Matrix a = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
-            decomposer.decompose();
-            final Matrix u = decomposer.getU();
-            final Matrix w = decomposer.getW();
-            final Matrix v = decomposer.getV();
-            final Matrix transV = v.transposeAndReturnNew();
+        final Matrix a = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            // Set last singular value to zero to enforce rank 2
-            w.setElementAt(2, 2, 0.0);
-            final Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
-                    w.multiplyAndReturnNew(transV));
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+        decomposer.decompose();
+        final Matrix u = decomposer.getU();
+        final Matrix w = decomposer.getW();
+        final Matrix v = decomposer.getV();
+        final Matrix transV = v.transposeAndReturnNew();
 
-            // Creating the intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        // Set last singular value to zero to enforce rank 2
+        w.setElementAt(2, 2, 0.0);
+        final Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
+                w.multiplyAndReturnNew(transV));
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+        // Creating the intrinsic parameters
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    fundamentalInternalMatrix);
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
 
-            final EssentialMatrix essentialMatrix = new EssentialMatrix(
-                    fundamentalMatrix, intrinsic1, intrinsic2);
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
+                fundamentalInternalMatrix);
 
-            final Matrix kLeftMatrix = intrinsic1.getInternalMatrix();
-            final double normK1 = Utils.normF(kLeftMatrix);
-            final Matrix k1 = kLeftMatrix.multiplyByScalarAndReturnNew(1.0 / normK1);
+        final EssentialMatrix essentialMatrix = new EssentialMatrix(
+                fundamentalMatrix, intrinsic1, intrinsic2);
 
-            final Matrix kRightMatrix = intrinsic2.getInternalMatrix();
-            final double normK2 = Utils.normF(kRightMatrix);
-            final Matrix k2 = kRightMatrix.multiplyByScalarAndReturnNew(1.0 / normK2);
-            final Matrix transK2 = k2.transposeAndReturnNew();
+        final Matrix kLeftMatrix = intrinsic1.getInternalMatrix();
+        final double normK1 = Utils.normF(kLeftMatrix);
+        final Matrix k1 = kLeftMatrix.multiplyByScalarAndReturnNew(1.0 / normK1);
 
-            final double normFund = Utils.normF(fundamentalInternalMatrix);
-            final Matrix tempFundMatrix = fundamentalInternalMatrix.
-                    multiplyByScalarAndReturnNew(1.0 / normFund);
+        final Matrix kRightMatrix = intrinsic2.getInternalMatrix();
+        final double normK2 = Utils.normF(kRightMatrix);
+        final Matrix k2 = kRightMatrix.multiplyByScalarAndReturnNew(1.0 / normK2);
+        final Matrix transK2 = k2.transposeAndReturnNew();
 
-            final Matrix estimatedEssentialMatrix = transK2.multiplyAndReturnNew(
-                    tempFundMatrix.multiplyAndReturnNew(k1));
+        final double normFund = Utils.normF(fundamentalInternalMatrix);
+        final Matrix tempFundMatrix = fundamentalInternalMatrix.
+                multiplyByScalarAndReturnNew(1.0 / normFund);
 
-            final double normEssential = Utils.normF(estimatedEssentialMatrix);
-            estimatedEssentialMatrix.multiplyByScalarAndReturnNew(
-                    1.0 / normEssential);
+        final Matrix estimatedEssentialMatrix = transK2.multiplyAndReturnNew(
+                tempFundMatrix.multiplyAndReturnNew(k1));
 
-            final Matrix eInternal2 = essentialMatrix.getInternalMatrix();
-            final double firstScale = eInternal2.getElementAtIndex(0) /
-                    estimatedEssentialMatrix.getElementAtIndex(0);
-            double previousScale = firstScale, currentScale = 0.0;
-            for (int i = 1; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
-                currentScale = eInternal2.getElementAtIndex(i) /
-                        estimatedEssentialMatrix.getElementAtIndex(i);
-                assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
-                previousScale = currentScale;
-            }
-            assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
+        final double normEssential = Utils.normF(estimatedEssentialMatrix);
+        estimatedEssentialMatrix.multiplyByScalarAndReturnNew(
+                1.0 / normEssential);
+
+        final Matrix eInternal2 = essentialMatrix.getInternalMatrix();
+        final double firstScale = eInternal2.getElementAtIndex(0) /
+                estimatedEssentialMatrix.getElementAtIndex(0);
+        double previousScale = firstScale, currentScale = 0.0;
+        for (int i = 1; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
+            currentScale = eInternal2.getElementAtIndex(i) /
+                    estimatedEssentialMatrix.getElementAtIndex(i);
+            assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
+            previousScale = currentScale;
         }
+        assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -604,109 +600,106 @@ public class EssentialMatrixTest {
             com.irurueta.algebra.NotAvailableException,
             InvalidEssentialMatrixException, NotAvailableException {
 
-        for (int t = 0; t < TIMES; t++) {
+        EssentialMatrix essentialMatrix = new EssentialMatrix();
 
-            EssentialMatrix essentialMatrix = new EssentialMatrix();
+        assertFalse(essentialMatrix.isInternalMatrixAvailable());
 
-            assertFalse(essentialMatrix.isInternalMatrixAvailable());
+        // Force NotAvailableException
+        try {
+            essentialMatrix.getInternalMatrix();
+            fail("NotAvailableException expected but not thrown");
+        } catch (final NotAvailableException ignore) {
+        }
 
-            // Force NotAvailableException
-            try {
-                essentialMatrix.getInternalMatrix();
-                fail("NotAvailableException expected but not thrown");
-            } catch (final NotAvailableException ignore) {
-            }
+        Matrix internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS, MIN_RANDOM_VALUE,
+                MAX_RANDOM_VALUE);
+        SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                internalMatrix);
+        decomposer.decompose();
 
-            Matrix internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
-            decomposer.decompose();
+        Matrix u = decomposer.getU();
+        Matrix w = decomposer.getW();
+        Matrix v = decomposer.getV();
+        Matrix transV = v.transposeAndReturnNew();
 
-            Matrix u = decomposer.getU();
-            Matrix w = decomposer.getW();
-            Matrix v = decomposer.getV();
-            Matrix transV = v.transposeAndReturnNew();
+        // Set last singular value to zero to enforce rank 2
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 1.0);
+        w.setElementAt(2, 2, 0.0);
 
-            // Set last singular value to zero to enforce rank 2
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 1.0);
-            w.setElementAt(2, 2, 0.0);
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+        essentialMatrix.setInternalMatrix(internalMatrix);
 
+        assertTrue(essentialMatrix.isInternalMatrixAvailable());
+        assertEquals(essentialMatrix.getInternalMatrix(), internalMatrix);
+
+        // Force IllegalArgumentException
+        try {
+            essentialMatrix.setInternalMatrix(internalMatrix, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+
+        // Force InvalidEssentialMatrixException by setting wrong rank
+        essentialMatrix = new EssentialMatrix();
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+
+        decomposer = new SingularValueDecomposer(internalMatrix);
+        decomposer.decompose();
+
+        u = decomposer.getU();
+        w = decomposer.getW();
+        v = decomposer.getV();
+        transV = v.transposeAndReturnNew();
+
+        // Enforce wrong rank
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 2.0);
+        w.setElementAt(2, 2, 3.0);
+
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
+
+        try {
             essentialMatrix.setInternalMatrix(internalMatrix);
+            fail("InvalidFundamentalMatrixException expected but not " +
+                    "thrown");
+        } catch (final InvalidEssentialMatrixException ignore) {
+        }
 
-            assertTrue(essentialMatrix.isInternalMatrixAvailable());
-            assertEquals(essentialMatrix.getInternalMatrix(), internalMatrix);
+        // Force InvalidEssentialMatrixException by setting wrong singular
+        // values
+        essentialMatrix = new EssentialMatrix();
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            // Force IllegalArgumentException
-            try {
-                essentialMatrix.setInternalMatrix(internalMatrix, -1.0);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
+        decomposer = new SingularValueDecomposer(internalMatrix);
+        decomposer.decompose();
 
-            // Force InvalidEssentialMatrixException by setting wrong rank
-            essentialMatrix = new EssentialMatrix();
-            internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        u = decomposer.getU();
+        w = decomposer.getW();
+        v = decomposer.getV();
+        transV = v.transposeAndReturnNew();
 
-            decomposer = new SingularValueDecomposer(internalMatrix);
-            decomposer.decompose();
+        // Enforce wrong rank
+        w.setElementAt(0, 0, 1.5);
+        w.setElementAt(1, 1, 1.0);
+        w.setElementAt(2, 2, 0.0);
 
-            u = decomposer.getU();
-            w = decomposer.getW();
-            v = decomposer.getV();
-            transV = v.transposeAndReturnNew();
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
 
-            // Enforce wrong rank
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 2.0);
-            w.setElementAt(2, 2, 3.0);
-
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
-
-            try {
-                essentialMatrix.setInternalMatrix(internalMatrix);
-                fail("InvalidFundamentalMatrixException expected but not " +
-                        "thrown");
-            } catch (final InvalidEssentialMatrixException ignore) {
-            }
-
-            // Force InvalidEssentialMatrixException by setting wrong singular
-            // values
-            essentialMatrix = new EssentialMatrix();
-            internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-
-            decomposer = new SingularValueDecomposer(internalMatrix);
-            decomposer.decompose();
-
-            u = decomposer.getU();
-            w = decomposer.getW();
-            v = decomposer.getV();
-            transV = v.transposeAndReturnNew();
-
-            // Enforce wrong rank
-            w.setElementAt(0, 0, 1.5);
-            w.setElementAt(1, 1, 1.0);
-            w.setElementAt(2, 2, 0.0);
-
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
-
-            try {
-                essentialMatrix.setInternalMatrix(internalMatrix);
-                fail("InvalidFundamentalMatrixException expected but not " +
-                        "thrown");
-            } catch (final InvalidEssentialMatrixException ignore) {
-            }
+        try {
+            essentialMatrix.setInternalMatrix(internalMatrix);
+            fail("InvalidFundamentalMatrixException expected but not " +
+                    "thrown");
+        } catch (final InvalidEssentialMatrixException ignore) {
         }
     }
 
@@ -717,124 +710,250 @@ public class EssentialMatrixTest {
             com.irurueta.geometry.estimators.NotReadyException,
             NotAvailableException {
 
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double alphaEuler1 = 0.0;
+        final double betaEuler1 = 0.0;
+        final double gammaEuler1 = 0.0;
+        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+        final Point3D center1 = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+        final Point3D center2 = new InhomogeneousPoint3D(
+                center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation,
+                center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
+                betaEuler1, gammaEuler1);
+        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
+                betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
+                center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
+                center2);
 
-            final EssentialMatrix essentialMatrix = new EssentialMatrix();
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
 
-            // set from pair of cameras
-            essentialMatrix.setFromPairOfCameras(camera1, camera2);
+        // set from pair of cameras
+        essentialMatrix.setFromPairOfCameras(camera1, camera2);
 
-            // check correctness
-            final Matrix cam1InternalMatrix = camera1.getInternalMatrix();
-            final Matrix cam1IntrinsicParameters = intrinsic1.getInternalMatrix();
-            final Matrix inverseCam1IntrinsicParameters = Utils.inverse(
-                    cam1IntrinsicParameters);
-            final Matrix newCam1InternalMatrix = inverseCam1IntrinsicParameters.
-                    multiplyAndReturnNew(cam1InternalMatrix);
+        // check correctness
+        final Matrix cam1InternalMatrix = camera1.getInternalMatrix();
+        final Matrix cam1IntrinsicParameters = intrinsic1.getInternalMatrix();
+        final Matrix inverseCam1IntrinsicParameters = Utils.inverse(
+                cam1IntrinsicParameters);
+        final Matrix newCam1InternalMatrix = inverseCam1IntrinsicParameters.
+                multiplyAndReturnNew(cam1InternalMatrix);
 
-            camera1.setInternalMatrix(newCam1InternalMatrix);
+        camera1.setInternalMatrix(newCam1InternalMatrix);
 
-            final Matrix cam2InternalMatrix = camera2.getInternalMatrix();
-            final Matrix cam2IntrinsicParameters = intrinsic2.getInternalMatrix();
-            final Matrix inverseCam2IntrinsicParameters = Utils.inverse(
-                    cam2IntrinsicParameters);
-            final Matrix newCam2InternalMatrix = inverseCam2IntrinsicParameters.
-                    multiplyAndReturnNew(cam2InternalMatrix);
+        final Matrix cam2InternalMatrix = camera2.getInternalMatrix();
+        final Matrix cam2IntrinsicParameters = intrinsic2.getInternalMatrix();
+        final Matrix inverseCam2IntrinsicParameters = Utils.inverse(
+                cam2IntrinsicParameters);
+        final Matrix newCam2InternalMatrix = inverseCam2IntrinsicParameters.
+                multiplyAndReturnNew(cam2InternalMatrix);
 
-            camera2.setInternalMatrix(newCam2InternalMatrix);
+        camera2.setInternalMatrix(newCam2InternalMatrix);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
+                camera2);
 
-            // check equality up to scale
-            fundamentalMatrix.normalize();
-            essentialMatrix.normalize();
+        // check equality up to scale
+        fundamentalMatrix.normalize();
+        essentialMatrix.normalize();
 
-            final Matrix fInternal = fundamentalMatrix.getInternalMatrix();
-            final Matrix eInternal = essentialMatrix.getInternalMatrix();
-            final double firstScale = fInternal.getElementAtIndex(0) /
-                    eInternal.getElementAtIndex(0);
-            double previousScale = firstScale, currentScale = 0.0;
-            for (int i = 0; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
-                currentScale = fInternal.getElementAtIndex(i) /
-                        eInternal.getElementAtIndex(i);
-                assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
-                previousScale = currentScale;
-            }
-            assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
+        final Matrix fInternal = fundamentalMatrix.getInternalMatrix();
+        final Matrix eInternal = essentialMatrix.getInternalMatrix();
+        final double firstScale = fInternal.getElementAtIndex(0) /
+                eInternal.getElementAtIndex(0);
+        double previousScale = firstScale, currentScale = 0.0;
+        for (int i = 0; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
+            currentScale = fInternal.getElementAtIndex(i) /
+                    eInternal.getElementAtIndex(i);
+            assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
+            previousScale = currentScale;
+        }
+        assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
 
-            // Force IllegalArgumentException
-            try {
-                essentialMatrix.setFromPairOfCameras(camera1, camera2, -1.0);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
+        // Force IllegalArgumentException
+        try {
+            essentialMatrix.setFromPairOfCameras(camera1, camera2, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
         }
     }
+
+    @Test
+    public void testSetFromPairOfCameras2() throws InvalidPairOfCamerasException,
+            WrongSizeException, RankDeficientMatrixException,
+            DecomposerException,
+            com.irurueta.geometry.estimators.NotReadyException,
+            NotAvailableException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double alphaEuler1 = 0.0;
+        final double betaEuler1 = 0.0;
+        final double gammaEuler1 = 0.0;
+        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+
+        final Point3D center1 = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+        final Point3D center2 = new InhomogeneousPoint3D(
+                center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation,
+                center1.getInhomZ() + cameraSeparation);
+
+        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
+                betaEuler1, gammaEuler1);
+        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
+                betaEuler2, gammaEuler2);
+
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
+
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
+                center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
+                center2);
+
+        final PinholeCamera camera1b = new PinholeCamera(camera1.getInternalMatrix());
+        final PinholeCamera camera2b = new PinholeCamera(camera2.getInternalMatrix());
+
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
+
+        // set from pair of cameras
+        essentialMatrix.setFromPairOfCameras(camera1b, camera2b);
+
+        // check correctness
+        final Matrix cam1InternalMatrix = camera1.getInternalMatrix();
+        final Matrix cam1IntrinsicParameters = intrinsic1.getInternalMatrix();
+        final Matrix inverseCam1IntrinsicParameters = Utils.inverse(
+                cam1IntrinsicParameters);
+        final Matrix newCam1InternalMatrix = inverseCam1IntrinsicParameters.
+                multiplyAndReturnNew(cam1InternalMatrix);
+
+        camera1.setInternalMatrix(newCam1InternalMatrix);
+
+        final Matrix cam2InternalMatrix = camera2.getInternalMatrix();
+        final Matrix cam2IntrinsicParameters = intrinsic2.getInternalMatrix();
+        final Matrix inverseCam2IntrinsicParameters = Utils.inverse(
+                cam2IntrinsicParameters);
+        final Matrix newCam2InternalMatrix = inverseCam2IntrinsicParameters.
+                multiplyAndReturnNew(cam2InternalMatrix);
+
+        camera2.setInternalMatrix(newCam2InternalMatrix);
+
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
+                camera2);
+
+        // check equality up to scale
+        fundamentalMatrix.normalize();
+        essentialMatrix.normalize();
+
+        final Matrix fInternal = fundamentalMatrix.getInternalMatrix();
+        final Matrix eInternal = essentialMatrix.getInternalMatrix();
+        final double firstScale = fInternal.getElementAtIndex(0) /
+                eInternal.getElementAtIndex(0);
+        double previousScale = firstScale, currentScale = 0.0;
+        for (int i = 0; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
+            currentScale = fInternal.getElementAtIndex(i) /
+                    eInternal.getElementAtIndex(i);
+            assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
+            previousScale = currentScale;
+        }
+        assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
+
+        // Force IllegalArgumentException
+        try {
+            essentialMatrix.setFromPairOfCameras(camera1, camera2, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
 
     @Test
     public void testSetFromRotationAndTranslation() throws
@@ -945,99 +1064,97 @@ public class EssentialMatrixTest {
             InvalidFundamentalMatrixException,
             InvalidPairOfIntrinsicParametersException, NotAvailableException {
 
-        for (int t = 0; t < TIMES; t++) {
-            final Matrix a = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
-            decomposer.decompose();
-            final Matrix u = decomposer.getU();
-            final Matrix w = decomposer.getW();
-            final Matrix v = decomposer.getV();
+        final Matrix a = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+        decomposer.decompose();
+        final Matrix u = decomposer.getU();
+        final Matrix w = decomposer.getW();
+        final Matrix v = decomposer.getV();
 
-            final Matrix transV = v.transposeAndReturnNew();
+        final Matrix transV = v.transposeAndReturnNew();
 
-            // set last singular value to zero to enforce rank 2
-            w.setElementAt(2, 2, 0.0);
-            final Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
-                    w.multiplyAndReturnNew(transV));
+        // set last singular value to zero to enforce rank 2
+        w.setElementAt(2, 2, 0.0);
+        final Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
+                w.multiplyAndReturnNew(transV));
 
-            // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        // create intrinsic parameters
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    fundamentalInternalMatrix);
+        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
+                fundamentalInternalMatrix);
 
-            final EssentialMatrix essentialMatrix = new EssentialMatrix();
+        final EssentialMatrix essentialMatrix = new EssentialMatrix();
 
-            // set from fundamental matrix and intrinsics
-            essentialMatrix.setFromFundamentalMatrixAndIntrinsics(
-                    fundamentalMatrix, intrinsic1, intrinsic2);
+        // set from fundamental matrix and intrinsics
+        essentialMatrix.setFromFundamentalMatrixAndIntrinsics(
+                fundamentalMatrix, intrinsic1, intrinsic2);
 
-            final Matrix kLeftMatrix = intrinsic1.getInternalMatrix();
-            final double normK1 = Utils.normF(kLeftMatrix);
-            final Matrix K1 = kLeftMatrix.multiplyByScalarAndReturnNew(1.0 / normK1);
+        final Matrix kLeftMatrix = intrinsic1.getInternalMatrix();
+        final double normK1 = Utils.normF(kLeftMatrix);
+        final Matrix K1 = kLeftMatrix.multiplyByScalarAndReturnNew(1.0 / normK1);
 
-            final Matrix kRightMatrix = intrinsic2.getInternalMatrix();
-            final double normK2 = Utils.normF(kRightMatrix);
-            final Matrix K2 = kRightMatrix.multiplyByScalarAndReturnNew(1.0 / normK2);
+        final Matrix kRightMatrix = intrinsic2.getInternalMatrix();
+        final double normK2 = Utils.normF(kRightMatrix);
+        final Matrix K2 = kRightMatrix.multiplyByScalarAndReturnNew(1.0 / normK2);
 
-            final Matrix transK2 = K2.transposeAndReturnNew();
+        final Matrix transK2 = K2.transposeAndReturnNew();
 
-            final double normFund = Utils.normF(fundamentalInternalMatrix);
-            final Matrix tempFundMatrix = fundamentalInternalMatrix.
-                    multiplyByScalarAndReturnNew(1.0 / normFund);
+        final double normFund = Utils.normF(fundamentalInternalMatrix);
+        final Matrix tempFundMatrix = fundamentalInternalMatrix.
+                multiplyByScalarAndReturnNew(1.0 / normFund);
 
-            final Matrix estimatedEssentialMatrix =
-                    transK2.multiplyAndReturnNew(
-                            tempFundMatrix.multiplyAndReturnNew(K1));
+        final Matrix estimatedEssentialMatrix =
+                transK2.multiplyAndReturnNew(
+                        tempFundMatrix.multiplyAndReturnNew(K1));
 
-            final double normEssential = Utils.normF(estimatedEssentialMatrix);
-            estimatedEssentialMatrix.multiplyByScalar(1.0 / normEssential);
+        final double normEssential = Utils.normF(estimatedEssentialMatrix);
+        estimatedEssentialMatrix.multiplyByScalar(1.0 / normEssential);
 
-            final Matrix eInternal2 = essentialMatrix.getInternalMatrix();
-            final double firstScale = eInternal2.getElementAtIndex(0) /
-                    estimatedEssentialMatrix.getElementAtIndex(0);
-            double previousScale = firstScale, currentScale = 0.0;
-            for (int i = 1; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
-                currentScale = eInternal2.getElementAtIndex(i) /
-                        estimatedEssentialMatrix.getElementAtIndex(i);
-                assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
-                previousScale = currentScale;
-            }
-            assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
+        final Matrix eInternal2 = essentialMatrix.getInternalMatrix();
+        final double firstScale = eInternal2.getElementAtIndex(0) /
+                estimatedEssentialMatrix.getElementAtIndex(0);
+        double previousScale = firstScale, currentScale = 0.0;
+        for (int i = 1; i < ESSENTIAL_MATRIX_ROWS * ESSENTIAL_MATRIX_COLS; i++) {
+            currentScale = eInternal2.getElementAtIndex(i) /
+                    estimatedEssentialMatrix.getElementAtIndex(i);
+            assertEquals(previousScale - currentScale, 0.0, ABSOLUTE_ERROR);
+            previousScale = currentScale;
         }
+        assertEquals(currentScale - firstScale, 0.0, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -1507,94 +1624,98 @@ public class EssentialMatrixTest {
             NotReadyException, LockedException, DecomposerException,
             com.irurueta.algebra.NotAvailableException {
 
-        for (int t = 0; t < TIMES; t++) {
-            // testing invalid essential matrix with rank different of 2
-            Matrix internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
-            decomposer.decompose();
+        // testing invalid essential matrix with rank different of 2
+        Matrix internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                internalMatrix);
+        decomposer.decompose();
 
-            Matrix u = decomposer.getU();
-            Matrix w = decomposer.getW();
-            Matrix v = decomposer.getV();
-            Matrix transV = v.transposeAndReturnNew();
+        Matrix u = decomposer.getU();
+        Matrix w = decomposer.getW();
+        Matrix v = decomposer.getV();
+        Matrix transV = v.transposeAndReturnNew();
 
-            // set all singular values to non-zero to enforce rank 3
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 1.0);
-            w.setElementAt(2, 2, 3.0);
+        // set all singular values to non-zero to enforce rank 3
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 1.0);
+        w.setElementAt(2, 2, 3.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
 
-            assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
+        assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
 
-            // testing invalid essential matrix with more than 3 columns and rows
-            internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS + 1, ESSENTIAL_MATRIX_COLS + 1,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        // testing invalid essential matrix with more than 3 columns and rows
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS + 1, ESSENTIAL_MATRIX_COLS + 1,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
+        assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
 
-            // testing invalid essential matrix with different singular values
-            internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            decomposer = new SingularValueDecomposer(internalMatrix);
-            decomposer.decompose();
+        // testing invalid essential matrix with different singular values
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        decomposer = new SingularValueDecomposer(internalMatrix);
+        decomposer.decompose();
 
-            u = decomposer.getU();
-            w = decomposer.getW();
-            v = decomposer.getV();
-            transV = v.transposeAndReturnNew();
+        u = decomposer.getU();
+        w = decomposer.getW();
+        v = decomposer.getV();
+        transV = v.transposeAndReturnNew();
 
-            // set last singular value to zero to enforce rank 2, but set
-            // different non-zero singular values
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 1.5);
-            w.setElementAt(2, 2, 0.0);
+        // set last singular value to zero to enforce rank 2, but set
+        // different non-zero singular values
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 1.5);
+        w.setElementAt(2, 2, 0.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
 
-            assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
-            assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix,
-                    0.2));
+        assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
+        assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix,
+                0.2));
 
-            // setting a large enough threshold makes it valid
-            assertTrue(EssentialMatrix.isValidInternalMatrix(internalMatrix,
-                    0.5 + ABSOLUTE_ERROR));
+        // setting a large enough threshold makes it valid
+        assertTrue(EssentialMatrix.isValidInternalMatrix(internalMatrix,
+                0.5 + ABSOLUTE_ERROR));
 
-            // testing a valid essential matrix
-            internalMatrix = Matrix.createWithUniformRandomValues(
-                    ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            decomposer = new SingularValueDecomposer(internalMatrix);
-            decomposer.decompose();
+        // testing a valid essential matrix
+        internalMatrix = Matrix.createWithUniformRandomValues(
+                ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS,
+                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        decomposer = new SingularValueDecomposer(internalMatrix);
+        decomposer.decompose();
 
-            u = decomposer.getU();
-            w = decomposer.getW();
-            v = decomposer.getV();
-            transV = v.transposeAndReturnNew();
+        u = decomposer.getU();
+        w = decomposer.getW();
+        v = decomposer.getV();
+        transV = v.transposeAndReturnNew();
 
-            // set last singular value to zero to enforce rank 2
-            w.setElementAt(0, 0, 1.0);
-            w.setElementAt(1, 1, 1.0);
-            w.setElementAt(2, 2, 0.0);
+        // set last singular value to zero to enforce rank 2
+        w.setElementAt(0, 0, 1.0);
+        w.setElementAt(1, 1, 1.0);
+        w.setElementAt(2, 2, 0.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+        internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
+                transV));
 
-            assertTrue(EssentialMatrix.isValidInternalMatrix(internalMatrix));
+        assertTrue(EssentialMatrix.isValidInternalMatrix(internalMatrix));
 
-            // Force IllegalArgumentException
-            try {
-                EssentialMatrix.isValidInternalMatrix(internalMatrix, -1.0);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
+        // Force IllegalArgumentException
+        try {
+            EssentialMatrix.isValidInternalMatrix(internalMatrix, -1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
         }
+
+        // Test for matrix with numerical instabilities
+        internalMatrix = new Matrix(ESSENTIAL_MATRIX_ROWS, ESSENTIAL_MATRIX_COLS);
+        Arrays.fill(internalMatrix.getBuffer(), Double.NaN);
+
+        assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
     }
 }
