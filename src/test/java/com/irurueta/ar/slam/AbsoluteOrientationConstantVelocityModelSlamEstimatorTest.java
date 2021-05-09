@@ -5468,7 +5468,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamEstimatorTest
             }
         }
 
-        assertTrue(numSuccess >= 5 * REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
+        assertTrue(numSuccess >= REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
     }
 
     @Test
