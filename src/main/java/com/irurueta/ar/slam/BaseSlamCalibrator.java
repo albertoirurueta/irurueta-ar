@@ -946,7 +946,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
      * convergence has been reached and calibrator has finished or failed.
      */
     protected void updateSample() {
-        if (mFinished) return;
+        if (mFinished) {
+            return;
+        }
 
         try {
             mEstimator.update(mSample);

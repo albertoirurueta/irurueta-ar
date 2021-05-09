@@ -1352,6 +1352,8 @@ public class SlamCalibratorTest implements BaseSlamCalibratorListener<SlamCalibr
         assertTrue(fullSampleProcessed < N_SAMPLES);
         assertEquals(fullSampleReceived, fullSampleProcessed);
         assertEquals(calibratorFinished, 1);
+
+        calibrator.updateSample();
     }
 
     @Override
