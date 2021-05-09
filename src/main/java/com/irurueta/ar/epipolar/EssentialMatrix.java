@@ -671,7 +671,6 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public void computePossibleRotationAndTranslations()
             throws InvalidEssentialMatrixException {
-
         try {
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     mInternalMatrix);

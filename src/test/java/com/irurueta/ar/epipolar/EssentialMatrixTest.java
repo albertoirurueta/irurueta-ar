@@ -1937,7 +1937,7 @@ public class EssentialMatrixTest {
 
         // testing invalid essential matrix with more than 3 columns and rows
         internalMatrix = Matrix.createWithUniformRandomValues(
-                ESSENTIAL_MATRIX_ROWS + 1, ESSENTIAL_MATRIX_COLS + 1,
+                ESSENTIAL_MATRIX_ROWS + 1, ESSENTIAL_MATRIX_COLS,
                 MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         assertFalse(EssentialMatrix.isValidInternalMatrix(internalMatrix));
