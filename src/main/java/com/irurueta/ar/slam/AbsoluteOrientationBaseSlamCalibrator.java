@@ -18,8 +18,6 @@ package com.irurueta.ar.slam;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.Rotation3D;
 
-import java.io.Serializable;
-
 /**
  * Base class for estimating mean and covariance of noise in control values
  * when the system state is held constant (only noise is provided as control
@@ -30,7 +28,7 @@ import java.io.Serializable;
  * @param <D> type of calibration data.
  */
 public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibrationData> extends
-        BaseSlamCalibrator<D> implements Serializable {
+        BaseSlamCalibrator<D> {
 
     /**
      * Timestamp expressed in nanoseconds since the epoch time of the last

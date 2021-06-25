@@ -16,10 +16,13 @@
 
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.ar.epipolar.CorrectorType;
 import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -696,5 +699,137 @@ public class PairedViewsSparseReconstructorConfigurationTest {
         assertEquals(!cfg.getPlanarHomographyComputeAndKeepResiduals(),
                 PairedViewsSparseReconstructorConfiguration.
                         DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final PairedViewsSparseReconstructorConfiguration cfg1 =
+                new PairedViewsSparseReconstructorConfiguration();
+
+        // set new value
+        cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        cfg1.setRobustFundamentalMatrixEstimatorMethod(
+                RobustEstimatorMethod.RANSAC);
+        cfg1.setFundamentalMatrixRefined(false);
+        cfg1.setFundamentalMatrixCovarianceKept(true);
+        cfg1.setFundamentalMatrixConfidence(0.9);
+        cfg1.setFundamentalMatrixMaxIterations(500);
+        cfg1.setFundamentalMatrixThreshold(0.99);
+        cfg1.setFundamentalMatrixComputeAndKeepInliers(false);
+        cfg1.setFundamentalMatrixComputeAndKeepResiduals(false);
+        cfg1.setPairedCamerasEstimatorMethod(
+                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        cfg1.setDaqUseHomogeneousPointTriangulator(false);
+        cfg1.setPairedCamerasAspectRatio(0.8);
+        cfg1.setPrincipalPointX(1e-3);
+        cfg1.setPrincipalPointY(-1e-3);
+        cfg1.setPairedCamerasCorrectorType(CorrectorType.GOLD_STANDARD);
+        cfg1.setPairedCamerasMarkValidTriangulatedPoints(false);
+        cfg1.setIntrinsicParametersKnown(true);
+        cfg1.setGeneralSceneAllowed(false);
+        cfg1.setPlanarSceneAllowed(false);
+        cfg1.setRobustPlanarHomographyEstimatorMethod(RobustEstimatorMethod.LMedS);
+        cfg1.setPlanarHomographyRefined(false);
+        cfg1.setPlanarHomographyCovarianceKept(true);
+        cfg1.setPlanarHomographyConfidence(0.7);
+        cfg1.setPlanarHomographyMaxIterations(200);
+        cfg1.setPlanarHomographyThreshold(1e-2);
+        cfg1.setPlanarHomographyComputeAndKeepInliers(false);
+        cfg1.setPlanarHomographyComputeAndKeepResiduals(false);
+
+        // check
+        assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
+                cfg1.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(RobustEstimatorMethod.RANSAC,
+                cfg1.getRobustFundamentalMatrixEstimatorMethod());
+        assertFalse(cfg1.isFundamentalMatrixRefined());
+        assertTrue(cfg1.isFundamentalMatrixCovarianceKept());
+        assertEquals(0.9, cfg1.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(500, cfg1.getFundamentalMatrixMaxIterations());
+        assertEquals(0.99, cfg1.getFundamentalMatrixThreshold(), 0.0);
+        assertFalse(cfg1.getFundamentalMatrixComputeAndKeepInliers());
+        assertFalse(cfg1.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
+                cfg1.getPairedCamerasEstimatorMethod());
+        assertFalse(cfg1.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(0.8, cfg1.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(1e-3, cfg1.getPrincipalPointX(), 0.0);
+        assertEquals(-1e-3, cfg1.getPrincipalPointY(), 0.0);
+        assertEquals(CorrectorType.GOLD_STANDARD, cfg1.getPairedCamerasCorrectorType());
+        assertFalse(cfg1.getPairedCamerasMarkValidTriangulatedPoints());
+        assertTrue(cfg1.areIntrinsicParametersKnown());
+        assertFalse(cfg1.isGeneralSceneAllowed());
+        assertFalse(cfg1.isPlanarSceneAllowed());
+        assertEquals(RobustEstimatorMethod.LMedS,
+                cfg1.getRobustPlanarHomographyEstimatorMethod());
+        assertFalse(cfg1.isPlanarHomographyRefined());
+        assertTrue(cfg1.isPlanarHomographyCovarianceKept());
+        assertEquals(0.7, cfg1.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(200, cfg1.getPlanarHomographyMaxIterations());
+        assertEquals(1e-2, cfg1.getPlanarHomographyThreshold(), 0.0);
+        assertFalse(cfg1.getPlanarHomographyComputeAndKeepInliers());
+        assertFalse(cfg1.getPlanarHomographyComputeAndKeepResiduals());
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(cfg1);
+        final PairedViewsSparseReconstructorConfiguration cfg2 =
+                SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
+                cfg2.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(cfg1.getRobustFundamentalMatrixEstimatorMethod(),
+                cfg2.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(cfg1.isFundamentalMatrixRefined(),
+                cfg2.isFundamentalMatrixRefined());
+        assertEquals(cfg1.isFundamentalMatrixCovarianceKept(),
+                cfg2.isFundamentalMatrixCovarianceKept());
+        assertEquals(cfg1.getFundamentalMatrixConfidence(),
+                cfg2.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(cfg1.getFundamentalMatrixMaxIterations(),
+                cfg2.getFundamentalMatrixMaxIterations());
+        assertEquals(cfg1.getFundamentalMatrixThreshold(),
+                cfg2.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(cfg1.getFundamentalMatrixComputeAndKeepInliers(),
+                cfg2.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(cfg1.getFundamentalMatrixComputeAndKeepResiduals(),
+                cfg2.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(cfg1.getPairedCamerasEstimatorMethod(),
+                cfg2.getPairedCamerasEstimatorMethod());
+        assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(),
+                cfg2.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(cfg1.getPairedCamerasAspectRatio(),
+                cfg2.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(cfg1.getPrincipalPointX(),
+                cfg2.getPrincipalPointX(), 0.0);
+        assertEquals(cfg1.getPrincipalPointY(),
+                cfg2.getPrincipalPointY(), 0.0);
+        assertEquals(cfg1.getPairedCamerasCorrectorType(),
+                cfg2.getPairedCamerasCorrectorType());
+        assertEquals(cfg1.getPairedCamerasMarkValidTriangulatedPoints(),
+                cfg2.getPairedCamerasMarkValidTriangulatedPoints());
+        assertEquals(cfg1.areIntrinsicParametersKnown(),
+                cfg2.areIntrinsicParametersKnown());
+        assertEquals(cfg1.isGeneralSceneAllowed(),
+                cfg2.isGeneralSceneAllowed());
+        assertEquals(cfg1.isPlanarSceneAllowed(),
+                cfg2.isPlanarSceneAllowed());
+        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
+                cfg2.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(cfg1.isPlanarHomographyRefined(),
+                cfg2.isPlanarHomographyRefined());
+        assertEquals(cfg1.isPlanarHomographyCovarianceKept(),
+                cfg2.isPlanarHomographyCovarianceKept());
+        assertEquals(cfg1.getPlanarHomographyConfidence(),
+                cfg2.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(cfg1.getPlanarHomographyMaxIterations(),
+                cfg2.getPlanarHomographyMaxIterations());
+        assertEquals(cfg1.getPlanarHomographyThreshold(),
+                cfg2.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
+                cfg2.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepResiduals(),
+                cfg2.getPlanarHomographyComputeAndKeepResiduals());
     }
 }

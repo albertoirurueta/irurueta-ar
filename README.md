@@ -1,7 +1,7 @@
 # irurueta-ar
 Augmented Reality and 3D reconstruction library
 
-[![Build Status](https://travis-ci.org/albertoirurueta/irurueta-ar.svg?branch=master)](https://travis-ci.org/albertoirurueta/irurueta-ar)
+[![Build Status](https://travis-ci.com/albertoirurueta/irurueta-ar.svg?branch=master)](https://travis-ci.com/albertoirurueta/irurueta-ar)
 
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-ar&metric=bugs)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-ar)

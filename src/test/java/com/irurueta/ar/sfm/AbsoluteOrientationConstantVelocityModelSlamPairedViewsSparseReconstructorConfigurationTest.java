@@ -18,11 +18,15 @@ package com.irurueta.ar.sfm;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.ar.epipolar.CorrectorType;
 import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
 import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrationData;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -806,5 +810,196 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
                 !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
                         DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg1 =
+                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+
+        // set new values
+        assertSame(cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM), cfg1);
+        assertSame(cfg1.setRobustFundamentalMatrixEstimatorMethod(
+                RobustEstimatorMethod.LMedS), cfg1);
+        assertSame(cfg1.setFundamentalMatrixRefined(false), cfg1);
+        assertSame(cfg1.setFundamentalMatrixCovarianceKept(true), cfg1);
+        assertSame(cfg1.setFundamentalMatrixConfidence(0.7), cfg1);
+        assertSame(cfg1.setFundamentalMatrixMaxIterations(10), cfg1);
+        assertSame(cfg1.setFundamentalMatrixThreshold(2.0), cfg1);
+        assertSame(cfg1.setFundamentalMatrixComputeAndKeepInliers(false), cfg1);
+        assertSame(cfg1.setFundamentalMatrixComputeAndKeepResiduals(false), cfg1);
+        assertSame(cfg1.setPairedCamerasEstimatorMethod(
+                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC),
+                cfg1);
+        assertSame(cfg1.setDaqUseHomogeneousPointTriangulator(false), cfg1);
+        assertSame(cfg1.setPairedCamerasAspectRatio(0.5), cfg1);
+        assertSame(cfg1.setPrincipalPointX(10.0), cfg1);
+        assertSame(cfg1.setPrincipalPointY(10.0), cfg1);
+        assertSame(cfg1.setPairedCamerasCorrectorType(
+                CorrectorType.GOLD_STANDARD), cfg1);
+        assertSame(cfg1.setPairedCamerasMarkValidTriangulatedPoints(false),
+                cfg1);
+        assertSame(cfg1.setIntrinsicParametersKnown(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS), cfg1);
+        assertSame(cfg1.setGeneralSceneAllowed(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ALLOW_GENERAL_SCENE), cfg1);
+        assertSame(cfg1.setPlanarSceneAllowed(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ALLOW_PLANAR_SCENE), cfg1);
+        assertSame(cfg1.setRobustPlanarHomographyEstimatorMethod(
+                RobustEstimatorMethod.RANSAC), cfg1);
+        assertSame(cfg1.setPlanarHomographyRefined(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY), cfg1);
+        assertSame(cfg1.setPlanarHomographyCovarianceKept(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE), cfg1);
+        assertSame(cfg1.setPlanarHomographyConfidence(0.5), cfg1);
+        assertSame(cfg1.setPlanarHomographyMaxIterations(100), cfg1);
+        assertSame(cfg1.setPlanarHomographyThreshold(0.5), cfg1);
+        assertSame(cfg1.setPlanarHomographyComputeAndKeepInliers(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS), cfg1);
+        assertSame(cfg1.setPlanarHomographyComputeAndKeepResiduals(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS), cfg1);
+        final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData =
+                new AbsoluteOrientationConstantVelocityModelSlamCalibrationData();
+        assertSame(cfg1.setCalibrationData(calibrationData), cfg1);
+        final Matrix cov = Matrix.identity(POINT_INHOM_COORDS, POINT_INHOM_COORDS);
+        cov.multiplyByScalar(2.0);
+        assertSame(cfg1.setCameraPositionCovariance(cov), cfg1);
+        assertSame(cfg1.setNotifyAvailableSlamDataEnabled(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE), cfg1);
+        assertSame(cfg1.setNotifyEstimatedSlamCameraEnabled(
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA), cfg1);
+
+        // check
+        assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        assertEquals(cfg1.getRobustFundamentalMatrixEstimatorMethod(),
+                RobustEstimatorMethod.LMedS);
+        assertFalse(cfg1.isFundamentalMatrixRefined());
+        assertTrue(cfg1.isFundamentalMatrixCovarianceKept());
+        assertEquals(cfg1.getFundamentalMatrixConfidence(), 0.7, 0.0);
+        assertEquals(cfg1.getFundamentalMatrixMaxIterations(), 10);
+        assertEquals(cfg1.getFundamentalMatrixThreshold(), 2.0, 0.0);
+        assertFalse(cfg1.getFundamentalMatrixComputeAndKeepInliers());
+        assertFalse(cfg1.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(cfg1.getPairedCamerasEstimatorMethod(),
+                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertFalse(cfg1.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(cfg1.getPairedCamerasAspectRatio(), 0.5, 0.0);
+        assertEquals(cfg1.getPrincipalPointX(), 10.0, 0.0);
+        assertEquals(cfg1.getPrincipalPointY(), 10.0, 0.0);
+        assertEquals(cfg1.getPairedCamerasCorrectorType(),
+                CorrectorType.GOLD_STANDARD);
+        assertFalse(cfg1.getPairedCamerasMarkValidTriangulatedPoints());
+        assertEquals(cfg1.areIntrinsicParametersKnown(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS);
+        assertEquals(cfg1.isGeneralSceneAllowed(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ALLOW_GENERAL_SCENE);
+        assertEquals(cfg1.isPlanarSceneAllowed(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ALLOW_PLANAR_SCENE);
+        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
+                RobustEstimatorMethod.RANSAC);
+        assertEquals(cfg1.isPlanarHomographyRefined(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
+        assertEquals(cfg1.isPlanarHomographyCovarianceKept(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
+        assertEquals(cfg1.getPlanarHomographyConfidence(), 0.5, 0.0);
+        assertEquals(cfg1.getPlanarHomographyMaxIterations(), 100);
+        assertEquals(cfg1.getPlanarHomographyThreshold(), 0.5, 0.0);
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(!cfg1.getPlanarHomographyComputeAndKeepResiduals(),
+                AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertSame(cfg1.getCalibrationData(), calibrationData);
+        assertSame(cfg1.getCameraPositionCovariance(), cov);
+        assertEquals(cfg1.isNotifyAvailableSlamDataEnabled(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
+        assertEquals(cfg1.isNotifyEstimatedSlamCameraEnabled(),
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(cfg1);
+        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg2 =
+                SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
+                cfg2.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(cfg1.getRobustFundamentalMatrixEstimatorMethod(),
+                cfg2.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(cfg1.isFundamentalMatrixRefined(),
+                cfg1.isFundamentalMatrixRefined());
+        assertEquals(cfg1.isFundamentalMatrixCovarianceKept(),
+                cfg2.isFundamentalMatrixCovarianceKept());
+        assertEquals(cfg1.getFundamentalMatrixConfidence(),
+                cfg2.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(cfg1.getFundamentalMatrixMaxIterations(),
+                cfg2.getFundamentalMatrixMaxIterations());
+        assertEquals(cfg1.getFundamentalMatrixThreshold(),
+                cfg2.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(cfg1.getFundamentalMatrixComputeAndKeepInliers(),
+                cfg2.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(cfg1.getFundamentalMatrixComputeAndKeepResiduals(),
+                cfg2.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(cfg1.getPairedCamerasEstimatorMethod(),
+                cfg2.getPairedCamerasEstimatorMethod());
+        assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(),
+                cfg2.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(cfg1.getPairedCamerasAspectRatio(),
+                cfg2.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(cfg1.getPrincipalPointX(),
+                cfg2.getPrincipalPointX(), 0.0);
+        assertEquals(cfg1.getPrincipalPointY(),
+                cfg2.getPrincipalPointY(), 0.0);
+        assertEquals(cfg1.getPairedCamerasCorrectorType(),
+                cfg2.getPairedCamerasCorrectorType());
+        assertEquals(cfg1.getPairedCamerasMarkValidTriangulatedPoints(),
+                cfg2.getPairedCamerasMarkValidTriangulatedPoints());
+        assertEquals(cfg1.areIntrinsicParametersKnown(),
+                cfg2.areIntrinsicParametersKnown());
+        assertEquals(cfg1.isGeneralSceneAllowed(),
+                cfg2.isGeneralSceneAllowed());
+        assertEquals(cfg1.isPlanarSceneAllowed(),
+                cfg2.isPlanarSceneAllowed());
+        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
+                cfg2.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(cfg1.isPlanarHomographyRefined(),
+                cfg2.isPlanarHomographyRefined());
+        assertEquals(cfg1.isPlanarHomographyCovarianceKept(),
+                cfg2.isPlanarHomographyCovarianceKept());
+        assertEquals(cfg1.getPlanarHomographyConfidence(),
+                cfg2.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(cfg1.getPlanarHomographyMaxIterations(),
+                cfg2.getPlanarHomographyMaxIterations());
+        assertEquals(cfg1.getPlanarHomographyThreshold(),
+                cfg2.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
+                cfg2.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepResiduals(),
+                cfg2.getPlanarHomographyComputeAndKeepResiduals());
+        assertNotSame(cfg1.getCalibrationData(), cfg2.getCalibrationData());
+        assertEquals(cfg1.getCameraPositionCovariance(), cfg2.getCameraPositionCovariance());
+        assertEquals(cfg1.isNotifyAvailableSlamDataEnabled(),
+                cfg2.isNotifyAvailableSlamDataEnabled());
+        assertEquals(cfg1.isNotifyEstimatedSlamCameraEnabled(),
+                cfg2.isNotifyEstimatedSlamCameraEnabled());
     }
 }

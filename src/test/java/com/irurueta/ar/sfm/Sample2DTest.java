@@ -17,8 +17,13 @@ package com.irurueta.ar.sfm;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
+import com.irurueta.geometry.InhomogeneousPoint2D;
+import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point2D;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -138,6 +143,60 @@ public class Sample2DTest {
 
         // check correctness
         assertSame(s.getColorData(), data);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws WrongSizeException, IOException,
+            ClassNotFoundException {
+        final Sample2D s1 = new Sample2D();
+
+        // set new values
+        s1.setId("id");
+        s1.setViewId(1);
+        final InhomogeneousPoint2D point = new InhomogeneousPoint2D(1.0, 2.0);
+        s1.setPoint(point);
+        final ReconstructedPoint3D reconstructedPoint = new ReconstructedPoint3D();
+        reconstructedPoint.setPoint(new InhomogeneousPoint3D(1.0, 2.0, 3.0));
+        reconstructedPoint.setId("2");
+        reconstructedPoint.setInlier(true);
+        s1.setReconstructedPoint(reconstructedPoint);
+        s1.setQualityScore(1.0);
+        final Matrix cov = Matrix.identity(2, 2);
+        s1.setCovariance(cov);
+        final PointColorData data = new CustomPointColorData();
+        data.setId("3");
+        data.setQualityScore(1.0);
+        s1.setColorData(data);
+
+        // check
+        assertEquals("id", s1.getId());
+        assertEquals(1, s1.getViewId());
+        assertSame(point, s1.getPoint());
+        assertSame(reconstructedPoint, s1.getReconstructedPoint());
+        assertEquals(1.0, s1.getQualityScore(), 0.0);
+        assertSame(cov, s1.getCovariance());
+        assertSame(data, s1.getColorData());
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(s1);
+        final Sample2D s2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(s1.getId(), s2.getId());
+        assertEquals(s1.getViewId(), s2.getViewId());
+        assertEquals(s1.getPoint(), s2.getPoint());
+        assertEquals(s1.getReconstructedPoint().getPoint(),
+                s2.getReconstructedPoint().getPoint());
+        assertEquals(s1.getReconstructedPoint().getId(),
+                s2.getReconstructedPoint().getId());
+        assertEquals(s1.getReconstructedPoint().isInlier(),
+                s2.getReconstructedPoint().isInlier());
+        assertEquals(s1.getQualityScore(), s2.getQualityScore(), 0.0);
+        assertEquals(s1.getCovariance(), s2.getCovariance());
+        assertEquals(s1.getColorData().getId(),
+                s2.getColorData().getId());
+        assertEquals(s1.getColorData().getQualityScore(),
+                s2.getColorData().getQualityScore(), 0.0);
     }
 
     public static class CustomPointColorData extends PointColorData {

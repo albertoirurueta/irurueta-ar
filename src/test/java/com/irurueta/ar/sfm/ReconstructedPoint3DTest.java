@@ -17,8 +17,11 @@ package com.irurueta.ar.sfm;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.Point3D;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -109,6 +112,37 @@ public class ReconstructedPoint3DTest {
 
         // check correctness
         assertSame(rp.getColorData(), data);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final ReconstructedPoint3D rp1 = new ReconstructedPoint3D();
+
+        // set values
+        rp1.setId("id");
+        final Point3D p = Point3D.create();
+        rp1.setPoint(p);
+        rp1.setQualityScore(5.0);
+        final Matrix cov = new Matrix(3, 3);
+        rp1.setCovariance(cov);
+        final PointColorData data = new CustomPointColorData();
+        rp1.setColorData(data);
+
+        // check
+        assertEquals(rp1.getId(), "id");
+        assertSame(rp1.getPoint(), p);
+        assertEquals(rp1.getQualityScore(), 5.0, 0.0);
+        assertSame(rp1.getCovariance(), cov);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(rp1);
+        final ReconstructedPoint3D rp2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(rp1.getId(), rp2.getId());
+        assertEquals(rp1.getPoint(), rp2.getPoint());
+        assertEquals(rp1.getQualityScore(), rp2.getQualityScore(), 0.0);
+        assertEquals(rp1.getCovariance(), rp2.getCovariance());
     }
 
     public static class CustomPointColorData extends PointColorData {

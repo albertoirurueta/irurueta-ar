@@ -17,6 +17,7 @@ package com.irurueta.ar.calibration;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.DualConicNotAvailableException;
 import com.irurueta.geometry.InvalidPinholeCameraIntrinsicParametersException;
 import com.irurueta.geometry.NonSymmetricMatrixException;
@@ -24,6 +25,7 @@ import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -220,5 +222,37 @@ public class ImageOfAbsoluteConicTest {
                 intrinsic2.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
         assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(),
                 ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testSerializeDeserialize()
+            throws InvalidPinholeCameraIntrinsicParametersException, IOException, ClassNotFoundException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
+                MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
+                MAX_FOCAL_LENGTH);
+
+        final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+
+        final double horizontalPrincipalPoint = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+
+        final PinholeCameraIntrinsicParameters intrinsic =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                        verticalFocalLength, horizontalPrincipalPoint,
+                        verticalPrincipalPoint, skewness);
+
+        // test constructor from intrinsic parameters
+        final ImageOfAbsoluteConic iac1 = new ImageOfAbsoluteConic(intrinsic);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(iac1);
+        final ImageOfAbsoluteConic iac2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(iac1.asMatrix(), iac2.asMatrix());
     }
 }

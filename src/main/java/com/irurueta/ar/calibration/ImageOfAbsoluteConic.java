@@ -18,6 +18,7 @@ package com.irurueta.ar.calibration;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.CholeskyDecomposer;
 import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.Utils;
 import com.irurueta.geometry.Conic;
 import com.irurueta.geometry.DualConic;
 import com.irurueta.geometry.DualConicNotAvailableException;
@@ -124,7 +125,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
             throws InvalidPinholeCameraIntrinsicParametersException {
         final Matrix kMatrix = k.getInternalMatrix();
         try {
-            final Matrix invKMatrix = com.irurueta.algebra.Utils.inverse(kMatrix);
+            final Matrix invKMatrix = Utils.inverse(kMatrix);
             setParameters(invKMatrix.transposeAndReturnNew().
                     multiplyAndReturnNew(invKMatrix));
         } catch (final AlgebraException e) {

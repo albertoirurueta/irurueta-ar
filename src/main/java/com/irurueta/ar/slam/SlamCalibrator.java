@@ -15,15 +15,12 @@
  */
 package com.irurueta.ar.slam;
 
-import java.io.Serializable;
-
 /**
  * Processes data to estimate calibration for SLAM estimator.
  * This class must be used while gathering data for a system being kept constant
  * (no motion).
  */
-public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData>
-        implements Serializable {
+public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData> {
 
     /**
      * Last sample of linear acceleration along x-axis.

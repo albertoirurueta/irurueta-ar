@@ -15,12 +15,14 @@
  */
 package com.irurueta.ar.calibration;
 
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.NotSupportedException;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -675,5 +677,45 @@ public class RadialDistortionTest {
             assertEquals(distortedPoint1.getInhomX(), xd, ERROR);
             assertEquals(distortedPoint1.getInhomY(), yd, ERROR);
         }
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws NotSupportedException,
+            DistortionException, IOException, ClassNotFoundException {
+        final RadialDistortion distortion1 = new RadialDistortion();
+
+        // set new values
+        final InhomogeneousPoint2D center = new InhomogeneousPoint2D();
+        distortion1.setCenter(center);
+        distortion1.setHorizontalFocalLength(0.5);
+        distortion1.setVerticalFocalLength(0.4);
+        distortion1.setSkew(1e-3);
+        distortion1.setK1(1.0);
+        distortion1.setK2(0.5);
+
+        // check
+        assertSame(center, distortion1.getCenter());
+        assertEquals(0.5, distortion1.getHorizontalFocalLength(), 0.0);
+        assertEquals(0.4, distortion1.getVerticalFocalLength(), 0.0);
+        assertEquals(1e-3, distortion1.getSkew(), 0.0);
+        assertEquals(1.0, distortion1.getK1(), 0.0);
+        assertEquals(0.5, distortion1.getK2(), 0.0);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(distortion1);
+        final RadialDistortion distortion2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(distortion1.getCenter(), distortion2.getCenter());
+        assertEquals(distortion1.getHorizontalFocalLength(),
+                distortion2.getHorizontalFocalLength(), 0.0);
+        assertEquals(distortion1.getVerticalFocalLength(),
+                distortion2.getVerticalFocalLength(), 0.0);
+        assertEquals(distortion1.getSkew(),
+                distortion2.getSkew(), 0.0);
+        assertEquals(distortion1.getK1(),
+                distortion2.getK1(), 0.0);
+        assertEquals(distortion1.getK2(),
+                distortion2.getK2(), 0.0);
     }
 }

@@ -15,7 +15,10 @@
  */
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.SerializationHelper;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -71,6 +74,26 @@ public class PointColorDataTest {
         assertNotNull(data1);
         assertNotNull(data2);
         assertNotNull(data3);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final PointColorData data1 = new CustomPointColorData();
+
+        // set new values
+        data1.setId("id");
+        data1.setQualityScore(5.0);
+
+        // check correctness
+        assertEquals(data1.getId(), "id");
+        assertEquals(data1.getQualityScore(), 5.0, 0.0);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(data1);
+        final PointColorData data2 = SerializationHelper.deserialize(bytes);
+
+        assertEquals(data1.getId(), data2.getId());
+        assertEquals(data1.getQualityScore(), data2.getQualityScore(), 0.0);
     }
 
     public static class CustomPointColorData extends PointColorData {

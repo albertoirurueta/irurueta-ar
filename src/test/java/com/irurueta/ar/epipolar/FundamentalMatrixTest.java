@@ -24,6 +24,7 @@ import com.irurueta.algebra.NotReadyException;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.Utils;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
@@ -31,6 +32,7 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -1254,6 +1256,82 @@ public class FundamentalMatrixTest {
             break;
         }
         assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws GeometryException, AlgebraException, IOException, ClassNotFoundException {
+        // create fundamental matrix by providing two pinhole cameras
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double alphaEuler1 = 0.0;
+        final double betaEuler1 = 0.0;
+        final double gammaEuler1 = 0.0;
+        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+
+        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
+                MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
+                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
+                MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
+                MAX_FOCAL_LENGTH);
+
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+
+        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint1 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint2 = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+
+        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
+                MAX_CAMERA_SEPARATION);
+
+        final Point3D center1 = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+        final Point3D center2 = new InhomogeneousPoint3D(
+                center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation,
+                center1.getInhomZ() + cameraSeparation);
+
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
+                gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
+                gammaEuler2);
+
+        final PinholeCameraIntrinsicParameters intrinsic1 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
+                        verticalFocalLength1, horizontalPrincipalPoint1,
+                        verticalPrincipalPoint1, skewness1);
+        final PinholeCameraIntrinsicParameters intrinsic2 =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
+                        verticalFocalLength2, horizontalPrincipalPoint2,
+                        verticalPrincipalPoint2, skewness2);
+
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
+                center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
+                center2);
+
+        final FundamentalMatrix fundMatrix1 = new FundamentalMatrix(camera1, camera2);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(fundMatrix1);
+        final FundamentalMatrix fundMatrix2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(fundMatrix1.getInternalMatrix(), fundMatrix2.getInternalMatrix());
     }
 
     private Transformation2D generateHomography(

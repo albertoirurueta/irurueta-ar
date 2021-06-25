@@ -15,9 +15,11 @@
  */
 package com.irurueta.ar.calibration;
 
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.Point2D;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -148,5 +150,30 @@ public class CirclesPattern2DTest {
         assertEquals(points.get(8).getInhomY(), 2.0, 0.0);
 
         assertEquals(points.size(), pattern.getNumberOfPoints());
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final CirclesPattern2D pattern1 = new CirclesPattern2D();
+
+        // set new values
+        pattern1.setPointSeparation(1.0);
+        pattern1.setCols(2);
+        pattern1.setRows(2);
+
+        // check
+        assertEquals(pattern1.getPointSeparation(), 1.0, 0.0);
+        assertEquals(pattern1.getCols(), 2);
+        assertEquals(pattern1.getRows(), 2);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(pattern1);
+        final CirclesPattern2D pattern2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(pattern1.getPointSeparation(),
+                pattern2.getPointSeparation(), 0.0);
+        assertEquals(pattern1.getCols(), pattern2.getCols());
+        assertEquals(pattern1.getRows(), pattern2.getRows());
     }
 }

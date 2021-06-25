@@ -15,8 +15,10 @@
  */
 package com.irurueta.ar.sfm;
 
+import com.irurueta.ar.SerializationHelper;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.BitSet;
 
 import static org.junit.Assert.*;
@@ -138,5 +140,49 @@ public class MatchedSamplesTest {
 
         // check correctness
         assertSame(samples.getInliers(), inliers);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException,
+            ClassNotFoundException {
+        final MatchedSamples samples1 = new MatchedSamples();
+
+        // set new values
+        final Sample2D[] s = new Sample2D[1];
+        s[0] = new Sample2D();
+        samples1.setSamples(s);
+        final EstimatedCamera[] cams = new EstimatedCamera[1];
+        samples1.setCameras(cams);
+        final int[] ids = new int[1];
+        samples1.setViewIds(ids);
+        ReconstructedPoint3D rp = new ReconstructedPoint3D();
+        samples1.setReconstructedPoint(rp);
+        samples1.setQualityScore(20.0);
+        final BitSet inliers = new BitSet();
+        samples1.setInliers(inliers);
+
+        // check
+        assertSame(s, samples1.getSamples());
+        assertSame(cams, samples1.getCameras());
+        assertSame(samples1.getViewIds(), ids);
+        assertSame(samples1.getReconstructedPoint(), rp);
+        assertEquals(samples1.getQualityScore(), 20.0, 0.0);
+        assertSame(samples1.getInliers(), inliers);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(samples1);
+        final MatchedSamples samples2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertNotSame(samples1.getSamples(), samples2.getSamples());
+        assertEquals(samples1.getSamples().length,
+                samples2.getSamples().length);
+        assertArrayEquals(samples1.getCameras(), samples2.getCameras());
+        assertArrayEquals(samples1.getViewIds(), samples2.getViewIds());
+        assertNotSame(samples1.getReconstructedPoint(),
+                samples2.getReconstructedPoint());
+        assertEquals(samples1.getQualityScore(),
+                samples2.getQualityScore(), 0.0);
+        assertEquals(samples1.getInliers(), samples2.getInliers());
     }
 }

@@ -18,6 +18,7 @@ package com.irurueta.ar.slam;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.ar.slam.BaseSlamEstimator.BaseSlamEstimatorListener;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
@@ -27,6 +28,7 @@ import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
@@ -7846,6 +7848,140 @@ public class ConstantVelocityModelSlamEstimatorTest implements
         }
 
         assertTrue(numSuccess > REPEAT_TIMES * REQUIRED_PREDICTION_WITH_CALIBRATION_SUCCESS_RATE);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final ConstantVelocityModelSlamEstimator estimator1 =
+                new ConstantVelocityModelSlamEstimator();
+
+        // set new values
+        final ConstantVelocityModelSlamCalibrationData data = new ConstantVelocityModelSlamCalibrationData();
+        estimator1.setCalibrationData(data);
+        estimator1.mStatePositionX = 1.0;
+        estimator1.mStatePositionY = 2.0;
+        estimator1.mStatePositionZ = 3.0;
+        estimator1.mStateVelocityX = 4.0;
+        estimator1.mStateVelocityY = 5.0;
+        estimator1.mStateVelocityZ = 6.0;
+        estimator1.mStateAccelerationX = 7.0;
+        estimator1.mStateAccelerationY = 8.0;
+        estimator1.mStateAccelerationZ = 9.0;
+        estimator1.mStateQuaternionA = 0.1;
+        estimator1.mStateQuaternionB = 0.2;
+        estimator1.mStateQuaternionC = 0.3;
+        estimator1.mStateQuaternionD = 0.4;
+        estimator1.mStateAngularSpeedX = 10.0;
+        estimator1.mStateAngularSpeedY = 11.0;
+        estimator1.mStateAngularSpeedZ = 12.0;
+        estimator1.mError = true;
+        estimator1.mAccumulationEnabled = true;
+        estimator1.mAccelerometerTimestampNanos = 1L;
+        estimator1.mGyroscopeTimestampNanos = 2L;
+        estimator1.mAccumulatedAccelerometerSamples = 100;
+        estimator1.mAccumulatedGyroscopeSamples = 200;
+        estimator1.mAccumulatedAccelerationSampleX = -1.0;
+        estimator1.mAccumulatedAccelerationSampleY = -2.0;
+        estimator1.mAccumulatedAccelerationSampleZ = -3.0;
+        estimator1.mAccumulatedAngularSpeedSampleX = -4.0;
+        estimator1.mAccumulatedAngularSpeedSampleY = -5.0;
+        estimator1.mAccumulatedAngularSpeedSampleZ = -6.0;
+
+        // check
+        assertSame(data, estimator1.getCalibrationData());
+        assertEquals(1.0, estimator1.mStatePositionX, 0.0);
+        assertEquals(2.0, estimator1.mStatePositionY, 0.0);
+        assertEquals(3.0, estimator1.mStatePositionZ, 0.0);
+        assertEquals(4.0, estimator1.mStateVelocityX, 0.0);
+        assertEquals(5.0, estimator1.mStateVelocityY, 0.0);
+        assertEquals(6.0, estimator1.mStateVelocityZ, 0.0);
+        assertEquals(7.0, estimator1.mStateAccelerationX, 0.0);
+        assertEquals(8.0, estimator1.mStateAccelerationY, 0.0);
+        assertEquals(9.0, estimator1.mStateAccelerationZ, 0.0);
+        assertEquals(0.1, estimator1.mStateQuaternionA, 0.0);
+        assertEquals(0.2, estimator1.mStateQuaternionB, 0.0);
+        assertEquals(0.3, estimator1.mStateQuaternionC, 0.0);
+        assertEquals(0.4, estimator1.mStateQuaternionD, 0.0);
+        assertEquals(10.0, estimator1.mStateAngularSpeedX, 0.0);
+        assertEquals(11.0, estimator1.mStateAngularSpeedY, 0.0);
+        assertEquals(12.0, estimator1.mStateAngularSpeedZ, 0.0);
+        assertTrue(estimator1.hasError());
+        assertTrue(estimator1.isAccumulationEnabled());
+        assertEquals(1L, estimator1.getAccelerometerTimestampNanos());
+        assertEquals(2L, estimator1.getGyroscopeTimestampNanos());
+        assertEquals(100, estimator1.getAccumulatedAccelerometerSamples());
+        assertEquals(200, estimator1.getAccumulatedGyroscopeSamples());
+        assertEquals(-1.0, estimator1.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(-2.0, estimator1.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(-3.0, estimator1.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(-4.0, estimator1.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(-5.0, estimator1.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(-6.0, estimator1.getAccumulatedAngularSpeedSampleZ(), 0.0);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(estimator1);
+        final ConstantVelocityModelSlamEstimator estimator2 =
+                SerializationHelper.deserialize(bytes);
+
+        // check
+        assertNotSame(estimator1.getCalibrationData(),
+                estimator2.getCalibrationData());
+        assertEquals(estimator1.mStatePositionX,
+                estimator2.mStatePositionX, 0.0);
+        assertEquals(estimator1.mStatePositionY,
+                estimator2.mStatePositionY, 0.0);
+        assertEquals(estimator1.mStatePositionZ,
+                estimator2.mStatePositionZ, 0.0);
+        assertEquals(estimator1.mStateVelocityX,
+                estimator2.mStateVelocityX, 0.0);
+        assertEquals(estimator1.mStateVelocityY,
+                estimator2.mStateVelocityY, 0.0);
+        assertEquals(estimator1.mStateVelocityZ,
+                estimator2.mStateVelocityZ, 0.0);
+        assertEquals(estimator1.mStateAccelerationX,
+                estimator2.mStateAccelerationX, 0.0);
+        assertEquals(estimator1.mStateAccelerationY,
+                estimator2.mStateAccelerationY, 0.0);
+        assertEquals(estimator1.mStateAccelerationZ,
+                estimator2.mStateAccelerationZ, 0.0);
+        assertEquals(estimator1.mStateQuaternionA,
+                estimator2.mStateQuaternionA, 0.0);
+        assertEquals(estimator1.mStateQuaternionB,
+                estimator2.mStateQuaternionB, 0.0);
+        assertEquals(estimator1.mStateQuaternionC,
+                estimator2.mStateQuaternionC, 0.0);
+        assertEquals(estimator1.mStateQuaternionD,
+                estimator2.mStateQuaternionD, 0.0);
+        assertEquals(estimator1.mStateAngularSpeedX,
+                estimator2.mStateAngularSpeedX, 0.0);
+        assertEquals(estimator1.mStateAngularSpeedY,
+                estimator2.mStateAngularSpeedY, 0.0);
+        assertEquals(estimator1.mStateAngularSpeedZ,
+                estimator2.mStateAngularSpeedZ, 0.0);
+        assertEquals(estimator1.hasError(),
+                estimator2.hasError());
+        assertEquals(estimator1.isAccumulationEnabled(),
+                estimator2.isAccumulationEnabled());
+        assertEquals(estimator1.getAccelerometerTimestampNanos(),
+                estimator2.getAccelerometerTimestampNanos());
+        assertEquals(estimator1.getGyroscopeTimestampNanos(),
+                estimator2.getGyroscopeTimestampNanos());
+        assertEquals(estimator1.getAccumulatedAccelerometerSamples(),
+                estimator2.getAccumulatedAccelerometerSamples());
+        assertEquals(estimator1.getAccumulatedGyroscopeSamples(),
+                estimator2.getAccumulatedGyroscopeSamples());
+        assertEquals(estimator1.getAccumulatedAccelerationSampleX(),
+                estimator2.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(estimator1.getAccumulatedAccelerationSampleY(),
+                estimator2.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(estimator1.getAccumulatedAccelerationSampleZ(),
+                estimator2.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(estimator1.getAccumulatedAngularSpeedSampleX(),
+                estimator2.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(estimator1.getAccumulatedAngularSpeedSampleY(),
+                estimator2.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(estimator1.getAccumulatedAngularSpeedSampleZ(),
+                estimator2.getAccumulatedAngularSpeedSampleZ(), 0.0);
     }
 
     @Override

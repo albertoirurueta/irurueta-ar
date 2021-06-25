@@ -15,8 +15,6 @@
  */
 package com.irurueta.ar.slam;
 
-import java.io.Serializable;
-
 /**
  * Processes data to estimate calibration for constant velocity model SLAM
  * estimator.
@@ -24,8 +22,7 @@ import java.io.Serializable;
  * (no motion).
  */
 public class ConstantVelocityModelSlamCalibrator extends
-        BaseSlamCalibrator<ConstantVelocityModelSlamCalibrationData>
-        implements Serializable {
+        BaseSlamCalibrator<ConstantVelocityModelSlamCalibrationData> {
 
     /**
      * Last sample of angular speed along x-axis.

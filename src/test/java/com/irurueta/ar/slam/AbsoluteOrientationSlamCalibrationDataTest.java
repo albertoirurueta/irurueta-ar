@@ -17,11 +17,13 @@ package com.irurueta.ar.slam;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.statistics.InvalidCovarianceMatrixException;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -166,5 +168,34 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
                 new double[AbsoluteOrientationSlamEstimator.STATE_LENGTH], 0.0);
         assertArrayEquals(dist2.getMean(),
                 new double[AbsoluteOrientationSlamEstimator.STATE_LENGTH], 0.0);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final AbsoluteOrientationSlamCalibrationData data1 =
+                new AbsoluteOrientationSlamCalibrationData();
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer();
+
+        final double[] mean = new double[
+                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        randomizer.fill(mean);
+        data1.setControlMean(mean);
+        final Matrix cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
+                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
+        data1.setControlCovariance(cov);
+
+        // check
+        assertSame(data1.getControlMean(), mean);
+        assertSame(data1.getControlCovariance(), cov);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(data1);
+        final AbsoluteOrientationSlamCalibrationData data2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertArrayEquals(data1.getControlMean(), data2.getControlMean(), 0.0);
+        assertEquals(data1.getControlCovariance(), data2.getControlCovariance());
     }
 }

@@ -23,7 +23,6 @@ import com.irurueta.numerical.signal.processing.SignalProcessingException;
 import com.irurueta.statistics.InvalidCovarianceMatrixException;
 import com.irurueta.statistics.MultivariateNormalDist;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -34,8 +33,7 @@ import java.util.Arrays;
  * @param <D> type of calibration data.
  */
 @SuppressWarnings("DuplicatedCode")
-public abstract class BaseSlamCalibrator<D extends BaseCalibrationData>
-        implements Serializable {
+public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
 
     /**
      * Minimum allowed sample length.

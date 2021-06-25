@@ -15,9 +15,11 @@
  */
 package com.irurueta.ar.calibration;
 
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.Point2D;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -127,5 +129,26 @@ public class QRPattern2DTest {
         assertEquals(points.get(3).getInhomY(), 0.0066, ABSOLUTE_ERROR);
 
         assertEquals(points.size(), pattern.getNumberOfPoints());
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final QRPattern2D pattern1 = new QRPattern2D();
+
+        // set new values
+        pattern1.setCodeWidth(1.0);
+        pattern1.setCodeHeight(2.0);
+
+        // check
+        assertEquals(1.0, pattern1.getCodeWidth(), 0.0);
+        assertEquals(2.0, pattern1.getCodeHeight(), 0.0);
+
+        // serialize and deserialize
+        final byte[] bytes = SerializationHelper.serialize(pattern1);
+        final QRPattern2D pattern2 = SerializationHelper.deserialize(bytes);
+
+        // check
+        assertEquals(pattern1.getCodeWidth(), pattern2.getCodeWidth(), 0.0);
+        assertEquals(pattern1.getCodeHeight(), pattern2.getCodeHeight(), 0.0);
     }
 }

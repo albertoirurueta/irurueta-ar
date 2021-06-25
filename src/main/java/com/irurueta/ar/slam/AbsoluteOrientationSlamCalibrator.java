@@ -17,8 +17,6 @@ package com.irurueta.ar.slam;
 
 import com.irurueta.geometry.Quaternion;
 
-import java.io.Serializable;
-
 /**
  * Processes data to estimate calibration for absolute orientation SLAM
  * estimator.
@@ -26,8 +24,7 @@ import java.io.Serializable;
  * (under no motion).
  */
 public class AbsoluteOrientationSlamCalibrator extends
-        AbsoluteOrientationBaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData>
-        implements Serializable {
+        AbsoluteOrientationBaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> {
 
     /**
      * Last sample of linear acceleration along x-axis.

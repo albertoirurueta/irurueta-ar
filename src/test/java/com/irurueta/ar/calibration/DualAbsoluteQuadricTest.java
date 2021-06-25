@@ -19,12 +19,14 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.Utils;
+import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Plane;
 import com.irurueta.geometry.ProjectiveTransformation3D;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -599,5 +601,51 @@ public class DualAbsoluteQuadricTest {
 
         final double det = Utils.det(daqMatrix);
         assertEquals(det, 0.0, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        // create from DIAC and plane at infinity
+        final UniformRandomizer randomizer = new UniformRandomizer();
+        final double horizontalFocalLength = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
+                MAX_SKEWNESS);
+        final double horizontalPrincipalPoint = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double verticalPrincipalPoint = randomizer.nextDouble(
+                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+
+        final PinholeCameraIntrinsicParameters intrinsic =
+                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                        verticalFocalLength, horizontalPrincipalPoint,
+                        verticalPrincipalPoint, skewness);
+
+        final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
+                intrinsic);
+
+        final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE,
+                MAX_RANDOM_VALUE);
+        final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE,
+                MAX_RANDOM_VALUE);
+        final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE,
+                MAX_RANDOM_VALUE);
+        final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE,
+                MAX_RANDOM_VALUE);
+
+        final Plane planeAtInfinity = new Plane(planeA, planeB, planeC,
+                planeD);
+
+        diac.normalize();
+        planeAtInfinity.normalize();
+
+        final DualAbsoluteQuadric daq1 = new DualAbsoluteQuadric(diac, planeAtInfinity);
+
+        final byte[] bytes = SerializationHelper.serialize(daq1);
+        final DualAbsoluteQuadric daq2 = SerializationHelper.deserialize(bytes);
+
+        assertEquals(daq1.asMatrix(), daq2.asMatrix());
     }
 }
