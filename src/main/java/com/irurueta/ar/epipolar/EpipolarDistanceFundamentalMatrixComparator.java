@@ -599,7 +599,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
             final Line2D l2est = new Line2D();
             final UniformRandomizer randomizer = new UniformRandomizer();
             double avgDist = 0.0;
-            final int maxIterations = (int) (((double) mNSamples) * mMaxIterationsFactor);
+            final int maxIterations = (int) (mNSamples * mMaxIterationsFactor);
             int currentIter = 0;
             float progress;
             float previousProgress = 0.0f;
@@ -810,7 +810,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
                 mListener.onCompareEnd(this);
             }
 
-            return avgDist / (double) mNSamples;
+            return avgDist / mNSamples;
 
         } finally {
             mLocked = false;

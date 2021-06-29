@@ -707,7 +707,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      */
     @Override
     protected void notifyProgress() {
-        final float lambda = 1.0f / (float) mMaxIterations;
+        final float lambda = 1.0f / mMaxIterations;
         final float partial = 0.5f * mIntrinsicProgress +
                 0.5f * mRadialDistortionProgress;
 

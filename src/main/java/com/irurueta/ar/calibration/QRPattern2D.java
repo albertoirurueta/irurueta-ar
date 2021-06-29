@@ -188,8 +188,8 @@ public class QRPattern2D extends Pattern2D implements Serializable {
         // is located at ([(((V-1)*4)+21) - 7 - 3], [(((V-1)*4)+21) - 7 - 3]),
         // so for version 2 this is equal to (15, 15)
 
-        final double moduleWidth = mCodeWidth / (double) NUMBER_OF_MODULES;
-        final double moduleHeight = mCodeHeight / (double) NUMBER_OF_MODULES;
+        final double moduleWidth = mCodeWidth / NUMBER_OF_MODULES;
+        final double moduleHeight = mCodeHeight / NUMBER_OF_MODULES;
 
         // below is equivalent to [(((V-1)*4)+21) - 7] = 18
         final int finderModulePos = NUMBER_OF_MODULES - 3 - ORIGIN_OFFSET;
@@ -198,17 +198,17 @@ public class QRPattern2D extends Pattern2D implements Serializable {
 
         // bottom-left finder pattern
         points.add(new InhomogeneousPoint2D(0.0,
-                (double) finderModulePos * moduleHeight));
+                finderModulePos * moduleHeight));
         // top-left finder pattern
         points.add(new InhomogeneousPoint2D(0.0, 0.0));
         // top-right finder pattern
         points.add(new InhomogeneousPoint2D(
-                (double) finderModulePos * moduleWidth, 0.0));
+                finderModulePos * moduleWidth, 0.0));
 
         // bottom-right alignment pattern
         points.add(new InhomogeneousPoint2D(
-                (double) alignModulePos * moduleWidth,
-                (double) alignModulePos * moduleHeight));
+                alignModulePos * moduleWidth,
+                alignModulePos * moduleHeight));
 
         return points;
     }

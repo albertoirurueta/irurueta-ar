@@ -209,7 +209,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
     /**
      * Listener in charge of handling events raised by instances of this class.
      */
-    protected transient BaseSlamCalibratorListener<D> mListener;
+    protected BaseSlamCalibratorListener<D> mListener;
 
     /**
      * Constructor.

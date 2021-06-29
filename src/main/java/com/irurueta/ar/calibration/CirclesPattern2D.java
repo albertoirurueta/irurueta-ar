@@ -166,8 +166,8 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
         double y;
         for (int i = 0; i < mRows; i++) {
             for (int j = 0; j < mCols; j++) {
-                x = (double) (2 * j + i % 2) * mPointSeparation;
-                y = (double) i * mPointSeparation;
+                x = (2 * j + i % 2) * mPointSeparation;
+                y = i * mPointSeparation;
                 points.add(new InhomogeneousPoint2D(x, y));
             }
         }
