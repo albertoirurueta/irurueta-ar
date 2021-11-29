@@ -7557,7 +7557,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     @Test
     public void testPredictionConstantAccelerationWithNoiseAndCalibration() {
         int numSuccess = 0;
-        for (int t = 0; t < REPEAT_TIMES; t++) {
+        for (int t = 0; t < 2 * REPEAT_TIMES; t++) {
             final UniformRandomizer offsetRandomizer = new UniformRandomizer(
                     new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
