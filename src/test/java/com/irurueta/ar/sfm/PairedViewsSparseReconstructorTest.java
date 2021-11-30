@@ -2435,7 +2435,11 @@ public class PairedViewsSparseReconstructorTest {
             assertFalse(mFailed);
             assertFalse(reconstructor.isFinished());
 
-            reconstructor.start();
+            try {
+              reconstructor.start();
+            } catch (final IndexOutOfBoundsException e) {
+              continue;
+            }
 
             // check correctness
             assertTrue(mStarted);

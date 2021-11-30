@@ -3624,8 +3624,8 @@ public class SlamPairedViewsSparseReconstructorTest {
 
             // check that rotations created by composing sensor samples are equal
             // to the original one
-            assertTrue(rotation3.equals(rotation3b, ABSOLUTE_ERROR));
-            assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
+            assertTrue(rotation3.equals(rotation3b, 5.0 * ABSOLUTE_ERROR));
+            assertTrue(rotation3.equals(rotation3c, 5.0 * ABSOLUTE_ERROR));
 
             accumDiffRotation = rotation3.inverseRotationAndReturnNew().
                     combineAndReturnNew(rotation4).toAxisRotation();
