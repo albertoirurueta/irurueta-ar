@@ -20,3 +20,17 @@ Augmented Reality and 3D reconstruction library
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-ar&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-ar)
 
 [Maven Site Report](http://albertoirurueta.github.io/irurueta-ar)
+
+## Usage
+
+Add the following dependency to your project:
+
+Latest release:
+```
+<dependency>
+    <groupId>com.irurueta</groupId>
+    <artifactId>irurueta-ar</artifactId>
+    <version>1.0.0</version>
+    <scope>compile</scope>
+</dependency>
+```
