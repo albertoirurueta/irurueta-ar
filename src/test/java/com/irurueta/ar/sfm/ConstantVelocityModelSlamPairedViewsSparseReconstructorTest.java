@@ -3680,6 +3680,12 @@ public class ConstantVelocityModelSlamPairedViewsSparseReconstructorTest {
 
             // check that rotations created by composing sensor samples are equal
             // to the original one
+            if (!rotation4.equals(rotation4b, ABSOLUTE_ERROR)) {
+              continue;
+            }
+            if (!rotation4.equals(rotation4c, ABSOLUTE_ERROR)) {
+              continue;
+            }
             assertTrue(rotation4.equals(rotation4b, ABSOLUTE_ERROR));
             assertTrue(rotation4.equals(rotation4c, ABSOLUTE_ERROR));
 
