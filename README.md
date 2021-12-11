@@ -1,8 +1,8 @@
 # irurueta-ar
 Augmented Reality and 3D reconstruction library
 
-[![Build Status](https://travis-ci.com/albertoirurueta/irurueta-ar.svg?branch=master)](https://travis-ci.com/albertoirurueta/irurueta-ar)
-
+[![Build Status](https://github.com/albertoirurueta/irurueta-ar/actions/workflows/master.yml/badge.svg)](https://github.com/albertoirurueta/irurueta-ar/actions)
+[![Build Status](https://github.com/albertoirurueta/irurueta-ar/actions/workflows/develop.yml/badge.svg)](https://github.com/albertoirurueta/irurueta-ar/actions)
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-ar&metric=bugs)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-ar)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=albertoirurueta_irurueta-ar&metric=code_smells)](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-ar)
@@ -30,7 +30,7 @@ Latest release:
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-ar</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -40,7 +40,7 @@ Latest snapshot:
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-ar</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
 ```
