@@ -403,7 +403,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws LockedException                         if estimator is locked.
      * @throws NotReadyException                       if estimator is not ready.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      */
     @Override
     public void estimate() throws LockedException, NotReadyException,
@@ -722,10 +723,10 @@ public class EssentialMatrixInitialCamerasEstimator
      *                          This can be used when cameras have been previously calibrated.
      * @param rightIntrinsic    intrinsic parameters to be set on right view.
      *                          This can be used when cameras have been previously calibrated.
-     * @param leftPoints        points on left view matched with points on right view
+     * @param leftPoints        points on left view matched with points on right view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param rightPoints       points on right view matched with points on left view
+     * @param rightPoints       points on right view matched with points on left view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
      * @param leftCamera        instance where estimated left camera will be stored.
@@ -733,7 +734,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -764,13 +766,13 @@ public class EssentialMatrixInitialCamerasEstimator
      *                          This can be used when cameras have been previously calibrated.
      * @param rightIntrinsic    intrinsic parameters to be set on right view.
      *                          This can be used when cameras have been previously calibrated.
-     * @param leftPoints        points on left view matched with points on right view
+     * @param leftPoints        points on left view matched with points on right view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param rightPoints       points on right view matched with points on left view
+     * @param rightPoints       points on right view matched with points on left view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param correctorType     corrector type to be used to correct 2D points so
+     * @param correctorType     corrector type to be used to correct 2D points, so
      *                          they follow the epipolar geometry defined by provided fundamental matrix
      *                          so that error on triangulated points is reduced. If null, no corrector
      *                          will be used.
@@ -779,8 +781,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical
-     *                                                 instabilities.
+     *                                                 cameras fails for some reason, typically due to
+     *                                                 numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -811,23 +813,24 @@ public class EssentialMatrixInitialCamerasEstimator
      *                                This can be used when cameras have been previously calibrated.
      * @param rightIntrinsic          intrinsic parameters to be set on right view.
      *                                This can be used when cameras have been previously calibrated.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
      * @param leftCamera              instance where estimated left camera will be stored.
      * @param rightCamera             instance where estimated right camera will be stored.
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -859,28 +862,28 @@ public class EssentialMatrixInitialCamerasEstimator
      *                                This can be used when cameras have been previously calibrated.
      * @param rightIntrinsic          intrinsic parameters to be set on right view.
      *                                This can be used when cameras have been previously calibrated.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param correctorType           corrector type to be used to correct 2D points so
-     *                                they follow the epipolar geometry defined by provided fundamental matrix
-     *                                so that error on triangulated points is reduced. If null, no corrector
-     *                                will be used.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists
+     *                                of points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists
+     *                                of points must have the same size.
+     * @param correctorType           corrector type to be used to correct 2D points, so
+     *                                they follow the epipolar geometry defined by provided fundamental
+     *                                matrix so that error on triangulated points is reduced. If null,
+     *                                no corrector will be used.
      * @param leftCamera              instance where estimated left camera will be stored.
      * @param rightCamera             instance where estimated right camera will be stored.
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical
-     *                                                 instabilities.
+     *                                                 cameras fails for some reason, typically due to
+     *                                                 numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -1102,18 +1105,20 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param leftCamera                     instance where best found left camera will be stored.
      * @param rightCamera                    instance where best found right camera will be stored.
      * @param triangulatedPoints             instance where triangulated points for best
-     *                                       found solution will be stored or null if points don't need to be kept.
+     *                                       found solution will be stored or null if points don't need to
+     *                                       be kept.
      * @param validTriangulatedPoints        instance where valid triangulated points
-     *                                       for best found solution will be stored or null if such data doesn't need
-     *                                       to be kept.
-     * @param attemptLeftCamera              estimated left camera to be copied into best
+     *                                       for best found solution will be stored or null if such data
+     *                                       doesn't need to be kept.
+     * @param attemptLeftCamera              estimated left camera to be copied into the best
      *                                       solution.
-     * @param attemptRightCamera             estimated right camera to be copied into best
+     * @param attemptRightCamera             estimated right camera to be copied into the best
      *                                       solution.
-     * @param attemptTriangulatedPoints      triangulated points to be copied into
+     * @param attemptTriangulatedPoints      triangulated points to be copied into the
      *                                       best solution, or null if nothing needs to be copied.
      * @param attemptValidTriangulatedPoints valid triangulated points to be
-     *                                       copied into best solution, or null if nothing needs to be copied.
+     *                                       copied into the best solution, or null if nothing needs to
+     *                                       be copied.
      * @throws InitialCamerasEstimationFailedException if something fails.
      */
     private static void updateBestSolutionData(
@@ -1158,12 +1163,12 @@ public class EssentialMatrixInitialCamerasEstimator
      *                                camera.
      * @param rightIntrinsic          intrinsic parameters to set on estimated right
      *                                camera.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists
+     *                                of points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists
+     *                                of points must have the same size.
      * @param estimatedLeftCamera     instance where estimated left camera will be
      *                                stored.
      * @param estimatedRightCamera    instance where estimated right camera will be
@@ -1171,8 +1176,8 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws WrongSizeException            never occurs.
@@ -1227,7 +1232,8 @@ public class EssentialMatrixInitialCamerasEstimator
         // 2nd camera
 
         // set left 3x3 minor containing rotation
-        tmp.setSubmatrix(0, 0, 2, 2, rotationMatrix);
+        tmp.setSubmatrix(0, 0, 2, 2,
+                rotationMatrix);
 
         // set last column containing translation
         translation.normalize();

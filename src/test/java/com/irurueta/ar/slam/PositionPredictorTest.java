@@ -64,8 +64,7 @@ public class PositionPredictorTest {
         Matrix jacobianR = new Matrix(3, 3);
         Matrix jacobianV = new Matrix(3, 3);
         Matrix jacobianA = new Matrix(3, 3);
-        PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, result,
-                jacobianR, jacobianV, jacobianA);
+        PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         InhomogeneousPoint3D result2 = new InhomogeneousPoint3D(
@@ -115,8 +114,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        PositionPredictor.predict(r, v, a, dt, result, jacobianR,
-                jacobianV, jacobianA);
+        PositionPredictor.predict(r, v, a, dt, result, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -170,8 +168,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        PositionPredictor.predict(r, vx, vy, vz, dt, result, jacobianR,
-                jacobianV, jacobianA);
+        PositionPredictor.predict(r, vx, vy, vz, dt, result, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         final InhomogeneousPoint3D result3 = new InhomogeneousPoint3D(x + vx * dt,
@@ -219,8 +216,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        PositionPredictor.predict(r, v, dt, result, jacobianR,
-                jacobianV, jacobianA);
+        PositionPredictor.predict(r, v, dt, result, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -232,26 +228,22 @@ public class PositionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            PositionPredictor.predict(r, new double[1], dt, result,
-                    jacobianR, jacobianV, jacobianA);
+            PositionPredictor.predict(r, new double[1], dt, result, jacobianR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            PositionPredictor.predict(r, v, dt, result, new Matrix(1, 1),
-                    jacobianV, jacobianA);
+            PositionPredictor.predict(r, v, dt, result, new Matrix(1, 1), jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            PositionPredictor.predict(r, v, dt, result, jacobianR,
-                    new Matrix(1, 1), jacobianA);
+            PositionPredictor.predict(r, v, dt, result, jacobianR, new Matrix(1, 1), jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            PositionPredictor.predict(r, v, dt, result, jacobianR,
-                    jacobianV, new Matrix(1, 1));
+            PositionPredictor.predict(r, v, dt, result, jacobianR, jacobianV, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -274,8 +266,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        result = PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt,
-                jacobianR, jacobianV, jacobianA);
+        result = PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -317,8 +308,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        result = PositionPredictor.predict(r, v, a, dt, jacobianR,
-                jacobianV, jacobianA);
+        result = PositionPredictor.predict(r, v, a, dt, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -331,14 +321,12 @@ public class PositionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = PositionPredictor.predict(r, new double[1], a, dt,
-                    jacobianR, jacobianV, jacobianA);
+            result = PositionPredictor.predict(r, new double[1], a, dt, jacobianR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = PositionPredictor.predict(r, v, new double[1], dt,
-                    jacobianR, jacobianV, jacobianA);
+            result = PositionPredictor.predict(r, v, new double[1], dt, jacobianR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -372,8 +360,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        result = PositionPredictor.predict(r, vx, vy, vz, dt, jacobianR,
-                jacobianV, jacobianA);
+        result = PositionPredictor.predict(r, vx, vy, vz, dt, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -417,8 +404,7 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        result = PositionPredictor.predict(r, v, dt, jacobianR, jacobianV,
-                jacobianA);
+        result = PositionPredictor.predict(r, v, dt, jacobianR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -431,26 +417,22 @@ public class PositionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = PositionPredictor.predict(r, new double[1], dt,
-                    jacobianR, jacobianV, jacobianA);
+            result = PositionPredictor.predict(r, new double[1], dt, jacobianR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = PositionPredictor.predict(r, v, dt, new Matrix(1, 1),
-                    jacobianV, jacobianA);
+            result = PositionPredictor.predict(r, v, dt, new Matrix(1, 1), jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = PositionPredictor.predict(r, v, dt, jacobianR,
-                    new Matrix(1, 1), jacobianA);
+            result = PositionPredictor.predict(r, v, dt, jacobianR, new Matrix(1, 1), jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = PositionPredictor.predict(r, v, dt, jacobianR,
-                    jacobianV, new Matrix(1, 1));
+            result = PositionPredictor.predict(r, v, dt, jacobianR, jacobianV, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -477,15 +459,13 @@ public class PositionPredictorTest {
         jacobianR = new Matrix(3, 3);
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
-        result = PositionPredictor.predict(r, v, a, dt, jacobianR,
-                jacobianV, jacobianA);
+        result = PositionPredictor.predict(r, v, a, dt, jacobianR, jacobianV, jacobianA);
 
         // check position variation
         double[] diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final InhomogeneousPoint3D r2 = new InhomogeneousPoint3D(
-                r.getInhomX() + diff[0], r.getInhomY() + diff[1],
-                r.getInhomZ() + diff[2]);
+                r.getInhomX() + diff[0], r.getInhomY() + diff[1], r.getInhomZ() + diff[2]);
         result2 = PositionPredictor.predict(r2, v, a, dt);
 
         double[] diffResult = new double[]{
@@ -493,8 +473,7 @@ public class PositionPredictorTest {
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        double[] diffResult2 = jacobianR.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianR.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check velocity variation
@@ -508,8 +487,7 @@ public class PositionPredictorTest {
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        diffResult2 = jacobianV.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        diffResult2 = jacobianV.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check acceleration variation
@@ -523,8 +501,7 @@ public class PositionPredictorTest {
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        diffResult2 = jacobianA.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        diffResult2 = jacobianA.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
@@ -563,8 +540,7 @@ public class PositionPredictorTest {
         Matrix jacobianV = new Matrix(3, 3);
         Matrix jacobianA = new Matrix(3, 3);
         PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz,
-                vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianDR,
-                jacobianV, jacobianA);
+                vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianDR, jacobianV, jacobianA);
 
         // check correctness
         InhomogeneousPoint3D result2 = new InhomogeneousPoint3D(
@@ -643,78 +619,67 @@ public class PositionPredictorTest {
         // Force IllegalArgumentException
         try {
             PositionPredictor.predictWithPositionAdjustment(r,
-                    new double[1], v, a, dt, result, jacobianR, jacobianDR,
-                    jacobianV, jacobianA);
+                    new double[1], v, a, dt, result, jacobianR, jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             PositionPredictor.predictWithPositionAdjustment(r, dr,
-                    new double[1], a, dt, result, jacobianR, jacobianDR,
-                    jacobianV, jacobianA);
+                    new double[1], a, dt, result, jacobianR, jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             PositionPredictor.predictWithPositionAdjustment(r, dr, v,
-                    new double[1], dt, result, jacobianR, jacobianDR, jacobianV,
-                    jacobianA);
+                    new double[1], dt, result, jacobianR, jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             PositionPredictor.predictWithPositionAdjustment(r, dr, v, a,
-                    dt, result, new Matrix(1, 1), jacobianDR, jacobianV,
-                    jacobianA);
+                    dt, result, new Matrix(1, 1), jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             PositionPredictor.predictWithPositionAdjustment(r, dr, v, a,
-                    dt, result, jacobianR, new Matrix(1, 1), jacobianV,
-                    jacobianA);
+                    dt, result, jacobianR, new Matrix(1, 1), jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             PositionPredictor.predictWithPositionAdjustment(r, dr, v, a,
-                    dt, result, jacobianR, jacobianDR, new Matrix(1, 1),
-                    jacobianA);
+                    dt, result, jacobianR, jacobianDR, new Matrix(1, 1), jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             PositionPredictor.predictWithPositionAdjustment(r, dr, v, a,
-                    dt, result, jacobianR, jacobianDR, jacobianV,
-                    new Matrix(1, 1));
+                    dt, result, jacobianR, jacobianDR, jacobianV, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
 
         // test with arrays and no jacobians
         result = new InhomogeneousPoint3D();
-        PositionPredictor.predictWithPositionAdjustment(r, dr, v, a, dt,
-                result);
+        PositionPredictor.predictWithPositionAdjustment(r, dr, v, a, dt, result);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         try {
-            PositionPredictor.predictWithPositionAdjustment(r,
-                    new double[1], v, a, dt, result);
+            PositionPredictor.predictWithPositionAdjustment(r, new double[1], v, a, dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            PositionPredictor.predictWithPositionAdjustment(r, dr,
-                    new double[1], a, dt, result);
+            PositionPredictor.predictWithPositionAdjustment(r, dr, new double[1], a, dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            PositionPredictor.predictWithPositionAdjustment(r, dr, v,
-                    new double[1], dt, result);
+            PositionPredictor.predictWithPositionAdjustment(r, dr, v, new double[1], dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -725,8 +690,7 @@ public class PositionPredictorTest {
         jacobianV = new Matrix(3, 3);
         jacobianA = new Matrix(3, 3);
         result = PositionPredictor.predictWithPositionAdjustment(r,
-                drx, dry, drz, vx, vy, vz, ax, ay, az, dt,
-                jacobianR, jacobianDR, jacobianV, jacobianA);
+                drx, dry, drz, vx, vy, vz, ax, ay, az, dt, jacobianR, jacobianDR, jacobianV, jacobianA);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -771,8 +735,7 @@ public class PositionPredictorTest {
 
 
         // test with new instance, with all parameters and no jacobians
-        result = PositionPredictor.predictWithPositionAdjustment(r,
-                drx, dry, drz, vx, vy, vz, ax, ay, az, dt);
+        result = PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, dt);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -799,50 +762,43 @@ public class PositionPredictorTest {
         result = null;
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    new double[1], v, a, dt, jacobianR, jacobianDR, jacobianV,
-                    jacobianA);
+                    new double[1], v, a, dt, jacobianR, jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, new double[1], a, dt, jacobianR, jacobianDR, jacobianV,
-                    jacobianA);
+                    dr, new double[1], a, dt, jacobianR, jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, v, new double[1], dt, jacobianR, jacobianDR, jacobianV,
-                    jacobianA);
+                    dr, v, new double[1], dt, jacobianR, jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, v, a, dt, new Matrix(1, 1), jacobianDR, jacobianV,
-                    jacobianA);
+                    dr, v, a, dt, new Matrix(1, 1), jacobianDR, jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, v, a, dt, jacobianR, new Matrix(1, 1), jacobianV,
-                    jacobianA);
+                    dr, v, a, dt, jacobianR, new Matrix(1, 1), jacobianV, jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, v, a, dt, jacobianR, jacobianDR, new Matrix(1, 1),
-                    jacobianA);
+                    dr, v, a, dt, jacobianR, jacobianDR, new Matrix(1, 1), jacobianA);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, v, a, dt, jacobianR, jacobianDR, jacobianV,
-                    new Matrix(1, 1));
+                    dr, v, a, dt, jacobianR, jacobianDR, jacobianV, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -850,8 +806,7 @@ public class PositionPredictorTest {
 
 
         // test with new instance, with arrays and no jacobians
-        result = PositionPredictor.predictWithPositionAdjustment(r, dr, v,
-                a, dt);
+        result = PositionPredictor.predictWithPositionAdjustment(r, dr, v, a, dt);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -859,20 +814,17 @@ public class PositionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = PositionPredictor.predictWithPositionAdjustment(r,
-                    new double[1], v, a, dt);
+            result = PositionPredictor.predictWithPositionAdjustment(r, new double[1], v, a, dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, new double[1], a, dt);
+            result = PositionPredictor.predictWithPositionAdjustment(r, dr, new double[1], a, dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = PositionPredictor.predictWithPositionAdjustment(r,
-                    dr, v, new double[1], dt);
+            result = PositionPredictor.predictWithPositionAdjustment(r, dr, v, new double[1], dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -890,66 +842,57 @@ public class PositionPredictorTest {
         double[] diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final InhomogeneousPoint3D r2 = new InhomogeneousPoint3D(
-                r.getInhomX() + diff[0], r.getInhomY() + diff[1],
-                r.getInhomZ() + diff[2]);
-        result2 = PositionPredictor.predictWithPositionAdjustment(r2, dr,
-                v, a, dt);
+                r.getInhomX() + diff[0], r.getInhomY() + diff[1], r.getInhomZ() + diff[2]);
+        result2 = PositionPredictor.predictWithPositionAdjustment(r2, dr, v, a, dt);
 
         double[] diffResult = new double[]{
                 result2.getInhomX() - result.getInhomX(),
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        double[] diffResult2 = jacobianR.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianR.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check position adjustment variation
         diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] dr2 = ArrayUtils.sumAndReturnNew(dr, diff);
-        result2 = PositionPredictor.predictWithPositionAdjustment(r, dr2,
-                v, a, dt);
+        result2 = PositionPredictor.predictWithPositionAdjustment(r, dr2, v, a, dt);
 
         diffResult = new double[]{
                 result2.getInhomX() - result.getInhomX(),
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        diffResult2 = jacobianDR.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        diffResult2 = jacobianDR.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check velocity variation
         diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] v2 = ArrayUtils.sumAndReturnNew(v, diff);
-        result2 = PositionPredictor.predictWithPositionAdjustment(r, dr,
-                v2, a, dt);
+        result2 = PositionPredictor.predictWithPositionAdjustment(r, dr, v2, a, dt);
 
         diffResult = new double[]{
                 result2.getInhomX() - result.getInhomX(),
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        diffResult2 = jacobianV.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        diffResult2 = jacobianV.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check acceleration variation
         diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] a2 = ArrayUtils.sumAndReturnNew(a, diff);
-        result2 = PositionPredictor.predictWithPositionAdjustment(r, dr,
-                v, a2, dt);
+        result2 = PositionPredictor.predictWithPositionAdjustment(r, dr, v, a2, dt);
 
         diffResult = new double[]{
                 result2.getInhomX() - result.getInhomX(),
                 result2.getInhomY() - result.getInhomY(),
                 result2.getInhomZ() - result.getInhomZ()
         };
-        diffResult2 = jacobianA.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        diffResult2 = jacobianA.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 }

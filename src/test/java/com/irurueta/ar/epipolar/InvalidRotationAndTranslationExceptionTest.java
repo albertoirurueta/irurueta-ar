@@ -23,8 +23,7 @@ public class InvalidRotationAndTranslationExceptionTest {
 
     @Test
     public void testConstructor() {
-        InvalidRotationAndTranslationException ex =
-                new InvalidRotationAndTranslationException();
+        InvalidRotationAndTranslationException ex = new InvalidRotationAndTranslationException();
         assertNotNull(ex);
 
         ex = new InvalidRotationAndTranslationException(

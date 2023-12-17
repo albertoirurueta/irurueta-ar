@@ -24,8 +24,8 @@ public interface PairedViewsSparseReconstructorListener extends
         BasePairedViewsSparseReconstructorListener<PairedViewsSparseReconstructor> {
 
     /**
-     * Requests baseline for provided pair of views so that actual scale can be estimated
-     * to obtain cameras an reconstructed points in an euclidean space (up to certain rotation and
+     * Requests baseline for the provided pair of views so that actual scale can be estimated
+     * to obtain cameras and reconstructed points in an Euclidean space (up to certain rotation and
      * translation).
      *
      * @param reconstructor re-constructor raising this event.

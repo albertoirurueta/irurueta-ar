@@ -203,7 +203,7 @@ public class CameraPoseEstimatorTest {
             if (distance > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(distance, 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, distance, LARGE_ABSOLUTE_ERROR);
 
             // project 3D points using estimated camera and check projection
             // error
@@ -220,8 +220,7 @@ public class CameraPoseEstimatorTest {
                     failed = true;
                     break;
                 }
-                assertEquals(projectionDistance, 0.0,
-                        4 * VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(0.0, projectionDistance, 4 * VERY_LARGE_ABSOLUTE_ERROR);
             }
 
             if (failed) {

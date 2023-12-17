@@ -37,7 +37,9 @@ import java.util.List;
  * - Bottom-right alignment pattern.
  * <p>
  * The contents of this class are based on:
- * http://www.thonky.com/qr-code-tutorial/module-placement-matrix/
+ * <a href="http://www.thonky.com/qr-code-tutorial/module-placement-matrix/">
+ *     http://www.thonky.com/qr-code-tutorial/module-placement-matrix/
+ * </a>
  */
 public class QRPattern2D extends Pattern2D implements Serializable {
 

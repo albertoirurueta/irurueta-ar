@@ -55,10 +55,9 @@ public class EstimatedCameraTest {
 
         // check default values
         assertNull(ec.getId());
-        assertEquals(ec.getViewId(), 0);
+        assertEquals(0, ec.getViewId());
         assertNull(ec.getCamera());
-        assertEquals(ec.getQualityScore(),
-                EstimatedCamera.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(EstimatedCamera.DEFAULT_QUALITY_SCORE, ec.getQualityScore(), 0.0);
         assertNull(ec.getCovariance());
     }
 
@@ -73,7 +72,7 @@ public class EstimatedCameraTest {
         ec.setId("id");
 
         // check correctness
-        assertEquals(ec.getId(), "id");
+        assertEquals("id", ec.getId());
     }
 
     @Test
@@ -81,13 +80,13 @@ public class EstimatedCameraTest {
         final EstimatedCamera ec = new EstimatedCamera();
 
         // check default value
-        assertEquals(ec.getViewId(), 0);
+        assertEquals(0, ec.getViewId());
 
         // set new value
         ec.setViewId(1);
 
         // check
-        assertEquals(ec.getViewId(), 1);
+        assertEquals(1, ec.getViewId());
     }
 
     @Test
@@ -102,7 +101,7 @@ public class EstimatedCameraTest {
         ec.setCamera(camera);
 
         // check correctness
-        assertSame(ec.getCamera(), camera);
+        assertSame(camera, ec.getCamera());
     }
 
     @Test
@@ -110,14 +109,13 @@ public class EstimatedCameraTest {
         final EstimatedCamera ec = new EstimatedCamera();
 
         // check default value
-        assertEquals(ec.getQualityScore(),
-                EstimatedCamera.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(EstimatedCamera.DEFAULT_QUALITY_SCORE, ec.getQualityScore(), 0.0);
 
         // set new value
         ec.setQualityScore(5.0);
 
         // check correctness
-        assertEquals(ec.getQualityScore(), 5.0, 0.0);
+        assertEquals(5.0, ec.getQualityScore(), 0.0);
     }
 
     @Test
@@ -132,11 +130,12 @@ public class EstimatedCameraTest {
         ec.setCovariance(cov);
 
         // check correctness
-        assertSame(ec.getCovariance(), cov);
+        assertSame(cov, ec.getCovariance());
     }
 
     @Test
-    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+    public void testSerializeDeserialize() throws WrongSizeException, IOException,
+            ClassNotFoundException {
         final EstimatedCamera ec1 = new EstimatedCamera();
 
         // set new values
@@ -151,10 +150,10 @@ public class EstimatedCameraTest {
         final double gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
         final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double horizontalPrincipalPoint = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -166,16 +165,14 @@ public class EstimatedCameraTest {
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-        final Rotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler,
-                gammaEuler);
+        final Rotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
         final PinholeCameraIntrinsicParameters intrinsic =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength,
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                center);
+        final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, center);
 
         ec1.setCamera(camera);
         ec1.setQualityScore(0.5);
@@ -197,8 +194,7 @@ public class EstimatedCameraTest {
         // check
         assertEquals(ec1.getId(), ec2.getId());
         assertEquals(ec1.getViewId(), ec2.getViewId());
-        assertEquals(ec1.getCamera().getInternalMatrix(),
-                ec2.getCamera().getInternalMatrix());
+        assertEquals(ec1.getCamera().getInternalMatrix(), ec2.getCamera().getInternalMatrix());
         assertEquals(ec1.getQualityScore(), ec2.getQualityScore(), 0.0);
         assertEquals(ec1.getCovariance(), ec2.getCovariance());
     }

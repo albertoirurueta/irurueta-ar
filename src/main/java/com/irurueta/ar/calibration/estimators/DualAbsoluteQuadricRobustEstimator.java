@@ -37,12 +37,11 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
     /**
      * Default robust estimator method when none is provided.
      */
-    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.LMedS;
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.LMEDS;
 
     /**
      * Default amount of progress variation before notifying a change in
-     * estimation progress. By default this is set to 5%.
+     * estimation progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -89,7 +88,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
     protected List<PinholeCamera> mCameras;
 
     /**
-     * Internal non robust estimator of DAQ.
+     * Internal non-robust estimator of DAQ.
      */
     protected final LMSEDualAbsoluteQuadricEstimator mDAQEstimator;
 
@@ -185,7 +184,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * or not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated.
@@ -199,7 +198,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @param zeroSkewness true if camera skewness is assumed to be zero,
      *                     otherwise camera skewness is estimated.
@@ -252,7 +251,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -268,7 +267,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -293,7 +292,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -316,7 +315,7 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -712,9 +711,9 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
                 return new RANSACDualAbsoluteQuadricRobustEstimator();
             case PROSAC:
                 return new PROSACDualAbsoluteQuadricRobustEstimator();
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSDualAbsoluteQuadricRobustEstimator();
-            case LMedS:
+            case LMEDS:
             default:
                 return new LMedSDualAbsoluteQuadricRobustEstimator();
 
@@ -744,10 +743,10 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
             case PROSAC:
                 return new PROSACDualAbsoluteQuadricRobustEstimator(cameras,
                         qualityScores);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSDualAbsoluteQuadricRobustEstimator(cameras,
                         qualityScores);
-            case LMedS:
+            case LMEDS:
             default:
                 return new LMedSDualAbsoluteQuadricRobustEstimator(cameras);
         }
@@ -773,9 +772,9 @@ public abstract class DualAbsoluteQuadricRobustEstimator {
                 return new RANSACDualAbsoluteQuadricRobustEstimator(cameras);
             case PROSAC:
                 return new PROSACDualAbsoluteQuadricRobustEstimator(cameras);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSDualAbsoluteQuadricRobustEstimator(cameras);
-            case LMedS:
+            case LMEDS:
             default:
                 return new LMedSDualAbsoluteQuadricRobustEstimator(cameras);
         }

@@ -56,8 +56,7 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
     private int compareStart, compareEnd, compareProgressChange;
 
     @Test
-    public void testConstructor() throws AlgebraException,
-            InvalidFundamentalMatrixException {
+    public void testConstructor() throws AlgebraException, InvalidFundamentalMatrixException {
         // test constructor without arguments
         EpipolarDistanceFundamentalMatrixComparator comparator =
                 new EpipolarDistanceFundamentalMatrixComparator();
@@ -68,37 +67,30 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR,
+                comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         // test constructor with fundamental matrices
         final FundamentalMatrix emptyFundamentalMatrix1 = new FundamentalMatrix();
@@ -111,175 +103,136 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 emptyFundamentalMatrix1, emptyFundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 fundamentalMatrix1, emptyFundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR,
+                comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 emptyFundamentalMatrix1, fundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         assertFalse(comparator.isReady()); //fundamental matrices are not defined
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 fundamentalMatrix1, fundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         assertTrue(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         // test constructor with listener
         comparator = new EpipolarDistanceFundamentalMatrixComparator(this);
@@ -287,216 +240,168 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
         // check default values
         assertNull(comparator.getGroundTruthFundamentalMatrix());
         assertNull(comparator.getOtherFundamentalMatrix());
-        assertSame(comparator.getListener(), this);
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         // test constructor with fundamental matrices and listener
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 emptyFundamentalMatrix1, emptyFundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 fundamentalMatrix1, emptyFundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 emptyFundamentalMatrix1, fundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertSame(comparator.getListener(), this);
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         comparator = new EpipolarDistanceFundamentalMatrixComparator(
                 fundamentalMatrix1, fundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         assertTrue(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR);
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
-                0.0);
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR, comparator.getType());
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -505,17 +410,17 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default values
-        assertEquals(comparator.getMinX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X, 0.0);
-        assertEquals(comparator.getMaxX(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X, 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_X,
+                comparator.getMinX(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_X,
+                comparator.getMaxX(), 0.0);
 
         // set new values
         comparator.setMinMaxX(5.0, 10.0);
 
         // check correctness
-        assertEquals(comparator.getMinX(), 5.0, 0.0);
-        assertEquals(comparator.getMaxX(), 10.0, 0.0);
+        assertEquals(5.0, comparator.getMinX(), 0.0);
+        assertEquals(10.0, comparator.getMaxX(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -531,17 +436,17 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default values
-        assertEquals(comparator.getMinY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y, 0.0);
-        assertEquals(comparator.getMaxY(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y, 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_Y,
+                comparator.getMinY(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_Y,
+                comparator.getMaxY(), 0.0);
 
         // set new values
         comparator.setMinMaxY(5.0, 10.0);
 
         // check correctness
-        assertEquals(comparator.getMinY(), 5.0, 0.0);
-        assertEquals(comparator.getMaxY(), 10.0, 0.0);
+        assertEquals(5.0, comparator.getMinY(), 0.0);
+        assertEquals(10.0, comparator.getMaxY(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -557,14 +462,14 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default values
-        assertEquals(comparator.getNSamples(),
-                EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_N_SAMPLES,
+                comparator.getNSamples());
 
         // set new value
         comparator.setNSamples(1);
 
         // check correctness
-        assertEquals(comparator.getNSamples(), 1);
+        assertEquals(1, comparator.getNSamples());
 
         // Force IllegalArgumentException
         try {
@@ -581,19 +486,17 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default values
-        assertEquals(comparator.getMinHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxHorizontalDisparityFactor(), 0.0);
 
         // set new value
         comparator.setMinMaxHorizontalDisparityFactor(-0.2, 0.2);
 
         // check correctness
-        assertEquals(comparator.getMinHorizontalDisparityFactor(), -0.2, 0.0);
-        assertEquals(comparator.getMaxHorizontalDisparityFactor(), 0.2, 0.0);
+        assertEquals(-0.2, comparator.getMinHorizontalDisparityFactor(), 0.0);
+        assertEquals(0.2, comparator.getMaxHorizontalDisparityFactor(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -610,19 +513,17 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default values
-        assertEquals(comparator.getMinVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MIN_DISPARITY_FACTOR, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_DISPARITY_FACTOR, 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MIN_DISPARITY_FACTOR,
+                comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_DISPARITY_FACTOR,
+                comparator.getMaxVerticalDisparityFactor(), 0.0);
 
         // set new value
         comparator.setMinMaxVerticalDisparityFactor(-0.2, 0.2);
 
         // check correctness
-        assertEquals(comparator.getMinVerticalDisparityFactor(), -0.2, 0.0);
-        assertEquals(comparator.getMaxVerticalDisparityFactor(), 0.2, 0.0);
+        assertEquals(-0.2, comparator.getMinVerticalDisparityFactor(), 0.0);
+        assertEquals(0.2, comparator.getMaxVerticalDisparityFactor(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -638,15 +539,14 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default value
-        assertEquals(comparator.getMaxIterationsFactor(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_MAX_ITERATIONS_FACTOR, 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_MAX_ITERATIONS_FACTOR,
+                comparator.getMaxIterationsFactor(), 0.0);
 
         // set new value
         comparator.setMaxIterationsFactor(1.0);
 
         // check correctness
-        assertEquals(comparator.getMaxIterationsFactor(), 1.0, 0.0);
+        assertEquals(1.0, comparator.getMaxIterationsFactor(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -662,15 +562,14 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 new EpipolarDistanceFundamentalMatrixComparator();
 
         // check default value
-        assertEquals(comparator.getProgressDelta(),
-                EpipolarDistanceFundamentalMatrixComparator.
-                        DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(EpipolarDistanceFundamentalMatrixComparator.DEFAULT_PROGRESS_DELTA,
+                comparator.getProgressDelta(), 0.0);
 
         // set new value
         comparator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(comparator.getProgressDelta(), 0.5, 0.0);
+        assertEquals(0.5, comparator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -686,8 +585,7 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
     }
 
     @Test
-    public void testCompare() throws InvalidPairOfCamerasException,
-            NotReadyException, LockedException,
+    public void testCompare() throws InvalidPairOfCamerasException, NotReadyException, LockedException,
             FundamentalMatrixComparatorException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double alphaEuler1 = 0.0;
@@ -730,10 +628,8 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -744,15 +640,11 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                cameraCenter1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                cameraCenter2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
 
-        final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1,
-                camera2);
-        final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera1,
-                camera2);
+        final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+        final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera1, camera2);
 
         final EpipolarDistanceFundamentalMatrixComparator comparator =
                 new EpipolarDistanceFundamentalMatrixComparator(
@@ -761,17 +653,17 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
         // check status
         assertFalse(comparator.isLocked());
         assertTrue(comparator.isReady());
-        assertEquals(compareStart, 0);
-        assertEquals(compareEnd, 0);
+        assertEquals(0, compareStart);
+        assertEquals(0, compareEnd);
 
         // compare
-        assertEquals(comparator.compare(), 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, comparator.compare(), ABSOLUTE_ERROR);
 
         // check correctness
         assertTrue(comparator.isReady());
         assertFalse(comparator.isLocked());
-        assertEquals(compareStart, 1);
-        assertEquals(compareEnd, 1);
+        assertEquals(1, compareStart);
+        assertEquals(1, compareEnd);
         assertTrue(compareProgressChange > 0);
         reset();
     }
@@ -872,8 +764,7 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
                     MAX_RANDOM_VALUE);
 
             // ensure that internal matrix has rank 2
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(internalMatrix);
             decomposer.decompose();
 
             // if rank is less than 2 we need to
@@ -888,8 +779,7 @@ public class EpipolarDistanceFundamentalMatrixComparatorTest implements
             // set last element to 0 to force rank 2
             w.setElementAt(2, 2, 0.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(transV));
 
             fundamentalMatrix = new FundamentalMatrix(internalMatrix);
         } while (rank < 2);

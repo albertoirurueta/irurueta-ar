@@ -130,8 +130,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints);
-        if (leftPoints.size() <
-                EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
+        if (leftPoints.size() < EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
             throw new IllegalArgumentException();
         }
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
@@ -154,8 +153,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             final List<Point2D> leftPoints, final List<Point2D> rightPoints,
             final FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
-        if (leftPoints.size() <
-                EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
+        if (leftPoints.size() < EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
             throw new IllegalArgumentException();
         }
         mStopThreshold = DEFAULT_STOP_THRESHOLD;
@@ -208,7 +206,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param leftPoints                2D points on left view.
      * @param rightPoints               2D points on right view.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
@@ -230,7 +229,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param listener                  listener to be notified of events such as when estimation
      *                                  starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
@@ -267,10 +267,9 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided list of points do not have
      *                                  the same length or their length is less than 8 points.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints,
-                                                   final List<Point2D> rightPoints) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,
-                rightPoints);
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, rightPoints);
     }
 
     /**
@@ -283,9 +282,9 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided list of points do not have
      *                                  the same length or their length is less than 8 points.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints,
-                                                   final List<Point2D> rightPoints,
-                                                   final FundamentalMatrixRobustEstimatorListener listener) {
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,
                 rightPoints, listener);
     }
@@ -299,8 +298,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  smaller than required size (i.e. 7 matched pair of points).
      */
     public PROMedSFundamentalMatrixRobustEstimator(final double[] qualityScores) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
-                qualityScores);
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores);
     }
 
     /**
@@ -313,8 +311,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      *                                  smaller than required size (i.e. 7 matched pair of points).
      */
-    public PROMedSFundamentalMatrixRobustEstimator(final double[] qualityScores,
-                                                   final FundamentalMatrixRobustEstimatorListener listener) {
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final double[] qualityScores, final FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,
                 listener);
     }
@@ -327,13 +325,13 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param leftPoints    2D points on left view.
      * @param rightPoints   2D points on right view.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(final double[] qualityScores,
-                                                   final List<Point2D> leftPoints,
-                                                   final List<Point2D> rightPoints) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,
-                leftPoints, rightPoints);
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final double[] qualityScores, final List<Point2D> leftPoints,
+            final List<Point2D> rightPoints) {
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints, rightPoints);
     }
 
     /**
@@ -346,14 +344,14 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(final double[] qualityScores,
-                                                   final List<Point2D> leftPoints,
-                                                   final List<Point2D> rightPoints,
-                                                   final FundamentalMatrixRobustEstimatorListener listener) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,
-                leftPoints, rightPoints, listener);
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final double[] qualityScores, final List<Point2D> leftPoints,
+            final List<Point2D> rightPoints, final FundamentalMatrixRobustEstimatorListener listener) {
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints,
+                rightPoints, listener);
     }
 
     /**
@@ -363,8 +361,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param rightPoints matched 2D points on right view.
      * @throws LockedException          if this fundamental matrix estimator is locked.
      * @throws IllegalArgumentException if provided matched points on left and
-     *                                  right views do not have the same length or if their length is less than 8
-     *                                  points.
+     *                                  right views do not have the same length or if their length is
+     *                                  less than 8 points.
      */
     @Override
     public void setPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints)
@@ -372,8 +370,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
         if (isLocked()) {
             throw new LockedException();
         }
-        if (leftPoints.size() <
-                EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
+        if (leftPoints.size() < EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
             throw new IllegalArgumentException();
         }
         super.setPoints(leftPoints, rightPoints);
@@ -532,8 +529,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<FundamentalMatrix> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
 
                                 mSubsetLeftPoints.clear();
                                 mSubsetRightPoints.clear();
@@ -542,13 +539,12 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
                                     mSubsetRightPoints.add(mRightPoints.get(samplesIndex));
                                 }
 
-                                nonRobustEstimate(solutions, mSubsetLeftPoints,
-                                        mSubsetRightPoints);
+                                nonRobustEstimate(solutions, mSubsetLeftPoints, mSubsetRightPoints);
                             }
 
                             @Override
-                            public double computeResidual(final FundamentalMatrix currentEstimation,
-                                                          final int i) {
+                            public double computeResidual(
+                                    final FundamentalMatrix currentEstimation, final int i) {
                                 final Point2D leftPoint = mLeftPoints.get(i);
                                 final Point2D rightPoint = mRightPoints.get(i);
                                 return residual(currentEstimation, leftPoint, rightPoint);
@@ -630,7 +626,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROMedS;
+        return RobustEstimatorMethod.PROMEDS;
     }
 
     /**
@@ -638,7 +634,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      *

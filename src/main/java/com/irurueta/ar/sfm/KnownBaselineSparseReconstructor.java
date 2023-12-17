@@ -59,11 +59,11 @@ public class KnownBaselineSparseReconstructor extends
     }
 
     /**
-     * Called when processing one frame is successfully finished. This can be done to estimate scale on those
-     * implementations where scale can be measured or is already known.
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
      *
      * @param isInitialPairOfViews true if initial pair of views is being processed, false otherwise.
-     * @return true if post processing succeeded, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
@@ -103,31 +103,34 @@ public class KnownBaselineSparseReconstructor extends
             mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
             mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
             mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());
-            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());
+            mPreviousEuclideanEstimatedCamera.setQualityScore(
+                    mPreviousMetricEstimatedCamera.getQualityScore());
             if (mPreviousMetricEstimatedCamera.getCovariance() != null) {
                 mPreviousEuclideanEstimatedCamera.setCovariance(
-                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
+                                sqrScale));
             }
 
             mCurrentEuclideanEstimatedCamera = new EstimatedCamera();
             mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);
             mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());
-            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());
+            mCurrentEuclideanEstimatedCamera.setQualityScore(
+                    mCurrentMetricEstimatedCamera.getQualityScore());
             if (mCurrentMetricEstimatedCamera.getCovariance() != null) {
                 mCurrentEuclideanEstimatedCamera.setCovariance(
-                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
+                                sqrScale));
             }
 
             // update scale of reconstructed points
             final int numPoints = mActiveMetricReconstructedPoints.size();
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             for (ReconstructedPoint3D activeMetricReconstructedPoint : mActiveMetricReconstructedPoints) {
-                metricReconstructedPoints3D.add(activeMetricReconstructedPoint.
-                        getPoint());
+                metricReconstructedPoints3D.add(activeMetricReconstructedPoint.getPoint());
             }
 
-            final List<Point3D> euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(
-                    metricReconstructedPoints3D);
+            final List<Point3D> euclideanReconstructedPoints3D =
+                    scaleTransformation.transformPointsAndReturnNew(metricReconstructedPoints3D);
 
             // set scaled points into result
             mActiveEuclideanReconstructedPoints = new ArrayList<>();
@@ -142,7 +145,8 @@ public class KnownBaselineSparseReconstructor extends
                 euclideanPoint.setInlier(metricPoint.isInlier());
                 euclideanPoint.setQualityScore(metricPoint.getQualityScore());
                 if (metricPoint.getCovariance() != null) {
-                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(
+                            sqrScale));
                 }
                 euclideanPoint.setColorData(metricPoint.getColorData());
 

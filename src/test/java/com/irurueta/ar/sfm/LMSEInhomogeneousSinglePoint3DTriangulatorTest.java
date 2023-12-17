@@ -32,8 +32,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
-        SinglePoint3DTriangulatorListener {
+public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoint3DTriangulatorListener {
 
     private static final int MIN_VIEWS = 2;
     private static final int MAX_VIEWS = 20;
@@ -70,11 +69,10 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
                 new LMSEInhomogeneousSinglePoint3DTriangulator();
 
         // check correctness
-        assertEquals(triangulator.isLMSESolutionAllowed(),
-                LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                triangulator.isLMSESolutionAllowed());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
@@ -90,17 +88,15 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points,
-                cameras);
+        triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points, cameras);
 
         // check correctness
-        assertEquals(triangulator.isLMSESolutionAllowed(),
-                LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                triangulator.isLMSESolutionAllowed());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
@@ -111,20 +107,17 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
 
         triangulator = null;
         try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, cameras);
+            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(
-                    points, emptyCameras);
+            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras);
+            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -134,50 +127,43 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
         triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(this);
 
         // check correctness
-        assertEquals(triangulator.isLMSESolutionAllowed(),
-                LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                triangulator.isLMSESolutionAllowed());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
 
         // test constructor with points, cameras and listener
-        triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points,
-                cameras, this);
+        triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points, cameras, this);
 
         // check correctness
-        assertEquals(triangulator.isLMSESolutionAllowed(),
-                LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                triangulator.isLMSESolutionAllowed());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
 
         // Force IllegalArgumentException
         triangulator = null;
         try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, cameras);
+            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(
-                    points, emptyCameras);
+            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras);
+            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -190,19 +176,16 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
                 new LMSEInhomogeneousSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.isLMSESolutionAllowed(),
-                LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                triangulator.isLMSESolutionAllowed());
 
         // set new value
         triangulator.setLMSESolutionAllowed(
-                !LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
+                !LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION);
 
         // check correctness
-        assertEquals(triangulator.isLMSESolutionAllowed(),
-                !LMSEInhomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(!LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                triangulator.isLMSESolutionAllowed());
     }
 
     @Test
@@ -226,8 +209,8 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
         triangulator.setPointsAndCameras(points, cameras);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
@@ -261,7 +244,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
         triangulator.setListener(this);
 
         // check correctness
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
     }
 
     @Test
@@ -289,8 +272,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
                 final double verticalFocalLength = randomizer.nextDouble(
                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                        MAX_SKEWNESS);
+                final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
                 final double horizontalPrincipalPoint = randomizer.nextDouble(
                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
                 final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -311,21 +293,17 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
                 final PinholeCameraIntrinsicParameters intrinsic =
-                        new PinholeCameraIntrinsicParameters(
-                                horizontalFocalLength, verticalFocalLength,
-                                horizontalPrincipalPoint, verticalPrincipalPoint,
-                                skewness);
+                        new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 final Point3D cameraCenter = new InhomogeneousPoint3D(
                         previousCameraCenter.getInhomX() + cameraSeparationX,
                         previousCameraCenter.getInhomY() + cameraSeparationY,
                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
 
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
 
                 // project 3D point using camera
                 final Point2D point2D = camera.project(point3D);
@@ -336,28 +314,27 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements
 
             // create triangulator
             final LMSEInhomogeneousSinglePoint3DTriangulator triangulator =
-                    new LMSEInhomogeneousSinglePoint3DTriangulator(points2D,
-                            cameras, this);
+                    new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, cameras, this);
 
             // check default values
             assertTrue(triangulator.isReady());
             assertFalse(triangulator.isLocked());
-            assertEquals(triangulateStart, 0);
-            assertEquals(triangulateEnd, 0);
+            assertEquals(0, triangulateStart);
+            assertEquals(0, triangulateEnd);
 
             final Point3D triangulated = triangulator.triangulate();
 
             // check correctness
             assertTrue(triangulator.isReady());
             assertFalse(triangulator.isLocked());
-            assertEquals(triangulateStart, 1);
-            assertEquals(triangulateEnd, 1);
+            assertEquals(1, triangulateStart);
+            assertEquals(1, triangulateEnd);
             reset();
 
             if (point3D.distanceTo(triangulated) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(point3D.distanceTo(triangulated), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, point3D.distanceTo(triangulated), ABSOLUTE_ERROR);
 
             numValid++;
             break;

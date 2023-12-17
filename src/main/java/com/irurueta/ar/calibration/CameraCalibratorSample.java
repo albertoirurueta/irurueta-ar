@@ -117,8 +117,8 @@ public class CameraCalibratorSample {
      * @param sampledMarkers              sampled markers of the pattern taken from a
      *                                    single picture using the camera.
      * @param sampledMarkersQualityScores quality scores associated to
-     *                                    each provided point for each sampled marker. The higher the value the
-     *                                    better the quality assigned to that point.
+     *                                    each provided point for each sampled marker. The higher the value
+     *                                    the better the quality assigned to that point.
      * @throws IllegalArgumentException if size of sampled markers or
      *                                  quality scores is smaller than the required minimum (4) to estimate
      *                                  an homography, or if their sizes do not match.
@@ -156,14 +156,15 @@ public class CameraCalibratorSample {
      * @param sampledMarkers              sampled markers of the pattern taken from a
      *                                    single picture using the camera.
      * @param sampledMarkersQualityScores quality scores associated to
-     *                                    each provided point for each sampled marker. The higher the value the
-     *                                    better the quality assigned to that point.
+     *                                    each provided point for each sampled marker. The higher the value
+     *                                    the better the quality assigned to that point.
      * @throws IllegalArgumentException if size of sampled markers or
      *                                  quality scores is smaller than the required minimum (4) to estimate
      *                                  an homography, or if their sizes do not match.
      */
     public CameraCalibratorSample(final Pattern2D pattern,
-                                  final List<Point2D> sampledMarkers, double[] sampledMarkersQualityScores) {
+                                  final List<Point2D> sampledMarkers,
+                                  double[] sampledMarkersQualityScores) {
         if (sampledMarkers.size() != sampledMarkersQualityScores.length) {
             throw new IllegalArgumentException();
         }
@@ -258,7 +259,7 @@ public class CameraCalibratorSample {
     /**
      * Computes quality scores of sampled markers by taking into account
      * distance to radial distortion center.
-     * Typically the farther a sample is to the radial distortion, the more
+     * Typically, the farther a sample is to the radial distortion, the more
      * likely it is to be distorted, and hence, the less reliable will be.
      *
      * @param sampledMarkers         sampled markers of the pattern.
@@ -323,7 +324,7 @@ public class CameraCalibratorSample {
      * Sets sampled markers of the pattern but accounting for the distortion
      * effect introduced by the camera lens, so that coordinates are
      * undistorted and follow a pure pinhole camera model.
-     * This method is for internal purposes only and it is called while
+     * This method is for internal purposes only, and it is called while
      * the camera radial distortion parameters are being computed.
      *
      * @param undistortedMarkers sampled markers of the pattern accounting
@@ -347,7 +348,7 @@ public class CameraCalibratorSample {
     /**
      * Sets 2D homography estimated from the sampled pattern points
      * respect to the ideal ones using a single picture.
-     * This method is for internal purposes only and it is called while
+     * This method is for internal purposes only, and it is called while
      * the IAC is being estimated.
      *
      * @param homography homography to be set.
@@ -438,7 +439,7 @@ public class CameraCalibratorSample {
      * points. Undistorted sampled taking into account radial distortion
      * will be taken into account whenever possible.
      *
-     * @param estimator           a robust estimator for the homography. If will only
+     * @param estimator           a robust estimator for the homography. It will only
      *                            be used if more than 4 markers are provided.
      * @param idealPatternMarkers ideal marker coordinates of the pattern.
      *                            This contains measures expressed in meters so that camera can be
@@ -447,7 +448,7 @@ public class CameraCalibratorSample {
      * @throws LockedException           if robust estimator is locked because
      *                                   computations are already in progress.
      * @throws NotReadyException         if provided data to compute homography is
-     *                                   not enough or it is invalid.
+     *                                   not enough, or it is invalid.
      * @throws RobustEstimatorException  if robust estimation of homography
      *                                   failed. This typically happens when not enough inliers are found or
      *                                   configuration of points to estimate homography is degenerate.
@@ -471,7 +472,7 @@ public class CameraCalibratorSample {
         }
 
         if (markers.size() == MIN_REQUIRED_SAMPLED_MARKERS) {
-            // use non robust projective transformation estimation since it
+            // use non-robust projective transformation estimation since it
             // is faster and will produce the same result as a robust
             // estimator
             return new ProjectiveTransformation2D(
@@ -483,7 +484,7 @@ public class CameraCalibratorSample {
             // use robust projective transformation estimation
             estimator.setPoints(idealPatternMarkers, markers);
             if (estimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                    estimator.getMethod() == RobustEstimatorMethod.PROMedS) {
+                    estimator.getMethod() == RobustEstimatorMethod.PROMEDS) {
                 if (mSampledMarkersQualityScores == null) {
                     // attempt to estimate quality scores based on distance of
                     // samples to origin of coordinates (i.e. image center)

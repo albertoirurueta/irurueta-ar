@@ -79,7 +79,7 @@ public class CameraCalibratorSampleTest {
 
         // check correctness
         assertNull(sample.getPattern());
-        assertSame(sample.getSampledMarkers(), sampledMarkers);
+        assertSame(sampledMarkers, sample.getSampledMarkers());
         assertNull(sample.getSampledMarkersQualityScores());
         assertNull(sample.getUndistortedMarkers());
         assertNull(sample.getHomography());
@@ -103,8 +103,8 @@ public class CameraCalibratorSampleTest {
 
         // check correctness
         assertNull(sample.getPattern());
-        assertSame(sample.getSampledMarkers(), sampledMarkers);
-        assertSame(sample.getSampledMarkersQualityScores(), qualityScores);
+        assertSame(sampledMarkers, sample.getSampledMarkers());
+        assertSame(qualityScores, sample.getSampledMarkersQualityScores());
         assertNull(sample.getUndistortedMarkers());
         assertNull(sample.getHomography());
         assertNull(sample.getRotation());
@@ -115,8 +115,7 @@ public class CameraCalibratorSampleTest {
         final double[] shortQualityScores = new double[1];
         sample = null;
         try {
-            sample = new CameraCalibratorSample(sampledMarkers,
-                    shortQualityScores);
+            sample = new CameraCalibratorSample(sampledMarkers, shortQualityScores);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -128,7 +127,7 @@ public class CameraCalibratorSampleTest {
 
         // check correctness
         assertSame(sample.getPattern(), pattern);
-        assertSame(sample.getSampledMarkers(), sampledMarkers);
+        assertSame(sampledMarkers, sample.getSampledMarkers());
         assertNull(sample.getSampledMarkersQualityScores());
         assertNull(sample.getUndistortedMarkers());
         assertNull(sample.getHomography());
@@ -146,13 +145,12 @@ public class CameraCalibratorSampleTest {
         assertNull(sample);
 
         // test constructor with sampled markers and quality scores
-        sample = new CameraCalibratorSample(pattern, sampledMarkers,
-                qualityScores);
+        sample = new CameraCalibratorSample(pattern, sampledMarkers, qualityScores);
 
         // check correctness
-        assertSame(sample.getPattern(), pattern);
-        assertSame(sample.getSampledMarkers(), sampledMarkers);
-        assertSame(sample.getSampledMarkersQualityScores(), qualityScores);
+        assertSame(pattern, sample.getPattern());
+        assertSame(sampledMarkers, sample.getSampledMarkers());
+        assertSame(qualityScores, sample.getSampledMarkersQualityScores());
         assertNull(sample.getUndistortedMarkers());
         assertNull(sample.getHomography());
         assertNull(sample.getRotation());
@@ -162,8 +160,7 @@ public class CameraCalibratorSampleTest {
         // Force IllegalArgumentException
         sample = null;
         try {
-            sample = new CameraCalibratorSample(pattern, sampledMarkers,
-                    shortQualityScores);
+            sample = new CameraCalibratorSample(pattern, sampledMarkers, shortQualityScores);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -181,7 +178,7 @@ public class CameraCalibratorSampleTest {
         sample.setPattern(pattern);
 
         // check correctness
-        assertSame(sample.getPattern(), pattern);
+        assertSame(pattern, sample.getPattern());
     }
 
     @Test
@@ -222,7 +219,7 @@ public class CameraCalibratorSampleTest {
         sample.setSampledMarkersQualityScores(qualityScores);
 
         // check correctness
-        assertSame(sample.getSampledMarkersQualityScores(), qualityScores);
+        assertSame(qualityScores, sample.getSampledMarkersQualityScores());
 
         // Force IllegalArgumentException
         final double[] shortScores = new double[1];
@@ -266,12 +263,11 @@ public class CameraCalibratorSampleTest {
 
         // check correctness
         assertArrayEquals(scoresNoCenter,
-                CameraCalibratorSample.computeSampledMarkersQualityScores(
-                        sampledMarkers), ABSOLUTE_ERROR);
+                CameraCalibratorSample.computeSampledMarkersQualityScores(sampledMarkers), ABSOLUTE_ERROR);
 
         assertArrayEquals(scoresWithCenter,
-                CameraCalibratorSample.computeSampledMarkersQualityScores(
-                        sampledMarkers, center), ABSOLUTE_ERROR);
+                CameraCalibratorSample.computeSampledMarkersQualityScores(sampledMarkers, center),
+                ABSOLUTE_ERROR);
     }
 
     @Test
@@ -280,8 +276,7 @@ public class CameraCalibratorSampleTest {
         for (int i = 0; i < 4; i++) {
             sampledMarkers.add(Point2D.create());
         }
-        final CameraCalibratorSample sample = new CameraCalibratorSample(
-                sampledMarkers);
+        final CameraCalibratorSample sample = new CameraCalibratorSample(sampledMarkers);
 
         // check default value
         assertNull(sample.getUndistortedMarkers());
@@ -294,7 +289,7 @@ public class CameraCalibratorSampleTest {
         sample.setUndistortedMarkers(undistortedMarkers);
 
         // check correctness
-        assertSame(sample.getUndistortedMarkers(), undistortedMarkers);
+        assertSame(undistortedMarkers, sample.getUndistortedMarkers());
     }
 
     @Test
@@ -305,12 +300,11 @@ public class CameraCalibratorSampleTest {
         assertNull(sample.getHomography());
 
         // set new value
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
         sample.setHomography(homography);
 
         // check correctness
-        assertSame(sample.getHomography(), homography);
+        assertSame(homography, sample.getHomography());
     }
 
     @Test
@@ -325,7 +319,7 @@ public class CameraCalibratorSampleTest {
         sample.setRotation(r);
 
         // check correctness
-        assertSame(sample.getRotation(), r);
+        assertSame(r, sample.getRotation());
     }
 
     @Test
@@ -340,7 +334,7 @@ public class CameraCalibratorSampleTest {
         sample.setCameraCenter(center);
 
         // check correctness
-        assertSame(sample.getCameraCenter(), center);
+        assertSame(center, sample.getCameraCenter());
     }
 
     @Test
@@ -355,13 +349,12 @@ public class CameraCalibratorSampleTest {
         sample.setCamera(camera);
 
         // check correctness
-        assertSame(sample.getCamera(), camera);
+        assertSame(camera, sample.getCamera());
     }
 
     @Test
-    public void testEstimateHomographyCirclesPattern() throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            CoincidentPointsException {
+    public void testEstimateHomographyCirclesPattern() throws LockedException, NotReadyException,
+            RobustEstimatorException, CoincidentPointsException {
 
         int totalPoints = 0;
         double avgTotalError = 0.0;
@@ -379,8 +372,7 @@ public class CameraCalibratorSampleTest {
 
             // create random camera to project 3D points
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -406,15 +398,12 @@ public class CameraCalibratorSampleTest {
 
             // camera center
             final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                    cameraCenterArray);
+            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                    cameraCenter);
+            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // project 3D pattern points
@@ -427,10 +416,8 @@ public class CameraCalibratorSampleTest {
 
             // estimate homography using ideal markers as reference
             final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                            create();
-            final Transformation2D homography = sample.estimateHomography(estimator,
-                    patternPoints);
+                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
+            final Transformation2D homography = sample.estimateHomography(estimator, patternPoints);
 
             // check that points are properly transformed
             double distance;
@@ -443,12 +430,12 @@ public class CameraCalibratorSampleTest {
         }
 
         avgTotalError /= totalPoints;
-        assertEquals(avgTotalError, 0.0, 5.0 * VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgTotalError, 5.0 * VERY_LARGE_ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testEstimateHomographyQRPattern() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public void testEstimateHomographyQRPattern() throws LockedException, NotReadyException,
+            RobustEstimatorException {
 
         int totalPoints = 0;
         double avgTotalError = 0.0;
@@ -488,20 +475,16 @@ public class CameraCalibratorSampleTest {
                     MIN_ANGLE_DEGREES * Math.PI / 180.0,
                     MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                    betaEuler, gammaEuler);
+            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
             final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                    cameraCenterArray);
+            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                    cameraCenter);
+            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // project 3D pattern points
@@ -509,13 +492,12 @@ public class CameraCalibratorSampleTest {
 
             // create sample with projected pattern markers
             final CameraCalibratorSample sample = new CameraCalibratorSample(
-                    projectedPatternPoints, CameraCalibratorSample.
-                    computeSampledMarkersQualityScores(projectedPatternPoints));
+                    projectedPatternPoints, CameraCalibratorSample.computeSampledMarkersQualityScores(
+                            projectedPatternPoints));
 
             // estimate homography using ideal markers as reference
             final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                            create();
+                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
             final Transformation2D homography;
             try {
                 homography = sample.estimateHomography(estimator, patternPoints);
@@ -534,14 +516,12 @@ public class CameraCalibratorSampleTest {
         }
 
         avgTotalError /= totalPoints;
-        assertEquals(avgTotalError, 0.0, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgTotalError, LARGE_ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testComputeCameraPose() throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            CoincidentPointsException, CalibrationException,
-            NotAvailableException, WrongSizeException {
+    public void testComputeCameraPose() throws LockedException, NotReadyException, RobustEstimatorException,
+            CoincidentPointsException, CalibrationException, NotAvailableException, WrongSizeException {
 
         int totalPoints = 0;
         double avgProjectionError = 0.0;
@@ -560,8 +540,7 @@ public class CameraCalibratorSampleTest {
 
             // create random camera to project 3D points
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -582,20 +561,16 @@ public class CameraCalibratorSampleTest {
                     MIN_ANGLE_DEGREES * Math.PI / 180.0,
                     MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                    betaEuler, gammaEuler);
+            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
             final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                    cameraCenterArray);
+            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                    cameraCenter);
+            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // project 3D pattern points
@@ -603,15 +578,13 @@ public class CameraCalibratorSampleTest {
 
             // create sample with projected pattern markers
             final CameraCalibratorSample sample = new CameraCalibratorSample(
-                    projectedPatternPoints, CameraCalibratorSample.
-                    computeSampledMarkersQualityScores(projectedPatternPoints));
+                    projectedPatternPoints, CameraCalibratorSample.computeSampledMarkersQualityScores(
+                            projectedPatternPoints));
 
             // estimate homography using ideal markers as reference
             final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                            create();
-            final Transformation2D homography = sample.estimateHomography(estimator,
-                    patternPoints);
+                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
+            final Transformation2D homography = sample.estimateHomography(estimator, patternPoints);
 
             // set homography
             sample.setHomography(homography);
@@ -639,22 +612,20 @@ public class CameraCalibratorSampleTest {
                                     Math.abs(rotMat.getElementAt(r, c)));
                 }
             }
-            assertEquals(Utils.normF(rotDiff), 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, Utils.normF(rotDiff), LARGE_ABSOLUTE_ERROR);
 
             // compare center
             avgCenterError += sample.getCameraCenter().distanceTo(cameraCenter);
 
             // compare camera parameters
             assertSame(sample.getCamera().getIntrinsicParameters(), intrinsic);
-            assertSame(sample.getCamera().getCameraRotation(),
-                    sample.getRotation());
-            assertEquals(sample.getCamera().getCameraCenter().distanceTo(
-                    sample.getCameraCenter()), 0.0, ABSOLUTE_ERROR);
+            assertSame(sample.getCamera().getCameraRotation(), sample.getRotation());
+            assertEquals(0.0, sample.getCamera().getCameraCenter().distanceTo(
+                    sample.getCameraCenter()), ABSOLUTE_ERROR);
 
             // project ideal pattern points using estimated camera and
             // compare against sampled points
-            final List<Point2D> projectedPatternPoints2 = sample.getCamera().project(
-                    points3D);
+            final List<Point2D> projectedPatternPoints2 = sample.getCamera().project(points3D);
             double distance;
             for (int i = 0; i < patternPoints.size(); i++) {
                 distance = projectedPatternPoints.get(i).distanceTo(
@@ -666,7 +637,7 @@ public class CameraCalibratorSampleTest {
 
         avgProjectionError /= totalPoints;
         avgCenterError /= TIMES;
-        assertEquals(avgProjectionError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgCenterError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgProjectionError, ULTRA_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgCenterError, ULTRA_LARGE_ABSOLUTE_ERROR);
     }
 }

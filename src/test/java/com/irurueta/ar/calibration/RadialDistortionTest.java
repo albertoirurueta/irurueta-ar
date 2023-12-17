@@ -44,93 +44,78 @@ public class RadialDistortionTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstructor() throws NotSupportedException,
-            DistortionException {
+    public void testConstructor() throws NotSupportedException, DistortionException {
         // default constructor
         RadialDistortion distortion = new RadialDistortion();
 
         // check correctness
         assertNull(distortion.getCenter());
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getK1(), 0.0, 0.0);
-        assertEquals(distortion.getK2(), 0.0, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
+        assertEquals(0.0, distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(0.0, distortion.getK1(), 0.0);
+        assertEquals(0.0, distortion.getK2(), 0.0);
         assertNull(distortion.getKParams());
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // constructor with parameters
         distortion = new RadialDistortion(1.0, 2.0);
 
         // check correctness
         assertNull(distortion.getCenter());
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getK1(), 1.0, 0.0);
-        assertEquals(distortion.getK2(), 2.0, 0.0);
-        assertEquals(distortion.getKParams()[0], 1.0, 0.0);
-        assertEquals(distortion.getKParams()[1], 2.0, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
+        assertEquals(0.0, distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(1.0, distortion.getK1(), 0.0);
+        assertEquals(2.0, distortion.getK2(), 0.0);
+        assertEquals(1.0, distortion.getKParams()[0], 0.0);
+        assertEquals(2.0, distortion.getKParams()[1], 0.0);
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // constructor with parameters array
         distortion = new RadialDistortion(new double[]{-1.0, -2.0});
 
         // check correctness
         assertNull(distortion.getCenter());
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getK1(), -1.0, 0.0);
-        assertEquals(distortion.getK2(), -2.0, 0.0);
-        assertEquals(distortion.getKParams()[0], -1.0, 0.0);
-        assertEquals(distortion.getKParams()[1], -2.0, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
+        assertEquals(0.0, distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(-1.0, distortion.getK1(), 0.0);
+        assertEquals(-2.0, distortion.getK2(), 0.0);
+        assertEquals(-1.0, distortion.getKParams()[0], 0.0);
+        assertEquals(-2.0, distortion.getKParams()[1], 0.0);
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force IllegalArgumentException
         distortion = null;
@@ -139,7 +124,6 @@ public class RadialDistortionTest {
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
-        //noinspection ConstantConditions
         assertNull(distortion);
 
         // constructor with parameters and center
@@ -147,59 +131,51 @@ public class RadialDistortionTest {
         distortion = new RadialDistortion(2.0, 3.0, center);
 
         // check correctness
-        assertSame(distortion.getCenter(), center);
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getK1(), 2.0, 0.0);
-        assertEquals(distortion.getK2(), 3.0, 0.0);
-        assertEquals(distortion.getKParams()[0], 2.0, 0.0);
-        assertEquals(distortion.getKParams()[1], 3.0, 0.0);
+        assertSame(center, distortion.getCenter());
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
+        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(2.0, distortion.getK1(), 0.0);
+        assertEquals(3.0, distortion.getK2(), 0.0);
+        assertEquals(2.0, distortion.getKParams()[0], 0.0);
+        assertEquals(3.0, distortion.getKParams()[1], 0.0);
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // constructor with parameters array and center
         distortion = new RadialDistortion(new double[]{-2.0, -3.0}, center);
 
         // check correctness
-        assertSame(distortion.getCenter(), center);
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                RadialDistortion.DEFAULT_SKEW, 0.0);
-        assertEquals(distortion.getK1(), -2.0, 0.0);
-        assertEquals(distortion.getK2(), -3.0, 0.0);
-        assertEquals(distortion.getKParams()[0], -2.0, 0.0);
-        assertEquals(distortion.getKParams()[1], -3.0, 0.0);
+        assertSame(center, distortion.getCenter());
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
+        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(-2.0, distortion.getK1(), 0.0);
+        assertEquals(-3.0, distortion.getK2(), 0.0);
+        assertEquals(-2.0, distortion.getKParams()[0], 0.0);
+        assertEquals(-3.0, distortion.getKParams()[1], 0.0);
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force IllegalArgumentException
         distortion = null;
@@ -216,27 +192,21 @@ public class RadialDistortionTest {
 
         // check correctness
         assertSame(distortion.getCenter(), center);
-        assertEquals(distortion.getHorizontalFocalLength(), 3.0, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(), 4.0, 0.0);
-        assertEquals(distortion.getSkew(), 5.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                3.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                4.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                5.0, 0.0);
-        assertEquals(distortion.getK1(), 1.0, 0.0);
-        assertEquals(distortion.getK2(), 2.0, 0.0);
-        assertEquals(distortion.getKParams()[0], 1.0, 0.0);
-        assertEquals(distortion.getKParams()[1], 2.0, 0.0);
+        assertEquals(3.0, distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(4.0, distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, distortion.getSkew(), 0.0);
+        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(3.0, distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(4.0, distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(1.0, distortion.getK1(), 0.0);
+        assertEquals(2.0, distortion.getK2(), 0.0);
+        assertEquals(1.0, distortion.getKParams()[0], 0.0);
+        assertEquals(2.0, distortion.getKParams()[1], 0.0);
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force RadialDistortionException
         distortion = null;
@@ -254,27 +224,21 @@ public class RadialDistortionTest {
 
         // check correctness
         assertSame(distortion.getCenter(), center);
-        assertEquals(distortion.getHorizontalFocalLength(), 3.0, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(), 4.0, 0.0);
-        assertEquals(distortion.getSkew(), 5.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
-        assertEquals(distortion.getIntrinsic().getHorizontalFocalLength(),
-                3.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getVerticalFocalLength(),
-                4.0, 0.0);
-        assertEquals(distortion.getIntrinsic().getSkewness(),
-                5.0, 0.0);
-        assertEquals(distortion.getK1(), -1.0, 0.0);
-        assertEquals(distortion.getK2(), -2.0, 0.0);
-        assertEquals(distortion.getKParams()[0], -1.0, 0.0);
-        assertEquals(distortion.getKParams()[1], -2.0, 0.0);
+        assertEquals(3.0, distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(4.0, distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, distortion.getSkew(), 0.0);
+        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(3.0, distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(4.0, distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, distortion.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(-1.0, distortion.getK1(), 0.0);
+        assertEquals(-2.0, distortion.getK2(), 0.0);
+        assertEquals(-1.0, distortion.getKParams()[0], 0.0);
+        assertEquals(-2.0, distortion.getKParams()[1], 0.0);
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force RadialDistortionException
         distortion = null;
@@ -319,16 +283,15 @@ public class RadialDistortionTest {
                 undistortedPoint1, undistortedPoint2, center);
 
         // check correctness
-        assertEquals(distortion.getK1(), k1, ERROR);
-        assertEquals(distortion.getK2(), k2, ERROR);
-        assertSame(distortion.getCenter(), center);
+        assertEquals(k1, distortion.getK1(), ERROR);
+        assertEquals(k2, distortion.getK2(), ERROR);
+        assertSame(center, distortion.getCenter());
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
     }
 
     @Test
-    public void testSetFromPointsAndCenter() throws NotSupportedException,
-            DistortionException {
+    public void testSetFromPointsAndCenter() throws NotSupportedException, DistortionException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
@@ -355,13 +318,12 @@ public class RadialDistortionTest {
                 undistortedPoint1, undistortedPoint2, center);
 
         // check correctness
-        assertEquals(distortion.getK1(), k1, ERROR);
-        assertEquals(distortion.getK2(), k2, ERROR);
-        assertSame(distortion.getCenter(), center);
+        assertEquals(k1, distortion.getK1(), ERROR);
+        assertEquals(k2, distortion.getK2(), ERROR);
+        assertSame(center, distortion.getCenter());
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
-        assertEquals(distortion.getKind(),
-                DistortionKind.BROWN_RADIAL_DISTORTION);
+        assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
     }
 
     @Test
@@ -376,23 +338,22 @@ public class RadialDistortionTest {
         distortion.setCenter(center);
 
         // check correctness
-        assertSame(distortion.getCenter(), center);
+        assertSame(center, distortion.getCenter());
     }
 
     @Test
-    public void testGetSetHorizontalFocalLength()
-            throws RadialDistortionException {
+    public void testGetSetHorizontalFocalLength() throws RadialDistortionException {
         final RadialDistortion distortion = new RadialDistortion();
 
         // check default value
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
 
         // set new value
         distortion.setHorizontalFocalLength(2.0);
 
         // check correctness
-        assertEquals(distortion.getHorizontalFocalLength(), 2.0, 0.0);
+        assertEquals(2.0, distortion.getHorizontalFocalLength(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -403,19 +364,17 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testGetSetVerticalFocalLength()
-            throws RadialDistortionException {
+    public void testGetSetVerticalFocalLength() throws RadialDistortionException {
         final RadialDistortion distortion = new RadialDistortion();
 
         // check default value
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
 
         // set new value
         distortion.setVerticalFocalLength(2.0);
 
         // check correctness
-        assertEquals(distortion.getVerticalFocalLength(), 2.0, 0.0);
+        assertEquals(2.0, distortion.getVerticalFocalLength(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -430,13 +389,13 @@ public class RadialDistortionTest {
         final RadialDistortion distortion = new RadialDistortion();
 
         // check default value
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
 
         // set new value
         distortion.setSkew(2.0);
 
         // check correctness
-        assertEquals(distortion.getSkew(), 2.0, 0.0);
+        assertEquals(2.0, distortion.getSkew(), 0.0);
     }
 
     @Test
@@ -445,21 +404,20 @@ public class RadialDistortionTest {
 
         // check default value
         assertNull(distortion.getCenter());
-        assertEquals(distortion.getHorizontalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(),
-                RadialDistortion.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(distortion.getSkew(), RadialDistortion.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
+                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
 
         // set new value
         final Point2D center = Point2D.create();
         distortion.setIntrinsic(center, 2.0, 3.0, 4.0);
 
         // check correctness
-        assertSame(distortion.getCenter(), center);
-        assertEquals(distortion.getHorizontalFocalLength(), 2.0, 0.0);
-        assertEquals(distortion.getVerticalFocalLength(), 3.0, 0.0);
-        assertEquals(distortion.getSkew(), 4.0, 0.0);
+        assertSame(center, distortion.getCenter());
+        assertEquals(2.0, distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(3.0, distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(4.0, distortion.getSkew(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -474,13 +432,13 @@ public class RadialDistortionTest {
         final RadialDistortion distortion = new RadialDistortion();
 
         // check default value
-        assertEquals(distortion.getK1(), 0.0, 0.0);
+        assertEquals(0.0, distortion.getK1(), 0.0);
 
         // set new value
         distortion.setK1(1.0);
 
         // check correctness
-        assertEquals(distortion.getK1(), 1.0, 0.0);
+        assertEquals(1.0, distortion.getK1(), 0.0);
     }
 
     @Test
@@ -488,13 +446,13 @@ public class RadialDistortionTest {
         final RadialDistortion distortion = new RadialDistortion();
 
         // check default value
-        assertEquals(distortion.getK2(), 0.0, 0.0);
+        assertEquals(0.0, distortion.getK2(), 0.0);
 
         // set new value
         distortion.setK2(2.0);
 
         // check correctness
-        assertEquals(distortion.getK2(), 2.0, 0.0);
+        assertEquals(2.0, distortion.getK2(), 0.0);
     }
 
     @Test
@@ -503,17 +461,17 @@ public class RadialDistortionTest {
 
         // check default value
         assertNull(distortion.getKParams());
-        assertEquals(distortion.getK1(), 0.0, 0.0);
-        assertEquals(distortion.getK2(), 0.0, 0.0);
+        assertEquals(0.0, distortion.getK1(), 0.0);
+        assertEquals(0.0, distortion.getK2(), 0.0);
 
         // set new values
         final double[] kParams = new double[]{1.0, 2.0, 3.0};
         distortion.setKParams(kParams);
 
         // check correctness
-        assertSame(distortion.getKParams(), kParams);
-        assertEquals(distortion.getK1(), 1.0, 0.0);
-        assertEquals(distortion.getK2(), 2.0, 0.0);
+        assertSame(kParams, distortion.getKParams());
+        assertEquals(1.0, distortion.getK1(), 0.0);
+        assertEquals(2.0, distortion.getK2(), 0.0);
     }
 
     @Test
@@ -538,7 +496,7 @@ public class RadialDistortionTest {
             final Point2D undistorted = distortion.undistort(distorted);
             final Point2D distorted2 = distortion.distort(undistorted);
 
-            assertEquals(distorted.distanceTo(distorted2), 0.0, ERROR);
+            assertEquals(0.0, distorted.distanceTo(distorted2), ERROR);
         }
     }
 
@@ -573,8 +531,8 @@ public class RadialDistortionTest {
             distortedPoints2 = distortion.distort(undistortedPoints);
 
             for (int i = 0; i < NUM_POINTS; i++) {
-                assertEquals(distortedPoints.get(i).distanceTo(
-                        distortedPoints2.get(i)), 0.0, ERROR);
+                assertEquals(0.0, distortedPoints.get(i).distanceTo(distortedPoints2.get(i)),
+                        ERROR);
             }
         }
     }
@@ -615,10 +573,8 @@ public class RadialDistortionTest {
         final double xd = xc + diffX * factor;
         final double yd = yc + diffY * factor;
 
-        assertEquals(distorted1.getInhomX(), xd,
-                ERROR);
-        assertEquals(distorted1.getInhomY(), yd,
-                ERROR);
+        assertEquals(xd, distorted1.getInhomX(), ERROR);
+        assertEquals(yd, distorted1.getInhomY(), ERROR);
     }
 
     @Test
@@ -653,8 +609,8 @@ public class RadialDistortionTest {
         distortion.distort(undistortedPoints, distortedPoints1);
         distortedPoints2 = distortion.distort(undistortedPoints);
 
-        assertEquals(distortedPoints1.size(), NUM_POINTS);
-        assertEquals(distortedPoints2.size(), NUM_POINTS);
+        assertEquals(NUM_POINTS, distortedPoints1.size());
+        assertEquals(NUM_POINTS, distortedPoints2.size());
         for (int i = 0; i < NUM_POINTS; i++) {
             undistortedPoint = undistortedPoints.get(i);
             distortedPoint1 = distortedPoints1.get(i);
@@ -674,14 +630,13 @@ public class RadialDistortionTest {
             final double xd = xc + diffX * factor;
             final double yd = yc + diffY * factor;
 
-            assertEquals(distortedPoint1.getInhomX(), xd, ERROR);
-            assertEquals(distortedPoint1.getInhomY(), yd, ERROR);
+            assertEquals(xd, distortedPoint1.getInhomX(), ERROR);
+            assertEquals(yd, distortedPoint1.getInhomY(), ERROR);
         }
     }
 
     @Test
-    public void testSerializeDeserialize() throws NotSupportedException,
-            DistortionException, IOException, ClassNotFoundException {
+    public void testSerializeDeserialize() throws DistortionException, IOException, ClassNotFoundException {
         final RadialDistortion distortion1 = new RadialDistortion();
 
         // set new values
@@ -707,15 +662,12 @@ public class RadialDistortionTest {
 
         // check
         assertEquals(distortion1.getCenter(), distortion2.getCenter());
-        assertEquals(distortion1.getHorizontalFocalLength(),
-                distortion2.getHorizontalFocalLength(), 0.0);
-        assertEquals(distortion1.getVerticalFocalLength(),
-                distortion2.getVerticalFocalLength(), 0.0);
-        assertEquals(distortion1.getSkew(),
-                distortion2.getSkew(), 0.0);
-        assertEquals(distortion1.getK1(),
-                distortion2.getK1(), 0.0);
-        assertEquals(distortion1.getK2(),
-                distortion2.getK2(), 0.0);
+        assertEquals(distortion1.getHorizontalFocalLength(), distortion2.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(distortion1.getVerticalFocalLength(), distortion2.getVerticalFocalLength(),
+                0.0);
+        assertEquals(distortion1.getSkew(), distortion2.getSkew(), 0.0);
+        assertEquals(distortion1.getK1(), distortion2.getK1(), 0.0);
+        assertEquals(distortion1.getK2(), distortion2.getK2(), 0.0);
     }
 }

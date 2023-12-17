@@ -37,8 +37,8 @@ public class SlamCalibrationDataTest {
         final SlamCalibrationData data = new SlamCalibrationData();
 
         // check initial values
-        assertEquals(data.getControlLength(), SlamEstimator.CONTROL_LENGTH);
-        assertEquals(data.getStateLength(), SlamEstimator.STATE_LENGTH);
+        assertEquals(SlamEstimator.CONTROL_LENGTH, data.getControlLength());
+        assertEquals(SlamEstimator.STATE_LENGTH, data.getStateLength());
         assertNull(data.getControlMean());
         assertNull(data.getControlCovariance());
     }
@@ -55,7 +55,7 @@ public class SlamCalibrationDataTest {
         data.setControlMean(mean);
 
         // check correctness
-        assertSame(data.getControlMean(), mean);
+        assertSame(mean, data.getControlMean());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[1];
@@ -74,12 +74,11 @@ public class SlamCalibrationDataTest {
         assertNull(data.getControlCovariance());
 
         // set new value
-        final Matrix cov = new Matrix(SlamEstimator.CONTROL_LENGTH,
-                SlamEstimator.CONTROL_LENGTH);
+        final Matrix cov = new Matrix(SlamEstimator.CONTROL_LENGTH, SlamEstimator.CONTROL_LENGTH);
         data.setControlCovariance(cov);
 
         // check correctness
-        assertSame(data.getControlCovariance(), cov);
+        assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
         final Matrix wrong = new Matrix(1, 1);
@@ -96,13 +95,12 @@ public class SlamCalibrationDataTest {
 
         // set new values
         final double[] mean = new double[SlamEstimator.CONTROL_LENGTH];
-        final Matrix cov = new Matrix(SlamEstimator.CONTROL_LENGTH,
-                SlamEstimator.CONTROL_LENGTH);
+        final Matrix cov = new Matrix(SlamEstimator.CONTROL_LENGTH, SlamEstimator.CONTROL_LENGTH);
         data.setControlMeanAndCovariance(mean, cov);
 
         // check correctness
-        assertSame(data.getControlMean(), mean);
-        assertSame(data.getControlCovariance(), cov);
+        assertSame(mean, data.getControlMean());
+        assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
         final double[] wrongMean = new double[1];
@@ -124,8 +122,7 @@ public class SlamCalibrationDataTest {
     public void testPropagateWithControlJacobian() throws WrongSizeException,
             InvalidCovarianceMatrixException {
 
-        final Matrix cov = Matrix.identity(SlamEstimator.CONTROL_LENGTH,
-                SlamEstimator.CONTROL_LENGTH).
+        final Matrix cov = Matrix.identity(SlamEstimator.CONTROL_LENGTH, SlamEstimator.CONTROL_LENGTH).
                 multiplyByScalarAndReturnNew(1e-3);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -135,11 +132,10 @@ public class SlamCalibrationDataTest {
         final SlamCalibrationData data = new SlamCalibrationData();
         data.setControlMeanAndCovariance(mean, cov);
 
-        final Matrix jacobian = Matrix.identity(SlamEstimator.STATE_LENGTH,
-                SlamEstimator.CONTROL_LENGTH).multiplyByScalarAndReturnNew(2.0);
+        final Matrix jacobian = Matrix.identity(SlamEstimator.STATE_LENGTH, SlamEstimator.CONTROL_LENGTH)
+                .multiplyByScalarAndReturnNew(2.0);
 
-        final MultivariateNormalDist dist = data.propagateWithControlJacobian(
-                jacobian);
+        final MultivariateNormalDist dist = data.propagateWithControlJacobian(jacobian);
         final MultivariateNormalDist dist2 = new MultivariateNormalDist();
         data.propagateWithControlJacobian(jacobian, dist2);
 
@@ -150,10 +146,8 @@ public class SlamCalibrationDataTest {
         assertTrue(dist.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
         assertTrue(dist2.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
 
-        assertArrayEquals(dist.getMean(),
-                new double[SlamEstimator.STATE_LENGTH], 0.0);
-        assertArrayEquals(dist2.getMean(),
-                new double[SlamEstimator.STATE_LENGTH], 0.0);
+        assertArrayEquals(new double[SlamEstimator.STATE_LENGTH], dist.getMean(), 0.0);
+        assertArrayEquals(new double[SlamEstimator.STATE_LENGTH], dist2.getMean(), 0.0);
     }
 
     @Test
@@ -166,13 +160,12 @@ public class SlamCalibrationDataTest {
         final double[] mean = new double[SlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
         data1.setControlMean(mean);
-        final Matrix cov = new Matrix(SlamEstimator.CONTROL_LENGTH,
-                SlamEstimator.CONTROL_LENGTH);
+        final Matrix cov = new Matrix(SlamEstimator.CONTROL_LENGTH, SlamEstimator.CONTROL_LENGTH);
         data1.setControlCovariance(cov);
 
         // check
-        assertSame(data1.getControlMean(), mean);
-        assertSame(data1.getControlCovariance(), cov);
+        assertSame(mean, data1.getControlMean());
+        assertSame(cov, data1.getControlCovariance());
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(data1);

@@ -20,7 +20,7 @@ package com.irurueta.ar.calibration.estimators;
  */
 public enum ImageOfAbsoluteConicEstimatorType {
     /**
-     * Image of Absolute Conic (IAC) estimator using LMSE (Least Mean Square
+     * Image of Absolute Conic (IAC) estimator using LMSE (the Least Mean Square
      * Error) solutions.
      */
     LMSE_IAC_ESTIMATOR,

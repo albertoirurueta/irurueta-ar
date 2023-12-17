@@ -29,8 +29,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class SevenPointsFundamentalMatrixEstimatorTest implements
-        FundamentalMatrixEstimatorListener {
+public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMatrixEstimatorListener {
 
     private static final int MIN_POINTS = 7;
     private static final int MAX_POINTS = 500;
@@ -66,21 +65,18 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
     @Test
     public void testConstructor() {
         // test constructor without arguments
-        SevenPointsFundamentalMatrixEstimator estimator =
-                new SevenPointsFundamentalMatrixEstimator();
+        SevenPointsFundamentalMatrixEstimator estimator = new SevenPointsFundamentalMatrixEstimator();
 
         // check correctness
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(estimator.arePointsNormalized(),
-                SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
+        assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(),
-                SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getMethod());
+        assertEquals(SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS,
+                estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -96,23 +92,20 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             rightPoints.add(Point2D.create());
         }
 
-        estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints,
-                rightPoints);
+        estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
 
         // check correctness
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(estimator.arePointsNormalized(),
-                SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
+        assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(),
-                SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getMethod());
+        assertEquals(SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS,
+                estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
 
@@ -120,14 +113,12 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
         final List<Point2D> emptyPoints = new ArrayList<>();
         estimator = null;
         try {
-            estimator = new SevenPointsFundamentalMatrixEstimator(emptyPoints,
-                    rightPoints);
+            estimator = new SevenPointsFundamentalMatrixEstimator(emptyPoints, rightPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints,
-                    emptyPoints);
+            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, emptyPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -140,19 +131,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 new SevenPointsFundamentalMatrixEstimator();
 
         // check default value
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
 
         // set new value
         estimator.setLMSESolutionAllowed(
-                !SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
+                !SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
 
         // check correctness
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                !SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(!SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
     }
 
     @Test
@@ -161,19 +149,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 new SevenPointsFundamentalMatrixEstimator();
 
         // check default value
-        assertEquals(estimator.arePointsNormalized(),
-                SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
 
         // set new value
         estimator.setPointsNormalized(
-                !SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+                !SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
 
         // check correctness
-        assertEquals(estimator.arePointsNormalized(),
-                !SevenPointsFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(!SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
     }
 
     @Test
@@ -198,8 +183,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
         estimator.setPoints(leftPoints, rightPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
@@ -227,13 +212,12 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
-    public void testEstimateAllNoLMSENoNormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateAllNoLMSENoNormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
@@ -264,10 +248,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -292,10 +274,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -306,20 +286,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -327,8 +303,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(false);
             estimator.setPointsNormalized(false);
             estimator.setListener(this);
@@ -336,15 +311,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate all
             final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             if (fundMatrixList.size() > 1) {
@@ -356,8 +331,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 } catch (FundamentalMatrixEstimatorException ignore) {
                 }
 
-                assertEquals(estimateStart, 1);
-                assertEquals(estimateEnd, 1);
+                assertEquals(1, estimateStart);
+                assertEquals(1, estimateEnd);
                 reset();
             }
 
@@ -378,10 +353,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
                 rightEpipoleError = epipole2a.distanceTo(epipole2b);
-                epipoleLeftCorrect = leftEpipoleError <=
-                        EXTREME_LARGE_ABSOLUTE_ERROR;
-                epipoleRightCorrect = rightEpipoleError <=
-                        EXTREME_LARGE_ABSOLUTE_ERROR;
+                epipoleLeftCorrect = leftEpipoleError <= EXTREME_LARGE_ABSOLUTE_ERROR;
+                epipoleRightCorrect = rightEpipoleError <= EXTREME_LARGE_ABSOLUTE_ERROR;
 
                 boolean validPoints = true;
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
@@ -394,12 +367,10 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(
-                                rightPoint);
+                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(
-                                leftPoint);
+                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -407,8 +378,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             validPoints = false;
                             break;
                         }
-                        assertTrue(line1.isLocus(leftPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line1.isLocus(leftPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // check that 2D point on right view belongs to right
                         // epipolar line
@@ -416,8 +386,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             validPoints = false;
                             break;
                         }
-                        assertTrue(line2.isLocus(rightPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
                         final Plane epipolarPlane1 = camera1.backProject(line1);
@@ -438,39 +407,33 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(point3D,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(point3D, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane1.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(center1,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(center2,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR));
 
                         if (!epipolarPlane2.isLocus(point3D, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(point3D,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(point3D, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(center1,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane2.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(center2,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR));
                     }
                 }
 
@@ -487,8 +450,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
         avgRightEpipoleError /= numValid;
 
 
-        assertEquals(avgLeftEpipoleError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgRightEpipoleError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgLeftEpipoleError, ULTRA_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgRightEpipoleError, ULTRA_LARGE_ABSOLUTE_ERROR);
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();
@@ -500,9 +463,9 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testEstimateAllNoLMSENormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateAllNoLMSENormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException,
+            NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
@@ -531,10 +494,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -559,10 +520,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -573,20 +532,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -594,8 +549,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(false);
             estimator.setPointsNormalized(true);
             estimator.setListener(this);
@@ -603,15 +557,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate all
             final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             if (fundMatrixList.size() > 1) {
@@ -623,8 +577,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 } catch (final FundamentalMatrixEstimatorException ignore) {
                 }
 
-                assertEquals(estimateStart, 1);
-                assertEquals(estimateEnd, 1);
+                assertEquals(1, estimateStart);
+                assertEquals(1, estimateEnd);
                 reset();
             }
 
@@ -645,10 +599,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
                 rightEpipoleError = epipole2a.distanceTo(epipole2b);
-                epipoleLeftCorrect = leftEpipoleError <=
-                        ULTRA_LARGE_ABSOLUTE_ERROR;
-                epipoleRightCorrect = rightEpipoleError <=
-                        ULTRA_LARGE_ABSOLUTE_ERROR;
+                epipoleLeftCorrect = leftEpipoleError <= ULTRA_LARGE_ABSOLUTE_ERROR;
+                epipoleRightCorrect = rightEpipoleError <= ULTRA_LARGE_ABSOLUTE_ERROR;
 
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding epipolar
@@ -660,45 +612,34 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(
-                                rightPoint);
+                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(
-                                leftPoint);
+                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
-                        assertTrue(line1.isLocus(leftPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line1.isLocus(leftPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
                         // check that 2D point on right view belongs to right
                         // epipolar line
-                        assertTrue(line2.isLocus(rightPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
                         final Plane epipolarPlane1 = camera1.backProject(line1);
                         final Plane epipolarPlane2 = camera2.backProject(line2);
 
                         // check that both planes are the same
-                        assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                                VERY_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.equals(epipolarPlane2, VERY_LARGE_ABSOLUTE_ERROR));
 
                         // check that point3D and camera centers belong to
                         // epipolar plane
-                        assertTrue(epipolarPlane1.isLocus(point3D,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
-                        assertTrue(epipolarPlane1.isLocus(center1,
-                                ABSOLUTE_ERROR));
-                        assertTrue(epipolarPlane1.isLocus(center2,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
-                        assertTrue(epipolarPlane2.isLocus(point3D,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
-                        assertTrue(epipolarPlane2.isLocus(center1,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
-                        assertTrue(epipolarPlane2.isLocus(center2,
-                                ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center2, ABSOLUTE_ERROR));
                     }
                 }
 
@@ -724,9 +665,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testEstimateAllLMSENoNormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateAllLMSENoNormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
@@ -757,10 +697,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -785,10 +723,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -799,20 +735,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -820,8 +752,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(true);
             estimator.setPointsNormalized(false);
             estimator.setListener(this);
@@ -829,15 +760,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate all
             final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             if (fundMatrixList.size() > 1) {
@@ -849,8 +780,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 } catch (final FundamentalMatrixEstimatorException ignore) {
                 }
 
-                assertEquals(estimateStart, 1);
-                assertEquals(estimateEnd, 1);
+                assertEquals(1, estimateStart);
+                assertEquals(1, estimateEnd);
                 reset();
             }
 
@@ -872,10 +803,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
                 rightEpipoleError = epipole2a.distanceTo(epipole2b);
-                epipoleLeftCorrect = leftEpipoleError <=
-                        EXTREME_LARGE_ABSOLUTE_ERROR;
-                epipoleRightCorrect = rightEpipoleError <=
-                        EXTREME_LARGE_ABSOLUTE_ERROR;
+                epipoleLeftCorrect = leftEpipoleError <= EXTREME_LARGE_ABSOLUTE_ERROR;
+                epipoleRightCorrect = rightEpipoleError <= EXTREME_LARGE_ABSOLUTE_ERROR;
 
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding
@@ -888,12 +817,10 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(
-                                rightPoint);
+                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(
-                                leftPoint);
+                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -901,16 +828,14 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             failed = true;
                             break;
                         }
-                        assertTrue(line1.isLocus(leftPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line1.isLocus(leftPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
                         // check that 2D point on right view belongs to right
                         // epipolar line
                         if (!line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(line2.isLocus(rightPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
                         final Plane epipolarPlane1 = camera1.backProject(line1);
@@ -921,8 +846,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.equals(epipolarPlane2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // check that point3D and camera centers belong to
                         // epipolar plane
@@ -930,39 +854,33 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(point3D,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(point3D, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane1.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(center1,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(center2,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR));
 
                         if (!epipolarPlane2.isLocus(point3D, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(point3D,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(point3D, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(center1,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane2.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(center2,
-                                EXTREME_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR));
                     }
 
                     if (failed) {
@@ -983,8 +901,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
         avgRightEpipoleError /= numValid;
 
 
-        assertEquals(avgLeftEpipoleError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgRightEpipoleError, 0.0, ULTRA_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgLeftEpipoleError, ULTRA_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgRightEpipoleError, ULTRA_LARGE_ABSOLUTE_ERROR);
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();
@@ -996,9 +914,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testEstimateAllLMSENormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateAllLMSENormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
@@ -1029,10 +946,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1057,10 +972,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1071,20 +984,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -1092,8 +1001,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(true);
             estimator.setPointsNormalized(true);
             estimator.setListener(this);
@@ -1101,15 +1009,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate all
             final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             if (fundMatrixList.size() > 1) {
@@ -1121,8 +1029,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 } catch (final FundamentalMatrixEstimatorException ignore) {
                 }
 
-                assertEquals(estimateStart, 1);
-                assertEquals(estimateEnd, 1);
+                assertEquals(1, estimateStart);
+                assertEquals(1, estimateEnd);
                 reset();
             }
 
@@ -1144,10 +1052,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
                 rightEpipoleError = epipole2a.distanceTo(epipole2b);
-                epipoleLeftCorrect = leftEpipoleError <=
-                        ULTRA_LARGE_ABSOLUTE_ERROR;
-                epipoleRightCorrect = rightEpipoleError <=
-                        ULTRA_LARGE_ABSOLUTE_ERROR;
+                epipoleLeftCorrect = leftEpipoleError <= ULTRA_LARGE_ABSOLUTE_ERROR;
+                epipoleRightCorrect = rightEpipoleError <= ULTRA_LARGE_ABSOLUTE_ERROR;
 
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding
@@ -1160,12 +1066,10 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(
-                                rightPoint);
+                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(
-                                leftPoint);
+                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -1173,16 +1077,14 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             failed = true;
                             break;
                         }
-                        assertTrue(line1.isLocus(leftPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line1.isLocus(leftPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
                         // check that 2D point on right view belongs to right
                         // epipolar line
                         if (!line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(line2.isLocus(rightPoint,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
                         final Plane epipolarPlane1 = camera1.backProject(line1);
@@ -1193,8 +1095,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                                VERY_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.equals(epipolarPlane2, VERY_LARGE_ABSOLUTE_ERROR));
 
                         // check that point3D and camera centers belong to
                         // epipolar plane
@@ -1202,39 +1103,33 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(point3D,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(center1,
-                                ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
                         if (!epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane1.isLocus(center2,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         if (!epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(point3D,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(center1,
-                                ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
                         if (!epipolarPlane2.isLocus(center2, ABSOLUTE_ERROR)) {
                             failed = true;
                             break;
                         }
-                        assertTrue(epipolarPlane2.isLocus(center2,
-                                ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane2.isLocus(center2, ABSOLUTE_ERROR));
                     }
 
                     if (failed) {
@@ -1254,8 +1149,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements
         avgLeftEpipoleError /= numValid;
         avgRightEpipoleError /= numValid;
 
-        assertEquals(avgLeftEpipoleError, 0.0, 10.0 * VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgRightEpipoleError, 0.0, 10.0 * VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgLeftEpipoleError, 10.0 * VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgRightEpipoleError, 10.0 * VERY_LARGE_ABSOLUTE_ERROR);
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();

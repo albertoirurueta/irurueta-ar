@@ -110,7 +110,8 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      *
      * @return A new conic instance of this dual conic.
      * @throws ConicNotAvailableException Raised if the rank of the dual conic
-     *                                    matrix is not complete due to wrong parameters or numerical instability.
+     *                                    matrix is not complete due to wrong parameters or numerical
+     *                                    instability.
      */
     @Override
     public Conic getConic() throws ConicNotAvailableException {
@@ -162,7 +163,8 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      *
      * @return the internal parameters of a pinhole camera.
      * @throws InvalidPinholeCameraIntrinsicParametersException if pinhole
-     *                                                          camera intrinsic parameters cannot be obtained from this conic instance.
+     *                                                          camera intrinsic parameters cannot be
+     *                                                          obtained from this conic instance.
      */
     public PinholeCameraIntrinsicParameters getIntrinsicParameters()
             throws InvalidPinholeCameraIntrinsicParametersException {

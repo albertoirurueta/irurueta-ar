@@ -94,7 +94,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
     /**
      * Transforms metric cameras on current pair of views so that they are referred to
      * last kept location and rotation and upgrades cameras from metric stratum to
-     * euclidean stratum.
+     * Euclidean stratum.
      *
      * @param isInitialPairOfViews   true if initial pair of views is being processed, false otherwise.
      * @param hasAbsoluteOrientation true if absolute orientation is required, false otherwise.
@@ -135,7 +135,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
         //     [0       1]
 
         if (isInitialPairOfViews && hasAbsoluteOrientation) {
-            // first pair of views does not require setting translation and rotation
+            // The first pair of views does not require setting translation and rotation
             mLastEuclideanCameraRotation = mFirstOrientation;
         }
 

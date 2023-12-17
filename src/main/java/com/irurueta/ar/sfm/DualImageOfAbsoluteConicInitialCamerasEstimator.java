@@ -55,7 +55,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Aspect ratio of intrinsic parameters of cameras.
-     * Typically this value is 1.0 if vertical coordinates increase upwards,
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      */
     private double mAspectRatio = KruppaDualImageOfAbsoluteConicEstimator.
@@ -251,7 +251,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @throws LockedException                         if estimator is locked.
      * @throws NotReadyException                       if estimator is not ready.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
@@ -314,7 +315,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Gets aspect ratio of intrinsic parameters of cameras.
-     * Typically this value is 1.0 if vertical coordinates increase upwards,
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      *
      * @return aspect ratio of intrinsic parameters of cameras.
@@ -325,7 +326,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
     /**
      * Sets aspect ratio of intrinsic parameters of cameras.
-     * Typically this value is 1.0 if vertical coordinates increase upwards,
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      *
      * @param aspectRatio aspect ratio of intrinsic parameters of cameras.
@@ -596,10 +597,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                          value should be the coordinates of the center of an image assuming that
      *                          the coordinates start on the top-left or bottom-left corner. Using a
      *                          value close to zero will produce inaccurate results.
-     * @param leftPoints        points on left view matched with points on right view
+     * @param leftPoints        points on left view matched with points on right view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param rightPoints       points on right view matched with points on left view
+     * @param rightPoints       points on right view matched with points on left view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
      * @param leftCamera        instance where estimated left camera will be stored.
@@ -607,7 +608,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -645,13 +647,13 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                          value should be the coordinates of the center of an image assuming that
      *                          the coordinates start on the top-left or bottom-left corner. Using a
      *                          value close to zero will produce inaccurate results.
-     * @param leftPoints        points on left view matched with points on right view
+     * @param leftPoints        points on left view matched with points on right view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param rightPoints       points on right view matched with points on left view
+     * @param rightPoints       points on right view matched with points on left view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param correctorType     corrector type to be used to correct 2D points so
+     * @param correctorType     corrector type to be used to correct 2D points, so
      *                          they follow the epipolar geometry defined by provided fundamental matrix
      *                          so that error on triangulated points is reduced. If null, no corrector
      *                          will be used.
@@ -660,7 +662,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical instabilities.
+     *                                                 cameras fails for some reason, typically due to
+     *                                                 numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -691,30 +694,31 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param fundamentalMatrix       fundamental matrix relating both left and right
      *                                views.
      * @param principalPointX         horizontal coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
      * @param principalPointY         vertical coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
      * @param leftCamera              instance where estimated left camera will be stored.
      * @param rightCamera             instance where estimated right camera will be stored.
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -747,34 +751,35 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param fundamentalMatrix       fundamental matrix relating both left and right
      *                                views.
      * @param principalPointX         horizontal coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
      * @param principalPointY         vertical coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param correctorType           corrector type to be used to correct 2D points so
-     *                                they follow the epipolar geometry defined by provided fundamental matrix
-     *                                so that error on triangulated points is reduced. If null, no corrector
-     *                                will be used.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param correctorType           corrector type to be used to correct 2D points, so
+     *                                they follow the epipolar geometry defined by provided fundamental
+     *                                matrix so that error on triangulated points is reduced. If null, no
+     *                                corrector will be used.
      * @param leftCamera              instance where estimated left camera will be stored.
      * @param rightCamera             instance where estimated right camera will be stored.
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -820,10 +825,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param aspectRatio       aspect ratio for estimated intrinsic parameters. This
      *                          is typically 1.0 if vertical coordinates increase upwards or -1.0 if it
      *                          is the opposite.
-     * @param leftPoints        points on left view matched with points on right view
+     * @param leftPoints        points on left view matched with points on right view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param rightPoints       points on right view matched with points on left view
+     * @param rightPoints       points on right view matched with points on left view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
      * @param leftCamera        instance where estimated left camera will be stored.
@@ -831,7 +836,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -873,13 +879,13 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param aspectRatio       aspect ratio for estimated intrinsic parameters. This
      *                          is typically 1.0 if vertical coordinates increase upwards or -1.0 if it
      *                          is the opposite.
-     * @param leftPoints        points on left view matched with points on right view
+     * @param leftPoints        points on left view matched with points on right view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param rightPoints       points on right view matched with points on left view
+     * @param rightPoints       points on right view matched with points on left view,
      *                          so they can be triangulated using estimated cameras. Both lists of points
      *                          must have the same size.
-     * @param correctorType     corrector type to be used to correct 2D points so
+     * @param correctorType     corrector type to be used to correct 2D points, so
      *                          they follow the epipolar geometry defined by provided fundamental matrix
      *                          so that error on triangulated points is reduced. If null, no corrector
      *                          will be used.
@@ -888,7 +894,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of
-     *                                                 cameras fails for some reason, typically due to numerical instabilities.
+     *                                                 cameras fails for some reason, typically due to
+     *                                                 numerical instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -920,33 +927,34 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param fundamentalMatrix       fundamental matrix relating both left and right
      *                                views.
      * @param principalPointX         horizontal coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
      * @param principalPointY         vertical coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
      * @param aspectRatio             aspect ratio for estimated intrinsic parameters. This
-     *                                is typically 1.0 if vertical coordinates increase upwards or -1.0 if it
-     *                                is the opposite.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
+     *                                is typically 1.0 if vertical coordinates increase upwards or -1.0 if
+     *                                it is the opposite.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
      * @param leftCamera              instance where estimated left camera will be stored.
      * @param rightCamera             instance where estimated right camera will be stored.
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */
@@ -978,37 +986,38 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param fundamentalMatrix       fundamental matrix relating both left and right
      *                                views.
      * @param principalPointX         horizontal coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
      * @param principalPointY         vertical coordinate of principal point. This
-     *                                value should be the coordinates of the center of an image assuming that
-     *                                the coordinates start on the top-left or bottom-left corner. Using a
-     *                                value close to zero will produce inaccurate results.
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
      * @param aspectRatio             aspect ratio for estimated intrinsic parameters. This
-     *                                is typically 1.0 if vertical coordinates increase upwards or -1.0 if it
-     *                                is the opposite.
-     * @param leftPoints              points on left view matched with points on right view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param rightPoints             points on right view matched with points on left view
-     *                                so they can be triangulated using estimated cameras. Both lists of points
-     *                                must have the same size.
-     * @param correctorType           corrector type to be used to correct 2D points so
-     *                                they follow the epipolar geometry defined by provided fundamental matrix
-     *                                so that error on triangulated points is reduced. If null, no corrector
-     *                                will be used.
+     *                                is typically 1.0 if vertical coordinates increase upwards or -1.0 if
+     *                                it is the opposite.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param correctorType           corrector type to be used to correct 2D points, so
+     *                                they follow the epipolar geometry defined by provided fundamental
+     *                                matrix so that error on triangulated points is reduced. If null, no
+     *                                corrector will be used.
      * @param leftCamera              instance where estimated left camera will be stored.
      * @param rightCamera             instance where estimated right camera will be stored.
      * @param triangulatedPoints      instance where triangulated 3D points will be
      *                                stored or null if triangulated points don't need to be kept.
      * @param validTriangulatedPoints instance which indicates which
-     *                                triangulated 3D points are considered valid because they lie in front of
-     *                                both cameras or null if such data doesn't need to be kept.
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
      * @return number of valid triangulated points which lie in front of the two
      * estimated cameras.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      * @throws IllegalArgumentException                if provided lists of left and right
      *                                                 points don't have the same size.
      */

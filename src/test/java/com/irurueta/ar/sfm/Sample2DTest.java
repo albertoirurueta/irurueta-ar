@@ -35,10 +35,10 @@ public class Sample2DTest {
 
         // check default values
         assertNull(s.getId());
-        assertEquals(s.getViewId(), 0);
+        assertEquals(0, s.getViewId());
         assertNull(s.getPoint());
         assertNull(s.getReconstructedPoint());
-        assertEquals(s.getQualityScore(), Sample2D.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(Sample2D.DEFAULT_QUALITY_SCORE, s.getQualityScore(), 0.0);
         assertNull(s.getCovariance());
         assertNull(s.getColorData());
     }
@@ -54,7 +54,7 @@ public class Sample2DTest {
         s.setId("id");
 
         // check correctness
-        assertEquals(s.getId(), "id");
+        assertEquals("id", s.getId());
     }
 
     @Test
@@ -62,13 +62,13 @@ public class Sample2DTest {
         final Sample2D s = new Sample2D();
 
         // check default values
-        assertEquals(s.getViewId(), 0);
+        assertEquals(0, s.getViewId());
 
         // set new value
         s.setViewId(5);
 
         // check correctness
-        assertEquals(s.getViewId(), 5);
+        assertEquals(5, s.getViewId());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class Sample2DTest {
         s.setPoint(p);
 
         // check correctness
-        assertSame(s.getPoint(), p);
+        assertSame(p, s.getPoint());
     }
 
     @Test
@@ -98,7 +98,7 @@ public class Sample2DTest {
         s.setReconstructedPoint(reconstructedPoint3D);
 
         // check correctness
-        assertSame(s.getReconstructedPoint(), reconstructedPoint3D);
+        assertSame(reconstructedPoint3D, s.getReconstructedPoint());
     }
 
     @Test
@@ -106,13 +106,13 @@ public class Sample2DTest {
         final Sample2D s = new Sample2D();
 
         // check default value
-        assertEquals(s.getQualityScore(), Sample2D.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(Sample2D.DEFAULT_QUALITY_SCORE, s.getQualityScore(), 0.0);
 
         // set new value
         s.setQualityScore(15.0);
 
         // check correctness
-        assertEquals(s.getQualityScore(), 15.0, 0.0);
+        assertEquals(15.0, s.getQualityScore(), 0.0);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class Sample2DTest {
         s.setCovariance(cov);
 
         // check correctness
-        assertSame(s.getCovariance(), cov);
+        assertSame(cov, s.getCovariance());
     }
 
     @Test
@@ -142,7 +142,7 @@ public class Sample2DTest {
         s.setColorData(data);
 
         // check correctness
-        assertSame(s.getColorData(), data);
+        assertSame(data, s.getColorData());
     }
 
     @Test

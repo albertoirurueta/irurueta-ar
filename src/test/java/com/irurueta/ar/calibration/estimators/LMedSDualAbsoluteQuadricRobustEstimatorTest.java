@@ -77,30 +77,28 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getStopThreshold(),
-                LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // test with listener
         estimator = new LMedSDualAbsoluteQuadricRobustEstimator(this);
@@ -109,30 +107,28 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertSame(estimator.getListener(), this);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getStopThreshold(),
-                LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // test with cameras
         final List<PinholeCamera> cameras = new ArrayList<>();
@@ -145,30 +141,28 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getStopThreshold(),
-                LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
         estimator = null;
@@ -187,30 +181,28 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertSame(estimator.getListener(), this);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getStopThreshold(),
-                LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
         estimator = null;
@@ -274,13 +266,13 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // set new value
         estimator.setFocalDistanceAspectRatio(0.5);
 
         // check correctness
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getFocalDistanceAspectRatio(), 0.0);
     }
 
     @Test
@@ -319,15 +311,14 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
 
         // set new value
         estimator.setDeterminantThreshold(1e-3);
 
         // check correctness
-        assertEquals(estimator.getDeterminantThreshold(), 1e-3, 0.0);
+        assertEquals(1e-3, estimator.getDeterminantThreshold(), 0.0);
     }
 
     @Test
@@ -348,7 +339,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
     }
 
@@ -358,14 +349,14 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getProgressDelta(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
 
         // set new value
         estimator.setProgressDelta(0.1f);
 
         // check correctness
-        assertEquals(estimator.getProgressDelta(), 0.1f, 0.0);
+        assertEquals(0.1f, estimator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -386,14 +377,14 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getConfidence(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.8);
 
         // check correctness
-        assertEquals(estimator.getConfidence(), 0.8, 0.0);
+        assertEquals(0.8, estimator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -414,14 +405,14 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getMaxIterations(),
-                DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(100);
 
         // check correctness
-        assertEquals(estimator.getMaxIterations(), 100);
+        assertEquals(100, estimator.getMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -446,7 +437,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
         estimator.setCameras(cameras);
 
         // check correctness
-        assertSame(estimator.getCameras(), cameras);
+        assertSame(cameras, estimator.getCameras());
 
         // Force IllegalArgumentException
         try {
@@ -467,40 +458,40 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
 
         // disable principal point at origin
         estimator.setPrincipalPointAtOrigin(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), -1);
+        assertEquals(-1, estimator.getMinNumberOfRequiredCameras());
 
         // disable zero skewness
         estimator.setPrincipalPointAtOrigin(true);
         estimator.setZeroSkewness(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 4);
+        assertEquals(4, estimator.getMinNumberOfRequiredCameras());
 
         // disable focal distance aspect ratio known
         estimator.setZeroSkewness(true);
         estimator.setFocalDistanceAspectRatioKnown(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
+        assertEquals(3, estimator.getMinNumberOfRequiredCameras());
 
         // disable zero skewness and singularity enforcement
         estimator.setZeroSkewness(false);
         estimator.setSingularityEnforced(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 5);
+        assertEquals(5, estimator.getMinNumberOfRequiredCameras());
 
         // disable focal distance aspect ratio known and singularity enforcement
         estimator.setZeroSkewness(true);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
+        assertEquals(3, estimator.getMinNumberOfRequiredCameras());
     }
 
     @Test
@@ -584,15 +575,14 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 new LMedSDualAbsoluteQuadricRobustEstimator();
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(),
-                LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(LMedSDualAbsoluteQuadricRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // set new value
         estimator.setStopThreshold(1e-3);
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(), 1e-3, 0.0);
+        assertEquals(1e-3, estimator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -625,8 +615,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                             verticalFocalLength, horizontalPrincipalPoint,
                             verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                    metricIntrinsic);
+            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
             final Matrix metricDiacMatrix = metricDiac.asMatrix();
 
@@ -634,15 +623,13 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
             // truth cameras
             final Matrix t = Matrix.createWithUniformRandomValues(
                     ProjectiveTransformation3D.HOM_COORDS,
-                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation =
-                    new ProjectiveTransformation3D(t);
+            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
@@ -662,8 +649,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera, projectiveCamera;
             final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras =
-                    new ArrayList<>();
+            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
             final LMedSDualAbsoluteQuadricRobustEstimator estimator =
                     new LMedSDualAbsoluteQuadricRobustEstimator();
@@ -695,14 +681,11 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier (add error to metric intrinsics)
                     inliers[i] = false;
-                    final double errorHorizontalFocalLength =
-                            errorRandomizer.nextDouble();
+                    final double errorHorizontalFocalLength = errorRandomizer.nextDouble();
                     final double errorAspectRatio = errorRandomizer.nextDouble();
                     final double errorSkewness = errorRandomizer.nextDouble();
-                    final double errorHorizontalPrincipalPoint =
-                            errorRandomizer.nextDouble();
-                    final double errorVerticalPrincipalPoint =
-                            errorRandomizer.nextDouble();
+                    final double errorHorizontalPrincipalPoint = errorRandomizer.nextDouble();
+                    final double errorVerticalPrincipalPoint = errorRandomizer.nextDouble();
 
                     final double outlierHorizontalFocalLength =
                             horizontalFocalLength + errorHorizontalFocalLength;
@@ -711,8 +694,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                             outlierAspectRatio * outlierHorizontalFocalLength;
                     final double outlierSkewness = skewness + errorSkewness;
                     final double outlierHorizontalPrincipalPoint =
-                            horizontalPrincipalPoint +
-                                    errorHorizontalPrincipalPoint;
+                            horizontalPrincipalPoint + errorHorizontalPrincipalPoint;
                     final double outlierVerticalPrincipalPoint =
                             verticalPrincipalPoint + errorVerticalPrincipalPoint;
 
@@ -723,20 +705,17 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                                     outlierHorizontalPrincipalPoint,
                                     outlierVerticalPrincipalPoint, outlierSkewness);
 
-                    metricCamera = new PinholeCamera(outlierMetricIntrinsic, q,
-                            cameraCenter);
+                    metricCamera = new PinholeCamera(outlierMetricIntrinsic, q, cameraCenter);
                 } else {
                     // inlier
                     inliers[i] = true;
-                    metricCamera = new PinholeCamera(metricIntrinsic, q,
-                            cameraCenter);
+                    metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
                 }
                 metricCamera.normalize();
                 metricCameras.add(metricCamera);
 
                 // transform camera
-                projectiveCamera = transformation.transformAndReturnNew(
-                        metricCamera);
+                projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
                 projectiveCameras.add(projectiveCamera);
             }
@@ -752,22 +731,18 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                 if (Math.abs(Utils.det(estimatedDaqMatrix)) > ABSOLUTE_ERROR) {
                     continue;
                 }
-                assertEquals(Utils.det(estimatedDaqMatrix), 0.0,
-                        ABSOLUTE_ERROR);
+                assertEquals(0.0, Utils.det(estimatedDaqMatrix), ABSOLUTE_ERROR);
 
-                if (!projectiveDaqMatrix.equals(estimatedDaqMatrix,
-                        ABSOLUTE_ERROR)) {
+                if (!projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix,
-                        ABSOLUTE_ERROR));
+                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
                 final ProjectiveTransformation3D estimatedTransformation =
                         estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
                 final ProjectiveTransformation3D invEstimatedTransformation =
-                        (ProjectiveTransformation3D) estimatedTransformation.
-                                inverseAndReturnNew();
+                        (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // projected estimated DAQ using projective cameras to obtain
                 // DIAC and check that DIAC in projective stratum is equal to
@@ -794,41 +769,34 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                     projectiveCamera = projectiveCameras.get(i);
 
                     final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera,
-                                    estimatedDaq);
+                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix =
-                            projectedProjectiveDiac.asMatrix();
+                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
-                    if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix,
-                            ABSOLUTE_ERROR)) {
+                    if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
                         continue;
                     }
-                    assertTrue(metricDiacMatrix.equals(
-                            projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
+                    assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.
-                            transformAndReturnNew(projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
+                            projectiveCamera);
 
                     estimatedMetricCamera.decompose();
                     final PinholeCameraIntrinsicParameters estimatedIntrinsic =
                             estimatedMetricCamera.getIntrinsicParameters();
 
-                    assertEquals(horizontalFocalLength,
-                            estimatedIntrinsic.getHorizontalFocalLength(),
+                    assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(verticalFocalLength,
-                            estimatedIntrinsic.getVerticalFocalLength(),
+                    assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(skewness, estimatedIntrinsic.getSkewness(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(horizontalPrincipalPoint,
                             estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(verticalPrincipalPoint,
-                            estimatedIntrinsic.getVerticalPrincipalPoint(),
+                    assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
 
                     if (anyFailed) {
@@ -842,30 +810,25 @@ public class LMedSDualAbsoluteQuadricRobustEstimatorTest implements
                     metricCamera = metricCameras.get(i);
                     metricCamera.decompose();
 
-                    estimatedMetricCenter = estimatedMetricCamera.
-                            getCameraCenter();
+                    estimatedMetricCenter = estimatedMetricCamera.getCameraCenter();
                     metricCenter = metricCamera.getCameraCenter();
-                    estimatedMetricRotation = estimatedMetricCamera.
-                            getCameraRotation();
+                    estimatedMetricRotation = estimatedMetricCamera.getCameraRotation();
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (count > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.
-                                distanceTo(estimatedMetricCenter);
-                        distanceCenter = previousMetricCenter.distanceTo(
-                                metricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter
+                                .distanceTo(estimatedMetricCenter);
+                        distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
                         final Rotation3D diffEstimatedRotation =
                                 estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.
-                                                inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.
-                                combineAndReturnNew(previousMetricRotation.
-                                        inverseRotationAndReturnNew());
+                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final Rotation3D diffRotation =
+                                metricRotation.combineAndReturnNew(
+                                        previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.
-                                asInhomogeneousMatrix();
+                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
                         final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }

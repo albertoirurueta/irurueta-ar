@@ -34,33 +34,28 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
 
     @Test
     public void testConstructorGetControlLengthAndGetStateLength() {
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
 
         // check initial values
-        assertEquals(data.getControlLength(),
-                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
-        assertEquals(data.getStateLength(),
-                AbsoluteOrientationSlamEstimator.STATE_LENGTH);
+        assertEquals(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH, data.getControlLength());
+        assertEquals(AbsoluteOrientationSlamEstimator.STATE_LENGTH, data.getStateLength());
         assertNull(data.getControlMean());
         assertNull(data.getControlCovariance());
     }
 
     @Test
     public void testGetSetControlMean() {
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
 
         // check initial value
         assertNull(data.getControlMean());
 
         // set new value
-        final double[] mean = new double[
-                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         data.setControlMean(mean);
 
         // check correctness
-        assertSame(data.getControlMean(), mean);
+        assertSame(mean, data.getControlMean());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[1];
@@ -73,8 +68,7 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
 
     @Test
     public void testGetSetControlCovariance() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
 
         // check initial value
         assertNull(data.getControlCovariance());
@@ -85,7 +79,7 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
         data.setControlCovariance(cov);
 
         // check correctness
-        assertSame(data.getControlCovariance(), cov);
+        assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
         final Matrix wrong = new Matrix(1, 1);
@@ -98,19 +92,17 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
 
     @Test
     public void testSetControlMeanAndCovariance() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
 
         // set new values
-        final double[] mean = new double[
-                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         final Matrix cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
         data.setControlMeanAndCovariance(mean, cov);
 
         // check correctness
-        assertSame(data.getControlMean(), mean);
-        assertSame(data.getControlCovariance(), cov);
+        assertSame(mean, data.getControlMean());
+        assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
         final double[] wrongMean = new double[1];
@@ -130,8 +122,7 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
 
 
     @Test
-    public void testPropagateWithControlJacobian() throws WrongSizeException,
-            InvalidCovarianceMatrixException {
+    public void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
 
         final Matrix cov = Matrix.identity(
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
@@ -139,12 +130,10 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
                 multiplyByScalarAndReturnNew(1e-3);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double[] mean = new double[
-                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
 
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
         data.setControlMeanAndCovariance(mean, cov);
 
         final Matrix jacobian = Matrix.identity(
@@ -152,8 +141,7 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH).
                 multiplyByScalarAndReturnNew(2.0);
 
-        final MultivariateNormalDist dist = data.propagateWithControlJacobian(
-                jacobian);
+        final MultivariateNormalDist dist = data.propagateWithControlJacobian(jacobian);
         final MultivariateNormalDist dist2 = new MultivariateNormalDist();
         data.propagateWithControlJacobian(jacobian, dist2);
 
@@ -178,8 +166,7 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer();
 
-        final double[] mean = new double[
-                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
         data1.setControlMean(mean);
         final Matrix cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,

@@ -268,13 +268,15 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws LockedException                        if estimator is locked.
      * @throws NotReadyException                      if input has not yet been provided.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
-     *                                                Indeed, if provided homographies belong to the group of affine
-     *                                                transformations (or other groups contained within such as metric or
-     *                                                euclidean ones), this exception will raise because camera movements will
-     *                                                be degenerate. To avoid this exception, homographies must be purely
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided. Indeed,
+     *                                                if provided homographies belong to the group of affine
+     *                                                transformations (or other groups contained within such
+     *                                                as metric or Euclidean ones), this exception will
+     *                                                raise because camera movements will be degenerate. To
+     *                                                avoid this exception, homographies must be purely
      *                                                projective.
      */
     @Override
@@ -358,9 +360,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                estimation, usually because repeated homographies
+     *                                                are provided, or homographies corresponding to
+     *                                                degenerate camera movements such as pure parallel
+     *                                                translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimateNoConstraints()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -523,9 +527,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                estimation, usually because repeated homographies
+     *                                                are provided, or homographies corresponding to
+     *                                                degenerate camera movements such as pure parallel
+     *                                                translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimateZeroSkewness()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -681,9 +687,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                estimation, usually because repeated homographies
+     *                                                are provided, or homographies corresponding to
+     *                                                degenerate camera movements such as pure parallel
+     *                                                translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -832,9 +840,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                estimation, usually because repeated homographies
+     *                                                are provided, or homographies corresponding to
+     *                                                degenerate camera movements such as pure parallel
+     *                                                translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimateZeroSkewnessAndPrincipalPointAtOrigin()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -974,9 +984,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                estimation, usually because repeated homographies
+     *                                                are provided, or homographies corresponding to
+     *                                                degenerate camera movements such as pure parallel
+     *                                                translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimateZeroSkewnessAndKnownFocalDistanceAspectRatio()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -1129,9 +1141,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
+     *                                                estimation, usually because repeated homographies
+     *                                                are provided, or homographies corresponding to
+     *                                                degenerate camera movements such as pure parallel
+     *                                                translations where no additional data is really
+     *                                                provided.
      */
     private ImageOfAbsoluteConic estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio()
             throws ImageOfAbsoluteConicEstimatorException {

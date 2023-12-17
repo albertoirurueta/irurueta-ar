@@ -105,7 +105,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
 
     /**
      * Default amount of progress variation before notifying a change in
-     * comparison progress. By default this is set to 5%.
+     * comparison progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -546,7 +546,7 @@ public class EpipolarDistanceFundamentalMatrixComparator extends
      * Comparison value will depend on the method implemented to compare both
      * fundamental matrices.
      *
-     * @return comparison value. Typically the smaller the absolute value the
+     * @return comparison value. Typically, the smaller the absolute value the
      * more similar the fundamental matrices are.
      * @throws NotReadyException                    if this comparator is not  yet ready to start
      *                                              the comparison.

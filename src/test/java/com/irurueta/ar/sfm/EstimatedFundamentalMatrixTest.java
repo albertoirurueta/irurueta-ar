@@ -65,11 +65,11 @@ public class EstimatedFundamentalMatrixTest {
         // check default values
         assertNull(efm.getId());
         assertNull(efm.getFundamentalMatrix());
-        assertEquals(efm.getQualityScore(),
-                EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE,
+                efm.getQualityScore(), 0.0);
         assertNull(efm.getCovariance());
-        assertEquals(efm.getViewId1(), 0);
-        assertEquals(efm.getViewId2(), 0);
+        assertEquals(0, efm.getViewId1());
+        assertEquals(0, efm.getViewId2());
         assertNull(efm.getInliers());
         assertNull(efm.getLeftSamples());
         assertNull(efm.getRightSamples());
@@ -86,7 +86,7 @@ public class EstimatedFundamentalMatrixTest {
         efm.setId("id");
 
         // check correctness
-        assertEquals(efm.getId(), "id");
+        assertEquals("id", efm.getId());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class EstimatedFundamentalMatrixTest {
         efm.setFundamentalMatrix(f);
 
         // check correctness
-        assertSame(efm.getFundamentalMatrix(), f);
+        assertSame(f, efm.getFundamentalMatrix());
     }
 
     @Test
@@ -109,14 +109,14 @@ public class EstimatedFundamentalMatrixTest {
         final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
 
         // check default value
-        assertEquals(efm.getQualityScore(),
-                EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE,
+                efm.getQualityScore(), 0.0);
 
         // set new value
         efm.setQualityScore(5.0);
 
         // check correctness
-        assertEquals(efm.getQualityScore(), 5.0, 0.0);
+        assertEquals(5.0, efm.getQualityScore(), 0.0);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class EstimatedFundamentalMatrixTest {
         efm.setCovariance(cov);
 
         // check correctness
-        assertSame(efm.getCovariance(), cov);
+        assertSame(cov, efm.getCovariance());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class EstimatedFundamentalMatrixTest {
         efm.setViewId1(5);
 
         // check correctness
-        assertEquals(efm.getViewId1(), 5);
+        assertEquals(5, efm.getViewId1());
     }
 
     @Test
@@ -153,13 +153,13 @@ public class EstimatedFundamentalMatrixTest {
         final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
 
         // check default value
-        assertEquals(efm.getViewId2(), 0);
+        assertEquals(0, efm.getViewId2());
 
         // set new value
         efm.setViewId2(10);
 
         // check correctness
-        assertEquals(efm.getViewId2(), 10);
+        assertEquals(10, efm.getViewId2());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class EstimatedFundamentalMatrixTest {
         efm.setInliers(inliers);
 
         // check correctness
-        assertSame(efm.getInliers(), inliers);
+        assertSame(inliers, efm.getInliers());
     }
 
     @Test
@@ -189,7 +189,7 @@ public class EstimatedFundamentalMatrixTest {
         efm.setLeftSamples(leftSamples);
 
         // check correctness
-        assertSame(efm.getLeftSamples(), leftSamples);
+        assertSame(leftSamples, efm.getLeftSamples());
     }
 
     @Test
@@ -204,11 +204,12 @@ public class EstimatedFundamentalMatrixTest {
         efm.setRightSamples(rightSamples);
 
         // check correctness
-        assertSame(efm.getRightSamples(), rightSamples);
+        assertSame(rightSamples, efm.getRightSamples());
     }
 
     @Test
-    public void testSerializeDeserialize() throws InvalidPairOfCamerasException, WrongSizeException, IOException, ClassNotFoundException, NotAvailableException {
+    public void testSerializeDeserialize() throws InvalidPairOfCamerasException,
+            WrongSizeException, IOException, ClassNotFoundException, NotAvailableException {
         final EstimatedFundamentalMatrix efm1 = new EstimatedFundamentalMatrix();
 
         // set new values
@@ -223,14 +224,14 @@ public class EstimatedFundamentalMatrixTest {
         final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(
+                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
@@ -244,8 +245,8 @@ public class EstimatedFundamentalMatrixTest {
         final double verticalPrincipalPoint2 = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
         final Point3D center1 = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -256,10 +257,8 @@ public class EstimatedFundamentalMatrixTest {
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -270,10 +269,8 @@ public class EstimatedFundamentalMatrixTest {
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                center2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         final FundamentalMatrix fundMatrix = new FundamentalMatrix(camera1, camera2);
 

@@ -225,17 +225,21 @@ public class ConstantVelocityModelStatePredictor {
                 // [0    0   eye 0  ]
                 // [0    0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
                 for (int i = 7; i < STATE_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
 
-                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12,
+                        qw);
             }
 
             if (jacobianU != null) {
@@ -252,7 +256,7 @@ public class ConstantVelocityModelStatePredictor {
 
     /**
      * Updates the system model (position, orientation, linear velocity and
-     * angular velocity assuming a constant velocity model (without
+     * angular velocity) assuming a constant velocity model (without
      * acceleration).
      *
      * @param x      initial system state containing: position-x, position-y,
@@ -278,7 +282,7 @@ public class ConstantVelocityModelStatePredictor {
 
     /**
      * Updates the system model (position, orientation, linear velocity and
-     * angular velocity assuming a constant velocity model (without
+     * angular velocity) assuming a constant velocity model (without
      * acceleration).
      *
      * @param x         initial system state containing: position-x, position-y,
@@ -307,7 +311,7 @@ public class ConstantVelocityModelStatePredictor {
 
     /**
      * Updates the system model (position, orientation, linear velocity and
-     * angular velocity assuming a constant velocity model (without
+     * angular velocity) assuming a constant velocity model (without
      * acceleration).
      *
      * @param x  initial system state containing: position-x, position-y,
@@ -469,17 +473,21 @@ public class ConstantVelocityModelStatePredictor {
                 // [0    0   eye 0  ]
                 // [0    0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
                 for (int i = 7; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
 
-                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12,
+                        qw);
             }
 
             if (jacobianU != null) {
@@ -489,7 +497,8 @@ public class ConstantVelocityModelStatePredictor {
                     jacobianU.setElementAt(i, i, 1.0);
                 }
                 // variation of linear and angular speed
-                for (int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {
+                for (int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH;
+                     i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {
                     jacobianU.setElementAt(i, j, 1.0);
                 }
             }
@@ -721,27 +730,33 @@ public class ConstantVelocityModelStatePredictor {
                 // [0    0   eye 0  ]
                 // [0    0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
                 for (int i = 7; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
 
-                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12,
+                        qw);
             }
 
             if (jacobianU != null) {
                 jacobianU.initialize(0.0);
 
                 // variation of rotation
-                jacobianU.setSubmatrix(3, 0, 6, 3, qdq);
+                jacobianU.setSubmatrix(3, 0, 6, 3,
+                        qdq);
 
                 // variation of linear and angular speed
-                for (int i = 7, j = Quaternion.N_PARAMS; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
+                for (int i = 7, j = Quaternion.N_PARAMS;
+                     i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
                     jacobianU.setElementAt(i, j, 1.0);
                 }
             }
@@ -880,12 +895,14 @@ public class ConstantVelocityModelStatePredictor {
         if (result.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 13");
         }
-        if (jacobianX != null && (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||
-                jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianX != null
+                && (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS
+                || jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt x must be 13x13");
         }
-        if (jacobianU != null && (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||
-                jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianU != null
+                && (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS
+                || jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt u must be 13x13");
         }
 
@@ -986,17 +1003,21 @@ public class ConstantVelocityModelStatePredictor {
                 // [0    0   eye 0  ]
                 // [0    0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
                 for (int i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
 
-                jacobianX.setSubmatrix(3, 10, 6, 12, qw);
+                jacobianX.setSubmatrix(3, 10, 6, 12,
+                        qw);
             }
 
             if (jacobianU != null) {
@@ -1007,7 +1028,8 @@ public class ConstantVelocityModelStatePredictor {
                 }
 
                 // variation of rotation
-                jacobianU.setSubmatrix(3, 3, 6, 6, qdq);
+                jacobianU.setSubmatrix(3, 3, 6, 6,
+                        qdq);
 
                 // variation of linear and angular speed
                 for (int i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {

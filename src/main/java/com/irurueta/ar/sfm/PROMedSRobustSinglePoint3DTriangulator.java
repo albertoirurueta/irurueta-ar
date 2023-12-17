@@ -177,8 +177,8 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      *                      same position as the camera on the list.
      * @param qualityScores quality scores corresponding to each provided view.
      * @throws IllegalArgumentException if provided lists or quality scores
-     *                                  don't have the same length or their length is less than 2 views, which
-     *                                  is the minimum required to compute triangulation.
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
      */
     public PROMedSRobustSinglePoint3DTriangulator(final List<Point2D> points,
                                                   final List<PinholeCamera> cameras,
@@ -198,8 +198,8 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided lists or quality scores
-     *                                  don't have the same length or their length is less than 2 views, which is
-     *                                  the minimum required to compute triangulation.
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
      */
     public PROMedSRobustSinglePoint3DTriangulator(final List<Point2D> points,
                                                   final List<PinholeCamera> cameras,
@@ -472,7 +472,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROMedS;
+        return RobustEstimatorMethod.PROMEDS;
     }
 
     /**

@@ -38,7 +38,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
     /**
      * Constant defining default threshold to determine whether points are
      * inliers or not.
-     * By default 1.0 is considered a good value for cases where measures are
+     * By default, 1.0 is considered a good value for cases where measures are
      * done in pixels, since typically the minimum resolution is 1 pixel.
      */
     public static final double DEFAULT_THRESHOLD = 1.0;
@@ -208,7 +208,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @param leftPoints                2D points on left view.
      * @param rightPoints               2D points on right view.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less than
+     *                                  7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
@@ -233,7 +234,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @param listener                  listener to be notified of events such as when estimation
      *                                  starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less than
+     *                                  7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
@@ -332,7 +334,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @param leftPoints    2D points on left view.
      * @param rightPoints   2D points on right view.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less than
+     *                                  7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(final double[] qualityScores,
                                                   final List<Point2D> leftPoints,
@@ -351,7 +354,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided list of points or quality
-     *                                  scores do not have the same length or their length is less than 7 points.
+     *                                  scores do not have the same length or their length is less than
+     *                                  7 points.
      */
     public PROSACFundamentalMatrixRobustEstimator(final double[] qualityScores,
                                                   final List<Point2D> leftPoints,
@@ -540,8 +544,8 @@ public class PROSACFundamentalMatrixRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<FundamentalMatrix> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
 
                                 mSubsetLeftPoints.clear();
                                 mSubsetRightPoints.clear();
@@ -650,7 +654,7 @@ public class PROSACFundamentalMatrixRobustEstimator extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      *

@@ -23,8 +23,7 @@ public class InvalidPairOfIntrinsicParametersExceptionTest {
 
     @Test
     public void testConstructor() {
-        InvalidPairOfIntrinsicParametersException ex =
-                new InvalidPairOfIntrinsicParametersException();
+        InvalidPairOfIntrinsicParametersException ex = new InvalidPairOfIntrinsicParametersException();
         assertNotNull(ex);
 
         ex = new InvalidPairOfIntrinsicParametersException(

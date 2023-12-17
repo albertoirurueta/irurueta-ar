@@ -317,7 +317,7 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             final Complex[] roots = rootEstimator.getRoots();
 
             // evaluate polynomial s(t) on each root of its derivative to obtain
-            // the global minima (we discard non real roots)
+            // the global minima (we discard non-real roots)
             double minimum = Double.MAX_VALUE;
             double value;
             Complex bestRoot = null;

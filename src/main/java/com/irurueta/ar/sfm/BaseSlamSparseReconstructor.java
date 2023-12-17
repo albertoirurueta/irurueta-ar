@@ -289,19 +289,23 @@ public abstract class BaseSlamSparseReconstructor<
             mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
             mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
             mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());
-            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());
+            mPreviousEuclideanEstimatedCamera.setQualityScore(
+                    mPreviousMetricEstimatedCamera.getQualityScore());
             if (mPreviousMetricEstimatedCamera.getCovariance() != null) {
                 mPreviousEuclideanEstimatedCamera.setCovariance(
-                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                        mPreviousMetricEstimatedCamera.getCovariance()
+                                .multiplyByScalarAndReturnNew(sqrScale));
             }
 
             mCurrentEuclideanEstimatedCamera = new EstimatedCamera();
             mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);
             mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());
-            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());
+            mCurrentEuclideanEstimatedCamera.setQualityScore(
+                    mCurrentMetricEstimatedCamera.getQualityScore());
             if (mCurrentMetricEstimatedCamera.getCovariance() != null) {
                 mCurrentEuclideanEstimatedCamera.setCovariance(
-                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                        mCurrentMetricEstimatedCamera.getCovariance()
+                                .multiplyByScalarAndReturnNew(sqrScale));
             }
 
             // update scale of reconstructed points
@@ -328,7 +332,8 @@ public abstract class BaseSlamSparseReconstructor<
                 euclideanPoint.setInlier(metricPoint.isInlier());
                 euclideanPoint.setQualityScore(metricPoint.getQualityScore());
                 if (metricPoint.getCovariance() != null) {
-                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                    euclideanPoint.setCovariance(metricPoint.getCovariance()
+                            .multiplyByScalarAndReturnNew(sqrScale));
                 }
                 euclideanPoint.setColorData(metricPoint.getColorData());
 

@@ -40,7 +40,7 @@ public class PROSACRobustSinglePoint3DTriangulator extends
     /**
      * Constant defining default threshold to determine whether samples are
      * inliers or not.
-     * By default 1.0 is considered a good value for cases where 2D point
+     * By default, 1.0 is considered a good value for cases where 2D point
      * measures are done on pixels, since typically the minimum resolution is 1
      * pixel.
      */
@@ -159,8 +159,8 @@ public class PROSACRobustSinglePoint3DTriangulator extends
      *                      same position as the camera on the list.
      * @param qualityScores quality scores corresponding to each provided view.
      * @throws IllegalArgumentException if provided lists or quality scores
-     *                                  don't have the same length or their length is less than 2 views, which
-     *                                  is the minimum required to compute triangulation.
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
      */
     public PROSACRobustSinglePoint3DTriangulator(final List<Point2D> points,
                                                  final List<PinholeCamera> cameras,
@@ -180,8 +180,8 @@ public class PROSACRobustSinglePoint3DTriangulator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided lists or quality scores
-     *                                  don't have the same length or their length is less than 2 views, which is
-     *                                  the minimum required to compute triangulation.
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
      */
     public PROSACRobustSinglePoint3DTriangulator(final List<Point2D> points,
                                                  final List<PinholeCamera> cameras,
@@ -194,7 +194,7 @@ public class PROSACRobustSinglePoint3DTriangulator extends
     /**
      * Returns threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @return threshold to determine whether points are inliers or not when
@@ -207,7 +207,7 @@ public class PROSACRobustSinglePoint3DTriangulator extends
     /**
      * Sets threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @param threshold threshold to be set.

@@ -54,7 +54,7 @@ public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData> {
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
-     * time..
+     * time.
      */
     private long mLastTimestampNanos = -1;
 

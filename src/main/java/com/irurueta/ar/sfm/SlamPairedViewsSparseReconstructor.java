@@ -56,8 +56,8 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
 
     /**
      * Process one view of all the available data during the reconstruction.
-     * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
-     * one view at a time.
+     * This method can be called multiple times instead of {@link #start()} to build the reconstruction
+     * step by step, one view at a time.
      *
      * @return true if more views can be processed, false when reconstruction has finished.
      */

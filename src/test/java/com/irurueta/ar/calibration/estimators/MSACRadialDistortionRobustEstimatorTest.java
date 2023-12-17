@@ -35,8 +35,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class MSACRadialDistortionRobustEstimatorTest implements
-        RadialDistortionRobustEstimatorListener {
+public class MSACRadialDistortionRobustEstimatorTest implements RadialDistortionRobustEstimatorListener {
 
     private static final double MIN_POINT_VALUE = -1.0;
     private static final double MAX_POINT_VALUE = 1.0;
@@ -69,40 +68,39 @@ public class MSACRadialDistortionRobustEstimatorTest implements
                 new MSACRadialDistortionRobustEstimator();
 
         // check correctness
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0,
+                estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0,
+                estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -111,40 +109,36 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         estimator = new MSACRadialDistortionRobustEstimator(this);
 
         // check correctness
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
-        assertSame(estimator.getListener(), this);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -157,44 +151,39 @@ public class MSACRadialDistortionRobustEstimatorTest implements
             undistortedPoints.add(Point2D.create());
         }
 
-        estimator = new MSACRadialDistortionRobustEstimator(distortedPoints,
-                undistortedPoints);
+        estimator = new MSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints);
 
         // check correctness
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -203,26 +192,22 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         final List<Point2D> emptyPoints = new ArrayList<>();
         estimator = null;
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints,
-                    undistortedPoints);
+            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints, undistortedPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints,
-                    emptyPoints);
+            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints, emptyPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(
-                    null, undistortedPoints);
+            estimator = new MSACRadialDistortionRobustEstimator(null, undistortedPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(
-                    distortedPoints, null);
+            estimator = new MSACRadialDistortionRobustEstimator(distortedPoints, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -233,40 +218,37 @@ public class MSACRadialDistortionRobustEstimatorTest implements
                 undistortedPoints, this);
 
         // check correctness
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
-        assertSame(estimator.getListener(), this);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -280,8 +262,7 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints,
-                    emptyPoints, this);
+            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints, emptyPoints, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -302,44 +283,38 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         // test constructor with points and center
         final Point2D center = Point2D.create();
 
-        estimator = new MSACRadialDistortionRobustEstimator(distortedPoints,
-                undistortedPoints, center);
+        estimator = new MSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, center);
 
         // check correctness
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(center.getInhomX(), estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -347,14 +322,12 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints,
-                    undistortedPoints, center);
+            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints, undistortedPoints, center);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints,
-                    emptyPoints, center);
+            estimator = new MSACRadialDistortionRobustEstimator(emptyPoints, emptyPoints, center);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -377,40 +350,36 @@ public class MSACRadialDistortionRobustEstimatorTest implements
                 undistortedPoints, center, this);
 
         // check correctness
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
-        assertSame(estimator.getListener(), this);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(center.getInhomX(), estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -446,8 +415,7 @@ public class MSACRadialDistortionRobustEstimatorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
         assertNull(estimator.getQualityScores());
@@ -462,18 +430,17 @@ public class MSACRadialDistortionRobustEstimatorTest implements
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getThreshold(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_THRESHOLD,
+                estimator.getThreshold(), 0.0);
 
         // set new value
         estimator.setThreshold(10.0);
 
         // check correctness
-        assertEquals(estimator.getThreshold(), 10.0, 0.0);
+        assertEquals(10.0, estimator.getThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -485,8 +452,7 @@ public class MSACRadialDistortionRobustEstimatorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -496,25 +462,23 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
     }
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getProgressDelta(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(estimator.getProgressDelta(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -531,18 +495,17 @@ public class MSACRadialDistortionRobustEstimatorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getConfidence(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.75);
 
         // check correctness
-        assertEquals(estimator.getConfidence(), 0.75, 0.0);
+        assertEquals(0.75, estimator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -559,18 +522,17 @@ public class MSACRadialDistortionRobustEstimatorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getMaxIterations(),
-                MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(MSACRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(10);
 
         // check correctness
-        assertEquals(estimator.getMaxIterations(), 10);
+        assertEquals(10, estimator.getMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -589,8 +551,7 @@ public class MSACRadialDistortionRobustEstimatorTest implements
             undistortedPoints.add(Point2D.create());
         }
 
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default values
         assertNull(estimator.getDistortedPoints());
@@ -602,8 +563,8 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         estimator.setPoints(distortedPoints, undistortedPoints);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
 
@@ -633,8 +594,7 @@ public class MSACRadialDistortionRobustEstimatorTest implements
 
     @Test
     public void testGetSetDistortionCenter() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
         assertNull(estimator.getDistortionCenter());
@@ -644,112 +604,106 @@ public class MSACRadialDistortionRobustEstimatorTest implements
         estimator.setDistortionCenter(center);
 
         // check correctness
-        assertSame(estimator.getDistortionCenter(), center);
+        assertSame(center, estimator.getDistortionCenter());
     }
 
     @Test
     public void testGetSetHorizontalFocalLength() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
 
         // set new value
         estimator.setHorizontalFocalLength(2.0);
 
         // check correctness
-        assertEquals(estimator.getHorizontalFocalLength(), 2.0, 0.0);
+        assertEquals(2.0, estimator.getHorizontalFocalLength(), 0.0);
     }
 
     @Test
     public void testGetSetVerticalFocalLength() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
 
         // set new value
         estimator.setVerticalFocalLength(2.0);
 
         // check correctness
-        assertEquals(estimator.getVerticalFocalLength(), 2.0, 0.0);
+        assertEquals(2.0, estimator.getVerticalFocalLength(), 0.0);
     }
 
     @Test
     public void testGetSetSkew() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getSkew(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
 
         // set new value
         estimator.setSkew(1.0);
 
         // check correctness
-        assertEquals(estimator.getSkew(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getSkew(), 0.0);
     }
 
     @Test
     public void testGetSetIntrinsic() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
         PinholeCameraIntrinsicParameters intrinsic = estimator.getIntrinsic();
 
-        assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-        assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-        assertEquals(intrinsic.getHorizontalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(intrinsic.getVerticalFocalLength(),
-                RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(intrinsic.getSkewness(),
-                RadialDistortionRobustEstimator.DEFAULT_SKEW, 0.0);
+        assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                intrinsic.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
+                intrinsic.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
+                intrinsic.getSkewness(), 0.0);
 
         // set new value
-        intrinsic = new PinholeCameraIntrinsicParameters(2.0, 3.0, 4.0, 5.0,
-                6.0);
+        intrinsic = new PinholeCameraIntrinsicParameters(2.0, 3.0,
+                4.0, 5.0, 6.0);
         estimator.setIntrinsic(intrinsic);
 
         // check correctness
-        assertEquals(intrinsic.getHorizontalPrincipalPoint(), 4.0, 0.0);
-        assertEquals(intrinsic.getVerticalPrincipalPoint(), 5.0, 0.0);
-        assertEquals(intrinsic.getHorizontalFocalLength(), 2.0, 0.0);
-        assertEquals(intrinsic.getVerticalFocalLength(), 3.0, 0.0);
-        assertEquals(intrinsic.getSkewness(), 6.0, 0.0);
+        assertEquals(4.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(5.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+        assertEquals(2.0, intrinsic.getHorizontalFocalLength(), 0.0);
+        assertEquals(3.0, intrinsic.getVerticalFocalLength(), 0.0);
+        assertEquals(6.0, intrinsic.getSkewness(), 0.0);
 
         // set again
-        estimator.setIntrinsic(new InhomogeneousPoint2D(6.0, 5.0), 4.0, 3.0,
-                2.0);
+        estimator.setIntrinsic(new InhomogeneousPoint2D(6.0, 5.0),
+                4.0, 3.0, 2.0);
 
         // check correctness
-        assertEquals(estimator.getDistortionCenter().getInhomX(), 6.0, 0.0);
-        assertEquals(estimator.getDistortionCenter().getInhomY(), 5.0, 0.0);
-        assertEquals(estimator.getHorizontalFocalLength(), 4.0, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(), 3.0, 0.0);
-        assertEquals(estimator.getSkew(), 2.0, 0.0);
+        assertEquals(6.0, estimator.getDistortionCenter().getInhomX(), 0.0);
+        assertEquals(5.0, estimator.getDistortionCenter().getInhomY(), 0.0);
+        assertEquals(4.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(3.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getSkew(), 0.0);
     }
 
     @Test
     public void testGetSetNumKParams() throws LockedException {
-        final MSACRadialDistortionRobustEstimator estimator =
-                new MSACRadialDistortionRobustEstimator();
+        final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
 
         // set new value
         estimator.setNumKParams(3);
 
         // check correctness
-        assertEquals(estimator.getNumKParams(), 3);
+        assertEquals(3, estimator.getNumKParams());
     }
 
     @Test
@@ -800,37 +754,34 @@ public class MSACRadialDistortionRobustEstimatorTest implements
                 undistortedPoints.add(undistortedPoint);
             }
 
-            final MSACRadialDistortionRobustEstimator estimator =
-                    new MSACRadialDistortionRobustEstimator(
-                            distortedPointsWithError,
-                            undistortedPoints, this);
+            final MSACRadialDistortionRobustEstimator estimator = new MSACRadialDistortionRobustEstimator(
+                    distortedPointsWithError, undistortedPoints, this);
 
             estimator.setIntrinsic(distortion.getIntrinsic());
             estimator.setThreshold(THRESHOLD);
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             final RadialDistortion distortion2 = estimator.estimate();
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
 
             // check correctness of estimation
-            assertEquals(distortion2.getK1(), k1, ABSOLUTE_ERROR);
-            assertEquals(distortion2.getK2(), k2, ABSOLUTE_ERROR);
+            assertEquals(k1, distortion2.getK1(), ABSOLUTE_ERROR);
+            assertEquals(k2, distortion2.getK2(), ABSOLUTE_ERROR);
             assertEquals(distortion2.getCenter(), center);
 
             for (int i = 0; i < nPoints; i++) {
-                assertEquals(distortedPoints.get(i),
-                        distortion2.distort(undistortedPoints.get(i)));
+                assertEquals(distortedPoints.get(i), distortion2.distort(undistortedPoints.get(i)));
             }
         }
     }

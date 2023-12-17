@@ -27,8 +27,7 @@ public class SingleCorrectorTest {
         // test create with method
 
         // Gold Standard
-        SingleCorrector corrector = SingleCorrector.create(
-                CorrectorType.GOLD_STANDARD);
+        SingleCorrector corrector = SingleCorrector.create(CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertNull(corrector.getLeftPoint());
@@ -37,7 +36,7 @@ public class SingleCorrectorTest {
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardSingleCorrector);
 
         // Sampson
@@ -50,38 +49,36 @@ public class SingleCorrectorTest {
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonSingleCorrector);
 
         // test create with fundamental matrix and type
         final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
 
         // Gold standard
-        corrector = SingleCorrector.create(fundamentalMatrix,
-                CorrectorType.GOLD_STANDARD);
+        corrector = SingleCorrector.create(fundamentalMatrix, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertNull(corrector.getLeftPoint());
         assertNull(corrector.getRightPoint());
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardSingleCorrector);
 
         // Sampson
-        corrector = SingleCorrector.create(fundamentalMatrix,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = SingleCorrector.create(fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertNull(corrector.getLeftPoint());
         assertNull(corrector.getRightPoint());
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonSingleCorrector);
 
         // test create with left and right points
@@ -89,63 +86,61 @@ public class SingleCorrectorTest {
         final Point2D rightPoint = Point2D.create();
 
         // Gold standard
-        corrector = SingleCorrector.create(leftPoint, rightPoint,
-                CorrectorType.GOLD_STANDARD);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
         assertNull(corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardSingleCorrector);
 
         // Sampson
-        corrector = SingleCorrector.create(leftPoint, rightPoint,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
         assertNull(corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonSingleCorrector);
 
         // test create with left and right points and fundamental matrix
 
         // Gold standard
-        corrector = SingleCorrector.create(leftPoint, rightPoint,
-                fundamentalMatrix, CorrectorType.GOLD_STANDARD);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix,
+                CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         // fundamental matrix is not defined
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardSingleCorrector);
 
         // Sampson
-        corrector = SingleCorrector.create(leftPoint, rightPoint,
-                fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix,
+                CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         // fundamental matrix is not defined
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonSingleCorrector);
 
         // test create without arguments
@@ -158,7 +153,7 @@ public class SingleCorrectorTest {
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), SingleCorrector.DEFAULT_TYPE);
+        assertEquals(SingleCorrector.DEFAULT_TYPE, corrector.getType());
 
         // test create with fundamental matrix
         corrector = SingleCorrector.create(fundamentalMatrix);
@@ -166,35 +161,34 @@ public class SingleCorrectorTest {
         // check correctness
         assertNull(corrector.getLeftPoint());
         assertNull(corrector.getRightPoint());
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), SingleCorrector.DEFAULT_TYPE);
+        assertEquals(SingleCorrector.DEFAULT_TYPE, corrector.getType());
 
         // test create with left and right points
         corrector = SingleCorrector.create(leftPoint, rightPoint);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
         assertNull(corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), SingleCorrector.DEFAULT_TYPE);
+        assertEquals(SingleCorrector.DEFAULT_TYPE, corrector.getType());
 
         // test create with left and right points and fundamental matrix
-        corrector = SingleCorrector.create(leftPoint, rightPoint,
-                fundamentalMatrix);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), SingleCorrector.DEFAULT_TYPE);
+        assertEquals(SingleCorrector.DEFAULT_TYPE, corrector.getType());
     }
 }

@@ -90,8 +90,8 @@ public class FundamentalMatrixTest {
             // test constructor with internal matrix
 
             // create a valid 3x3 rank 2 matrix
-            final Matrix a = Matrix.createWithUniformRandomValues(FUND_MATRIX_ROWS,
-                    FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final Matrix a = Matrix.createWithUniformRandomValues(FUND_MATRIX_ROWS, FUND_MATRIX_COLS,
+                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
 
@@ -107,20 +107,18 @@ public class FundamentalMatrixTest {
             // Set last singular value to zero to enforce rank 2
             w.setElementAt(2, 2, 0.0);
 
-            Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
-                    w.multiplyAndReturnNew(transV));
+            Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(transV));
 
             fundMatrix = new FundamentalMatrix(fundamentalInternalMatrix);
             assertTrue(fundMatrix.isInternalMatrixAvailable());
             assertEquals(fundamentalInternalMatrix, fundMatrix.getInternalMatrix());
-            assertNotSame(fundamentalInternalMatrix,
-                    fundMatrix.getInternalMatrix());
+            assertNotSame(fundamentalInternalMatrix, fundMatrix.getInternalMatrix());
 
             // Force InvalidFundamentalMatrixException
 
             // try with a non 3x3 matrix
-            fundamentalInternalMatrix = new Matrix(FUND_MATRIX_ROWS + 1,
-                    FUND_MATRIX_COLS + 1);
+            fundamentalInternalMatrix = new Matrix(
+                    FUND_MATRIX_ROWS + 1, FUND_MATRIX_COLS + 1);
 
             fundMatrix = null;
             try {
@@ -132,15 +130,12 @@ public class FundamentalMatrixTest {
 
             // try with a non rank-2 3x3 matrix
             fundamentalInternalMatrix = Matrix.createWithUniformRandomValues(
-                    FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+                    FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             while (Utils.rank(fundamentalInternalMatrix) == 2) {
                 fundamentalInternalMatrix = Matrix.createWithUniformRandomValues(
-                        FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
+                        FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             }
 
-            fundMatrix = null;
             try {
                 fundMatrix = new FundamentalMatrix(fundamentalInternalMatrix);
                 fail("InvalidFundamentalMatrixException expected but not thrown");
@@ -160,14 +155,12 @@ public class FundamentalMatrixTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double horizontalFocalLength1 = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double horizontalFocalLength2 = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
             final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
             final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
@@ -181,8 +174,8 @@ public class FundamentalMatrixTest {
             final double verticalPrincipalPoint2 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+            final double cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -193,10 +186,8 @@ public class FundamentalMatrixTest {
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -207,10 +198,8 @@ public class FundamentalMatrixTest {
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             fundMatrix = new FundamentalMatrix(camera1, camera2);
 
@@ -228,13 +217,11 @@ public class FundamentalMatrixTest {
             if (epipole1a.distanceTo(epipole1b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1a.distanceTo(epipole1b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1a.distanceTo(epipole1b), LARGE_ABSOLUTE_ERROR);
             if (epipole2a.distanceTo(epipole2b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2a.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2a.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate a random 3D point
             final Point3D point3D = new InhomogeneousPoint3D(
@@ -300,8 +287,7 @@ public class FundamentalMatrixTest {
             final List<Point2D> rightPoints = new ArrayList<>();
             Transformation2D homography = null;
             try {
-                homography = generateHomography(camera1, camera2,
-                        fundMatrix2, leftPoints, rightPoints);
+                homography = generateHomography(camera1, camera2, fundMatrix2, leftPoints, rightPoints);
             } catch (final Exception ignore) {
             }
             if (homography == null) {
@@ -320,16 +306,14 @@ public class FundamentalMatrixTest {
             // check correctness
             if (!fundMatrix.getInternalMatrix().equals(
                     fundMatrix2.getInternalMatrix(), VERY_LARGE_ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR)) {
+                    !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix().
+                            multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
                     fundMatrix2.getInternalMatrix(), VERY_LARGE_ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR));
+                    fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix().
+                            multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR));
 
             fundMatrix.computeEpipoles();
             final Point2D leftEpipole = fundMatrix.getLeftEpipole();
@@ -352,16 +336,14 @@ public class FundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetInternalMatrixAndAvailability()
-            throws WrongSizeException, NotReadyException, LockedException,
-            DecomposerException, com.irurueta.algebra.NotAvailableException,
+    public void testGetSetInternalMatrixAndAvailability() throws WrongSizeException, NotReadyException,
+            LockedException, DecomposerException, com.irurueta.algebra.NotAvailableException,
             InvalidFundamentalMatrixException, NotAvailableException {
         // create a valid 3x3 rank 2 matrix
         final Matrix a = Matrix.createWithUniformRandomValues(FUND_MATRIX_ROWS,
                 FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final SingularValueDecomposer decomposer =
-                new SingularValueDecomposer(a);
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
 
         decomposer.decompose();
 
@@ -375,8 +357,7 @@ public class FundamentalMatrixTest {
         // set last singular value to zero to enforce rank 2
         w.setElementAt(2, 2, 0.0);
 
-        Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
-                w.multiplyAndReturnNew(transV));
+        Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(transV));
 
         // Instantiate empty fundamental matrix
         final FundamentalMatrix fundMatrix = new FundamentalMatrix();
@@ -394,14 +375,12 @@ public class FundamentalMatrixTest {
         // Check correctness
         assertTrue(fundMatrix.isInternalMatrixAvailable());
         assertEquals(fundamentalInternalMatrix, fundMatrix.getInternalMatrix());
-        assertNotSame(fundamentalInternalMatrix,
-                fundMatrix.getInternalMatrix());
+        assertNotSame(fundamentalInternalMatrix, fundMatrix.getInternalMatrix());
 
         // Force InvalidFundamentalMatrixException
 
         // try with a non 3x3 matrix
-        fundamentalInternalMatrix = new Matrix(FUND_MATRIX_ROWS + 1,
-                FUND_MATRIX_COLS + 1);
+        fundamentalInternalMatrix = new Matrix(FUND_MATRIX_ROWS + 1, FUND_MATRIX_COLS + 1);
         try {
             fundMatrix.setInternalMatrix(fundamentalInternalMatrix);
             fail("InvalidFundamentalMatrixException expected but not thrown");
@@ -410,12 +389,10 @@ public class FundamentalMatrixTest {
 
         // try with a non rank-2 3x3 matrix
         fundamentalInternalMatrix = Matrix.createWithUniformRandomValues(
-                FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+                FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         while (Utils.rank(fundamentalInternalMatrix) == 2) {
             fundamentalInternalMatrix = Matrix.createWithUniformRandomValues(
-                    FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE,
-                    MIN_RANDOM_VALUE);
+                    FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MIN_RANDOM_VALUE);
         }
 
         try {
@@ -427,8 +404,8 @@ public class FundamentalMatrixTest {
 
     @Test
     public void testSetFromPairOfCameras() throws InvalidPairOfCamerasException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+            com.irurueta.geometry.estimators.NotReadyException, InvalidFundamentalMatrixException,
+            NotAvailableException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -463,8 +440,8 @@ public class FundamentalMatrixTest {
             final double verticalPrincipalPoint2 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+            final double cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -475,10 +452,8 @@ public class FundamentalMatrixTest {
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -489,10 +464,8 @@ public class FundamentalMatrixTest {
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             final FundamentalMatrix fundMatrix = new FundamentalMatrix();
 
@@ -517,11 +490,11 @@ public class FundamentalMatrixTest {
             if (epipole1a.distanceTo(epipole1b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1a.distanceTo(epipole1b), 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1a.distanceTo(epipole1b), LARGE_ABSOLUTE_ERROR);
             if (epipole2a.distanceTo(epipole2b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2a.distanceTo(epipole2b), 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2a.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate a random 3D point
             final Point3D point3D = new InhomogeneousPoint3D(
@@ -581,8 +554,7 @@ public class FundamentalMatrixTest {
             final PinholeCamera camera2 = new PinholeCamera();
             Transformation2D homography = null;
             try {
-                homography = generateHomography(camera1, camera2,
-                        fundMatrix2, leftPoints, rightPoints);
+                homography = generateHomography(camera1, camera2, fundMatrix2, leftPoints, rightPoints);
             } catch (final Exception ignore) {
             }
             if (homography == null) {
@@ -602,16 +574,14 @@ public class FundamentalMatrixTest {
             // check correctness
             if (!fundMatrix.getInternalMatrix().equals(
                     fundMatrix2.getInternalMatrix(), VERY_LARGE_ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR)) {
+                    !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix().
+                            multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
                     fundMatrix2.getInternalMatrix(), VERY_LARGE_ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR));
+                    fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix().
+                            multiplyByScalarAndReturnNew(-1.0), VERY_LARGE_ABSOLUTE_ERROR));
 
             fundMatrix.computeEpipoles();
             final Point2D leftEpipole = fundMatrix.getLeftEpipole();
@@ -635,8 +605,7 @@ public class FundamentalMatrixTest {
 
     @Test
     public void testGetAndComputeEpipolesAndEpipolarLinesAndCheckAvailability()
-            throws InvalidPairOfCamerasException,
-            com.irurueta.geometry.estimators.NotReadyException,
+            throws InvalidPairOfCamerasException, com.irurueta.geometry.estimators.NotReadyException,
             InvalidFundamentalMatrixException, NotAvailableException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -661,10 +630,8 @@ public class FundamentalMatrixTest {
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -687,10 +654,8 @@ public class FundamentalMatrixTest {
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -701,13 +666,10 @@ public class FundamentalMatrixTest {
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
-            final FundamentalMatrix fundMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix = new FundamentalMatrix(camera1, camera2);
 
             // compute epipoles
             final Point2D epipole1a = camera1.project(center2);
@@ -721,12 +683,11 @@ public class FundamentalMatrixTest {
             if (epipole1a.distanceTo(epipole1b) > 10.0 * ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1a.distanceTo(epipole1b), 0.0,
-                    10.0 * ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1a.distanceTo(epipole1b), 10.0 * ABSOLUTE_ERROR);
             if (epipole2a.distanceTo(epipole2b) > 10.0 * ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2a.distanceTo(epipole2b), 0.0, 10.0 * ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2a.distanceTo(epipole2b), 10.0 * ABSOLUTE_ERROR);
 
             // generate a random 3D point
             final Point3D point3D = new InhomogeneousPoint3D(
@@ -807,10 +768,8 @@ public class FundamentalMatrixTest {
     }
 
     @Test
-    public void testNormalizeAndIsNormalized()
-            throws InvalidPairOfCamerasException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            NotAvailableException {
+    public void testNormalizeAndIsNormalized() throws InvalidPairOfCamerasException,
+            com.irurueta.geometry.estimators.NotReadyException, NotAvailableException {
         // provide two pinhole cameras
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double alphaEuler1 = 0.0;
@@ -823,14 +782,10 @@ public class FundamentalMatrixTest {
         final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
@@ -844,8 +799,8 @@ public class FundamentalMatrixTest {
         final double verticalPrincipalPoint2 = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
         final Point3D center1 = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -856,10 +811,8 @@ public class FundamentalMatrixTest {
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -870,10 +823,8 @@ public class FundamentalMatrixTest {
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                center2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         final FundamentalMatrix fundMatrix = new FundamentalMatrix(camera1, camera2);
 
@@ -888,17 +839,16 @@ public class FundamentalMatrixTest {
         // check that internal matrix has Frobenius norm equal to 1
         final Matrix internalMatrix = fundMatrix.getInternalMatrix();
 
-        assertEquals(Utils.normF(internalMatrix), 1.0, ABSOLUTE_ERROR);
+        assertEquals(1.0, Utils.normF(internalMatrix), ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testIsValidInternalMatrix() throws WrongSizeException,
-            NotReadyException, LockedException, DecomposerException,
-            com.irurueta.algebra.NotAvailableException {
+    public void testIsValidInternalMatrix() throws WrongSizeException, NotReadyException, LockedException,
+            DecomposerException, com.irurueta.algebra.NotAvailableException {
 
         // create a valid 3x3 rank 2 matrix
-        final Matrix a = Matrix.createWithUniformRandomValues(FUND_MATRIX_ROWS,
-                FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final Matrix a = Matrix.createWithUniformRandomValues(
+                FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
 
@@ -914,37 +864,28 @@ public class FundamentalMatrixTest {
         // Set last singular value to zero to enforce rank 2
         w.setElementAt(2, 2, 0.0);
 
-        Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(
-                w.multiplyAndReturnNew(transV));
+        Matrix fundamentalInternalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(transV));
 
-        assertTrue(FundamentalMatrix.isValidInternalMatrix(
-                fundamentalInternalMatrix));
+        assertTrue(FundamentalMatrix.isValidInternalMatrix(fundamentalInternalMatrix));
 
         // try with a non 3x3 matrix
-        fundamentalInternalMatrix = new Matrix(FUND_MATRIX_ROWS + 1,
-                FUND_MATRIX_COLS + 1);
-        assertFalse(FundamentalMatrix.isValidInternalMatrix(
-                fundamentalInternalMatrix));
+        fundamentalInternalMatrix = new Matrix(FUND_MATRIX_ROWS + 1, FUND_MATRIX_COLS + 1);
+        assertFalse(FundamentalMatrix.isValidInternalMatrix(fundamentalInternalMatrix));
 
         // try with a non rank-2 3x3 matrix
         fundamentalInternalMatrix = Matrix.createWithUniformRandomValues(
-                FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+                FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         while (Utils.rank(fundamentalInternalMatrix) == 2) {
             fundamentalInternalMatrix = Matrix.createWithUniformRandomValues(
-                    FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+                    FUND_MATRIX_ROWS, FUND_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         }
 
-        assertFalse(FundamentalMatrix.isValidInternalMatrix(
-                fundamentalInternalMatrix));
+        assertFalse(FundamentalMatrix.isValidInternalMatrix(fundamentalInternalMatrix));
     }
 
     @Test
-    public void testGenerateCamerasInArbitraryProjectiveSpace()
-            throws InvalidPairOfCamerasException,
-            InvalidFundamentalMatrixException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testGenerateCamerasInArbitraryProjectiveSpace() throws InvalidPairOfCamerasException,
+            InvalidFundamentalMatrixException, com.irurueta.geometry.estimators.NotReadyException,
             NotAvailableException, CameraException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -980,8 +921,8 @@ public class FundamentalMatrixTest {
             final double verticalPrincipalPoint2 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+            final double cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -992,10 +933,8 @@ public class FundamentalMatrixTest {
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1006,10 +945,8 @@ public class FundamentalMatrixTest {
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             final FundamentalMatrix fundMatrix = new FundamentalMatrix();
 
@@ -1026,8 +963,7 @@ public class FundamentalMatrixTest {
                     MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             final double referencePlaneDirectorVectorZ = randomizer.nextDouble(
                     MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double scaleFactor = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final double scaleFactor = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
             final PinholeCamera camera1b = new PinholeCamera();
             final PinholeCamera camera2b = new PinholeCamera();
             fundMatrix.generateCamerasInArbitraryProjectiveSpace(camera1b, camera2b,
@@ -1044,8 +980,7 @@ public class FundamentalMatrixTest {
             // plane and unitary scale factor
             final PinholeCamera camera1c = new PinholeCamera();
             final PinholeCamera camera2c = new PinholeCamera();
-            fundMatrix.generateCamerasInArbitraryProjectiveSpace(camera1c,
-                    camera2c);
+            fundMatrix.generateCamerasInArbitraryProjectiveSpace(camera1c, camera2c);
 
             // compute fundamental matrix for arbitrary cameras
             final FundamentalMatrix fundMatrix3 = new FundamentalMatrix();
@@ -1079,29 +1014,29 @@ public class FundamentalMatrixTest {
             if (epipole1.distanceTo(epipole1a) > 5.0 * LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, 5.0 * LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), 5.0 * LARGE_ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > 5.0 * LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, 5.0 * LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), 5.0 * LARGE_ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > 5.0 * LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, 5.0 * LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), 5.0 * LARGE_ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > 5.0 * LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0, 5.0 * LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), 5.0 * LARGE_ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1c) > 5.0 * LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1c), 0.0, 5.0 * LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1c), 5.0 * LARGE_ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2c) > 5.0 * LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2c), 0.0, 5.0 * LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2c), 5.0 * LARGE_ABSOLUTE_ERROR);
 
             // generate a random 3D points
             final Point3D point3Da = new InhomogeneousPoint3D(
@@ -1259,7 +1194,7 @@ public class FundamentalMatrixTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws GeometryException, AlgebraException, IOException, ClassNotFoundException {
+    public void testSerializeDeserialize() throws GeometryException, IOException, ClassNotFoundException {
         // create fundamental matrix by providing two pinhole cameras
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double alphaEuler1 = 0.0;
@@ -1272,14 +1207,10 @@ public class FundamentalMatrixTest {
         final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
@@ -1293,8 +1224,8 @@ public class FundamentalMatrixTest {
         final double verticalPrincipalPoint2 = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
         final Point3D center1 = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
@@ -1305,10 +1236,8 @@ public class FundamentalMatrixTest {
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1319,10 +1248,8 @@ public class FundamentalMatrixTest {
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                center2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         final FundamentalMatrix fundMatrix1 = new FundamentalMatrix(camera1, camera2);
 
@@ -1334,17 +1261,13 @@ public class FundamentalMatrixTest {
         assertEquals(fundMatrix1.getInternalMatrix(), fundMatrix2.getInternalMatrix());
     }
 
-    private Transformation2D generateHomography(
-            final PinholeCamera camera1,
-            final PinholeCamera camera2,
-            final FundamentalMatrix fundamentalMatrix,
-            final List<Point2D> projectedPoints1,
+    private Transformation2D generateHomography(final PinholeCamera camera1, final PinholeCamera camera2,
+            final FundamentalMatrix fundamentalMatrix, final List<Point2D> projectedPoints1,
             final List<Point2D> projectedPoints2) throws GeometryException, AlgebraException,
             RobustEstimatorException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
         final double aspectRatio = 1.0;
         final double skewness = 0.0;
         final double principalPoint = 0.0;
@@ -1364,8 +1287,8 @@ public class FundamentalMatrixTest {
         final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(
+                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
         final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
         final Point3D center2 = new InhomogeneousPoint3D(
@@ -1373,15 +1296,11 @@ public class FundamentalMatrixTest {
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                betaEuler1, gammaEuler1);
-        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                betaEuler2, gammaEuler2);
+        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        camera1.setIntrinsicAndExtrinsicParameters(intrinsic, rotation1,
-                center1);
-        camera2.setIntrinsicAndExtrinsicParameters(intrinsic, rotation2,
-                center2);
+        camera1.setIntrinsicAndExtrinsicParameters(intrinsic, rotation1, center1);
+        camera2.setIntrinsicAndExtrinsicParameters(intrinsic, rotation2, center2);
 
         fundamentalMatrix.setFromPairOfCameras(camera1, camera2);
 
@@ -1390,8 +1309,8 @@ public class FundamentalMatrixTest {
         final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
         final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
         final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-        final Matrix planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS,
-                Plane.PLANE_NUMBER_PARAMS);
+        final Matrix planesIntersectionMatrix = new Matrix(
+                Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
         planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
         planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
         planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1412,8 +1331,7 @@ public class FundamentalMatrixTest {
         planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
         planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-        final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                planesIntersectionMatrix);
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
         decomposer.decompose();
         final Matrix v = decomposer.getV();
         final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -1425,8 +1343,7 @@ public class FundamentalMatrixTest {
         final double[] principalAxis1 = camera1.getPrincipalAxisArray();
         final double[] principalAxis2 = camera2.getPrincipalAxisArray();
         final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                0.5);
+                ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
         final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
         plane.normalize();
@@ -1453,18 +1370,13 @@ public class FundamentalMatrixTest {
                 final double homX;
                 final double homY;
                 final double homW = 1.0;
-                final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
+                final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                    homX = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                            planeB;
+                    homX = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                 } else {
-                    homY = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                            planeA;
+                    homY = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                 }
 
                 point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -1480,9 +1392,7 @@ public class FundamentalMatrixTest {
             } while (!front1 || !front2);
 
             // check that 3D point is in front of both cameras
-            //noinspection ConstantConditions
             assertTrue(front1);
-            //noinspection ConstantConditions
             assertTrue(front2);
 
             // project 3D point into both cameras
@@ -1493,8 +1403,7 @@ public class FundamentalMatrixTest {
         // estimate homography
         final ProjectiveTransformation2DRobustEstimator homographyEstimator =
                 ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                        projectedPoints1, projectedPoints2,
-                        RobustEstimatorMethod.LMedS);
+                        projectedPoints1, projectedPoints2, RobustEstimatorMethod.LMEDS);
 
         return homographyEstimator.estimate();
     }

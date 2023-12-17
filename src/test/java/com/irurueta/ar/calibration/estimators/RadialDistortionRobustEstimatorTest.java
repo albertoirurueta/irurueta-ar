@@ -32,126 +32,110 @@ public class RadialDistortionRobustEstimatorTest {
         // test create with method
 
         // test RANSAC
-        RadialDistortionRobustEstimator estimator =
-                RadialDistortionRobustEstimator.create(
-                        RobustEstimatorMethod.RANSAC);
-
-        // check correctness
-        assertNull(estimator.getListener());
-        assertFalse(estimator.isListenerAvailable());
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getDistortedPoints());
-        assertNull(estimator.getUndistortedPoints());
-        assertNull(estimator.getDistortionCenter());
-        assertFalse(estimator.arePointsAvailable());
-        assertFalse(estimator.isReady());
-        assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
+        RadialDistortionRobustEstimator estimator = RadialDistortionRobustEstimator.create(
                 RobustEstimatorMethod.RANSAC);
 
-        // test LMedS
-        estimator = RadialDistortionRobustEstimator.create(
-                RobustEstimatorMethod.LMedS);
-
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
+
+        // test LMedS
+        estimator = RadialDistortionRobustEstimator.create(RobustEstimatorMethod.LMEDS);
+
+        // check correctness
+        assertNull(estimator.getListener());
+        assertFalse(estimator.isListenerAvailable());
+        assertFalse(estimator.isLocked());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertNull(estimator.getDistortedPoints());
+        assertNull(estimator.getUndistortedPoints());
+        assertNull(estimator.getDistortionCenter());
+        assertFalse(estimator.arePointsAvailable());
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test MSAC
-        estimator = RadialDistortionRobustEstimator.create(
-                RobustEstimatorMethod.MSAC);
+        estimator = RadialDistortionRobustEstimator.create(RobustEstimatorMethod.MSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // test PROSAC
-        estimator = RadialDistortionRobustEstimator.create(
-                RobustEstimatorMethod.PROSAC);
+        estimator = RadialDistortionRobustEstimator.create(RobustEstimatorMethod.PROSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROSAC);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // test PROMedS
-        estimator = RadialDistortionRobustEstimator.create(
-                RobustEstimatorMethod.PROMedS);
+        estimator = RadialDistortionRobustEstimator.create(RobustEstimatorMethod.PROMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROMedS);
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // test create with points, quality scores, center and method
         final List<Point2D> distortedPoints = new ArrayList<>();
         final List<Point2D> undistortedPoints = new ArrayList<>();
-        final double[] qualityScores = new double[
-                RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS];
+        final double[] qualityScores = new double[RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS];
         for (int i = 0; i < RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS; i++) {
             distortedPoints.add(Point2D.create());
             undistortedPoints.add(Point2D.create());
@@ -160,172 +144,153 @@ public class RadialDistortionRobustEstimatorTest {
 
         // test RANSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores, center,
-                RobustEstimatorMethod.RANSAC);
+                undistortedPoints, qualityScores, center, RobustEstimatorMethod.RANSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
 
         // test LMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores, center,
-                RobustEstimatorMethod.LMedS);
+                undistortedPoints, qualityScores, center, RobustEstimatorMethod.LMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test MSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores, center,
-                RobustEstimatorMethod.MSAC);
+                undistortedPoints, qualityScores, center, RobustEstimatorMethod.MSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // test PROSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores, center,
-                RobustEstimatorMethod.PROSAC);
+                undistortedPoints, qualityScores, center, RobustEstimatorMethod.PROSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROSAC);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // test PROMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores, center,
-                RobustEstimatorMethod.PROMedS);
+                undistortedPoints, qualityScores, center, RobustEstimatorMethod.PROMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROMedS);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // test create with points, center and method
 
         // test RANSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, center,
-                RobustEstimatorMethod.RANSAC);
+                undistortedPoints, center, RobustEstimatorMethod.RANSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(estimator.getDistortedPoints(), distortedPoints);
         assertSame(estimator.getUndistortedPoints(), undistortedPoints);
         assertSame(estimator.getDistortionCenter(), center);
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
 
         // test LMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, center, RobustEstimatorMethod.LMedS);
+                undistortedPoints, center, RobustEstimatorMethod.LMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test MSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
@@ -335,190 +300,168 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // test PROSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, center,
-                RobustEstimatorMethod.PROSAC);
+                undistortedPoints, center, RobustEstimatorMethod.PROSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROSAC);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // test PROMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, center,
-                RobustEstimatorMethod.PROMedS);
+                undistortedPoints, center, RobustEstimatorMethod.PROMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROMedS);
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // test create with points, quality scores and method
 
         // test RANSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores,
-                RobustEstimatorMethod.RANSAC);
+                undistortedPoints, qualityScores, RobustEstimatorMethod.RANSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
 
         // test LMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores,
-                RobustEstimatorMethod.LMedS);
+                undistortedPoints, qualityScores, RobustEstimatorMethod.LMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test MSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores,
-                RobustEstimatorMethod.MSAC);
+                undistortedPoints, qualityScores, RobustEstimatorMethod.MSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // test PROSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores,
-                RobustEstimatorMethod.PROSAC);
+                undistortedPoints, qualityScores, RobustEstimatorMethod.PROSAC);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROSAC);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // test PROMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, qualityScores,
-                RobustEstimatorMethod.PROMedS);
+                undistortedPoints, qualityScores, RobustEstimatorMethod.PROMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROMedS);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // test create with points and method
 
@@ -530,43 +473,40 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC,
+                estimator.getMethod());
 
         // test LMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, RobustEstimatorMethod.LMedS);
+                undistortedPoints, RobustEstimatorMethod.LMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test MSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
@@ -576,20 +516,18 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // test PROSAC
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
@@ -599,43 +537,39 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROSAC);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // test PROMedS
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, RobustEstimatorMethod.PROMedS);
+                undistortedPoints, RobustEstimatorMethod.PROMEDS);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RobustEstimatorMethod.PROMedS);
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // test create with default method
         estimator = RadialDistortionRobustEstimator.create();
@@ -644,20 +578,18 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD, estimator.getMethod());
 
         // test create with points and quality scores
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
@@ -667,43 +599,38 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(),
-                RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD, estimator.getMethod());
 
         // test create with points
-        estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints);
+        estimator = RadialDistortionRobustEstimator.create(distortedPoints, undistortedPoints);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD, estimator.getMethod());
 
         // test create with points, quality scores and center
         estimator = RadialDistortionRobustEstimator.create(distortedPoints,
@@ -713,44 +640,39 @@ public class RadialDistortionRobustEstimatorTest {
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(),
-                RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD, estimator.getMethod());
 
 
         // test create with points and center
-        estimator = RadialDistortionRobustEstimator.create(distortedPoints,
-                undistortedPoints, center);
+        estimator = RadialDistortionRobustEstimator.create(distortedPoints, undistortedPoints, center);
 
         // check correctness
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
         assertTrue(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(),
-                RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_ROBUST_METHOD, estimator.getMethod());
     }
 
     @Test
@@ -763,16 +685,11 @@ public class RadialDistortionRobustEstimatorTest {
         }
         final List<Point2D> emptyPoints = new ArrayList<>();
 
-        assertTrue(RadialDistortionRobustEstimator.areValidPoints(
-                distortedPoints, undistortedPoints));
-        assertFalse(RadialDistortionRobustEstimator.areValidPoints(emptyPoints,
-                undistortedPoints));
-        assertFalse(RadialDistortionRobustEstimator.areValidPoints(emptyPoints,
-                emptyPoints));
-        assertFalse(RadialDistortionRobustEstimator.areValidPoints(null,
-                undistortedPoints));
-        assertFalse(RadialDistortionRobustEstimator.areValidPoints(
-                distortedPoints, null));
+        assertTrue(RadialDistortionRobustEstimator.areValidPoints(distortedPoints, undistortedPoints));
+        assertFalse(RadialDistortionRobustEstimator.areValidPoints(emptyPoints, undistortedPoints));
+        assertFalse(RadialDistortionRobustEstimator.areValidPoints(emptyPoints, emptyPoints));
+        assertFalse(RadialDistortionRobustEstimator.areValidPoints(null, undistortedPoints));
+        assertFalse(RadialDistortionRobustEstimator.areValidPoints(distortedPoints, null));
     }
 
     @Test
@@ -822,7 +739,7 @@ public class RadialDistortionRobustEstimatorTest {
         estimator.setListener(listener);
 
         // check correctness
-        assertSame(estimator.getListener(), listener);
+        assertSame(listener, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
     }
 
@@ -836,18 +753,17 @@ public class RadialDistortionRobustEstimatorTest {
         }
 
         final RadialDistortionRobustEstimator estimator =
-                RadialDistortionRobustEstimator.create(distortedPoints,
-                        undistortedPoints);
+                RadialDistortionRobustEstimator.create(distortedPoints, undistortedPoints);
 
         // check default value
-        assertEquals(estimator.getProgressDelta(),
-                RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(estimator.getProgressDelta(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getProgressDelta(), 0.0);
     }
 
     @Test
@@ -860,18 +776,17 @@ public class RadialDistortionRobustEstimatorTest {
         }
 
         final RadialDistortionRobustEstimator estimator =
-                RadialDistortionRobustEstimator.create(distortedPoints,
-                        undistortedPoints);
+                RadialDistortionRobustEstimator.create(distortedPoints, undistortedPoints);
 
         // check default value
-        assertEquals(estimator.getConfidence(),
-                RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.5f);
 
         // check correctness
-        assertEquals(estimator.getConfidence(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getConfidence(), 0.0);
     }
 
     @Test
@@ -884,18 +799,17 @@ public class RadialDistortionRobustEstimatorTest {
         }
 
         final RadialDistortionRobustEstimator estimator =
-                RadialDistortionRobustEstimator.create(distortedPoints,
-                        undistortedPoints);
+                RadialDistortionRobustEstimator.create(distortedPoints, undistortedPoints);
 
         // check default value
-        assertEquals(estimator.getMaxIterations(),
-                RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(10);
 
         // check correctness
-        assertEquals(estimator.getMaxIterations(), 10);
+        assertEquals(10, estimator.getMaxIterations());
     }
 
     @Test
@@ -913,8 +827,7 @@ public class RadialDistortionRobustEstimatorTest {
         final List<Point2D> emptyPoints = new ArrayList<>();
 
         final RadialDistortionRobustEstimator estimator =
-                RadialDistortionRobustEstimator.create(distortedPoints1,
-                        undistortedPoints1);
+                RadialDistortionRobustEstimator.create(distortedPoints1, undistortedPoints1);
 
         // check correctness
         assertSame(estimator.getDistortedPoints(), distortedPoints1);
@@ -925,8 +838,8 @@ public class RadialDistortionRobustEstimatorTest {
         estimator.setPoints(distortedPoints2, undistortedPoints2);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints2);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints2);
+        assertSame(distortedPoints2, estimator.getDistortedPoints());
+        assertSame(undistortedPoints2, estimator.getUndistortedPoints());
         assertTrue(estimator.arePointsAvailable());
 
         // Force IllegalArgumentException
@@ -963,8 +876,7 @@ public class RadialDistortionRobustEstimatorTest {
         final Point2D center = Point2D.create();
 
         final RadialDistortionRobustEstimator estimator =
-                RadialDistortionRobustEstimator.create(distortedPoints,
-                        undistortedPoints);
+                RadialDistortionRobustEstimator.create(distortedPoints, undistortedPoints);
 
         // check default value
         assertNull(estimator.getDistortionCenter());
@@ -973,7 +885,7 @@ public class RadialDistortionRobustEstimatorTest {
         estimator.setDistortionCenter(center);
 
         // check correctness
-        assertSame(estimator.getDistortionCenter(), center);
+        assertSame(center, estimator.getDistortionCenter());
     }
 
     @Test

@@ -202,7 +202,8 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      *
      * @return a new metric to projective space transformation.
      * @throws InvalidTransformationException if transformation cannot be
-     *                                        determined because dual absolute quadric is numerically unstable.
+     *                                        determined because dual absolute quadric is numerically
+     *                                        unstable.
      */
     public ProjectiveTransformation3D getMetricToProjectiveTransformation()
             throws InvalidTransformationException {
@@ -218,7 +219,8 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * @param result instance where metric to projective space transformation
      *               will be stored.
      * @throws InvalidTransformationException if transformation cannot be
-     *                                        determined because dual absolute quadric is numerically unstable.
+     *                                        determined because dual absolute quadric is numerically
+     *                                        unstable.
      */
     public void getMetricToProjectiveTransformation(
             final ProjectiveTransformation3D result)
@@ -245,7 +247,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
         // and U are the singular vectors of M
         // Since S is diagonal, then S*S contains the squared singular values on
         // its diagonal and matrix S*S can be seen as the eigen values of DAQ,
-        // while U are the eigen vectors of DAQ
+        // while "U" are the eigen vectors of DAQ
         // Since we don't care about scale, we can normalize the eigen values of
         // DAQ, and transformation H is equal to matrix U (up to scale)
 

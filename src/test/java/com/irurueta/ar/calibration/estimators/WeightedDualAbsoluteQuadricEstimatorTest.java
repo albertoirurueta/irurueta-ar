@@ -33,8 +33,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class WeightedDualAbsoluteQuadricEstimatorTest implements
-        DualAbsoluteQuadricEstimatorListener {
+public class WeightedDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadricEstimatorListener {
 
     private static final double MIN_ASPECT_RATIO = 0.5;
     private static final double MAX_ASPECT_RATIO = 2.0;
@@ -62,31 +61,28 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     @Test
     public void testConstructor() {
         // empty constructor
-        WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default values
         assertNull(estimator.getCameras());
         assertFalse(estimator.isLocked());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS, estimator.getMaxCameras());
         assertTrue(estimator.isSortWeightsEnabled());
 
         // constructor with listener
@@ -97,23 +93,22 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertFalse(estimator.isReady());
         assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS,
+                estimator.getMaxCameras());
         assertTrue(estimator.isSortWeightsEnabled());
 
         // constructor with cameras
@@ -123,54 +118,51 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         estimator = new WeightedDualAbsoluteQuadricEstimator(cameras);
 
         // check default values
-        assertSame(estimator.getCameras(), cameras);
+        assertSame(cameras, estimator.getCameras());
         assertFalse(estimator.isLocked());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS, estimator.getMaxCameras());
         assertTrue(estimator.isSortWeightsEnabled());
 
         // constructor with cameras and listener
         estimator = new WeightedDualAbsoluteQuadricEstimator(cameras, this);
 
         // check default values
-        assertSame(estimator.getCameras(), cameras);
+        assertSame(cameras, estimator.getCameras());
         assertFalse(estimator.isLocked());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertSame(this, estimator.getListener());
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS,
+                estimator.getMaxCameras());
         assertTrue(estimator.isSortWeightsEnabled());
 
         // constructor with cameras and weights
@@ -182,50 +174,46 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertSame(weights, estimator.getWeights());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS, estimator.getMaxCameras());
         assertTrue(estimator.isSortWeightsEnabled());
 
         // constructor with cameras, weights and listener
         estimator = new WeightedDualAbsoluteQuadricEstimator(cameras, weights, this);
 
         // check default values
-        assertSame(estimator.getCameras(), cameras);
+        assertSame(cameras, estimator.getCameras());
         assertFalse(estimator.isLocked());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getListener(), this);
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertSame(this, estimator.getListener());
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertSame(weights, estimator.getWeights());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS, estimator.getMaxCameras());
         assertTrue(estimator.isSortWeightsEnabled());
     }
 
@@ -238,18 +226,17 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
         final double[] weights = new double[cameras.size()];
 
-        assertTrue(WeightedDualAbsoluteQuadricEstimator.
-                areValidCamerasAndWeights(cameras, weights));
+        assertTrue(WeightedDualAbsoluteQuadricEstimator.areValidCamerasAndWeights(cameras, weights));
 
         // test not valid
-        //noinspection ConstantConditions
-        assertFalse(WeightedDualAbsoluteQuadricEstimator.
-                areValidCamerasAndWeights(null, weights));
-        //noinspection ConstantConditions
-        assertFalse(WeightedDualAbsoluteQuadricEstimator.
-                areValidCamerasAndWeights(cameras, null));
-        assertFalse(WeightedDualAbsoluteQuadricEstimator.
-                areValidCamerasAndWeights(cameras, new double[1]));
+        //noinspection ConstantValue
+        assertFalse(
+                WeightedDualAbsoluteQuadricEstimator.areValidCamerasAndWeights(null, weights));
+        //noinspection ConstantValue
+        assertFalse(
+                WeightedDualAbsoluteQuadricEstimator.areValidCamerasAndWeights(cameras, null));
+        assertFalse(
+                WeightedDualAbsoluteQuadricEstimator.areValidCamerasAndWeights(cameras, new double[1]));
     }
 
     @Test
@@ -258,8 +245,8 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator(cameras);
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator(
+                cameras);
 
         // initial value
         assertNull(estimator.getWeights());
@@ -269,7 +256,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         estimator.setWeights(weights);
 
         // check correctness
-        assertSame(estimator.getWeights(), weights);
+        assertSame(weights, estimator.getWeights());
 
         // Force IllegalArgumentException
         try {
@@ -281,8 +268,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testSetCamerasAndWeights() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // initial values
         assertNull(estimator.getCameras());
@@ -299,8 +285,8 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         estimator.setCamerasAndWeights(cameras, weights);
 
         // check correctness
-        assertSame(estimator.getCameras(), cameras);
-        assertSame(estimator.getWeights(), weights);
+        assertSame(cameras, estimator.getCameras());
+        assertSame(weights, estimator.getWeights());
 
         // Force IllegalArgumentException
         try {
@@ -312,24 +298,21 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetSetMaxCameras() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // initial value
-        assertEquals(estimator.getMaxCameras(),
-                WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS);
+        assertEquals(WeightedDualAbsoluteQuadricEstimator.DEFAULT_MAX_CAMERAS, estimator.getMaxCameras());
 
         // set new value
         estimator.setMaxCameras(100);
 
         // check correctness
-        assertEquals(estimator.getMaxCameras(), 100);
+        assertEquals(100, estimator.getMaxCameras());
     }
 
     @Test
-    public void tetIsSetsortWeightsEnabled() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+    public void tetIsSetSortWeightsEnabled() throws LockedException {
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // initial value
         assertTrue(estimator.isSortWeightsEnabled());
@@ -343,8 +326,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetZeroSkewness() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isZeroSkewness());
@@ -358,8 +340,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -374,8 +355,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     @Test
     public void testIsSetFocalDistanceAspectRatioKnown()
             throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -389,13 +369,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                DualAbsoluteQuadricEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO,
@@ -403,7 +381,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         estimator.setFocalDistanceAspectRatio(aspectRatio);
 
         // check correctness
-        assertEquals(estimator.getFocalDistanceAspectRatio(), aspectRatio, 0.0);
+        assertEquals(aspectRatio, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -415,8 +393,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetSingularityEnforced() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isSingularityEnforced());
@@ -430,8 +407,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetEnforcedSingularityValidated() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isEnforcedSingularityValidated());
@@ -445,19 +421,17 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetSetDeterminantThreshold() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
 
         // set new value
         estimator.setDeterminantThreshold(1e-3);
 
         // check correctness
-        assertEquals(estimator.getDeterminantThreshold(), 1e-3, 0.0);
+        assertEquals(1e-3, estimator.getDeterminantThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -469,8 +443,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetSetListener() {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -479,13 +452,12 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
     public void testGetSetCamera() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertNull(estimator.getCameras());
@@ -497,7 +469,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         estimator.setCameras(cameras);
 
         // check correctness
-        assertSame(estimator.getCameras(), cameras);
+        assertSame(cameras, estimator.getCameras());
 
         // Force IllegalArgumentException
         cameras.clear();
@@ -511,50 +483,48 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetMinNumberOfRequiredCameras() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
 
         // disable principal point at origin
         estimator.setPrincipalPointAtOrigin(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), -1);
+        assertEquals(-1, estimator.getMinNumberOfRequiredCameras());
 
         // disable zero skewness
         estimator.setPrincipalPointAtOrigin(true);
         estimator.setZeroSkewness(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 4);
+        assertEquals(4, estimator.getMinNumberOfRequiredCameras());
 
         // disable focal distance aspect ratio known
         estimator.setZeroSkewness(true);
         estimator.setFocalDistanceAspectRatioKnown(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
+        assertEquals(3, estimator.getMinNumberOfRequiredCameras());
 
         // disable zero skewness and singularity enforcement
         estimator.setZeroSkewness(false);
         estimator.setSingularityEnforced(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 5);
+        assertEquals(5, estimator.getMinNumberOfRequiredCameras());
 
         // disable focal distance aspect ratio known and singularity enforcement
         estimator.setZeroSkewness(true);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
+        assertEquals(3, estimator.getMinNumberOfRequiredCameras());
     }
 
     @Test
     public void testAreValidConstraints() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.areValidConstraints());
@@ -588,8 +558,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsReady() throws LockedException {
-        final WeightedDualAbsoluteQuadricEstimator estimator =
-                new WeightedDualAbsoluteQuadricEstimator();
+        final WeightedDualAbsoluteQuadricEstimator estimator = new WeightedDualAbsoluteQuadricEstimator();
 
         // check default value
         assertNull(estimator.getCameras());
@@ -628,8 +597,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testProject() throws InvalidPinholeCameraIntrinsicParametersException,
-            AlgebraException, NonSymmetricMatrixException,
-            InvalidTransformationException {
+            AlgebraException, NonSymmetricMatrixException, InvalidTransformationException {
 
         int numSucceeded = 0;
         for (int times = 0; times < TIMES; times++) {
@@ -639,8 +607,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
             final double horizontalFocalLength = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
             final double horizontalPrincipalPoint = randomizer.nextDouble(
                     MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
@@ -653,8 +620,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                             verticalPrincipalPoint, skewness);
 
             final DualAbsoluteQuadric metricDaq = new DualAbsoluteQuadric();
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                    metricIntrinsic);
+            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
 
             final Matrix metricDiacMatrix = metricDiac.asMatrix();
@@ -685,8 +651,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 cameraCenter = new InhomogeneousPoint3D(x, y, z);
 
-                metricCamera = new PinholeCamera(metricIntrinsic, q,
-                        cameraCenter);
+                metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
                 metricCamera.normalize();
 
                 final DualImageOfAbsoluteConic projectedMetricDiac =
@@ -695,31 +660,24 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
 
                 final Matrix projectedMetricDiacMatrix = projectedMetricDiac.asMatrix();
 
-                if (!metricDiacMatrix.equals(projectedMetricDiacMatrix,
-                        ABSOLUTE_ERROR)) {
+                if (!metricDiacMatrix.equals(projectedMetricDiacMatrix, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(metricDiacMatrix.equals(projectedMetricDiacMatrix,
-                        ABSOLUTE_ERROR));
+                assertTrue(metricDiacMatrix.equals(projectedMetricDiacMatrix, ABSOLUTE_ERROR));
 
                 metricCameras.add(metricCamera);
 
                 final PinholeCameraIntrinsicParameters projectedMetricIntrinsic =
                         projectedMetricDiac.getIntrinsicParameters();
 
-                assertEquals(horizontalFocalLength,
-                        projectedMetricIntrinsic.getHorizontalFocalLength(),
+                assertEquals(horizontalFocalLength, projectedMetricIntrinsic.getHorizontalFocalLength(),
                         ABSOLUTE_ERROR);
-                assertEquals(verticalFocalLength,
-                        projectedMetricIntrinsic.getVerticalFocalLength(),
+                assertEquals(verticalFocalLength, projectedMetricIntrinsic.getVerticalFocalLength(),
                         ABSOLUTE_ERROR);
-                assertEquals(skewness, projectedMetricIntrinsic.getSkewness(),
-                        ABSOLUTE_ERROR);
+                assertEquals(skewness, projectedMetricIntrinsic.getSkewness(), ABSOLUTE_ERROR);
                 assertEquals(horizontalPrincipalPoint,
-                        projectedMetricIntrinsic.getHorizontalPrincipalPoint(),
-                        ABSOLUTE_ERROR);
-                assertEquals(verticalPrincipalPoint,
-                        projectedMetricIntrinsic.getVerticalPrincipalPoint(),
+                        projectedMetricIntrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+                assertEquals(verticalPrincipalPoint, projectedMetricIntrinsic.getVerticalPrincipalPoint(),
                         ABSOLUTE_ERROR);
             }
 
@@ -730,8 +688,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             // truth cameras
             final Matrix t = Matrix.createWithUniformRandomValues(
                     ProjectiveTransformation3D.HOM_COORDS,
-                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
@@ -747,8 +704,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric();
             invTransTransformation.transform(metricDaq, projectiveDaq);
 
-            final DualAbsoluteQuadric projectiveDaq2 = new DualAbsoluteQuadric(
-                    transformation);
+            final DualAbsoluteQuadric projectiveDaq2 = new DualAbsoluteQuadric(transformation);
 
             PinholeCamera projectiveCamera;
             for (final PinholeCamera c : metricCameras) {
@@ -756,32 +712,24 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 projectiveCamera.normalize();
 
                 final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                        new DualImageOfAbsoluteConic(projectiveCamera,
-                                projectiveDaq);
+                        new DualImageOfAbsoluteConic(projectiveCamera, projectiveDaq);
                 projectedProjectiveDiac.normalize();
 
                 final DualImageOfAbsoluteConic projectedProjectiveDiac2 =
-                        new DualImageOfAbsoluteConic(projectiveCamera,
-                                projectiveDaq2);
+                        new DualImageOfAbsoluteConic(projectiveCamera, projectiveDaq2);
                 projectedProjectiveDiac2.normalize();
 
-                final Matrix projectedProjectiveDiacMatrix =
-                        projectedProjectiveDiac.asMatrix();
-                final Matrix projectedProjectiveDiacMatrix2 =
-                        projectedProjectiveDiac2.asMatrix();
+                final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                final Matrix projectedProjectiveDiacMatrix2 = projectedProjectiveDiac2.asMatrix();
 
-                if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix,
-                        ABSOLUTE_ERROR)) {
+                if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix2,
-                        ABSOLUTE_ERROR)) {
+                if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix2, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(metricDiacMatrix.equals(
-                        projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
-                assertTrue(metricDiacMatrix.equals(
-                        projectedProjectiveDiacMatrix2, ABSOLUTE_ERROR));
+                assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
+                assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix2, ABSOLUTE_ERROR));
 
                 final PinholeCameraIntrinsicParameters projectedProjectiveIntrinsic =
                         projectedProjectiveDiac.getIntrinsicParameters();
@@ -789,19 +737,15 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 assertEquals(horizontalFocalLength,
                         projectedProjectiveIntrinsic.getHorizontalFocalLength(),
                         5 * LARGE_ABSOLUTE_ERROR);
-                assertEquals(verticalFocalLength,
-                        projectedProjectiveIntrinsic.getVerticalFocalLength(),
+                assertEquals(verticalFocalLength, projectedProjectiveIntrinsic.getVerticalFocalLength(),
                         5 * LARGE_ABSOLUTE_ERROR);
-                assertEquals(skewness,
-                        projectedProjectiveIntrinsic.getSkewness(),
+                assertEquals(skewness, projectedProjectiveIntrinsic.getSkewness(),
                         5 * LARGE_ABSOLUTE_ERROR);
                 assertEquals(horizontalPrincipalPoint,
-                        projectedProjectiveIntrinsic.
-                                getHorizontalPrincipalPoint(),
+                        projectedProjectiveIntrinsic.getHorizontalPrincipalPoint(),
                         5 * LARGE_ABSOLUTE_ERROR);
                 assertEquals(verticalPrincipalPoint,
-                        projectedProjectiveIntrinsic.
-                                getVerticalPrincipalPoint(),
+                        projectedProjectiveIntrinsic.getVerticalPrincipalPoint(),
                         5 * LARGE_ABSOLUTE_ERROR);
             }
 
@@ -819,10 +763,8 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     // focal distance aspect ratio known (1.0)
     // singularity not enforced
     @Test
-    public void testEstimate1() throws LockedException,
-            AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException,
-            CameraException {
+    public void testEstimate1() throws LockedException, AlgebraException, NotReadyException,
+            InvalidTransformationException, NotAvailableException, CameraException {
 
         int numSucceeded = 0;
         for (int times = 0; times < TIMES; times++) {
@@ -842,8 +784,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                             verticalFocalLength, horizontalPrincipalPoint,
                             verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                    metricIntrinsic);
+            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
             final Matrix metricDiacMatrix = metricDiac.asMatrix();
 
@@ -857,13 +798,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation =
-                    new ProjectiveTransformation3D(t);
+            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
-                    transformation);
+            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
             final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
@@ -879,8 +818,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
             final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras =
-                    new ArrayList<>();
+            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
             final WeightedDualAbsoluteQuadricEstimator estimator =
                     new WeightedDualAbsoluteQuadricEstimator();
@@ -908,14 +846,12 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 cameraCenter = new InhomogeneousPoint3D(x, y, z);
 
-                metricCamera = new PinholeCamera(metricIntrinsic, q,
-                        cameraCenter);
+                metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
                 metricCamera.normalize();
                 metricCameras.add(metricCamera);
 
                 // transform camera
-                projectiveCamera = transformation.transformAndReturnNew(
-                        metricCamera);
+                projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
                 projectiveCameras.add(projectiveCamera);
                 weights[i] = randomizer.nextDouble(MIN_WEIGHT, MAX_WEIGHT);
@@ -932,30 +868,25 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
-                assertTrue(estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(),
-                        ABSOLUTE_ERROR));
+                assertTrue(estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(), ABSOLUTE_ERROR));
 
                 // check that DAQ has rank 3 (zero determinant)
                 if (Math.abs(Utils.det(estimatedDaqMatrix)) > ABSOLUTE_ERROR) {
                     continue;
                 }
 
-                assertEquals(Utils.det(estimatedDaqMatrix), 0.0,
-                        ABSOLUTE_ERROR);
+                assertEquals(0.0, Utils.det(estimatedDaqMatrix), ABSOLUTE_ERROR);
 
-                if (!projectiveDaqMatrix.equals(estimatedDaqMatrix,
-                        ABSOLUTE_ERROR)) {
+                if (!projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix,
-                        ABSOLUTE_ERROR));
+                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
                 final ProjectiveTransformation3D estimatedTransformation =
                         estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
                 final ProjectiveTransformation3D invEstimatedTransformation =
-                        (ProjectiveTransformation3D) estimatedTransformation.
-                                inverseAndReturnNew();
+                        (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
                 // and check that DIAC in projective stratum is equal to DIAC in
@@ -976,23 +907,19 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                     projectiveCamera = projectiveCameras.get(i);
 
                     final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera,
-                                    estimatedDaq);
+                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix =
-                            projectedProjectiveDiac.asMatrix();
+                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
-                    if (!metricDiacMatrix.equals(
-                            projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
+                    if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
                         continue;
                     }
-                    assertTrue(metricDiacMatrix.equals(
-                            projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
+                    assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.
-                            transformAndReturnNew(projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
+                            projectiveCamera);
 
                     estimatedMetricCamera.decompose();
                     final PinholeCameraIntrinsicParameters estimatedIntrinsic =
@@ -1001,14 +928,12 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                     if (Math.abs(horizontalFocalLength - estimatedIntrinsic.getHorizontalFocalLength()) > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(horizontalFocalLength,
-                            estimatedIntrinsic.getHorizontalFocalLength(),
+                    assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     if (Math.abs(verticalFocalLength - estimatedIntrinsic.getVerticalFocalLength()) > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(verticalFocalLength,
-                            estimatedIntrinsic.getVerticalFocalLength(),
+                    assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     if (Math.abs(skewness - estimatedIntrinsic.getSkewness()) > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
@@ -1024,8 +949,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                     if (Math.abs(verticalPrincipalPoint - estimatedIntrinsic.getVerticalPrincipalPoint()) > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(verticalPrincipalPoint,
-                            estimatedIntrinsic.getVerticalPrincipalPoint(),
+                    assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
 
                     if (anyFailed) {
@@ -1039,27 +963,22 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                     metricCamera = metricCameras.get(i);
                     metricCamera.decompose();
 
-                    estimatedMetricCenter = estimatedMetricCamera.
-                            getCameraCenter();
+                    estimatedMetricCenter = estimatedMetricCamera.getCameraCenter();
                     metricCenter = metricCamera.getCameraCenter();
-                    estimatedMetricRotation = estimatedMetricCamera.
-                            getCameraRotation();
+                    estimatedMetricRotation = estimatedMetricCamera.getCameraRotation();
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0 && previousEstimatedMetricCenter != null) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.
-                                distanceTo(estimatedMetricCenter);
-                        distanceCenter = previousMetricCenter.distanceTo(
-                                metricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
+                                estimatedMetricCenter);
+                        distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
                         final Rotation3D diffEstimatedRotation =
                                 estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.
-                                                inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.
-                                combineAndReturnNew(previousMetricRotation.
-                                        inverseRotationAndReturnNew());
+                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                                previousMetricRotation.inverseRotationAndReturnNew());
 
                         final Matrix rot1 = diffEstimatedRotation.
                                 asInhomogeneousMatrix();
@@ -1096,10 +1015,8 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     // focal distance aspect ratio known (1.0)
     // singularity enforced
     @Test
-    public void testEstimate2() throws LockedException,
-            AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException,
-            CameraException {
+    public void testEstimate2() throws LockedException, AlgebraException, NotReadyException,
+            InvalidTransformationException, NotAvailableException, CameraException {
 
         int numSucceeded = 0;
         for (int times = 0; times < TIMES; times++) {
@@ -1119,8 +1036,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                             verticalFocalLength, horizontalPrincipalPoint,
                             verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                    metricIntrinsic);
+            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
             final Matrix metricDiacMatrix = metricDiac.asMatrix();
 
@@ -1134,13 +1050,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation =
-                    new ProjectiveTransformation3D(t);
+            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
-                    transformation);
+            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
             final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
@@ -1156,8 +1070,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
             final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras =
-                    new ArrayList<>();
+            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
             final WeightedDualAbsoluteQuadricEstimator estimator =
                     new WeightedDualAbsoluteQuadricEstimator();
@@ -1185,14 +1098,12 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 cameraCenter = new InhomogeneousPoint3D(x, y, z);
 
-                metricCamera = new PinholeCamera(metricIntrinsic, q,
-                        cameraCenter);
+                metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
                 metricCamera.normalize();
                 metricCameras.add(metricCamera);
 
                 // transform camera
-                projectiveCamera = transformation.transformAndReturnNew(
-                        metricCamera);
+                projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
                 projectiveCameras.add(projectiveCamera);
                 weights[i] = randomizer.nextDouble(MIN_WEIGHT, MAX_WEIGHT);
@@ -1212,30 +1123,25 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                 if (!estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(), ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(),
-                        ABSOLUTE_ERROR));
+                assertTrue(estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(), ABSOLUTE_ERROR));
 
                 // check that DAQ has rank 3 (zero determinant)
                 if (Math.abs(Utils.det(estimatedDaqMatrix)) > ABSOLUTE_ERROR) {
                     continue;
                 }
 
-                assertEquals(Utils.det(estimatedDaqMatrix), 0.0,
-                        ABSOLUTE_ERROR);
+                assertEquals(0.0, Utils.det(estimatedDaqMatrix), ABSOLUTE_ERROR);
 
-                if (!projectiveDaqMatrix.equals(estimatedDaqMatrix,
-                        ABSOLUTE_ERROR)) {
+                if (!projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix,
-                        ABSOLUTE_ERROR));
+                assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
                 final ProjectiveTransformation3D estimatedTransformation =
                         estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
                 final ProjectiveTransformation3D invEstimatedTransformation =
-                        (ProjectiveTransformation3D) estimatedTransformation.
-                                inverseAndReturnNew();
+                        (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
                 // and check that DIAC in projective stratum is equal to DIAC in
@@ -1258,41 +1164,34 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                     projectiveCamera = projectiveCameras.get(i);
 
                     final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera,
-                                    estimatedDaq);
+                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix =
-                            projectedProjectiveDiac.asMatrix();
+                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
-                    if (!metricDiacMatrix.equals(
-                            projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
+                    if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
                         continue;
                     }
-                    assertTrue(metricDiacMatrix.equals(
-                            projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
+                    assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.
-                            transformAndReturnNew(projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
+                            projectiveCamera);
 
                     estimatedMetricCamera.decompose();
                     final PinholeCameraIntrinsicParameters estimatedIntrinsic =
                             estimatedMetricCamera.getIntrinsicParameters();
 
-                    assertEquals(horizontalFocalLength,
-                            estimatedIntrinsic.getHorizontalFocalLength(),
+                    assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(verticalFocalLength,
-                            estimatedIntrinsic.getVerticalFocalLength(),
+                    assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(skewness, estimatedIntrinsic.getSkewness(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(horizontalPrincipalPoint,
                             estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(verticalPrincipalPoint,
-                            estimatedIntrinsic.getVerticalPrincipalPoint(),
+                    assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
 
                     if (anyFailed) {
@@ -1306,30 +1205,24 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                     metricCamera = metricCameras.get(i);
                     metricCamera.decompose();
 
-                    estimatedMetricCenter = estimatedMetricCamera.
-                            getCameraCenter();
+                    estimatedMetricCenter = estimatedMetricCamera.getCameraCenter();
                     metricCenter = metricCamera.getCameraCenter();
-                    estimatedMetricRotation = estimatedMetricCamera.
-                            getCameraRotation();
+                    estimatedMetricRotation = estimatedMetricCamera.getCameraRotation();
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.
-                                distanceTo(estimatedMetricCenter);
-                        distanceCenter = previousMetricCenter.distanceTo(
-                                metricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
+                                estimatedMetricCenter);
+                        distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
                         final Rotation3D diffEstimatedRotation =
                                 estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.
-                                                inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.
-                                combineAndReturnNew(previousMetricRotation.
-                                        inverseRotationAndReturnNew());
+                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                                previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.
-                                asInhomogeneousMatrix();
+                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
                         final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
@@ -1363,8 +1256,8 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     // focal distance aspect ratio known (1.0)
     // singularity not enforced
     @Test
-    public void testEstimate3() throws LockedException,
-            AlgebraException, InvalidTransformationException {
+    public void testEstimate3() throws LockedException, AlgebraException,
+            InvalidTransformationException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1382,27 +1275,23 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                metricIntrinsic);
+        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
         metricDiac.normalize();
 
         // generate random projective transformation to transform ground
         // truth cameras
         final Matrix t = Matrix.createWithUniformRandomValues(
                 ProjectiveTransformation3D.HOM_COORDS,
-                ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+                ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
         t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                 ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-        final ProjectiveTransformation3D transformation =
-                new ProjectiveTransformation3D(t);
+        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
-                transformation);
+        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -1415,8 +1304,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras =
-                new ArrayList<>();
+        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
         final WeightedDualAbsoluteQuadricEstimator estimator =
                 new WeightedDualAbsoluteQuadricEstimator();
@@ -1444,13 +1332,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             cameraCenter = new InhomogeneousPoint3D(x, y, z);
 
-            metricCamera = new PinholeCamera(metricIntrinsic, q,
-                    cameraCenter);
+            metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
             metricCamera.normalize();
 
             // transform camera
-            projectiveCamera = transformation.transformAndReturnNew(
-                    metricCamera);
+            projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
             projectiveCameras.add(projectiveCamera);
             weights[i] = randomizer.nextDouble(MIN_WEIGHT, MAX_WEIGHT);
@@ -1472,8 +1358,8 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     // focal distance aspect ratio known (1.0)
     // singularity enforced
     @Test
-    public void testEstimate4() throws LockedException,
-            AlgebraException, InvalidTransformationException {
+    public void testEstimate4() throws LockedException, AlgebraException,
+            InvalidTransformationException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1491,27 +1377,23 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                metricIntrinsic);
+        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
         metricDiac.normalize();
 
         // generate random projective transformation to transform ground
         // truth cameras
         final Matrix t = Matrix.createWithUniformRandomValues(
                 ProjectiveTransformation3D.HOM_COORDS,
-                ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+                ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
         t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                 ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-        final ProjectiveTransformation3D transformation =
-                new ProjectiveTransformation3D(t);
+        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
-                transformation);
+        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -1524,8 +1406,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras =
-                new ArrayList<>();
+        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
         final WeightedDualAbsoluteQuadricEstimator estimator =
                 new WeightedDualAbsoluteQuadricEstimator();
@@ -1553,13 +1434,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             cameraCenter = new InhomogeneousPoint3D(x, y, z);
 
-            metricCamera = new PinholeCamera(metricIntrinsic, q,
-                    cameraCenter);
+            metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
             metricCamera.normalize();
 
             // transform camera
-            projectiveCamera = transformation.transformAndReturnNew(
-                    metricCamera);
+            projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
             projectiveCameras.add(projectiveCamera);
             weights[i] = randomizer.nextDouble(MIN_WEIGHT, MAX_WEIGHT);
@@ -1581,14 +1460,13 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     // arbitrary focal distance aspect ratio
     // singularity not enforced
     @Test
-    public void testEstimate5() throws LockedException,
-            AlgebraException, InvalidTransformationException {
+    public void testEstimate5() throws LockedException, AlgebraException,
+            InvalidTransformationException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // create ground truth intrinsic parameters
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO,
-                MAX_ASPECT_RATIO);
+        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
         final double horizontalFocalLength =
                 randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
         final double verticalFocalLength = aspectRatio * horizontalFocalLength;
@@ -1601,8 +1479,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                metricIntrinsic);
+        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
         metricDiac.normalize();
 
         // generate random projective transformation to transform ground
@@ -1615,13 +1492,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                 ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-        final ProjectiveTransformation3D transformation =
-                new ProjectiveTransformation3D(t);
+        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
-                transformation);
+        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -1634,8 +1509,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras =
-                new ArrayList<>();
+        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
         final WeightedDualAbsoluteQuadricEstimator estimator =
                 new WeightedDualAbsoluteQuadricEstimator();
@@ -1663,13 +1537,11 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             cameraCenter = new InhomogeneousPoint3D(x, y, z);
 
-            metricCamera = new PinholeCamera(metricIntrinsic, q,
-                    cameraCenter);
+            metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
             metricCamera.normalize();
 
             // transform camera
-            projectiveCamera = transformation.transformAndReturnNew(
-                    metricCamera);
+            projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
             projectiveCameras.add(projectiveCamera);
             weights[i] = randomizer.nextDouble(MIN_WEIGHT, MAX_WEIGHT);
@@ -1691,16 +1563,14 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
     // arbitrary focal distance aspect ratio
     // singularity enforced
     @Test
-    public void testEstimate6() throws LockedException,
-            AlgebraException, InvalidTransformationException {
+    public void testEstimate6() throws LockedException, AlgebraException,
+            InvalidTransformationException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // create ground truth intrinsic parameters
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO,
-                MAX_ASPECT_RATIO);
-        final double horizontalFocalLength =
-                randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
         final double verticalFocalLength = aspectRatio * horizontalFocalLength;
         final double skewness = 0.0;
         final double horizontalPrincipalPoint = 0.0;
@@ -1711,27 +1581,23 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                metricIntrinsic);
+        final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
         metricDiac.normalize();
 
         // generate random projective transformation to transform ground
         // truth cameras
         final Matrix t = Matrix.createWithUniformRandomValues(
                 ProjectiveTransformation3D.HOM_COORDS,
-                ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+                ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
         t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                 ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-        final ProjectiveTransformation3D transformation =
-                new ProjectiveTransformation3D(t);
+        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(
-                transformation);
+        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -1744,8 +1610,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras =
-                new ArrayList<>();
+        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
 
         final WeightedDualAbsoluteQuadricEstimator estimator =
                 new WeightedDualAbsoluteQuadricEstimator();
@@ -1778,8 +1643,7 @@ public class WeightedDualAbsoluteQuadricEstimatorTest implements
             metricCamera.normalize();
 
             // transform camera
-            projectiveCamera = transformation.transformAndReturnNew(
-                    metricCamera);
+            projectiveCamera = transformation.transformAndReturnNew(metricCamera);
 
             projectiveCameras.add(projectiveCamera);
             weights[i] = randomizer.nextDouble(MIN_WEIGHT, MAX_WEIGHT);

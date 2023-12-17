@@ -41,7 +41,7 @@ public class PROSACRadialDistortionRobustEstimator extends
     /**
      * Constant defining default threshold to determine whether points are
      * inliers or not.
-     * By default 1.0 is considered a good value for cases where measures are
+     * By default, 1.0 is considered a good value for cases where measures are
      * done on pixels, since typically the minimum resolution is 1 pixel.
      */
     public static final double DEFAULT_THRESHOLD = 1.0;
@@ -276,7 +276,7 @@ public class PROSACRadialDistortionRobustEstimator extends
     /**
      * Returns threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @return threshold to determine whether points are inliers or not when
@@ -289,7 +289,7 @@ public class PROSACRadialDistortionRobustEstimator extends
     /**
      * Sets threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @param threshold threshold to be set.
@@ -433,7 +433,8 @@ public class PROSACRadialDistortionRobustEstimator extends
                             }
 
                             @Override
-                            public double computeResidual(final RadialDistortion currentEstimation, final int i) {
+                            public double computeResidual(final RadialDistortion currentEstimation,
+                                                          final int i) {
                                 final Point2D distortedPoint = mDistortedPoints.get(i);
                                 final Point2D undistortedPoint = mUndistortedPoints.get(i);
 
@@ -461,7 +462,8 @@ public class PROSACRadialDistortionRobustEstimator extends
                                 }
 
                                 if (mListener != null) {
-                                    mListener.onEstimateStart(PROSACRadialDistortionRobustEstimator.this);
+                                    mListener.onEstimateStart(
+                                            PROSACRadialDistortionRobustEstimator.this);
                                 }
                             }
 
@@ -469,7 +471,8 @@ public class PROSACRadialDistortionRobustEstimator extends
                             public void onEstimateEnd(
                                     final RobustEstimator<RadialDistortion> estimator) {
                                 if (mListener != null) {
-                                    mListener.onEstimateEnd(PROSACRadialDistortionRobustEstimator.this);
+                                    mListener.onEstimateEnd(
+                                            PROSACRadialDistortionRobustEstimator.this);
                                 }
                             }
 

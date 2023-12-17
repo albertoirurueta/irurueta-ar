@@ -54,7 +54,7 @@ public class AffineFundamentalMatrixEstimator extends
     public static final boolean DEFAULT_NORMALIZE_POINT_CORRESPONDENCES = true;
 
     /**
-     * Indicates whether an LMSE (Least Mean Square Error) solution is allowed
+     * Indicates whether an LMSE (the Least Mean Square Error) solution is allowed
      * or not.
      */
     private boolean mAllowLMSESolution;
@@ -90,7 +90,7 @@ public class AffineFundamentalMatrixEstimator extends
     }
 
     /**
-     * Returns boolean indicating whether an LMSE (Least Mean Square Error)
+     * Returns boolean indicating whether an LMSE (the Least Mean Square Error)
      * solution is allowed or not. When an LMSE solution is allowed, more than 8
      * matched points can be used for fundamental matrix estimation. If LMSE
      * solution is not allowed then only the 4 former matched points will be
@@ -103,7 +103,7 @@ public class AffineFundamentalMatrixEstimator extends
     }
 
     /**
-     * Sets boolean indicating whether an LMSE (LEast Mean Square Error)
+     * Sets boolean indicating whether an LMSE (the Least Mean Square Error)
      * solution is allowed or not. When an LMSE solution is allowed, more than 8
      * matched points can be used for fundamental matrix estimation. If LMSE
      * solution is not allowed then only the 4 former matched points will be
@@ -175,7 +175,8 @@ public class AffineFundamentalMatrixEstimator extends
      * @throws NotReadyException                   if estimator is not ready because required
      *                                             input points have not already been provided.
      * @throws FundamentalMatrixEstimatorException if configuration of provided
-     *                                             2D points is degenerate and fundamental matrix estimation fails.
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails.
      */
     @SuppressWarnings("DuplicatedCode")
     @Override

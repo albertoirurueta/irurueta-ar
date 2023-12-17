@@ -32,8 +32,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
-        SinglePoint3DTriangulatorListener {
+public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoint3DTriangulatorListener {
 
     private static final int MIN_VIEWS = 2;
     private static final int MAX_VIEWS = 20;
@@ -74,14 +73,11 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
 
         // check correctness
         assertNull(triangulator.getWeights());
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
@@ -97,21 +93,17 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                points, cameras);
+        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, cameras);
 
         // check correctness
         assertNull(triangulator.getWeights());
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
@@ -122,20 +114,17 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
 
         triangulator = null;
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, cameras);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    points, emptyCameras);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -144,21 +133,17 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         // test constructor with points, cameras and weights
         final double[] weights = new double[2];
 
-        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                points, cameras, weights);
+        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, cameras, weights);
 
         // check correctness
-        assertSame(triangulator.getWeights(), weights);
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(weights, triangulator.getWeights());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
@@ -167,26 +152,23 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         final double[] emptyWeights = new double[0];
         triangulator = null;
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, cameras, weights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    points, emptyCameras, weights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, emptyCameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras, weights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras,
+                    weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    points, cameras, emptyWeights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, cameras, emptyWeights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -198,93 +180,80 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
 
         // check correctness
         assertNull(triangulator.getWeights());
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
 
         // test constructor with points, cameras and listener
-        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                points, cameras, this);
+        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, cameras, this);
 
         // check correctness
         assertNull(triangulator.getWeights());
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
 
         // force IllegalArgumentException
         triangulator = null;
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, cameras);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    points, emptyCameras);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(triangulator);
 
         // test constructor with points, cameras, weights and listener
-        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                points, cameras, weights, this);
+        triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, cameras, weights,
+                this);
 
         // check correctness
-        assertSame(triangulator.getWeights(), weights);
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(weights, triangulator.getWeights());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
 
         // force IllegalArgumentException
         triangulator = null;
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    emptyPoints, cameras, weights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    points, emptyCameras, weights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, emptyCameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -295,8 +264,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(
-                    points, cameras, emptyWeights);
+            triangulator = new WeightedInhomogeneousSinglePoint3DTriangulator(points, cameras, emptyWeights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -324,8 +292,8 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         triangulator.setPointsAndCameras(points, cameras);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
@@ -380,26 +348,22 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         final List<PinholeCamera> emptyCameras = new ArrayList<>();
         final double[] emptyWeights = new double[0];
         try {
-            triangulator.setPointsCamerasAndWeights(emptyPoints, cameras,
-                    weights);
+            triangulator.setPointsCamerasAndWeights(emptyPoints, cameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator.setPointsCamerasAndWeights(points, emptyCameras,
-                    weights);
+            triangulator.setPointsCamerasAndWeights(points, emptyCameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator.setPointsCamerasAndWeights(emptyPoints, emptyCameras,
-                    weights);
+            triangulator.setPointsCamerasAndWeights(emptyPoints, emptyCameras, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator.setPointsCamerasAndWeights(points, cameras,
-                    emptyWeights);
+            triangulator.setPointsCamerasAndWeights(points, cameras, emptyWeights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -417,7 +381,7 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
         triangulator.setListener(this);
 
         // check correctness
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
     }
 
     @Test
@@ -426,15 +390,14 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
                 new WeightedInhomogeneousSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.getMaxCorrespondences(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_MAX_CORRESPONDENCES);
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_MAX_CORRESPONDENCES,
+                triangulator.getMaxCorrespondences());
 
         // set new value
         triangulator.setMaxCorrespondences(10);
 
         // check correctness
-        assertEquals(triangulator.getMaxCorrespondences(), 10);
+        assertEquals(10, triangulator.getMaxCorrespondences());
 
         // Force IllegalArgumentException
         try {
@@ -450,24 +413,19 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
                 new WeightedInhomogeneousSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
 
         // set new value
-        triangulator.setSortWeightsEnabled(
-                !WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
+        triangulator.setSortWeightsEnabled(!WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS);
 
         // check correctness
-        assertEquals(triangulator.isSortWeightsEnabled(),
-                !WeightedHomogeneousSinglePoint3DTriangulator.
-                        DEFAULT_SORT_WEIGHTS);
+        assertEquals(!WeightedHomogeneousSinglePoint3DTriangulator.DEFAULT_SORT_WEIGHTS,
+                triangulator.isSortWeightsEnabled());
     }
 
     @Test
-    public void testTriangulate() throws LockedException, NotReadyException,
-            Point3DTriangulationException {
+    public void testTriangulate() throws LockedException, NotReadyException, Point3DTriangulationException {
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -486,12 +444,9 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
             final double[] weights = new double[numViews];
             for (int i = 0; i < numViews; i++) {
                 // create a random camera
-                final double horizontalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double verticalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                        MAX_SKEWNESS);
+                final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
                 final double horizontalPrincipalPoint = randomizer.nextDouble(
                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
                 final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -519,16 +474,14 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
                                 horizontalPrincipalPoint, verticalPrincipalPoint,
                                 skewness);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 final Point3D cameraCenter = new InhomogeneousPoint3D(
                         previousCameraCenter.getInhomX() + cameraSeparationX,
                         previousCameraCenter.getInhomY() + cameraSeparationY,
                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
 
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
 
                 // project 3D point using camera
                 final Point2D point2D = camera.project(point3D);
@@ -539,50 +492,44 @@ public class WeightedInhomogeneousSinglePoint3DTriangulatorTest implements
 
             // create triangulator
             final WeightedInhomogeneousSinglePoint3DTriangulator triangulator =
-                    new WeightedInhomogeneousSinglePoint3DTriangulator(points2D,
-                            cameras, weights, this);
+                    new WeightedInhomogeneousSinglePoint3DTriangulator(points2D, cameras, weights, this);
 
             // check default values
             assertTrue(triangulator.isReady());
             assertFalse(triangulator.isLocked());
-            assertEquals(triangulateStart, 0);
-            assertEquals(triangulateEnd, 0);
+            assertEquals(0, triangulateStart);
+            assertEquals(0, triangulateEnd);
 
             final Point3D triangulated = triangulator.triangulate();
 
             // check correctness
             assertTrue(triangulator.isReady());
             assertFalse(triangulator.isLocked());
-            assertEquals(triangulateStart, 1);
-            assertEquals(triangulateEnd, 1);
+            assertEquals(1, triangulateStart);
+            assertEquals(1, triangulateEnd);
             reset();
 
-            assertEquals(point3D.distanceTo(triangulated), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, point3D.distanceTo(triangulated), ABSOLUTE_ERROR);
         }
     }
 
     @Override
-    public void onTriangulateStart(
-            final SinglePoint3DTriangulator triangulator) {
+    public void onTriangulateStart(final SinglePoint3DTriangulator triangulator) {
         triangulateStart++;
-        checkLocked(
-                (WeightedInhomogeneousSinglePoint3DTriangulator) triangulator);
+        checkLocked((WeightedInhomogeneousSinglePoint3DTriangulator) triangulator);
     }
 
     @Override
-    public void onTriangulateEnd(
-            final SinglePoint3DTriangulator triangulator) {
+    public void onTriangulateEnd(final SinglePoint3DTriangulator triangulator) {
         triangulateEnd++;
-        checkLocked(
-                (WeightedInhomogeneousSinglePoint3DTriangulator) triangulator);
+        checkLocked((WeightedInhomogeneousSinglePoint3DTriangulator) triangulator);
     }
 
     private void reset() {
         triangulateStart = triangulateEnd = 0;
     }
 
-    private void checkLocked(
-            final WeightedInhomogeneousSinglePoint3DTriangulator triangulator) {
+    private void checkLocked(final WeightedInhomogeneousSinglePoint3DTriangulator triangulator) {
         try {
             triangulator.setListener(this);
             fail("LockedException expected but not thrown");

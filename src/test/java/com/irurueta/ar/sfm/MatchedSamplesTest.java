@@ -34,8 +34,7 @@ public class MatchedSamplesTest {
         assertNull(samples.getCameras());
         assertNull(samples.getViewIds());
         assertNull(samples.getReconstructedPoint());
-        assertEquals(samples.getQualityScore(),
-                MatchedSamples.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(MatchedSamples.DEFAULT_QUALITY_SCORE, samples.getQualityScore(), 0.0);
         assertNull(samples.getInliers());
     }
 
@@ -51,7 +50,7 @@ public class MatchedSamplesTest {
         samples.setSamples(s);
 
         // check correctness
-        assertSame(samples.getSamples(), s);
+        assertSame(s, samples.getSamples());
     }
 
     @Test
@@ -66,7 +65,7 @@ public class MatchedSamplesTest {
         samples.setCameras(cams);
 
         // check correctness
-        assertSame(samples.getCameras(), cams);
+        assertSame(cams, samples.getCameras());
     }
 
     @Test
@@ -81,7 +80,7 @@ public class MatchedSamplesTest {
         samples.setViewIds(ids);
 
         // check correctness
-        assertSame(samples.getViewIds(), ids);
+        assertSame(ids, samples.getViewIds());
     }
 
     @Test
@@ -96,7 +95,7 @@ public class MatchedSamplesTest {
         samples.setReconstructedPoint(rp);
 
         // check correctness
-        assertSame(samples.getReconstructedPoint(), rp);
+        assertSame(rp, samples.getReconstructedPoint());
 
         // set samples
         final Sample2D[] s = new Sample2D[1];
@@ -108,8 +107,8 @@ public class MatchedSamplesTest {
         samples.setReconstructedPoint(rp);
 
         // check correctness
-        assertSame(samples.getReconstructedPoint(), rp);
-        assertSame(s[0].getReconstructedPoint(), rp);
+        assertSame(rp, samples.getReconstructedPoint());
+        assertSame(rp, s[0].getReconstructedPoint());
     }
 
     @Test
@@ -117,14 +116,13 @@ public class MatchedSamplesTest {
         final MatchedSamples samples = new MatchedSamples();
 
         // check default value
-        assertEquals(samples.getQualityScore(),
-                MatchedSamples.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(MatchedSamples.DEFAULT_QUALITY_SCORE, samples.getQualityScore(), 0.0);
 
         // set new value
         samples.setQualityScore(20.0);
 
         // check correctness
-        assertEquals(samples.getQualityScore(), 20.0, 0.0);
+        assertEquals(20.0, samples.getQualityScore(), 0.0);
     }
 
     @Test
@@ -139,12 +137,11 @@ public class MatchedSamplesTest {
         samples.setInliers(inliers);
 
         // check correctness
-        assertSame(samples.getInliers(), inliers);
+        assertSame(inliers, samples.getInliers());
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException,
-            ClassNotFoundException {
+    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
         final MatchedSamples samples1 = new MatchedSamples();
 
         // set new values
@@ -166,7 +163,7 @@ public class MatchedSamplesTest {
         assertSame(cams, samples1.getCameras());
         assertSame(samples1.getViewIds(), ids);
         assertSame(samples1.getReconstructedPoint(), rp);
-        assertEquals(samples1.getQualityScore(), 20.0, 0.0);
+        assertEquals(20.0, samples1.getQualityScore(), 0.0);
         assertSame(samples1.getInliers(), inliers);
 
         // serialize and deserialize
@@ -175,14 +172,11 @@ public class MatchedSamplesTest {
 
         // check
         assertNotSame(samples1.getSamples(), samples2.getSamples());
-        assertEquals(samples1.getSamples().length,
-                samples2.getSamples().length);
+        assertEquals(samples1.getSamples().length, samples2.getSamples().length);
         assertArrayEquals(samples1.getCameras(), samples2.getCameras());
         assertArrayEquals(samples1.getViewIds(), samples2.getViewIds());
-        assertNotSame(samples1.getReconstructedPoint(),
-                samples2.getReconstructedPoint());
-        assertEquals(samples1.getQualityScore(),
-                samples2.getQualityScore(), 0.0);
+        assertNotSame(samples1.getReconstructedPoint(), samples2.getReconstructedPoint());
+        assertEquals(samples1.getQualityScore(), samples2.getQualityScore(), 0.0);
         assertEquals(samples1.getInliers(), samples2.getInliers());
     }
 }

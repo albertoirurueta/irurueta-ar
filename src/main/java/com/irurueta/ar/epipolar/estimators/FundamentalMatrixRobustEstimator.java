@@ -63,7 +63,7 @@ public abstract class FundamentalMatrixRobustEstimator {
 
     /**
      * Default amount of progress variation before notifying a change in
-     * estimation progress. By default this is set to 5%.
+     * estimation progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -312,8 +312,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @param rightPoints matched 2D points on right view.
      * @throws LockedException          if this fundamental matrix estimator is locked.
      * @throws IllegalArgumentException if provided matched points on left and
-     *                                  right views do not have the same length or if their length is less than 7
-     *                                  points.
+     *                                  right views do not have the same length or if their length is
+     *                                  less than 7 points.
      */
     public void setPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints)
             throws LockedException {
@@ -624,20 +624,20 @@ public abstract class FundamentalMatrixRobustEstimator {
     /**
      * Creates a fundamental matrix robust estimator using provided method.
      *
-     * @param method method of a robust estimator algorithm to estimate best
+     * @param method method of a robust estimator algorithm to estimate the best
      *               fundamental matrix.
      * @return an instance of a fundamental matrix robust estimator.
      */
     public static FundamentalMatrixRobustEstimator create(
             final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSFundamentalMatrixRobustEstimator();
             case MSAC:
                 return new MSACFundamentalMatrixRobustEstimator();
             case PROSAC:
                 return new PROSACFundamentalMatrixRobustEstimator();
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSFundamentalMatrixRobustEstimator();
             case RANSAC:
             default:
@@ -651,7 +651,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      *
      * @param leftPoints  2D points on left view.
      * @param rightPoints 2D points on left view.
-     * @param method      method of a robust estimator algorithm to estimate best
+     * @param method      method of a robust estimator algorithm to estimate the best
      *                    fundamental matrix.
      * @return an instance of a fundamental matrix robust estimator.
      * @throws IllegalArgumentException if provided list of points do not have
@@ -661,7 +661,7 @@ public abstract class FundamentalMatrixRobustEstimator {
             final List<Point2D> leftPoints, final List<Point2D> rightPoints,
             final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSFundamentalMatrixRobustEstimator(leftPoints,
                         rightPoints);
             case MSAC:
@@ -670,7 +670,7 @@ public abstract class FundamentalMatrixRobustEstimator {
             case PROSAC:
                 return new PROSACFundamentalMatrixRobustEstimator(leftPoints,
                         rightPoints);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSFundamentalMatrixRobustEstimator(leftPoints,
                         rightPoints);
             case RANSAC:
@@ -688,7 +688,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @param rightPoints   2D points on left view.
      * @param qualityScores quality scores corresponding to each pair of matched
      *                      points.
-     * @param method        method of a robust estimator algorithm to estimate best
+     * @param method        method of a robust estimator algorithm to estimate the best
      *                      fundamental matrix.
      * @return an instance of a fundamental matrix robust estimator.
      * @throws IllegalArgumentException if provided list of points do not have
@@ -698,7 +698,7 @@ public abstract class FundamentalMatrixRobustEstimator {
             final List<Point2D> leftPoints, final List<Point2D> rightPoints,
             final double[] qualityScores, final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSFundamentalMatrixRobustEstimator(leftPoints,
                         rightPoints);
             case MSAC:
@@ -707,7 +707,7 @@ public abstract class FundamentalMatrixRobustEstimator {
             case PROSAC:
                 return new PROSACFundamentalMatrixRobustEstimator(qualityScores,
                         leftPoints, rightPoints);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSFundamentalMatrixRobustEstimator(
                         qualityScores, leftPoints, rightPoints);
             case RANSAC:
@@ -790,7 +790,7 @@ public abstract class FundamentalMatrixRobustEstimator {
     }
 
     /**
-     * Estimates a fundamental matrix using a non robust method and provided
+     * Estimates a fundamental matrix using a non-robust method and provided
      * subset of matched points and stores the solution in provided array of
      * solutions.
      *
@@ -822,13 +822,13 @@ public abstract class FundamentalMatrixRobustEstimator {
      * Attempts to refine provided solution if refinement is requested.
      * This method returns a refined solution or the same provided solution
      * if refinement is not requested or has failed.
-     * If refinement is enabled and it is requested to keep covariance, this
+     * If refinement is enabled, and it is requested to keep covariance, this
      * method will also keep covariance of refined fundamental matrix.
      *
      * @param fundamentalMatrix fundamental matrix estimated by a robust
      *                          estimator without refinement.
-     * @return solution after refinement (if requested) or the provided non-
-     * refined solution if not requested or if refinement failed.
+     * @return solution after refinement (if requested) or the provided
+     * non-refined solution if not requested or if refinement failed.
      */
     protected FundamentalMatrix attemptRefine(
             final FundamentalMatrix fundamentalMatrix) {
@@ -863,7 +863,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      *

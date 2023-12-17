@@ -45,7 +45,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
 
     /**
      * Default amount of progress variation before notifying a change in
-     * estimation progress. By default this is set to 5%.
+     * estimation progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -92,7 +92,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     protected List<Transformation2D> mHomographies;
 
     /**
-     * Internal non robust estimator of IAC.
+     * Internal non-robust estimator of IAC.
      */
     protected final LMSEImageOfAbsoluteConicEstimator mIACEstimator;
 
@@ -227,7 +227,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * or not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated.
@@ -241,7 +241,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @param zeroSkewness true if camera skewness is assumed to be zero,
      *                     otherwise camera skewness is estimated.
@@ -294,7 +294,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -310,7 +310,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -325,8 +325,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
             throw new LockedException();
         }
 
-        mIACEstimator.setFocalDistanceAspectRatioKnown(
-                focalDistanceAspectRatioKnown);
+        mIACEstimator.setFocalDistanceAspectRatioKnown(focalDistanceAspectRatioKnown);
     }
 
     /**
@@ -335,7 +334,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -358,7 +357,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -401,8 +400,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @throws LockedException if robust estimator is locked.
      */
     public void setListener(
-            final ImageOfAbsoluteConicRobustEstimatorListener listener)
-            throws LockedException {
+            final ImageOfAbsoluteConicRobustEstimatorListener listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -542,7 +540,8 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
      * @param homographies list of homographies to estimate IAC.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided list of homographies does
-     *                                  not contain enough elements to estimate the DIAC using current settings.
+     *                                  not contain enough elements to estimate the DIAC using current
+     *                                  settings.
      */
     public void setHomographies(final List<Transformation2D> homographies)
             throws LockedException {
@@ -643,13 +642,13 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public static ImageOfAbsoluteConicRobustEstimator create(
             final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSImageOfAbsoluteConicRobustEstimator();
             case MSAC:
                 return new MSACImageOfAbsoluteConicRobustEstimator();
             case PROSAC:
                 return new PROSACImageOfAbsoluteConicRobustEstimator();
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSImageOfAbsoluteConicRobustEstimator();
             case RANSAC:
             default:
@@ -673,7 +672,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
             final List<Transformation2D> homographies, final double[] qualityScores,
             final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSImageOfAbsoluteConicRobustEstimator(
                         homographies);
             case MSAC:
@@ -682,7 +681,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
             case PROSAC:
                 return new PROSACImageOfAbsoluteConicRobustEstimator(
                         homographies, qualityScores);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSImageOfAbsoluteConicRobustEstimator(
                         homographies, qualityScores);
             case RANSAC:
@@ -706,7 +705,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
     public static ImageOfAbsoluteConicRobustEstimator create(
             final List<Transformation2D> homographies, final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSImageOfAbsoluteConicRobustEstimator(
                         homographies);
             case MSAC:
@@ -715,7 +714,7 @@ public abstract class ImageOfAbsoluteConicRobustEstimator {
             case PROSAC:
                 return new PROSACImageOfAbsoluteConicRobustEstimator(
                         homographies);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSImageOfAbsoluteConicRobustEstimator(
                         homographies);
             case RANSAC:

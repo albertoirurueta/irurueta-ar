@@ -67,16 +67,16 @@ public class DualAbsoluteQuadricTest {
             DualAbsoluteQuadric daq = new DualAbsoluteQuadric();
 
             // check correctness
-            assertEquals(daq.getA(), 1.0, 0.0);
-            assertEquals(daq.getB(), 1.0, 0.0);
-            assertEquals(daq.getC(), 1.0, 0.0);
-            assertEquals(daq.getD(), 0.0, 0.0);
-            assertEquals(daq.getE(), 0.0, 0.0);
-            assertEquals(daq.getF(), 0.0, 0.0);
-            assertEquals(daq.getG(), 0.0, 0.0);
-            assertEquals(daq.getH(), 0.0, 0.0);
-            assertEquals(daq.getI(), 0.0, 0.0);
-            assertEquals(daq.getJ(), 0.0, 0.0);
+            assertEquals(1.0, daq.getA(), 0.0);
+            assertEquals(1.0, daq.getB(), 0.0);
+            assertEquals(1.0, daq.getC(), 0.0);
+            assertEquals(0.0, daq.getD(), 0.0);
+            assertEquals(0.0, daq.getE(), 0.0);
+            assertEquals(0.0, daq.getF(), 0.0);
+            assertEquals(0.0, daq.getG(), 0.0);
+            assertEquals(0.0, daq.getH(), 0.0);
+            assertEquals(0.0, daq.getI(), 0.0);
+            assertEquals(0.0, daq.getJ(), 0.0);
 
             final Matrix m = daq.asMatrix();
             final Matrix m2 = Matrix.identity(DAQ_ROWS, DAQ_COLS);
@@ -85,45 +85,31 @@ public class DualAbsoluteQuadricTest {
             assertTrue(m.equals(m2, 0.0));
 
             // test constructor from parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(
-                    new Random());
-            final double a = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double b = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double c = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double d = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double e = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double f = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double g = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double h = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double i = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double j = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double a = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double b = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double c = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double d = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double e = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double f = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double g = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double h = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double i = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double j = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             daq = new DualAbsoluteQuadric(a, b, c, d, e, f, g, h, i, j);
 
             // check correctness
-            assertEquals(daq.getA(), a, 0.0);
-            assertEquals(daq.getB(), b, 0.0);
-            assertEquals(daq.getC(), c, 0.0);
-            assertEquals(daq.getD(), d, 0.0);
+            assertEquals(a, daq.getA(), 0.0);
+            assertEquals(b, daq.getB(), 0.0);
+            assertEquals(c, daq.getC(), 0.0);
+            assertEquals(d, daq.getD(), 0.0);
 
             // test constructor from dual image of absolute conic and plane
             // at infinity
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
             final double horizontalPrincipalPoint = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
             final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -134,20 +120,14 @@ public class DualAbsoluteQuadricTest {
                             verticalFocalLength, horizontalPrincipalPoint,
                             verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                    intrinsic);
+            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(intrinsic);
 
-            final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            final Plane planeAtInfinity = new Plane(planeA, planeB, planeC,
-                    planeD);
+            final Plane planeAtInfinity = new Plane(planeA, planeB, planeC, planeD);
 
             diac.normalize();
             planeAtInfinity.normalize();
@@ -160,31 +140,28 @@ public class DualAbsoluteQuadricTest {
             final Matrix diacMatrix = diac.asMatrix();
             final Matrix planeAtInfinityDirectorVector =
                     Matrix.newFromArray(planeAtInfinity.getDirectorVector());
-            planeAtInfinityDirectorVector.multiplyByScalar(
-                    1.0 / planeAtInfinity.getD());
+            planeAtInfinityDirectorVector.multiplyByScalar(1.0 / planeAtInfinity.getD());
 
             Matrix daqMatrix = new Matrix(DAQ_ROWS, DAQ_COLS);
-            daqMatrix.setSubmatrix(0, 0, 2, 2, diacMatrix);
-            daqMatrix.setSubmatrix(0, 3, 2, 3, diacMatrix.
-                    multiplyAndReturnNew(planeAtInfinityDirectorVector).
-                    multiplyByScalarAndReturnNew(-1.0));
-            daqMatrix.setSubmatrix(3, 0, 3, 2, diacMatrix.
-                    multiplyAndReturnNew(planeAtInfinityDirectorVector).
-                    multiplyByScalarAndReturnNew(-1.0).
-                    transposeAndReturnNew());
-            daqMatrix.setElementAt(3, 3, planeAtInfinityDirectorVector.
-                    transposeAndReturnNew().multiplyAndReturnNew(
-                    diacMatrix).multiplyAndReturnNew(
-                    planeAtInfinityDirectorVector).getElementAtIndex(0));
+            daqMatrix.setSubmatrix(0, 0, 2, 2,
+                    diacMatrix);
+            daqMatrix.setSubmatrix(0, 3, 2, 3,
+                    diacMatrix.multiplyAndReturnNew(planeAtInfinityDirectorVector)
+                            .multiplyByScalarAndReturnNew(-1.0));
+            daqMatrix.setSubmatrix(3, 0, 3, 2,
+                    diacMatrix.multiplyAndReturnNew(planeAtInfinityDirectorVector)
+                            .multiplyByScalarAndReturnNew(-1.0).transposeAndReturnNew());
+            daqMatrix.setElementAt(3, 3,
+                    planeAtInfinityDirectorVector.transposeAndReturnNew().multiplyAndReturnNew(
+                            diacMatrix).multiplyAndReturnNew(planeAtInfinityDirectorVector)
+                            .getElementAtIndex(0));
 
             assertTrue(daqMatrix2.equals(daqMatrix, ABSOLUTE_ERROR));
 
-            DualImageOfAbsoluteConic diac2 =
-                    daq.getDualImageOfAbsoluteConic();
+            DualImageOfAbsoluteConic diac2 = daq.getDualImageOfAbsoluteConic();
             assertTrue(diac2.asMatrix().equals(diacMatrix, ABSOLUTE_ERROR));
             Plane planeAtInfinity2 = daq.getPlaneAtInfinity();
-            assertTrue(planeAtInfinity.equals(planeAtInfinity2,
-                    ABSOLUTE_ERROR));
+            assertTrue(planeAtInfinity.equals(planeAtInfinity2, ABSOLUTE_ERROR));
 
             // test constructor from dual image of absolute conic
             daq = new DualAbsoluteQuadric(diac);
@@ -195,7 +172,8 @@ public class DualAbsoluteQuadricTest {
             final Plane planeAtInfinity3 = new Plane(0.0, 0.0, 0.0, 1.0);
 
             daqMatrix = new Matrix(DAQ_ROWS, DAQ_COLS);
-            daqMatrix.setSubmatrix(0, 0, 2, 2, diacMatrix);
+            daqMatrix.setSubmatrix(0, 0, 2, 2,
+                    diacMatrix);
 
             assertTrue(daqMatrix2.equals(daqMatrix, ABSOLUTE_ERROR));
 
@@ -213,21 +191,18 @@ public class DualAbsoluteQuadricTest {
 
             daqMatrix = Matrix.identity(DAQ_ROWS, DAQ_COLS);
             daqMatrix.setSubmatrix(0, 3, 2, 3,
-                    planeAtInfinityDirectorVector.
-                            multiplyByScalarAndReturnNew(-1.0));
+                    planeAtInfinityDirectorVector.multiplyByScalarAndReturnNew(-1.0));
             daqMatrix.setSubmatrix(3, 0, 3, 2,
-                    planeAtInfinityDirectorVector.
-                            multiplyByScalarAndReturnNew(-1.0).
-                            transposeAndReturnNew());
-            daqMatrix.setElementAt(3, 3, planeAtInfinityDirectorVector.
-                    transposeAndReturnNew().multiplyAndReturnNew(
-                    planeAtInfinityDirectorVector).getElementAtIndex(0));
+                    planeAtInfinityDirectorVector.multiplyByScalarAndReturnNew(-1.0)
+                            .transposeAndReturnNew());
+            daqMatrix.setElementAt(3, 3,
+                    planeAtInfinityDirectorVector.transposeAndReturnNew().multiplyAndReturnNew(
+                            planeAtInfinityDirectorVector).getElementAtIndex(0));
 
             assertTrue(daqMatrix2.equals(daqMatrix, ABSOLUTE_ERROR));
 
             diac2 = daq.getDualImageOfAbsoluteConic();
-            assertTrue(diac2.asMatrix().equals(Matrix.identity(IAC_ROWS,
-                    IAC_COLS), ABSOLUTE_ERROR));
+            assertTrue(diac2.asMatrix().equals(Matrix.identity(IAC_ROWS, IAC_COLS), ABSOLUTE_ERROR));
             planeAtInfinity2 = daq.getPlaneAtInfinity();
             assertTrue(planeAtInfinity.equals(planeAtInfinity2, ABSOLUTE_ERROR));
 
@@ -238,8 +213,7 @@ public class DualAbsoluteQuadricTest {
         assertTrue(succeeded > 0);
 
         // initially transformation is the identity
-        ProjectiveTransformation3D transformation =
-                new ProjectiveTransformation3D();
+        ProjectiveTransformation3D transformation = new ProjectiveTransformation3D();
 
         DualAbsoluteQuadric daq = new DualAbsoluteQuadric(transformation);
         daq.normalize();
@@ -263,8 +237,7 @@ public class DualAbsoluteQuadricTest {
         // check correctness
         Matrix i = Matrix.identity(4, 4);
         i.setElementAt(3, 3, 0.0);
-        daqMatrix = t.multiplyAndReturnNew(i).multiplyAndReturnNew(
-                t.transposeAndReturnNew());
+        daqMatrix = t.multiplyAndReturnNew(i).multiplyAndReturnNew(t.transposeAndReturnNew());
         daqMatrix.multiplyByScalar(1.0 / Utils.normF(daqMatrix));
 
         daqMatrix2 = daq.asMatrix();
@@ -277,8 +250,7 @@ public class DualAbsoluteQuadricTest {
         final DualAbsoluteQuadric daq = new DualAbsoluteQuadric();
 
         // check initial value
-        ProjectiveTransformation3D transformation =
-                daq.getMetricToProjectiveTransformation();
+        ProjectiveTransformation3D transformation = daq.getMetricToProjectiveTransformation();
         transformation.normalize();
 
         daq.normalize();
@@ -288,8 +260,7 @@ public class DualAbsoluteQuadricTest {
         final Matrix ident = Matrix.identity(4, 4);
         ident.setElementAt(3, 3, 0.0);
 
-        Matrix daqMatrix2 = t.multiplyAndReturnNew(ident).multiplyAndReturnNew(
-                t.transposeAndReturnNew());
+        Matrix daqMatrix2 = t.multiplyAndReturnNew(ident).multiplyAndReturnNew(t.transposeAndReturnNew());
         daqMatrix2.multiplyByScalar(1.0 / Utils.normF(daqMatrix2));
 
         assertTrue(daqMatrix.equals(daqMatrix2, ABSOLUTE_ERROR));
@@ -319,10 +290,8 @@ public class DualAbsoluteQuadricTest {
         daqMatrix = daq.asMatrix();
 
         // check correctness
-        final ProjectiveTransformation3D transformation2 =
-                daq.getMetricToProjectiveTransformation();
-        final ProjectiveTransformation3D transformation3 =
-                new ProjectiveTransformation3D();
+        final ProjectiveTransformation3D transformation2 = daq.getMetricToProjectiveTransformation();
+        final ProjectiveTransformation3D transformation3 = new ProjectiveTransformation3D();
         daq.getMetricToProjectiveTransformation(transformation3);
 
         transformation2.normalize();
@@ -331,8 +300,7 @@ public class DualAbsoluteQuadricTest {
         final Matrix t2 = transformation2.asMatrix();
         final Matrix t3 = transformation3.asMatrix();
 
-        daqMatrix2 = t2.multiplyAndReturnNew(ident).multiplyAndReturnNew(
-                t2.transposeAndReturnNew());
+        daqMatrix2 = t2.multiplyAndReturnNew(ident).multiplyAndReturnNew(t2.transposeAndReturnNew());
         daqMatrix2.multiplyByScalar(1.0 / Utils.normF(daqMatrix2));
 
         final Matrix daqMatrix3 = t3.multiplyAndReturnNew(ident).multiplyAndReturnNew(
@@ -351,14 +319,10 @@ public class DualAbsoluteQuadricTest {
         try {
             final DualAbsoluteQuadric daq = new DualAbsoluteQuadric();
 
-            final UniformRandomizer randomizer = new UniformRandomizer(
-                    new Random());
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
             final double horizontalPrincipalPoint = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
             final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -369,58 +333,44 @@ public class DualAbsoluteQuadricTest {
                             verticalFocalLength, horizontalPrincipalPoint,
                             verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                    intrinsic);
+            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(intrinsic);
 
-            final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            final Plane planeAtInfinity = new Plane(planeA, planeB, planeC,
-                    planeD);
+            final Plane planeAtInfinity = new Plane(planeA, planeB, planeC, planeD);
 
             diac.normalize();
             planeAtInfinity.normalize();
 
-            daq.setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac,
-                    planeAtInfinity);
+            daq.setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);
 
             // check correctness
             final Matrix daqMatrix2 = daq.asMatrix();
 
             final Matrix diacMatrix = diac.asMatrix();
-            final Matrix planeAtInfinityDirectorVector =
-                    Matrix.newFromArray(
-                            planeAtInfinity.getDirectorVector());
-            planeAtInfinityDirectorVector.multiplyByScalar(
-                    1.0 / planeAtInfinity.getD());
+            final Matrix planeAtInfinityDirectorVector = Matrix.newFromArray(
+                    planeAtInfinity.getDirectorVector());
+            planeAtInfinityDirectorVector.multiplyByScalar(1.0 / planeAtInfinity.getD());
 
             final Matrix daqMatrix = new Matrix(DAQ_ROWS, DAQ_COLS);
-            daqMatrix.setSubmatrix(0, 0, 2, 2, diacMatrix);
+            daqMatrix.setSubmatrix(0, 0, 2, 2,
+                    diacMatrix);
             daqMatrix.setSubmatrix(0, 3, 2, 3,
-                    diacMatrix.multiplyAndReturnNew(
-                            planeAtInfinityDirectorVector).
-                            multiplyByScalarAndReturnNew(-1.0));
+                    diacMatrix.multiplyAndReturnNew(planeAtInfinityDirectorVector)
+                            .multiplyByScalarAndReturnNew(-1.0));
             daqMatrix.setSubmatrix(3, 0, 3, 2,
-                    diacMatrix.multiplyAndReturnNew(
-                            planeAtInfinityDirectorVector).
-                            multiplyByScalarAndReturnNew(-1.0).
-                            transposeAndReturnNew());
-            daqMatrix.setElementAt(3, 3,
-                    planeAtInfinityDirectorVector.transposeAndReturnNew().
-                            multiplyAndReturnNew(diacMatrix).
-                            multiplyAndReturnNew(planeAtInfinityDirectorVector).
-                            getElementAtIndex(0));
+                    diacMatrix.multiplyAndReturnNew(planeAtInfinityDirectorVector).
+                            multiplyByScalarAndReturnNew(-1.0).transposeAndReturnNew());
+            daqMatrix.setElementAt(3, 3, planeAtInfinityDirectorVector.transposeAndReturnNew().
+                    multiplyAndReturnNew(diacMatrix).multiplyAndReturnNew(planeAtInfinityDirectorVector)
+                    .getElementAtIndex(0));
 
             assertTrue(daqMatrix2.equals(daqMatrix, ABSOLUTE_ERROR));
 
-            final DualImageOfAbsoluteConic diac2 =
-                    daq.getDualImageOfAbsoluteConic();
+            final DualImageOfAbsoluteConic diac2 = daq.getDualImageOfAbsoluteConic();
             assertTrue(diac2.asMatrix().equals(diacMatrix, ABSOLUTE_ERROR));
             final Plane planeAtInfinity2 = daq.getPlaneAtInfinity();
             assertTrue(planeAtInfinity.equals(planeAtInfinity2, ABSOLUTE_ERROR));
@@ -438,14 +388,10 @@ public class DualAbsoluteQuadricTest {
         try {
             final DualAbsoluteQuadric daq = new DualAbsoluteQuadric();
 
-            final UniformRandomizer randomizer = new UniformRandomizer(
-                    new Random());
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
             final double horizontalPrincipalPoint = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
             final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -456,8 +402,7 @@ public class DualAbsoluteQuadricTest {
                             verticalFocalLength, horizontalPrincipalPoint,
                             verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                    intrinsic);
+            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(intrinsic);
             final Matrix diacMatrix = diac.asMatrix();
 
             daq.setDualImageOfAbsoluteConic(diac);
@@ -468,12 +413,12 @@ public class DualAbsoluteQuadricTest {
             final Plane planeAtInfinity3 = new Plane(0.0, 0.0, 0.0, 1.0);
 
             final Matrix daqMatrix = new Matrix(DAQ_ROWS, DAQ_COLS);
-            daqMatrix.setSubmatrix(0, 0, 2, 2, diacMatrix);
+            daqMatrix.setSubmatrix(0, 0, 2, 2,
+                    diacMatrix);
 
             assertTrue(daqMatrix2.equals(daqMatrix, ABSOLUTE_ERROR));
 
-            final DualImageOfAbsoluteConic diac2 =
-                    daq.getDualImageOfAbsoluteConic();
+            final DualImageOfAbsoluteConic diac2 = daq.getDualImageOfAbsoluteConic();
             assertTrue(diac2.asMatrix().equals(diacMatrix, ABSOLUTE_ERROR));
             final Plane planeAtInfinity2 = daq.getPlaneAtInfinity();
             assertTrue(planeAtInfinity3.equals(planeAtInfinity2, ABSOLUTE_ERROR));
@@ -493,20 +438,14 @@ public class DualAbsoluteQuadricTest {
             for (int t = 0; t < TIMES; t++) {
                 final DualAbsoluteQuadric daq = new DualAbsoluteQuadric();
 
-                final UniformRandomizer randomizer = new UniformRandomizer(
-                        new Random());
+                final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-                final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
+                final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-                final Plane planeAtInfinity = new Plane(planeA, planeB, planeC,
-                        planeD);
+                final Plane planeAtInfinity = new Plane(planeA, planeB, planeC, planeD);
 
                 planeAtInfinity.normalize();
 
@@ -515,36 +454,29 @@ public class DualAbsoluteQuadricTest {
                 // check correctness
                 final Matrix daqMatrix2 = daq.asMatrix();
 
-                final Matrix planeAtInfinityDirectorVector =
-                        Matrix.newFromArray(planeAtInfinity.
-                                getDirectorVector());
-                planeAtInfinityDirectorVector.multiplyByScalar(
-                        1.0 / planeAtInfinity.getD());
+                final Matrix planeAtInfinityDirectorVector = Matrix.newFromArray(
+                        planeAtInfinity.getDirectorVector());
+                planeAtInfinityDirectorVector.multiplyByScalar(1.0 / planeAtInfinity.getD());
 
                 final Matrix daqMatrix = Matrix.identity(DAQ_ROWS, DAQ_COLS);
                 daqMatrix.setSubmatrix(0, 3, 2, 3,
-                        planeAtInfinityDirectorVector.
-                                multiplyByScalarAndReturnNew(-1.0));
+                        planeAtInfinityDirectorVector.multiplyByScalarAndReturnNew(-1.0));
                 daqMatrix.setSubmatrix(3, 0, 3, 2,
-                        planeAtInfinityDirectorVector.
-                                multiplyByScalarAndReturnNew(-1.0).
-                                transposeAndReturnNew());
-                daqMatrix.setElementAt(3, 3, planeAtInfinityDirectorVector.
-                        transposeAndReturnNew().multiplyAndReturnNew(
-                        planeAtInfinityDirectorVector).getElementAtIndex(0));
+                        planeAtInfinityDirectorVector.multiplyByScalarAndReturnNew(-1.0)
+                                .transposeAndReturnNew());
+                daqMatrix.setElementAt(3, 3,
+                        planeAtInfinityDirectorVector.transposeAndReturnNew().multiplyAndReturnNew(
+                                planeAtInfinityDirectorVector).getElementAtIndex(0));
 
                 if (!daqMatrix2.equals(daqMatrix, LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
                 assertTrue(daqMatrix2.equals(daqMatrix, LARGE_ABSOLUTE_ERROR));
 
-                final DualImageOfAbsoluteConic diac2 =
-                        daq.getDualImageOfAbsoluteConic();
-                assertTrue(diac2.asMatrix().equals(Matrix.identity(IAC_ROWS,
-                        IAC_COLS), ABSOLUTE_ERROR));
+                final DualImageOfAbsoluteConic diac2 = daq.getDualImageOfAbsoluteConic();
+                assertTrue(diac2.asMatrix().equals(Matrix.identity(IAC_ROWS, IAC_COLS), ABSOLUTE_ERROR));
                 final Plane planeAtInfinity2 = daq.getPlaneAtInfinity();
-                assertTrue(planeAtInfinity.equals(planeAtInfinity2,
-                        ABSOLUTE_ERROR));
+                assertTrue(planeAtInfinity.equals(planeAtInfinity2, ABSOLUTE_ERROR));
 
                 succeeded++;
                 break;
@@ -561,10 +493,8 @@ public class DualAbsoluteQuadricTest {
         // is zero)
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final double horizontalFocalLength = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
         final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double horizontalPrincipalPoint = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -576,43 +506,33 @@ public class DualAbsoluteQuadricTest {
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                intrinsic);
+        final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(intrinsic);
 
-        final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
-        final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
-        final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
-        final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+        final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final Plane planeAtInfinity = new Plane(planeA, planeB, planeC,
-                planeD);
+        final Plane planeAtInfinity = new Plane(planeA, planeB, planeC, planeD);
 
         diac.normalize();
         planeAtInfinity.normalize();
 
-        final DualAbsoluteQuadric daq = new DualAbsoluteQuadric(
-                diac, planeAtInfinity);
+        final DualAbsoluteQuadric daq = new DualAbsoluteQuadric(diac, planeAtInfinity);
 
         final Matrix daqMatrix = daq.asMatrix();
 
         final double det = Utils.det(daqMatrix);
-        assertEquals(det, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, det, ABSOLUTE_ERROR);
     }
 
     @Test
     public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
         // create from DIAC and plane at infinity
         final UniformRandomizer randomizer = new UniformRandomizer();
-        final double horizontalFocalLength = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                MAX_SKEWNESS);
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double horizontalPrincipalPoint = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
         final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -623,20 +543,14 @@ public class DualAbsoluteQuadricTest {
                         verticalFocalLength, horizontalPrincipalPoint,
                         verticalPrincipalPoint, skewness);
 
-        final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                intrinsic);
+        final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(intrinsic);
 
-        final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
-        final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
-        final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
-        final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                MAX_RANDOM_VALUE);
+        final double planeA = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final double planeB = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final double planeC = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final double planeD = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final Plane planeAtInfinity = new Plane(planeA, planeB, planeC,
-                planeD);
+        final Plane planeAtInfinity = new Plane(planeA, planeB, planeC, planeD);
 
         diac.normalize();
         planeAtInfinity.normalize();

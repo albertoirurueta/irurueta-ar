@@ -60,9 +60,8 @@ public class SampsonSingleCorrectorTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstructor() throws WrongSizeException,
-            NotAvailableException, NotReadyException, LockedException,
-            DecomposerException, InvalidFundamentalMatrixException {
+    public void testConstructor() throws WrongSizeException, NotAvailableException, NotReadyException,
+            LockedException, DecomposerException, InvalidFundamentalMatrixException {
         // test constructor without arguments
         SampsonSingleCorrector corrector = new SampsonSingleCorrector();
 
@@ -73,7 +72,7 @@ public class SampsonSingleCorrectorTest {
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
 
         // test constructor with fundamental matrix
         final FundamentalMatrix emptyFundamentalMatrix = new FundamentalMatrix();
@@ -82,11 +81,11 @@ public class SampsonSingleCorrectorTest {
         // check default values
         assertNull(corrector.getLeftPoint());
         assertNull(corrector.getRightPoint());
-        assertSame(corrector.getFundamentalMatrix(), emptyFundamentalMatrix);
+        assertSame(emptyFundamentalMatrix, corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
 
         // test constructor with left and right points
         final Point2D leftPoint = Point2D.create();
@@ -94,13 +93,13 @@ public class SampsonSingleCorrectorTest {
         corrector = new SampsonSingleCorrector(leftPoint, rightPoint);
 
         // check default values
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
         assertNull(corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
 
         // test constructor with left and right points and a valid fundamental
         // matrix
@@ -109,12 +108,10 @@ public class SampsonSingleCorrectorTest {
         do {
             Matrix internalMatrix = Matrix.createWithUniformRandomValues(
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             // ensure that internal matrix has rank 2
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(internalMatrix);
             decomposer.decompose();
 
             // if rank is less than 2 we need to
@@ -129,37 +126,34 @@ public class SampsonSingleCorrectorTest {
             // set last element to 0 to force rank 2
             w.setElementAt(2, 2, 0.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(transV));
 
             fundamentalMatrix = new FundamentalMatrix(internalMatrix);
         } while (rank < 2);
 
-        corrector = new SampsonSingleCorrector(leftPoint, rightPoint,
-                fundamentalMatrix);
+        corrector = new SampsonSingleCorrector(leftPoint, rightPoint, fundamentalMatrix);
 
         // check default values
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertTrue(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
 
         // if we use a fundamental matrix without internal matrix defined, then
         // corrector is not ready
-        corrector = new SampsonSingleCorrector(leftPoint, rightPoint,
-                emptyFundamentalMatrix);
+        corrector = new SampsonSingleCorrector(leftPoint, rightPoint, emptyFundamentalMatrix);
 
         // check default values
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
-        assertSame(corrector.getFundamentalMatrix(), emptyFundamentalMatrix);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
+        assertSame(emptyFundamentalMatrix, corrector.getFundamentalMatrix());
         assertFalse(corrector.isReady());
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
     }
 
     @Test
@@ -176,13 +170,12 @@ public class SampsonSingleCorrectorTest {
         final Point2D rightPoint = Point2D.create();
         final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
 
-        corrector.setPointsAndFundamentalMatrix(leftPoint, rightPoint,
-                fundamentalMatrix);
+        corrector.setPointsAndFundamentalMatrix(leftPoint, rightPoint, fundamentalMatrix);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
     }
 
     @Test
@@ -197,7 +190,7 @@ public class SampsonSingleCorrectorTest {
         corrector.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
     }
 
     @Test
@@ -215,8 +208,8 @@ public class SampsonSingleCorrectorTest {
         corrector.setPoints(leftPoint, rightPoint);
 
         // check correctness
-        assertSame(corrector.getLeftPoint(), leftPoint);
-        assertSame(corrector.getRightPoint(), rightPoint);
+        assertSame(leftPoint, corrector.getLeftPoint());
+        assertSame(rightPoint, corrector.getRightPoint());
     }
 
     @Test
@@ -245,10 +238,8 @@ public class SampsonSingleCorrectorTest {
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -281,10 +272,8 @@ public class SampsonSingleCorrectorTest {
                     cameraCenter1.getInhomY() + cameraSeparation,
                     cameraCenter1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             // create random 3D point to project
             final Point3D pointToProject = new InhomogeneousPoint3D(
@@ -293,24 +282,18 @@ public class SampsonSingleCorrectorTest {
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
             // create two cameras
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    cameraCenter1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    cameraCenter2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
 
             // project 3D point with both cameras
             final Point2D leftPoint = camera1.project(pointToProject);
             final Point2D rightPoint = camera2.project(pointToProject);
 
             // add error to projected points
-            final double errorLeftX = randomizer.nextDouble(MIN_PROJECTED_ERROR,
-                    MAX_PROJECTED_ERROR);
-            final double errorLeftY = randomizer.nextDouble(MIN_PROJECTED_ERROR,
-                    MAX_PROJECTED_ERROR);
-            final double errorRightX = randomizer.nextDouble(MIN_PROJECTED_ERROR,
-                    MAX_PROJECTED_ERROR);
-            final double errorRightY = randomizer.nextDouble(MIN_PROJECTED_ERROR,
-                    MAX_PROJECTED_ERROR);
+            final double errorLeftX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final double errorLeftY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final double errorRightX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final double errorRightY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
 
             final Point2D wrongLeftPoint = new HomogeneousPoint2D(
                     leftPoint.getInhomX() + errorLeftX,
@@ -321,14 +304,11 @@ public class SampsonSingleCorrectorTest {
 
             // create fundamental matrix for the same pair of cameras used to
             // project point
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // check that points without error belong to epipolar lines
-            Line2D rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(
-                    leftPoint);
-            Line2D leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(
-                    rightPoint);
+            Line2D rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+            Line2D leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
             assertTrue(rightEpipolarLine.isLocus(rightPoint, ABSOLUTE_ERROR));
             assertTrue(leftEpipolarLine.isLocus(leftPoint, ABSOLUTE_ERROR));
 
@@ -345,38 +325,28 @@ public class SampsonSingleCorrectorTest {
             final Point2D correctedLeftPoint = corrector.getLeftCorrectedPoint();
             final Point2D correctedRightPoint = corrector.getRightCorrectedPoint();
 
-            rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(
-                    correctedLeftPoint);
-            leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(
-                    correctedRightPoint);
+            rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(correctedLeftPoint);
+            leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(correctedRightPoint);
 
-            final double correctedDistanceLeft = leftEpipolarLine.signedDistance(
-                    correctedLeftPoint);
-            final double correctedDistanceRight = rightEpipolarLine.signedDistance(
-                    correctedRightPoint);
+            final double correctedDistanceLeft = leftEpipolarLine.signedDistance(correctedLeftPoint);
+            final double correctedDistanceRight = rightEpipolarLine.signedDistance(correctedRightPoint);
 
-            rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(
-                    wrongLeftPoint);
-            leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(
-                    wrongRightPoint);
+            rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(wrongLeftPoint);
+            leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(wrongRightPoint);
 
-            final double wrongDistanceLeft = leftEpipolarLine.signedDistance(
-                    wrongLeftPoint);
-            final double wrongDistanceRight = rightEpipolarLine.signedDistance(
-                    wrongRightPoint);
+            final double wrongDistanceLeft = leftEpipolarLine.signedDistance(wrongLeftPoint);
+            final double wrongDistanceRight = rightEpipolarLine.signedDistance(wrongRightPoint);
 
             // check that corrector has indeed reduced the amount of projection
             // error
             if (Math.abs(correctedDistanceLeft) > Math.abs(wrongDistanceLeft)) {
                 continue;
             }
-            assertTrue(Math.abs(correctedDistanceLeft) <=
-                    Math.abs(wrongDistanceLeft));
+            assertTrue(Math.abs(correctedDistanceLeft) <= Math.abs(wrongDistanceLeft));
             if (Math.abs(correctedDistanceRight) > Math.abs(wrongDistanceRight)) {
                 continue;
             }
-            assertTrue(Math.abs(correctedDistanceRight) <=
-                    Math.abs(wrongDistanceRight));
+            assertTrue(Math.abs(correctedDistanceRight) <= Math.abs(wrongDistanceRight));
 
             numImproved++;
             break;

@@ -59,72 +59,59 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testConstructor() throws WrongSizeException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // check initial values
-        assertEquals(calibrator.getSampleLength(),
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH);
-        assertEquals(calibrator.getEstimatorStateLength(),
-                ConstantVelocityModelSlamEstimator.STATE_LENGTH);
+        assertEquals(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH, calibrator.getSampleLength());
+        assertEquals(ConstantVelocityModelSlamEstimator.STATE_LENGTH, calibrator.getEstimatorStateLength());
         assertFalse(calibrator.isConverged());
         assertFalse(calibrator.isFailed());
         assertFalse(calibrator.isFinished());
-        assertEquals(calibrator.getSampleCount(), 0);
-        assertEquals(calibrator.getMinNumSamples(),
-                SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES);
-        assertEquals(calibrator.getMaxNumSamples(),
-                SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES);
-        assertEquals(calibrator.getConvergenceThreshold(),
-                SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
-        assertEquals(calibrator.isAccumulationEnabled(),
-                SlamCalibrator.DEFAULT_ENABLE_SAMPLE_ACCUMULATION);
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(0, calibrator.getSampleCount());
+        assertEquals(SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES, calibrator.getMinNumSamples());
+        assertEquals(SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES, calibrator.getMaxNumSamples());
+        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
+                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(SlamCalibrator.DEFAULT_ENABLE_SAMPLE_ACCUMULATION, calibrator.isAccumulationEnabled());
+        assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isAccelerometerSampleReceived());
         assertFalse(calibrator.isGyroscopeSampleReceived());
         assertFalse(calibrator.isFullSampleAvailable());
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getAccumulatedAccelerationSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAccelerationSample(),
+                0.0);
         final double[] accumAcceleration = new double[3];
         calibrator.getAccumulatedAccelerationSample(accumAcceleration);
-        assertArrayEquals(accumAcceleration, new double[]{0.0, 0.0, 0.0}, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getAccumulatedAngularSpeedSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAcceleration, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
         final double[] accumAngularSpeed = new double[3];
         calibrator.getAccumulatedAngularSpeedSample(accumAngularSpeed);
-        assertArrayEquals(accumAngularSpeed, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAngularSpeed, 0.0);
         assertNull(calibrator.getListener());
-        assertArrayEquals(calibrator.getControlMean(),
-                new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH],
-                0.0);
-        final double[] controlMean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        assertArrayEquals(new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH],
+                calibrator.getControlMean(), 0.0);
+        final double[] controlMean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         calibrator.getControlMean(controlMean);
-        assertArrayEquals(controlMean, new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH], 0.0);
-        assertEquals(calibrator.getControlCovariance(),
-                new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
-                        ConstantVelocityModelSlamEstimator.CONTROL_LENGTH));
+        assertArrayEquals(new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH], controlMean, 0.0);
+        assertEquals(new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH), calibrator.getControlCovariance());
         final Matrix cov = new Matrix(1, 1);
         calibrator.getControlCovariance(cov);
-        assertEquals(cov, new Matrix(
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH));
+        assertEquals(new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH), cov);
     }
 
     @Test
     public void testIsConverged() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
         assertFalse(calibrator.isConverged());
@@ -138,8 +125,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testIsFailed() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
         assertFalse(calibrator.isFailed());
@@ -153,8 +139,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testIsFinished() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
         assertFalse(calibrator.isFinished());
@@ -168,33 +153,30 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetSampleCount() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getSampleCount(), 0);
+        assertEquals(0, calibrator.getSampleCount());
 
         // set new value
         calibrator.mSampleCount = 5;
 
         // check correctness
-        assertEquals(calibrator.getSampleCount(), 5);
+        assertEquals(5, calibrator.getSampleCount());
     }
 
     @Test
     public void testGetSetMinNumSamples() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getMinNumSamples(),
-                SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES);
+        assertEquals(SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES, calibrator.getMinNumSamples());
 
         // set new value
         calibrator.setMinNumSamples(50);
 
         // check correctness
-        assertEquals(calibrator.getMinNumSamples(), 50);
+        assertEquals(50, calibrator.getMinNumSamples());
 
         // Force IllegalArgumentException
         try {
@@ -206,18 +188,16 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetSetMaxNumSamples() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getMaxNumSamples(),
-                SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES);
+        assertEquals(SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES, calibrator.getMaxNumSamples());
 
         // set new value
         calibrator.setMaxNumSamples(1000);
 
         // check correctness
-        assertEquals(calibrator.getMaxNumSamples(), 1000);
+        assertEquals(1000, calibrator.getMaxNumSamples());
 
         // Force IllegalArgumentException
         try {
@@ -229,18 +209,17 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetSetConvergenceThreshold() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getConvergenceThreshold(),
-                SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
+        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, calibrator.getConvergenceThreshold(),
+                0.0);
 
         // set new value
         calibrator.setConvergenceThreshold(1.0);
 
         // check correctness
-        assertEquals(calibrator.getConvergenceThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getConvergenceThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -252,8 +231,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testReset() throws WrongSizeException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         calibrator.reset();
 
@@ -261,61 +239,50 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         assertFalse(calibrator.isConverged());
         assertFalse(calibrator.isFailed());
         assertFalse(calibrator.isFinished());
-        assertEquals(calibrator.getSampleCount(), 0);
-        assertEquals(calibrator.getMinNumSamples(),
-                SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES);
-        assertEquals(calibrator.getMaxNumSamples(),
-                SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES);
-        assertEquals(calibrator.getConvergenceThreshold(),
-                SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
-        assertEquals(calibrator.isAccumulationEnabled(),
-                SlamCalibrator.DEFAULT_ENABLE_SAMPLE_ACCUMULATION);
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(0, calibrator.getSampleCount());
+        assertEquals(SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES, calibrator.getMinNumSamples());
+        assertEquals(SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES, calibrator.getMaxNumSamples());
+        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, calibrator.getConvergenceThreshold(),
+                0.0);
+        assertEquals(SlamCalibrator.DEFAULT_ENABLE_SAMPLE_ACCUMULATION, calibrator.isAccumulationEnabled());
+        assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isAccelerometerSampleReceived());
         assertFalse(calibrator.isGyroscopeSampleReceived());
         assertFalse(calibrator.isFullSampleAvailable());
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getAccumulatedAccelerationSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
         final double[] accumAcceleration = new double[3];
         calibrator.getAccumulatedAccelerationSample(accumAcceleration);
-        assertArrayEquals(accumAcceleration, new double[]{0.0, 0.0, 0.0}, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getAccumulatedAngularSpeedSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAcceleration, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
         final double[] accumAngularSpeed = new double[3];
         calibrator.getAccumulatedAngularSpeedSample(accumAngularSpeed);
-        assertArrayEquals(accumAngularSpeed, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAngularSpeed, 0.0);
         assertNull(calibrator.getListener());
-        assertArrayEquals(calibrator.getControlMean(),
-                new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH],
-                0.0);
-        final double[] controlMean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        assertArrayEquals(new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH],
+                calibrator.getControlMean(), 0.0);
+        final double[] controlMean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         calibrator.getControlMean(controlMean);
-        assertArrayEquals(controlMean, new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH], 0.0);
-        assertEquals(calibrator.getControlCovariance(),
-                new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
-                        ConstantVelocityModelSlamEstimator.CONTROL_LENGTH));
+        assertArrayEquals(controlMean, new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH], 0.0);
+        assertEquals(new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH), calibrator.getControlCovariance());
         final Matrix cov = new Matrix(1, 1);
         calibrator.getControlCovariance(cov);
-        assertEquals(cov, new Matrix(
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH));
+        assertEquals(new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH), cov);
     }
 
     @Test
     public void testIsSetAccumulationEnabled() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
         assertTrue(calibrator.isAccumulationEnabled());
@@ -329,76 +296,71 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetAccelerometerTimestampNanos() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), -1);
+        assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
 
         // set new value
         calibrator.mAccelerometerTimestampNanos = 1000;
 
         // check correctness
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), 1000);
+        assertEquals(1000, calibrator.getAccelerometerTimestampNanos());
     }
 
     @Test
     public void testGetGyroscopeTimestampNanos() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), -1);
+        assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
 
         // set new value
         calibrator.mGyroscopeTimestampNanos = 2000;
 
         // check correctness
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), 2000);
+        assertEquals(2000, calibrator.getGyroscopeTimestampNanos());
     }
 
     @Test
     public void testGetAccumulatedAccelerometerSamplesAndIsAccelerometerSampleReceived() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 0);
+        assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isAccelerometerSampleReceived());
 
         // set new value
         calibrator.mAccumulatedAccelerometerSamples = 50;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 50);
+        assertEquals(50, calibrator.getAccumulatedAccelerometerSamples());
         assertTrue(calibrator.isAccelerometerSampleReceived());
     }
 
     @Test
     public void testGetAccumulatedGyroscopeSamples() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isGyroscopeSampleReceived());
 
         // set new value
         calibrator.mAccumulatedGyroscopeSamples = 500;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 500);
+        assertEquals(500, calibrator.getAccumulatedGyroscopeSamples());
         assertTrue(calibrator.isGyroscopeSampleReceived());
     }
 
     @Test
     public void testIsFullSampleAvailable() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial values
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isAccelerometerSampleReceived());
         assertFalse(calibrator.isGyroscopeSampleReceived());
         assertFalse(calibrator.isFullSampleAvailable());
@@ -407,8 +369,8 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.mAccumulatedAccelerometerSamples = 1;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 1);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(1, calibrator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertTrue(calibrator.isAccelerometerSampleReceived());
         assertFalse(calibrator.isGyroscopeSampleReceived());
         assertFalse(calibrator.isFullSampleAvailable());
@@ -417,8 +379,8 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.mAccumulatedGyroscopeSamples = 1;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 1);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 1);
+        assertEquals(1, calibrator.getAccumulatedAccelerometerSamples());
+        assertEquals(1, calibrator.getAccumulatedGyroscopeSamples());
         assertTrue(calibrator.isAccelerometerSampleReceived());
         assertTrue(calibrator.isGyroscopeSampleReceived());
         assertTrue(calibrator.isFullSampleAvailable());
@@ -426,57 +388,52 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetAccumulatedAccelerationSampleX() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAccelerationSampleX = 1.0;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAccelerationSampleY() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAccelerationSampleY = 2.0;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAccelerationSampleZ() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAccelerationSampleZ = 3.0;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAccelerationSample() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertArrayEquals(calibrator.getAccumulatedAccelerationSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAccelerationSampleX = 1.0;
@@ -484,14 +441,13 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.mAccumulatedAccelerationSampleZ = 3.0;
 
         // check correctness
-        assertArrayEquals(calibrator.getAccumulatedAccelerationSample(),
-                new double[]{1.0, 2.0, 3.0}, 0.0);
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
 
         final double[] sample = new double[3];
         calibrator.getAccumulatedAccelerationSample(sample);
 
         // check correctness
-        assertArrayEquals(sample, new double[]{1.0, 2.0, 3.0}, 0.0);
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0}, sample, 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -503,57 +459,52 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetAccumulatedAngularSpeedSampleX() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAngularSpeedSampleX = 1.0;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAngularSpeedSampleY() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAngularSpeedSampleY = 2.0;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAngularSpeedSampleZ() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAngularSpeedSampleZ = 3.0;
 
         // check correctness
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAngularSpeedSample() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
-        assertArrayEquals(calibrator.getAccumulatedAngularSpeedSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
 
         // set new value
         calibrator.mAccumulatedAngularSpeedSampleX = 1.0;
@@ -561,14 +512,13 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.mAccumulatedAngularSpeedSampleZ = 3.0;
 
         // check correctness
-        assertArrayEquals(calibrator.getAccumulatedAngularSpeedSample(),
-                new double[]{1.0, 2.0, 3.0}, 0.0);
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
 
         final double[] sample = new double[3];
         calibrator.getAccumulatedAngularSpeedSample(sample);
 
         // check correctness
-        assertArrayEquals(sample, new double[]{1.0, 2.0, 3.0}, 0.0);
+        assertArrayEquals(new double[]{1.0, 2.0, 3.0}, sample, 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -580,29 +530,27 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetMostRecentTimestampNanos() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // check correctness
-        assertEquals(calibrator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, calibrator.getMostRecentTimestampNanos());
 
         // set new value
         calibrator.mAccelerometerTimestampNanos = 1000;
 
         // check correctness
-        assertEquals(calibrator.getMostRecentTimestampNanos(), 1000);
+        assertEquals(1000, calibrator.getMostRecentTimestampNanos());
 
         // set new value
         calibrator.mGyroscopeTimestampNanos = 2000;
 
         // check correctness
-        assertEquals(calibrator.getMostRecentTimestampNanos(), 2000);
+        assertEquals(2000, calibrator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testGetSetListener() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         // initial value
         assertNull(calibrator.getListener());
@@ -611,24 +559,20 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.setListener(this);
 
         // check correctness
-        assertSame(calibrator.getListener(), this);
+        assertSame(this, calibrator.getListener());
     }
 
     @Test
     public void testGetControlMean() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
-        assertArrayEquals(calibrator.getControlMean(),
-                new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH],
-                0.0);
-        assertArrayEquals(calibrator.getControlMean(),
-                calibrator.mEstimator.getSampleAverage(), 0.0);
+        assertArrayEquals(new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH],
+                calibrator.getControlMean(), 0.0);
+        assertArrayEquals(calibrator.mEstimator.getSampleAverage(), calibrator.getControlMean(), 0.0);
 
-        final double[] controlMean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        final double[] controlMean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         calibrator.getControlMean(controlMean);
-        assertArrayEquals(calibrator.getControlMean(), controlMean, 0.0);
+        assertArrayEquals(controlMean, calibrator.getControlMean(), 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[1];
@@ -641,24 +585,21 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetControlCovariance() throws WrongSizeException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
-        assertEquals(calibrator.getControlCovariance(),
-                new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
-                        ConstantVelocityModelSlamEstimator.CONTROL_LENGTH));
+        assertEquals(new Matrix(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH), calibrator.getControlCovariance());
 
         final Matrix cov = new Matrix(1, 1);
         calibrator.getControlCovariance(cov);
 
-        assertEquals(calibrator.getControlCovariance(), cov);
+        assertEquals(cov, calibrator.getControlCovariance());
     }
 
     @Test
     public void testGetControlDistribution()
             throws InvalidCovarianceMatrixException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         final double[] controlMean = calibrator.getControlMean();
         final Matrix cov = calibrator.getControlCovariance();
@@ -679,50 +620,38 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testGetCalibrationData() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
         final double[] controlMean = calibrator.getControlMean();
         final Matrix cov = calibrator.getControlCovariance();
 
-        final ConstantVelocityModelSlamCalibrationData data1 =
-                calibrator.getCalibrationData();
-        final ConstantVelocityModelSlamCalibrationData data2 =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data1 = calibrator.getCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data2 = new ConstantVelocityModelSlamCalibrationData();
         calibrator.getCalibrationData(data2);
 
         // check correctness
-        assertSame(data1.getControlMean(), controlMean);
-        assertSame(data1.getControlCovariance(), cov);
+        assertSame(controlMean, data1.getControlMean());
+        assertSame(cov, data1.getControlCovariance());
 
-        assertSame(data2.getControlMean(), controlMean);
-        assertSame(data2.getControlCovariance(), cov);
+        assertSame(controlMean, data2.getControlMean());
+        assertSame(cov, data2.getControlCovariance());
     }
 
     @Test
-    public void testPropagateWithControlJacobian() throws WrongSizeException,
-            InvalidCovarianceMatrixException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+    public void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                new Random());
+        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
         long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
@@ -760,10 +689,8 @@ public class ConstantVelocityModelSlamCalibratorTest implements
             angularZ = angularOffsetZ + angularNoiseZ;
 
             calibrator.updateAccelerometerSample(timestamp,
-                    (float) accelerationX, (float) accelerationY,
-                    (float) accelerationZ);
-            calibrator.updateGyroscopeSample(timestamp, (float) angularX,
-                    (float) angularY, (float) angularZ);
+                    (float) accelerationX, (float) accelerationY, (float) accelerationZ);
+            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
 
             if (calibrator.isFinished()) {
                 break;
@@ -781,8 +708,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         final Matrix jacobian = Matrix.identity(calibrator.getEstimatorStateLength(),
                 calibrator.getSampleLength());
         jacobian.multiplyByScalar(2.0);
-        final MultivariateNormalDist dist = calibrator.propagateWithControlJacobian(
-                jacobian);
+        final MultivariateNormalDist dist = calibrator.propagateWithControlJacobian(jacobian);
         final MultivariateNormalDist dist2 = new MultivariateNormalDist();
         calibrator.propagateWithControlJacobian(jacobian, dist2);
 
@@ -796,8 +722,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testUpdateAccelerometerSampleWithAccumulationDisabled() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setAccumulationEnabled(false);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -808,25 +733,21 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         final float accelerationZ = randomizer.nextFloat();
 
         // check initial values
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 0);
+        assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
-        calibrator.updateAccelerometerSample(timestamp, accelerationX,
-                accelerationY, accelerationZ);
+        calibrator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
 
         // check correctness
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(),
-                accelerationX, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(),
-                accelerationY, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(),
-                accelerationZ, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 1);
+        assertEquals(timestamp, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), accelerationX, 0.0);
+        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), accelerationY, 0.0);
+        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), accelerationZ, 0.0);
+        assertEquals(1, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
         // test again but using an array
@@ -837,14 +758,11 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.updateAccelerometerSample(timestamp, acceleration);
 
         // check correctness
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(),
-                acceleration[0], 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(),
-                acceleration[1], 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(),
-                acceleration[2], 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 2);
+        assertEquals(timestamp, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(acceleration[0], calibrator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(acceleration[1], calibrator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(acceleration[2], calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(2, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
         // Force IllegalArgumentException
@@ -858,18 +776,17 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testUpdateAccelerometerSampleWithAccumulationEnabled() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setAccumulationEnabled(true);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), 0);
+        assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
         // update with several samples
@@ -890,26 +807,21 @@ public class ConstantVelocityModelSlamCalibratorTest implements
             avgAccelerationY += accelerationY / TIMES;
             avgAccelerationZ += accelerationZ / TIMES;
 
-            calibrator.updateAccelerometerSample(timestamp, accelerationX,
-                    accelerationY, accelerationZ);
+            calibrator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
         }
 
         // check correctness
-        assertEquals(calibrator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleX(),
-                avgAccelerationX, ABSOLUTE_ERROR);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleY(),
-                avgAccelerationY, ABSOLUTE_ERROR);
-        assertEquals(calibrator.getAccumulatedAccelerationSampleZ(),
-                avgAccelerationZ, ABSOLUTE_ERROR);
-        assertEquals(calibrator.getAccumulatedAccelerometerSamples(), TIMES);
+        assertEquals(timestamp, calibrator.getAccelerometerTimestampNanos());
+        assertEquals(avgAccelerationX, calibrator.getAccumulatedAccelerationSampleX(), ABSOLUTE_ERROR);
+        assertEquals(avgAccelerationY, calibrator.getAccumulatedAccelerationSampleY(), ABSOLUTE_ERROR);
+        assertEquals(avgAccelerationZ, calibrator.getAccumulatedAccelerationSampleZ(), ABSOLUTE_ERROR);
+        assertEquals(TIMES, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isFullSampleAvailable());
     }
 
     @Test
     public void testUpdateGyroscopeSampleWithAccumulationDisabled() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setAccumulationEnabled(false);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -920,25 +832,21 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         final float angularSpeedZ = randomizer.nextFloat();
 
         // check initial values
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
-        calibrator.updateGyroscopeSample(timestamp, angularSpeedX,
-                angularSpeedY, angularSpeedZ);
+        calibrator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
 
         // check correctness
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(),
-                angularSpeedX, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(),
-                angularSpeedY, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(),
-                angularSpeedZ, 0.0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 1);
+        assertEquals(timestamp, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(angularSpeedX, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(angularSpeedY, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(angularSpeedZ, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(1, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
         // test again but using an array
@@ -949,14 +857,11 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         calibrator.updateGyroscopeSample(timestamp, angularSpeed);
 
         // check correctness
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(),
-                angularSpeed[0], 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(),
-                angularSpeed[1], 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(),
-                angularSpeed[2], 0.0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 2);
+        assertEquals(timestamp, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(angularSpeed[0], calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(angularSpeed[1], calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(angularSpeed[2], calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(2, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
         // Force IllegalArgumentException
@@ -970,18 +875,17 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
     @Test
     public void testUpdateGyroscopeSampleWithAccumulationEnabled() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setAccumulationEnabled(true);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
         // update with several samples
@@ -1002,50 +906,38 @@ public class ConstantVelocityModelSlamCalibratorTest implements
             avgAngularSpeedY += angularSpeedY / TIMES;
             avgAngularSpeedZ += angularSpeedZ / TIMES;
 
-            calibrator.updateGyroscopeSample(timestamp, angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            calibrator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
         }
 
         // check correctness
-        assertEquals(calibrator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleX(),
-                avgAngularSpeedX, ABSOLUTE_ERROR);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleY(),
-                avgAngularSpeedY, ABSOLUTE_ERROR);
-        assertEquals(calibrator.getAccumulatedAngularSpeedSampleZ(),
-                avgAngularSpeedZ, ABSOLUTE_ERROR);
-        assertEquals(calibrator.getAccumulatedGyroscopeSamples(), TIMES);
+        assertEquals(timestamp, calibrator.getGyroscopeTimestampNanos());
+        assertEquals(avgAngularSpeedX, calibrator.getAccumulatedAngularSpeedSampleX(), ABSOLUTE_ERROR);
+        assertEquals(avgAngularSpeedY, calibrator.getAccumulatedAngularSpeedSampleY(), ABSOLUTE_ERROR);
+        assertEquals(avgAngularSpeedZ, calibrator.getAccumulatedAngularSpeedSampleZ(), ABSOLUTE_ERROR);
+        assertEquals(TIMES, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isFullSampleAvailable());
     }
 
     @Test
     public void testCalibrationWithOffset() throws SignalProcessingException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setListener(this);
 
         // setup so that calibrator doesn't reach convergence
         calibrator.setMaxNumSamples(N_SAMPLES);
         calibrator.setConvergenceThreshold(0.0);
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                new Random());
+        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
         long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
@@ -1095,8 +987,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
             calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
                     (float) accelerationY, (float) accelerationZ);
-            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY,
-                    (float) angularZ);
+            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
 
             timestamp += DELTA_NANOS;
 
@@ -1123,22 +1014,19 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         final double[] mean2 = estimator.getSampleAverage();
 
         assertArrayEquals(mean, mean2, LARGE_ABSOLUTE_ERROR);
-        assertEquals(mean[0], accelerationOffsetX / DELTA_SECONDS * 2.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(mean[1], accelerationOffsetY / DELTA_SECONDS * 2.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(mean[2], accelerationOffsetZ / DELTA_SECONDS * 2.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(mean[3], angularOffsetX, LARGE_ABSOLUTE_ERROR);
-        assertEquals(mean[4], angularOffsetY, LARGE_ABSOLUTE_ERROR);
-        assertEquals(mean[5], angularOffsetZ, LARGE_ABSOLUTE_ERROR);
+        assertEquals(accelerationOffsetX / DELTA_SECONDS * 2.0, mean[0], VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(accelerationOffsetY / DELTA_SECONDS * 2.0, mean[1], VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(accelerationOffsetZ / DELTA_SECONDS * 2.0, mean[2], VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(angularOffsetX, mean[3], LARGE_ABSOLUTE_ERROR);
+        assertEquals(angularOffsetY, mean[4], LARGE_ABSOLUTE_ERROR);
+        assertEquals(angularOffsetZ, mean[5], LARGE_ABSOLUTE_ERROR);
 
         assertFalse(calibrator.isFailed());
         assertFalse(calibrator.isFinished());
         assertFalse(calibrator.isConverged());
-        assertEquals(fullSampleReceived, N_SAMPLES);
-        assertEquals(fullSampleProcessed, N_SAMPLES);
-        assertEquals(calibratorFinished, 0);
+        assertEquals(N_SAMPLES, fullSampleReceived);
+        assertEquals(N_SAMPLES, fullSampleProcessed);
+        assertEquals(0, calibratorFinished);
 
         // add one last sample
         calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
@@ -1150,39 +1038,31 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         assertFalse(calibrator.isFailed());
         assertTrue(calibrator.isFinished());
         assertFalse(calibrator.isConverged());
-        assertEquals(fullSampleReceived, N_SAMPLES + 1);
-        assertEquals(fullSampleProcessed, N_SAMPLES + 1);
-        assertEquals(calibratorFinished, 1);
+        assertEquals(N_SAMPLES + 1, fullSampleReceived);
+        assertEquals(N_SAMPLES + 1, fullSampleProcessed);
+        assertEquals(1, calibratorFinished);
     }
 
     @Test
     public void testCalibrationWithoutOffset() throws SignalProcessingException {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setListener(this);
 
         // setup so that calibrator doesn't reach convergence
         calibrator.setMaxNumSamples(N_SAMPLES);
         calibrator.setConvergenceThreshold(0.0);
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                new Random());
+        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
         long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
@@ -1232,8 +1112,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
             calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
                     (float) accelerationY, (float) accelerationZ);
-            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY,
-                    (float) angularZ);
+            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
 
             timestamp += DELTA_NANOS;
 
@@ -1269,9 +1148,9 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         assertFalse(calibrator.isFailed());
         assertFalse(calibrator.isFinished());
         assertFalse(calibrator.isConverged());
-        assertEquals(fullSampleReceived, N_SAMPLES);
-        assertEquals(fullSampleProcessed, N_SAMPLES);
-        assertEquals(calibratorFinished, 0);
+        assertEquals(N_SAMPLES, fullSampleReceived);
+        assertEquals(N_SAMPLES, fullSampleProcessed);
+        assertEquals(0, calibratorFinished);
 
         // add one last sample
         calibrator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
@@ -1281,35 +1160,27 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         assertFalse(calibrator.isFailed());
         assertTrue(calibrator.isFinished());
         assertFalse(calibrator.isConverged());
-        assertEquals(fullSampleReceived, N_SAMPLES + 1);
-        assertEquals(fullSampleProcessed, N_SAMPLES + 1);
-        assertEquals(calibratorFinished, 1);
+        assertEquals(N_SAMPLES + 1, fullSampleReceived);
+        assertEquals(N_SAMPLES + 1, fullSampleProcessed);
+        assertEquals(1, calibratorFinished);
     }
 
     @Test
     public void testCalibrationConvergence() {
-        final ConstantVelocityModelSlamCalibrator calibrator =
-                new ConstantVelocityModelSlamCalibrator();
+        final ConstantVelocityModelSlamCalibrator calibrator = new ConstantVelocityModelSlamCalibrator();
         calibrator.setListener(this);
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                new Random());
+        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
         final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET,
-                MAX_OFFSET);
+        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
         long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
@@ -1349,8 +1220,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
 
             calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
                     (float) accelerationY, (float) accelerationZ);
-            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY,
-                    (float) angularZ);
+            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
 
             if (calibrator.isFinished()) {
                 break;
@@ -1366,7 +1236,7 @@ public class ConstantVelocityModelSlamCalibratorTest implements
         assertTrue(fullSampleReceived < N_SAMPLES);
         assertTrue(fullSampleProcessed < N_SAMPLES);
         assertEquals(fullSampleReceived, fullSampleProcessed);
-        assertEquals(calibratorFinished, 1);
+        assertEquals(1, calibratorFinished);
     }
 
     @Override

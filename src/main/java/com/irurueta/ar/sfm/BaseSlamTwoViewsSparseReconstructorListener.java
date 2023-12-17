@@ -58,8 +58,8 @@ public interface BaseSlamTwoViewsSparseReconstructorListener<
      * @param angularSpeedX x coordinate of angular speed expressed in radians per second (rad/s).
      * @param angularSpeedY y coordinate of angular speed expressed in radians per second (rad/s).
      * @param angularSpeedZ z coordinate of angular speed expressed in radians per second (rad/s).
-     * @param covariance    contains covariance matrix of estimated SLAM state. Matrix meaning will change depending
-     *                      on slam implementation. See: {@link SlamEstimator#getStateCovariance()},
+     * @param covariance    contains covariance matrix of estimated SLAM state. Matrix meaning will change
+     *                      depending on slam implementation. See: {@link SlamEstimator#getStateCovariance()},
      *                      {@link ConstantVelocityModelSlamEstimator#getStateCovariance()},
      *                      {@link AbsoluteOrientationSlamEstimator#getStateCovariance()} or
      *                      {@link AbsoluteOrientationConstantVelocityModelSlamEstimator#getStateCovariance()}.
@@ -80,8 +80,9 @@ public interface BaseSlamTwoViewsSparseReconstructorListener<
      * initial intrinsic parameters are known.
      *
      * @param reconstructor re-constructor raising this event.
-     * @param camera        current camera estimated using IMU data. This instance and its associated instances (camera center,
-     *                      rotation and intrinsic parameters) will be reused between consecutive calls to this method.
+     * @param camera        current camera estimated using IMU data. This instance and its associated
+     *                      instances (camera center, rotation and intrinsic parameters) will be reused
+     *                      between consecutive calls to this method.
      */
     void onSlamCameraEstimated(final R reconstructor, final PinholeCamera camera);
 }

@@ -63,7 +63,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * Constant defining whether aspect ratio of focal distance (i.e. vertical
      * focal distance divided by horizontal focal distance) is known or not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      */
     public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN =
@@ -132,7 +132,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
      * distance divided by horizontal focal distance) is known or not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -145,7 +145,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -258,7 +258,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * or not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated
@@ -272,7 +272,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @param zeroSkewness true if camera skewness is assumed to be zero,
      *                     otherwise camera skewness is estimated
@@ -325,7 +325,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -341,7 +341,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -365,7 +365,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -388,7 +388,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -636,9 +636,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mCameras != null &&
-                mCameras.size() >= getMinNumberOfRequiredCameras() &&
-                areValidConstraints();
+        return mCameras != null && mCameras.size() >= getMinNumberOfRequiredCameras()
+                && areValidConstraints();
     }
 
 
@@ -650,8 +649,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws NotReadyException                     if no valid input data has already been
      *                                               provided.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because input data is not valid or numerically
-     *                                               unstable.
+     *                                               estimation, usually because input data is not valid
+     *                                               or numerically unstable.
      */
     public DualAbsoluteQuadric estimate() throws LockedException,
             NotReadyException, DualAbsoluteQuadricEstimatorException {
@@ -669,12 +668,11 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws NotReadyException                     if no valid input data has already been
      *                                               provided.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because input data is not valid or numerically
-     *                                               unstable.
+     *                                               estimation, usually because input data is not valid
+     *                                               or numerically unstable.
      */
     public abstract void estimate(final DualAbsoluteQuadric result)
-            throws LockedException, NotReadyException,
-            DualAbsoluteQuadricEstimatorException;
+            throws LockedException, NotReadyException, DualAbsoluteQuadricEstimatorException;
 
 
     /**
@@ -825,7 +823,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     }
 
     /**
-     * Normalizes i-th row of provided matrix a.
+     * Normalizes i-th row of provided matrix "a".
      *
      * @param a matrix whose row must be normalized.
      * @param i row to be normalized.
@@ -845,7 +843,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     }
 
     /**
-     * Fills equation p3^t*Q*p1 in provided row of matrix a.
+     * Fills equation p3^t*Q*p1 in provided row of matrix "a".
      *
      * @param p11 element (1,1) of camera matrix.
      * @param p31 element (3,1) of camera matrix.
@@ -889,7 +887,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     }
 
     /**
-     * Fills equation p3^t*Q*p2 in provided row of matrix a.
+     * Fills equation p3^t*Q*p2 in provided row of matrix "a".
      *
      * @param p21 element (2,1) of camera matrix.
      * @param p31 element (3,1) of camera matrix.
@@ -933,7 +931,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     }
 
     /**
-     * Fills equation p2^t*Q*p1 in provided row of matrix a.
+     * Fills equation p2^t*Q*p1 in provided row of matrix "a".
      *
      * @param p11 element (1,1) of camera matrix.
      * @param p21 element (2,1) of camera matrix.
@@ -1052,7 +1050,7 @@ public abstract class DualAbsoluteQuadricEstimator {
 
             final Matrix v = decomposer.getV();
 
-            // last 2 columns of v contains parameters parameters a, b, c, d, e,
+            // last 2 columns of v contains parameters a, b, c, d, e,
             // f, g, h, i  that can be obtained as a linear combination of
             // those last columns (i.e. a = a1 + alpha*a2).
             // By enforcing determinant zero, we can obtain a 4th degree
@@ -1087,7 +1085,7 @@ public abstract class DualAbsoluteQuadricEstimator {
             final Complex[] roots = poly.getRoots();
 
             if (roots != null) {
-                // pick best solution (closest real root) = evaluation closest to
+                // pick the best solution (closest real root) = evaluation closest to
                 // zero
                 double polyEval;
                 double bestPolyEval = Double.MAX_VALUE;

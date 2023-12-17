@@ -30,27 +30,23 @@ public class HomographyDecompositionTest {
         // check default values
         assertNull(decomposition.getTransformation());
         assertNull(decomposition.getPlaneNormal());
-        assertEquals(decomposition.getPlaneDistance(), 0.0, 0.0);
+        assertEquals(0.0, decomposition.getPlaneDistance(), 0.0);
 
         // test non-empty constructor
-        final EuclideanTransformation3D transformation =
-                new EuclideanTransformation3D();
-        final double[] planeNormal = new double[
-                HomographyDecomposition.PLANE_NORMAL_LENGTH];
-        decomposition = new HomographyDecomposition(transformation,
-                planeNormal, 5.0);
+        final EuclideanTransformation3D transformation = new EuclideanTransformation3D();
+        final double[] planeNormal = new double[HomographyDecomposition.PLANE_NORMAL_LENGTH];
+        decomposition = new HomographyDecomposition(transformation, planeNormal, 5.0);
 
         // check correctness
-        assertSame(decomposition.getTransformation(), transformation);
-        assertSame(decomposition.getPlaneNormal(), planeNormal);
-        assertEquals(decomposition.getPlaneDistance(), 5.0, 0.0);
+        assertSame(transformation, decomposition.getTransformation());
+        assertSame(planeNormal, decomposition.getPlaneNormal());
+        assertEquals(5.0, decomposition.getPlaneDistance(), 0.0);
 
         // Force IllegalArgumentException
         decomposition = null;
         final double[] wrong = new double[1];
         try {
-            decomposition = new HomographyDecomposition(transformation, wrong,
-                    3.0);
+            decomposition = new HomographyDecomposition(transformation, wrong, 3.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -65,8 +61,7 @@ public class HomographyDecompositionTest {
         assertNull(decomposition.getTransformation());
 
         // set new value
-        final EuclideanTransformation3D transformation =
-                new EuclideanTransformation3D();
+        final EuclideanTransformation3D transformation = new EuclideanTransformation3D();
         decomposition.setTransformation(transformation);
 
         // check correctness
@@ -81,12 +76,11 @@ public class HomographyDecompositionTest {
         assertNull(decomposition.getPlaneNormal());
 
         // set new value
-        final double[] planeNormal = new double[
-                HomographyDecomposition.PLANE_NORMAL_LENGTH];
+        final double[] planeNormal = new double[HomographyDecomposition.PLANE_NORMAL_LENGTH];
         decomposition.setPlaneNormal(planeNormal);
 
         // check correctness
-        assertSame(decomposition.getPlaneNormal(), planeNormal);
+        assertSame(planeNormal, decomposition.getPlaneNormal());
 
         // force IllegalArgumentException
         final double[] wrong = new double[1];
@@ -102,12 +96,12 @@ public class HomographyDecompositionTest {
         final HomographyDecomposition decomposition = new HomographyDecomposition();
 
         // initial value
-        assertEquals(decomposition.getPlaneDistance(), 0.0, 0.0);
+        assertEquals(0.0, decomposition.getPlaneDistance(), 0.0);
 
         // set new value
         decomposition.setPlaneDistance(10.0);
 
         // check correctness
-        assertEquals(decomposition.getPlaneDistance(), 10.0, 0.0);
+        assertEquals(10.0, decomposition.getPlaneDistance(), 0.0);
     }
 }

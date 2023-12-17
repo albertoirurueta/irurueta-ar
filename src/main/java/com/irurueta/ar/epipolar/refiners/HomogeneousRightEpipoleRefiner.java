@@ -39,8 +39,8 @@ import java.util.List;
  * Refines the epipole of a fundamental matrix formed by an initial epipole
  * estimation and an estimated homography.
  * Any fundamental matrix can be expressed as F = [e']x*H, where
- * e' is the epipole on the right view, []x is the skew matrix, and H is a non
- * degenerate homography.
+ * e' is the epipole on the right view, []x is the skew matrix, and H is a
+ * non-degenerate homography.
  * This class refines an initial epipole so that residuals from provided point
  * correspondences generating fundamental matrix F are reduced.
  * This class is especially useful in cases where geometry of the scene is
@@ -77,8 +77,8 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      * @param refinementStandardDeviation standard deviation used for
      *                                    Levenberg-Marquardt fitting.
      * @param homography                  homography relating samples in two views, which is
-     *                                    used to generate a fundamental matrix and its corresponding epipolar
-     *                                    geometry.
+     *                                    used to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
      */
     public HomogeneousRightEpipoleRefiner(
             final Point2D initialEpipoleEstimation,
@@ -109,7 +109,8 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      * @param refinementStandardDeviation standard deviation used for
      *                                    Levenberg-Marquardt fitting.
      * @param homography                  homography relating samples in two views, which is used
-     *                                    to generate a fundamental matrix and its corresponding epipolar geometry.
+     *                                    to generate a fundamental matrix and its corresponding epipolar
+     *                                    geometry.
      */
     public HomogeneousRightEpipoleRefiner(
             final Point2D initialEpipoleEstimation,
@@ -212,22 +213,21 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                                     new FundamentalMatrix();
 
                             private final GradientEstimator mGradientEstimator =
-                                    new GradientEstimator(
-                                            new MultiDimensionFunctionEvaluatorListener() {
-                                                @Override
-                                                public double evaluate(final double[] point)
-                                                        throws EvaluationException {
-                                                    try {
-                                                        mEpipole.setCoordinates(point);
-                                                        computeFundamentalMatrix(mHomography, mEpipole,
-                                                                mFundMatrix);
-                                                        return residual(mFundMatrix, mLeftPoint,
-                                                                mRightPoint);
-                                                    } catch (final InvalidFundamentalMatrixException e) {
-                                                        throw new EvaluationException(e);
-                                                    }
-                                                }
-                                            });
+                                    new GradientEstimator(new MultiDimensionFunctionEvaluatorListener() {
+                                        @Override
+                                        public double evaluate(final double[] point)
+                                                throws EvaluationException {
+                                            try {
+                                                mEpipole.setCoordinates(point);
+                                                computeFundamentalMatrix(mHomography, mEpipole,
+                                                        mFundMatrix);
+                                                return residual(mFundMatrix, mLeftPoint,
+                                                        mRightPoint);
+                                            } catch (final InvalidFundamentalMatrixException e) {
+                                                throw new EvaluationException(e);
+                                            }
+                                        }
+                                    });
 
                             @Override
                             public int getNumberOfDimensions() {
@@ -298,8 +298,7 @@ public class HomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
             } while (iterErrorDecreased && numIter < MAX_ITERS);
 
             if (mListener != null) {
-                mListener.onRefineEnd(this, mInitialEstimation, result,
-                        true);
+                mListener.onRefineEnd(this, mInitialEstimation, result, true);
             }
 
             return true;

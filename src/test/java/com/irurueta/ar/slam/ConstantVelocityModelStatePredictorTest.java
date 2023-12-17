@@ -66,10 +66,7 @@ public class ConstantVelocityModelStatePredictorTest {
         final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         final double[] state = new double[]{
-                x, y, z,
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx, vy, vz,
-                wx, wy, wz
+                x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, wx, wy, wz
         };
 
         final double[] u = new double[6];
@@ -78,25 +75,21 @@ public class ConstantVelocityModelStatePredictorTest {
         Matrix jacobianX = new Matrix(13, 13);
         Matrix jacobianU = new Matrix(13, 6);
         double[] result = new double[13];
-        ConstantVelocityModelStatePredictor.predict(state, u, dt, result,
-                jacobianX, jacobianU);
+        ConstantVelocityModelStatePredictor.predict(state, u, dt, result, jacobianX, jacobianU);
 
         // check correctness
         InhomogeneousPoint3D r = new InhomogeneousPoint3D(x, y, z);
         final Matrix Rr = new Matrix(3, 3);
         final Matrix Rv = new Matrix(3, 3);
-        r = PositionPredictor.predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt,
-                Rr, Rv, null);
+        r = PositionPredictor.predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt, Rr, Rv, null);
 
         final Matrix Qq = new Matrix(4, 4);
         final Matrix Qw = new Matrix(4, 3);
         q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, Qq, Qw);
 
         double[] result2 = new double[]{
-                r.getInhomX(), r.getInhomY(), r.getInhomZ(),
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx + u[0], vy + u[1], vz + u[2],
-                wx + u[3], wy + u[4], wz + u[5]
+                r.getInhomX(), r.getInhomY(), r.getInhomZ(), q.getA(), q.getB(), q.getC(), q.getD(),
+                vx + u[0], vy + u[1], vz + u[2], wx + u[3], wy + u[4], wz + u[5]
         };
 
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -108,27 +101,25 @@ public class ConstantVelocityModelStatePredictorTest {
         jacobianX2.setSubmatrix(3, 10, 6, 12, Qw);
 
         final Matrix jacobianU2 = new Matrix(13, 6);
-        jacobianU2.setSubmatrix(7, 0, 12, 5, Matrix.identity(6, 6));
+        jacobianU2.setSubmatrix(7, 0, 12, 5,
+                Matrix.identity(6, 6));
 
         assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
         assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         try {
-            ConstantVelocityModelStatePredictor.predict(new double[1], u,
-                    dt, result, jacobianX, jacobianU);
+            ConstantVelocityModelStatePredictor.predict(new double[1], u, dt, result, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predict(state,
-                    new double[1], dt, result, jacobianX, jacobianU);
+            ConstantVelocityModelStatePredictor.predict(state, new double[1], dt, result, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predict(state, u, dt,
-                    new double[1], jacobianX, jacobianU);
+            ConstantVelocityModelStatePredictor.predict(state, u, dt, new double[1], jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -155,20 +146,17 @@ public class ConstantVelocityModelStatePredictorTest {
 
         // Force IllegalArgumentException
         try {
-            ConstantVelocityModelStatePredictor.predict(new double[1], u,
-                    dt, result);
+            ConstantVelocityModelStatePredictor.predict(new double[1], u, dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predict(state,
-                    new double[1], dt, result);
+            ConstantVelocityModelStatePredictor.predict(state, new double[1], dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predict(state, u, dt,
-                    new double[1]);
+            ConstantVelocityModelStatePredictor.predict(state, u, dt, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -176,8 +164,7 @@ public class ConstantVelocityModelStatePredictorTest {
         // test with new instance, with jacobians
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 6);
-        result = ConstantVelocityModelStatePredictor.predict(state, u, dt,
-                jacobianX, jacobianU);
+        result = ConstantVelocityModelStatePredictor.predict(state, u, dt, jacobianX, jacobianU);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -187,8 +174,7 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.predict(
-                    new double[1], u, dt, jacobianX, jacobianU);
+            result = ConstantVelocityModelStatePredictor.predict(new double[1], u, dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -213,8 +199,7 @@ public class ConstantVelocityModelStatePredictorTest {
         assertNull(result);
 
         // test with new instance without jacobians
-        result = ConstantVelocityModelStatePredictor.predict(state, u,
-                dt);
+        result = ConstantVelocityModelStatePredictor.predict(state, u, dt);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -222,14 +207,12 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.predict(
-                    new double[1], u, dt);
+            result = ConstantVelocityModelStatePredictor.predict(new double[1], u, dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.predict(state,
-                    new double[1], dt);
+            result = ConstantVelocityModelStatePredictor.predict(state, new double[1], dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -238,31 +221,26 @@ public class ConstantVelocityModelStatePredictorTest {
         // check correctness of jacobians
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 6);
-        result = ConstantVelocityModelStatePredictor.predict(state, u, dt,
-                jacobianX, jacobianU);
+        result = ConstantVelocityModelStatePredictor.predict(state, u, dt, jacobianX, jacobianU);
 
         // check state variation
         double[] diff = new double[13];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
-        result2 = ConstantVelocityModelStatePredictor.predict(state2, u,
-                dt);
+        result2 = ConstantVelocityModelStatePredictor.predict(state2, u, dt);
 
         double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[6];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
-        result2 = ConstantVelocityModelStatePredictor.predict(state, u2,
-                dt);
+        result2 = ConstantVelocityModelStatePredictor.predict(state, u2, dt);
 
         diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
@@ -294,10 +272,7 @@ public class ConstantVelocityModelStatePredictorTest {
         final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         final double[] state = new double[]{
-                x, y, z,
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx, vy, vz,
-                wx, wy, wz
+                x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, wx, wy, wz
         };
 
         final double[] u = new double[9];
@@ -341,8 +316,10 @@ public class ConstantVelocityModelStatePredictorTest {
         jacobianX2.setSubmatrix(3, 10, 6, 12, Qw);
 
         final Matrix jacobianU2 = new Matrix(13, 9);
-        jacobianU2.setSubmatrix(0, 0, 2, 2, Matrix.identity(3, 3));
-        jacobianU2.setSubmatrix(7, 3, 12, 8, Matrix.identity(6, 6));
+        jacobianU2.setSubmatrix(0, 0, 2, 2,
+                Matrix.identity(3, 3));
+        jacobianU2.setSubmatrix(7, 3, 12, 8,
+                Matrix.identity(6, 6));
 
         assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
         assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
@@ -381,28 +358,24 @@ public class ConstantVelocityModelStatePredictorTest {
 
         // test without jacobians
         result = new double[13];
-        ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
-                state, u, dt, result);
+        ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(state, u, dt, result);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
         try {
-            ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
-                    new double[1], u, dt, result);
+            ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(new double[1], u, dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
-                    state, new double[1], dt, result);
+            ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(state, new double[1], dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
-                    state, u, dt, new double[1]);
+            ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(state, u, dt, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -410,9 +383,8 @@ public class ConstantVelocityModelStatePredictorTest {
         // test with new instance, with jacobians
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 9);
-        result = ConstantVelocityModelStatePredictor.
-                predictWithPositionAdjustment(
-                        state, u, dt, jacobianX, jacobianU);
+        result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
+                state, u, dt, jacobianX, jacobianU);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -423,39 +395,33 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAdjustment(
-                            new double[1], u, dt, jacobianX, jacobianU);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
+                    new double[1], u, dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAdjustment(
-                            state, new double[1], dt, jacobianX, jacobianU);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
+                    state, new double[1], dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAdjustment(
-                            state, u, dt, new Matrix(1, 1), jacobianU);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
+                    state, u, dt, new Matrix(1, 1), jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAdjustment(
-                            state, u, dt, jacobianX, new Matrix(1, 1));
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(
+                    state, u, dt, jacobianX, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(result);
 
         // test with new instance without jacobians
-        result = ConstantVelocityModelStatePredictor.
-                predictWithPositionAdjustment(
-                        state, u, dt);
+        result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(state, u, dt);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -463,16 +429,13 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAdjustment(
-                            new double[1], u, dt);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(new double[1], u, dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAdjustment(
-                            state, new double[1], dt);
+                    predictWithPositionAdjustment(state, new double[1], dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -482,33 +445,26 @@ public class ConstantVelocityModelStatePredictorTest {
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 9);
         result = ConstantVelocityModelStatePredictor.
-                predictWithPositionAdjustment(state,
-                        u, dt, jacobianX, jacobianU);
+                predictWithPositionAdjustment(state, u, dt, jacobianX, jacobianU);
 
         // check state variation
         double[] diff = new double[13];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
-        result2 = ConstantVelocityModelStatePredictor.
-                predictWithPositionAdjustment(state2,
-                        u, dt);
+        result2 = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(state2, u, dt);
 
         double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[9];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
-        result2 = ConstantVelocityModelStatePredictor.
-                predictWithPositionAdjustment(state,
-                        u2, dt);
+        result2 = ConstantVelocityModelStatePredictor.predictWithPositionAdjustment(state, u2, dt);
 
         diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
@@ -547,10 +503,7 @@ public class ConstantVelocityModelStatePredictorTest {
         final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         final double[] state = new double[]{
-                x, y, z,
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx, vy, vz,
-                wx, wy, wz
+                x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, wx, wy, wz
         };
 
         final double[] u = new double[10];
@@ -575,14 +528,11 @@ public class ConstantVelocityModelStatePredictorTest {
         final Matrix Qq = new Matrix(4, 4);
         final Matrix Qw = new Matrix(4, 3);
         final Matrix Qdq = new Matrix(4, 4);
-        q = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                wx, wy, wz, dt, Qq, Qdq, Qw);
+        q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, Qq, Qdq, Qw);
 
         double[] result2 = new double[]{
-                r.getInhomX(), r.getInhomY(), r.getInhomZ(),
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx + u[4], vy + u[5], vz + u[6],
-                wx + u[7], wy + u[8], wz + u[9]
+                r.getInhomX(), r.getInhomY(), r.getInhomZ(), q.getA(), q.getB(), q.getC(), q.getD(),
+                vx + u[4], vy + u[5], vz + u[6], wx + u[7], wy + u[8], wz + u[9]
         };
 
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -595,7 +545,8 @@ public class ConstantVelocityModelStatePredictorTest {
 
         final Matrix jacobianU2 = new Matrix(13, 10);
         jacobianU2.setSubmatrix(3, 0, 6, 3, Qdq);
-        jacobianU2.setSubmatrix(7, 4, 12, 9, Matrix.identity(6, 6));
+        jacobianU2.setSubmatrix(7, 4, 12, 9,
+                Matrix.identity(6, 6));
 
         assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
         assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
@@ -634,28 +585,24 @@ public class ConstantVelocityModelStatePredictorTest {
 
         // test without jacobians
         result = new double[13];
-        ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(
-                state, u, dt, result);
+        ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(state, u, dt, result);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
         try {
-            ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(
-                    new double[1], u, dt, result);
+            ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(new double[1], u, dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(
-                    state, new double[1], dt, result);
+            ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(state, new double[1], dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(
-                    state, u, dt, new double[1]);
+            ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(state, u, dt, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -664,8 +611,7 @@ public class ConstantVelocityModelStatePredictorTest {
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 10);
         result = ConstantVelocityModelStatePredictor.
-                predictWithRotationAdjustment(
-                        state, u, dt, jacobianX, jacobianU);
+                predictWithRotationAdjustment(state, u, dt, jacobianX, jacobianU);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -677,38 +623,32 @@ public class ConstantVelocityModelStatePredictorTest {
         result = null;
         try {
             result = ConstantVelocityModelStatePredictor.
-                    predictWithRotationAdjustment(
-                            new double[1], u, dt, jacobianX, jacobianU);
+                    predictWithRotationAdjustment(new double[1], u, dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = ConstantVelocityModelStatePredictor.
-                    predictWithRotationAdjustment(
-                            state, new double[1], dt, jacobianX, jacobianU);
+                    predictWithRotationAdjustment(state, new double[1], dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = ConstantVelocityModelStatePredictor.
-                    predictWithRotationAdjustment(
-                            state, u, dt, new Matrix(1, 1), jacobianU);
+                    predictWithRotationAdjustment(state, u, dt, new Matrix(1, 1), jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = ConstantVelocityModelStatePredictor.
-                    predictWithRotationAdjustment(
-                            state, u, dt, jacobianX, new Matrix(1, 1));
+                    predictWithRotationAdjustment(state, u, dt, jacobianX, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(result);
 
         // test with new instance, without jacobians
-        result = ConstantVelocityModelStatePredictor.
-                predictWithRotationAdjustment(
-                        state, u, dt);
+        result = ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(state, u, dt);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -716,16 +656,13 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithRotationAdjustment(
-                            new double[1], u, dt);
+            result = ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(new double[1], u, dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             result = ConstantVelocityModelStatePredictor.
-                    predictWithRotationAdjustment(
-                            state, new double[1], dt);
+                    predictWithRotationAdjustment(state, new double[1], dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -735,33 +672,26 @@ public class ConstantVelocityModelStatePredictorTest {
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 10);
         result = ConstantVelocityModelStatePredictor.
-                predictWithRotationAdjustment(
-                        state, u, dt, jacobianX, jacobianU);
+                predictWithRotationAdjustment(state, u, dt, jacobianX, jacobianU);
 
         // check state variation
         double[] diff = new double[13];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
-        result2 = ConstantVelocityModelStatePredictor.
-                predictWithRotationAdjustment(state2,
-                        u, dt);
+        result2 = ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(state2, u, dt);
 
         double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[10];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
-        result2 = ConstantVelocityModelStatePredictor.
-                predictWithRotationAdjustment(state,
-                        u2, dt);
+        result2 = ConstantVelocityModelStatePredictor.predictWithRotationAdjustment(state, u2, dt);
 
         diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
@@ -802,10 +732,7 @@ public class ConstantVelocityModelStatePredictorTest {
         final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
         final double[] state = new double[]{
-                x, y, z,
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx, vy, vz,
-                wx, wy, wz
+                x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, wx, wy, wz
         };
 
         final double[] u = new double[13];
@@ -822,8 +749,7 @@ public class ConstantVelocityModelStatePredictorTest {
         Matrix jacobianU = new Matrix(13, 13);
         double[] result = new double[13];
         ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state, u, dt, result, jacobianX, jacobianU);
+                predictWithPositionAndRotationAdjustment(state, u, dt, result, jacobianX, jacobianU);
 
         // check correctness
         InhomogeneousPoint3D r = new InhomogeneousPoint3D(x, y, z);
@@ -836,14 +762,11 @@ public class ConstantVelocityModelStatePredictorTest {
         final Matrix Qq = new Matrix(4, 4);
         final Matrix Qw = new Matrix(4, 3);
         final Matrix Qdq = new Matrix(4, 4);
-        q = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                wx, wy, wz, dt, Qq, Qdq, Qw);
+        q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, Qq, Qdq, Qw);
 
         double[] result2 = new double[]{
-                r.getInhomX(), r.getInhomY(), r.getInhomZ(),
-                q.getA(), q.getB(), q.getC(), q.getD(),
-                vx + u[7], vy + u[8], vz + u[9],
-                wx + u[10], wy + u[11], wz + u[12]
+                r.getInhomX(), r.getInhomY(), r.getInhomZ(), q.getA(), q.getB(), q.getC(), q.getD(),
+                vx + u[7], vy + u[8], vz + u[9], wx + u[10], wy + u[11], wz + u[12]
         };
 
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -855,78 +778,70 @@ public class ConstantVelocityModelStatePredictorTest {
         jacobianX2.setSubmatrix(3, 10, 6, 12, Qw);
 
         final Matrix jacobianU2 = new Matrix(13, 13);
-        jacobianU2.setSubmatrix(0, 0, 2, 2, Matrix.identity(3, 3));
+        jacobianU2.setSubmatrix(0, 0, 2, 2,
+                Matrix.identity(3, 3));
         jacobianU2.setSubmatrix(3, 3, 6, 6, Qdq);
-        jacobianU2.setSubmatrix(7, 7, 12, 12, Matrix.identity(6, 6));
+        jacobianU2.setSubmatrix(7, 7, 12, 12,
+                Matrix.identity(6, 6));
 
         assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
         assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            new double[1], u, dt, result, jacobianX, jacobianU);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    new double[1], u, dt, result, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, new double[1], dt, result, jacobianX, jacobianU);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, new double[1], dt, result, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, u, dt, new double[1], jacobianX, jacobianU);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, u, dt, new double[1], jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, u, dt, result, new Matrix(1, 1), jacobianU);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, u, dt, result, new Matrix(1, 1), jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, u, dt, result, jacobianX, new Matrix(1, 1));
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, u, dt, result, jacobianX, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
 
         // test without jacobians
         result = new double[13];
-        ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state, u, dt, result);
+        ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, result);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            new double[1], u, dt, result);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    new double[1], u, dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, new double[1], dt, result);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, new double[1], dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, u, dt, new double[1]);
+            ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, u, dt, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -934,9 +849,8 @@ public class ConstantVelocityModelStatePredictorTest {
         // test with new instance, with jacobians
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 13);
-        result = ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state, u, dt, jacobianX, jacobianU);
+        result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, jacobianX, jacobianU);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -947,39 +861,33 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            new double[1], u, dt, jacobianX, jacobianU);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    new double[1], u, dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, new double[1], dt, jacobianX, jacobianU);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, new double[1], dt, jacobianX, jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, u, dt, new Matrix(1, 1), jacobianU);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, u, dt, new Matrix(1, 1), jacobianU);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, u, dt, jacobianX, new Matrix(1, 1));
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, u, dt, jacobianX, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(result);
 
         // test with new instance, without jacobians
-        result = ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state, u, dt);
+        result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt);
 
         // check correctness
         assertArrayEquals(result, result2, ABSOLUTE_ERROR);
@@ -987,16 +895,14 @@ public class ConstantVelocityModelStatePredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            new double[1], u, dt);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    new double[1], u, dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = ConstantVelocityModelStatePredictor.
-                    predictWithPositionAndRotationAdjustment(
-                            state, new double[1], dt);
+            result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                    state, new double[1], dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1005,34 +911,27 @@ public class ConstantVelocityModelStatePredictorTest {
         // check correctness of jacobians
         jacobianX = new Matrix(13, 13);
         jacobianU = new Matrix(13, 13);
-        result = ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state, u, dt, jacobianX, jacobianU);
+        result = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, jacobianX, jacobianU);
 
         // check state variation
         double[] diff = new double[13];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
-        result2 = ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state2, u, dt);
+        result2 = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(state2, u, dt);
 
         double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[13];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
-        result2 = ConstantVelocityModelStatePredictor.
-                predictWithPositionAndRotationAdjustment(
-                        state, u2, dt);
+        result2 = ConstantVelocityModelStatePredictor.predictWithPositionAndRotationAdjustment(state, u2, dt);
 
         diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 }

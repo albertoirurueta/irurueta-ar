@@ -226,7 +226,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Multivariate distribution to be reused during propagation of calibrated
      * covariance.
      */
-    protected MultivariateNormalDist mNormalDist;
+    protected transient MultivariateNormalDist mNormalDist;
 
     /**
      * Constructor.
@@ -239,8 +239,8 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Resets position and timestamp to zero while keeping other state parameters.
      */
     public final void resetPosition() {
-        reset(0.0, 0.0, 0.0, mStateVelocityX, mStateVelocityY, mStateVelocityZ,
-                mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
+        reset(0.0, 0.0, 0.0, mStateVelocityX, mStateVelocityY,
+                mStateVelocityZ, mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
                 mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
                 mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
     }
@@ -249,8 +249,8 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Resets linear velocity and timestamp to zero while keeping other state parameters.
      */
     public final void resetVelocity() {
-        reset(mStatePositionX, mStatePositionY, mStatePositionZ, 0.0, 0.0, 0.0,
-                mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
+        reset(mStatePositionX, mStatePositionY, mStatePositionZ, 0.0, 0.0,
+                0.0, mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
                 mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
                 mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
     }
@@ -259,8 +259,8 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Resets position, linear velocity and timestamp to zero while keeping other state parameters.
      */
     public final void resetPositionAndVelocity() {
-        reset(0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
+        reset(0.0, 0.0, 0.0, 0.0, 0.0,
+                0.0, mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
                 mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
                 mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
     }
@@ -270,9 +270,10 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public final void resetAcceleration() {
         reset(mStatePositionX, mStatePositionY, mStatePositionZ,
-                mStateVelocityX, mStateVelocityY, mStateVelocityZ, 0.0, 0.0, 0.0,
-                mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
-                mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
+                mStateVelocityX, mStateVelocityY, mStateVelocityZ, 0.0,
+                0.0, 0.0, mStateQuaternionA, mStateQuaternionB,
+                mStateQuaternionC, mStateQuaternionD, mStateAngularSpeedX, mStateAngularSpeedY,
+                mStateAngularSpeedZ);
     }
 
     /**
@@ -282,7 +283,8 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
         reset(mStatePositionX, mStatePositionY, mStatePositionZ,
                 mStateVelocityX, mStateVelocityY, mStateVelocityZ,
                 mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
-                1.0, 0.0, 0.0, 0.0, mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
+                1.0, 0.0, 0.0, 0.0,
+                mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
     }
 
     /**
@@ -303,7 +305,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
     public final void reset() {
         // NOTE: initial orientation is expressed as quaternion
         // (1.0, 0.0, 0.0, 0.0) which is equivalent to no rotation.
-        reset(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+        reset(0.0, 0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 0.0,
+                1.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0);
     }
 
@@ -626,7 +630,8 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
     }
 
     /**
-     * Gets covariance matrix of state variables (position, velocity, acceleration, orientation and angular speed).
+     * Gets covariance matrix of state variables (position, velocity, acceleration, orientation and
+     * angular speed).
      * Actual meaning of elements in returned matrix will depend on actual implementation of the estimator.
      *
      * @return covariance matrix of state variables.
@@ -957,12 +962,15 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
             if (isAccumulationEnabled() && isGyroscopeSampleReceived()) {
                 // accumulation enabled
                 final int nextSamples = mAccumulatedGyroscopeSamples + 1;
-                mAccumulatedAngularSpeedSampleX = (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
-                        angularSpeedX) / nextSamples;
-                mAccumulatedAngularSpeedSampleY = (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
-                        angularSpeedY) / nextSamples;
-                mAccumulatedAngularSpeedSampleZ = (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
-                        angularSpeedZ) / nextSamples;
+                mAccumulatedAngularSpeedSampleX =
+                        (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
+                                angularSpeedX) / nextSamples;
+                mAccumulatedAngularSpeedSampleY =
+                        (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
+                                angularSpeedY) / nextSamples;
+                mAccumulatedAngularSpeedSampleZ =
+                        (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
+                                angularSpeedZ) / nextSamples;
                 mAccumulatedGyroscopeSamples = nextSamples;
             } else {
                 // accumulation disabled
@@ -1011,9 +1019,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Corrects system state with provided position measure having an accuracy
      * determined by provided covariance matrix.
      *
-     * @param positionX          new position along x axis expressed in meters (m).
-     * @param positionY          new position along y axis expressed in meters (m).
-     * @param positionZ          new position along z axis expressed in meters (m).
+     * @param positionX          new position along x-axis expressed in meters (m).
+     * @param positionY          new position along y-axis expressed in meters (m).
+     * @param positionZ          new position along z-axis expressed in meters (m).
      * @param positionCovariance new position covariance matrix determining
      *                           new position accuracy or null if last available covariance does not need
      *                           to be updated.
@@ -1091,9 +1099,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Corrects system state with provided position measure using current
      * position accuracy.
      *
-     * @param positionX new position along x axis expressed in meters (m).
-     * @param positionY new position along y axis expressed in meters (m).
-     * @param positionZ new position along z axis expressed in meters (m).
+     * @param positionX new position along x-axis expressed in meters (m).
+     * @param positionY new position along y-axis expressed in meters (m).
+     * @param positionZ new position along z-axis expressed in meters (m).
      */
     public abstract void correctWithPositionMeasure(
             final double positionX, final double positionY, final double positionZ);
@@ -1198,10 +1206,11 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
     protected void reset(
             final double statePositionX, final double statePositionY, final double statePositionZ,
             final double stateVelocityX, final double stateVelocityY, final double stateVelocityZ,
-            final double stateAccelerationX, final double stateAccelerationY, final double stateAccelerationZ,
-            final double stateQuaternionA, final double stateQuaternionB,
+            final double stateAccelerationX, final double stateAccelerationY,
+            final double stateAccelerationZ, final double stateQuaternionA, final double stateQuaternionB,
             final double stateQuaternionC, final double stateQuaternionD,
-            final double stateAngularSpeedX, final double stateAngularSpeedY, final double stateAngularSpeedZ) {
+            final double stateAngularSpeedX, final double stateAngularSpeedY,
+            final double stateAngularSpeedZ) {
         mStatePositionX = statePositionX;
         mStatePositionY = statePositionY;
         mStatePositionZ = statePositionZ;
@@ -1245,7 +1254,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public interface BaseSlamEstimatorListener<D extends BaseCalibrationData> {
         /**
-         * Called when a full sample (accelerometer + gyroscope, etc) has been
+         * Called when a full sample (accelerometer + gyroscope, etc.) has been
          * received and is about to be processed to update internal state.
          *
          * @param estimator SLAM estimator.
@@ -1253,7 +1262,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
         void onFullSampleReceived(final BaseSlamEstimator<D> estimator);
 
         /**
-         * Called when a full sample (accelerometer + gyroscope, etc) has been
+         * Called when a full sample (accelerometer + gyroscope, etc.) has been
          * received and has already been processed, and hence internal state has
          * also been updated.
          *

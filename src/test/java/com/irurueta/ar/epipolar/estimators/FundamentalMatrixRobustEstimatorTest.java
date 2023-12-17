@@ -34,133 +34,125 @@ public class FundamentalMatrixRobustEstimatorTest {
         // create with method
 
         // RANSAC
-        FundamentalMatrixRobustEstimator estimator =
-                FundamentalMatrixRobustEstimator.create(
-                        RobustEstimatorMethod.RANSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        FundamentalMatrixRobustEstimator estimator = FundamentalMatrixRobustEstimator.create(
+                RobustEstimatorMethod.RANSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertTrue(estimator instanceof RANSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // LMedS
-        estimator = FundamentalMatrixRobustEstimator.create(
-                RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        estimator = FundamentalMatrixRobustEstimator.create(RobustEstimatorMethod.LMEDS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertTrue(estimator instanceof LMedSFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // MSAC
-        estimator = FundamentalMatrixRobustEstimator.create(
-                RobustEstimatorMethod.MSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        estimator = FundamentalMatrixRobustEstimator.create(RobustEstimatorMethod.MSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
         assertTrue(estimator instanceof MSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // PROSAC
-        estimator = FundamentalMatrixRobustEstimator.create(
-                RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        estimator = FundamentalMatrixRobustEstimator.create(RobustEstimatorMethod.PROSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
         assertTrue(estimator instanceof PROSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // PROMedS
-        estimator = FundamentalMatrixRobustEstimator.create(
-                RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        estimator = FundamentalMatrixRobustEstimator.create(RobustEstimatorMethod.PROMEDS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertTrue(estimator instanceof
-                PROMedSFundamentalMatrixRobustEstimator);
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
+        assertTrue(estimator instanceof PROMedSFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
@@ -174,132 +166,127 @@ public class FundamentalMatrixRobustEstimatorTest {
         }
 
         // RANSAC
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, RobustEstimatorMethod.RANSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints,
+                RobustEstimatorMethod.RANSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertTrue(estimator instanceof RANSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // LMedS
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints,
+                RobustEstimatorMethod.LMEDS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertTrue(estimator instanceof LMedSFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // MSAC
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, RobustEstimatorMethod.MSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints,
+                RobustEstimatorMethod.MSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
         assertTrue(estimator instanceof MSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // PROSAC
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints,
+                RobustEstimatorMethod.PROSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
         assertTrue(estimator instanceof PROSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // PROMedS
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints,
+                RobustEstimatorMethod.PROMEDS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertTrue(estimator instanceof
-                PROMedSFundamentalMatrixRobustEstimator);
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
+        assertTrue(estimator instanceof PROMedSFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
@@ -308,212 +295,201 @@ public class FundamentalMatrixRobustEstimatorTest {
         final double[] qualityScores = new double[MIN_REQUIRED_POINTS_8];
 
         // RANSAC
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, qualityScores, RobustEstimatorMethod.RANSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,
+                RobustEstimatorMethod.RANSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertTrue(estimator instanceof RANSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // LMedS
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, qualityScores, RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,
+                RobustEstimatorMethod.LMEDS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertTrue(estimator instanceof LMedSFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // MSAC
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, qualityScores, RobustEstimatorMethod.MSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,
+                RobustEstimatorMethod.MSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
         assertTrue(estimator instanceof MSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // PROSAC
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, qualityScores, RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,
+                RobustEstimatorMethod.PROSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
         assertTrue(estimator instanceof PROSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // PROMedS
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, qualityScores, RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,
+                RobustEstimatorMethod.PROMEDS);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertTrue(estimator instanceof
-                PROMedSFundamentalMatrixRobustEstimator);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
+        assertTrue(estimator instanceof PROMedSFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // test create without arguments
         estimator = FundamentalMatrixRobustEstimator.create();
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertTrue(estimator instanceof
-                PROSACFundamentalMatrixRobustEstimator);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
+        assertTrue(estimator instanceof PROSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // test create with left and right points
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertTrue(estimator instanceof
-                PROSACFundamentalMatrixRobustEstimator);
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
+        assertTrue(estimator instanceof PROSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
 
         // test create with left and right points, and quality scores
-        estimator = FundamentalMatrixRobustEstimator.create(leftPoints,
-                rightPoints, qualityScores);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertTrue(estimator instanceof
-                PROSACFundamentalMatrixRobustEstimator);
+        assertSame(qualityScores, estimator.getQualityScores());
+        assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
+        assertTrue(estimator instanceof PROSACFundamentalMatrixRobustEstimator);
         assertTrue(estimator.isResultRefined());
         assertFalse(estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());

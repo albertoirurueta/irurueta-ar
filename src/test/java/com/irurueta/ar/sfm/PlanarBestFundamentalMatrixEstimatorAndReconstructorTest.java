@@ -81,19 +81,13 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         assertNull(er.getLeftIntrinsics());
         assertNull(er.getRightIntrinsics());
         assertNotNull(er.getHomographyEstimator());
-        assertEquals(er.getEssentialCameraEstimatorCorrectorType(),
-                Corrector.DEFAULT_TYPE);
-        assertEquals(er.getHomographyConfidence(),
-                er.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(er.getHomographyMaxIterations(),
-                er.getHomographyEstimator().getMaxIterations());
-        assertEquals(er.isHomographyRefined(),
-                er.getHomographyEstimator().isResultRefined());
-        assertEquals(er.isHomographyCovarianceKept(),
-                er.getHomographyEstimator().isCovarianceKept());
+        assertEquals(Corrector.DEFAULT_TYPE, er.getEssentialCameraEstimatorCorrectorType());
+        assertEquals(er.getHomographyEstimator().getConfidence(), er.getHomographyConfidence(), 0.0);
+        assertEquals(er.getHomographyEstimator().getMaxIterations(), er.getHomographyMaxIterations());
+        assertEquals(er.getHomographyEstimator().isResultRefined(), er.isHomographyRefined());
+        assertEquals(er.getHomographyEstimator().isCovarianceKept(), er.isHomographyCovarianceKept());
         assertNull(er.getHomographyCovariance());
-        assertEquals(er.getHomographyMethod(),
-                er.getHomographyEstimator().getMethod());
+        assertEquals(er.getHomographyEstimator().getMethod(), er.getHomographyMethod());
         assertNull(er.getQualityScores());
         assertNull(er.getListener());
         assertFalse(er.isLocked());
@@ -117,33 +111,25 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         rightPoints.add(Point2D.create());
         rightPoints.add(Point2D.create());
 
-        final PinholeCameraIntrinsicParameters leftIntrinsics =
-                new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters leftIntrinsics = new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsics = new PinholeCameraIntrinsicParameters();
 
         er = new PlanarBestFundamentalMatrixEstimatorAndReconstructor(
                 leftPoints, rightPoints, leftIntrinsics, rightIntrinsics);
 
         // check correctness
-        assertSame(er.getLeftPoints(), leftPoints);
-        assertSame(er.getRightPoints(), rightPoints);
-        assertSame(er.getLeftIntrinsics(), leftIntrinsics);
-        assertSame(er.getRightIntrinsics(), rightIntrinsics);
+        assertSame(leftPoints, er.getLeftPoints());
+        assertSame(rightPoints, er.getRightPoints());
+        assertSame(leftIntrinsics, er.getLeftIntrinsics());
+        assertSame(rightIntrinsics, er.getRightIntrinsics());
         assertNotNull(er.getHomographyEstimator());
-        assertEquals(er.getEssentialCameraEstimatorCorrectorType(),
-                Corrector.DEFAULT_TYPE);
-        assertEquals(er.getHomographyConfidence(),
-                er.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(er.getHomographyMaxIterations(),
-                er.getHomographyEstimator().getMaxIterations());
-        assertEquals(er.isHomographyRefined(),
-                er.getHomographyEstimator().isResultRefined());
-        assertEquals(er.isHomographyCovarianceKept(),
-                er.getHomographyEstimator().isCovarianceKept());
+        assertEquals(Corrector.DEFAULT_TYPE, er.getEssentialCameraEstimatorCorrectorType());
+        assertEquals(er.getHomographyEstimator().getConfidence(), er.getHomographyConfidence(), 0.0);
+        assertEquals(er.getHomographyEstimator().getMaxIterations(), er.getHomographyMaxIterations());
+        assertEquals(er.getHomographyEstimator().isResultRefined(), er.isHomographyRefined());
+        assertEquals(er.getHomographyEstimator().isCovarianceKept(), er.isHomographyCovarianceKept());
         assertNull(er.getHomographyCovariance());
-        assertEquals(er.getHomographyMethod(),
-                er.getHomographyEstimator().getMethod());
+        assertEquals(er.getHomographyEstimator().getMethod(), er.getHomographyMethod());
         assertNotNull(er.getQualityScores());
         assertNull(er.getListener());
         assertFalse(er.isLocked());
@@ -183,26 +169,20 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                 leftPoints, rightPoints, leftIntrinsics, rightIntrinsics, this);
 
         // check correctness
-        assertSame(er.getLeftPoints(), leftPoints);
-        assertSame(er.getRightPoints(), rightPoints);
-        assertSame(er.getLeftIntrinsics(), leftIntrinsics);
-        assertSame(er.getRightIntrinsics(), rightIntrinsics);
+        assertSame(leftPoints, er.getLeftPoints());
+        assertSame(rightPoints, er.getRightPoints());
+        assertSame(leftIntrinsics, er.getLeftIntrinsics());
+        assertSame(rightIntrinsics, er.getRightIntrinsics());
         assertNotNull(er.getHomographyEstimator());
-        assertEquals(er.getEssentialCameraEstimatorCorrectorType(),
-                Corrector.DEFAULT_TYPE);
-        assertEquals(er.getHomographyConfidence(),
-                er.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(er.getHomographyMaxIterations(),
-                er.getHomographyEstimator().getMaxIterations());
-        assertEquals(er.isHomographyRefined(),
-                er.getHomographyEstimator().isResultRefined());
-        assertEquals(er.isHomographyCovarianceKept(),
-                er.getHomographyEstimator().isCovarianceKept());
+        assertEquals(Corrector.DEFAULT_TYPE, er.getEssentialCameraEstimatorCorrectorType());
+        assertEquals(er.getHomographyEstimator().getConfidence(), er.getHomographyConfidence(), 0.0);
+        assertEquals(er.getHomographyEstimator().getMaxIterations(), er.getHomographyMaxIterations());
+        assertEquals(er.getHomographyEstimator().isResultRefined(), er.isHomographyRefined());
+        assertEquals(er.getHomographyEstimator().isCovarianceKept(), er.isHomographyCovarianceKept());
         assertNull(er.getHomographyCovariance());
-        assertEquals(er.getHomographyMethod(),
-                er.getHomographyEstimator().getMethod());
+        assertEquals(er.getHomographyEstimator().getMethod(), er.getHomographyMethod());
         assertNotNull(er.getQualityScores());
-        assertSame(er.getListener(), this);
+        assertSame(this, er.getListener());
         assertFalse(er.isLocked());
         assertTrue(er.isReady());
         assertNull(er.getFundamentalMatrix());
@@ -252,7 +232,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         er.setLeftPoints(leftPoints);
 
         // check correctness
-        assertSame(er.getLeftPoints(), leftPoints);
+        assertSame(leftPoints, er.getLeftPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> wrong = new ArrayList<>();
@@ -281,7 +261,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         er.setRightPoints(rightPoints);
 
         // check correctness
-        assertSame(er.getRightPoints(), rightPoints);
+        assertSame(rightPoints, er.getRightPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> wrong = new ArrayList<>();
@@ -317,10 +297,10 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         er.setLeftAndRightPoints(leftPoints, rightPoints);
 
         // check correctness
-        assertSame(er.getLeftPoints(), leftPoints);
-        assertSame(er.getRightPoints(), rightPoints);
-        assertSame(er.getHomographyEstimator().getInputPoints(), leftPoints);
-        assertSame(er.getHomographyEstimator().getOutputPoints(), rightPoints);
+        assertSame(leftPoints, er.getLeftPoints());
+        assertSame(rightPoints, er.getRightPoints());
+        assertSame(leftPoints, er.getHomographyEstimator().getInputPoints());
+        assertSame(rightPoints, er.getHomographyEstimator().getOutputPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> wrong = new ArrayList<>();
@@ -357,12 +337,11 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         assertNull(er.getLeftIntrinsics());
 
         // set new value
-        final PinholeCameraIntrinsicParameters leftIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters leftIntrinsics = new PinholeCameraIntrinsicParameters();
         er.setLeftIntrinsics(leftIntrinsics);
 
         // check correctness
-        assertSame(er.getLeftIntrinsics(), leftIntrinsics);
+        assertSame(leftIntrinsics, er.getLeftIntrinsics());
     }
 
     @Test
@@ -374,12 +353,11 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         assertNull(er.getRightIntrinsics());
 
         // set new value
-        final PinholeCameraIntrinsicParameters rightIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsics = new PinholeCameraIntrinsicParameters();
         er.setRightIntrinsics(rightIntrinsics);
 
         // check correctness
-        assertSame(er.getRightIntrinsics(), rightIntrinsics);
+        assertSame(rightIntrinsics, er.getRightIntrinsics());
     }
 
     @Test
@@ -391,14 +369,12 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         assertNotNull(er.getHomographyEstimator());
 
         // set new value
-        final PointCorrespondenceProjectiveTransformation2DRobustEstimator
-                homographyEstimator =
-                PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                        create();
+        final PointCorrespondenceProjectiveTransformation2DRobustEstimator homographyEstimator =
+                PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
         er.setHomographyEstimator(homographyEstimator);
 
         // check correctness
-        assertSame(er.getHomographyEstimator(), homographyEstimator);
+        assertSame(homographyEstimator, er.getHomographyEstimator());
 
         // Force NullPointerException
         try {
@@ -415,16 +391,13 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                 new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
 
         // check initial value
-        assertEquals(er.getEssentialCameraEstimatorCorrectorType(),
-                Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, er.getEssentialCameraEstimatorCorrectorType());
 
         // set new value
-        er.setEssentialCameraEstimatorCorrectorType(
-                CorrectorType.GOLD_STANDARD);
+        er.setEssentialCameraEstimatorCorrectorType(CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertEquals(er.getEssentialCameraEstimatorCorrectorType(),
-                CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, er.getEssentialCameraEstimatorCorrectorType());
     }
 
     @Test
@@ -433,15 +406,14 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                 new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
 
         // check default value
-        assertEquals(er.getHomographyConfidence(),
-                er.getHomographyEstimator().getConfidence(), 0.0);
+        assertEquals(er.getHomographyEstimator().getConfidence(), er.getHomographyConfidence(), 0.0);
 
         // set new value
         er.setHomographyConfidence(0.5);
 
         // check correctness
-        assertEquals(er.getHomographyConfidence(), 0.5, 0.0);
-        assertEquals(er.getHomographyEstimator().getConfidence(), 0.5, 0.0);
+        assertEquals(0.5, er.getHomographyConfidence(), 0.0);
+        assertEquals(0.5, er.getHomographyEstimator().getConfidence(), 0.0);
     }
 
     @Test
@@ -450,15 +422,14 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                 new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
 
         // check default value
-        assertEquals(er.getHomographyMaxIterations(),
-                er.getHomographyEstimator().getMaxIterations());
+        assertEquals(er.getHomographyEstimator().getMaxIterations(), er.getHomographyMaxIterations());
 
         // set new value
         er.setHomographyMaxIterations(10);
 
         // check correctness
-        assertEquals(er.getHomographyMaxIterations(), 10);
-        assertEquals(er.getHomographyEstimator().getMaxIterations(), 10);
+        assertEquals(10, er.getHomographyMaxIterations());
+        assertEquals(10, er.getHomographyEstimator().getMaxIterations());
     }
 
     @Test
@@ -468,15 +439,14 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
 
         // check default value
         final boolean refined = er.isHomographyRefined();
-        assertEquals(er.isHomographyRefined(),
-                er.getHomographyEstimator().isResultRefined());
+        assertEquals(er.getHomographyEstimator().isResultRefined(), er.isHomographyRefined());
 
         // set new value
         er.setHomographyRefined(!refined);
 
         // check correctness
-        assertEquals(er.isHomographyRefined(), !refined);
-        assertEquals(er.getHomographyEstimator().isResultRefined(), !refined);
+        assertEquals(!refined, er.isHomographyRefined());
+        assertEquals(!refined, er.getHomographyEstimator().isResultRefined());
     }
 
     @Test
@@ -486,16 +456,14 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
 
         // check default value
         final boolean covarianceKept = er.isHomographyCovarianceKept();
-        assertEquals(er.isHomographyCovarianceKept(),
-                er.getHomographyEstimator().isCovarianceKept());
+        assertEquals(er.getHomographyEstimator().isCovarianceKept(), er.isHomographyCovarianceKept());
 
         // set new value
         er.setHomographyCovarianceKept(!covarianceKept);
 
         // check correctness
-        assertEquals(er.isHomographyCovarianceKept(), !covarianceKept);
-        assertEquals(er.getHomographyEstimator().isCovarianceKept(),
-                !covarianceKept);
+        assertEquals(!covarianceKept, er.isHomographyCovarianceKept());
+        assertEquals(!covarianceKept, er.getHomographyEstimator().isCovarianceKept());
     }
 
     @Test
@@ -507,21 +475,19 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         assertNull(er.getQualityScores());
 
         // set new estimator
-        final PointCorrespondenceProjectiveTransformation2DRobustEstimator
-                homographyEstimator =
-                PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                        create(RobustEstimatorMethod.PROSAC);
+        final PointCorrespondenceProjectiveTransformation2DRobustEstimator homographyEstimator =
+                PointCorrespondenceProjectiveTransformation2DRobustEstimator.create(
+                        RobustEstimatorMethod.PROSAC);
         er.setHomographyEstimator(homographyEstimator);
         assertNull(er.getQualityScores());
 
         // set new value
         final double[] qualityScores = new double[
-                PlanarBestFundamentalMatrixEstimatorAndReconstructor.
-                        MINIMUM_SIZE];
+                PlanarBestFundamentalMatrixEstimatorAndReconstructor.MINIMUM_SIZE];
         er.setQualityScores(qualityScores);
 
         // check correctness
-        assertSame(er.getQualityScores(), qualityScores);
+        assertSame(qualityScores, er.getQualityScores());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[1];
@@ -544,7 +510,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         er.setListener(this);
 
         // check correctness
-        assertSame(er.getListener(), this);
+        assertSame(this, er.getListener());
     }
 
     @Test
@@ -555,20 +521,18 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double focalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPointX = 0.0;
             final double principalPointY = 0.0;
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(focalLength1,
-                            focalLength1, principalPointX, principalPointY, skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength1, focalLength1,
+                            principalPointX, principalPointY, skewness);
             final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(focalLength2,
-                            focalLength2, principalPointX, principalPointY, skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength2, focalLength2,
+                            principalPointX, principalPointY, skewness);
 
             final double alphaEuler1 = 0.0;
             final double betaEuler1 = 0.0;
@@ -581,8 +545,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -590,18 +553,13 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
@@ -619,31 +577,22 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -655,8 +604,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -666,8 +614,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -686,18 +633,13 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -713,9 +655,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -734,12 +674,11 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
 
             final PlanarBestFundamentalMatrixEstimatorAndReconstructor er =
                     new PlanarBestFundamentalMatrixEstimatorAndReconstructor(
-                            projectedPoints1, projectedPoints2, intrinsic1,
-                            intrinsic2, this);
+                            projectedPoints1, projectedPoints2, intrinsic1, intrinsic2, this);
 
             reset();
-            assertEquals(mEstimateStart, 0);
-            assertEquals(mEstimateEnd, 0);
+            assertEquals(0, mEstimateStart);
+            assertEquals(0, mEstimateEnd);
             assertFalse(er.isLocked());
             assertTrue(er.isReady());
 
@@ -750,8 +689,8 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
             }
 
             // check correctness
-            assertEquals(mEstimateStart, 1);
-            assertEquals(mEstimateEnd, 1);
+            assertEquals(1, mEstimateStart);
+            assertEquals(1, mEstimateEnd);
             assertFalse(er.isLocked());
 
             // check correctness of homography
@@ -782,8 +721,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
             if (!areEqualUpToScale(fundamentalMatrix, er.getFundamentalMatrix())) {
                 continue;
             }
-            assertTrue(areEqualUpToScale(fundamentalMatrix,
-                    er.getFundamentalMatrix()));
+            assertTrue(areEqualUpToScale(fundamentalMatrix, er.getFundamentalMatrix()));
 
             // check that triangulated points lie in front of both estimated
             // cameras
@@ -826,8 +764,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructorTest implements
 
     private static boolean areEqualUpToScale(
             final FundamentalMatrix fundamentalMatrix1,
-            final FundamentalMatrix fundamentalMatrix2)
-            throws NotAvailableException, NotReadyException {
+            final FundamentalMatrix fundamentalMatrix2) throws NotAvailableException, NotReadyException {
 
         // normalize to increase accuracy
         fundamentalMatrix1.normalize();

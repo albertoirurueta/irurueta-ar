@@ -41,7 +41,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             RobustEstimatorMethod.PROSAC;
 
     /**
-     * Default non robust fundamental matrix estimator method used internally
+     * Default non-robust fundamental matrix estimator method used internally
      * within a robust estimator.
      * This is only used when general scenes are allowed.
      */
@@ -65,7 +65,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             false;
 
     /**
-     * Default confidence of robustly estimated fundamental matrix. By default
+     * Default confidence of robustly estimated fundamental matrix. By default,
      * this is 99%.
      * This is only used when general scenes are allowed.
      */
@@ -74,7 +74,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
 
     /**
      * Default maximum number of iterations to make while robustly estimating
-     * fundamental matrix. By default this is 5000 iterations.
+     * fundamental matrix. By default, this is 5000 iterations.
      * This is only used when general scenes are allowed.
      */
     public static final int DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS =
@@ -105,7 +105,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS = true;
 
     /**
-     * Default method to use for initial cameras estimation.
+     * Default method to use for initial estimation of cameras.
      */
     public static final InitialCamerasEstimatorMethod
             DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD =
@@ -178,7 +178,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      */
     public static final RobustEstimatorMethod
             DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD =
-            RobustEstimatorMethod.PROMedS;
+            RobustEstimatorMethod.PROMEDS;
 
     /**
      * Indicates that planar homography is refined by default using all found
@@ -196,7 +196,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             false;
 
     /**
-     * Default confidence of robustly estimated planar homography. By default
+     * Default confidence of robustly estimated planar homography. By default,
      * this is 99%.
      * This is only used when planar scenes are allowed.
      */
@@ -205,7 +205,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
 
     /**
      * Default maximum number of iterations to make while robustly estimating
-     * planar homography. By default this is 5000 iterations.
+     * planar homography. By default, this is 5000 iterations.
      * This is only used when planar scenes are allowed.
      */
     public static final int DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS =
@@ -235,7 +235,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS = true;
 
     /**
-     * Method to use for non robust fundamental matrix estimation.
+     * Method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      */
     private FundamentalMatrixEstimatorMethod
@@ -304,7 +304,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
-     * Method to use for initial cameras estimation.
+     * Method to use for initial estimation of cameras.
      */
     private InitialCamerasEstimatorMethod mInitialCamerasEstimatorMethod =
             DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD;
@@ -403,7 +403,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
             DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE;
 
     /**
-     * Confidence of robustly estimated planar homography. By default this is
+     * Confidence of robustly estimated planar homography. By default, this is
      * 99%.
      * This is only used when planar scenes are allowed.
      */
@@ -412,7 +412,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
 
     /**
      * Maximum number of iterations to make while robustly estimating planar
-     * homography. By default this is 5000.
+     * homography. By default, this is 5000.
      * This is only used when planar scenes are allowed.
      */
     private int mPlanarHomographyMaxIterations =
@@ -448,20 +448,20 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
     }
 
     /**
-     * Gets method to use for non robust fundamental matrix estimation.
+     * Gets method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      *
-     * @return method to use for non robust fundamental matrix estimation.
+     * @return method to use for non-robust fundamental matrix estimation.
      */
     public FundamentalMatrixEstimatorMethod getNonRobustFundamentalMatrixEstimatorMethod() {
         return mNonRobustFundamentalMatrixEstimatorMethod;
     }
 
     /**
-     * Sets method to use for non robust fundamental matrix estimation.
+     * Sets method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      *
-     * @param method method to use for non robust fundamental matrix estimation.
+     * @param method method to use for non-robust fundamental matrix estimation.
      * @return this instance so that method can be easily chained.
      */
     public T setNonRobustFundamentalMatrixEstimatorMethod(
@@ -646,7 +646,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * This is only used when general scenes are allowed.
      *
      * @param fundamentalMatrixComputeAndKeepInliers true if inliers must be
-     *                                               kept during robust fundamental matrix estimation, false otherwise.
+     *                                               kept during robust fundamental matrix estimation,
+     *                                               false otherwise.
      * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixComputeAndKeepInliers(
@@ -686,18 +687,18 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
     }
 
     /**
-     * Gets method to use for initial cameras estimation.
+     * Gets method to use for initial estimation of cameras.
      *
-     * @return method to use for initial cameras estimation.
+     * @return method to use for initial estimation of cameras.
      */
     public InitialCamerasEstimatorMethod getInitialCamerasEstimatorMethod() {
         return mInitialCamerasEstimatorMethod;
     }
 
     /**
-     * Sets method to use for initial cameras estimation.
+     * Sets method to use for initial estimation of cameras.
      *
-     * @param method method to use for initial cameras estimation.
+     * @param method method to use for initial estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
     public T setInitialCamerasEstimatorMethod(
@@ -725,8 +726,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * used.
      *
      * @param daqUseHomogeneousPointTriangulator true if homogeneous point
-     *                                           triangulator is used, false if an inhomogeneous point triangulator is
-     *                                           used instead.
+     *                                           triangulator is used, false if an inhomogeneous point
+     *                                           triangulator is used instead.
      * @return this instance so that method can be easily chained.
      */
     public T setDaqUseHomogeneousPointTriangulator(
@@ -856,8 +857,9 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * initial cameras estimation using either DIAC or essential matrix methods.
      *
      * @param initialCamerasMarkValidTriangulatedPoints value indicating whether
-     *                                                  valid triangulated points are marked during initial cameras estimation
-     *                                                  using either DIAC or essential matrix methods.
+     *                                                  valid triangulated points are marked during
+     *                                                  initial cameras estimation using either DIAC or
+     *                                                  essential matrix methods.
      * @return this instance so that method can be easily chained.
      */
     public T setInitialCamerasMarkValidTriangulatedPoints(
@@ -1051,7 +1053,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
     }
 
     /**
-     * Gets confidence of robustly estimated planar homography. By default this
+     * Gets confidence of robustly estimated planar homography. By default, this
      * is 99%.
      * This is only used when planar scenes are allowed.
      *
@@ -1062,7 +1064,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
     }
 
     /**
-     * Sets confidence of robustly estimated planar homography. By default this
+     * Sets confidence of robustly estimated planar homography. By default, this
      * is 99%.
      * This is only used when planar scenes are allowed.
      *
@@ -1078,7 +1080,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
 
     /**
      * Gets maximum number of iterations to make while robustly estimating
-     * planar homography. By default this is 5000.
+     * planar homography. By default, this is 5000.
      * This is only used when planar scenes are allowed.
      *
      * @return maximum number of iterations to make while robustly estimating
@@ -1090,7 +1092,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
 
     /**
      * Sets maximum number of iterations to make while robustly estimating
-     * planar homography. By default this is 5000.
+     * planar homography. By default, this is 5000.
      * This is only used when planar scenes are allowed.
      *
      * @param planarHomographyMaxIterations maximum number of iterations to make

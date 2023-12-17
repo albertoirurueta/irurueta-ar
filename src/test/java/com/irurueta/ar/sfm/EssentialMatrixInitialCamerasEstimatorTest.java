@@ -60,8 +60,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
     @Test
     public void testConstructor() {
-        EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+        EssentialMatrixInitialCamerasEstimator estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -69,26 +68,23 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
+                estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
         final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix);
 
         // check default values
         assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
@@ -96,29 +92,23 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        final PinholeCameraIntrinsicParameters leftIntrinsic =
-                new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsic =
-                new PinholeCameraIntrinsicParameters();
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic,
-                rightIntrinsic);
+        final PinholeCameraIntrinsicParameters leftIntrinsic = new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsic = new PinholeCameraIntrinsicParameters();
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -126,20 +116,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
         assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -152,20 +139,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
         assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -173,8 +157,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         leftPoints.add(Point2D.create());
         final List<Point2D> rightPoints = new ArrayList<>();
         rightPoints.add(Point2D.create());
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints,
-                rightPoints);
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints, rightPoints);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -182,62 +165,53 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints,
-                    null);
+            estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(null,
-                    rightPoints);
+            estimator = new EssentialMatrixInitialCamerasEstimator(null, rightPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftPoints, rightPoints);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftPoints, rightPoints);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -266,20 +240,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
         assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
         assertSame(estimator.getLeftPoints(), leftPoints);
         assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -300,29 +271,26 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator);
 
         estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints,
-                rightPoints);
+                fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, rightPoints);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
+                estimator.getMethod());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -330,15 +298,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator = null;
         try {
             estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftIntrinsic, rightIntrinsic,
-                    leftPoints, null);
+                    fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
             estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftIntrinsic, rightIntrinsic, null,
-                    rightPoints);
+                    fundamentalMatrix, leftIntrinsic, rightIntrinsic, null, rightPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -348,24 +314,21 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -373,51 +336,47 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 fundamentalMatrix, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(estimator.getListener(), this);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
+                estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic,
-                rightIntrinsic, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic,
+                this);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
+                estimator.getMethod());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -425,51 +384,45 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 fundamentalMatrix, leftIntrinsic, rightIntrinsic, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(estimator.getListener(), this);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
+                estimator.getMethod());
         assertFalse(estimator.isReady());
         assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
         assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints,
-                rightPoints, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints, rightPoints, this);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -493,25 +446,22 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 fundamentalMatrix, leftPoints, rightPoints, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(estimator.getListener(), this);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
         assertSame(estimator.getLeftPoints(), leftPoints);
         assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -536,24 +486,21 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -578,25 +525,23 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 rightPoints, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(estimator.getListener(), this);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
+                estimator.getMethod());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -633,7 +578,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
     }
 
     @Test
@@ -648,7 +593,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -666,7 +611,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setLeftIntrinsic(leftIntrinsic);
 
         // check correctness
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
     }
 
     @Test
@@ -684,7 +629,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setRightIntrinsic(rightIntrinsic);
 
         // check correctness
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
     }
 
     @Test
@@ -698,15 +643,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getRightIntrinsic());
 
         // set new values
-        final PinholeCameraIntrinsicParameters leftIntrinsic =
-                new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsic =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters leftIntrinsic = new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsic = new PinholeCameraIntrinsicParameters();
         estimator.setLeftAndRightIntrinsics(leftIntrinsic, rightIntrinsic);
 
         // check correctness
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
     }
 
     @Test
@@ -720,13 +663,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getRightIntrinsic());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters();
         estimator.setIntrinsicsForBoth(intrinsic);
 
         // check correctness
-        assertSame(estimator.getLeftIntrinsic(), intrinsic);
-        assertSame(estimator.getRightIntrinsic(), intrinsic);
+        assertSame(intrinsic, estimator.getLeftIntrinsic());
+        assertSame(intrinsic, estimator.getRightIntrinsic());
     }
 
     @Test
@@ -743,7 +685,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setLeftPoints(leftPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
     }
 
     @Test
@@ -760,7 +702,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setRightPoints(rightPoints);
 
         // check correctness
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(rightPoints, estimator.getRightPoints());
     }
 
     @Test
@@ -781,8 +723,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         estimator.setLeftAndRightPoints(leftPoints, rightPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
 
         // Force IllegalArgumentException
         try {
@@ -811,13 +753,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
 
         // set new value
         estimator.setCorrectorType(CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertEquals(estimator.getCorrectorType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, estimator.getCorrectorType());
     }
 
     @Test
@@ -827,18 +769,16 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
 
         // set new value
-        estimator.setPointsTriangulated(!EssentialMatrixInitialCamerasEstimator.
-                DEFAULT_TRIANGULATE_POINTS);
+        estimator.setPointsTriangulated(
+                !EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS);
 
         // check correctness
-        assertEquals(estimator.arePointsTriangulated(),
-                !EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
+        assertEquals(!EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
     }
 
     @Test
@@ -848,19 +788,16 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
 
         // set new value
         estimator.setValidTriangulatedPointsMarked(
-                !EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+                !EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
 
         // check correctness
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                !EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(!EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
     }
 
     @Test
@@ -882,8 +819,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
@@ -896,23 +832,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -929,28 +859,20 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -970,8 +892,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -1005,9 +926,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -1019,9 +938,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             }
 
             EssentialMatrixInitialCamerasEstimator estimator =
-                    new EssentialMatrixInitialCamerasEstimator(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints,
-                            rightPoints, this);
+                    new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, intrinsic, intrinsic,
+                            leftPoints, rightPoints, this);
             estimator.setPointsTriangulated(true);
             estimator.setValidTriangulatedPointsMarked(true);
 
@@ -1035,18 +953,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             final PinholeCamera camera1b = estimator.getEstimatedLeftCamera();
             final PinholeCamera camera2b = estimator.getEstimatedRightCamera();
-            final List<Point3D> triangulatedPoints =
-                    estimator.getTriangulatedPoints();
-            final BitSet validTriangulatedPoints =
-                    estimator.getValidTriangulatedPoints();
+            final List<Point3D> triangulatedPoints = estimator.getTriangulatedPoints();
+            final BitSet validTriangulatedPoints = estimator.getValidTriangulatedPoints();
 
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -1054,25 +968,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -1092,12 +998,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -1107,8 +1011,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -1127,12 +1030,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -1151,15 +1053,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1176,10 +1074,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -1198,8 +1094,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -1213,27 +1108,23 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
-                if (worldPoint.equals(scaledTriangulatedPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (worldPoint.equals(scaledTriangulatedPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidEqual++;
                 }
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0 && numValidEqual > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0
+                    && numValidEqual > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.
-                    transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.
-                    transformAndReturnNew(camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1298,23 +1189,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1331,28 +1216,20 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -1372,8 +1249,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -1407,9 +1283,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -1424,8 +1298,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final PinholeCamera camera2b = new PinholeCamera();
             final int numValid = EssentialMatrixInitialCamerasEstimator.
                     generateInitialMetricCamerasFromEssentialMatrix(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints,
-                            rightPoints, camera1b, camera2b);
+                            fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints,
+                            camera1b, camera2b);
 
             // check correctness
             assertEquals(numValid, nPoints);
@@ -1433,10 +1307,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -1444,25 +1316,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -1482,12 +1346,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -1497,8 +1359,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -1517,12 +1378,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -1556,10 +1416,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -1593,16 +1451,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.
-                    transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.
-                    transformAndReturnNew(camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1642,13 +1497,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+            final double cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1662,17 +1516,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                     betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1689,28 +1539,20 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -1730,8 +1572,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -1765,9 +1606,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -1791,10 +1630,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -1802,25 +1639,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -1840,12 +1669,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -1854,8 +1681,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -1874,12 +1700,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -1892,15 +1717,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1917,10 +1738,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -1939,8 +1758,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -1960,10 +1778,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.
-                    transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.
-                    transformAndReturnNew(camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -2003,13 +1819,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+            final double cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -2017,23 +1832,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -2043,35 +1852,27 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
             final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
             final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS,
-                    Plane.PLANE_NUMBER_PARAMS);
+            final Matrix planesIntersectionMatrix = new Matrix(
+                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -2091,8 +1892,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -2126,9 +1926,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -2155,10 +1953,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -2166,25 +1962,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -2204,12 +1992,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -2218,8 +2004,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar geometry
             fundamentalMatrix.normalize();
@@ -2237,12 +2022,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -2261,15 +2045,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -2286,10 +2066,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -2308,8 +2086,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -2323,8 +2100,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
@@ -2334,16 +2110,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 }
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0 && numValidEqual > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0
+                    && numValidEqual > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.
-                    transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.
-                    transformAndReturnNew(camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -2383,8 +2157,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
@@ -2397,23 +2170,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -2430,28 +2197,20 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -2471,8 +2230,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -2506,9 +2264,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -2535,10 +2291,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -2546,25 +2300,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -2584,12 +2330,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -2599,8 +2343,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -2619,12 +2362,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -2643,15 +2385,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -2668,10 +2406,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -2690,8 +2426,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -2705,8 +2440,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
@@ -2722,10 +2456,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.
-                    transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.
-                    transformAndReturnNew(camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();

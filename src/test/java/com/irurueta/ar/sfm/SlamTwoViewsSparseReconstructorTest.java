@@ -214,28 +214,27 @@ public class SlamTwoViewsSparseReconstructorTest {
 
         // check default values
         assertNotNull(reconstructor.getConfiguration());
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getEstimatedFundamentalMatrix());
         assertNull(reconstructor.getEstimatedCamera1());
         assertNull(reconstructor.getEstimatedCamera2());
         assertNull(reconstructor.getReconstructedPoints());
 
         // constructor with configuration and listener
-        reconstructor = new SlamTwoViewsSparseReconstructor(configuration,
-                listener);
+        reconstructor = new SlamTwoViewsSparseReconstructor(configuration, listener);
 
         // check default values
-        assertSame(reconstructor.getConfiguration(), configuration);
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(configuration, reconstructor.getConfiguration());
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getEstimatedFundamentalMatrix());
         assertNull(reconstructor.getEstimatedCamera1());
         assertNull(reconstructor.getEstimatedCamera2());
@@ -244,9 +243,8 @@ public class SlamTwoViewsSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoise()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException, RotationException, NotReadyException,
-            NotAvailableException {
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException, RotationException,
+            NotReadyException, NotAvailableException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -255,8 +253,7 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             final SlamTwoViewsSparseReconstructorConfiguration configuration
                     = new SlamTwoViewsSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = 0.0f;
             final float accelerationOffsetY = 0.0f;
@@ -267,24 +264,20 @@ public class SlamTwoViewsSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             assertSame(configuration, configuration.setCalibrationData(calibrationData));
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic
-                    = new PinholeCameraIntrinsicParameters(focalLength,
-                    focalLength, principalPoint, principalPoint, skewness);
+            final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters(
+                    focalLength, focalLength, principalPoint, principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
@@ -300,10 +293,8 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -320,8 +311,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -337,8 +327,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -352,16 +341,12 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
             // 1st find an approximate central point by intersecting the axis
@@ -377,31 +362,22 @@ public class SlamTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -414,12 +390,10 @@ public class SlamTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D
-                    = new ArrayList<>();
+            final List<InhomogeneousPoint3D> points3D = new ArrayList<>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
             final List<Point2D> projectedPoints1 = new ArrayList<>();
@@ -430,12 +404,9 @@ public class SlamTwoViewsSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -452,9 +423,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                 points3D.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -648,23 +617,17 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    || fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
-            // check that reconstructed points are in a euclidean stratum (with
+            // check that reconstructed points are in a Euclidean stratum (with
             // correct scale)
             final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
             final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
@@ -674,8 +637,7 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             final List<Point3D> reconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(
-                        mReconstructedPoints.get(i).getPoint());
+                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -693,13 +655,10 @@ public class SlamTwoViewsSparseReconstructorTest {
             final PinholeCameraIntrinsicParameters estimatedIntrinsic2
                     = estimatedCamera2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1
-                    = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2
-                    = estimatedCamera2.getCameraRotation();
+            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
+            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             final double maxBaseline = Math.max(estimatedBaseline, baseline);
@@ -720,8 +679,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
@@ -731,8 +689,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
@@ -745,21 +702,17 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // check that points are correct (after scale correction)
             final double scale = baseline / estimatedBaseline;
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             boolean validPoints = true;
             for (int i = 0; i < numPoints; i++) {
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(reconstructedPoints3D.get(i),
-                        rescaledPoint);
-                if (!points3D.get(i).equals(rescaledPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                scaleTransformation.transform(reconstructedPoints3D.get(i), rescaledPoint);
+                if (!points3D.get(i).equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D.get(i).equals(rescaledPoint,
-                        LARGE_ABSOLUTE_ERROR));
+                assertTrue(points3D.get(i).equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
             }
 
             if (!validPoints) {
@@ -767,8 +720,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             }
 
             final double scaleRelativeError = 1.0 - minBaseline / maxBaseline;
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // cancel
@@ -786,21 +738,18 @@ public class SlamTwoViewsSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoise()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException, RotationException, NotReadyException,
-            NotAvailableException {
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException, RotationException,
+            NotReadyException, NotAvailableException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
             final SlamTwoViewsSparseReconstructorConfiguration configuration
                     = new SlamTwoViewsSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
@@ -817,24 +766,20 @@ public class SlamTwoViewsSparseReconstructorTest {
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             assertSame(configuration, configuration.setCalibrationData(calibrationData));
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic
-                    = new PinholeCameraIntrinsicParameters(focalLength,
-                    focalLength, principalPoint, principalPoint, skewness);
+            final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters(
+                    focalLength, focalLength, principalPoint, principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
@@ -850,10 +795,8 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -870,8 +813,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -887,8 +829,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -902,16 +843,12 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
             // 1st find an approximate central point by intersecting the axis
@@ -927,31 +864,22 @@ public class SlamTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -964,12 +892,10 @@ public class SlamTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D
-                    = new ArrayList<>();
+            final List<InhomogeneousPoint3D> points3D = new ArrayList<>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
             final List<Point2D> projectedPoints1 = new ArrayList<>();
@@ -980,12 +906,9 @@ public class SlamTwoViewsSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1002,9 +925,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                 points3D.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -1018,11 +939,9 @@ public class SlamTwoViewsSparseReconstructorTest {
             }
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
 
             final SlamTwoViewsSparseReconstructorListener listener
                     = new SlamTwoViewsSparseReconstructorListener() {
@@ -1089,44 +1008,30 @@ public class SlamTwoViewsSparseReconstructorTest {
                         final float[] accelerationWithNoise = new float[3];
                         final float[] angularSpeedWithNoise = new float[3];
                         for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                            noiseAccelerationX =
-                                    accelerationRandomizer.nextFloat();
-                            noiseAccelerationY =
-                                    accelerationRandomizer.nextFloat();
-                            noiseAccelerationZ =
-                                    accelerationRandomizer.nextFloat();
+                            noiseAccelerationX = accelerationRandomizer.nextFloat();
+                            noiseAccelerationY = accelerationRandomizer.nextFloat();
+                            noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                            noiseAngularSpeedX =
-                                    angularSpeedRandomizer.nextFloat();
-                            noiseAngularSpeedY =
-                                    angularSpeedRandomizer.nextFloat();
-                            noiseAngularSpeedZ =
-                                    angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                            accelerationWithNoiseX = (float) accelerationX +
-                                    noiseAccelerationX;
-                            accelerationWithNoiseY = (float) accelerationY +
-                                    noiseAccelerationY;
-                            accelerationWithNoiseZ = (float) accelerationZ +
-                                    noiseAccelerationZ;
+                            accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                            accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                            accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
                             accelerationWithNoise[0] = accelerationWithNoiseX;
                             accelerationWithNoise[1] = accelerationWithNoiseY;
                             accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                            angularSpeedWithNoiseX = (float) angularSpeedX +
-                                    noiseAngularSpeedX;
-                            angularSpeedWithNoiseY = (float) angularSpeedY +
-                                    noiseAngularSpeedY;
-                            angularSpeedWithNoiseZ = (float) angularSpeedZ +
-                                    noiseAngularSpeedZ;
+                            angularSpeedWithNoiseX = (float) angularSpeedX + noiseAngularSpeedX;
+                            angularSpeedWithNoiseY = (float) angularSpeedY + noiseAngularSpeedY;
+                            angularSpeedWithNoiseZ = (float) angularSpeedZ + noiseAngularSpeedZ;
                             angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                             angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                             angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
 
-                            reconstructor.updateAccelerometerSample(timestamp,
-                                    accelerationWithNoise);
-                            reconstructor.updateGyroscopeSample(timestamp,
-                                    angularSpeedWithNoise);
+                            reconstructor.updateAccelerometerSample(timestamp, accelerationWithNoise);
+                            reconstructor.updateGyroscopeSample(timestamp, angularSpeedWithNoise);
                             timestamp += DELTA_NANOS;
                         }
 
@@ -1223,8 +1128,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             };
 
             final SlamTwoViewsSparseReconstructor reconstructor
-                    = new SlamTwoViewsSparseReconstructor(configuration,
-                    listener);
+                    = new SlamTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -1253,23 +1157,19 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    || fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
-            // check that reconstructed points are in a euclidean stratum (with
+            // check that reconstructed points are in a Euclidean stratum (with
             // correct scale)
             final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
             final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
@@ -1279,8 +1179,7 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             final List<Point3D> reconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(
-                        mReconstructedPoints.get(i).getPoint());
+                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -1298,13 +1197,10 @@ public class SlamTwoViewsSparseReconstructorTest {
             final PinholeCameraIntrinsicParameters estimatedIntrinsic2
                     = estimatedCamera2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1
-                    = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2
-                    = estimatedCamera2.getCameraRotation();
+            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
+            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             final double maxBaseline = Math.max(estimatedBaseline, baseline);
@@ -1325,8 +1221,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
@@ -1336,8 +1231,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
@@ -1350,21 +1244,17 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // check that points are correct (after scale correction)
             final double scale = baseline / estimatedBaseline;
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             boolean validPoints = true;
             for (int i = 0; i < numPoints; i++) {
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(reconstructedPoints3D.get(i),
-                        rescaledPoint);
-                if (!points3D.get(i).equals(rescaledPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                scaleTransformation.transform(reconstructedPoints3D.get(i), rescaledPoint);
+                if (!points3D.get(i).equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D.get(i).equals(rescaledPoint,
-                        LARGE_ABSOLUTE_ERROR));
+                assertTrue(points3D.get(i).equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
             }
 
             if (!validPoints) {
@@ -1372,8 +1262,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             }
 
             final double scaleRelativeError = 1.0 - minBaseline / maxBaseline;
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error with noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error with noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // cancel
@@ -1391,9 +1280,8 @@ public class SlamTwoViewsSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsDAQWithUnknownCalibrationParametersOfFirstCamera()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException, RotationException, NotReadyException,
-            NotAvailableException {
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException, RotationException,
+            NotReadyException, NotAvailableException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -1414,24 +1302,20 @@ public class SlamTwoViewsSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             assertSame(configuration, configuration.setCalibrationData(calibrationData));
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic
-                    = new PinholeCameraIntrinsicParameters(focalLength,
-                    focalLength, principalPoint, principalPoint, skewness);
+            final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters(
+                    focalLength, focalLength, principalPoint, principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic2(intrinsic);
@@ -1446,10 +1330,8 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -1466,8 +1348,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -1483,8 +1364,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1498,16 +1378,12 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
             // 1st find an approximate central point by intersecting the axis
@@ -1523,31 +1399,22 @@ public class SlamTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -1560,8 +1427,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -1574,12 +1440,9 @@ public class SlamTwoViewsSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1595,9 +1458,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -1791,23 +1652,19 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    || fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
-            // check that reconstructed points are in a euclidean stratum (with
+            // check that reconstructed points are in a Euclidean stratum (with
             // correct scale)
             final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
             final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
@@ -1823,8 +1680,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final PinholeCameraIntrinsicParameters estimatedIntrinsic2
                     = estimatedCamera2.getIntrinsicParameters();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             final double maxBaseline = Math.max(estimatedBaseline, baseline);
@@ -1839,8 +1695,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
@@ -1850,16 +1705,14 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             final double scaleRelativeError = 1.0 - minBaseline / maxBaseline;
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // cancel
@@ -1877,9 +1730,8 @@ public class SlamTwoViewsSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsDAQWithUnknownCalibrationParameters()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException, RotationException, NotReadyException,
-            NotAvailableException {
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException, RotationException,
+            NotReadyException, NotAvailableException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -1900,11 +1752,9 @@ public class SlamTwoViewsSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             assertSame(configuration, configuration.setCalibrationData(calibrationData));
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1915,9 +1765,8 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic
-                    = new PinholeCameraIntrinsicParameters(focalLength,
-                    focalLength, principalPoint, principalPoint, skewness);
+            final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters(
+                    focalLength, focalLength, principalPoint, principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             final double alphaEuler1 = 0.0;
@@ -1930,10 +1779,8 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -1950,8 +1797,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -1967,8 +1813,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1982,16 +1827,12 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
             // 1st find an approximate central point by intersecting the axis
@@ -2007,31 +1848,22 @@ public class SlamTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -2044,8 +1876,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -2058,12 +1889,9 @@ public class SlamTwoViewsSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2079,9 +1907,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -2245,8 +2071,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             };
 
             final SlamTwoViewsSparseReconstructor reconstructor
-                    = new SlamTwoViewsSparseReconstructor(configuration,
-                    listener);
+                    = new SlamTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -2265,7 +2090,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertTrue(mSlamDataAvailable > 0);
-            assertEquals(mSlamCameraEstimated, 0);
+            assertEquals(0, mSlamCameraEstimated);
             assertNull(mSlamCamera);
             assertNotNull(mSlamCovariance);
 
@@ -2275,23 +2100,19 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    || fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
-            // check that reconstructed points are in a euclidean stratum (with
+            // check that reconstructed points are in a Euclidean stratum (with
             // correct scale)
             final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
             final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
@@ -2307,8 +2128,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final PinholeCameraIntrinsicParameters estimatedIntrinsic2
                     = estimatedCamera2.getIntrinsicParameters();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             final double maxBaseline = Math.max(estimatedBaseline, baseline);
@@ -2323,8 +2143,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
@@ -2334,16 +2153,14 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             final double scaleRelativeError = 1.0 - minBaseline / maxBaseline;
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // cancel
@@ -2361,9 +2178,8 @@ public class SlamTwoViewsSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithNotifyEstimatedSlamCameraDisabled()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException, RotationException, NotReadyException,
-            NotAvailableException {
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException, RotationException,
+            NotReadyException, NotAvailableException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -2373,8 +2189,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final SlamTwoViewsSparseReconstructorConfiguration configuration
                     = new SlamTwoViewsSparseReconstructorConfiguration();
             configuration.setNotifyEstimatedSlamCameraEnabled(false);
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = 0.0f;
             final float accelerationOffsetY = 0.0f;
@@ -2385,24 +2200,20 @@ public class SlamTwoViewsSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             assertSame(configuration, configuration.setCalibrationData(calibrationData));
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic
-                    = new PinholeCameraIntrinsicParameters(focalLength,
-                    focalLength, principalPoint, principalPoint, skewness);
+            final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters(
+                    focalLength, focalLength, principalPoint, principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
@@ -2418,10 +2229,8 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -2438,8 +2247,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -2455,8 +2263,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -2470,16 +2277,12 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
             // 1st find an approximate central point by intersecting the axis
@@ -2495,31 +2298,22 @@ public class SlamTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -2532,12 +2326,10 @@ public class SlamTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D
-                    = new ArrayList<>();
+            final List<InhomogeneousPoint3D> points3D = new ArrayList<>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
             final List<Point2D> projectedPoints1 = new ArrayList<>();
@@ -2548,12 +2340,9 @@ public class SlamTwoViewsSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2570,9 +2359,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                 points3D.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -2736,8 +2523,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             };
 
             final SlamTwoViewsSparseReconstructor reconstructor
-                    = new SlamTwoViewsSparseReconstructor(configuration,
-                    listener);
+                    = new SlamTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -2756,7 +2542,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertTrue(mSlamDataAvailable > 0);
-            assertEquals(mSlamCameraEstimated, 0);
+            assertEquals(0, mSlamCameraEstimated);
             assertNull(mSlamCamera);
             assertNotNull(mSlamCovariance);
 
@@ -2766,23 +2552,19 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR)
-                    || fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
-            // check that reconstructed points are in a euclidean stratum (with
+            // check that reconstructed points are in a Euclidean stratum (with
             // correct scale)
             final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
             final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
@@ -2792,8 +2574,7 @@ public class SlamTwoViewsSparseReconstructorTest {
 
             final List<Point3D> reconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(
-                        mReconstructedPoints.get(i).getPoint());
+                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -2811,13 +2592,10 @@ public class SlamTwoViewsSparseReconstructorTest {
             final PinholeCameraIntrinsicParameters estimatedIntrinsic2
                     = estimatedCamera2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1
-                    = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2
-                    = estimatedCamera2.getCameraRotation();
+            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
+            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             final double maxBaseline = Math.max(estimatedBaseline, baseline);
@@ -2838,8 +2616,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
@@ -2849,8 +2626,7 @@ public class SlamTwoViewsSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
@@ -2869,15 +2645,12 @@ public class SlamTwoViewsSparseReconstructorTest {
             boolean validPoints = true;
             for (int i = 0; i < numPoints; i++) {
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(reconstructedPoints3D.get(i),
-                        rescaledPoint);
-                if (!points3D.get(i).equals(rescaledPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                scaleTransformation.transform(reconstructedPoints3D.get(i), rescaledPoint);
+                if (!points3D.get(i).equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D.get(i).equals(rescaledPoint,
-                        LARGE_ABSOLUTE_ERROR));
+                assertTrue(points3D.get(i).equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
             }
 
             if (!validPoints) {
@@ -2885,8 +2658,7 @@ public class SlamTwoViewsSparseReconstructorTest {
             }
 
             final double scaleRelativeError = 1.0 - minBaseline / maxBaseline;
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // cancel

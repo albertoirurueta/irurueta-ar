@@ -35,8 +35,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class LMedSRobustSinglePoint3DTriangulatorTest implements
-        RobustSinglePoint3DTriangulatorListener {
+public class LMedSRobustSinglePoint3DTriangulatorTest implements RobustSinglePoint3DTriangulatorListener {
 
     private static final int MIN_VIEWS = 100;
     private static final int MAX_VIEWS = 500;
@@ -80,23 +79,20 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
         LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check correctness
-        assertEquals(triangulator.getStopThreshold(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(triangulator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
+                triangulator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
         assertNull(triangulator.getListener());
         assertFalse(triangulator.isListenerAvailable());
-        assertEquals(triangulator.isUseHomogeneousSolution(),
-                LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
+                triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(triangulator.getProgressDelta(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(triangulator.getConfidence(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(triangulator.getMaxIterations(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
+                triangulator.getProgressDelta(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
+                triangulator.getConfidence(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
+                triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
@@ -106,23 +102,20 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
         triangulator = new LMedSRobustSinglePoint3DTriangulator(this);
 
         // check correctness
-        assertEquals(triangulator.getStopThreshold(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(triangulator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertSame(triangulator.getListener(), this);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
+                triangulator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
+        assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
-        assertEquals(triangulator.isUseHomogeneousSolution(),
-                LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
+                triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(triangulator.getProgressDelta(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(triangulator.getConfidence(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(triangulator.getMaxIterations(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
+                triangulator.getProgressDelta(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
+                triangulator.getConfidence(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
+                triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
@@ -137,29 +130,25 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        triangulator = new LMedSRobustSinglePoint3DTriangulator(points,
-                cameras);
+        triangulator = new LMedSRobustSinglePoint3DTriangulator(points, cameras);
 
         // check correctness
-        assertEquals(triangulator.getStopThreshold(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(triangulator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
+                triangulator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
         assertNull(triangulator.getListener());
         assertFalse(triangulator.isListenerAvailable());
-        assertEquals(triangulator.isUseHomogeneousSolution(),
-                LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
+                triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(triangulator.getProgressDelta(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(triangulator.getConfidence(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(triangulator.getMaxIterations(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS);
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
+                triangulator.getProgressDelta(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
+                triangulator.getConfidence(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
+                triangulator.getMaxIterations());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
 
@@ -169,48 +158,41 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
         triangulator = null;
         try {
-            triangulator = new LMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, cameras);
+            triangulator = new LMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMedSRobustSinglePoint3DTriangulator(
-                    points, emptyCameras);
+            triangulator = new LMedSRobustSinglePoint3DTriangulator(points, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras);
+            triangulator = new LMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(triangulator);
 
         // test constructor with points, cameras and listener
-        triangulator = new LMedSRobustSinglePoint3DTriangulator(points,
-                cameras, this);
+        triangulator = new LMedSRobustSinglePoint3DTriangulator(points, cameras, this);
 
         // check correctness
-        assertEquals(triangulator.getStopThreshold(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(triangulator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertSame(triangulator.getListener(), this);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
+                triangulator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
+        assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
-        assertEquals(triangulator.isUseHomogeneousSolution(),
-                LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
+                triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(triangulator.getProgressDelta(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(triangulator.getConfidence(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(triangulator.getMaxIterations(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS);
-        assertSame(triangulator.getPoints2D(), points);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
+                triangulator.getProgressDelta(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
+                triangulator.getConfidence(), 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
+                triangulator.getMaxIterations());
+        assertSame(points, triangulator.getPoints2D());
         assertSame(triangulator.getCameras(), cameras);
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
@@ -218,20 +200,17 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
         // Force IllegalArgumentException
         triangulator = null;
         try {
-            triangulator = new LMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, cameras, this);
+            triangulator = new LMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMedSRobustSinglePoint3DTriangulator(
-                    points, emptyCameras, this);
+            triangulator = new LMedSRobustSinglePoint3DTriangulator(points, emptyCameras, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            triangulator = new LMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras, this);
+            triangulator = new LMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -240,19 +219,17 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
     @Test
     public void testGetSetStopThreshold() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.getStopThreshold(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
+                triangulator.getStopThreshold(), 0.0);
 
         // set new value
         triangulator.setStopThreshold(0.5);
 
         // check correctness
-        assertEquals(triangulator.getStopThreshold(), 0.5, 0.0);
+        assertEquals(0.5, triangulator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -264,8 +241,7 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
         assertNull(triangulator.getListener());
@@ -275,46 +251,40 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
         triangulator.setListener(this);
 
         // check correctness
-        assertSame(triangulator.getListener(), this);
+        assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
     }
 
     @Test
     public void testIsSetUseHomogeneousSolution() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.isUseHomogeneousSolution(),
-                LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
+                triangulator.isUseHomogeneousSolution());
 
         // set new value
         triangulator.setUseHomogeneousSolution(
-                !LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+                !LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION);
 
         // check correctness
         assertEquals(triangulator.isUseHomogeneousSolution(),
-                !LMedSRobustSinglePoint3DTriangulator.
-                        DEFAULT_USE_HOMOGENEOUS_SOLUTION);
+                !LMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION);
     }
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.getProgressDelta(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
+                triangulator.getProgressDelta(), 0.0);
 
         // set new value
         triangulator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(triangulator.getProgressDelta(), 0.5, 0.0);
+        assertEquals(0.5, triangulator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -331,18 +301,17 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.getConfidence(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
+                triangulator.getConfidence(), 0.0);
 
         // set new value
         triangulator.setConfidence(0.5);
 
         // check correctness
-        assertEquals(triangulator.getConfidence(), 0.5, 0.0);
+        assertEquals(0.5, triangulator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -359,18 +328,17 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(triangulator.getMaxIterations(),
-                LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(LMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
+                triangulator.getMaxIterations());
 
         // set new value
         triangulator.setMaxIterations(1);
 
         // check correctness
-        assertEquals(triangulator.getMaxIterations(), 1);
+        assertEquals(1, triangulator.getMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -382,8 +350,7 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
     @Test
     public void testGetSetPointsAndCamerasAndIsReady() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default values
         assertNull(triangulator.getPoints2D());
@@ -429,8 +396,7 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final LMedSRobustSinglePoint3DTriangulator triangulator =
-                new LMedSRobustSinglePoint3DTriangulator();
+        final LMedSRobustSinglePoint3DTriangulator triangulator = new LMedSRobustSinglePoint3DTriangulator();
 
         // check default value
         assertNull(triangulator.getQualityScores());
@@ -469,8 +435,7 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
                 final double verticalFocalLength = randomizer.nextDouble(
                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double skewness = randomizer.nextDouble(MIN_SKEWNESS,
-                        MAX_SKEWNESS);
+                final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
                 final double horizontalPrincipalPoint = randomizer.nextDouble(
                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
                 final double verticalPrincipalPoint = randomizer.nextDouble(
@@ -491,21 +456,17 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
                         MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
                 final PinholeCameraIntrinsicParameters intrinsic =
-                        new PinholeCameraIntrinsicParameters(
-                                horizontalFocalLength, verticalFocalLength,
-                                horizontalPrincipalPoint, verticalPrincipalPoint,
-                                skewness);
+                        new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 final Point3D cameraCenter = new InhomogeneousPoint3D(
                         previousCameraCenter.getInhomX() + cameraSeparationX,
                         previousCameraCenter.getInhomY() + cameraSeparationY,
                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
 
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
 
                 // project 3D point using camera
                 final Point2D point2D = camera.project(point3D);
@@ -516,8 +477,7 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
                     final double inhomX = point2D.getInhomX();
                     final double inhomY = point2D.getInhomY();
 
-                    point2D.setInhomogeneousCoordinates(inhomX + errorX,
-                            inhomY + errorY);
+                    point2D.setInhomogeneousCoordinates(inhomX + errorX, inhomY + errorY);
                 }
 
                 cameras.add(camera);
@@ -526,30 +486,29 @@ public class LMedSRobustSinglePoint3DTriangulatorTest implements
 
             // create triangulator
             final LMedSRobustSinglePoint3DTriangulator triangulator =
-                    new LMedSRobustSinglePoint3DTriangulator(points2D, cameras,
-                            this);
+                    new LMedSRobustSinglePoint3DTriangulator(points2D, cameras, this);
             triangulator.setStopThreshold(STOP_THRESHOLD);
 
             // check default values
             assertTrue(triangulator.isReady());
             assertFalse(triangulator.isLocked());
-            assertEquals(triangulateStart, 0);
-            assertEquals(triangulateEnd, 0);
-            assertEquals(triangulateNextIteration, 0);
-            assertEquals(triangulateProgressChange, 0);
+            assertEquals(0, triangulateStart);
+            assertEquals(0, triangulateEnd);
+            assertEquals(0, triangulateNextIteration);
+            assertEquals(0, triangulateProgressChange);
 
             final Point3D triangulated = triangulator.triangulate();
 
             // check correctness
             assertTrue(triangulator.isReady());
             assertFalse(triangulator.isLocked());
-            assertEquals(triangulateStart, 1);
-            assertEquals(triangulateEnd, 1);
+            assertEquals(1, triangulateStart);
+            assertEquals(1, triangulateEnd);
             assertTrue(triangulateNextIteration > 0);
             assertTrue(triangulateProgressChange >= 0);
             reset();
 
-            assertEquals(point3D.distanceTo(triangulated), 0.0, 2.0 * ABSOLUTE_ERROR);
+            assertEquals(0.0, point3D.distanceTo(triangulated), 2.0 * ABSOLUTE_ERROR);
         }
     }
 

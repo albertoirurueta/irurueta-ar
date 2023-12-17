@@ -144,7 +144,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
     private final List<MatchedSamples> mMatches = new ArrayList<>();
 
     /**
-     * Id of first view.
+     * ID of first view.
      */
     private int mFirstViewId = 0;
 
@@ -269,8 +269,8 @@ public abstract class BaseTwoViewsSparseReconstructor<
 
     /**
      * Process one view of all the available data during the reconstruction.
-     * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
-     * one view at a time.
+     * This method can be called multiple times instead of {@link #start()} to build the reconstruction
+     * step by step, one view at a time.
      *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
@@ -409,7 +409,8 @@ public abstract class BaseTwoViewsSparseReconstructor<
     }
 
     /**
-     * Resets this instance so that a reconstruction can be started from the beginning without cancelling current one.
+     * Resets this instance so that a reconstruction can be started from the beginning without cancelling
+     * current one.
      */
     public void reset() {
         mFirstViewSamples = mCurrentViewSamples = null;
@@ -426,10 +427,10 @@ public abstract class BaseTwoViewsSparseReconstructor<
     }
 
     /**
-     * Called when processing one frame is successfully finished. This can be done to estimate scale on those
-     * implementations where scale can be measured or is already known.
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
      *
-     * @return true if post processing succeeded, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
      */
     protected abstract boolean postProcessOne();
 
@@ -482,7 +483,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
 
     /**
      * Estimates fundamental matrix for provided matches, when 3D points lay in
-     * a general non degenerate 3D configuration.
+     * a general non-degenerate 3D configuration.
      *
      * @param matches pairs of matches to find fundamental matrix.
      * @param viewId1 id of first view.
@@ -557,7 +558,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
                     mConfiguration.getFundamentalMatrixMaxIterations());
 
             switch (mConfiguration.getRobustFundamentalMatrixEstimatorMethod()) {
-                case LMedS:
+                case LMEDS:
                     ((LMedSFundamentalMatrixRobustEstimator) estimator).
                             setStopThreshold(mConfiguration.
                                     getFundamentalMatrixThreshold());
@@ -567,7 +568,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
                             setThreshold(mConfiguration.
                                     getFundamentalMatrixThreshold());
                     break;
-                case PROMedS:
+                case PROMEDS:
                     ((PROMedSFundamentalMatrixRobustEstimator) estimator).
                             setStopThreshold(mConfiguration.
                                     getFundamentalMatrixThreshold());
@@ -714,7 +715,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
                     mConfiguration.getPlanarHomographyMaxIterations());
 
             switch (mConfiguration.getRobustPlanarHomographyEstimatorMethod()) {
-                case LMedS:
+                case LMEDS:
                     ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                             homographyEstimator).setStopThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
@@ -724,7 +725,7 @@ public abstract class BaseTwoViewsSparseReconstructor<
                             homographyEstimator).setThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
                     break;
-                case PROMedS:
+                case PROMEDS:
                     ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                             homographyEstimator).setStopThreshold(
                             mConfiguration.getPlanarHomographyThreshold());

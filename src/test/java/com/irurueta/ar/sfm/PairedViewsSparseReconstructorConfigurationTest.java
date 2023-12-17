@@ -34,87 +34,68 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default values
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getPairedCamerasEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD);
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getPairedCamerasAspectRatio(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getPrincipalPointX(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X, 0.0);
-        assertEquals(cfg.getPrincipalPointY(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
-        assertEquals(cfg.getPairedCamerasCorrectorType(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE);
-        assertEquals(cfg.getPairedCamerasMarkValidTriangulatedPoints(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
-        assertEquals(cfg.areIntrinsicParametersKnown(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS);
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE);
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE);
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getPairedCamerasEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO,
+                cfg.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X,
+                cfg.getPrincipalPointX(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y,
+                cfg.getPrincipalPointY(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE,
+                cfg.getPairedCamerasCorrectorType());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getPairedCamerasMarkValidTriangulatedPoints());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KNOWN_INTRINSIC_PARAMETERS,
+                cfg.areIntrinsicParametersKnown());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
     }
 
     @Test
@@ -123,87 +104,68 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 PairedViewsSparseReconstructorConfiguration.make();
 
         // check default values
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getPairedCamerasEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD);
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getPairedCamerasAspectRatio(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getPrincipalPointX(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X, 0.0);
-        assertEquals(cfg.getPrincipalPointY(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
-        assertEquals(cfg.getPairedCamerasCorrectorType(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE);
-        assertEquals(cfg.getPairedCamerasMarkValidTriangulatedPoints(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
-        assertEquals(cfg.areIntrinsicParametersKnown(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS);
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE);
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE);
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getPairedCamerasEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO,
+                cfg.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X,
+                cfg.getPrincipalPointX(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y,
+                cfg.getPrincipalPointY(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE,
+                cfg.getPairedCamerasCorrectorType());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getPairedCamerasMarkValidTriangulatedPoints());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KNOWN_INTRINSIC_PARAMETERS,
+                cfg.areIntrinsicParametersKnown());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
     }
 
     @Test
@@ -212,17 +174,17 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setNonRobustFundamentalMatrixEstimatorMethod(
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM), cfg);
+        assertSame(cfg, cfg.setNonRobustFundamentalMatrixEstimatorMethod(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM));
 
         // check correctness
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
     }
 
     @Test
@@ -231,17 +193,15 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setRobustFundamentalMatrixEstimatorMethod(
-                RobustEstimatorMethod.LMedS), cfg);
+        assertSame(cfg, cfg.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.LMEDS));
 
         // check correctness
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, cfg.getRobustFundamentalMatrixEstimatorMethod());
     }
 
     @Test
@@ -250,12 +210,11 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixRefined(false), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixRefined(false));
 
         // check correctness
         assertFalse(cfg.isFundamentalMatrixRefined());
@@ -267,12 +226,11 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixCovarianceKept(true), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixCovarianceKept(true));
 
         // check correctness
         assertTrue(cfg.isFundamentalMatrixCovarianceKept());
@@ -284,15 +242,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixConfidence(0.7), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixConfidence(0.7));
 
         // check correctness
-        assertEquals(cfg.getFundamentalMatrixConfidence(), 0.7, 0.0);
+        assertEquals(0.7, cfg.getFundamentalMatrixConfidence(), 0.0);
     }
 
     @Test
@@ -301,15 +258,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixMaxIterations(10), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixMaxIterations(10));
 
         // check correctness
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(), 10);
+        assertEquals(10, cfg.getFundamentalMatrixMaxIterations());
     }
 
     @Test
@@ -318,15 +274,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixThreshold(2.0), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixThreshold(2.0));
 
         // check correctness
-        assertEquals(cfg.getFundamentalMatrixThreshold(), 2.0, 0.0);
+        assertEquals(2.0, cfg.getFundamentalMatrixThreshold(), 0.0);
     }
 
     @Test
@@ -335,12 +290,12 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixComputeAndKeepInliers(false), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixComputeAndKeepInliers(false));
 
         // check correctness
         assertFalse(cfg.getFundamentalMatrixComputeAndKeepInliers());
@@ -352,12 +307,12 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixComputeAndKeepResiduals(false), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixComputeAndKeepResiduals(false));
 
         // check correctness
         assertFalse(cfg.getFundamentalMatrixComputeAndKeepResiduals());
@@ -369,18 +324,16 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPairedCamerasEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getPairedCamerasEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setPairedCamerasEstimatorMethod(
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC),
-                cfg);
+        assertSame(cfg, cfg.setPairedCamerasEstimatorMethod(
+                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC));
 
         // check correctness
-        assertEquals(cfg.getPairedCamerasEstimatorMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
+                cfg.getPairedCamerasEstimatorMethod());
     }
 
     @Test
@@ -389,12 +342,11 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
 
         // set new value
-        assertSame(cfg.setDaqUseHomogeneousPointTriangulator(false), cfg);
+        assertSame(cfg, cfg.setDaqUseHomogeneousPointTriangulator(false));
 
         // check correctness
         assertFalse(cfg.getDaqUseHomogeneousPointTriangulator());
@@ -406,15 +358,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPairedCamerasAspectRatio(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO,
+                cfg.getPairedCamerasAspectRatio(), 0.0);
 
         // set new value
-        assertSame(cfg.setPairedCamerasAspectRatio(0.5), cfg);
+        assertSame(cfg, cfg.setPairedCamerasAspectRatio(0.5));
 
         // check correctness
-        assertEquals(cfg.getPairedCamerasAspectRatio(), 0.5, 0.0);
+        assertEquals(0.5, cfg.getPairedCamerasAspectRatio(), 0.0);
     }
 
     @Test
@@ -423,13 +374,13 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPrincipalPointX(), 0.0, 0.0);
+        assertEquals(0.0, cfg.getPrincipalPointX(), 0.0);
 
         // set new value
-        assertSame(cfg.setPrincipalPointX(10.0), cfg);
+        assertSame(cfg, cfg.setPrincipalPointX(10.0));
 
         // check correctness
-        assertEquals(cfg.getPrincipalPointX(), 10.0, 0.0);
+        assertEquals(10.0, cfg.getPrincipalPointX(), 0.0);
     }
 
     @Test
@@ -438,13 +389,13 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPrincipalPointY(), 0.0, 0.0);
+        assertEquals(0.0, cfg.getPrincipalPointY(), 0.0);
 
         // set new value
-        assertSame(cfg.setPrincipalPointY(10.0), cfg);
+        assertSame(cfg, cfg.setPrincipalPointY(10.0));
 
         // check correctness
-        assertEquals(cfg.getPrincipalPointY(), 10.0, 0.0);
+        assertEquals(10.0, cfg.getPrincipalPointY(), 0.0);
     }
 
     @Test
@@ -453,17 +404,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPairedCamerasCorrectorType(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE,
+                cfg.getPairedCamerasCorrectorType());
 
         // set new value
-        assertSame(cfg.setPairedCamerasCorrectorType(
-                CorrectorType.GOLD_STANDARD), cfg);
+        assertSame(cfg, cfg.setPairedCamerasCorrectorType(CorrectorType.GOLD_STANDARD));
 
         // check correctness
-        assertEquals(cfg.getPairedCamerasCorrectorType(),
-                CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, cfg.getPairedCamerasCorrectorType());
     }
 
     @Test
@@ -472,13 +420,12 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPairedCamerasMarkValidTriangulatedPoints(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getPairedCamerasMarkValidTriangulatedPoints());
 
         // set new value
-        assertSame(cfg.setPairedCamerasMarkValidTriangulatedPoints(false),
-                cfg);
+        assertSame(cfg, cfg.setPairedCamerasMarkValidTriangulatedPoints(false));
 
         // check correctness
         assertFalse(cfg.getPairedCamerasMarkValidTriangulatedPoints());
@@ -490,19 +437,16 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.areIntrinsicParametersKnown(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KNOWN_INTRINSIC_PARAMETERS,
+                cfg.areIntrinsicParametersKnown());
 
         // set new value
-        assertSame(cfg.setIntrinsicParametersKnown(
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS), cfg);
+        assertSame(cfg, cfg.setIntrinsicParametersKnown(
+                !PairedViewsSparseReconstructorConfiguration.DEFAULT_KNOWN_INTRINSIC_PARAMETERS));
 
         // check correctness
-        assertEquals(cfg.areIntrinsicParametersKnown(),
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.DEFAULT_KNOWN_INTRINSIC_PARAMETERS,
+                cfg.areIntrinsicParametersKnown());
     }
 
     @Test
@@ -511,19 +455,16 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
 
         // set new value
-        assertSame(cfg.setGeneralSceneAllowed(
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE), cfg);
+        assertSame(cfg, cfg.setGeneralSceneAllowed(
+                !PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE));
 
         // check correctness
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
     }
 
     @Test
@@ -532,19 +473,16 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
 
         // set new value
-        assertSame(cfg.setPlanarSceneAllowed(
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE), cfg);
+        assertSame(cfg, cfg.setPlanarSceneAllowed(
+                !PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE));
 
         // check correctness
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
     }
 
     @Test
@@ -553,17 +491,15 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
+        assertEquals(
+                PairedViewsSparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setRobustPlanarHomographyEstimatorMethod(
-                RobustEstimatorMethod.RANSAC), cfg);
+        assertSame(cfg, cfg.setRobustPlanarHomographyEstimatorMethod(RobustEstimatorMethod.RANSAC));
 
         // check correctness
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg.getRobustPlanarHomographyEstimatorMethod());
     }
 
     @Test
@@ -572,19 +508,16 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyRefined(
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyRefined(
+                !PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY));
 
         // check correctness
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
     }
 
     @Test
@@ -593,19 +526,16 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyCovarianceKept(
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyCovarianceKept(
+                !PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE));
 
         // check correctness
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
     }
 
     @Test
@@ -614,15 +544,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
 
         // set new value
-        assertSame(cfg.setPlanarHomographyConfidence(0.5), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyConfidence(0.5));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyConfidence(), 0.5, 0.0);
+        assertEquals(0.5, cfg.getPlanarHomographyConfidence(), 0.0);
     }
 
     @Test
@@ -631,15 +560,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyMaxIterations(100), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyMaxIterations(100));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyMaxIterations(), 100);
+        assertEquals(100, cfg.getPlanarHomographyMaxIterations());
     }
 
     @Test
@@ -648,15 +576,14 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setPlanarHomographyThreshold(0.5), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyThreshold(0.5));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyThreshold(), 0.5, 0.0);
+        assertEquals(0.5, cfg.getPlanarHomographyThreshold(), 0.0);
     }
 
     @Test
@@ -665,19 +592,19 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyComputeAndKeepInliers(
+        assertSame(cfg, cfg.setPlanarHomographyComputeAndKeepInliers(
                 !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS), cfg);
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
     }
 
     @Test
@@ -686,19 +613,19 @@ public class PairedViewsSparseReconstructorConfigurationTest {
                 new PairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyComputeAndKeepResiduals(
+        assertSame(cfg, cfg.setPlanarHomographyComputeAndKeepResiduals(
                 !PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS), cfg);
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS));
 
         // check correctness
-        assertEquals(!cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                PairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(!PairedViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
     }
 
     @Test
@@ -709,8 +636,7 @@ public class PairedViewsSparseReconstructorConfigurationTest {
         // set new value
         cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
-        cfg1.setRobustFundamentalMatrixEstimatorMethod(
-                RobustEstimatorMethod.RANSAC);
+        cfg1.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.RANSAC);
         cfg1.setFundamentalMatrixRefined(false);
         cfg1.setFundamentalMatrixCovarianceKept(true);
         cfg1.setFundamentalMatrixConfidence(0.9);
@@ -718,8 +644,7 @@ public class PairedViewsSparseReconstructorConfigurationTest {
         cfg1.setFundamentalMatrixThreshold(0.99);
         cfg1.setFundamentalMatrixComputeAndKeepInliers(false);
         cfg1.setFundamentalMatrixComputeAndKeepResiduals(false);
-        cfg1.setPairedCamerasEstimatorMethod(
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        cfg1.setPairedCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
         cfg1.setDaqUseHomogeneousPointTriangulator(false);
         cfg1.setPairedCamerasAspectRatio(0.8);
         cfg1.setPrincipalPointX(1e-3);
@@ -729,7 +654,7 @@ public class PairedViewsSparseReconstructorConfigurationTest {
         cfg1.setIntrinsicParametersKnown(true);
         cfg1.setGeneralSceneAllowed(false);
         cfg1.setPlanarSceneAllowed(false);
-        cfg1.setRobustPlanarHomographyEstimatorMethod(RobustEstimatorMethod.LMedS);
+        cfg1.setRobustPlanarHomographyEstimatorMethod(RobustEstimatorMethod.LMEDS);
         cfg1.setPlanarHomographyRefined(false);
         cfg1.setPlanarHomographyCovarianceKept(true);
         cfg1.setPlanarHomographyConfidence(0.7);
@@ -741,8 +666,7 @@ public class PairedViewsSparseReconstructorConfigurationTest {
         // check
         assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
                 cfg1.getNonRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(RobustEstimatorMethod.RANSAC,
-                cfg1.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg1.getRobustFundamentalMatrixEstimatorMethod());
         assertFalse(cfg1.isFundamentalMatrixRefined());
         assertTrue(cfg1.isFundamentalMatrixCovarianceKept());
         assertEquals(0.9, cfg1.getFundamentalMatrixConfidence(), 0.0);
@@ -761,8 +685,7 @@ public class PairedViewsSparseReconstructorConfigurationTest {
         assertTrue(cfg1.areIntrinsicParametersKnown());
         assertFalse(cfg1.isGeneralSceneAllowed());
         assertFalse(cfg1.isPlanarSceneAllowed());
-        assertEquals(RobustEstimatorMethod.LMedS,
-                cfg1.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(RobustEstimatorMethod.LMEDS, cfg1.getRobustPlanarHomographyEstimatorMethod());
         assertFalse(cfg1.isPlanarHomographyRefined());
         assertTrue(cfg1.isPlanarHomographyCovarianceKept());
         assertEquals(0.7, cfg1.getPlanarHomographyConfidence(), 0.0);
@@ -773,8 +696,7 @@ public class PairedViewsSparseReconstructorConfigurationTest {
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(cfg1);
-        final PairedViewsSparseReconstructorConfiguration cfg2 =
-                SerializationHelper.deserialize(bytes);
+        final PairedViewsSparseReconstructorConfiguration cfg2 = SerializationHelper.deserialize(bytes);
 
         // check
         assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),

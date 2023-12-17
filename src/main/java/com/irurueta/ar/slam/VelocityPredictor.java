@@ -364,7 +364,8 @@ public class VelocityPredictor {
      * @param jacobianDV jacobian wrt velocity adjustment. Must be 3x3.
      * @param jacobianA  jacobian wrt acceleration. Must be 3x3.
      * @throws IllegalArgumentException if any of provided jacobians does not
-     *                                  have proper size or if result, v, dv or a do not have length 3.
+     *                                  have proper size, or if result "v", "dv" or "a" do not have
+     *                                  length 3.
      */
     public static void predictWithVelocityAdjustment(
             final double[] v, final double[] dv, final double[] a,
@@ -476,7 +477,7 @@ public class VelocityPredictor {
      * @param jacobianA  jacobian wrt acceleration. Must be 3x3.
      * @return a new array containing updated velocity.
      * @throws IllegalArgumentException if any of provided jacobians does not
-     *                                  have proper size or if v, dv or a do not have length 3.
+     *                                  have proper size, or if "v", "dv" or "a" do not have length 3.
      */
     public static double[] predictWithVelocityAdjustment(
             final double[] v, final double[] dv, final double[] a, final double dt,

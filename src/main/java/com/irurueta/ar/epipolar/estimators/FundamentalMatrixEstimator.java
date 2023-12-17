@@ -168,7 +168,8 @@ public abstract class FundamentalMatrixEstimator {
      * @throws NotReadyException                   if estimator is not ready because required
      *                                             input points have not already been provided.
      * @throws FundamentalMatrixEstimatorException if configuration of provided
-     *                                             2D points is degenerate and fundamental matrix estimation fails.
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails.
      */
     public abstract FundamentalMatrix estimate() throws LockedException,
             NotReadyException, FundamentalMatrixEstimatorException;

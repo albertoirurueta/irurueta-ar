@@ -635,7 +635,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
     }
 
     /**
-     * Estimates homography, best fundamental matrix, their cameras and
+     * Estimates homography, the best fundamental matrix, their cameras and
      * reconstructs matched points.
      *
      * @throws LockedException                     if estimator is locked.
@@ -759,7 +759,7 @@ public class PlanarBestFundamentalMatrixEstimatorAndReconstructor {
         try {
             mHomographyEstimator.setPoints(leftPoints, rightPoints);
 
-            if (mHomographyEstimator.getMethod() == RobustEstimatorMethod.PROMedS) {
+            if (mHomographyEstimator.getMethod() == RobustEstimatorMethod.PROMEDS) {
                 final PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator promedsEstimator =
                         (PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator;
                 if (promedsEstimator.getQualityScores() == null) {

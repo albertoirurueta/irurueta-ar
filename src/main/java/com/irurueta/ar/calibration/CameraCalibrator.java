@@ -62,7 +62,7 @@ public abstract class CameraCalibrator {
 
     /**
      * Default amount of progress variation before notifying a change in
-     * estimation progress. By default this is set to 5%.
+     * estimation progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -106,7 +106,7 @@ public abstract class CameraCalibrator {
      * robust estimation methods of the IAC such as PROSAC and PROMedS.
      * If not provided, homography quality scores will be estimated based on
      * re-projection error and this value will be ignored.
-     * Typically this will not be provided, but it can be used in case that it
+     * Typically, this will not be provided, but it can be used in case that it
      * can be assured by some means that one sample is better than another.
      */
     protected double[] mSamplesQualityScores;
@@ -239,7 +239,7 @@ public abstract class CameraCalibrator {
     protected float mIACProgress;
 
     /**
-     * Indicates progress of intrinsic parameters estimation.
+     * Indicates progress of estimation of intrinsic parameters.
      */
     protected float mIntrinsicProgress;
 
@@ -371,8 +371,8 @@ public abstract class CameraCalibrator {
      * @param samples list of samples.
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if not enough samples are provided to
-     *                                  estimate the intrinsic parameters. By default the minimum is 1, but
-     *                                  depending on the settings at least 3 samples might be required.
+     *                                  estimate the intrinsic parameters. By default, the minimum is 1,
+     *                                  but depending on the settings at least 3 samples might be required.
      */
     public void setSamples(final List<CameraCalibratorSample> samples) throws LockedException {
         if (isLocked()) {
@@ -386,7 +386,7 @@ public abstract class CameraCalibrator {
      * on certain robust estimation methods of the IAC such as PROSAC and
      * PROMedS. If not provided, homography quality scores will be estimated
      * based on re-projection error and this value will be ignored.
-     * Typically this will not be provided, but it can be used in case that it
+     * Typically, this will not be provided, but it can be used in case that it
      * can be assured by some means that one sample is better than another
      *
      * @return quality scores assigned to each provided sample.
@@ -406,8 +406,8 @@ public abstract class CameraCalibrator {
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if not enough quality scores are
      *                                  provided for the corresponding samples to estimate the intrinsic
-     *                                  parameters. By default the minimum is 1, but depending on the settings at
-     *                                  least 3 samples might be required.
+     *                                  parameters. By default, the minimum is 1, but depending on the
+     *                                  settings at least 3 samples might be required.
      */
     public void setSamplesQualityScores(final double[] samplesQualityScores)
             throws LockedException {
@@ -581,7 +581,7 @@ public abstract class CameraCalibrator {
      * or not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated.
@@ -595,7 +595,7 @@ public abstract class CameraCalibrator {
      * not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @param zeroSkewness true if camera skewness is assumed to be zero,
      *                     otherwise camera skewness is estimated.
@@ -648,7 +648,7 @@ public abstract class CameraCalibrator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -664,7 +664,7 @@ public abstract class CameraCalibrator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -689,7 +689,7 @@ public abstract class CameraCalibrator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -712,7 +712,7 @@ public abstract class CameraCalibrator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -802,7 +802,7 @@ public abstract class CameraCalibrator {
      */
     public double getHomographyEstimatorThreshold() {
         switch (mHomographyEstimator.getMethod()) {
-            case LMedS:
+            case LMEDS:
                 return ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
                         .getStopThreshold();
             case MSAC:
@@ -811,7 +811,7 @@ public abstract class CameraCalibrator {
             case PROSAC:
                 return ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
                         .getThreshold();
-            case PROMedS:
+            case PROMEDS:
                 return ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator)
                         .getStopThreshold();
             case RANSAC:
@@ -839,7 +839,7 @@ public abstract class CameraCalibrator {
         }
 
         switch (mHomographyEstimator.getMethod()) {
-            case LMedS:
+            case LMEDS:
                 ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setStopThreshold(homographyEstimatorThreshold);
                 break;
@@ -851,7 +851,7 @@ public abstract class CameraCalibrator {
                 ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setThreshold(homographyEstimatorThreshold);
                 break;
-            case PROMedS:
+            case PROMEDS:
                 ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) mHomographyEstimator).
                         setStopThreshold(homographyEstimatorThreshold);
                 break;
@@ -872,7 +872,7 @@ public abstract class CameraCalibrator {
      * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
-     * Typically this value will be close to 1.0, but not exactly 1.0, because
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
@@ -892,7 +892,7 @@ public abstract class CameraCalibrator {
      * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
-     * Typically this value will be close to 1.0, but not exactly 1.0, because
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
@@ -937,8 +937,8 @@ public abstract class CameraCalibrator {
      * setting can be changed for finer adjustments.
      *
      * @param homographyEstimatorMaxIterations maximum number of iterations to
-     *                                         be done when estimating the homographies between ideal pattern markers
-     *                                         and sampled pattern markers.
+     *                                         be done when estimating the homographies between ideal
+     *                                         pattern markers and sampled pattern markers.
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
@@ -960,13 +960,13 @@ public abstract class CameraCalibrator {
      */
     public double getIACEstimatorThreshold() {
         switch (mIACEstimator.getMethod()) {
-            case LMedS:
+            case LMEDS:
                 return ((LMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).getStopThreshold();
             case MSAC:
                 return ((MSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).getThreshold();
             case PROSAC:
                 return ((PROSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).getThreshold();
-            case PROMedS:
+            case PROMEDS:
                 return ((PROMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).getStopThreshold();
             case RANSAC:
             default:
@@ -991,7 +991,7 @@ public abstract class CameraCalibrator {
         }
 
         switch (mIACEstimator.getMethod()) {
-            case LMedS:
+            case LMEDS:
                 ((LMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setStopThreshold(iacEstimatorThreshold);
                 break;
@@ -1003,7 +1003,7 @@ public abstract class CameraCalibrator {
                 ((PROSACImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setThreshold(iacEstimatorThreshold);
                 break;
-            case PROMedS:
+            case PROMEDS:
                 ((PROMedSImageOfAbsoluteConicRobustEstimator) mIACEstimator).
                         setStopThreshold(iacEstimatorThreshold);
                 break;
@@ -1023,7 +1023,7 @@ public abstract class CameraCalibrator {
      * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
-     * Typically this value will be close to 1.0, but not exactly 1.0, because
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
@@ -1042,7 +1042,7 @@ public abstract class CameraCalibrator {
      * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
-     * Typically this value will be close to 1.0, but not exactly 1.0, because
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
@@ -1340,7 +1340,7 @@ public abstract class CameraCalibrator {
                 mHomographies.add(homography);
 
                 if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                        mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||
+                        mIACEstimator.getMethod() == RobustEstimatorMethod.PROMEDS ||
                         mHomographyQualityScoresRequired) {
                     if (mSamplesQualityScores != null) {
                         // pick corresponding quality score
@@ -1370,7 +1370,7 @@ public abstract class CameraCalibrator {
         }
 
         if (mIACEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                mIACEstimator.getMethod() == RobustEstimatorMethod.PROMedS ||
+                mIACEstimator.getMethod() == RobustEstimatorMethod.PROMEDS ||
                 mHomographyQualityScoresRequired) {
 
             // truncate tmpHomographyQualityScores to contain only actual number of
@@ -1540,8 +1540,8 @@ public abstract class CameraCalibrator {
      *
      * @param samples list of samples.
      * @throws IllegalArgumentException if not enough samples are provided to
-     *                                  estimate the intrinsic parameters. By default the minimum is 1, but
-     *                                  depending on the settings at least 3 samples might be required.
+     *                                  estimate the intrinsic parameters. By default, the minimum is 1,
+     *                                  but depending on the settings at least 3 samples might be required.
      */
     private void internalSetSamples(final List<CameraCalibratorSample> samples) {
         if (samples.size() < mIACEstimator.getMinNumberOfRequiredHomographies()) {
@@ -1563,8 +1563,8 @@ public abstract class CameraCalibrator {
      *                             sample.
      * @throws IllegalArgumentException if not enough quality scores are
      *                                  provided for the corresponding samples to estimate the intrinsic
-     *                                  parameters. By default the minimum is 1, but depending on the settings at
-     *                                  least 3 samples might be required.
+     *                                  parameters. By default, the minimum is 1, but depending on the
+     *                                  settings at least 3 samples might be required.
      */
     private void internalSetSamplesQualityScores(final double[] samplesQualityScores) {
         if (samplesQualityScores.length < mIACEstimator.getMinNumberOfRequiredHomographies()) {

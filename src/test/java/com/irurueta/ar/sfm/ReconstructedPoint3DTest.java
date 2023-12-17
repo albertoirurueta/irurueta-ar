@@ -34,8 +34,7 @@ public class ReconstructedPoint3DTest {
         // check default values
         assertNull(rp.getId());
         assertNull(rp.getPoint());
-        assertEquals(rp.getQualityScore(),
-                ReconstructedPoint3D.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(ReconstructedPoint3D.DEFAULT_QUALITY_SCORE, rp.getQualityScore(), 0.0);
         assertNull(rp.getCovariance());
         assertNull(rp.getColorData());
     }
@@ -51,7 +50,7 @@ public class ReconstructedPoint3DTest {
         rp.setId("id");
 
         // check correctness
-        assertEquals(rp.getId(), "id");
+        assertEquals("id", rp.getId());
     }
 
     @Test
@@ -66,7 +65,7 @@ public class ReconstructedPoint3DTest {
         rp.setPoint(p);
 
         // check correctness
-        assertSame(rp.getPoint(), p);
+        assertSame(p, rp.getPoint());
     }
 
     @Test
@@ -74,14 +73,13 @@ public class ReconstructedPoint3DTest {
         final ReconstructedPoint3D rp = new ReconstructedPoint3D();
 
         // check default value
-        assertEquals(rp.getQualityScore(),
-                ReconstructedPoint3D.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(ReconstructedPoint3D.DEFAULT_QUALITY_SCORE, rp.getQualityScore(), 0.0);
 
         // set new value
         rp.setQualityScore(5.0);
 
         // check correctness
-        assertEquals(rp.getQualityScore(), 5.0, 0.0);
+        assertEquals(5.0, rp.getQualityScore(), 0.0);
     }
 
     @Test
@@ -96,7 +94,7 @@ public class ReconstructedPoint3DTest {
         rp.setCovariance(cov);
 
         // check correctness
-        assertSame(rp.getCovariance(), cov);
+        assertSame(cov, rp.getCovariance());
     }
 
     @Test
@@ -111,7 +109,7 @@ public class ReconstructedPoint3DTest {
         rp.setColorData(data);
 
         // check correctness
-        assertSame(rp.getColorData(), data);
+        assertSame(data, rp.getColorData());
     }
 
     @Test
@@ -129,10 +127,10 @@ public class ReconstructedPoint3DTest {
         rp1.setColorData(data);
 
         // check
-        assertEquals(rp1.getId(), "id");
-        assertSame(rp1.getPoint(), p);
-        assertEquals(rp1.getQualityScore(), 5.0, 0.0);
-        assertSame(rp1.getCovariance(), cov);
+        assertEquals("id", rp1.getId());
+        assertSame(p, rp1.getPoint());
+        assertEquals(5.0, rp1.getQualityScore(), 0.0);
+        assertSame(cov, rp1.getCovariance());
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(rp1);

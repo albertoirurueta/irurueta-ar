@@ -32,8 +32,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class AffineFundamentalMatrixEstimatorTest implements
-        FundamentalMatrixEstimatorListener {
+public class AffineFundamentalMatrixEstimatorTest implements FundamentalMatrixEstimatorListener {
 
     private static final int MIN_POINTS = 4;
     private static final int MAX_POINTS = 500;
@@ -74,16 +73,14 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 new AffineFundamentalMatrixEstimator();
 
         // check correctness
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(estimator.arePointsNormalized(),
-                AffineFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
+        assertEquals(AffineFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getMethod(),
-                FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(),
-                AffineFundamentalMatrixEstimator.MIN_REQUIRED_POINTS);
+        assertEquals(FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM, estimator.getMethod());
+        assertEquals(AffineFundamentalMatrixEstimator.MIN_REQUIRED_POINTS,
+                estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -99,22 +96,19 @@ public class AffineFundamentalMatrixEstimatorTest implements
             rightPoints.add(Point2D.create());
         }
 
-        estimator = new AffineFundamentalMatrixEstimator(leftPoints,
-                rightPoints);
+        estimator = new AffineFundamentalMatrixEstimator(leftPoints, rightPoints);
 
         // check correctness
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
-        assertEquals(estimator.arePointsNormalized(),
-                AffineFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
+        assertEquals(AffineFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getMethod(),
-                FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(),
-                AffineFundamentalMatrixEstimator.MIN_REQUIRED_POINTS);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertEquals(FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM, estimator.getMethod());
+        assertEquals(AffineFundamentalMatrixEstimator.MIN_REQUIRED_POINTS,
+                estimator.getMinRequiredPoints());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
 
@@ -122,14 +116,12 @@ public class AffineFundamentalMatrixEstimatorTest implements
         final List<Point2D> emptyPoints = new ArrayList<>();
         estimator = null;
         try {
-            estimator = new AffineFundamentalMatrixEstimator(emptyPoints,
-                    rightPoints);
+            estimator = new AffineFundamentalMatrixEstimator(emptyPoints, rightPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new AffineFundamentalMatrixEstimator(leftPoints,
-                    emptyPoints);
+            estimator = new AffineFundamentalMatrixEstimator(leftPoints, emptyPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -138,42 +130,40 @@ public class AffineFundamentalMatrixEstimatorTest implements
 
     @Test
     public void testIsSetLMSESolutionAllowed() throws LockedException {
-        final AffineFundamentalMatrixEstimator estimator =
-                new AffineFundamentalMatrixEstimator();
+        final AffineFundamentalMatrixEstimator estimator = new AffineFundamentalMatrixEstimator();
 
         // check default value
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
 
         // set new value
         estimator.setLMSESolutionAllowed(
                 !AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
 
         // check correctness
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                !AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(!AffineFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
     }
 
     @Test
     public void testAreSetPointsNormalized() throws LockedException {
-        final AffineFundamentalMatrixEstimator estimator =
-                new AffineFundamentalMatrixEstimator();
+        final AffineFundamentalMatrixEstimator estimator = new AffineFundamentalMatrixEstimator();
 
         // check default value
-        assertEquals(estimator.arePointsNormalized(),
-                AffineFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        assertEquals(AffineFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
 
         // set new value
         estimator.setPointsNormalized(
-                !AffineFundamentalMatrixEstimator.
-                        DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+                !AffineFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+
+        assertEquals(!AffineFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
+                estimator.arePointsNormalized());
     }
 
     @Test
     public void testGetSetPoints() throws LockedException {
-        final AffineFundamentalMatrixEstimator estimator =
-                new AffineFundamentalMatrixEstimator();
+        final AffineFundamentalMatrixEstimator estimator = new AffineFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getLeftPoints());
@@ -192,8 +182,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
         estimator.setPoints(leftPoints, rightPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
@@ -211,8 +201,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final AffineFundamentalMatrixEstimator estimator =
-                new AffineFundamentalMatrixEstimator();
+        final AffineFundamentalMatrixEstimator estimator = new AffineFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -221,13 +210,12 @@ public class AffineFundamentalMatrixEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
-    public void testEstimateNoLMSENoNormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException,
+    public void testEstimateNoLMSENoNormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
             WrongSizeException, InvalidPairOfCamerasException {
 
         AffineFundamentalMatrixEstimator estimator;
@@ -255,10 +243,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -283,10 +269,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -297,10 +281,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
             final Matrix cameraMatrix1 = camera1.getInternalMatrix();
@@ -333,8 +315,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new AffineFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new AffineFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(false);
             estimator.setPointsNormalized(false);
             estimator.setListener(this);
@@ -342,18 +323,17 @@ public class AffineFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
 
             // check correctness
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             // compute epipoles
@@ -380,18 +360,16 @@ public class AffineFundamentalMatrixEstimatorTest implements
             fundMatrix2.normalize();
 
             // check that both matrices are equal up to scale (i.e. sign)
-            if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
+            if (!fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundMatrix.getInternalMatrix().equals(
+                            fundMatrix2.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0),
+                    ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
@@ -416,41 +394,34 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
                 if (!epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
                 if (!epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
                 if (!epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        EXTREME_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR));
 
                 if (!epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
                 if (!epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center1,
-                        EXTREME_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR));
                 if (!epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
             }
 
             numValid++;
@@ -469,9 +440,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testEstimateNoLMSENormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException,
+    public void testEstimateNoLMSENormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
             InvalidPairOfCamerasException, WrongSizeException {
 
         AffineFundamentalMatrixEstimator estimator;
@@ -499,10 +469,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -527,10 +495,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -541,10 +507,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
             final Matrix cameraMatrix1 = camera1.getInternalMatrix();
@@ -561,7 +525,6 @@ public class AffineFundamentalMatrixEstimatorTest implements
             cameraMatrix2.setElementAt(2, 3, 1.0);
             camera2.setInternalMatrix(cameraMatrix2);
 
-
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
@@ -577,8 +540,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new AffineFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new AffineFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(false);
             estimator.setPointsNormalized(true);
             estimator.setListener(this);
@@ -586,18 +548,17 @@ public class AffineFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
 
             // check correctness
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             // compute epipoles
@@ -624,18 +585,15 @@ public class AffineFundamentalMatrixEstimatorTest implements
             fundMatrix2.normalize();
 
             // check that both matrices are equal up to scale (i.e. sign)
-            if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
+            if (!fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
@@ -650,59 +608,44 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                 // check that 2D point on left view belongs to left epipolar line
-                assertTrue(line1.isLocus(leftPoint,
-                        10.0 * VERY_LARGE_ABSOLUTE_ERROR));
+                assertTrue(line1.isLocus(leftPoint, 10.0 * VERY_LARGE_ABSOLUTE_ERROR));
                 // check that 2D point on right view belongs to right epipolar
                 // line
-                assertTrue(line2.isLocus(rightPoint,
-                        VERY_LARGE_ABSOLUTE_ERROR));
+                assertTrue(line2.isLocus(rightPoint, VERY_LARGE_ABSOLUTE_ERROR));
 
                 // obtain epipolar planes
                 final Plane epipolarPlane1 = camera1.backProject(line1);
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        VERY_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, VERY_LARGE_ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
-                if (!epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                if (!epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane1.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
-                if (!epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                if (!epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane2.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
             }
 
             numValid++;
@@ -721,9 +664,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testEstimateLMSENoNormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException,
+    public void testEstimateLMSENoNormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
             InvalidPairOfCamerasException, WrongSizeException {
 
         AffineFundamentalMatrixEstimator estimator;
@@ -751,10 +693,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -779,10 +719,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -793,10 +731,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
             final Matrix cameraMatrix1 = camera1.getInternalMatrix();
@@ -817,11 +753,9 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -829,8 +763,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new AffineFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new AffineFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(true);
             estimator.setPointsNormalized(false);
             estimator.setListener(this);
@@ -838,18 +771,17 @@ public class AffineFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
 
             // check correctness
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             // compute epipoles
@@ -877,17 +809,16 @@ public class AffineFundamentalMatrixEstimatorTest implements
 
             // check that both matrices are equal up to scale (i.e. sign)
             if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundMatrix.getInternalMatrix().equals(
+                            fundMatrix2.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
@@ -912,47 +843,34 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
-                if (!epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                if (!epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane1.isLocus(center2,
-                        EXTREME_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        EXTREME_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, EXTREME_LARGE_ABSOLUTE_ERROR));
 
-                if (!epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                if (!epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane2.isLocus(center1,
-                        EXTREME_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center1,
-                        EXTREME_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane2.isLocus(center1, EXTREME_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
             }
 
             numValid++;
@@ -971,9 +889,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
     }
 
     @Test
-    public void testEstimateLMSENormalization() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException,
+    public void testEstimateLMSENormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
             InvalidPairOfCamerasException, WrongSizeException {
 
         AffineFundamentalMatrixEstimator estimator;
@@ -1001,10 +918,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1029,10 +944,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1043,10 +956,8 @@ public class AffineFundamentalMatrixEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
             final Matrix cameraMatrix1 = camera1.getInternalMatrix();
@@ -1066,11 +977,10 @@ public class AffineFundamentalMatrixEstimatorTest implements
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
+                points3D.add(new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -1078,8 +988,7 @@ public class AffineFundamentalMatrixEstimatorTest implements
             final List<Point2D> rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
-            estimator = new AffineFundamentalMatrixEstimator(leftPoints,
-                    rightPoints);
+            estimator = new AffineFundamentalMatrixEstimator(leftPoints, rightPoints);
             estimator.setLMSESolutionAllowed(true);
             estimator.setPointsNormalized(true);
             estimator.setListener(this);
@@ -1087,18 +996,17 @@ public class AffineFundamentalMatrixEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             // estimate
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
 
             // check correctness
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             reset();
 
             // compute epipoles
@@ -1125,18 +1033,16 @@ public class AffineFundamentalMatrixEstimatorTest implements
             fundMatrix2.normalize();
 
             // check that both matrices are equal up to scale (i.e. sign)
-            if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
+            if (!fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundMatrix.getInternalMatrix().equals(
+                            fundMatrix2.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
@@ -1154,55 +1060,41 @@ public class AffineFundamentalMatrixEstimatorTest implements
                 assertTrue(line1.isLocus(leftPoint, VERY_LARGE_ABSOLUTE_ERROR));
                 // check that 2D point on right view belongs to right epipolar
                 // line
-                assertTrue(line2.isLocus(rightPoint,
-                        VERY_LARGE_ABSOLUTE_ERROR));
+                assertTrue(line2.isLocus(rightPoint, VERY_LARGE_ABSOLUTE_ERROR));
 
                 // obtain epipolar planes
                 final Plane epipolarPlane1 = camera1.backProject(line1);
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, LARGE_ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
-                if (!epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                if (!epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane1.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane1.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane1.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
 
-                if (!epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                if (!epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(point3D,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane2.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane2.isLocus(point3D, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center1,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
-                if (!epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                assertTrue(epipolarPlane2.isLocus(center1, ULTRA_LARGE_ABSOLUTE_ERROR));
+                if (!epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane2.isLocus(center2,
-                        ULTRA_LARGE_ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane2.isLocus(center2, ULTRA_LARGE_ABSOLUTE_ERROR));
             }
 
             numValid++;

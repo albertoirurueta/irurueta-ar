@@ -186,8 +186,8 @@ public class MSACDualAbsoluteQuadricRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<DualAbsoluteQuadric> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
                                 mSubsetCameras.clear();
                                 for (final int samplesIndex : samplesIndices) {
                                     mSubsetCameras.add(mCameras.get(samplesIndex));

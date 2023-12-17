@@ -33,8 +33,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class AlgebraicFundamentalMatrixComparatorTest implements
-        FundamentalMatrixComparatorListener {
+public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatrixComparatorListener {
 
     private static final double MIN_RANDOM_VALUE = 100.0;
     private static final double MAX_RANDOM_VALUE = 500.0;
@@ -56,11 +55,9 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
     private int compareStart, compareEnd;
 
     @Test
-    public void testConstructor() throws AlgebraException,
-            InvalidFundamentalMatrixException {
+    public void testConstructor() throws AlgebraException, InvalidFundamentalMatrixException {
         // test constructor without arguments
-        AlgebraicFundamentalMatrixComparator comparator =
-                new AlgebraicFundamentalMatrixComparator();
+        AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default values
         assertNull(comparator.getGroundTruthFundamentalMatrix());
@@ -68,8 +65,7 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         // test constructor with fundamental matrices
         final FundamentalMatrix emptyFundamentalMatrix1 = new FundamentalMatrix();
@@ -82,60 +78,45 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
                 emptyFundamentalMatrix1, emptyFundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                fundamentalMatrix1, emptyFundamentalMatrix2);
+        comparator = new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1, emptyFundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                emptyFundamentalMatrix1, fundamentalMatrix2);
+        comparator = new AlgebraicFundamentalMatrixComparator(emptyFundamentalMatrix1, fundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                fundamentalMatrix1, fundamentalMatrix2);
+        comparator = new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1, fundamentalMatrix2);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
         assertNull(comparator.getListener());
         assertFalse(comparator.isLocked());
         assertTrue(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         // test constructor with listener
         comparator = new AlgebraicFundamentalMatrixComparator(this);
@@ -143,77 +124,63 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         // check default values
         assertNull(comparator.getGroundTruthFundamentalMatrix());
         assertNull(comparator.getOtherFundamentalMatrix());
-        assertSame(comparator.getListener(), this);
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         // test constructor with fundamental matrices and listener
         comparator = new AlgebraicFundamentalMatrixComparator(
                 emptyFundamentalMatrix1, emptyFundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         comparator = new AlgebraicFundamentalMatrixComparator(
                 fundamentalMatrix1, emptyFundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                emptyFundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(emptyFundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         comparator = new AlgebraicFundamentalMatrixComparator(
                 emptyFundamentalMatrix1, fundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                emptyFundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         // fundamental matrices are not defined
         assertFalse(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         comparator = new AlgebraicFundamentalMatrixComparator(
                 fundamentalMatrix1, fundamentalMatrix2, this);
 
         // check default values
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix1);
-        assertSame(comparator.getOtherFundamentalMatrix(),
-                fundamentalMatrix2);
-        assertSame(comparator.getListener(), this);
+        assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
+        assertSame(fundamentalMatrix2, comparator.getOtherFundamentalMatrix());
+        assertSame(this, comparator.getListener());
         assertFalse(comparator.isLocked());
         assertTrue(comparator.isReady());
-        assertEquals(comparator.getType(),
-                FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR);
+        assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
     }
 
     @Test
     public void testGetSetGroundTruthFundamentalMatrix() throws LockedException {
-        final AlgebraicFundamentalMatrixComparator comparator =
-                new AlgebraicFundamentalMatrixComparator();
+        final AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default value
         assertNull(comparator.getGroundTruthFundamentalMatrix());
@@ -223,14 +190,12 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         comparator.setGroundTruthFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
-        assertSame(comparator.getGroundTruthFundamentalMatrix(),
-                fundamentalMatrix);
+        assertSame(fundamentalMatrix, comparator.getGroundTruthFundamentalMatrix());
     }
 
     @Test
     public void testGetSetOtherFundamentalMatrix() throws LockedException {
-        final AlgebraicFundamentalMatrixComparator comparator =
-                new AlgebraicFundamentalMatrixComparator();
+        final AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default value
         assertNull(comparator.getOtherFundamentalMatrix());
@@ -240,13 +205,12 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         comparator.setOtherFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
-        assertSame(comparator.getOtherFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, comparator.getOtherFundamentalMatrix());
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final AlgebraicFundamentalMatrixComparator comparator =
-                new AlgebraicFundamentalMatrixComparator();
+        final AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default value
         assertNull(comparator.getListener());
@@ -255,12 +219,11 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         comparator.setListener(this);
 
         // check correctness
-        assertSame(comparator.getListener(), this);
+        assertSame(this, comparator.getListener());
     }
 
     @Test
-    public void testCompare() throws InvalidPairOfCamerasException,
-            NotReadyException, LockedException,
+    public void testCompare() throws InvalidPairOfCamerasException, NotReadyException, LockedException,
             FundamentalMatrixComparatorException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double alphaEuler1 = 0.0;
@@ -273,14 +236,10 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
         final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
@@ -303,10 +262,8 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -317,15 +274,11 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                cameraCenter1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                cameraCenter2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
 
-        final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1,
-                camera2);
-        final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera1,
-                camera2);
+        final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+        final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera1, camera2);
 
         final AlgebraicFundamentalMatrixComparator comparator =
                 new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1,
@@ -334,17 +287,17 @@ public class AlgebraicFundamentalMatrixComparatorTest implements
         // check status
         assertFalse(comparator.isLocked());
         assertTrue(comparator.isReady());
-        assertEquals(compareStart, 0);
-        assertEquals(compareEnd, 0);
+        assertEquals(0, compareStart);
+        assertEquals(0, compareEnd);
 
         // compare
-        assertEquals(comparator.compare(), 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, comparator.compare(), ABSOLUTE_ERROR);
 
         // check correctness
         assertTrue(comparator.isReady());
         assertFalse(comparator.isLocked());
-        assertEquals(compareStart, 1);
-        assertEquals(compareEnd, 1);
+        assertEquals(1, compareStart);
+        assertEquals(1, compareEnd);
         reset();
     }
 

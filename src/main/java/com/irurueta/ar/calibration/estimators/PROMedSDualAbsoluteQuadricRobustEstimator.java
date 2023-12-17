@@ -133,8 +133,8 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      camera.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than required number of homographies for default settings (i.e.
-     *                                  2 cameras).
+     *                                  smaller than required number of homographies for default
+     *                                  settings (i.e. 2 cameras).
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(final double[] qualityScores) {
         this();
@@ -149,11 +149,11 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than required number of cameras for default settings (i.e. 2
-     *                                  cameras).
+     *                                  smaller than required number of cameras for default settings (i.e.
+     *                                  2 cameras).
      */
-    public PROMedSDualAbsoluteQuadricRobustEstimator(final double[] qualityScores,
-                                                     final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public PROMedSDualAbsoluteQuadricRobustEstimator(
+            final double[] qualityScores, final DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -166,8 +166,8 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      camera.
      * @throws IllegalArgumentException if not enough cameras are provided for
-     *                                  default settings (i.e. 2 cameras) or quality scores and cameras don't
-     *                                  have the same size.
+     *                                  default settings (i.e. 2 cameras) or quality scores and cameras
+     *                                  don't have the same size.
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(
             final List<PinholeCamera> cameras, final double[] qualityScores) {
@@ -185,8 +185,8 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or estimation progress changes.
      * @throws IllegalArgumentException if not enough cameras are provided for
-     *                                  default settings (i.e. 2 cameras) or quality scores and cameras don't
-     *                                  have the same size.
+     *                                  default settings (i.e. 2 cameras) or quality scores and cameras
+     *                                  don't have the same size.
      */
     public PROMedSDualAbsoluteQuadricRobustEstimator(
             final List<PinholeCamera> cameras, final double[] qualityScores,
@@ -291,8 +291,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mCameras.size();
+        return super.isReady() && mQualityScores != null && mQualityScores.length == mCameras.size();
     }
 
     /**
@@ -321,8 +320,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
                         new PROMedSRobustEstimatorListener<DualAbsoluteQuadric>() {
 
                             // subset of cameras picked on each iteration
-                            private final List<PinholeCamera> mSubsetCameras =
-                                    new ArrayList<>();
+                            private final List<PinholeCamera> mSubsetCameras = new ArrayList<>();
 
                             @Override
                             public double getThreshold() {
@@ -340,8 +338,8 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<DualAbsoluteQuadric> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
                                 mSubsetCameras.clear();
                                 for (final int samplesIndex : samplesIndices) {
                                     mSubsetCameras.add(mCameras.get(samplesIndex));
@@ -437,7 +435,7 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROMedS;
+        return RobustEstimatorMethod.PROMEDS;
     }
 
     /**
@@ -447,8 +445,8 @@ public class PROMedSDualAbsoluteQuadricRobustEstimator extends
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than the minimum number of required homographies for current
-     *                                  settings.
+     *                                  smaller than the minimum number of required homographies for
+     *                                  current settings.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores.length < mDAQEstimator.getMinNumberOfRequiredCameras()) {

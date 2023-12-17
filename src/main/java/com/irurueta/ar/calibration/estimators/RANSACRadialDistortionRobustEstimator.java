@@ -41,7 +41,7 @@ public class RANSACRadialDistortionRobustEstimator extends
     /**
      * Constant defining default threshold to determine whether points are
      * inliers or not.
-     * By defaul 1.0 is considered a good value for cases where measures are
+     * By default, 1.0 is considered a good value for cases where measures are
      * done on pixels, since typically the minimum resolution is 1 pixel.
      */
     public static final double DEFAULT_THRESHOLD = 1.0;
@@ -157,7 +157,7 @@ public class RANSACRadialDistortionRobustEstimator extends
     /**
      * Returns threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @return threshold to determine whether points are inliers or not when
@@ -170,7 +170,7 @@ public class RANSACRadialDistortionRobustEstimator extends
     /**
      * Sets threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @param threshold threshold to be set.
@@ -271,7 +271,8 @@ public class RANSACRadialDistortionRobustEstimator extends
                             }
 
                             @Override
-                            public double computeResidual(final RadialDistortion currentEstimation, final int i) {
+                            public double computeResidual(
+                                    final RadialDistortion currentEstimation, final int i) {
                                 final Point2D distortedPoint = mDistortedPoints.get(i);
                                 final Point2D undistortedPoint = mUndistortedPoints.get(i);
 
@@ -299,7 +300,8 @@ public class RANSACRadialDistortionRobustEstimator extends
                                 }
 
                                 if (mListener != null) {
-                                    mListener.onEstimateStart(RANSACRadialDistortionRobustEstimator.this);
+                                    mListener.onEstimateStart(
+                                            RANSACRadialDistortionRobustEstimator.this);
                                 }
                             }
 
@@ -307,7 +309,8 @@ public class RANSACRadialDistortionRobustEstimator extends
                             public void onEstimateEnd(
                                     final RobustEstimator<RadialDistortion> estimator) {
                                 if (mListener != null) {
-                                    mListener.onEstimateEnd(RANSACRadialDistortionRobustEstimator.this);
+                                    mListener.onEstimateEnd(
+                                            RANSACRadialDistortionRobustEstimator.this);
                                 }
                             }
 

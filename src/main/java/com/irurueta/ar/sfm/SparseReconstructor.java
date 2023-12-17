@@ -52,11 +52,11 @@ public class SparseReconstructor extends
      * implementations where scale can be measured or is already known.
      *
      * @param isInitialPairOfViews true if initial pair of views is being processed, false otherwise.
-     * @return true if post processing succeeded, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
      */
     @Override
     protected boolean postProcessOne(final boolean isInitialPairOfViews) {
-        // no need for post processing when computing metric reconstruction
+        // no need for post-processing when computing metric reconstruction
         mPreviousEuclideanEstimatedCamera = mPreviousMetricEstimatedCamera;
         mCurrentEuclideanEstimatedCamera = mCurrentMetricEstimatedCamera;
         mActiveEuclideanReconstructedPoints = mActiveMetricReconstructedPoints;

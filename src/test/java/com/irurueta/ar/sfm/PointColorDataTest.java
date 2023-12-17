@@ -30,8 +30,7 @@ public class PointColorDataTest {
 
         // check default value
         assertNull(data.getId());
-        assertEquals(data.getQualityScore(),
-                PointColorData.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(PointColorData.DEFAULT_QUALITY_SCORE, data.getQualityScore(), 0.0);
     }
 
     @Test
@@ -45,7 +44,7 @@ public class PointColorDataTest {
         data.setId("id");
 
         // check correctness
-        assertEquals(data.getId(), "id");
+        assertEquals("id", data.getId());
     }
 
     @Test
@@ -53,14 +52,13 @@ public class PointColorDataTest {
         final PointColorData data = new CustomPointColorData();
 
         // check default value
-        assertEquals(data.getQualityScore(),
-                PointColorData.DEFAULT_QUALITY_SCORE, 0.0);
+        assertEquals(PointColorData.DEFAULT_QUALITY_SCORE, data.getQualityScore(), 0.0);
 
         // set new value
         data.setQualityScore(5.0);
 
         // check correctness
-        assertEquals(data.getQualityScore(), 5.0, 0.0);
+        assertEquals(5.0, data.getQualityScore(), 0.0);
     }
 
     @Test
@@ -85,8 +83,8 @@ public class PointColorDataTest {
         data1.setQualityScore(5.0);
 
         // check correctness
-        assertEquals(data1.getId(), "id");
-        assertEquals(data1.getQualityScore(), 5.0, 0.0);
+        assertEquals("id", data1.getId());
+        assertEquals(5.0, data1.getQualityScore(), 0.0);
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(data1);

@@ -16,7 +16,7 @@
 package com.irurueta.ar.calibration.estimators;
 
 /**
- * Defines types of Dual Absolute Quadric estimators depending their algorithm
+ * Defines types of Dual Absolute Quadric estimators depending on their algorithm
  * of implementation.
  */
 public enum DualAbsoluteQuadricEstimatorType {

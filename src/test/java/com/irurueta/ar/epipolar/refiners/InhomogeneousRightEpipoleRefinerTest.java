@@ -40,8 +40,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class InhomogeneousRightEpipoleRefinerTest implements
-        RefinerListener<Point2D> {
+public class InhomogeneousRightEpipoleRefinerTest implements RefinerListener<Point2D> {
 
     private static final double MIN_RANDOM_VALUE = -1500.0;
     private static final double MAX_RANDOM_VALUE = 1500.0;
@@ -109,15 +108,15 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         InhomogeneousRightEpipoleRefiner refiner = new InhomogeneousRightEpipoleRefiner();
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(), 0.0, 0.0);
+        assertEquals(0.0, refiner.getRefinementStandardDeviation(), 0.0);
         assertNull(refiner.getHomography());
         assertNull(refiner.getSamples1());
         assertNull(refiner.getSamples2());
         assertFalse(refiner.isReady());
         assertNull(refiner.getInliers());
         assertNull(refiner.getResiduals());
-        assertEquals(refiner.getNumInliers(), 0);
-        assertEquals(refiner.getTotalSamples(), 0);
+        assertEquals(0, refiner.getNumInliers());
+        assertEquals(0, refiner.getTotalSamples());
         assertNull(refiner.getInitialEstimation());
         assertFalse(refiner.isCovarianceKept());
         assertFalse(refiner.isLocked());
@@ -126,21 +125,19 @@ public class InhomogeneousRightEpipoleRefinerTest implements
 
         // test non-empty constructor
         refiner = new InhomogeneousRightEpipoleRefiner(rightEpipole, true, inliers,
-                residuals, numInliers, samples1, samples2,
-                refinementStandardDeviation, homography);
+                residuals, numInliers, samples1, samples2, refinementStandardDeviation, homography);
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(),
-                refinementStandardDeviation, 0.0);
-        assertSame(refiner.getHomography(), homography);
-        assertSame(refiner.getSamples1(), samples1);
-        assertSame(refiner.getSamples2(), samples2);
+        assertEquals(refinementStandardDeviation, refiner.getRefinementStandardDeviation(), 0.0);
+        assertSame(homography, refiner.getHomography());
+        assertSame(samples1, refiner.getSamples1());
+        assertSame(samples2, refiner.getSamples2());
         assertTrue(refiner.isReady());
-        assertSame(refiner.getInliers(), inliers);
-        assertSame(refiner.getResiduals(), residuals);
-        assertEquals(refiner.getNumInliers(), numPoints);
-        assertEquals(refiner.getTotalSamples(), numPoints);
-        assertSame(refiner.getInitialEstimation(), rightEpipole);
+        assertSame(inliers, refiner.getInliers());
+        assertSame(residuals, refiner.getResiduals());
+        assertEquals(numPoints, refiner.getNumInliers());
+        assertEquals(numPoints, refiner.getTotalSamples());
+        assertSame(rightEpipole, refiner.getInitialEstimation());
         assertTrue(refiner.isCovarianceKept());
         assertFalse(refiner.isLocked());
         assertNull(refiner.getCovariance());
@@ -148,21 +145,19 @@ public class InhomogeneousRightEpipoleRefinerTest implements
 
         // test non-empty constructor with InliersData
         refiner = new InhomogeneousRightEpipoleRefiner(rightEpipole, true,
-                inliersData, samples1, samples2, refinementStandardDeviation,
-                homography);
+                inliersData, samples1, samples2, refinementStandardDeviation, homography);
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(),
-                refinementStandardDeviation, 0.0);
-        assertSame(refiner.getHomography(), homography);
-        assertSame(refiner.getSamples1(), samples1);
-        assertSame(refiner.getSamples2(), samples2);
+        assertEquals(refiner.getRefinementStandardDeviation(), refinementStandardDeviation, 0.0);
+        assertSame(homography, refiner.getHomography());
+        assertSame(samples1, refiner.getSamples1());
+        assertSame(samples2, refiner.getSamples2());
         assertTrue(refiner.isReady());
-        assertSame(refiner.getInliers(), inliers);
-        assertSame(refiner.getResiduals(), residuals);
-        assertEquals(refiner.getNumInliers(), numPoints);
-        assertEquals(refiner.getTotalSamples(), numPoints);
-        assertSame(refiner.getInitialEstimation(), rightEpipole);
+        assertSame(inliers, refiner.getInliers());
+        assertSame(residuals, refiner.getResiduals());
+        assertEquals(numPoints, refiner.getNumInliers());
+        assertEquals(numPoints, refiner.getTotalSamples());
+        assertSame(rightEpipole, refiner.getInitialEstimation());
         assertTrue(refiner.isCovarianceKept());
         assertFalse(refiner.isLocked());
         assertNull(refiner.getCovariance());
@@ -180,7 +175,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         refiner.setListener(this);
 
         // check correctness
-        assertSame(refiner.getListener(), this);
+        assertSame(this, refiner.getListener());
     }
 
     @Test
@@ -191,12 +186,11 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         assertNull(refiner.getHomography());
 
         // set new value
-        final ProjectiveTransformation2D homography
-                = new ProjectiveTransformation2D();
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
         refiner.setHomography(homography);
 
         // check correctness
-        assertSame(refiner.getHomography(), homography);
+        assertSame(homography, refiner.getHomography());
     }
 
     @Test
@@ -211,7 +205,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         refiner.setSamples1(samples1);
 
         // check correctness
-        assertSame(refiner.getSamples1(), samples1);
+        assertSame(samples1, refiner.getSamples1());
     }
 
     @Test
@@ -226,7 +220,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         refiner.setSamples2(samples2);
 
         // check correctness
-        assertSame(refiner.getSamples2(), samples2);
+        assertSame(samples2, refiner.getSamples2());
     }
 
     @Test
@@ -241,7 +235,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         refiner.setInliers(inliers);
 
         // check correctness
-        assertSame(refiner.getInliers(), inliers);
+        assertSame(inliers, refiner.getInliers());
     }
 
     @Test
@@ -256,7 +250,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         refiner.setResiduals(residuals);
 
         // check correctness
-        assertSame(refiner.getResiduals(), residuals);
+        assertSame(residuals, refiner.getResiduals());
     }
 
     @Test
@@ -264,13 +258,13 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         final InhomogeneousRightEpipoleRefiner refiner = new InhomogeneousRightEpipoleRefiner();
 
         // check default value
-        assertEquals(refiner.getNumInliers(), 0);
+        assertEquals(0, refiner.getNumInliers());
 
         // set new value
         refiner.setNumInliers(10);
 
         // check correctness
-        assertEquals(refiner.getNumInliers(), 10);
+        assertEquals(10, refiner.getNumInliers());
     }
 
     @Test
@@ -301,15 +295,15 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         // check default values
         assertNull(refiner.getInliers());
         assertNull(refiner.getResiduals());
-        assertEquals(refiner.getNumInliers(), 0);
+        assertEquals(0, refiner.getNumInliers());
 
         // set new value
         refiner.setInliersData(inliersData);
 
         // check correctness
-        assertSame(refiner.getInliers(), inliers);
-        assertSame(refiner.getResiduals(), residuals);
-        assertEquals(refiner.getNumInliers(), numInliers);
+        assertSame(inliers, refiner.getInliers());
+        assertSame(residuals, refiner.getResiduals());
+        assertEquals(numInliers, refiner.getNumInliers());
     }
 
     @Test
@@ -324,7 +318,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         refiner.setInitialEstimation(initialEstimation);
 
         // check correctness
-        assertSame(refiner.getInitialEstimation(), initialEstimation);
+        assertSame(initialEstimation, refiner.getInitialEstimation());
     }
 
     @Test
@@ -348,8 +342,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         for (int t = 0; t < TIMES; t++) {
             final PinholeCamera camera1 = new PinholeCamera();
             final PinholeCamera camera2 = new PinholeCamera();
-            final FundamentalMatrix groundTruthFundamentalMatrix
-                    = new FundamentalMatrix();
+            final FundamentalMatrix groundTruthFundamentalMatrix = new FundamentalMatrix();
             final List<Point2D> samples1 = new ArrayList<>();
             final List<Point2D> samples2 = new ArrayList<>();
             final Transformation2D homography = generateHomography(camera1, camera2,
@@ -363,8 +356,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
 
             groundTruthFundamentalMatrix.normalize();
             groundTruthFundamentalMatrix.computeEpipoles();
-            final Point2D groundTruthRightEpipole
-                    = groundTruthFundamentalMatrix.getRightEpipole();
+            final Point2D groundTruthRightEpipole = groundTruthFundamentalMatrix.getRightEpipole();
             groundTruthRightEpipole.normalize();
 
             // add noise to epipole
@@ -380,81 +372,68 @@ public class InhomogeneousRightEpipoleRefinerTest implements
             final InhomogeneousRightEpipoleRefiner refiner =
                     new InhomogeneousRightEpipoleRefiner(
                             noisyRightEpipole, true, inliers, residuals, numPoints,
-                            samples1, samples2, ERROR_STD,
-                            homography);
+                            samples1, samples2, ERROR_STD, homography);
             refiner.setListener(this);
 
-            final double groundTruthResidual = refiner.totalResidual(
-                    groundTruthFundamentalMatrix);
+            final double groundTruthResidual = refiner.totalResidual(groundTruthFundamentalMatrix);
 
             assertTrue(groundTruthResidual >= 0);
 
             reset();
-            assertEquals(refineStart, 0);
-            assertEquals(refineEnd, 0);
+            assertEquals(0, refineStart);
+            assertEquals(0, refineEnd);
 
             final HomogeneousPoint2D refinedEpipole1 = new HomogeneousPoint2D();
             refiner.refine(refinedEpipole1);
             final Point2D refinedEpipole2 = refiner.refine();
 
-            assertEquals(refineStart, 2);
-            assertEquals(refineEnd, 2);
+            assertEquals(2, refineStart);
+            assertEquals(2, refineEnd);
 
             refinedEpipole1.normalize();
             refinedEpipole2.normalize();
 
-            if (!refinedEpipole1.equals(groundTruthRightEpipole,
-                    ABSOLUTE_ERROR)) {
+            if (!refinedEpipole1.equals(groundTruthRightEpipole, ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(refinedEpipole1.equals(groundTruthRightEpipole,
-                    ABSOLUTE_ERROR));
-            if (!refinedEpipole2.equals(groundTruthRightEpipole,
-                    ABSOLUTE_ERROR)) {
+            assertTrue(refinedEpipole1.equals(groundTruthRightEpipole, ABSOLUTE_ERROR));
+            if (!refinedEpipole2.equals(groundTruthRightEpipole, ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(refinedEpipole2.equals(groundTruthRightEpipole,
-                    ABSOLUTE_ERROR));
+            assertTrue(refinedEpipole2.equals(groundTruthRightEpipole, ABSOLUTE_ERROR));
 
-            final FundamentalMatrix refinedFundamentalMatrix1
-                    = new FundamentalMatrix();
+            final FundamentalMatrix refinedFundamentalMatrix1 = new FundamentalMatrix();
             HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography,
                     refinedEpipole1, refinedFundamentalMatrix1);
             refinedFundamentalMatrix1.normalize();
 
-            final FundamentalMatrix refinedFundamentalMatrix2
-                    = new FundamentalMatrix();
+            final FundamentalMatrix refinedFundamentalMatrix2 = new FundamentalMatrix();
             HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography,
-                    new HomogeneousPoint2D(refinedEpipole2),
-                    refinedFundamentalMatrix2);
+                    new HomogeneousPoint2D(refinedEpipole2), refinedFundamentalMatrix2);
             refinedFundamentalMatrix2.normalize();
 
             // check correctness
             if (!groundTruthFundamentalMatrix.getInternalMatrix().equals(
                     refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !groundTruthFundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1.0).equals(
-                    refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    && !groundTruthFundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0)
+                    .equals(refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(groundTruthFundamentalMatrix.getInternalMatrix().equals(
                     refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)
-                    || groundTruthFundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1.0).equals(
-                    refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR));
+                    || groundTruthFundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0)
+                    .equals(refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR));
 
             if (!groundTruthFundamentalMatrix.getInternalMatrix().equals(
                     refinedFundamentalMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !groundTruthFundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1.0).equals(
-                    refinedFundamentalMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    && !groundTruthFundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0)
+                    .equals(refinedFundamentalMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(groundTruthFundamentalMatrix.getInternalMatrix().equals(
                     refinedFundamentalMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
-                    || groundTruthFundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1.0).equals(
-                    refinedFundamentalMatrix2.getInternalMatrix(), ABSOLUTE_ERROR));
+                    || groundTruthFundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0)
+                    .equals(refinedFundamentalMatrix2.getInternalMatrix(), ABSOLUTE_ERROR));
 
             numValid++;
             break;
@@ -472,8 +451,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
             RobustEstimatorException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
         final double aspectRatio = 1.0;
         final double skewness = 0.0;
         final double principalPoint = 0.0;
@@ -493,8 +471,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                 MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION,
-                MAX_CAMERA_SEPARATION);
+        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
         final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
         final Point3D center2 = new InhomogeneousPoint3D(
@@ -502,15 +479,11 @@ public class InhomogeneousRightEpipoleRefinerTest implements
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                betaEuler1, gammaEuler1);
-        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                betaEuler2, gammaEuler2);
+        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        camera1.setIntrinsicAndExtrinsicParameters(intrinsic, rotation1,
-                center1);
-        camera2.setIntrinsicAndExtrinsicParameters(intrinsic, rotation2,
-                center2);
+        camera1.setIntrinsicAndExtrinsicParameters(intrinsic, rotation1, center1);
+        camera2.setIntrinsicAndExtrinsicParameters(intrinsic, rotation2, center2);
 
         fundamentalMatrix.setFromPairOfCameras(camera1, camera2);
 
@@ -541,8 +514,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
         planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-        final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                planesIntersectionMatrix);
+        final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
         decomposer.decompose();
         final Matrix v = decomposer.getV();
         final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -554,8 +526,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         final double[] principalAxis1 = camera1.getPrincipalAxisArray();
         final double[] principalAxis2 = camera2.getPrincipalAxisArray();
         final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                0.5);
+                ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
         final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
         plane.normalize();
@@ -582,18 +553,13 @@ public class InhomogeneousRightEpipoleRefinerTest implements
                 final double homX;
                 final double homY;
                 final double homW = 1.0;
-                final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
+                final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                    homX = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    homY = -(planeA * homX + planeC * homZ + planeD * homW)
-                            / planeB;
+                    homX = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                 } else {
-                    homY = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    homX = -(planeB * homY + planeC * homZ + planeD * homW)
-                            / planeA;
+                    homY = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                 }
 
                 point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -609,9 +575,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
             } while (!front1 || !front2);
 
             // check that 3D point is in front of both cameras
-            //noinspection ConstantConditions
             assertTrue(front1);
-            //noinspection ConstantConditions
             assertTrue(front2);
 
             // project 3D point into both cameras
@@ -622,8 +586,7 @@ public class InhomogeneousRightEpipoleRefinerTest implements
         // estimate homography
         final ProjectiveTransformation2DRobustEstimator homographyEstimator
                 = ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                projectedPoints1, projectedPoints2,
-                RobustEstimatorMethod.LMedS);
+                        projectedPoints1, projectedPoints2, RobustEstimatorMethod.LMEDS);
 
         return homographyEstimator.estimate();
     }

@@ -49,7 +49,7 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
     private final InhomogeneousPoint3D mSlamPosition = new InhomogeneousPoint3D();
 
     /**
-     * Inverse euclidean camera rotation. This is reused for memory efficiency.
+     * Inverse Euclidean camera rotation. This is reused for memory efficiency.
      */
     private Rotation3D mInvEuclideanCameraRotation;
 
@@ -188,7 +188,8 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
     }
 
     /**
-     * Resets this instance so that a reconstruction can be started from the beginning without cancelling current one.
+     * Resets this instance so that a reconstruction can be started from the beginning without
+     * cancelling current one.
      */
     @Override
     public void reset() {
@@ -253,7 +254,7 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
     /**
      * Transforms metric cameras on current pair of views so that they are referred to
      * last kept location and rotation and upgrades cameras from metric stratum to
-     * euclidean stratum.
+     * Euclidean stratum.
      *
      * @param isInitialPairOfViews   true if initial pair of views is being processed, false otherwise.
      * @param hasAbsoluteOrientation true if absolute orientation is required, false otherwise.
@@ -380,7 +381,7 @@ public abstract class BaseSlamPairedViewsSparseReconstructor<
 
             mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);
 
-            // we assume that euclidean center of 1st camera is at origin because by the time
+            // we assume that Euclidean center of 1st camera is at origin because by the time
             // this method is called, metric cameras have not yet been orientation and position
             // transformed
             final double euclideanBaseline = Math.sqrt(

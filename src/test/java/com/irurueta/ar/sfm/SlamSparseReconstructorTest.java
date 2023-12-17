@@ -140,7 +140,7 @@ public class SlamSparseReconstructorTest {
 
     @Test
     public void testConstructor() {
-        assertEquals(SlamSparseReconstructor.MIN_NUMBER_OF_VIEWS, 2);
+        assertEquals(2, SlamSparseReconstructor.MIN_NUMBER_OF_VIEWS);
 
         final SlamSparseReconstructorConfiguration configuration =
                 new SlamSparseReconstructorConfiguration();
@@ -151,10 +151,10 @@ public class SlamSparseReconstructorTest {
                             final SlamSparseReconstructor reconstructor,
                             final double positionX, final double positionY, final double positionZ,
                             final double velocityX, final double velocityY, final double velocityZ,
-                            final double accelerationX, final double accelerationY, final double accelerationZ,
-                            final double quaternionA, final double quaternionB, final double quaternionC,
-                            final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                            final double angularSpeedZ, final Matrix covariance) {
+                            final double accelerationX, final double accelerationY,
+                            final double accelerationZ, final double quaternionA, final double quaternionB,
+                            final double quaternionC, final double quaternionD, final double angularSpeedX,
+                            final double angularSpeedY, final double angularSpeedZ, final Matrix covariance) {
                     }
 
                     @Override
@@ -210,23 +210,20 @@ public class SlamSparseReconstructorTest {
                     public void onMetricCameraEstimated(
                             final SlamSparseReconstructor reconstructor,
                             final int previousViewId, final int currentViewId,
-                            final EstimatedCamera previousCamera,
-                            final EstimatedCamera currentCamera) {
+                            final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                     }
 
                     @Override
                     public void onMetricReconstructedPointsEstimated(
                             final SlamSparseReconstructor reconstructor,
-                            final List<MatchedSamples> matches,
-                            final List<ReconstructedPoint3D> points) {
+                            final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                     }
 
                     @Override
                     public void onEuclideanCameraEstimated(
                             final SlamSparseReconstructor reconstructor,
                             final int previousViewId, final int currentViewId, final double scale,
-                            final EstimatedCamera previousCamera,
-                            final EstimatedCamera currentCamera) {
+                            final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                     }
 
                     @Override
@@ -261,12 +258,12 @@ public class SlamSparseReconstructorTest {
 
         // check default values
         assertNotNull(reconstructor.getConfiguration());
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
         assertNull(reconstructor.getCurrentMetricEstimatedCamera());
         assertNull(reconstructor.getPreviousMetricEstimatedCamera());
@@ -274,7 +271,7 @@ public class SlamSparseReconstructorTest {
         assertNull(reconstructor.getPreviousEuclideanEstimatedCamera());
         assertNull(reconstructor.getActiveMetricReconstructedPoints());
         assertNull(reconstructor.getActiveEuclideanReconstructedPoints());
-        assertEquals(reconstructor.getCurrentScale(), BaseSparseReconstructor.DEFAULT_SCALE, 0.0);
+        assertEquals(BaseSparseReconstructor.DEFAULT_SCALE, reconstructor.getCurrentScale(), 0.0);
         assertNull(reconstructor.getPreviousViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -286,13 +283,13 @@ public class SlamSparseReconstructorTest {
         reconstructor = new SlamSparseReconstructor(configuration, listener);
 
         // check default values
-        assertSame(reconstructor.getConfiguration(), configuration);
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(configuration, reconstructor.getConfiguration());
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
         assertNull(reconstructor.getCurrentMetricEstimatedCamera());
         assertNull(reconstructor.getPreviousMetricEstimatedCamera());
@@ -300,7 +297,7 @@ public class SlamSparseReconstructorTest {
         assertNull(reconstructor.getPreviousEuclideanEstimatedCamera());
         assertNull(reconstructor.getActiveMetricReconstructedPoints());
         assertNull(reconstructor.getActiveEuclideanReconstructedPoints());
-        assertEquals(reconstructor.getCurrentScale(), BaseSparseReconstructor.DEFAULT_SCALE, 0.0);
+        assertEquals(BaseSparseReconstructor.DEFAULT_SCALE, reconstructor.getCurrentScale(), 0.0);
         assertNull(reconstructor.getPreviousViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -311,8 +308,7 @@ public class SlamSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
@@ -323,8 +319,7 @@ public class SlamSparseReconstructorTest {
 
             final SlamSparseReconstructorConfiguration configuration =
                     new SlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = 0.0f;
             final float accelerationOffsetY = 0.0f;
@@ -335,16 +330,14 @@ public class SlamSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -367,10 +360,8 @@ public class SlamSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -387,8 +378,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -404,8 +394,7 @@ public class SlamSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -421,16 +410,12 @@ public class SlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -447,31 +432,22 @@ public class SlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -484,10 +460,8 @@ public class SlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -501,12 +475,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -523,9 +494,7 @@ public class SlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -544,12 +513,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -565,7 +531,6 @@ public class SlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -580,10 +545,12 @@ public class SlamSparseReconstructorTest {
                                 final SlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -710,8 +677,7 @@ public class SlamSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final SlamSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedMetricCamera1 = previousCamera;
                             mEstimatedMetricCamera2 = currentCamera;
                         }
@@ -719,8 +685,7 @@ public class SlamSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final SlamSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -795,20 +760,20 @@ public class SlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -819,21 +784,17 @@ public class SlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -856,10 +817,8 @@ public class SlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -905,8 +864,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -916,8 +874,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -933,8 +890,7 @@ public class SlamSparseReconstructorTest {
             // check that scale error is less than 5%
             assertTrue(Math.abs(baseline / mScale - 1.0) < RELATIVE_ERROR);
 
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(mScale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mScale);
 
             int numValidPoints = 0;
             double scaleX;
@@ -946,10 +902,9 @@ public class SlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i), rescaledPoint);
 
-                // euclidean and rescaled points match
+                // Euclidean and rescaled points match
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
                 scaleX = point.getInhomX() / rescaledPoint.getInhomX();
@@ -973,7 +928,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -992,8 +947,7 @@ public class SlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             numValid++;
@@ -1005,8 +959,7 @@ public class SlamSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
@@ -1019,8 +972,7 @@ public class SlamSparseReconstructorTest {
 
             final SlamSparseReconstructorConfiguration configuration =
                     new SlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
@@ -1040,13 +992,12 @@ public class SlamSparseReconstructorTest {
                     accelerationOffsetX, accelerationOffsetY,
                     accelerationOffsetZ, angularOffsetX, angularOffsetY,
                     angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -1069,10 +1020,8 @@ public class SlamSparseReconstructorTest {
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
 
             final double axisX = axisRotation2.getAxisX();
@@ -1089,8 +1038,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -1106,8 +1054,7 @@ public class SlamSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1123,16 +1070,12 @@ public class SlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1149,31 +1092,22 @@ public class SlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -1186,10 +1120,8 @@ public class SlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -1203,12 +1135,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1225,9 +1154,7 @@ public class SlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -1246,12 +1173,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1266,7 +1190,6 @@ public class SlamSparseReconstructorTest {
                 } while (!front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -1275,11 +1198,9 @@ public class SlamSparseReconstructorTest {
             }
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
 
             final SlamSparseReconstructorListener listener =
                     new SlamSparseReconstructorListener() {
@@ -1288,10 +1209,12 @@ public class SlamSparseReconstructorTest {
                                 final SlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -1374,44 +1297,31 @@ public class SlamSparseReconstructorTest {
                                 final float[] accelerationWithNoise = new float[3];
                                 final float[] angularSpeedWithNoise = new float[3];
                                 for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ =
-                                            accelerationRandomizer.nextFloat();
+                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                    noiseAngularSpeedX =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ =
-                                            angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                    accelerationWithNoiseX = (float) accelerationX +
-                                            noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY +
-                                            noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ +
-                                            noiseAccelerationZ;
+                                    accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                                    accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                                    accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
                                     accelerationWithNoise[0] = accelerationWithNoiseX;
                                     accelerationWithNoise[1] = accelerationWithNoiseY;
                                     accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                    angularSpeedWithNoiseX = (float) angularSpeedX +
-                                            noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeedY +
-                                            noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeedZ +
-                                            noiseAngularSpeedZ;
+                                    angularSpeedWithNoiseX = (float) angularSpeedX + noiseAngularSpeedX;
+                                    angularSpeedWithNoiseY = (float) angularSpeedY + noiseAngularSpeedY;
+                                    angularSpeedWithNoiseZ = (float) angularSpeedZ + noiseAngularSpeedZ;
                                     angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                                     angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                                     angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
 
                                     reconstructor.updateAccelerometerSample(mTimestamp,
                                             accelerationWithNoise);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            angularSpeedWithNoise);
+                                    reconstructor.updateGyroscopeSample(mTimestamp, angularSpeedWithNoise);
                                     mTimestamp += DELTA_NANOS;
                                 }
                             }
@@ -1551,20 +1461,20 @@ public class SlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -1575,21 +1485,17 @@ public class SlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -1612,10 +1518,8 @@ public class SlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -1661,8 +1565,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -1672,8 +1575,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -1689,8 +1591,7 @@ public class SlamSparseReconstructorTest {
             // check that scale error is less than 5%
             assertTrue(Math.abs(baseline / mScale - 1.0) < RELATIVE_ERROR);
 
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(mScale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mScale);
 
             int numValidPoints = 0;
             double scaleX;
@@ -1702,10 +1603,9 @@ public class SlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i), rescaledPoint);
 
-                // euclidean and rescaled points match
+                // Euclidean and rescaled points match
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
                 scaleX = point.getInhomX() / rescaledPoint.getInhomX();
@@ -1729,7 +1629,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -1748,8 +1648,7 @@ public class SlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             numValid++;
@@ -1761,8 +1660,7 @@ public class SlamSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
@@ -1773,8 +1671,7 @@ public class SlamSparseReconstructorTest {
 
             final SlamSparseReconstructorConfiguration configuration =
                     new SlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = 0.0f;
             final float accelerationOffsetY = 0.0f;
@@ -1785,16 +1682,14 @@ public class SlamSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -1828,13 +1723,10 @@ public class SlamSparseReconstructorTest {
             final double gammaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
             final double axis2X = axisRotation2.getAxisX();
             final double axis2Y = axisRotation2.getAxisY();
@@ -1850,8 +1742,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed2X = angularSpeeds[0];
             final double angularSpeed2Y = angularSpeeds[1];
             final double angularSpeed2Z = angularSpeeds[2];
-            Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            Quaternion diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -1881,8 +1772,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed3X = angularSpeeds[0];
             final double angularSpeed3Y = angularSpeeds[1];
             final double angularSpeed3Z = angularSpeeds[2];
-            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y,
-                    angularSpeed3Z);
+            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
@@ -1899,11 +1789,9 @@ public class SlamSparseReconstructorTest {
             assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1927,20 +1815,14 @@ public class SlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
-            accelerationX2 = accelerationY2 = accelerationZ2
-                    = 2 * cameraSeparation2;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
+            accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1957,31 +1839,22 @@ public class SlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -1994,12 +1867,9 @@ public class SlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -2015,12 +1885,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2037,9 +1904,7 @@ public class SlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -2065,12 +1930,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2086,7 +1948,6 @@ public class SlamSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -2105,10 +1966,12 @@ public class SlamSparseReconstructorTest {
                                 final SlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -2441,20 +2304,20 @@ public class SlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -2467,21 +2330,17 @@ public class SlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -2515,10 +2374,8 @@ public class SlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -2580,8 +2437,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -2591,8 +2447,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -2602,8 +2457,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -2621,8 +2475,7 @@ public class SlamSparseReconstructorTest {
             // check that scale error is less than 5%
             assertTrue(Math.abs(baseline / mScale - 1.0) < RELATIVE_ERROR);
             assertTrue(Math.abs(baseline / mScale2 - 1.0) < RELATIVE_ERROR);
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(mScale2);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mScale2);
 
             int numValidPoints = 0;
             double scaleX;
@@ -2634,8 +2487,7 @@ public class SlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
@@ -2669,7 +2521,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -2724,7 +2576,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -2743,8 +2595,7 @@ public class SlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale2 - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // check scales
@@ -2764,22 +2615,19 @@ public class SlamSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
             final SlamSparseReconstructorConfiguration configuration =
                     new SlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = offsetRandomizer.nextFloat(
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
@@ -2796,16 +2644,14 @@ public class SlamSparseReconstructorTest {
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -2839,13 +2685,10 @@ public class SlamSparseReconstructorTest {
             final double gammaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
             final double axis2X = axisRotation2.getAxisX();
             final double axis2Y = axisRotation2.getAxisY();
@@ -2861,8 +2704,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed2X = angularSpeeds[0];
             final double angularSpeed2Y = angularSpeeds[1];
             final double angularSpeed2Z = angularSpeeds[2];
-            Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            Quaternion diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -2892,8 +2734,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed3X = angularSpeeds[0];
             final double angularSpeed3Y = angularSpeeds[1];
             final double angularSpeed3Z = angularSpeeds[2];
-            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y,
-                    angularSpeed3Z);
+            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
@@ -2910,11 +2751,9 @@ public class SlamSparseReconstructorTest {
             assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -2934,20 +2773,14 @@ public class SlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
-            accelerationX2 = accelerationY2 = accelerationZ2
-                    = 2 * cameraSeparation2;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
+            accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -2964,31 +2797,22 @@ public class SlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -3001,12 +2825,9 @@ public class SlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -3022,12 +2843,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -3044,9 +2862,7 @@ public class SlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -3072,12 +2888,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -3093,7 +2906,6 @@ public class SlamSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -3106,11 +2918,9 @@ public class SlamSparseReconstructorTest {
             }
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
 
             final SlamSparseReconstructorListener listener =
                     new SlamSparseReconstructorListener() {
@@ -3119,10 +2929,12 @@ public class SlamSparseReconstructorTest {
                                 final SlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -3206,44 +3018,31 @@ public class SlamSparseReconstructorTest {
                                 final float[] accelerationWithNoise = new float[3];
                                 final float[] angularSpeedWithNoise = new float[3];
                                 for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ =
-                                            accelerationRandomizer.nextFloat();
+                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                    noiseAngularSpeedX =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ =
-                                            angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                    accelerationWithNoiseX = (float) accelerationX +
-                                            noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY +
-                                            noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ +
-                                            noiseAccelerationZ;
+                                    accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                                    accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                                    accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
                                     accelerationWithNoise[0] = accelerationWithNoiseX;
                                     accelerationWithNoise[1] = accelerationWithNoiseY;
                                     accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                    angularSpeedWithNoiseX = (float) angularSpeed2X +
-                                            noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeed2Y +
-                                            noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeed2Z +
-                                            noiseAngularSpeedZ;
+                                    angularSpeedWithNoiseX = (float) angularSpeed2X + noiseAngularSpeedX;
+                                    angularSpeedWithNoiseY = (float) angularSpeed2Y + noiseAngularSpeedY;
+                                    angularSpeedWithNoiseZ = (float) angularSpeed2Z + noiseAngularSpeedZ;
                                     angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                                     angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                                     angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
 
                                     reconstructor.updateAccelerometerSample(mTimestamp,
                                             accelerationWithNoise);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            angularSpeedWithNoise);
+                                    reconstructor.updateGyroscopeSample(mTimestamp, angularSpeedWithNoise);
                                     mTimestamp += DELTA_NANOS;
                                 }
 
@@ -3297,44 +3096,31 @@ public class SlamSparseReconstructorTest {
                                 final float[] accelerationWithNoise = new float[3];
                                 final float[] angularSpeedWithNoise = new float[3];
                                 for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ =
-                                            accelerationRandomizer.nextFloat();
+                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                    noiseAngularSpeedX =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ =
-                                            angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                    accelerationWithNoiseX = (float) accelerationX2 +
-                                            noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY2 +
-                                            noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ2 +
-                                            noiseAccelerationZ;
+                                    accelerationWithNoiseX = (float) accelerationX2 + noiseAccelerationX;
+                                    accelerationWithNoiseY = (float) accelerationY2 + noiseAccelerationY;
+                                    accelerationWithNoiseZ = (float) accelerationZ2 + noiseAccelerationZ;
                                     accelerationWithNoise[0] = accelerationWithNoiseX;
                                     accelerationWithNoise[1] = accelerationWithNoiseY;
                                     accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                    angularSpeedWithNoiseX = (float) angularSpeed3X +
-                                            noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeed3Y +
-                                            noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeed3Z +
-                                            noiseAngularSpeedZ;
+                                    angularSpeedWithNoiseX = (float) angularSpeed3X + noiseAngularSpeedX;
+                                    angularSpeedWithNoiseY = (float) angularSpeed3Y + noiseAngularSpeedY;
+                                    angularSpeedWithNoiseZ = (float) angularSpeed3Z + noiseAngularSpeedZ;
                                     angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                                     angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                                     angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
 
                                     reconstructor.updateAccelerometerSample(mTimestamp,
                                             accelerationWithNoise);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            angularSpeedWithNoise);
+                                    reconstructor.updateGyroscopeSample(mTimestamp, angularSpeedWithNoise);
                                     mTimestamp += DELTA_NANOS;
                                 }
                             }
@@ -3452,8 +3238,7 @@ public class SlamSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final SlamSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedMetricCamera2 == null) {
                                 mEstimatedMetricCamera1 = previousCamera;
                                 mEstimatedMetricCamera2 = currentCamera;
@@ -3475,7 +3260,8 @@ public class SlamSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final SlamSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera,
+                                final EstimatedCamera currentCamera) {
                             if (mEstimatedEuclideanCamera2 == null) {
                                 mEstimatedEuclideanCamera1 = previousCamera;
                                 mEstimatedEuclideanCamera2 = currentCamera;
@@ -3554,20 +3340,20 @@ public class SlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -3580,21 +3366,17 @@ public class SlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -3628,10 +3410,8 @@ public class SlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -3693,8 +3473,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -3704,8 +3483,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -3715,8 +3493,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -3734,8 +3511,7 @@ public class SlamSparseReconstructorTest {
             // check that scale error is less than 5%
             assertTrue(Math.abs(baseline / mScale - 1.0) < RELATIVE_ERROR);
             assertTrue(Math.abs(baseline / mScale2 - 1.0) < RELATIVE_ERROR);
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(mScale2);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mScale2);
 
             int numValidPoints = 0;
             double scaleX;
@@ -3747,8 +3523,7 @@ public class SlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
@@ -3760,9 +3535,8 @@ public class SlamSparseReconstructorTest {
                 assertEquals(scaleX, baseline / mScale2, LARGE_ABSOLUTE_ERROR);
                 assertEquals(scaleY, baseline / mScale2, LARGE_ABSOLUTE_ERROR);
                 assertEquals(scaleZ, baseline / mScale2, LARGE_ABSOLUTE_ERROR);
-                if (Math.abs(scaleX - 1.0) > RELATIVE_ERROR ||
-                        Math.abs(scaleY - 1.0) > RELATIVE_ERROR ||
-                        Math.abs(scaleZ - 1.0) > RELATIVE_ERROR) {
+                if (Math.abs(scaleX - 1.0) > RELATIVE_ERROR || Math.abs(scaleY - 1.0) > RELATIVE_ERROR
+                        || Math.abs(scaleZ - 1.0) > RELATIVE_ERROR) {
                     continue;
                 }
                 rescaledPoint.setInhomogeneousCoordinates(
@@ -3773,7 +3547,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -3815,9 +3589,8 @@ public class SlamSparseReconstructorTest {
                 assertEquals(scaleX, baseline / mScale2, LARGE_ABSOLUTE_ERROR);
                 assertEquals(scaleY, baseline / mScale2, LARGE_ABSOLUTE_ERROR);
                 assertEquals(scaleZ, baseline / mScale2, LARGE_ABSOLUTE_ERROR);
-                if (Math.abs(scaleX - 1.0) > RELATIVE_ERROR ||
-                        Math.abs(scaleY - 1.0) > RELATIVE_ERROR ||
-                        Math.abs(scaleZ - 1.0) > RELATIVE_ERROR) {
+                if (Math.abs(scaleX - 1.0) > RELATIVE_ERROR || Math.abs(scaleY - 1.0) > RELATIVE_ERROR
+                        || Math.abs(scaleZ - 1.0) > RELATIVE_ERROR) {
                     continue;
                 }
                 rescaledPoint.setInhomogeneousCoordinates(
@@ -3828,7 +3601,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -3856,8 +3629,7 @@ public class SlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale2 - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // check scales
@@ -3877,8 +3649,8 @@ public class SlamSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseFourViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException, com.irurueta.geometry.estimators.NotReadyException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
+            com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
         int numValid = 0;
@@ -3888,8 +3660,7 @@ public class SlamSparseReconstructorTest {
 
             final SlamSparseReconstructorConfiguration configuration =
                     new SlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final float accelerationOffsetX = 0.0f;
             final float accelerationOffsetY = 0.0f;
@@ -3900,16 +3671,14 @@ public class SlamSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final SlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final SlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final SlamCalibrationData calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -3949,15 +3718,11 @@ public class SlamSparseReconstructorTest {
             final double gammaEuler4 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
             final AxisRotation3D axisRotation2 = new AxisRotation3D(rotation2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
-            final MatrixRotation3D rotation4 = new MatrixRotation3D(alphaEuler4,
-                    betaEuler4, gammaEuler4);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation4 = new MatrixRotation3D(alphaEuler4, betaEuler4, gammaEuler4);
 
             final double axis2X = axisRotation2.getAxisX();
             final double axis2Y = axisRotation2.getAxisY();
@@ -3973,8 +3738,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed2X = angularSpeeds[0];
             final double angularSpeed2Y = angularSpeeds[1];
             final double angularSpeed2Z = angularSpeeds[2];
-            Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            Quaternion diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -4004,8 +3768,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed3X = angularSpeeds[0];
             final double angularSpeed3Y = angularSpeeds[1];
             final double angularSpeed3Z = angularSpeeds[2];
-            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y,
-                    angularSpeed3Z);
+            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
@@ -4036,8 +3799,7 @@ public class SlamSparseReconstructorTest {
             final double angularSpeed4X = angularSpeeds[0];
             final double angularSpeed4Y = angularSpeeds[1];
             final double angularSpeed4Z = angularSpeeds[2];
-            diffRotation2 = new Quaternion(angularSpeed4X, angularSpeed4Y,
-                    angularSpeed4Z);
+            diffRotation2 = new Quaternion(angularSpeed4X, angularSpeed4Y, angularSpeed4Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
@@ -4054,14 +3816,11 @@ public class SlamSparseReconstructorTest {
             assertTrue(rotation4.equals(rotation4c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation3 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -4087,24 +3846,16 @@ public class SlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
-            accelerationX2 = accelerationY2 = accelerationZ2
-                    = 2 * cameraSeparation2;
-            accelerationX3 = accelerationY3 = accelerationZ3
-                    = 2 * cameraSeparation3;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
+            accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
+            accelerationX3 = accelerationY3 = accelerationZ3 = 2 * cameraSeparation3;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
-            final PinholeCamera camera4 = new PinholeCamera(intrinsic, rotation4,
-                    center4);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
+            final PinholeCamera camera4 = new PinholeCamera(intrinsic, rotation4, center4);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -4121,31 +3872,22 @@ public class SlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -4158,16 +3900,11 @@ public class SlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints3 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints4 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start1 = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints3 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints4 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start1 = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
             final int start2 = randomizer.nextInt(0, numPoints2 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
@@ -4183,12 +3920,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -4204,9 +3938,7 @@ public class SlamSparseReconstructorTest {
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into first pair
@@ -4234,12 +3966,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -4255,7 +3984,6 @@ public class SlamSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of 2nd camera
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into second pair
@@ -4281,12 +4009,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -4302,7 +4027,6 @@ public class SlamSparseReconstructorTest {
                 points3D3.add(point3D);
 
                 // check that 3D point is in front of 2nd camera
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into second pair
@@ -4321,12 +4045,9 @@ public class SlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -4341,7 +4062,6 @@ public class SlamSparseReconstructorTest {
                 } while (!front2);
 
                 // check that 3D point is in front of 2nd camera
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into second pair
@@ -4357,10 +4077,12 @@ public class SlamSparseReconstructorTest {
                                 final SlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -4769,7 +4491,6 @@ public class SlamSparseReconstructorTest {
             assertTrue(mStarted);
             assertTrue(mFinished);
             assertFalse(mCancelled);
-            //noinspection ConstantConditions
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertTrue(mSlamDataAvailable > 0);
@@ -4782,20 +4503,20 @@ public class SlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera4);
+            assertSame(mEstimatedMetricCamera4, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera4);
+            assertSame(mEstimatedEuclideanCamera4, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale3, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale3, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -4808,21 +4529,17 @@ public class SlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -4861,10 +4578,8 @@ public class SlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -4952,16 +4667,11 @@ public class SlamSparseReconstructorTest {
             }
             assertEquals(estimatedBaseline3, baseline3, absoluteScaleError3);
 
-            MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(baseline);
-            final Point3D rescaledCenter1 = scaleTransformation.transformAndReturnNew(
-                    metricCenter1);
-            final Point3D rescaledCenter2 = scaleTransformation.transformAndReturnNew(
-                    metricCenter2);
-            final Point3D rescaledCenter3 = scaleTransformation.transformAndReturnNew(
-                    metricCenter3);
-            final Point3D rescaledCenter4 = scaleTransformation.transformAndReturnNew(
-                    metricCenter4);
+            MetricTransformation3D scaleTransformation = new MetricTransformation3D(baseline);
+            final Point3D rescaledCenter1 = scaleTransformation.transformAndReturnNew(metricCenter1);
+            final Point3D rescaledCenter2 = scaleTransformation.transformAndReturnNew(metricCenter2);
+            final Point3D rescaledCenter3 = scaleTransformation.transformAndReturnNew(metricCenter3);
+            final Point3D rescaledCenter4 = scaleTransformation.transformAndReturnNew(metricCenter4);
 
             if (!center1.equals(rescaledCenter1, LARGE_ABSOLUTE_ERROR)) {
                 continue;
@@ -4999,8 +4709,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -5010,8 +4719,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -5021,8 +4729,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -5032,8 +4739,7 @@ public class SlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic4.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic4.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic4.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic4.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic4.getVerticalPrincipalPoint(),
@@ -5064,8 +4770,7 @@ public class SlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start2),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start2), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
@@ -5099,7 +4804,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -5154,7 +4859,7 @@ public class SlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -5173,8 +4878,7 @@ public class SlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale3 - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // check scales
@@ -5194,8 +4898,7 @@ public class SlamSparseReconstructorTest {
 
     private void reset() {
         mViewCount = 0;
-        mEstimatedFundamentalMatrix = mEstimatedFundamentalMatrix2 =
-                mEstimatedFundamentalMatrix3 = null;
+        mEstimatedFundamentalMatrix = mEstimatedFundamentalMatrix2 = mEstimatedFundamentalMatrix3 = null;
         mEstimatedMetricCamera1 = mEstimatedMetricCamera2 =
                 mEstimatedMetricCamera3 = mEstimatedMetricCamera4 = null;
         mEstimatedEuclideanCamera1 = mEstimatedEuclideanCamera2 =

@@ -19,6 +19,7 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.BaseQuadric;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
@@ -42,13 +43,13 @@ public class LMSEDualAbsoluteQuadricEstimator extends
         DualAbsoluteQuadricEstimator {
 
     /**
-     * Indicates if by default an LMSE (Least Mean Square Error) solution is
+     * Indicates if by default an LMSE (the Least Mean Square Error) solution is
      * allowed if more pinhole cameras than the minimum are provided.
      */
     public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
 
     /**
-     * Indicates if by default an LMSE (Least Mean Square Error) solution is
+     * Indicates if by default an LMSE (the Least Mean Square Error) solution is
      * allowed if more pinhole cameras than the minimum are provided.
      */
     private boolean mAllowLMSESolution;
@@ -103,7 +104,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
     }
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more pinhole cameras than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 2 first ones
      * will be used.
@@ -115,7 +116,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
     }
 
     /**
-     * Specifies if an LMSE (Least Mean Square Error) solution is allowed if
+     * Specifies if an LMSE (the Least Mean Square Error) solution is allowed if
      * more pinhole cameras than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 2 first ones
      * will be used.
@@ -161,8 +162,8 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @throws NotReadyException                     if no valid input data has already been
      *                                               provided.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because input data is not valid or numerically
-     *                                               unstable.
+     *                                               estimation, usually because input data is not valid or
+     *                                               numerically unstable.
      */
     @Override
     public void estimate(final DualAbsoluteQuadric result)
@@ -232,10 +233,10 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or
-     *                                               cameras corresponding to critical motion sequences such as pure
-     *                                               parallel translations are provided, where no additional data is
-     *                                               really provided.
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
      */
     private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
             final DualAbsoluteQuadric result)
@@ -245,10 +246,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
-                a = new Matrix(4 * nCams, DualAbsoluteQuadric.N_PARAMS);
+                a = new Matrix(4 * nCams, BaseQuadric.N_PARAMS);
             } else {
-                a = new Matrix(mSingularityEnforced ? 8 : 12,
-                        DualAbsoluteQuadric.N_PARAMS);
+                a = new Matrix(mSingularityEnforced ? 8 : 12, BaseQuadric.N_PARAMS);
             }
 
             Matrix cameraMatrix;
@@ -337,9 +337,10 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or cameras
-     *                                               corresponding to critical motion sequences such as pure paraller
-     *                                               translations are provided, where no additional data is really provided.
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
      */
     private void estimateZeroSkewnessAndPrincipalPointAtOrigin(
             final DualAbsoluteQuadric result)
@@ -349,9 +350,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
-                a = new Matrix(3 * nCams, DualAbsoluteQuadric.N_PARAMS);
+                a = new Matrix(3 * nCams, BaseQuadric.N_PARAMS);
             } else {
-                a = new Matrix(9, DualAbsoluteQuadric.N_PARAMS);
+                a = new Matrix(9, BaseQuadric.N_PARAMS);
             }
 
             Matrix cameraMatrix;
@@ -433,10 +434,10 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or
-     *                                               cameras corresponding to critical motion sequences such as pure
-     *                                               parallel translations are provided, where no additional data is
-     *                                               really provided.
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
      */
     private void estimatePrincipalPointAtOrigin(
             final DualAbsoluteQuadric result)
@@ -446,10 +447,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
-                a = new Matrix(2 * nCams, DualAbsoluteQuadric.N_PARAMS);
+                a = new Matrix(2 * nCams, BaseQuadric.N_PARAMS);
             } else {
-                a = new Matrix(mSingularityEnforced ? 8 : 10,
-                        DualAbsoluteQuadric.N_PARAMS);
+                a = new Matrix(mSingularityEnforced ? 8 : 10, BaseQuadric.N_PARAMS);
             }
 
             Matrix cameraMatrix;
