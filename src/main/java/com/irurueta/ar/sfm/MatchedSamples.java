@@ -41,7 +41,7 @@ public class MatchedSamples implements Serializable {
     private EstimatedCamera[] mCameras;
 
     /**
-     * Id's of views where matched points belong to.
+     * ID's of views where matched points belong to.
      */
     private int[] mViewIds;
 
@@ -76,7 +76,7 @@ public class MatchedSamples implements Serializable {
     }
 
     /**
-     * Sets 2D matched matches on different views containing matched points.
+     * Sets 2D matched samples on different views containing matched points.
      * Each of these points correspond to projections of the same 3D point into
      * different views.
      *

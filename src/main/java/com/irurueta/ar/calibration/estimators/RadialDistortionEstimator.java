@@ -554,7 +554,7 @@ public abstract class RadialDistortionEstimator {
      * Returns minimum number of required matched points to compute the radial
      * distortion. This is equal to the number of radial distortion parameters.
      * The larger the number of radial distortion parameters, the larger the
-     * number of matched points required. Typically 2 radial distortion
+     * number of matched points required. Typically, 2 radial distortion
      * parameters are enough, since the following terms can be safely neglected
      *
      * @return minimum number of required matched points to compute the radial

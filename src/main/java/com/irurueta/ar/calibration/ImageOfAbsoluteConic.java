@@ -46,9 +46,10 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      *
      * @param k pinhole camera intrinsic parameters.
      * @throws InvalidPinholeCameraIntrinsicParametersException if intrinsic
-     *                                                          parameters cannot be inverted (i.e. this might happen when values are
-     *                                                          incorrectly set such as when focal length is zero, etc). Typically this
-     *                                                          will never be thrown.
+     *                                                          parameters cannot be inverted (i.e. this
+     *                                                          might happen when values are incorrectly set
+     *                                                          such as when focal length is zero, etc.).
+     *                                                          Typically, this will never be thrown.
      */
     public ImageOfAbsoluteConic(final PinholeCameraIntrinsicParameters k)
             throws InvalidPinholeCameraIntrinsicParametersException {
@@ -100,8 +101,8 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      *
      * @return A new DualConic corresponding to the dual conic of this instance.
      * @throws DualConicNotAvailableException Raised if the dual conic does not
-     *                                        exist because this conic instance is degenerate (its inverse cannot be
-     *                                        computed).
+     *                                        exist because this conic instance is degenerate (its inverse
+     *                                        cannot be computed).
      */
     @Override
     public DualConic getDualConic() throws DualConicNotAvailableException {
@@ -115,10 +116,11 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      * are working in a metric stratum, which is equal to C=(K^-1)'*(K^-1).
      *
      * @param k pinhole camera intrinsic parameters.
-     * @throws InvalidPinholeCameraIntrinsicParametersException if intrinsic parameters cannot be inverted (i.e. this
-     *                                                          might happen when values are incorrectly set such as
-     *                                                          when focal length is zero, etc). Typically this will
-     *                                                          never be thrown.
+     * @throws InvalidPinholeCameraIntrinsicParametersException if intrinsic parameters cannot be inverted
+     *                                                          (i.e. this might happen when values are
+     *                                                          incorrectly set such as when focal length
+     *                                                          is zero, etc.). Typically, this will never
+     *                                                          be thrown.
      */
     public final void setFromPinholeCameraIntrinsicParameters(
             final PinholeCameraIntrinsicParameters k)
@@ -142,8 +144,8 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      * more numerically stable.
      *
      * @return the internal parameters of a pinhole camera.
-     * @throws InvalidPinholeCameraIntrinsicParametersException if pinhole camera intrinsic parameters cannot be
-     *                                                          obtained from this conic instance.
+     * @throws InvalidPinholeCameraIntrinsicParametersException if pinhole camera intrinsic parameters
+     *                                                          cannot be obtained from this conic instance.
      */
     public PinholeCameraIntrinsicParameters getIntrinsicParameters()
             throws InvalidPinholeCameraIntrinsicParametersException {
@@ -173,7 +175,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
             }
 
             // lambda is an arbitrary scale, because conics are defined up to
-            // scale and we are obtaining intrinsic parameters from IAC (Image
+            // scale, and we are obtaining intrinsic parameters from IAC (Image
             // of Absolute Conic)
             double lambda = b33 - (b13 * b13 + v0 * (b12 * b13 - b11 * b23)) /
                     b11;
@@ -218,7 +220,8 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      *
      * @return the internal parameters of a pinhole camera.
      * @throws InvalidPinholeCameraIntrinsicParametersException if pinhole
-     *                                                          camera intrinsic parameters cannot be obtained from this conic instance.
+     *                                                          camera intrinsic parameters cannot be
+     *                                                          obtained from this conic instance.
      */
     public PinholeCameraIntrinsicParameters getIntrinsicParametersCholesky()
             throws InvalidPinholeCameraIntrinsicParametersException {

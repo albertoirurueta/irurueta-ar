@@ -101,7 +101,7 @@ public class FundamentalMatrix implements Serializable {
     }
 
     /**
-     * Constructor from pair of cameras.
+     * Constructor from a pair of cameras.
      *
      * @param leftCamera  camera corresponding to left view.
      * @param rightCamera camera corresponding to right view.
@@ -223,7 +223,7 @@ public class FundamentalMatrix implements Serializable {
     }
 
     /**
-     * Internal method to set fundamental matrix from provided pair of cameras.
+     * Internal method to set fundamental matrix from provided a pair of cameras.
      *
      * @param leftCamera  camera corresponding to left view.
      * @param rightCamera camera corresponding to right view.
@@ -322,8 +322,9 @@ public class FundamentalMatrix implements Serializable {
      * @throws InvalidFundamentalMatrixException if resulting fundamental matrix
      *                                           is invalid, typically because of numerical instabilities.
      */
-    private void internalSetFromHomography(final Transformation2D homography,
-                                           final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
+    private void internalSetFromHomography(
+            final Transformation2D homography,
+            final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
 
         rightEpipole.normalize();
 
@@ -600,24 +601,24 @@ public class FundamentalMatrix implements Serializable {
      * @param leftCamera                    instance where left camera will be stored.
      * @param rightCamera                   instance where right camera will be stored.
      * @param referencePlaneDirectorVectorX x coordinate of reference plane
-     *                                      director vector. This can be any arbitrary value, however typically the
-     *                                      reference plane is assumed to be the plane at infinity, hence the value
-     *                                      typically is zero.
+     *                                      director vector. This can be any arbitrary value, however
+     *                                      typically the reference plane is assumed to be the plane at
+     *                                      infinity, hence the value typically is zero.
      * @param referencePlaneDirectorVectorY y coordinate of reference plane
-     *                                      director vector. This can be any arbitrary value, however typically the
-     *                                      reference plane is assumed to be the plane at infinity, hence the value
-     *                                      typically is zero.
+     *                                      director vector. This can be any arbitrary value, however
+     *                                      typically the reference plane is assumed to be the plane at
+     *                                      infinity, hence the value typically is zero.
      * @param referencePlaneDirectorVectorZ z coordinate of reference plane
-     *                                      director vector. This can be any arbitrary value, however typically the
-     *                                      reference plane is assumed to be the plane at infinity, hence the value
-     *                                      typically is zero.
+     *                                      director vector. This can be any arbitrary value, however
+     *                                      typically the reference plane is assumed to be the plane at
+     *                                      infinity, hence the value typically is zero.
      * @param scaleFactor                   scale factor defining the length of the baseline in
-     *                                      a metric stratum. This can be any value, since cameras are obtained in
-     *                                      an arbitrary projective stratum. However, even if the stratum was metric,
-     *                                      cameras can only be defined up to scale. A typical value is a scale
-     *                                      factor of one.
-     * @throws InvalidFundamentalMatrixException if internal matrix is
-     *                                           numerically unstable and epipoles couldn't be computed.
+     *                                      a metric stratum. This can be any value, since cameras are
+     *                                      obtained in an arbitrary projective stratum. However, even if
+     *                                      the stratum was metric, cameras can only be defined up to scale.
+     *                                      A typical value is a scale factor of one.
+     * @throws InvalidFundamentalMatrixException if internal matrix is numerically unstable and epipoles
+     *                                           couldn't be computed.
      * @throws NotReadyException                 if an internal matrix has not yet been
      *                                           provided.
      */

@@ -106,8 +106,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if not enough cameras are provided for
      *                                  default settings. Hence, at least 2 cameras must be provided.
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras,
-                                                    final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public PROSACDualAbsoluteQuadricRobustEstimator(
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -137,8 +137,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      *                                  smaller than required number of cameras for default settings (i.e. 2
      *                                  cameras).
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(final double[] qualityScores,
-                                                    final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public PROSACDualAbsoluteQuadricRobustEstimator(
+            final double[] qualityScores, final DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -154,8 +154,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      *                                  default settings (i.e. 2 cameras) or quality scores and cameras don't
      *                                  have the same size.
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras,
-                                                    final double[] qualityScores) {
+    public PROSACDualAbsoluteQuadricRobustEstimator(
+            final List<PinholeCamera> cameras, final double[] qualityScores) {
         this(cameras);
         internalSetQualityScores(qualityScores);
     }
@@ -173,9 +173,10 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      *                                  for default settings (i.e. 2 cameras) or quality scores and cameras
      *                                  don't have the same size.
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras,
-                                                    final double[] qualityScores,
-                                                    final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public PROSACDualAbsoluteQuadricRobustEstimator(
+            final List<PinholeCamera> cameras,
+            final double[] qualityScores,
+            final DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(cameras, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -302,8 +303,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<DualAbsoluteQuadric> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
                                 mSubsetCameras.clear();
                                 for (final int samplesIndex : samplesIndices) {
                                     mSubsetCameras.add(mCameras.get(samplesIndex));
@@ -321,8 +322,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
                             }
 
                             @Override
-                            public double computeResidual(final DualAbsoluteQuadric currentEstimation,
-                                                          final int i) {
+                            public double computeResidual(
+                                    final DualAbsoluteQuadric currentEstimation, final int i) {
                                 return residual(currentEstimation, mCameras.get(i));
                             }
 
@@ -409,7 +410,8 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than the minimum number of required cameras for current settings.
+     *                                  smaller than the minimum number of required cameras for current
+     *                                  settings.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores.length < mDAQEstimator.getMinNumberOfRequiredCameras()) {

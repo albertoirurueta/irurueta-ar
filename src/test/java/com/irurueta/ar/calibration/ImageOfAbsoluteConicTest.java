@@ -51,14 +51,12 @@ public class ImageOfAbsoluteConicTest {
 
     @Test
     public void testConstructorAndGetIntrinsicParameters()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            NonSymmetricMatrixException, WrongSizeException {
+            throws InvalidPinholeCameraIntrinsicParametersException, NonSymmetricMatrixException,
+            WrongSizeException {
         // create intrinsic parameters
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
@@ -75,33 +73,29 @@ public class ImageOfAbsoluteConicTest {
         // test constructor from intrinsic parameters
         ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
 
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                iac.getIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters intrinsic2 = iac.getIntrinsicParameters();
 
-        assertEquals(intrinsic.getHorizontalFocalLength(),
-                intrinsic2.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getVerticalFocalLength(),
-                intrinsic2.getVerticalFocalLength(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                intrinsic2.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                intrinsic2.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(),
+        assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                 ABSOLUTE_ERROR);
-
-        final PinholeCameraIntrinsicParameters intrinsic3 =
-                iac.getIntrinsicParametersCholesky();
-
-        assertEquals(intrinsic.getHorizontalFocalLength(),
-                intrinsic3.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getVerticalFocalLength(),
-                intrinsic3.getVerticalFocalLength(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                intrinsic3.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                intrinsic3.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(),
+        assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                 ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getHorizontalPrincipalPoint(), intrinsic2.getHorizontalPrincipalPoint(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(), ABSOLUTE_ERROR);
+
+        final PinholeCameraIntrinsicParameters intrinsic3 = iac.getIntrinsicParametersCholesky();
+
+        assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic3.getHorizontalFocalLength(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getVerticalFocalLength(), intrinsic3.getVerticalFocalLength(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getHorizontalPrincipalPoint(), intrinsic3.getHorizontalPrincipalPoint(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic3.getVerticalPrincipalPoint(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(), ABSOLUTE_ERROR);
 
         // test constructor from parameters
         double a = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
@@ -114,12 +108,12 @@ public class ImageOfAbsoluteConicTest {
         iac = new ImageOfAbsoluteConic(a, b, c, d, e, f);
 
         // check correctness
-        assertEquals(iac.getA(), a, 0.0);
-        assertEquals(iac.getB(), b, 0.0);
-        assertEquals(iac.getC(), c, 0.0);
-        assertEquals(iac.getD(), d, 0.0);
-        assertEquals(iac.getE(), e, 0.0);
-        assertEquals(iac.getF(), f, 0.0);
+        assertEquals(a, iac.getA(), 0.0);
+        assertEquals(b, iac.getB(), 0.0);
+        assertEquals(c, iac.getC(), 0.0);
+        assertEquals(d, iac.getD(), 0.0);
+        assertEquals(e, iac.getE(), 0.0);
+        assertEquals(f, iac.getF(), 0.0);
 
         // test constructor from matrix
         Matrix m = new Matrix(IAC_ROWS, IAC_COLS);
@@ -143,12 +137,12 @@ public class ImageOfAbsoluteConicTest {
 
         iac = new ImageOfAbsoluteConic(m);
 
-        assertEquals(iac.getA(), m.getElementAt(0, 0), 0.0);
-        assertEquals(iac.getB(), m.getElementAt(0, 1), 0.0);
-        assertEquals(iac.getC(), m.getElementAt(1, 1), 0.0);
-        assertEquals(iac.getD(), m.getElementAt(0, 2), 0.0);
-        assertEquals(iac.getE(), m.getElementAt(1, 2), 0.0);
-        assertEquals(iac.getF(), m.getElementAt(2, 2), 0.0);
+        assertEquals(m.getElementAt(0, 0), iac.getA(),0.0);
+        assertEquals(m.getElementAt(0, 1), iac.getB(), 0.0);
+        assertEquals(m.getElementAt(1, 1), iac.getC(), 0.0);
+        assertEquals(m.getElementAt(0, 2), iac.getD(), 0.0);
+        assertEquals(m.getElementAt(1, 2), iac.getE(), 0.0);
+        assertEquals(m.getElementAt(2, 2), iac.getF(), 0.0);
 
         // Constructor using matrix with wrong size exception
         m = new Matrix(IAC_ROWS, IAC_COLS + 1);
@@ -172,7 +166,6 @@ public class ImageOfAbsoluteConicTest {
         m.setElementAt(2, 1, e);
         m.setElementAt(2, 2, f);
 
-        iac = null;
         try {
             iac = new ImageOfAbsoluteConic(m);
             fail("NonSymmetricMatrixException expected but not thrown");
@@ -182,15 +175,12 @@ public class ImageOfAbsoluteConicTest {
     }
 
     @Test
-    public void testGetDualConic()
-            throws InvalidPinholeCameraIntrinsicParametersException,
+    public void testGetDualConic() throws InvalidPinholeCameraIntrinsicParametersException,
             DualConicNotAvailableException {
         // create intrinsic parameters
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
@@ -206,32 +196,27 @@ public class ImageOfAbsoluteConicTest {
 
         final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
 
-        final DualImageOfAbsoluteConic diac =
-                (DualImageOfAbsoluteConic) iac.getDualConic();
+        final DualImageOfAbsoluteConic diac = (DualImageOfAbsoluteConic) iac.getDualConic();
 
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                diac.getIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
-        assertEquals(intrinsic.getHorizontalFocalLength(),
-                intrinsic2.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getVerticalFocalLength(),
-                intrinsic2.getVerticalFocalLength(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                intrinsic2.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                intrinsic2.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-        assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(),
+        assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                 ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getHorizontalPrincipalPoint(), intrinsic2.getHorizontalPrincipalPoint(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
+                ABSOLUTE_ERROR);
+        assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(), ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testSerializeDeserialize()
-            throws InvalidPinholeCameraIntrinsicParametersException, IOException, ClassNotFoundException {
+    public void testSerializeDeserialize() throws InvalidPinholeCameraIntrinsicParametersException,
+            IOException, ClassNotFoundException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
+        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
         final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 

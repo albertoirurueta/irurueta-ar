@@ -221,12 +221,12 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<ImageOfAbsoluteConic> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<ImageOfAbsoluteConic> solutions) {
                                 mSubsetHomographies.clear();
                                 for (final int samplesIndex : samplesIndices) {
-                                    mSubsetHomographies.add(mHomographies.get(
-                                            samplesIndex));
+                                    mSubsetHomographies.add(mHomographies.get(samplesIndex));
                                 }
 
                                 try {
@@ -315,6 +315,6 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.LMEDS;
     }
 }

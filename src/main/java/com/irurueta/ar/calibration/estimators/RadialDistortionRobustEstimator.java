@@ -38,11 +38,11 @@ public abstract class RadialDistortionRobustEstimator {
      * Default robust estimator method when none is provided.
      */
     public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMedS;
+            RobustEstimatorMethod.PROMEDS;
 
     /**
      * Default amount of progress variation before notifying a change in
-     * estimation progress. By default this is set to 5%.
+     * estimation progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -713,20 +713,20 @@ public abstract class RadialDistortionRobustEstimator {
     /**
      * Creates a radial distortion robust estimator using provided robust method.
      *
-     * @param method method of a robust estimator algorithm to estimate best
+     * @param method method of a robust estimator algorithm to estimate the best
      *               radial distortion.
      * @return an instance of a radial distortion robust estimator.
      */
     public static RadialDistortionRobustEstimator create(
             final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSRadialDistortionRobustEstimator();
             case MSAC:
                 return new MSACRadialDistortionRobustEstimator();
             case PROSAC:
                 return new PROSACRadialDistortionRobustEstimator();
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSRadialDistortionRobustEstimator();
             case RANSAC:
             default:
@@ -746,7 +746,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @param distortionCenter  Distortion center. This is usually equal to the
      *                          principal point of an estimated camera. If not set it is assumed to be at
      *                          the origin of coordinates (0,0).
-     * @param method            method of a robust estimator algorithm to estimate best
+     * @param method            method of a robust estimator algorithm to estimate the best
      *                          radial distortion.
      * @return an instance of a radial distortion robust estimator.
      * @throws IllegalArgumentException if provided lists of points don't have
@@ -757,7 +757,7 @@ public abstract class RadialDistortionRobustEstimator {
             final double[] qualityScores, final Point2D distortionCenter,
             final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSRadialDistortionRobustEstimator(distortedPoints,
                         undistortedPoints, distortionCenter);
             case MSAC:
@@ -767,7 +767,7 @@ public abstract class RadialDistortionRobustEstimator {
                 return new PROSACRadialDistortionRobustEstimator(
                         distortedPoints, undistortedPoints, qualityScores,
                         distortionCenter);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSRadialDistortionRobustEstimator(
                         distortedPoints, undistortedPoints, qualityScores,
                         distortionCenter);
@@ -789,7 +789,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @param distortionCenter  Distortion center. This is usually equal to the
      *                          principal point of an estimated camera. If not set it is assumed to be at
      *                          the origin of coordinates (0,0).
-     * @param method            method of a robust estimator algorithm to estimate best
+     * @param method            method of a robust estimator algorithm to estimate the best
      *                          radial distortion.
      * @return an instance of a radial distortion robust estimator.
      * @throws IllegalArgumentException if provided lists of points don't have
@@ -799,7 +799,7 @@ public abstract class RadialDistortionRobustEstimator {
             final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
             final Point2D distortionCenter, final RobustEstimatorMethod method) {
         switch (method) {
-            case LMedS:
+            case LMEDS:
                 return new LMedSRadialDistortionRobustEstimator(distortedPoints,
                         undistortedPoints, distortionCenter);
             case MSAC:
@@ -808,7 +808,7 @@ public abstract class RadialDistortionRobustEstimator {
             case PROSAC:
                 return new PROSACRadialDistortionRobustEstimator(
                         distortedPoints, undistortedPoints, distortionCenter);
-            case PROMedS:
+            case PROMEDS:
                 return new PROMedSRadialDistortionRobustEstimator(
                         distortedPoints, undistortedPoints, distortionCenter);
             case RANSAC:
@@ -827,7 +827,7 @@ public abstract class RadialDistortionRobustEstimator {
      *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
      * @param qualityScores     quality scores corresponding to each point.
-     * @param method            method of a robust estimator algorithm to estimate best
+     * @param method            method of a robust estimator algorithm to estimate the best
      *                          radial distortion.
      * @return an instance of a radial distortion robust estimator.
      * @throws IllegalArgumentException if provided lists of points don't have
@@ -848,7 +848,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @param distortedPoints   list of distorted points. Distorted points are
      *                          obtained after radial distortion is applied to an undistorted point.
      * @param undistortedPoints list of undistorted points.
-     * @param method            method of a robust estimator algorithm to estimate best
+     * @param method            method of a robust estimator algorithm to estimate the best
      *                          radial distortion.
      * @return an instance of a radial distortion robust estimator.
      * @throws IllegalArgumentException if provided lists of points don't have

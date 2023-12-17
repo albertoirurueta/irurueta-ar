@@ -266,19 +266,26 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9,
+                        vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12,
+                        ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12, va);
+                jacobianX.setSubmatrix(7, 10, 9, 12,
+                        va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15,
+                        qw);
 
                 for (int i = 10; i < STATE_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
@@ -564,19 +571,26 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9,
+                        vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12,
+                        ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12, va);
+                jacobianX.setSubmatrix(7, 10, 9, 12,
+                        va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15,
+                        qw);
 
                 for (int i = 10; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
@@ -591,7 +605,8 @@ public class StatePredictor {
                     jacobianU.setElementAt(i, i, 1.0);
                 }
                 // variation of linear speed and acceleration, and angular speed
-                for (int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {
+                for (int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH;
+                     i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {
                     jacobianU.setElementAt(i, j, 1.0);
                 }
             }
@@ -872,19 +887,26 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9,
+                        vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12,
+                        ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12, va);
+                jacobianX.setSubmatrix(7, 10, 9, 12,
+                        va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15,
+                        qw);
 
                 for (int i = 10; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
@@ -895,10 +917,12 @@ public class StatePredictor {
                 jacobianU.initialize(0.0);
 
                 // variation of rotation
-                jacobianU.setSubmatrix(3, 0, 6, 3, qdq);
+                jacobianU.setSubmatrix(3, 0, 6, 3,
+                        qdq);
 
                 // variation of linear speed and acceleration, and angular speed
-                for (int i = 7, j = Quaternion.N_PARAMS; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
+                for (int i = 7, j = Quaternion.N_PARAMS;
+                     i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
                     jacobianU.setElementAt(i, j, 1.0);
                 }
             }
@@ -1101,8 +1125,7 @@ public class StatePredictor {
             // update velocity
             final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
             final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
-            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
-                    vv, va);
+            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
             // update position
             Matrix rr = null;
@@ -1184,19 +1207,26 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2,
+                        rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6,
+                        qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9,
+                        rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9,
+                        vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12,
+                        ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12, va);
+                jacobianX.setSubmatrix(7, 10, 9, 12,
+                        va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15,
+                        qw);
 
                 for (int i = 10; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
@@ -1212,7 +1242,8 @@ public class StatePredictor {
                 }
 
                 // variation of rotation
-                jacobianU.setSubmatrix(3, 3, 6, 6, qdq);
+                jacobianU.setSubmatrix(3, 3, 6, 6,
+                        qdq);
 
                 // variation of linear speed and acceleration, and angular speed
                 for (int i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {

@@ -102,7 +102,7 @@ public class RadialDistortion extends Distortion implements Serializable {
     private double mSkew;
 
     /**
-     * Inverse of intrinsic parameters matrix.
+     * Inverse of intrinsic parameters' matrix.
      */
     private Matrix mKinv;
 

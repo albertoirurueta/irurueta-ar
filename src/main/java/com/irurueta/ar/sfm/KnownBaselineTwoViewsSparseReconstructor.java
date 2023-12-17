@@ -61,10 +61,10 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
     }
 
     /**
-     * Called when processing one frame is successfully finished. This can be done to estimate scale on those
-     * implementations where scale can be measured or is already known.
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
      *
-     * @return true if post processing succeeded, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
      */
     @SuppressWarnings("DuplicatedCode")
     @Override

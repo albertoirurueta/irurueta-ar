@@ -195,8 +195,9 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<ImageOfAbsoluteConic> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<ImageOfAbsoluteConic> solutions) {
                                 mSubsetHomographies.clear();
                                 for (int samplesIndex : samplesIndices) {
                                     mSubsetHomographies.add(mHomographies.get(

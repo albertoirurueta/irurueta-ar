@@ -67,8 +67,7 @@ public class QuaternionPredictorTest {
         Quaternion result = new Quaternion();
         Matrix jacobianQ = new Matrix(4, 4);
         Matrix jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, wx, wy, wz, dt, true, result,
-                jacobianQ, jacobianW);
+        QuaternionPredictor.predict(q, wx, wy, wz, dt, true, result, jacobianQ, jacobianW);
 
         // check correctness
         final double[] dtw = new double[]{dt * wx, dt * wy, dt * wz};
@@ -93,8 +92,7 @@ public class QuaternionPredictorTest {
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, wx, wy, wz, dt, false, result,
-                jacobianQ, jacobianW);
+        QuaternionPredictor.predict(q, wx, wy, wz, dt, false, result, jacobianQ, jacobianW);
 
         Matrix wMatrix = RotationUtils.w2omega(w);
         Matrix qMatrix = Matrix.newFromArray(q.getValues());
@@ -136,8 +134,7 @@ public class QuaternionPredictorTest {
         // test with w array and jacobians
 
         // test exact method
-        QuaternionPredictor.predict(q, w, dt, true, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, w, dt, true, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -147,8 +144,7 @@ public class QuaternionPredictorTest {
         assertTrue(jacobianW.equals(jacobianW2, ABSOLUTE_ERROR));
 
         // test Tustin method
-        QuaternionPredictor.predict(q, w, dt, false, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, w, dt, false, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -159,8 +155,7 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], dt, true,
-                    result, jacobianQ, jacobianW);
+            QuaternionPredictor.predict(q, new double[1], dt, true, result, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -181,8 +176,7 @@ public class QuaternionPredictorTest {
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, wx, wy, wz, dt, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, wx, wy, wz, dt, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -193,14 +187,12 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, wx, wy, wz, dt, result,
-                    new Matrix(1, 1), jacobianW);
+            QuaternionPredictor.predict(q, wx, wy, wz, dt, result, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            QuaternionPredictor.predict(q, wx, wy, wz, dt, result,
-                    jacobianQ, new Matrix(1, 1));
+            QuaternionPredictor.predict(q, wx, wy, wz, dt, result, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -209,8 +201,7 @@ public class QuaternionPredictorTest {
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, w, dt, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, w, dt, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -221,20 +212,17 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], dt, result,
-                    jacobianQ, jacobianW);
+            QuaternionPredictor.predict(q, new double[1], dt, result, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            QuaternionPredictor.predict(q, w, dt, result, new Matrix(1, 1),
-                    jacobianW);
+            QuaternionPredictor.predict(q, w, dt, result, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            QuaternionPredictor.predict(q, w, dt, result, jacobianQ,
-                    new Matrix(1, 1));
+            QuaternionPredictor.predict(q, w, dt, result, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -266,8 +254,7 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], dt, true,
-                    result);
+            QuaternionPredictor.predict(q, new double[1], dt, true, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -281,8 +268,7 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], dt, false,
-                    result);
+            QuaternionPredictor.predict(q, new double[1], dt, false, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -313,8 +299,7 @@ public class QuaternionPredictorTest {
         // test exact method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, wx, wy, wz, dt, true,
-                jacobianQ, jacobianW);
+        result = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -342,8 +327,7 @@ public class QuaternionPredictorTest {
         // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, wx, wy, wz, dt, false,
-                jacobianQ, jacobianW);
+        result = QuaternionPredictor.predict(q, wx, wy, wz, dt, false, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -372,8 +356,7 @@ public class QuaternionPredictorTest {
         // test exact method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, dt, true, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, dt, true, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -407,8 +390,7 @@ public class QuaternionPredictorTest {
         // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, dt, false, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, dt, false, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -442,8 +424,7 @@ public class QuaternionPredictorTest {
         // test with new instance, parameters, exact method and jacobians
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, wx, wy, wz, dt, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, wx, wy, wz, dt, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -471,8 +452,7 @@ public class QuaternionPredictorTest {
         // test with new instance, array, exact method and jacobians
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, dt, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, dt, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -484,20 +464,17 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, new double[1], dt,
-                    jacobianQ, jacobianW);
+            result = QuaternionPredictor.predict(q, new double[1], dt, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = QuaternionPredictor.predict(q, w, dt,
-                    new Matrix(1, 1), jacobianW);
+            result = QuaternionPredictor.predict(q, w, dt, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = QuaternionPredictor.predict(q, w, dt, jacobianQ,
-                    new Matrix(1, 1));
+            result = QuaternionPredictor.predict(q, w, dt, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -528,8 +505,7 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, new double[1], dt,
-                    true);
+            result = QuaternionPredictor.predict(q, new double[1], dt, true);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -544,8 +520,7 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, new double[1], dt,
-                    false);
+            result = QuaternionPredictor.predict(q, new double[1], dt, false);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -578,8 +553,7 @@ public class QuaternionPredictorTest {
         // check quaternion variation
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, dt, true, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, dt, true, jacobianQ, jacobianW);
 
         double[] diff = new double[4];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
@@ -593,8 +567,7 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        double[] diffResult2 = jacobianQ.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianQ.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check angular speed variation
@@ -609,14 +582,12 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        diffResult2 = jacobianW.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianW.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testPredictDefaultDt() throws WrongSizeException,
-            RotationException {
+    public void testPredictDefaultDt() throws WrongSizeException, RotationException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final double roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
@@ -641,8 +612,7 @@ public class QuaternionPredictorTest {
         Quaternion result = new Quaternion();
         Matrix jacobianQ = new Matrix(4, 4);
         Matrix jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, wx, wy, wz, true, result,
-                jacobianQ, jacobianW);
+        QuaternionPredictor.predict(q, wx, wy, wz, true, result, jacobianQ, jacobianW);
 
         // check correctness
         final double[] dtw = new double[]{dt * wx, dt * wy, dt * wz};
@@ -667,8 +637,7 @@ public class QuaternionPredictorTest {
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, wx, wy, wz, false, result,
-                jacobianQ, jacobianW);
+        QuaternionPredictor.predict(q, wx, wy, wz, false, result, jacobianQ, jacobianW);
 
         Matrix wMatrix = RotationUtils.w2omega(w);
         Matrix qMatrix = Matrix.newFromArray(q.getValues());
@@ -710,8 +679,7 @@ public class QuaternionPredictorTest {
         // test with w array and jacobians
 
         // test exact method
-        QuaternionPredictor.predict(q, w, true, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, w, true, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -721,8 +689,7 @@ public class QuaternionPredictorTest {
         assertTrue(jacobianW.equals(jacobianW2, ABSOLUTE_ERROR));
 
         // test Tustin method
-        QuaternionPredictor.predict(q, w, false, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, w, false, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -733,8 +700,7 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], true,
-                    result, jacobianQ, jacobianW);
+            QuaternionPredictor.predict(q, new double[1], true, result, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -755,8 +721,7 @@ public class QuaternionPredictorTest {
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, wx, wy, wz, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, wx, wy, wz, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -767,14 +732,12 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, wx, wy, wz, result,
-                    new Matrix(1, 1), jacobianW);
+            QuaternionPredictor.predict(q, wx, wy, wz, result, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            QuaternionPredictor.predict(q, wx, wy, wz, result,
-                    jacobianQ, new Matrix(1, 1));
+            QuaternionPredictor.predict(q, wx, wy, wz, result, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -783,8 +746,7 @@ public class QuaternionPredictorTest {
         result = new Quaternion();
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        QuaternionPredictor.predict(q, w, result, jacobianQ,
-                jacobianW);
+        QuaternionPredictor.predict(q, w, result, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -795,20 +757,17 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], result,
-                    jacobianQ, jacobianW);
+            QuaternionPredictor.predict(q, new double[1], result, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            QuaternionPredictor.predict(q, w, result, new Matrix(1, 1),
-                    jacobianW);
+            QuaternionPredictor.predict(q, w, result, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            QuaternionPredictor.predict(q, w, result, jacobianQ,
-                    new Matrix(1, 1));
+            QuaternionPredictor.predict(q, w, result, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -840,8 +799,7 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], true,
-                    result);
+            QuaternionPredictor.predict(q, new double[1], true, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -855,8 +813,7 @@ public class QuaternionPredictorTest {
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predict(q, new double[1], false,
-                    result);
+            QuaternionPredictor.predict(q, new double[1], false, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -887,8 +844,7 @@ public class QuaternionPredictorTest {
         // test exact method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, wx, wy, wz, true,
-                jacobianQ, jacobianW);
+        result = QuaternionPredictor.predict(q, wx, wy, wz, true, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -916,8 +872,7 @@ public class QuaternionPredictorTest {
         // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, wx, wy, wz, false,
-                jacobianQ, jacobianW);
+        result = QuaternionPredictor.predict(q, wx, wy, wz, false, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -946,8 +901,7 @@ public class QuaternionPredictorTest {
         // test exact method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, true, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, true, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -959,8 +913,7 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, new double[1],
-                    true, jacobianQ, jacobianW);
+            result = QuaternionPredictor.predict(q, new double[1], true, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -981,8 +934,7 @@ public class QuaternionPredictorTest {
         // test Tustin method
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, false, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, false, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result3, ABSOLUTE_ERROR));
@@ -994,8 +946,7 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, new double[1],
-                    false, jacobianQ, jacobianW);
+            result = QuaternionPredictor.predict(q, new double[1], false, jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1016,8 +967,7 @@ public class QuaternionPredictorTest {
         // test with new instance, parameters, exact method and jacobians
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, wx, wy, wz, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, wx, wy, wz, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -1029,14 +979,12 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, wx, wy, wz,
-                    new Matrix(1, 1), jacobianW);
+            result = QuaternionPredictor.predict(q, wx, wy, wz, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = QuaternionPredictor.predict(q, wx, wy, wz,
-                    jacobianQ, new Matrix(1, 1));
+            result = QuaternionPredictor.predict(q, wx, wy, wz, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1045,8 +993,7 @@ public class QuaternionPredictorTest {
         // test with new instance, array, exact method and jacobians
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, jacobianQ, jacobianW);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -1058,20 +1005,17 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predict(q, new double[1],
-                    jacobianQ, jacobianW);
+            result = QuaternionPredictor.predict(q, new double[1], jacobianQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = QuaternionPredictor.predict(q, w,
-                    new Matrix(1, 1), jacobianW);
+            result = QuaternionPredictor.predict(q, w, new Matrix(1, 1), jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            result = QuaternionPredictor.predict(q, w, jacobianQ,
-                    new Matrix(1, 1));
+            result = QuaternionPredictor.predict(q, w, jacobianQ, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1150,8 +1094,7 @@ public class QuaternionPredictorTest {
         // check quaternion variation
         jacobianQ = new Matrix(4, 4);
         jacobianW = new Matrix(4, 3);
-        result = QuaternionPredictor.predict(q, w, true, jacobianQ,
-                jacobianW);
+        result = QuaternionPredictor.predict(q, w, true, jacobianQ, jacobianW);
 
         double[] diff = new double[4];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
@@ -1165,8 +1108,7 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        double[] diffResult2 = jacobianQ.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianQ.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check angular speed variation
@@ -1181,8 +1123,7 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        diffResult2 = jacobianW.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianW.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
@@ -1241,8 +1182,7 @@ public class QuaternionPredictorTest {
         Quaternion.product(q, tmp2, result2, jacobianQ2, jacobianQ3);
 
         jacobianDQ2 = jacobianQ3.multiplyAndReturnNew(jacobianDQ2);
-        jacobianW2 = jacobianQ3.multiplyAndReturnNew(jacobianQb).
-                multiplyAndReturnNew(jacobianW2);
+        jacobianW2 = jacobianQ3.multiplyAndReturnNew(jacobianQb).multiplyAndReturnNew(jacobianW2);
         jacobianW2.multiplyByScalar(dt);
 
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -1283,8 +1223,7 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         try {
             QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                    new double[1], dt, result, jacobianQ, jacobianDQ,
-                    jacobianW);
+                    new double[1], dt, result, jacobianQ, jacobianDQ, jacobianW);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1317,21 +1256,18 @@ public class QuaternionPredictorTest {
 
         // test without jacobians
         result = new Quaternion();
-        QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy,
-                wz, dt, result);
+        QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
         // test with w array without jacobians
         result = new Quaternion();
-        QuaternionPredictor.predictWithRotationAdjustment(q, dq, w, dt,
-                result);
+        QuaternionPredictor.predictWithRotationAdjustment(q, dq, w, dt, result);
 
         // Force IllegalArgumentException
         try {
-            QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                    new double[1], dt, result);
+            QuaternionPredictor.predictWithRotationAdjustment(q, dq, new double[1], dt, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1411,15 +1347,13 @@ public class QuaternionPredictorTest {
         assertNull(result);
 
         // test with new instance without jacobians
-        result = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                wx, wy, wz, dt);
+        result = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
 
         // test with new instance, with array and without jacobians
-        result = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                w, dt);
+        result = QuaternionPredictor.predictWithRotationAdjustment(q, dq, w, dt);
 
         // check correctness
         assertTrue(result.equals(result2, ABSOLUTE_ERROR));
@@ -1427,8 +1361,7 @@ public class QuaternionPredictorTest {
         // Force IllegalArgumentException
         result = null;
         try {
-            result = QuaternionPredictor.predictWithRotationAdjustment(q,
-                    dq, new double[1], dt);
+            result = QuaternionPredictor.predictWithRotationAdjustment(q, dq, new double[1], dt);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1445,8 +1378,7 @@ public class QuaternionPredictorTest {
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final Quaternion q2 = new Quaternion(q.getA() + diff[0], q.getB() + diff[1],
                 q.getC() + diff[2], q.getD() + diff[3]);
-        result2 = QuaternionPredictor.predictWithRotationAdjustment(q2,
-                dq, w, dt);
+        result2 = QuaternionPredictor.predictWithRotationAdjustment(q2, dq, w, dt);
 
         double[] diffResult = new double[]{
                 result2.getA() - result.getA(),
@@ -1454,8 +1386,7 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        double[] diffResult2 = jacobianQ.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        double[] diffResult2 = jacobianQ.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check rotation variation
@@ -1463,8 +1394,7 @@ public class QuaternionPredictorTest {
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final Quaternion dq2 = new Quaternion(dq.getA() + diff[0],
                 dq.getB() + diff[1], dq.getC() + diff[2], dq.getD() + diff[3]);
-        result2 = QuaternionPredictor.predictWithRotationAdjustment(q,
-                dq2, w, dt);
+        result2 = QuaternionPredictor.predictWithRotationAdjustment(q, dq2, w, dt);
 
         diffResult = new double[]{
                 result2.getA() - result.getA(),
@@ -1472,16 +1402,14 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        diffResult2 = jacobianDQ.multiplyAndReturnNew(
-                Matrix.newFromArray(diff)).toArray();
+        diffResult2 = jacobianDQ.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check angular speed variation
         diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
         final double[] w2 = ArrayUtils.sumAndReturnNew(w, diff);
-        result2 = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                w2, dt);
+        result2 = QuaternionPredictor.predictWithRotationAdjustment(q, dq, w2, dt);
 
         diffResult = new double[]{
                 result2.getA() - result.getA(),
@@ -1489,8 +1417,7 @@ public class QuaternionPredictorTest {
                 result2.getC() - result.getC(),
                 result2.getD() - result.getD()
         };
-        diffResult2 = jacobianW.multiplyAndReturnNew(Matrix.newFromArray(diff)).
-                toArray();
+        diffResult2 = jacobianW.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 }

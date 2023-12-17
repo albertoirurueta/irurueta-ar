@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class defines an LMSE (Least Mean Square Error) estimator of radial
+ * This class defines an LMSE (the Least Mean Square Error) estimator of radial
  * distortion.
  * Equations to determine a RadialDistortion instance for a single point are
  * linear dependent, for that reason, at least 2 points are required for the
@@ -39,13 +39,13 @@ import java.util.List;
  */
 public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     /**
-     * Indicates if by default an LMSE (Least Mean Square Error) solution is
+     * Indicates if by default an LMSE (the Least Mean Square Error) solution is
      * allowed if more correspondences than the minimum are provided.
      */
     public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
@@ -171,7 +171,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     }
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
@@ -183,7 +183,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
     }
 
     /**
-     * Specifies if an LMSE (Least Mean Square Error) solution is allowed if
+     * Specifies if an LMSE (the Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.

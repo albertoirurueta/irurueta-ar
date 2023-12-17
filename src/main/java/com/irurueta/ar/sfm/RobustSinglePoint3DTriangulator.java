@@ -37,11 +37,11 @@ public abstract class RobustSinglePoint3DTriangulator {
      * Default robust estimator method when none is provided.
      */
     public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMedS;
+            RobustEstimatorMethod.PROMEDS;
 
     /**
      * Default amount of progress variation before notifying a change in
-     * estimation progress. By default this is set to 5%.
+     * estimation progress. By default, this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
 
@@ -113,9 +113,9 @@ public abstract class RobustSinglePoint3DTriangulator {
 
     /**
      * Indicates whether a solution to an homogeneous system of equations should
-     * be found. Typically this should be true, since even points and cameras
-     * at infinity can be used. If points are close and geometry is well
-     * defined, false can be used to solve an inhomogeneous system of equations
+     * be found. Typically, this should be true, since even points and cameras
+     * at infinity can be used. If points are close and geometry is
+     * well-defined, false can be used to solve an inhomogeneous system of equations
      * and obtain a slightly better accuracy.
      */
     protected boolean mUseHomogeneousSolution;
@@ -243,9 +243,9 @@ public abstract class RobustSinglePoint3DTriangulator {
 
     /**
      * Indicates whether a solution to an homogeneous system of equations should
-     * be found. Typically this should be true, since even points and cameras
-     * at infinity can be used. If points are close and geometry is well
-     * defined, false can be used to solve an inhomogeneous system of equations
+     * be found. Typically, this should be true, since even points and cameras
+     * at infinity can be used. If points are close and geometry is
+     * well-defined, false can be used to solve an inhomogeneous system of equations
      * and obtain a slightly better accuracy.
      *
      * @return true if an homogeneous solution must be found (default value),
@@ -257,9 +257,9 @@ public abstract class RobustSinglePoint3DTriangulator {
 
     /**
      * Sets boolean indicating whether a solution to an homogeneous system of
-     * equations should be found. Typically this should be true, since even
+     * equations should be found. Typically, this should be true, since even
      * points and cameras at infinity can be used. If points are close and
-     * geometry is well defined, false can be used to solve an inhomogeneous
+     * geometry is well-defined, false can be used to solve an inhomogeneous
      * system of equations and obtain a slightly better accuracy.
      *
      * @param useHomogeneousSolution true if an homogeneous solution will be
@@ -491,7 +491,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * Creates a robust single 3D point triangulator using provided robust
      * method.
      *
-     * @param method method of a robust estimator algorithm to estimate best
+     * @param method method of a robust estimator algorithm to estimate the best
      *               triangulation.
      * @return an instance of a robust single 3D point triangulator.
      */
@@ -500,13 +500,13 @@ public abstract class RobustSinglePoint3DTriangulator {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustSinglePoint3DTriangulator();
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustSinglePoint3DTriangulator();
             case MSAC:
                 return new MSACRobustSinglePoint3DTriangulator();
             case PROSAC:
                 return new PROSACRobustSinglePoint3DTriangulator();
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustSinglePoint3DTriangulator();
         }
@@ -520,7 +520,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                be projected by the corresponding camera in the list.
      * @param cameras list of cameras associated to the matched 2D point on the
      *                same position as the camera on the list.
-     * @param method  method of a robust estimator algorithm to estimate best
+     * @param method  method of a robust estimator algorithm to estimate the best
      *                triangulation.
      * @return an instance of a robust single 3D point triangulator.
      * @throws IllegalArgumentException if provided lists don't have the same
@@ -534,7 +534,7 @@ public abstract class RobustSinglePoint3DTriangulator {
             case RANSAC:
                 return new RANSACRobustSinglePoint3DTriangulator(points,
                         cameras);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustSinglePoint3DTriangulator(points,
                         cameras);
             case MSAC:
@@ -542,7 +542,7 @@ public abstract class RobustSinglePoint3DTriangulator {
             case PROSAC:
                 return new PROSACRobustSinglePoint3DTriangulator(points,
                         cameras);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustSinglePoint3DTriangulator(points,
                         cameras);
@@ -558,12 +558,12 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @param cameras       list of cameras associated to the matched 2D point on the
      *                      same position as the camera on the list.
      * @param qualityScores quality scores corresponding to each point.
-     * @param method        method of a robust estimator algorithm to estimate best
+     * @param method        method of a robust estimator algorithm to estimate the best
      *                      triangulation.
      * @return an instance of a robust single 3D point triangulator.
      * @throws IllegalArgumentException if provided lists or quality scores
-     *                                  don't have the same length or their length is less than 2 views, which
-     *                                  is the minimum required to compute triangulation.
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
      */
     public static RobustSinglePoint3DTriangulator create(
             final List<Point2D> points,
@@ -574,7 +574,7 @@ public abstract class RobustSinglePoint3DTriangulator {
             case RANSAC:
                 return new RANSACRobustSinglePoint3DTriangulator(points,
                         cameras);
-            case LMedS:
+            case LMEDS:
                 return new LMedSRobustSinglePoint3DTriangulator(points,
                         cameras);
             case MSAC:
@@ -582,7 +582,7 @@ public abstract class RobustSinglePoint3DTriangulator {
             case PROSAC:
                 return new PROSACRobustSinglePoint3DTriangulator(points,
                         cameras, qualityScores);
-            case PROMedS:
+            case PROMEDS:
             default:
                 return new PROMedSRobustSinglePoint3DTriangulator(points,
                         cameras, qualityScores);
@@ -629,8 +629,8 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @param qualityScores quality scores corresponding to each point.
      * @return an instance of a robust single 3D point triangulator.
      * @throws IllegalArgumentException if provided lists or quality scores
-     *                                  don't have the same length or their length is less than 2 views, which
-     *                                  is the minimum required to compute triangulation.
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
      */
     public static RobustSinglePoint3DTriangulator create(
             final List<Point2D> points,

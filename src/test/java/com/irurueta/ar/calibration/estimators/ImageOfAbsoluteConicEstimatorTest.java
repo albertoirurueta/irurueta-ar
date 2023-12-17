@@ -29,28 +29,24 @@ public class ImageOfAbsoluteConicEstimatorTest {
     @Test
     public void testCreate() {
         // test without parameters
-        ImageOfAbsoluteConicEstimator estimator =
-                ImageOfAbsoluteConicEstimator.create();
+        ImageOfAbsoluteConicEstimator estimator = ImageOfAbsoluteConicEstimator.create();
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // test with listener
@@ -75,24 +71,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
         estimator = ImageOfAbsoluteConicEstimator.create(listener);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), listener);
+        assertSame(listener, estimator.getListener());
         assertNull(estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // test with homographies
@@ -104,29 +97,25 @@ public class ImageOfAbsoluteConicEstimatorTest {
         estimator = ImageOfAbsoluteConicEstimator.create(homographies);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies =
-                new ArrayList<>();
+        final List<Transformation2D> emptyHomographies = new ArrayList<>();
         estimator = null;
         try {
             estimator = ImageOfAbsoluteConicEstimator.create(emptyHomographies);
@@ -136,35 +125,30 @@ public class ImageOfAbsoluteConicEstimatorTest {
         assertNull(estimator);
 
         // test with homographies and listener
-        estimator = ImageOfAbsoluteConicEstimator.create(homographies,
-                listener);
+        estimator = ImageOfAbsoluteConicEstimator.create(homographies, listener);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), listener);
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(listener, estimator.getListener());
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ESTIMATOR_TYPE,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = ImageOfAbsoluteConicEstimator.create(emptyHomographies,
-                    listener);
+            estimator = ImageOfAbsoluteConicEstimator.create(emptyHomographies, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -175,24 +159,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // test with Weighted type
@@ -200,24 +181,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof WeightedImageOfAbsoluteConicEstimator);
 
         // test with LMSE type and listener
@@ -225,24 +203,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), listener);
+        assertSame(listener, estimator.getListener());
         assertNull(estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // test with weighted type and listener
@@ -250,24 +225,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), listener);
+        assertSame(listener, estimator.getListener());
         assertNull(estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof WeightedImageOfAbsoluteConicEstimator);
 
         // test with LMSE type and homographies
@@ -275,24 +247,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // Force IllegalArgumentException
@@ -310,24 +279,21 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof WeightedImageOfAbsoluteConicEstimator);
 
         // Force IllegalArgumentException
@@ -345,32 +311,28 @@ public class ImageOfAbsoluteConicEstimatorTest {
                 listener, ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), listener);
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(listener, estimator.getListener());
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof LMSEImageOfAbsoluteConicEstimator);
 
         // Force IllegalArgumentException
         estimator = null;
         try {
             estimator = ImageOfAbsoluteConicEstimator.create(emptyHomographies,
-                    listener, ImageOfAbsoluteConicEstimatorType.
-                            LMSE_IAC_ESTIMATOR);
+                    listener, ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -378,28 +340,24 @@ public class ImageOfAbsoluteConicEstimatorTest {
 
         // test with weighted type, homographies and listener
         estimator = ImageOfAbsoluteConicEstimator.create(homographies,
-                listener, ImageOfAbsoluteConicEstimatorType.
-                        WEIGHTED_IAC_ESTIMATOR);
+                listener, ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), listener);
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(listener, estimator.getListener());
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.getMinNumberOfRequiredHomographies() > 0);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR,
+                estimator.getType());
         assertTrue(estimator instanceof WeightedImageOfAbsoluteConicEstimator);
 
         // Force IllegalArgumentException

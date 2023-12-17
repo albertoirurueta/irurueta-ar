@@ -199,7 +199,7 @@ public abstract class FundamentalMatrixComparator {
      * Comparison value will depend on the method implemented to compare both
      * fundamental matrices.
      *
-     * @return comparison value. Typically the smaller the absolute value the
+     * @return comparison value. Typically, the smaller the absolute value the
      * more similar the fundamental matrices are.
      * @throws NotReadyException                    if this comparator is not  yet ready to start
      *                                              the comparison.

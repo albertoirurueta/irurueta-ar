@@ -35,8 +35,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-public class WeightedImageOfAbsoluteConicEstimatorTest implements
-        ImageOfAbsoluteConicEstimatorListener {
+public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsoluteConicEstimatorListener {
 
     private static final double MIN_FOCAL_LENGTH = 3.0;
     private static final double MAX_FOCAL_LENGTH = 10.0;
@@ -69,63 +68,54 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
     @Test
     public void testConstructor() {
         // test constructor without arguments
-        WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getHomographies());
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxHomographies(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
+                estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
 
         // test constructor with listener
         estimator = new WeightedImageOfAbsoluteConicEstimator(this);
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertNull(estimator.getHomographies());
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxHomographies(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
+                estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
 
         // test constructor with homographies
         final List<Transformation2D> homographies = new ArrayList<>();
@@ -134,120 +124,102 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         homographies.add(new ProjectiveTransformation2D());
         final double[] weights = new double[3];
 
-        estimator = new WeightedImageOfAbsoluteConicEstimator(homographies,
-                weights);
+        estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights);
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
-        assertSame(estimator.getHomographies(), homographies);
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertSame(homographies, estimator.getHomographies());
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
-        assertSame(estimator.getWeights(), weights);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
+        assertSame(weights, estimator.getWeights());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxHomographies(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
+                estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies =
-                new ArrayList<>();
+        final List<Transformation2D> emptyHomographies = new ArrayList<>();
         final double[] shortWeights = new double[1];
 
         estimator = null;
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(
-                    null, weights);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(null, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies,
-                    shortWeights);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(
-                    emptyHomographies, weights);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(emptyHomographies, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(
-                    homographies, shortWeights);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
 
         // test constructor with homographies and listener
-        estimator = new WeightedImageOfAbsoluteConicEstimator(homographies,
-                weights, this);
+        estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertSame(estimator.getHomographies(), homographies);
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(),
-                ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR);
-        assertSame(estimator.getWeights(), weights);
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR,
+                estimator.getType());
+        assertSame(weights, estimator.getWeights());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxHomographies(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
+                estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(
-                    null, weights, this);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(null, weights, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies,
-                    shortWeights, this);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(
-                    emptyHomographies, weights, this);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(emptyHomographies, weights, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(
-                    homographies, shortWeights, this);
+            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -256,74 +228,66 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testIsSetZeroSkewness() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(estimator.isZeroSkewness(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
 
         // set new value
-        estimator.setZeroSkewness(!WeightedImageOfAbsoluteConicEstimator.
-                DEFAULT_ZERO_SKEWNESS);
+        estimator.setZeroSkewness(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                !WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
+        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
     }
 
     @Test
     public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
 
         // set new value
         estimator.setPrincipalPointAtOrigin(
-                !WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+                !WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
 
         // check correctness
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                !WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
     }
 
     @Test
     public void testIsFocalDistanceAspectRatioKnown() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
 
         // set new value
         estimator.setFocalDistanceAspectRatioKnown(
-                !WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                !WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+
+        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
     }
 
     @Test
     public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                WeightedImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // set new value
         estimator.setFocalDistanceAspectRatio(0.5);
 
         // check correctness
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -335,8 +299,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -345,14 +308,12 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
-    public void testGetSetHomographiesAndWeightsAndIsReady()
-            throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+    public void testGetSetHomographiesAndWeightsAndIsReady() throws LockedException {
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertNull(estimator.getHomographies());
@@ -374,13 +335,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         assertTrue(estimator.isReady());
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies =
-                new ArrayList<>();
+        final List<Transformation2D> emptyHomographies = new ArrayList<>();
         final double[] shortWeights = new double[1];
 
         try {
-            estimator.setHomographiesAndWeights(null,
-                    weights);
+            estimator.setHomographiesAndWeights(null, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -411,19 +370,17 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testGetSetMaxHomographies() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(estimator.getMaxHomographies(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
+                estimator.getMaxHomographies());
 
         // set new value
-        estimator.setMaxHomographies(
-                estimator.getMinNumberOfRequiredHomographies());
+        estimator.setMaxHomographies(estimator.getMinNumberOfRequiredHomographies());
 
         // check correctness
-        assertEquals(estimator.getMaxHomographies(), 1);
+        assertEquals(1, estimator.getMaxHomographies());
 
         // Force IllegalArgumentException
         try {
@@ -436,27 +393,25 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testIsSetSortWeightsEnabled() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator();
+        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
 
         // set new value
         estimator.setSortWeightsEnabled(
                 !WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
 
         // check correctness
-        assertEquals(estimator.isSortWeightsEnabled(),
-                !WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
     }
 
     @Test
     public void testEstimateNoConstraints()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            LockedException, NotReadyException, RobustEstimatorException,
-            ImageOfAbsoluteConicEstimatorException {
+            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -489,8 +444,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                 final UniformRandomizer randomizer = new UniformRandomizer(new Random());
                 final double horizontalFocalLength = randomizer.nextDouble(
                         MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                        MAX_FOCAL_LENGTH);
+                final double verticalFocalLength = randomizer.nextDouble(
+                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
                 final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
                 final double horizontalPrincipalPoint = randomizer.nextDouble(
                         MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -519,8 +474,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                 // create 3 random cameras having random rotation and translation but
                 // created intrinsic parameters in order to obtain 3 homographies to
                 // estimate the IAC
-                final List<Transformation2D> homographies =
-                        new ArrayList<>();
+                final List<Transformation2D> homographies = new ArrayList<>();
                 final double[] weights = new double[50];
                 randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 for (int i = 0; i < 50; i++) {
@@ -540,52 +494,46 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
                     // camera center
                     final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                    randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                            cameraCenterArray);
+                    randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                     // create camera with intrinsic parameters, rotation and camera
                     // center
-                    final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                            cameraCenter);
+                    final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                     camera.normalize();
 
                     // project 3D pattern points in a plane
                     final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                     final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                            ProjectiveTransformation2DRobustEstimator.
-                                    createFromPoints(patternPoints, projectedPatternPoints,
-                                            RobustEstimatorMethod.RANSAC);
+                            ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                                    patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                    final ProjectiveTransformation2D homography =
-                            homographyEstimator.estimate();
+                    final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                     homographies.add(homography);
                 }
 
                 // Estimate  IAC
                 final WeightedImageOfAbsoluteConicEstimator estimator =
-                        new WeightedImageOfAbsoluteConicEstimator(homographies,
-                                weights, this);
+                        new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
                 estimator.setZeroSkewness(false);
                 estimator.setPrincipalPointAtOrigin(false);
                 estimator.setFocalDistanceAspectRatioKnown(false);
 
-                assertEquals(estimator.getMinNumberOfRequiredHomographies(), 3);
+                assertEquals(3, estimator.getMinNumberOfRequiredHomographies());
 
                 // check initial state
                 assertFalse(estimator.isLocked());
                 assertTrue(estimator.isReady());
-                assertEquals(estimateStart, 0);
-                assertEquals(estimateEnd, 0);
-                assertEquals(estimationProgressChange, 0);
+                assertEquals(0, estimateStart);
+                assertEquals(0, estimateEnd);
+                assertEquals(0, estimationProgressChange);
 
                 // estimate
                 final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
-                assertEquals(estimateStart, 1);
-                assertEquals(estimateEnd, 1);
+                assertEquals(1, estimateStart);
+                assertEquals(1, estimateEnd);
                 assertTrue(estimationProgressChange >= 0);
                 reset();
 
@@ -595,52 +543,36 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                 iac.normalize();
                 iac2.normalize();
 
-                assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(Math.abs(iac.getB()), Math.abs(iac2.getB()),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(Math.abs(iac.getD()), Math.abs(iac2.getD()),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(Math.abs(iac.getE()), Math.abs(iac2.getE()),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                        VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(Math.abs(iac.getB()), Math.abs(iac2.getB()), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(Math.abs(iac.getD()), Math.abs(iac2.getD()), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(Math.abs(iac.getE()), Math.abs(iac2.getE()), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
                 try {
-                    final PinholeCameraIntrinsicParameters intrinsic2 =
-                            iac2.getIntrinsicParameters();
+                    final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
                     assertEquals(intrinsic.getHorizontalFocalLength(),
-                            intrinsic2.getHorizontalFocalLength(),
+                            intrinsic2.getHorizontalFocalLength(), VERY_LARGE_ABSOLUTE_ERROR);
+                    assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                             VERY_LARGE_ABSOLUTE_ERROR);
-                    assertEquals(intrinsic.getVerticalFocalLength(),
-                            intrinsic2.getVerticalFocalLength(),
+                    assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(),
                             VERY_LARGE_ABSOLUTE_ERROR);
-                    assertEquals(intrinsic.getSkewness(),
-                            intrinsic2.getSkewness(), VERY_LARGE_ABSOLUTE_ERROR);
                     assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                            intrinsic2.getHorizontalPrincipalPoint(),
-                            VERY_LARGE_ABSOLUTE_ERROR);
+                            intrinsic2.getHorizontalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
                     assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                            intrinsic2.getVerticalPrincipalPoint(),
-                            VERY_LARGE_ABSOLUTE_ERROR);
+                            intrinsic2.getVerticalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
 
-                    horizontalFocalDistanceError = Math.abs(
-                            intrinsic.getHorizontalFocalLength() -
-                                    intrinsic2.getHorizontalFocalLength());
-                    verticalFocalDistanceError = Math.abs(
-                            intrinsic.getVerticalFocalLength() -
-                                    intrinsic2.getVerticalFocalLength());
-                    skewnessError = Math.abs(intrinsic.getSkewness() -
-                            intrinsic2.getSkewness());
-                    horizontalPrincipalPointError = Math.abs(
-                            intrinsic.getHorizontalPrincipalPoint() -
-                                    intrinsic2.getHorizontalPrincipalPoint());
-                    verticalPrincipalPointError = Math.abs(
-                            intrinsic.getVerticalPrincipalPoint() -
-                                    intrinsic2.getVerticalPrincipalPoint());
+                    horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                            intrinsic2.getHorizontalFocalLength());
+                    verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                            intrinsic2.getVerticalFocalLength());
+                    skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                    horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                            intrinsic2.getHorizontalPrincipalPoint());
+                    verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                            intrinsic2.getVerticalPrincipalPoint());
 
                     avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                     avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -705,13 +637,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                 continue;
             }
 
-            assertEquals(avgHorizontalFocalDistanceError, 0.0,
-                    LARGE_ABSOLUTE_ERROR);
-            assertEquals(avgVerticalFocalDistanceError, 0.0, LARGE_ABSOLUTE_ERROR);
-            assertEquals(avgSkewnessError, 0.0, LARGE_ABSOLUTE_ERROR);
-            assertEquals(avgHorizontalPrincipalPointError, 0.0,
-                    LARGE_ABSOLUTE_ERROR);
-            assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, avgHorizontalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, avgVerticalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, avgSkewnessError, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
             final String msg = "No constraints - failed: " +
                     failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
@@ -755,9 +685,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testEstimateZeroSkewness()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            LockedException, NotReadyException, RobustEstimatorException,
-            ImageOfAbsoluteConicEstimatorException {
+            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
         boolean succeededAtLeastOnce = false;
         int failed = 0;
@@ -786,8 +715,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double horizontalFocalLength = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -816,8 +745,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
+            final List<Transformation2D> homographies = new ArrayList<>();
             final double[] weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             for (int i = 0; i < 50; i++) {
@@ -837,52 +765,46 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
                 final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                 final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.
-                                createFromPoints(patternPoints, projectedPatternPoints,
-                                        RobustEstimatorMethod.RANSAC);
+                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography =
-                        homographyEstimator.estimate();
+                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
             final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies,
-                            weights, this);
+                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(false);
             estimator.setFocalDistanceAspectRatioKnown(false);
 
-            assertEquals(estimator.getMinNumberOfRequiredHomographies(), 2);
+            assertEquals(2, estimator.getMinNumberOfRequiredHomographies());
 
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimationProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimationProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimationProgressChange >= 0);
             reset();
 
@@ -892,52 +814,37 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getB(), 0.0, 0.0);
-            assertEquals(iac2.getB(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getD()), Math.abs(iac2.getD()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getE()), Math.abs(iac2.getE()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getB(), 0.0);
+            assertEquals(0.0, iac2.getB(), 0.0);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getD()), Math.abs(iac2.getD()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getE()), Math.abs(iac2.getE()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
-                assertEquals(intrinsic.getHorizontalFocalLength(),
-                        intrinsic2.getHorizontalFocalLength(),
+                assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getVerticalFocalLength(),
-                        intrinsic2.getVerticalFocalLength(),
+                assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                         VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
+                assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
                 assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                        intrinsic2.getHorizontalPrincipalPoint(),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                        intrinsic2.getVerticalPrincipalPoint(),
+                        intrinsic2.getHorizontalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
                         VERY_LARGE_ABSOLUTE_ERROR);
 
-                horizontalFocalDistanceError = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength());
-                skewnessError = Math.abs(intrinsic.getSkewness() -
-                        intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(
-                        intrinsic.getHorizontalPrincipalPoint() -
-                                intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(
-                        intrinsic.getVerticalPrincipalPoint() -
-                                intrinsic2.getVerticalPrincipalPoint());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                        intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                        intrinsic2.getVerticalFocalLength());
+                skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                        intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                        intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -995,13 +902,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
         final String msg = "Zero skewness - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
@@ -1039,9 +944,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testEstimatePrincipalPointAtOrigin()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            LockedException, NotReadyException, RobustEstimatorException,
-            ImageOfAbsoluteConicEstimatorException {
+            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
         boolean succeededAtLeastOnce = false;
         int failed = 0;
@@ -1072,8 +976,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double horizontalFocalLength = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -1121,52 +1025,46 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
                 final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                 final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.
-                                createFromPoints(patternPoints, projectedPatternPoints,
-                                        RobustEstimatorMethod.RANSAC);
+                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography =
-                        homographyEstimator.estimate();
+                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
             final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies,
-                            weights, this);
+                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(false);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setFocalDistanceAspectRatioKnown(false);
 
-            assertEquals(estimator.getMinNumberOfRequiredHomographies(), 2);
+            assertEquals(2, estimator.getMinNumberOfRequiredHomographies());
 
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimationProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimationProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimationProgressChange >= 0);
             reset();
 
@@ -1176,62 +1074,48 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getB()), Math.abs(iac2.getB()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getD(), 0.0, 0.0);
-            assertEquals(iac2.getD(), 0.0, 0.0);
-            assertEquals(iac.getE(), 0.0, 0.0);
-            assertEquals(iac2.getE(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getB()), Math.abs(iac2.getB()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getD(), 0.0);
+            assertEquals(0.0, iac2.getD(), 0.0);
+            assertEquals(0.0, iac.getE(), 0.0);
+            assertEquals(0.0, iac2.getE(), 0.0);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
                 if (Math.abs(intrinsic.getHorizontalFocalLength() - intrinsic2.getHorizontalFocalLength()) >
                         VERY_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
-                assertEquals(intrinsic.getHorizontalFocalLength(),
-                        intrinsic2.getHorizontalFocalLength(),
+                assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         VERY_LARGE_ABSOLUTE_ERROR);
                 if (Math.abs(intrinsic.getVerticalFocalLength() - intrinsic2.getVerticalFocalLength()) >
                         VERY_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
-                assertEquals(intrinsic.getVerticalFocalLength(),
-                        intrinsic2.getVerticalFocalLength(),
+                assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                         VERY_LARGE_ABSOLUTE_ERROR);
                 if (Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness()) > VERY_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
-                assertEquals(intrinsic.getSkewness(),
-                        intrinsic2.getSkewness(), VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                        0.0);
-                assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+                assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength());
-                skewnessError = Math.abs(intrinsic.getSkewness() -
-                        intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(
-                        intrinsic.getHorizontalPrincipalPoint() -
-                                intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(
-                        intrinsic.getVerticalPrincipalPoint() -
-                                intrinsic2.getVerticalPrincipalPoint());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                        intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                        intrinsic2.getVerticalFocalLength());
+                skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                        intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                        intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1289,13 +1173,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
         final String msg = "Principal point at origin - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
@@ -1333,9 +1215,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testEstimateZeroSkewnessPrincipalPointAtOrigin()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            LockedException, NotReadyException, RobustEstimatorException,
-            ImageOfAbsoluteConicEstimatorException {
+            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
         boolean succeededAtLeastOnce = false;
         int failed = 0;
@@ -1364,10 +1245,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -1394,8 +1273,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
+            final List<Transformation2D> homographies = new ArrayList<>();
             final double[] weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             for (int i = 0; i < 50; i++) {
@@ -1410,57 +1288,50 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
                 final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                 final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.
-                                createFromPoints(patternPoints, projectedPatternPoints,
-                                        RobustEstimatorMethod.RANSAC);
+                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography =
-                        homographyEstimator.estimate();
+                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
             final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies,
-                            weights, this);
+                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setFocalDistanceAspectRatioKnown(false);
 
-            assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+            assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
 
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimationProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimationProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimationProgressChange >= 0);
             reset();
 
@@ -1470,51 +1341,39 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getB(), 0.0, 0.0);
-            assertEquals(iac2.getB(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getD(), 0.0, 0.0);
-            assertEquals(iac2.getD(), 0.0, 0.0);
-            assertEquals(iac.getE(), 0.0, 0.0);
-            assertEquals(iac2.getE(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getB(), 0.0);
+            assertEquals(0.0, iac2.getB(), 0.0);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getD(), 0.0);
+            assertEquals(0.0, iac2.getD(), 0.0);
+            assertEquals(0.0, iac.getE(), 0.0);
+            assertEquals(0.0, iac2.getE(), 0.0);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
-                assertEquals(intrinsic.getHorizontalFocalLength(),
-                        intrinsic2.getHorizontalFocalLength(),
+                assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         ULTRA_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getVerticalFocalLength(),
-                        intrinsic2.getVerticalFocalLength(),
+                assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                         ULTRA_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                        0.0);
-                assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+                assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength());
-                skewnessError = Math.abs(intrinsic.getSkewness() -
-                        intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(
-                        intrinsic.getHorizontalPrincipalPoint() -
-                                intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(
-                        intrinsic.getVerticalPrincipalPoint() -
-                                intrinsic2.getVerticalPrincipalPoint());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                        intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                        intrinsic2.getVerticalFocalLength());
+                skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                        intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                        intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1572,14 +1431,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
         final String msg = "No skewness and Principal point at origin - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
@@ -1617,9 +1473,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testEstimateZeroSkewnessAspectRatioKnown()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            LockedException, NotReadyException, RobustEstimatorException,
-            ImageOfAbsoluteConicEstimatorException {
+            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
         boolean succeededAtLeastOnce = false;
         int failed = 0;
@@ -1648,8 +1503,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1678,8 +1532,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
+            final List<Transformation2D> homographies = new ArrayList<>();
             final double[] weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             for (int i = 0; i < 50; i++) {
@@ -1694,20 +1547,16 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
@@ -1718,34 +1567,32 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                                 createFromPoints(patternPoints, projectedPatternPoints,
                                         RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography =
-                        homographyEstimator.estimate();
+                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
             final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies,
-                            weights, this);
+                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(false);
             estimator.setFocalDistanceAspectRatioKnown(true);
             estimator.setFocalDistanceAspectRatio(1.0);
 
-            assertEquals(estimator.getMinNumberOfRequiredHomographies(), 2);
+            assertEquals(2, estimator.getMinNumberOfRequiredHomographies());
 
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimationProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimationProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimationProgressChange >= 0);
             reset();
 
@@ -1755,52 +1602,37 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getB(), 0.0, 0.0);
-            assertEquals(iac2.getB(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getD()), Math.abs(iac2.getD()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getE()), Math.abs(iac2.getE()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getB(), 0.0);
+            assertEquals(0.0, iac2.getB(), 0.0);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getD()), Math.abs(iac2.getD()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getE()), Math.abs(iac2.getE()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
-                assertEquals(intrinsic.getHorizontalFocalLength(),
-                        intrinsic2.getHorizontalFocalLength(),
+                assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         2.0 * VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getVerticalFocalLength(),
-                        intrinsic2.getVerticalFocalLength(),
+                assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                         2.0 * VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
+                assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
                 assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                        intrinsic2.getHorizontalPrincipalPoint(),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                        intrinsic2.getVerticalPrincipalPoint(),
+                        intrinsic2.getHorizontalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
                         VERY_LARGE_ABSOLUTE_ERROR);
 
-                horizontalFocalDistanceError = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength());
-                skewnessError = Math.abs(intrinsic.getSkewness() -
-                        intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(
-                        intrinsic.getHorizontalPrincipalPoint() -
-                                intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(
-                        intrinsic.getVerticalPrincipalPoint() -
-                                intrinsic2.getVerticalPrincipalPoint());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                        intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                        intrinsic2.getVerticalFocalLength());
+                skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                        intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                        intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1858,13 +1690,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0,
-                LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
         final String msg = "Zero skewness, aspect ratio known - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
@@ -1892,8 +1722,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                 maxHorizontalPrincipalPointError +
                 " max vertical principal point error: " +
                 maxVerticalPrincipalPointError;
-        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
         assertTrue(succeededRatio >= 0.25);
@@ -1933,8 +1762,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -1961,8 +1789,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
+            final List<Transformation2D> homographies = new ArrayList<>();
             final double[] weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             for (int i = 0; i < 50; i++) {
@@ -1977,58 +1804,51 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
                 final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                 final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.
-                                createFromPoints(patternPoints, projectedPatternPoints,
-                                        RobustEstimatorMethod.RANSAC);
+                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography =
-                        homographyEstimator.estimate();
+                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate IAC
             final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies,
-                            weights, this);
+                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setFocalDistanceAspectRatioKnown(true);
             estimator.setFocalDistanceAspectRatio(1.0);
 
-            assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+            assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
 
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimationProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimationProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimationProgressChange >= 0);
             reset();
 
@@ -2038,55 +1858,43 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getB(), 0.0, 0.0);
-            assertEquals(iac2.getB(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getD(), 0.0, 0.0);
-            assertEquals(iac2.getD(), 0.0, 0.0);
-            assertEquals(iac.getE(), 0.0, 0.0);
-            assertEquals(iac2.getE(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getB(), 0.0);
+            assertEquals(0.0, iac2.getB(), 0.0);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getD(), 0.0);
+            assertEquals(0.0, iac2.getD(), 0.0);
+            assertEquals(0.0, iac.getE(), 0.0);
+            assertEquals(0.0, iac2.getE(), 0.0);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
                 if (Math.abs(intrinsic.getHorizontalFocalLength() -
                         intrinsic2.getHorizontalFocalLength()) > ULTRA_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
-                assertEquals(intrinsic.getHorizontalFocalLength(),
-                        intrinsic2.getHorizontalFocalLength(),
+                assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         ULTRA_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getVerticalFocalLength(),
-                        intrinsic2.getVerticalFocalLength(),
+                assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                         ULTRA_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                        0.0);
-                assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+                assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength());
-                skewnessError = Math.abs(intrinsic.getSkewness() -
-                        intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(
-                        intrinsic.getHorizontalPrincipalPoint() -
-                                intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(
-                        intrinsic.getVerticalPrincipalPoint() -
-                                intrinsic2.getVerticalPrincipalPoint());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                        intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                        intrinsic2.getVerticalFocalLength());
+                skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                        intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                        intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -2144,15 +1952,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0,
-                VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         final String msg = "No skewness, Principal point at origin, aspect ratio known - failed: " +
                 failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
@@ -2180,8 +1984,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
                 maxHorizontalPrincipalPointError +
                 " max vertical principal point error: " +
                 maxVerticalPrincipalPointError;
-        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
         assertTrue(succeededRatio >= 0.25);
@@ -2190,15 +1993,15 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
     @Test
     public void testEstimateRealData() throws CoincidentPointsException,
-            InvalidPinholeCameraIntrinsicParametersException, LockedException,
-            NotReadyException, ImageOfAbsoluteConicEstimatorException {
+            InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            ImageOfAbsoluteConicEstimatorException {
         // For a QR pattern, assuming zero skewness, equal focal lengths and
         // principal point at origin on a nexus 5 device
         final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
         final List<Point2D> patternPoints = pattern.getIdealPoints();
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 774.5, 1084.5 | 6.5, -60.5
         Point[1] = 791.5, 840.0 | 23.5, 184.0
@@ -2212,7 +2015,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         sampledPoints1.add(new InhomogeneousPoint2D(231.0, -50.0));
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 382.5, 701.5 | -385.5, 322.5
         Point[1] = 351.0, 473.5 | -417.0, 550.5
@@ -2226,7 +2029,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         sampledPoints2.add(new InhomogeneousPoint2D(-176.0, 370.5));
 
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 988.0, 486.5 | 220.0, 537.5
         Point[1] = 1028.5, 278.5 | 260.5, 745.5
@@ -2240,7 +2043,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         sampledPoints3.add(new InhomogeneousPoint2D(417.5, 525.5));
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 576.0, 1404.4166 | -192.0, -380.4166259765625
         Point[1] = 544.5, 1151.5 | -223.5, -127.5
@@ -2254,7 +2057,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         sampledPoints4.add(new InhomogeneousPoint2D(30.5, -323.0));
 
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 913.5, 1596.0 | 145.5, -572.0
         Point[1] = 939.5, 1360.7 | 171.5, -336.699951171875
@@ -2309,21 +2112,19 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
 
         // estimate IAC
         final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator(homographies,
-                        weights);
+                new WeightedImageOfAbsoluteConicEstimator(homographies, weights);
 
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         final ImageOfAbsoluteConic iac = estimator.estimate();
 
         assertNotNull(iac);
 
         // obtain intrinsic parameters
-        final PinholeCameraIntrinsicParameters intrinsic =
-                iac.getIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters intrinsic = iac.getIntrinsicParameters();
 
         assertNotNull(intrinsic);
 
@@ -2334,15 +2135,13 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements
         final double verticalPrincipalPoint = intrinsic.getVerticalPrincipalPoint();
         assertTrue(horizontalFocalLength > 0);
         assertTrue(verticalFocalLength > 0);
-        assertEquals(horizontalFocalLength, verticalFocalLength,
-                ABSOLUTE_ERROR);
-        assertEquals(skewness, 0.0, 0.0);
-        assertEquals(horizontalPrincipalPoint, 0.0, 0.0);
-        assertEquals(verticalPrincipalPoint, 0.0, 0.0);
+        assertEquals(horizontalFocalLength, verticalFocalLength, ABSOLUTE_ERROR);
+        assertEquals(0.0, skewness, 0.0);
+        assertEquals(0.0, horizontalPrincipalPoint, 0.0);
+        assertEquals(0.0, verticalPrincipalPoint, 0.0);
 
         final String msg = "Real data focal length: " + horizontalFocalLength;
-        Logger.getLogger(WeightedImageOfAbsoluteConicEstimatorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(WeightedImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Override

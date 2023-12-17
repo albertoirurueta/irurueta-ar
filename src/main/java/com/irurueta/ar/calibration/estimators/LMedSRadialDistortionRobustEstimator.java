@@ -306,7 +306,8 @@ public class LMedSRadialDistortionRobustEstimator extends
                             }
 
                             @Override
-                            public double computeResidual(final RadialDistortion currentEstimation, final int i) {
+                            public double computeResidual(final RadialDistortion currentEstimation,
+                                                          final int i) {
                                 final Point2D distortedPoint = mDistortedPoints.get(i);
                                 final Point2D undistortedPoint = mUndistortedPoints.get(i);
 
@@ -392,6 +393,6 @@ public class LMedSRadialDistortionRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.LMEDS;
     }
 }

@@ -81,34 +81,32 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     @Test
     public void testConstructor() {
         // test constructor without arguments
-        LMedSFundamentalMatrixRobustEstimator estimator =
-                new LMedSFundamentalMatrixRobustEstimator();
+        LMedSFundamentalMatrixRobustEstimator estimator = new LMedSFundamentalMatrixRobustEstimator();
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(),
-                LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
+        assertEquals(LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT,
+                estimator.isResultRefined());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
+                estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
@@ -116,30 +114,29 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         estimator = new LMedSFundamentalMatrixRobustEstimator(this);
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(),
-                LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
+        assertEquals(LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT,
+                estimator.isResultRefined());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
+                estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
@@ -151,34 +148,31 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             rightPoints.add(Point2D.create());
         }
 
-        estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints,
-                rightPoints);
+        estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(),
-                LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertEquals(LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
+                estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
@@ -186,74 +180,65 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         final List<Point2D> emptyPoints = new ArrayList<>();
         estimator = null;
         try {
-            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints,
-                    rightPoints);
+            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints, rightPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints,
-                    emptyPoints);
+            estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints, emptyPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints,
-                    emptyPoints);
+            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints, emptyPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
 
         // test constructor with left and right points and listener
-        estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints,
-                rightPoints, this);
+        estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints, rightPoints, this);
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(),
-                LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertSame(estimator.getListener(), this);
+        assertEquals(LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
+                estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints,
-                    rightPoints, this);
+            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints, rightPoints, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints,
-                    emptyPoints, this);
+            estimator = new LMedSFundamentalMatrixRobustEstimator(leftPoints, emptyPoints, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints,
-                    emptyPoints, this);
+            estimator = new LMedSFundamentalMatrixRobustEstimator(emptyPoints, emptyPoints, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -261,24 +246,23 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetNonRobustFundamentalMatrixEstimatorMethod()
-            throws LockedException {
+    public void testGetSetNonRobustFundamentalMatrixEstimatorMethod() throws LockedException {
         final LMedSFundamentalMatrixRobustEstimator estimator =
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_7);
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
 
         // set new value
         estimator.setNonRobustFundamentalMatrixEstimatorMethod(
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
 
         // check correctness
-        assertEquals(estimator.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
-        assertEquals(estimator.getMinRequiredPoints(), MIN_REQUIRED_POINTS_8);
+        assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
+                estimator.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(MIN_REQUIRED_POINTS_8, estimator.getMinRequiredPoints());
     }
 
     @Test
@@ -287,15 +271,14 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getStopThreshold(),
-                LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
+        assertEquals(LMedSFundamentalMatrixRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // set new value
         estimator.setStopThreshold(0.5);
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -326,8 +309,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         estimator.setPoints(leftPoints, rightPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertTrue(estimator.isReady());
 
         // Force IllegalArgumentException
@@ -350,8 +333,7 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetListenerAndIsListenerAvailable()
-            throws LockedException {
+    public void testGetSetListenerAndIsListenerAvailable() throws LockedException {
         final LMedSFundamentalMatrixRobustEstimator estimator =
                 new LMedSFundamentalMatrixRobustEstimator();
 
@@ -363,7 +345,7 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
     }
 
@@ -373,14 +355,14 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getProgressDelta(),
-                FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(estimator.getProgressDelta(), 0.5f, 0.0);
+        assertEquals(0.5f, estimator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -401,14 +383,14 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getConfidence(),
-                FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.5);
 
         // check correctness
-        assertEquals(estimator.getConfidence(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -429,14 +411,14 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getMaxIterations(),
-                FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(10);
 
         // check correctness
-        assertEquals(estimator.getMaxIterations(), 10);
+        assertEquals(10, estimator.getMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -452,16 +434,16 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.isResultRefined(),
-                FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT,
+                estimator.isResultRefined());
 
         // set new value
         estimator.setResultRefined(
                 !FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
 
         // check correctness
-        assertEquals(estimator.isResultRefined(),
-                !FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
+        assertEquals(!FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT,
+                estimator.isResultRefined());
     }
 
     @Test
@@ -470,16 +452,16 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 new LMedSFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(estimator.isCovarianceKept(),
-                FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
+                estimator.isCovarianceKept());
 
         // set new value
         estimator.setCovarianceKept(
                 !FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
 
         // check correctness
-        assertEquals(estimator.isCovarianceKept(),
-                !FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        assertEquals(!FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
+                estimator.isCovarianceKept());
     }
 
     @Test
@@ -499,9 +481,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateSevenPointsWithRefinement() throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateSevenPointsWithRefinement() throws LockedException, NotReadyException,
+            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
         double avgLeftEpipoleError = 0.0;
@@ -529,10 +510,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -557,10 +536,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -571,20 +548,16 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -637,14 +610,13 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertFalse(estimator.isLocked());
             assertNull(estimator.getCovariance());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            assertEquals(estimator.getMinRequiredPoints(),
-                    MIN_REQUIRED_POINTS_7);
+            assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
             assertNotNull(estimator.getInliersData().getResiduals());
@@ -652,8 +624,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertNotNull(estimator.getCovariance());
 
             // check correctness
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
@@ -673,11 +645,11 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             if (leftEpipoleError > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(leftEpipoleError, 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, leftEpipoleError, ABSOLUTE_ERROR);
             if (rightEpipoleError > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(rightEpipoleError, 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, rightEpipoleError, ABSOLUTE_ERROR);
 
             avgLeftEpipoleError += leftEpipoleError;
             avgRightEpipoleError += rightEpipoleError;
@@ -705,16 +677,12 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR));
 
                 assertTrue(epipolarPlane2.isLocus(point3D, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane2.isLocus(center1, ABSOLUTE_ERROR));
@@ -730,8 +698,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         avgLeftEpipoleError /= numValid;
         avgRightEpipoleError /= numValid;
 
-        assertEquals(avgLeftEpipoleError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(avgRightEpipoleError, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgLeftEpipoleError, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgRightEpipoleError, ABSOLUTE_ERROR);
 
         // Force NotReadyException
         final LMedSFundamentalMatrixRobustEstimator estimator =
@@ -744,9 +712,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateEightPointsWithRefinement() throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateEightPointsWithRefinement() throws LockedException, NotReadyException,
+            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
         double avgLeftEpipoleError = 0.0;
@@ -774,10 +741,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -802,10 +767,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -816,20 +779,16 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -883,14 +842,13 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertFalse(estimator.isLocked());
             assertNull(estimator.getCovariance());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            assertEquals(estimator.getMinRequiredPoints(),
-                    MIN_REQUIRED_POINTS_8);
+            assertEquals(MIN_REQUIRED_POINTS_8, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
             assertNotNull(estimator.getInliersData().getResiduals());
@@ -898,8 +856,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertNotNull(estimator.getCovariance());
 
             // check correctness
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
@@ -919,11 +877,11 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             if (leftEpipoleError > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(leftEpipoleError, 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, leftEpipoleError, ABSOLUTE_ERROR);
             if (rightEpipoleError > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(rightEpipoleError, 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, rightEpipoleError, ABSOLUTE_ERROR);
 
             avgLeftEpipoleError += leftEpipoleError;
             avgRightEpipoleError += rightEpipoleError;
@@ -951,16 +909,12 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR));
 
                 assertTrue(epipolarPlane2.isLocus(point3D, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane2.isLocus(center1, ABSOLUTE_ERROR));
@@ -976,8 +930,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         avgLeftEpipoleError /= numValid;
         avgRightEpipoleError /= numValid;
 
-        assertEquals(avgLeftEpipoleError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(avgRightEpipoleError, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgLeftEpipoleError, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgRightEpipoleError, ABSOLUTE_ERROR);
 
         // Force NotReadyException
         final LMedSFundamentalMatrixRobustEstimator estimator =
@@ -990,9 +944,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateAffineWithRefinement() throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException,
+    public void testEstimateAffineWithRefinement() throws LockedException, NotReadyException,
+            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
             WrongSizeException, InvalidPairOfCamerasException {
 
         int numValid = 0;
@@ -1018,10 +971,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1046,10 +997,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1060,10 +1009,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
             final Matrix cameraMatrix1 = camera1.getInternalMatrix();
@@ -1084,11 +1031,9 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -1142,29 +1087,27 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertFalse(estimator.isLocked());
             assertNull(estimator.getCovariance());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            assertEquals(estimator.getMinRequiredPoints(),
-                    MIN_REQUIRED_POINTS_AFFINE);
+            assertEquals(MIN_REQUIRED_POINTS_AFFINE, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
             assertNotNull(estimator.getInliersData().getResiduals());
             assertTrue(estimator.getInliersData().getNumInliers() > 0);
 
             // check correctness
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
 
             // compute epipoles
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
             fundMatrix2.computeEpipoles();
 
             final Point2D epipole1a = fundMatrix2.getLeftEpipole();
@@ -1190,18 +1133,15 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             fundMatrix2.normalize();
 
             // check that both matrices are equal up to scale (i.e. sign)
-            if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
+            if (!fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
@@ -1226,25 +1166,21 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
                 if (!epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR));
                 if (!epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
                 if (!epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR));
 
                 if (!epipolarPlane2.isLocus(point3D, ABSOLUTE_ERROR)) {
                     continue;
@@ -1277,9 +1213,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateSevenPointsWithoutRefinement()
-            throws LockedException, NotReadyException, RobustEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateSevenPointsWithoutRefinement() throws LockedException, NotReadyException,
+            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
 
@@ -1304,10 +1239,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         final double verticalFocalLength2 = randomizer.nextDouble(
                 MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                MAX_SKEWNESS);
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
         final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1332,10 +1265,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1346,20 +1277,16 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                center2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         // generate a random list of 3D points
         final List<Point3D> points3D = new ArrayList<>();
         for (int i = 0; i < nPoints; i++) {
             points3D.add(new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE), randomizer.nextDouble(
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE)));
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
         }
 
         // project 3D points with both cameras
@@ -1412,14 +1339,13 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getCovariance());
 
-        assertEquals(estimateStart, 0);
-        assertEquals(estimateEnd, 0);
-        assertEquals(estimateNextIteration, 0);
-        assertEquals(estimateProgressChange, 0);
+        assertEquals(0, estimateStart);
+        assertEquals(0, estimateEnd);
+        assertEquals(0, estimateNextIteration);
+        assertEquals(0, estimateProgressChange);
 
         final FundamentalMatrix fundMatrix = estimator.estimate();
-        assertEquals(estimator.getMinRequiredPoints(),
-                MIN_REQUIRED_POINTS_7);
+        assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNotNull(estimator.getInliersData());
         assertNotNull(estimator.getInliersData().getInliers());
         assertNotNull(estimator.getInliersData().getResiduals());
@@ -1427,8 +1353,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         assertNull(estimator.getCovariance());
 
         // check correctness
-        assertEquals(estimateStart, 1);
-        assertEquals(estimateEnd, 1);
+        assertEquals(1, estimateStart);
+        assertEquals(1, estimateEnd);
         assertTrue(estimateNextIteration > 0);
         assertTrue(estimateProgressChange >= 0);
         reset();
@@ -1445,8 +1371,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         // check correctness of epipoles
         leftEpipoleError = epipole1a.distanceTo(epipole1b);
         rightEpipoleError = epipole2a.distanceTo(epipole2b);
-        assertEquals(leftEpipoleError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(rightEpipoleError, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, leftEpipoleError, ABSOLUTE_ERROR);
+        assertEquals(0.0, rightEpipoleError, ABSOLUTE_ERROR);
 
         // check that all points lie within their corresponding epipolar
         // lines
@@ -1471,24 +1397,20 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final Plane epipolarPlane2 = camera2.backProject(line2);
 
             // check that both planes are the same
-            assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                    ABSOLUTE_ERROR));
+            assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
 
             // check that point3D and camera centers belong to epipolar plane
-            assertTrue(epipolarPlane1.isLocus(point3D,
-                    ABSOLUTE_ERROR));
-            assertTrue(epipolarPlane1.isLocus(center1,
-                    ABSOLUTE_ERROR));
-            assertTrue(epipolarPlane1.isLocus(center2,
-                    ABSOLUTE_ERROR));
+            assertTrue(epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR));
+            assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
+            assertTrue(epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR));
 
             assertTrue(epipolarPlane2.isLocus(point3D, ABSOLUTE_ERROR));
             assertTrue(epipolarPlane2.isLocus(center1, ABSOLUTE_ERROR));
             assertTrue(epipolarPlane2.isLocus(center2, ABSOLUTE_ERROR));
         }
 
-        assertEquals(leftEpipoleError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(rightEpipoleError, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, leftEpipoleError, ABSOLUTE_ERROR);
+        assertEquals(0.0, rightEpipoleError, ABSOLUTE_ERROR);
 
         // Force NotReadyException
         estimator = new LMedSFundamentalMatrixRobustEstimator();
@@ -1500,9 +1422,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateEightPointsWithoutRefinement()
-            throws LockedException, NotReadyException, RobustEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException {
+    public void testEstimateEightPointsWithoutRefinement() throws LockedException, NotReadyException,
+            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
         double avgLeftEpipoleError = 0.0;
@@ -1530,10 +1451,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1558,10 +1477,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1572,20 +1489,16 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -1639,14 +1552,13 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertFalse(estimator.isLocked());
             assertNull(estimator.getCovariance());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            assertEquals(estimator.getMinRequiredPoints(),
-                    MIN_REQUIRED_POINTS_8);
+            assertEquals(MIN_REQUIRED_POINTS_8, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
             assertNotNull(estimator.getInliersData().getResiduals());
@@ -1654,8 +1566,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertNull(estimator.getCovariance());
 
             // check correctness
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
@@ -1675,11 +1587,11 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             if (Math.abs(leftEpipoleError) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(leftEpipoleError, 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, leftEpipoleError, ABSOLUTE_ERROR);
             if (Math.abs(rightEpipoleError) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(rightEpipoleError, 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, rightEpipoleError, ABSOLUTE_ERROR);
 
             avgLeftEpipoleError += leftEpipoleError;
             avgRightEpipoleError += rightEpipoleError;
@@ -1707,16 +1619,12 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR));
 
                 assertTrue(epipolarPlane2.isLocus(point3D, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane2.isLocus(center1, ABSOLUTE_ERROR));
@@ -1731,8 +1639,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
         avgLeftEpipoleError /= numValid;
         avgRightEpipoleError /= numValid;
 
-        assertEquals(avgLeftEpipoleError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(avgRightEpipoleError, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgLeftEpipoleError, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgRightEpipoleError, ABSOLUTE_ERROR);
 
         // Force NotReadyException
         final LMedSFundamentalMatrixRobustEstimator estimator =
@@ -1745,9 +1653,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateAffineWithoutRefinement() throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            InvalidFundamentalMatrixException, NotAvailableException,
+    public void testEstimateAffineWithoutRefinement() throws LockedException, NotReadyException,
+            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
             WrongSizeException, InvalidPairOfCamerasException {
 
         int numValid = 0;
@@ -1773,10 +1680,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final double verticalFocalLength2 = randomizer.nextDouble(
                     MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                    MAX_SKEWNESS);
+            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
             final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                     MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -1801,10 +1706,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                    gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                    gammaEuler2);
+            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic1 =
                     new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -1815,10 +1718,8 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                             verticalFocalLength2, horizontalPrincipalPoint2,
                             verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
             final Matrix cameraMatrix1 = camera1.getInternalMatrix();
@@ -1839,11 +1740,9 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             final List<Point3D> points3D = new ArrayList<>();
             for (int i = 0; i < nPoints; i++) {
                 points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE), randomizer.nextDouble(
-                        MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE)));
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
@@ -1897,14 +1796,13 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertFalse(estimator.isLocked());
             assertNull(estimator.getCovariance());
 
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             final FundamentalMatrix fundMatrix = estimator.estimate();
-            assertEquals(estimator.getMinRequiredPoints(),
-                    MIN_REQUIRED_POINTS_AFFINE);
+            assertEquals(MIN_REQUIRED_POINTS_AFFINE, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
             assertNotNull(estimator.getInliersData().getResiduals());
@@ -1912,15 +1810,14 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             assertNull(estimator.getCovariance());
 
             // check correctness
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
 
             // compute epipoles
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
             fundMatrix2.computeEpipoles();
 
             final Point2D epipole1a = fundMatrix2.getLeftEpipole();
@@ -1946,18 +1843,15 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
             fundMatrix2.normalize();
 
             // check that both matrices are equal up to scale (i.e. sign)
-            if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
+            if (!fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundMatrix.getInternalMatrix().equals(
-                            fundMatrix2.getInternalMatrix().
-                                    multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
+                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
@@ -1982,25 +1876,21 @@ public class LMedSFundamentalMatrixRobustEstimatorTest implements
                 final Plane epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
-                assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
 
                 // check that point3D and camera centers belong to epipolar plane
                 if (!epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(point3D,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(point3D, ABSOLUTE_ERROR));
                 if (!epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center1,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center1, ABSOLUTE_ERROR));
                 if (!epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR)) {
                     continue;
                 }
-                assertTrue(epipolarPlane1.isLocus(center2,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1.isLocus(center2, ABSOLUTE_ERROR));
 
                 if (!epipolarPlane2.isLocus(point3D, ABSOLUTE_ERROR)) {
                     continue;

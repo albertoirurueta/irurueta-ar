@@ -346,6 +346,6 @@ public class LMedSRobustSinglePoint3DTriangulator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.LMEDS;
     }
 }

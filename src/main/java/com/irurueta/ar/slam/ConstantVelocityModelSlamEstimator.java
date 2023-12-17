@@ -124,7 +124,7 @@ public class ConstantVelocityModelSlamEstimator extends
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
-     * time..
+     * time.
      */
     private long mLastTimestampNanos = -1;
 
@@ -178,7 +178,8 @@ public class ConstantVelocityModelSlamEstimator extends
     }
 
     /**
-     * Gets covariance matrix of state variables (position, velocity, acceleration, orientation and angular speed).
+     * Gets covariance matrix of state variables (position, velocity, acceleration, orientation and
+     * angular speed).
      * Diagonal elements of matrix returned by this method are in the following order:
      * position-x, position-y, position-z, quaternion-a, quaternion-b, quaternion-c,
      * quaternion-d, linear-velocity-x, linear-velocity-y, linear-velocity-z,
@@ -224,9 +225,9 @@ public class ConstantVelocityModelSlamEstimator extends
      * Corrects system state with provided position measure using current
      * position accuracy.
      *
-     * @param positionX new position along x axis expressed in meters (m).
-     * @param positionY new position along y axis expressed in meters (m).
-     * @param positionZ new position along z axis expressed in meters (m).
+     * @param positionX new position along x-axis expressed in meters (m).
+     * @param positionY new position along y-axis expressed in meters (m).
+     * @param positionZ new position along z-axis expressed in meters (m).
      */
     @Override
     public void correctWithPositionMeasure(
@@ -427,10 +428,11 @@ public class ConstantVelocityModelSlamEstimator extends
     protected void reset(
             final double statePositionX, final double statePositionY, final double statePositionZ,
             final double stateVelocityX, final double stateVelocityY, final double stateVelocityZ,
-            final double stateAccelerationX, final double stateAccelerationY, final double stateAccelerationZ,
-            final double stateQuaternionA, final double stateQuaternionB,
+            final double stateAccelerationX, final double stateAccelerationY,
+            final double stateAccelerationZ, final double stateQuaternionA, final double stateQuaternionB,
             final double stateQuaternionC, final double stateQuaternionD,
-            final double stateAngularSpeedX, final double stateAngularSpeedY, final double stateAngularSpeedZ) {
+            final double stateAngularSpeedX, final double stateAngularSpeedY,
+            final double stateAngularSpeedZ) {
         super.reset(statePositionX, statePositionY, statePositionZ,
                 stateVelocityX, stateVelocityY, stateVelocityZ,
                 stateAccelerationX, stateAccelerationY, stateAccelerationZ,
@@ -492,7 +494,7 @@ public class ConstantVelocityModelSlamEstimator extends
         mStatePositionZ = mX[2];
         mX[2] = state.getElementAtIndex(2);
 
-        // quaternion (state predictor is more reliable than Kalman filter, for
+        // quaternion state predictor is more reliable than Kalman filter, for
         // that reason we ignore predicted quaternion values on Kalman filter and
         // simply keep predicted ones. Besides, typically gyroscope samples are
         // much more reliable than accelerometer ones. For that reason state
@@ -527,7 +529,7 @@ public class ConstantVelocityModelSlamEstimator extends
 
     /**
      * Updates state data of the device by using state matrix obtained from
-     * Kalman filter after correction..
+     * Kalman filter after correction.
      *
      * @param state state matrix obtained from Kalman filter.
      */

@@ -29,146 +29,129 @@ public class CameraCalibratorTest {
         // test create with method
 
         // Error Optimization
-        CameraCalibrator calibrator = CameraCalibrator.create(
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
+        CameraCalibrator calibrator = CameraCalibrator.create(CameraCalibratorMethod.ERROR_OPTIMIZATION);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
+        assertEquals(CameraCalibratorMethod.ERROR_OPTIMIZATION, calibrator.getMethod());
         assertNull(calibrator.getPattern());
         assertNull(calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(), calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA,
+                calibrator.getProgressDelta(), 0.0);
         assertFalse(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Alternating Calibrator
-        calibrator = CameraCalibrator.create(
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
+        calibrator = CameraCalibrator.create(CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
+        assertEquals(CameraCalibratorMethod.ALTERNATING_CALIBRATOR,
+                calibrator.getMethod());
         assertNull(calibrator.getPattern());
         assertNull(calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(), calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertFalse(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // test create with pattern, samples and method
         final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-        final List<CameraCalibratorSample> samples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> samples = new ArrayList<>();
         samples.add(new CameraCalibratorSample());
 
         // Error Optimization
-        calibrator = CameraCalibrator.create(pattern, samples,
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
+        calibrator = CameraCalibrator.create(pattern, samples, CameraCalibratorMethod.ERROR_OPTIMIZATION);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
+        assertEquals(CameraCalibratorMethod.ERROR_OPTIMIZATION,
+                calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD,
+                calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD,
+                calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(),
+                calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
-        final List<CameraCalibratorSample> emptySamples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> emptySamples = new ArrayList<>();
         calibrator = null;
         try {
             calibrator = CameraCalibrator.create(pattern, emptySamples,
@@ -183,43 +166,41 @@ public class CameraCalibratorTest {
                 CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
+        assertEquals(CameraCalibratorMethod.ALTERNATING_CALIBRATOR, calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD,
+                calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD,
+                calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(),
+                calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA,
+                calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
@@ -236,63 +217,54 @@ public class CameraCalibratorTest {
         final double[] samplesQualityScores = new double[1];
 
         // Error Optimization
-        calibrator = CameraCalibrator.create(pattern, samples,
-                samplesQualityScores,
+        calibrator = CameraCalibrator.create(pattern, samples, samplesQualityScores,
                 CameraCalibratorMethod.ERROR_OPTIMIZATION);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
-        assertSame(calibrator.getSamplesQualityScores(), samplesQualityScores);
+        assertEquals(CameraCalibratorMethod.ERROR_OPTIMIZATION, calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
+        assertSame(samplesQualityScores, calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(), calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
         final double[] shortSamplesQualityScores = new double[0];
         calibrator = null;
         try {
-            calibrator = CameraCalibrator.create(pattern, emptySamples,
-                    samplesQualityScores,
+            calibrator = CameraCalibrator.create(pattern, emptySamples, samplesQualityScores,
                     CameraCalibratorMethod.ERROR_OPTIMIZATION);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = CameraCalibrator.create(pattern, samples,
-                    shortSamplesQualityScores,
+            calibrator = CameraCalibrator.create(pattern, samples, shortSamplesQualityScores,
                     CameraCalibratorMethod.ERROR_OPTIMIZATION);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -300,61 +272,53 @@ public class CameraCalibratorTest {
         assertNull(calibrator);
 
         // Alternating Calibrator
-        calibrator = CameraCalibrator.create(pattern, samples,
-                samplesQualityScores,
+        calibrator = CameraCalibrator.create(pattern, samples, samplesQualityScores,
                 CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
-        assertSame(calibrator.getSamplesQualityScores(), samplesQualityScores);
+        assertEquals(CameraCalibratorMethod.ALTERNATING_CALIBRATOR, calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
+        assertSame(samplesQualityScores, calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.isZeroSkewness(), calibrator.getIACEstimator().isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA,
+                calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         calibrator = null;
         try {
-            calibrator = CameraCalibrator.create(pattern, emptySamples,
-                    samplesQualityScores,
+            calibrator = CameraCalibrator.create(pattern, emptySamples, samplesQualityScores,
                     CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = CameraCalibrator.create(pattern, samples,
-                    shortSamplesQualityScores,
+            calibrator = CameraCalibrator.create(pattern, samples, shortSamplesQualityScores,
                     CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -370,97 +334,83 @@ public class CameraCalibratorTest {
         CameraCalibrator calibrator = CameraCalibrator.create();
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
+        assertEquals(CameraCalibratorMethod.ERROR_OPTIMIZATION, calibrator.getMethod());
         assertNull(calibrator.getPattern());
         assertNull(calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(), calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertFalse(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // test create with pattern, samples and method
         final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-        final List<CameraCalibratorSample> samples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> samples = new ArrayList<>();
         samples.add(new CameraCalibratorSample());
 
         // Error Optimization
         calibrator = CameraCalibrator.create(pattern, samples);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
+        assertEquals(CameraCalibratorMethod.ERROR_OPTIMIZATION, calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(), calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
-        final List<CameraCalibratorSample> emptySamples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> emptySamples = new ArrayList<>();
         calibrator = null;
         try {
             calibrator = CameraCalibrator.create(pattern, emptySamples,
@@ -474,61 +424,53 @@ public class CameraCalibratorTest {
         final double[] samplesQualityScores = new double[1];
 
         // Error Optimization
-        calibrator = CameraCalibrator.create(pattern, samples,
-                samplesQualityScores);
+        calibrator = CameraCalibrator.create(pattern, samples, samplesQualityScores);
 
         // check default values
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ERROR_OPTIMIZATION);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
-        assertSame(calibrator.getSamplesQualityScores(), samplesQualityScores);
+        assertEquals(CameraCalibratorMethod.ERROR_OPTIMIZATION, calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
+        assertSame(samplesQualityScores, calibrator.getSamplesQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(),
+                calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
         final double[] shortSamplesQualityScores = new double[0];
         calibrator = null;
         try {
-            calibrator = CameraCalibrator.create(pattern, emptySamples,
-                    samplesQualityScores);
+            calibrator = CameraCalibrator.create(pattern, emptySamples, samplesQualityScores);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = CameraCalibrator.create(pattern, samples,
-                    shortSamplesQualityScores);
+            calibrator = CameraCalibrator.create(pattern, samples, shortSamplesQualityScores);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }

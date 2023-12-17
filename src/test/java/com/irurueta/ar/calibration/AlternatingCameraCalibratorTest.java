@@ -37,8 +37,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-public class AlternatingCameraCalibratorTest
-        implements CameraCalibratorListener {
+public class AlternatingCameraCalibratorTest implements CameraCalibratorListener {
 
     private static final double MIN_FOCAL_LENGTH = 3.0;
     private static final double MAX_FOCAL_LENGTH = 10.0;
@@ -79,25 +78,22 @@ public class AlternatingCameraCalibratorTest
     @Test
     public void testConstructor() {
         // test constructor without arguments
-        AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default values
-        assertEquals(calibrator.getMaxIterations(),
-                AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS);
-        assertEquals(calibrator.getConvergenceThreshold(),
-                AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
-        assertEquals(calibrator.getDistortionMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
-        assertEquals(calibrator.getDistortionEstimator().getMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS, calibrator.getMaxIterations());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
+                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionMethod());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionEstimator().getMethod());
         assertTrue(calibrator.getDistortionEstimatorThreshold() > 0);
-        assertEquals(calibrator.getDistortionEstimatorConfidence(),
-                calibrator.getDistortionEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getDistortionEstimatorMaxIterations(),
-                calibrator.getDistortionEstimator().getMaxIterations());
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
+        assertEquals(calibrator.getDistortionEstimator().getConfidence(),
+                calibrator.getDistortionEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getDistortionEstimator().getMaxIterations(),
+                calibrator.getDistortionEstimatorMaxIterations());
+        assertEquals(CameraCalibratorMethod.ALTERNATING_CALIBRATOR, calibrator.getMethod());
         assertNull(calibrator.getPattern());
         assertNull(calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
@@ -105,105 +101,96 @@ public class AlternatingCameraCalibratorTest
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD,
+                calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD,
+                calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(),
+                calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertFalse(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // test constructor with pattern and samples
         final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-        final List<CameraCalibratorSample> samples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> samples = new ArrayList<>();
         samples.add(new CameraCalibratorSample());
 
-        assertEquals(calibrator.getIACEstimator().
-                getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, calibrator.getIACEstimator().getMinNumberOfRequiredHomographies());
 
         calibrator = new AlternatingCameraCalibrator(pattern, samples);
 
         // check default values
-        assertEquals(calibrator.getMaxIterations(),
-                AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS);
-        assertEquals(calibrator.getConvergenceThreshold(),
-                AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
-        assertEquals(calibrator.getDistortionMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
-        assertEquals(calibrator.getDistortionEstimator().getMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS,
+                calibrator.getMaxIterations());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
+                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionMethod());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionEstimator().getMethod());
         assertTrue(calibrator.getDistortionEstimatorThreshold() > 0);
-        assertEquals(calibrator.getDistortionEstimatorConfidence(),
-                calibrator.getDistortionEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getDistortionEstimatorMaxIterations(),
-                calibrator.getDistortionEstimator().getMaxIterations());
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
+        assertEquals(calibrator.getDistortionEstimator().getConfidence(),
+                calibrator.getDistortionEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getDistortionEstimator().getMaxIterations(),
+                calibrator.getDistortionEstimatorMaxIterations());
+        assertEquals(CameraCalibratorMethod.ALTERNATING_CALIBRATOR,
+                calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
         assertNull(calibrator.getSamplesQualityScores());
         assertNull(calibrator.getHomographyQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(),
+                calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
-        final List<CameraCalibratorSample> emptySamples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> emptySamples = new ArrayList<>();
         calibrator = null;
         try {
             calibrator = new AlternatingCameraCalibrator(pattern, emptySamples);
@@ -214,75 +201,66 @@ public class AlternatingCameraCalibratorTest
 
         // test constructor with pattern, samples and quality scores
         final double[] samplesQualityScores = new double[1];
-        calibrator = new AlternatingCameraCalibrator(pattern, samples,
-                samplesQualityScores);
+        calibrator = new AlternatingCameraCalibrator(pattern, samples, samplesQualityScores);
 
         // check default values
-        assertEquals(calibrator.getMaxIterations(),
-                AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS);
-        assertEquals(calibrator.getConvergenceThreshold(),
-                AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
-        assertEquals(calibrator.getDistortionMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
-        assertEquals(calibrator.getDistortionEstimator().getMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS,
+                calibrator.getMaxIterations());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
+                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionMethod());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionEstimator().getMethod());
         assertTrue(calibrator.getDistortionEstimatorThreshold() > 0);
-        assertEquals(calibrator.getDistortionEstimatorConfidence(),
-                calibrator.getDistortionEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getDistortionEstimatorMaxIterations(),
-                calibrator.getDistortionEstimator().getMaxIterations());
-        assertEquals(calibrator.getMethod(),
-                CameraCalibratorMethod.ALTERNATING_CALIBRATOR);
-        assertSame(calibrator.getPattern(), pattern);
-        assertSame(calibrator.getSamples(), samples);
-        assertSame(calibrator.getSamplesQualityScores(), samplesQualityScores);
+        assertEquals(calibrator.getDistortionEstimator().getConfidence(),
+                calibrator.getDistortionEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getDistortionEstimator().getMaxIterations(),
+                calibrator.getDistortionEstimatorMaxIterations());
+        assertEquals(CameraCalibratorMethod.ALTERNATING_CALIBRATOR, calibrator.getMethod());
+        assertSame(pattern, calibrator.getPattern());
+        assertSame(samples, calibrator.getSamples());
+        assertSame(samplesQualityScores, calibrator.getSamplesQualityScores());
         assertNull(calibrator.getHomographyQualityScores());
         assertNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNull(calibrator.getEstimatedIntrinsicParameters());
         assertNull(calibrator.getDistortion());
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.isZeroSkewness(),
-                calibrator.getIACEstimator().isZeroSkewness());
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(calibrator.getIACEstimator().isZeroSkewness(), calibrator.isZeroSkewness());
+        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
+                calibrator.isPrincipalPointAtOrigin());
+        assertEquals(calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown(),
+                calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                calibrator.getFocalDistanceAspectRatio(), 0.0);
         assertFalse(calibrator.isLocked());
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA, calibrator.getProgressDelta(), 0.0);
         assertTrue(calibrator.isReady());
         assertTrue(calibrator.getHomographyEstimatorThreshold() > 0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(),
-                calibrator.getHomographyEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getConfidence(),
+                calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
         assertTrue(calibrator.getIACEstimatorThreshold() > 0);
-        assertEquals(calibrator.getIACEstimatorConfidence(),
-                calibrator.getIACEstimator().getConfidence(), 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getConfidence(),
+                calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
         assertNull(calibrator.getListener());
 
         // Force IllegalArgumentException
         final double[] shortSamplesQualityScores = new double[0];
         calibrator = null;
         try {
-            calibrator = new AlternatingCameraCalibrator(pattern,
-                    emptySamples, samplesQualityScores);
+            calibrator = new AlternatingCameraCalibrator(pattern, emptySamples, samplesQualityScores);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new AlternatingCameraCalibrator(pattern, samples,
-                    shortSamplesQualityScores);
+            calibrator = new AlternatingCameraCalibrator(pattern, samples, shortSamplesQualityScores);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -291,8 +269,7 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetPattern() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertNull(calibrator.getPattern());
@@ -302,30 +279,27 @@ public class AlternatingCameraCalibratorTest
         calibrator.setPattern(pattern);
 
         // check correctness
-        assertSame(calibrator.getPattern(), pattern);
+        assertSame(pattern, calibrator.getPattern());
     }
 
     @Test
     public void testGetSetSamples() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertNull(calibrator.getSamples());
 
         // set new value
-        final List<CameraCalibratorSample> samples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> samples = new ArrayList<>();
         samples.add(new CameraCalibratorSample());
 
         calibrator.setSamples(samples);
 
         // check correctness
-        assertSame(calibrator.getSamples(), samples);
+        assertSame(samples, calibrator.getSamples());
 
         // Force IllegalArgumentException
-        final List<CameraCalibratorSample> emptySamples =
-                new ArrayList<>();
+        final List<CameraCalibratorSample> emptySamples = new ArrayList<>();
         try {
             calibrator.setSamples(emptySamples);
             fail("IllegalArgumentException expected but not thrown");
@@ -335,8 +309,7 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetSamplesQualityScores() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertNull(calibrator.getSamplesQualityScores());
@@ -346,7 +319,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setSamplesQualityScores(sampleQualityScores);
 
         // check correctness
-        assertSame(calibrator.getSamplesQualityScores(), sampleQualityScores);
+        assertSame(sampleQualityScores, calibrator.getSamplesQualityScores());
 
         // Force IllegalArgumentException
         final double[] emptyQualityScores = new double[0];
@@ -359,32 +332,29 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetEstimateRadialDistortion() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
+        assertEquals(CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
 
         // set new value
         calibrator.setEstimateRadialDistortion(
                 !CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
 
         // check correctness
-        assertEquals(calibrator.getEstimateRadialDistortion(),
-                !CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION);
+        assertEquals(!CameraCalibrator.DEFAULT_ESTIMATE_RADIAL_DISTORTION,
+                calibrator.getEstimateRadialDistortion());
     }
 
     @Test
     public void testGetSetHomographyMethod() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getHomographyMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
-        assertEquals(calibrator.getHomographyEstimator().getMethod(),
-                CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD);
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD, calibrator.getHomographyMethod());
+        assertEquals(CameraCalibrator.DEFAULT_HOMOGRAPHY_METHOD,
+                calibrator.getHomographyEstimator().getMethod());
 
         final double threshold = calibrator.getHomographyEstimatorThreshold();
         final double confidence = calibrator.getHomographyEstimatorConfidence();
@@ -394,142 +364,111 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyMethod(RobustEstimatorMethod.RANSAC);
 
         // check correctness
-        assertEquals(calibrator.getHomographyMethod(),
-                RobustEstimatorMethod.RANSAC);
-        assertEquals(calibrator.getHomographyEstimator().getMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, calibrator.getHomographyMethod());
+        assertEquals(RobustEstimatorMethod.RANSAC, calibrator.getHomographyEstimator().getMethod());
 
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), threshold,
-                0.0);
-        assertEquals(calibrator.getHomographyEstimatorConfidence(), confidence,
-                0.0);
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                maxIterations);
+        assertEquals(threshold, calibrator.getHomographyEstimatorThreshold(), 0.0);
+        assertEquals(confidence, calibrator.getHomographyEstimatorConfidence(), 0.0);
+        assertEquals(maxIterations, calibrator.getHomographyEstimatorMaxIterations());
     }
 
     @Test
     public void testGetSetImageOfAbsoluteConicMethod() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
-        assertEquals(calibrator.getIACEstimator().getMethod(),
-                CameraCalibrator.DEFAULT_IAC_METHOD);
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(CameraCalibrator.DEFAULT_IAC_METHOD, calibrator.getIACEstimator().getMethod());
 
         final double threshold = calibrator.getIACEstimatorThreshold();
         final double confidence = calibrator.getIACEstimatorConfidence();
         final int maxIterations = calibrator.getIACEstimatorMaxIterations();
         final boolean zeroSkewness = calibrator.isZeroSkewness();
         final boolean principalPointAtOrigin = calibrator.isPrincipalPointAtOrigin();
-        final boolean focalDistanceAspectRatioKnown =
-                calibrator.isFocalDistanceAspectRatioKnown();
-        final double focalDistanceAspectRatio =
-                calibrator.getFocalDistanceAspectRatio();
+        final boolean focalDistanceAspectRatioKnown = calibrator.isFocalDistanceAspectRatioKnown();
+        final double focalDistanceAspectRatio = calibrator.getFocalDistanceAspectRatio();
 
         // set new value
         calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.RANSAC);
 
         // check correctness
-        assertEquals(calibrator.getImageOfAbsoluteConicMethod(),
-                RobustEstimatorMethod.RANSAC);
-        assertEquals(calibrator.getIACEstimator().getMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, calibrator.getImageOfAbsoluteConicMethod());
+        assertEquals(RobustEstimatorMethod.RANSAC, calibrator.getIACEstimator().getMethod());
 
-        assertEquals(calibrator.getIACEstimatorThreshold(), threshold, 0.0);
-        assertEquals(calibrator.getIACEstimatorConfidence(), confidence, 0.0);
-        assertEquals(calibrator.getIACEstimatorMaxIterations(), maxIterations);
-        assertEquals(calibrator.isZeroSkewness(), zeroSkewness);
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                principalPointAtOrigin);
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                focalDistanceAspectRatioKnown);
-        assertEquals(calibrator.getFocalDistanceAspectRatio(),
-                focalDistanceAspectRatio, 0.0);
+        assertEquals(threshold, calibrator.getIACEstimatorThreshold(), 0.0);
+        assertEquals(confidence, calibrator.getIACEstimatorConfidence(), 0.0);
+        assertEquals(maxIterations, calibrator.getIACEstimatorMaxIterations());
+        assertEquals(zeroSkewness, calibrator.isZeroSkewness());
+        assertEquals(principalPointAtOrigin, calibrator.isPrincipalPointAtOrigin());
+        assertEquals(focalDistanceAspectRatioKnown, calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(focalDistanceAspectRatio, calibrator.getFocalDistanceAspectRatio(), 0.0);
     }
 
     @Test
     public void testIsSetZeroSkewness() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         final boolean zeroSkewness = calibrator.isZeroSkewness();
-        assertEquals(zeroSkewness,
-                calibrator.getIACEstimator().isZeroSkewness());
+        assertEquals(zeroSkewness, calibrator.getIACEstimator().isZeroSkewness());
 
         // set new value
         calibrator.setZeroSkewness(!zeroSkewness);
 
         // check correctness
-        assertEquals(calibrator.isZeroSkewness(), !zeroSkewness);
-        assertEquals(calibrator.getIACEstimator().isZeroSkewness(),
-                !zeroSkewness);
+        assertEquals(!zeroSkewness, calibrator.isZeroSkewness());
+        assertEquals(!zeroSkewness, calibrator.getIACEstimator().isZeroSkewness());
     }
 
     @Test
     public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         final boolean principalPointAtOrigin = calibrator.isPrincipalPointAtOrigin();
-        assertEquals(principalPointAtOrigin,
-                calibrator.getIACEstimator().isPrincipalPointAtOrigin());
+        assertEquals(principalPointAtOrigin, calibrator.getIACEstimator().isPrincipalPointAtOrigin());
 
         // set new value
         calibrator.setPrincipalPointAtOrigin(!principalPointAtOrigin);
 
         // check correctness
-        assertEquals(calibrator.isPrincipalPointAtOrigin(),
-                !principalPointAtOrigin);
-        assertEquals(calibrator.getIACEstimator().isPrincipalPointAtOrigin(),
-                !principalPointAtOrigin);
+        assertEquals(!principalPointAtOrigin, calibrator.isPrincipalPointAtOrigin());
+        assertEquals(!principalPointAtOrigin, calibrator.getIACEstimator().isPrincipalPointAtOrigin());
     }
 
     @Test
     public void testIsSetFocalDistanceAspectRatioKnown() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        final boolean focalDistanceAspectRatioKnown =
-                calibrator.isFocalDistanceAspectRatioKnown();
+        final boolean focalDistanceAspectRatioKnown = calibrator.isFocalDistanceAspectRatioKnown();
         assertEquals(focalDistanceAspectRatioKnown,
                 calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
 
         // set new value
-        calibrator.setFocalDistanceAspectRatioKnown(
-                !focalDistanceAspectRatioKnown);
+        calibrator.setFocalDistanceAspectRatioKnown(!focalDistanceAspectRatioKnown);
 
         // check correctness
-        assertEquals(calibrator.isFocalDistanceAspectRatioKnown(),
-                !focalDistanceAspectRatioKnown);
-        assertEquals(calibrator.getIACEstimator().
-                        isFocalDistanceAspectRatioKnown(),
-                !focalDistanceAspectRatioKnown);
+        assertEquals(!focalDistanceAspectRatioKnown, calibrator.isFocalDistanceAspectRatioKnown());
+        assertEquals(!focalDistanceAspectRatioKnown,
+                calibrator.getIACEstimator().isFocalDistanceAspectRatioKnown());
     }
 
     @Test
     public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        final double focalDistanceAspectRatio =
-                calibrator.getFocalDistanceAspectRatio();
-        assertEquals(focalDistanceAspectRatio,
-                calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.0);
+        final double focalDistanceAspectRatio = calibrator.getFocalDistanceAspectRatio();
+        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
+                focalDistanceAspectRatio, 0.0);
 
         // set new value
         calibrator.setFocalDistanceAspectRatio(0.5);
 
         // check correctness
-        assertEquals(calibrator.getFocalDistanceAspectRatio(), 0.5, 0.0);
-        assertEquals(calibrator.getIACEstimator().getFocalDistanceAspectRatio(),
-                0.5, 0.0);
+        assertEquals(0.5, calibrator.getFocalDistanceAspectRatio(), 0.0);
+        assertEquals(0.5, calibrator.getIACEstimator().getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -541,24 +480,22 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getProgressDelta(),
-                CameraCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(CameraCalibrator.DEFAULT_PROGRESS_DELTA,
+                calibrator.getProgressDelta(), 0.0);
 
         // set new value
         calibrator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(calibrator.getProgressDelta(), 0.5f, 0.0);
+        assertEquals(0.5f, calibrator.getProgressDelta(), 0.0);
     }
 
     @Test
     public void testGetSetHomographyEstimatorThreshold() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // set RANSAC homography method
         calibrator.setHomographyMethod(RobustEstimatorMethod.RANSAC);
@@ -566,23 +503,23 @@ public class AlternatingCameraCalibratorTest
         // check default value
         final double threshold = calibrator.getHomographyEstimatorThreshold();
         assertEquals(threshold,
-                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                        calibrator.getHomographyEstimator()).getThreshold(), 0.0);
+                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) calibrator
+                        .getHomographyEstimator()).getThreshold(), 0.0);
 
         // set new value
         calibrator.setHomographyEstimatorThreshold(1.0);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(1.0,
-                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                        calibrator.getHomographyEstimator()).getThreshold(), 0.0);
+                ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) calibrator
+                        .getHomographyEstimator()).getThreshold(), 0.0);
 
         // set LMedS homography method
-        calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
+        calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
 
         // check default value
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(1.0,
                 ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getStopThreshold(), 0.0);
@@ -591,7 +528,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyEstimatorThreshold(2.0);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(2.0,
                 ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getStopThreshold(), 0.0);
@@ -600,7 +537,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyMethod(RobustEstimatorMethod.MSAC);
 
         // check default value
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(2.0,
                 ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getThreshold(), 0.0);
@@ -609,7 +546,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyEstimatorThreshold(3.0);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(3.0,
                 ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getThreshold(), 0.0);
@@ -618,7 +555,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyMethod(RobustEstimatorMethod.PROSAC);
 
         // check default value
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(3.0,
                 ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getThreshold(), 0.0);
@@ -627,16 +564,16 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyEstimatorThreshold(4.0);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 4.0, 0.0);
+        assertEquals(4.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(4.0,
                 ((PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getThreshold(), 0.0);
 
         // set PROMedS homography method
-        calibrator.setHomographyMethod(RobustEstimatorMethod.PROMedS);
+        calibrator.setHomographyMethod(RobustEstimatorMethod.PROMEDS);
 
         // check default value
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 4.0, 0.0);
+        assertEquals(4.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(4.0,
                 ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getStopThreshold(), 0.0);
@@ -645,7 +582,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyEstimatorThreshold(5.0);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorThreshold(), 5.0, 0.0);
+        assertEquals(5.0, calibrator.getHomographyEstimatorThreshold(), 0.0);
         assertEquals(5.0,
                 ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                         calibrator.getHomographyEstimator()).getStopThreshold(), 0.0);
@@ -661,8 +598,7 @@ public class AlternatingCameraCalibratorTest
     @Test
     public void testGetSetHomographyEstimatorConfidence()
             throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertEquals(calibrator.getHomographyEstimatorConfidence(),
@@ -672,7 +608,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setHomographyEstimatorConfidence(0.5);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorConfidence(), 0.5, 0.0);
+        assertEquals(0.5, calibrator.getHomographyEstimatorConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -690,18 +626,17 @@ public class AlternatingCameraCalibratorTest
     @Test
     public void testGetSetHomographyEstimatorMaxIterations()
             throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(),
-                calibrator.getHomographyEstimator().getMaxIterations());
+        assertEquals(calibrator.getHomographyEstimator().getMaxIterations(),
+                calibrator.getHomographyEstimatorMaxIterations());
 
         // set new value
         calibrator.setHomographyEstimatorMaxIterations(10);
 
         // check correctness
-        assertEquals(calibrator.getHomographyEstimatorMaxIterations(), 10);
+        assertEquals(10, calibrator.getHomographyEstimatorMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -713,8 +648,7 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetIACEstimatorThreshold() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // set RANSAC homography method
         calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.RANSAC);
@@ -728,16 +662,16 @@ public class AlternatingCameraCalibratorTest
         calibrator.setIACEstimatorThreshold(1.0);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(1.0,
-                ((RANSACImageOfAbsoluteConicRobustEstimator)
-                        calibrator.getIACEstimator()).getThreshold(), 0.0);
+                ((RANSACImageOfAbsoluteConicRobustEstimator) calibrator.getIACEstimator()).getThreshold(),
+                0.0);
 
         // set LMedS homography method
-        calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.LMedS);
+        calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.LMEDS);
 
         // check default value
-        assertEquals(calibrator.getIACEstimatorThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(1.0,
                 ((LMedSImageOfAbsoluteConicRobustEstimator)
                         calibrator.getIACEstimator()).getStopThreshold(), 0.0);
@@ -746,7 +680,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setIACEstimatorThreshold(2.0);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorThreshold(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(2.0,
                 ((LMedSImageOfAbsoluteConicRobustEstimator)
                         calibrator.getIACEstimator()).getStopThreshold(), 0.0);
@@ -755,43 +689,43 @@ public class AlternatingCameraCalibratorTest
         calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.MSAC);
 
         // check default value
-        assertEquals(calibrator.getIACEstimatorThreshold(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(2.0,
-                ((MSACImageOfAbsoluteConicRobustEstimator)
-                        calibrator.getIACEstimator()).getThreshold(), 0.0);
+                ((MSACImageOfAbsoluteConicRobustEstimator) calibrator.getIACEstimator()).getThreshold(),
+                0.0);
 
         // set new value
         calibrator.setIACEstimatorThreshold(3.0);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorThreshold(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(3.0,
-                ((MSACImageOfAbsoluteConicRobustEstimator)
-                        calibrator.getIACEstimator()).getThreshold(), 0.0);
+                ((MSACImageOfAbsoluteConicRobustEstimator) calibrator.getIACEstimator()).getThreshold(),
+                0.0);
 
         // set PROSAC homography method
         calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
 
         // check default value
-        assertEquals(calibrator.getIACEstimatorThreshold(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(3.0,
-                ((PROSACImageOfAbsoluteConicRobustEstimator)
-                        calibrator.getIACEstimator()).getThreshold(), 0.0);
+                ((PROSACImageOfAbsoluteConicRobustEstimator) calibrator.getIACEstimator()).getThreshold(),
+                0.0);
 
         // set new value
         calibrator.setIACEstimatorThreshold(4.0);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorThreshold(), 4.0, 0.0);
+        assertEquals(4.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(4.0,
-                ((PROSACImageOfAbsoluteConicRobustEstimator)
-                        calibrator.getIACEstimator()).getThreshold(), 0.0);
+                ((PROSACImageOfAbsoluteConicRobustEstimator) calibrator.getIACEstimator()).getThreshold(),
+                0.0);
 
         // set PROMedS homography method
-        calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROMedS);
+        calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROMEDS);
 
         // check default value
-        assertEquals(calibrator.getIACEstimatorThreshold(), 4.0, 0.0);
+        assertEquals(4.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(4.0,
                 ((PROMedSImageOfAbsoluteConicRobustEstimator)
                         calibrator.getIACEstimator()).getStopThreshold(), 0.0);
@@ -800,7 +734,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setIACEstimatorThreshold(5.0);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorThreshold(), 5.0, 0.0);
+        assertEquals(5.0, calibrator.getIACEstimatorThreshold(), 0.0);
         assertEquals(5.0,
                 ((PROMedSImageOfAbsoluteConicRobustEstimator)
                         calibrator.getIACEstimator()).getStopThreshold(), 0.0);
@@ -815,8 +749,7 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetIACEstimatorConfidence() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertEquals(calibrator.getIACEstimatorConfidence(),
@@ -826,7 +759,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setIACEstimatorConfidence(0.5);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorConfidence(), 0.5, 0.0);
+        assertEquals(0.5, calibrator.getIACEstimatorConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -844,18 +777,17 @@ public class AlternatingCameraCalibratorTest
     @Test
     public void testGetSetIACEstimatorMaxIterations()
             throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getIACEstimatorMaxIterations(),
-                calibrator.getIACEstimator().getMaxIterations());
+        assertEquals(calibrator.getIACEstimator().getMaxIterations(),
+                calibrator.getIACEstimatorMaxIterations());
 
         // set new value
         calibrator.setIACEstimatorMaxIterations(10);
 
         // check correctness
-        assertEquals(calibrator.getIACEstimatorMaxIterations(), 10);
+        assertEquals(10, calibrator.getIACEstimatorMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -867,8 +799,7 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -877,23 +808,22 @@ public class AlternatingCameraCalibratorTest
         calibrator.setListener(this);
 
         // check correctness
-        assertSame(calibrator.getListener(), this);
+        assertSame(this, calibrator.getListener());
     }
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getMaxIterations(),
-                AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_MAX_ITERATIONS,
+                calibrator.getMaxIterations());
 
         // set new value
         calibrator.setMaxIterations(5);
 
         // check correctness
-        assertEquals(calibrator.getMaxIterations(), 5);
+        assertEquals(5, calibrator.getMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -905,56 +835,48 @@ public class AlternatingCameraCalibratorTest
 
     @Test
     public void testGetSetConvergenceThreshold() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getConvergenceThreshold(),
-                AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, 0.0);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
+                calibrator.getConvergenceThreshold(), 0.0);
 
         // set new value
         calibrator.setConvergenceThreshold(1.0);
 
         // check correctness
-        assertEquals(calibrator.getConvergenceThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getConvergenceThreshold(), 0.0);
     }
 
     @Test
     public void testGetSetDistortionMethod() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getDistortionMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
-        assertEquals(calibrator.getDistortionEstimator().getMethod(),
-                AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD);
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionMethod());
+        assertEquals(AlternatingCameraCalibrator.DEFAULT_RADIAL_DISTORTION_METHOD,
+                calibrator.getDistortionEstimator().getMethod());
 
         final double threshold = calibrator.getDistortionEstimatorThreshold();
         final double confidence = calibrator.getDistortionEstimatorConfidence();
         final int maxIterations = calibrator.getDistortionEstimatorMaxIterations();
 
         // set new value
-        calibrator.setDistortionMethod(RobustEstimatorMethod.LMedS);
+        calibrator.setDistortionMethod(RobustEstimatorMethod.LMEDS);
 
         // check correctness
-        assertEquals(calibrator.getDistortionMethod(),
-                RobustEstimatorMethod.LMedS);
-        assertEquals(calibrator.getDistortionEstimator().getMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, calibrator.getDistortionMethod());
+        assertEquals(RobustEstimatorMethod.LMEDS, calibrator.getDistortionEstimator().getMethod());
 
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), threshold,
-                0.0);
-        assertEquals(calibrator.getDistortionEstimatorConfidence(), confidence,
-                0.0);
-        assertEquals(calibrator.getDistortionEstimatorMaxIterations(),
-                maxIterations);
+        assertEquals(threshold, calibrator.getDistortionEstimatorThreshold(), 0.0);
+        assertEquals(confidence, calibrator.getDistortionEstimatorConfidence(), 0.0);
+        assertEquals(maxIterations, calibrator.getDistortionEstimatorMaxIterations());
     }
 
     @Test
     public void testGetSetDistortionEstimatorThreshold() throws LockedException {
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // set RANSAC method
         calibrator.setDistortionMethod(RobustEstimatorMethod.RANSAC);
@@ -962,23 +884,23 @@ public class AlternatingCameraCalibratorTest
         // check default value
         final double threshold = calibrator.getDistortionEstimatorThreshold();
         assertEquals(threshold,
-                ((RANSACRadialDistortionRobustEstimator) calibrator.
-                        getDistortionEstimator()).getThreshold(), 0.0);
+                ((RANSACRadialDistortionRobustEstimator) calibrator.getDistortionEstimator())
+                        .getThreshold(), 0.0);
 
         // set new value
         calibrator.setDistortionEstimatorThreshold(1.0);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(1.0,
                 ((RANSACRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getThreshold(), 0.0);
 
         // set LMedS method
-        calibrator.setDistortionMethod(RobustEstimatorMethod.LMedS);
+        calibrator.setDistortionMethod(RobustEstimatorMethod.LMEDS);
 
         // check default value
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 1.0, 0.0);
+        assertEquals(1.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(1.0,
                 ((LMedSRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getStopThreshold(), 0.0);
@@ -987,7 +909,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionEstimatorThreshold(2.0);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(2.0,
                 ((LMedSRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getStopThreshold(), 0.0);
@@ -996,7 +918,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionMethod(RobustEstimatorMethod.MSAC);
 
         // check default value
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 2.0, 0.0);
+        assertEquals(2.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(2.0,
                 ((MSACRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getThreshold(), 0.0);
@@ -1005,7 +927,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionEstimatorThreshold(3.0);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(3.0,
                 ((MSACRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getThreshold(), 0.0);
@@ -1014,7 +936,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
 
         // check default value
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 3.0, 0.0);
+        assertEquals(3.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(3.0,
                 ((PROSACRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getThreshold(), 0.0);
@@ -1023,16 +945,16 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionEstimatorThreshold(4.0);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 4.0, 0.0);
+        assertEquals(4.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(4.0,
                 ((PROSACRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getThreshold(), 0.0);
 
         // set PROMedS method
-        calibrator.setDistortionMethod(RobustEstimatorMethod.PROMedS);
+        calibrator.setDistortionMethod(RobustEstimatorMethod.PROMEDS);
 
         // check default value
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 4.0, 0.0);
+        assertEquals(4.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(4.0,
                 ((PROMedSRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getStopThreshold(), 0.0);
@@ -1041,7 +963,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionEstimatorThreshold(5.0);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorThreshold(), 5.0, 0.0);
+        assertEquals(5.0, calibrator.getDistortionEstimatorThreshold(), 0.0);
         assertEquals(5.0,
                 ((PROMedSRadialDistortionRobustEstimator) calibrator.
                         getDistortionEstimator()).getStopThreshold(), 0.0);
@@ -1055,11 +977,9 @@ public class AlternatingCameraCalibratorTest
     }
 
     @Test
-    public void testGetSetDistortionEstimatorConfidence()
-            throws LockedException {
+    public void testGetSetDistortionEstimatorConfidence() throws LockedException {
 
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
         assertEquals(calibrator.getDistortionEstimatorConfidence(),
@@ -1069,7 +989,7 @@ public class AlternatingCameraCalibratorTest
         calibrator.setDistortionEstimatorConfidence(0.5);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorConfidence(), 0.5, 0.0);
+        assertEquals(0.5, calibrator.getDistortionEstimatorConfidence(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -1085,21 +1005,19 @@ public class AlternatingCameraCalibratorTest
     }
 
     @Test
-    public void testGetSetDistortionEstimatorMaxIterations()
-            throws LockedException {
+    public void testGetSetDistortionEstimatorMaxIterations() throws LockedException {
 
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator();
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator();
 
         // check default value
-        assertEquals(calibrator.getDistortionEstimatorMaxIterations(),
-                calibrator.getDistortionEstimator().getMaxIterations());
+        assertEquals(calibrator.getDistortionEstimator().getMaxIterations(),
+                calibrator.getDistortionEstimatorMaxIterations());
 
         // set new value
         calibrator.setDistortionEstimatorMaxIterations(10);
 
         // check correctness
-        assertEquals(calibrator.getDistortionEstimatorMaxIterations(), 10);
+        assertEquals(10, calibrator.getDistortionEstimatorMaxIterations());
 
         // Force IllegalArgumentException
         try {
@@ -1110,8 +1028,8 @@ public class AlternatingCameraCalibratorTest
     }
 
     @Test
-    public void testCalibrateCirclesPatternNoDistortion()
-            throws LockedException, CalibrationException, NotReadyException {
+    public void testCalibrateCirclesPatternNoDistortion() throws LockedException, CalibrationException,
+            NotReadyException {
 
         final long startTime = System.currentTimeMillis();
 
@@ -1150,8 +1068,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
@@ -1164,8 +1081,7 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
             final List<CameraCalibratorSample> samples =
                     new ArrayList<>();
             for (int i = 0; i < numSamples; i++) {
@@ -1181,20 +1097,16 @@ public class AlternatingCameraCalibratorTest
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
@@ -1211,32 +1123,31 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(false);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROMedS);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROMEDS);
 
             // check correctness
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             calibrator.calibrate();
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
             reset();
 
             // check correctness
@@ -1249,34 +1160,26 @@ public class AlternatingCameraCalibratorTest
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     calibrator.getEstimatedIntrinsicParameters();
 
-            assertEquals(intrinsic.getHorizontalFocalLength(),
-                    intrinsic2.getHorizontalFocalLength(),
+            assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                     VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(intrinsic.getVerticalFocalLength(),
-                    intrinsic2.getVerticalFocalLength(),
+            assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                     VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1333,7 +1236,7 @@ public class AlternatingCameraCalibratorTest
                 }
             }
 
-            assertEquals(estimatedCams, 0);
+            assertEquals(0, estimatedCams);
         }
 
         final long endTime = System.currentTimeMillis();
@@ -1347,11 +1250,11 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         final String msg = "Circles pattern - No distortion" +
                 " avg horizontal focal distance error: " +
@@ -1380,14 +1283,13 @@ public class AlternatingCameraCalibratorTest
                 " max vertical principal point error: " +
                 maxVerticalPrincipalPointError +
                 " time: " + avgTimeSeconds + " seconds";
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
 
     }
 
     @Test
-    public void testCalibrateQRPatternNoDistortion()
-            throws LockedException, CalibrationException, NotReadyException {
+    public void testCalibrateQRPatternNoDistortion() throws LockedException, CalibrationException,
+            NotReadyException {
 
         final long startTime = System.currentTimeMillis();
 
@@ -1427,8 +1329,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -1440,10 +1341,8 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
-            final List<CameraCalibratorSample> samples =
-                    new ArrayList<>();
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
+            final List<CameraCalibratorSample> samples = new ArrayList<>();
             for (int i = 0; i < numSamples; i++) {
                 // create random camera
                 // rotation
@@ -1457,20 +1356,16 @@ public class AlternatingCameraCalibratorTest
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
@@ -1487,32 +1382,31 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(false);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROMedS);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROMEDS);
 
             // check correctness
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             calibrator.calibrate();
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
             reset();
 
             // check correctness
@@ -1529,38 +1423,30 @@ public class AlternatingCameraCalibratorTest
                     3.0 * ULTRA_LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic.getHorizontalFocalLength(),
-                    intrinsic2.getHorizontalFocalLength(),
+            assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                     3.0 * ULTRA_LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic.getVerticalFocalLength() - intrinsic2.getVerticalFocalLength()) >
                     3.0 * ULTRA_LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic.getVerticalFocalLength(),
-                    intrinsic2.getVerticalFocalLength(),
+            assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                     3.0 * ULTRA_LARGE_ABSOLUTE_ERROR);
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1617,7 +1503,7 @@ public class AlternatingCameraCalibratorTest
                 }
             }
 
-            assertEquals(estimatedCams, 0);
+            assertEquals(0, estimatedCams);
 
             numValid++;
         }
@@ -1635,11 +1521,11 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         final String msg = "QR pattern - No distortion" +
                 " avg horizontal focal distance error: " +
@@ -1674,8 +1560,7 @@ public class AlternatingCameraCalibratorTest
     }
 
     @Test
-    public void testCalibrateCirclesPatternDistortion()
-            throws LockedException, NotReadyException,
+    public void testCalibrateCirclesPatternDistortion() throws LockedException, NotReadyException,
             NotSupportedException, DistortionException {
 
         final long startTime = System.currentTimeMillis();
@@ -1724,8 +1609,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -1738,8 +1622,7 @@ public class AlternatingCameraCalibratorTest
             // create distortion
             final double k1 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
                     MAX_DISTORTION_PARAM_VALUE);
-            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
-                    MAX_DISTORTION_PARAM_VALUE);
+            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE, MAX_DISTORTION_PARAM_VALUE);
             // square k2 so that we ensure it is smaller than k1 (typically k1
             // is the dominant term)
             final double signk2 = Math.signum(k2);
@@ -1750,8 +1633,7 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
             final List<CameraCalibratorSample> samples =
                     new ArrayList<>();
             for (int i = 0; i < numSamples; i++) {
@@ -1767,20 +1649,16 @@ public class AlternatingCameraCalibratorTest
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
@@ -1809,9 +1687,8 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(true);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROSAC);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setIACEstimatorThreshold(1e-6);
 
@@ -1819,13 +1696,13 @@ public class AlternatingCameraCalibratorTest
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             try {
@@ -1834,8 +1711,8 @@ public class AlternatingCameraCalibratorTest
                 continue;
             }
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
@@ -1853,28 +1730,22 @@ public class AlternatingCameraCalibratorTest
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     calibrator.getEstimatedIntrinsicParameters();
 
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1969,9 +1840,9 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgSkewnessError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, ABSOLUTE_ERROR);
 
         // check that average distortion parameters error is small enough
 
@@ -2008,14 +1879,12 @@ public class AlternatingCameraCalibratorTest
                 " max distortion K1 error: " + maxK1Error +
                 " max distortion K2 error: " + maxK2Error +
                 " time: " + avgTimeSeconds + " seconds";
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Test
-    public void testCalibrateQRPatternDistortion()
-            throws LockedException, CalibrationException, NotReadyException,
-            NotSupportedException, DistortionException {
+    public void testCalibrateQRPatternDistortion() throws LockedException, CalibrationException,
+            NotReadyException, NotSupportedException, DistortionException {
 
         final long startTime = System.currentTimeMillis();
 
@@ -2062,8 +1931,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -2076,8 +1944,7 @@ public class AlternatingCameraCalibratorTest
             // create distortion
             final double k1 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
                     MAX_DISTORTION_PARAM_VALUE);
-            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
-                    MAX_DISTORTION_PARAM_VALUE);
+            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE, MAX_DISTORTION_PARAM_VALUE);
             // square k2 so that we ensure it is smaller than k1 (typically k1
             // is the dominant term)
             final double signk2 = Math.signum(k2);
@@ -2088,10 +1955,8 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
-            final List<CameraCalibratorSample> samples =
-                    new ArrayList<>();
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
+            final List<CameraCalibratorSample> samples = new ArrayList<>();
             for (int i = 0; i < numSamples; i++) {
                 // create random camera
                 // rotation
@@ -2105,20 +1970,16 @@ public class AlternatingCameraCalibratorTest
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
@@ -2138,8 +1999,7 @@ public class AlternatingCameraCalibratorTest
             for (int i = 0; i < numSamples; i++) {
                 sample = samples.get(i);
 
-                sample.setSampledMarkers(distortion.distort(
-                        sample.getSampledMarkers()));
+                sample.setSampledMarkers(distortion.distort(sample.getSampledMarkers()));
             }
 
             // create calibrator
@@ -2147,9 +2007,8 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(true);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROSAC);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setIACEstimatorThreshold(1e-6);
 
@@ -2157,19 +2016,19 @@ public class AlternatingCameraCalibratorTest
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             calibrator.calibrate();
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
@@ -2187,28 +2046,22 @@ public class AlternatingCameraCalibratorTest
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     calibrator.getEstimatedIntrinsicParameters();
 
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -2302,9 +2155,9 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         // check that average distortion parameters error is small enough
 
@@ -2341,14 +2194,12 @@ public class AlternatingCameraCalibratorTest
                 " max distortion K1 error: " + maxK1Error +
                 " max distortion K2 error: " + maxK2Error +
                 " time: " + avgTimeSeconds + " seconds";
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Test
-    public void testCalibrateCirclesPatternDistortionAndOutliers()
-            throws LockedException, NotReadyException,
-            NotSupportedException, DistortionException {
+    public void testCalibrateCirclesPatternDistortionAndOutliers() throws LockedException,
+            NotReadyException, NotSupportedException, DistortionException {
 
         final long startTime = System.currentTimeMillis();
 
@@ -2394,8 +2245,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -2408,8 +2258,7 @@ public class AlternatingCameraCalibratorTest
             // create distortion
             final double k1 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
                     MAX_DISTORTION_PARAM_VALUE);
-            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
-                    MAX_DISTORTION_PARAM_VALUE);
+            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE, MAX_DISTORTION_PARAM_VALUE);
             // square k2 so that we ensure it is smaller than k1 (typically k1
             // is the dominant term)
             final double signk2 = Math.signum(k2);
@@ -2420,10 +2269,8 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
-            final List<CameraCalibratorSample> samples =
-                    new ArrayList<>();
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
+            final List<CameraCalibratorSample> samples = new ArrayList<>();
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, STD_ERROR);
             for (int i = 0; i < numSamples; i++) {
@@ -2439,28 +2286,23 @@ public class AlternatingCameraCalibratorTest
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
                 final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                 // add outliers
-                final List<Point2D> projectedPatternPointsWithError =
-                        new ArrayList<>();
+                final List<Point2D> projectedPatternPointsWithError = new ArrayList<>();
                 for (final Point2D p : projectedPatternPoints) {
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier
@@ -2475,8 +2317,7 @@ public class AlternatingCameraCalibratorTest
                     }
                 }
 
-                samples.add(new CameraCalibratorSample(
-                        projectedPatternPointsWithError));
+                samples.add(new CameraCalibratorSample(projectedPatternPointsWithError));
             }
 
             // distort projected pattern points using created distortion
@@ -2496,9 +2337,8 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(true);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROSAC);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setIACEstimatorThreshold(1e-6);
 
@@ -2506,13 +2346,13 @@ public class AlternatingCameraCalibratorTest
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             try {
@@ -2522,8 +2362,8 @@ public class AlternatingCameraCalibratorTest
                 continue;
             }
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
@@ -2541,28 +2381,22 @@ public class AlternatingCameraCalibratorTest
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     calibrator.getEstimatedIntrinsicParameters();
 
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -2656,9 +2490,9 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         // check that average distortion parameters error is small enough
 
@@ -2695,8 +2529,7 @@ public class AlternatingCameraCalibratorTest
                 " max distortion K1 error: " + maxK1Error +
                 " max distortion K2 error: " + maxK2Error +
                 " time: " + avgTimeSeconds + " seconds";
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Test
@@ -2749,8 +2582,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -2763,8 +2595,7 @@ public class AlternatingCameraCalibratorTest
             // create distortion
             final double k1 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
                     MAX_DISTORTION_PARAM_VALUE);
-            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
-                    MAX_DISTORTION_PARAM_VALUE);
+            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE, MAX_DISTORTION_PARAM_VALUE);
             // square k2 so that we ensure it is smaller than k1 (typically k1
             // is the dominant term)
             k2 = k2 * k2;
@@ -2774,10 +2605,8 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
-            final List<CameraCalibratorSample> samples =
-                    new ArrayList<>();
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
+            final List<CameraCalibratorSample> samples = new ArrayList<>();
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, STD_ERROR);
             for (int i = 0; i < numSamples; i++) {
@@ -2793,28 +2622,23 @@ public class AlternatingCameraCalibratorTest
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
                 final List<Point2D> projectedPatternPoints = camera.project(points3D);
 
                 // add outliers
-                final List<Point2D> projectedPatternPointsWithError =
-                        new ArrayList<>();
+                final List<Point2D> projectedPatternPointsWithError = new ArrayList<>();
                 for (final Point2D p : projectedPatternPoints) {
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier
@@ -2829,8 +2653,7 @@ public class AlternatingCameraCalibratorTest
                     }
                 }
 
-                samples.add(new CameraCalibratorSample(
-                        projectedPatternPointsWithError));
+                samples.add(new CameraCalibratorSample(projectedPatternPointsWithError));
             }
 
             // distort projected pattern points using created distortion
@@ -2841,8 +2664,7 @@ public class AlternatingCameraCalibratorTest
             for (int i = 0; i < numSamples; i++) {
                 sample = samples.get(i);
 
-                sample.setSampledMarkers(distortion.distort(
-                        sample.getSampledMarkers()));
+                sample.setSampledMarkers(distortion.distort(sample.getSampledMarkers()));
             }
 
             // create calibrator
@@ -2850,9 +2672,8 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(true);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROSAC);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setIACEstimatorThreshold(1e-6);
 
@@ -2860,19 +2681,19 @@ public class AlternatingCameraCalibratorTest
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             calibrator.calibrate();
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
@@ -2890,28 +2711,22 @@ public class AlternatingCameraCalibratorTest
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     calibrator.getEstimatedIntrinsicParameters();
 
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -3005,9 +2820,9 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         // check that average distortion parameters error is small enough
 
@@ -3044,13 +2859,11 @@ public class AlternatingCameraCalibratorTest
                 " max distortion K1 error: " + maxK1Error +
                 " max distortion K2 error: " + maxK2Error +
                 " time: " + avgTimeSeconds + " seconds";
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Test
-    public void testCalibrateMixedPatternDistortionAndOutliers()
-            throws LockedException, NotReadyException,
+    public void testCalibrateMixedPatternDistortionAndOutliers() throws LockedException, NotReadyException,
             NotSupportedException, DistortionException {
 
         final long startTime = System.currentTimeMillis();
@@ -3087,8 +2900,7 @@ public class AlternatingCameraCalibratorTest
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
@@ -3101,8 +2913,7 @@ public class AlternatingCameraCalibratorTest
             // create distortion
             final double k1 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
                     MAX_DISTORTION_PARAM_VALUE);
-            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE,
-                    MAX_DISTORTION_PARAM_VALUE);
+            double k2 = randomizer.nextDouble(MIN_DISTORTION_PARAM_VALUE, MAX_DISTORTION_PARAM_VALUE);
             // square k2 so that we ensure it is smaller than k1 (typically k1
             // is the dominant term)
             final double signk2 = Math.signum(k2);
@@ -3113,10 +2924,8 @@ public class AlternatingCameraCalibratorTest
 
             // create samples (each sample has one pinhole camera associated and
             // its corresponding sampled markers)
-            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES,
-                    MAX_NUM_SAMPLES);
-            final List<CameraCalibratorSample> samples =
-                    new ArrayList<>();
+            final int numSamples = randomizer.nextInt(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
+            final List<CameraCalibratorSample> samples = new ArrayList<>();
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, STD_ERROR);
             for (int i = 0; i < numSamples; i++) {
@@ -3137,15 +2946,12 @@ public class AlternatingCameraCalibratorTest
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // chose random pattern
@@ -3156,8 +2962,7 @@ public class AlternatingCameraCalibratorTest
 
                 // build 3D points corresponding to sample pattern (assuming they
                 // are in plane Z = 0)
-                final List<Point2D> samplePatternPoints =
-                        samplePattern.getIdealPoints();
+                final List<Point2D> samplePatternPoints = samplePattern.getIdealPoints();
                 final List<Point3D> points3D = new ArrayList<>();
                 for (final Point2D patternPoint : samplePatternPoints) {
                     points3D.add(new HomogeneousPoint3D(
@@ -3187,8 +2992,7 @@ public class AlternatingCameraCalibratorTest
 
                 // add random noise to projected points with a certain outlier
                 // proportion and a random pattern
-                samples.add(new CameraCalibratorSample(samplePattern,
-                        projectedPatternPointsWithError));
+                samples.add(new CameraCalibratorSample(samplePattern, projectedPatternPointsWithError));
             }
 
             // distort projected pattern points using created distortion
@@ -3199,8 +3003,7 @@ public class AlternatingCameraCalibratorTest
             for (int i = 0; i < numSamples; i++) {
                 sample = samples.get(i);
 
-                sample.setSampledMarkers(distortion.distort(
-                        sample.getSampledMarkers()));
+                sample.setSampledMarkers(distortion.distort(sample.getSampledMarkers()));
             }
 
             final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
@@ -3210,9 +3013,8 @@ public class AlternatingCameraCalibratorTest
                     new AlternatingCameraCalibrator(pattern, samples);
             calibrator.setListener(this);
             calibrator.setEstimateRadialDistortion(true);
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-            calibrator.setImageOfAbsoluteConicMethod(
-                    RobustEstimatorMethod.PROSAC);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+            calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
             calibrator.setIACEstimatorThreshold(1e-6);
 
@@ -3220,13 +3022,13 @@ public class AlternatingCameraCalibratorTest
             assertTrue(calibrator.isReady());
             assertFalse(calibrator.isLocked());
 
-            assertEquals(calibrateStart, 0);
-            assertEquals(calibrateEnd, 0);
-            assertEquals(calibrateProgressChange, 0);
-            assertEquals(intrinsicParametersEstimationStarts, 0);
-            assertEquals(intrinsicParametersEstimationEnds, 0);
-            assertEquals(radialDistortionEstimationStarts, 0);
-            assertEquals(radialDistortionEstimationEnds, 0);
+            assertEquals(0, calibrateStart);
+            assertEquals(0, calibrateEnd);
+            assertEquals(0, calibrateProgressChange);
+            assertEquals(0, intrinsicParametersEstimationStarts);
+            assertEquals(0, intrinsicParametersEstimationEnds);
+            assertEquals(0, radialDistortionEstimationStarts);
+            assertEquals(0, radialDistortionEstimationEnds);
 
             // calibrate
             try {
@@ -3236,8 +3038,8 @@ public class AlternatingCameraCalibratorTest
                 continue;
             }
 
-            assertEquals(calibrateStart, 1);
-            assertEquals(calibrateEnd, 1);
+            assertEquals(1, calibrateStart);
+            assertEquals(1, calibrateEnd);
             assertTrue(calibrateProgressChange >= 0);
             assertTrue(intrinsicParametersEstimationStarts > 0);
             assertTrue(intrinsicParametersEstimationEnds > 0);
@@ -3255,28 +3057,22 @@ public class AlternatingCameraCalibratorTest
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     calibrator.getEstimatedIntrinsicParameters();
 
-            assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-            assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                    0.0);
-            assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+            assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+            assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+            assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-            horizontalFocalDistanceError = Math.abs(
-                    intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-            verticalFocalDistanceError = Math.abs(
-                    intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
-            skewnessError = Math.abs(intrinsic.getSkewness() -
-                    intrinsic2.getSkewness());
-            horizontalPrincipalPointError = Math.abs(
-                    intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-            verticalPrincipalPointError = Math.abs(
-                    intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+            horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
+                    intrinsic2.getHorizontalFocalLength());
+            verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
+                    intrinsic2.getVerticalFocalLength());
+            skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+            horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
+                    intrinsic2.getHorizontalPrincipalPoint());
+            verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
+                    intrinsic2.getVerticalPrincipalPoint());
 
             avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
             avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -3374,9 +3170,9 @@ public class AlternatingCameraCalibratorTest
                 (double) 1000;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         // check that average distortion parameters error is small enough
         final String msg = "Mixed pattern - With distortion and outliers" +
@@ -3412,8 +3208,7 @@ public class AlternatingCameraCalibratorTest
                 " max distortion K1 error: " + maxK1Error +
                 " max distortion K2 error: " + maxK2Error +
                 " time: " + avgTimeSeconds + " seconds";
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Test
@@ -3424,7 +3219,7 @@ public class AlternatingCameraCalibratorTest
         final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 774.5, 1084.5 | 6.5, -60.5
         Point[1] = 791.5, 840.0 | 23.5, 184.0
@@ -3438,7 +3233,7 @@ public class AlternatingCameraCalibratorTest
         sampledPoints1.add(new InhomogeneousPoint2D(231.0, -50.0));
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 382.5, 701.5 | -385.5, 322.5
         Point[1] = 351.0, 473.5 | -417.0, 550.5
@@ -3452,7 +3247,7 @@ public class AlternatingCameraCalibratorTest
         sampledPoints2.add(new InhomogeneousPoint2D(-176.0, 370.5));
 
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 988.0, 486.5 | 220.0, 537.5
         Point[1] = 1028.5, 278.5 | 260.5, 745.5
@@ -3466,7 +3261,7 @@ public class AlternatingCameraCalibratorTest
         sampledPoints3.add(new InhomogeneousPoint2D(417.5, 525.5));
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 576.0, 1404.4166 | -192.0, -380.4166259765625
         Point[1] = 544.5, 1151.5 | -223.5, -127.5
@@ -3480,7 +3275,7 @@ public class AlternatingCameraCalibratorTest
         sampledPoints4.add(new InhomogeneousPoint2D(30.5, -323.0));
 
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 913.5, 1596.0 | 145.5, -572.0
         Point[1] = 939.5, 1360.7 | 171.5, -336.699951171875
@@ -3494,18 +3289,12 @@ public class AlternatingCameraCalibratorTest
         sampledPoints5.add(new InhomogeneousPoint2D(358.5, -576.5));
 
         // create samples for each set of sampled QR points
-        final List<CameraCalibratorSample> samples =
-                new ArrayList<>();
-        final CameraCalibratorSample sample1 = new CameraCalibratorSample(pattern,
-                sampledPoints1);
-        final CameraCalibratorSample sample2 = new CameraCalibratorSample(pattern,
-                sampledPoints2);
-        final CameraCalibratorSample sample3 = new CameraCalibratorSample(pattern,
-                sampledPoints3);
-        final CameraCalibratorSample sample4 = new CameraCalibratorSample(pattern,
-                sampledPoints4);
-        final CameraCalibratorSample sample5 = new CameraCalibratorSample(pattern,
-                sampledPoints5);
+        final List<CameraCalibratorSample> samples = new ArrayList<>();
+        final CameraCalibratorSample sample1 = new CameraCalibratorSample(pattern, sampledPoints1);
+        final CameraCalibratorSample sample2 = new CameraCalibratorSample(pattern, sampledPoints2);
+        final CameraCalibratorSample sample3 = new CameraCalibratorSample(pattern, sampledPoints3);
+        final CameraCalibratorSample sample4 = new CameraCalibratorSample(pattern, sampledPoints4);
+        final CameraCalibratorSample sample5 = new CameraCalibratorSample(pattern, sampledPoints5);
 
         samples.add(sample1);
         samples.add(sample2);
@@ -3514,13 +3303,11 @@ public class AlternatingCameraCalibratorTest
         samples.add(sample5);
 
         // create calibrator
-        final AlternatingCameraCalibrator calibrator =
-                new AlternatingCameraCalibrator(pattern, samples);
+        final AlternatingCameraCalibrator calibrator = new AlternatingCameraCalibrator(pattern, samples);
         calibrator.setListener(this);
         calibrator.setEstimateRadialDistortion(true);
-        calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
-        calibrator.setImageOfAbsoluteConicMethod(
-                RobustEstimatorMethod.PROSAC);
+        calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
+        calibrator.setImageOfAbsoluteConicMethod(RobustEstimatorMethod.PROSAC);
         calibrator.setIACEstimatorThreshold(REAL_IAC_THRESHOLD);
         calibrator.setDistortionMethod(RobustEstimatorMethod.PROSAC);
 
@@ -3528,19 +3315,19 @@ public class AlternatingCameraCalibratorTest
         assertTrue(calibrator.isReady());
         assertFalse(calibrator.isLocked());
 
-        assertEquals(calibrateStart, 0);
-        assertEquals(calibrateEnd, 0);
-        assertEquals(calibrateProgressChange, 0);
-        assertEquals(intrinsicParametersEstimationStarts, 0);
-        assertEquals(intrinsicParametersEstimationEnds, 0);
-        assertEquals(radialDistortionEstimationStarts, 0);
-        assertEquals(radialDistortionEstimationEnds, 0);
+        assertEquals(0, calibrateStart);
+        assertEquals(0, calibrateEnd);
+        assertEquals(0, calibrateProgressChange);
+        assertEquals(0, intrinsicParametersEstimationStarts);
+        assertEquals(0, intrinsicParametersEstimationEnds);
+        assertEquals(0, radialDistortionEstimationStarts);
+        assertEquals(0, radialDistortionEstimationEnds);
 
         // calibrate
         calibrator.calibrate();
 
-        assertEquals(calibrateStart, 1);
-        assertEquals(calibrateEnd, 1);
+        assertEquals(1, calibrateStart);
+        assertEquals(1, calibrateEnd);
         assertTrue(calibrateProgressChange >= 0);
         assertTrue(intrinsicParametersEstimationStarts > 0);
         assertTrue(intrinsicParametersEstimationEnds > 0);
@@ -3555,8 +3342,7 @@ public class AlternatingCameraCalibratorTest
         assertNotNull(calibrator.getHomographyQualityScores());
         assertNotNull(calibrator.getEstimatedImageOfAbsoluteConic());
         assertNotNull(calibrator.getEstimatedIntrinsicParameters());
-        final PinholeCameraIntrinsicParameters intrinsic =
-                calibrator.getEstimatedIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters intrinsic = calibrator.getEstimatedIntrinsicParameters();
 
         final double horizontalFocalLength = intrinsic.getHorizontalFocalLength();
         final double verticalFocalLength = intrinsic.getVerticalFocalLength();
@@ -3565,11 +3351,10 @@ public class AlternatingCameraCalibratorTest
         final double verticalPrincipalPoint = intrinsic.getVerticalPrincipalPoint();
         assertTrue(horizontalFocalLength > 0);
         assertTrue(verticalFocalLength > 0);
-        assertEquals(horizontalFocalLength, verticalFocalLength,
-                ABSOLUTE_ERROR);
-        assertEquals(skewness, 0.0, 0.0);
-        assertEquals(horizontalPrincipalPoint, 0.0, 0.0);
-        assertEquals(verticalPrincipalPoint, 0.0, 0.0);
+        assertEquals(horizontalFocalLength, verticalFocalLength, ABSOLUTE_ERROR);
+        assertEquals(0.0, skewness, 0.0);
+        assertEquals(0.0, horizontalPrincipalPoint, 0.0);
+        assertEquals(0.0, verticalPrincipalPoint, 0.0);
 
         // check distortion
         final RadialDistortion distortion = calibrator.getDistortion();
@@ -3579,8 +3364,7 @@ public class AlternatingCameraCalibratorTest
 
         final String msg = "Real data - focal length: " + horizontalFocalLength +
                 "Distortion K1: " + k1 + " K2: " + k2;
-        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).
-                log(Level.INFO, msg);
+        Logger.getLogger(AlternatingCameraCalibratorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Override
@@ -3652,7 +3436,7 @@ public class AlternatingCameraCalibratorTest
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setDistortionMethod(RobustEstimatorMethod.LMedS);
+            calibrator.setDistortionMethod(RobustEstimatorMethod.LMEDS);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -3692,7 +3476,7 @@ public class AlternatingCameraCalibratorTest
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setHomographyMethod(RobustEstimatorMethod.LMedS);
+            calibrator.setHomographyMethod(RobustEstimatorMethod.LMEDS);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

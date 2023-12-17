@@ -67,13 +67,11 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
     @Test
     public void testConstructor() {
         // test empty constructor
-        SingleHomographyPinholeCameraEstimator estimator =
-                new SingleHomographyPinholeCameraEstimator();
+        SingleHomographyPinholeCameraEstimator estimator = new SingleHomographyPinholeCameraEstimator();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
-                0.0);
+        assertEquals(SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertNull(estimator.getHomography());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
@@ -82,37 +80,32 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
         estimator = new SingleHomographyPinholeCameraEstimator(this);
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
-                0.0);
+        assertEquals(SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertNull(estimator.getHomography());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
 
         // test constructor with homography
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
         estimator = new SingleHomographyPinholeCameraEstimator(homography);
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
-                0.0);
-        assertSame(estimator.getHomography(), homography);
+        assertEquals(SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
+        assertSame(homography, estimator.getHomography());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
 
         // test constructor with homography and listener
-        estimator = new SingleHomographyPinholeCameraEstimator(homography,
-                this);
+        estimator = new SingleHomographyPinholeCameraEstimator(homography, this);
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
-                0.0);
-        assertSame(estimator.getHomography(), homography);
+        assertEquals(SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
+        assertSame(homography, estimator.getHomography());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -121,18 +114,15 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
                 new SingleHomographyPinholeCameraEstimator();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
-                0.0);
+        assertEquals(SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // set new value
-        estimator.setFocalDistanceAspectRatio(
-                -SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO);
+        estimator.setFocalDistanceAspectRatio(-SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO);
 
         // check correctness
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                -SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
-                0.0);
+        assertEquals(-SingleHomographyPinholeCameraEstimator.DEFAULT_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
     }
 
     @Test
@@ -145,8 +135,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
         assertFalse(estimator.isReady());
 
         // set new value
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
         estimator.setHomography(homography);
 
         // check correctness
@@ -166,7 +155,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -174,8 +163,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -204,18 +192,13 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and in a plane
             final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
@@ -265,8 +248,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -276,8 +258,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1, projectedPoint2;
@@ -295,16 +276,13 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE);
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                         homY = -(planeA * homX + planeC * homZ + planeD * homW) /
                                 planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                                MAX_RANDOM_VALUE);
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                         homX = -(planeB * homY + planeC * homZ + planeD * homW) /
                                 planeA;
                     }
@@ -323,9 +301,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -341,8 +317,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
             // estimate homography
             final ProjectiveTransformation2DRobustEstimator homographyEstimator =
                     ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                            projectedPoints1, projectedPoints2,
-                            RobustEstimatorMethod.LMedS);
+                            projectedPoints1, projectedPoints2, RobustEstimatorMethod.LMEDS);
 
             final Transformation2D homography;
             try {
@@ -352,12 +327,11 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
             }
 
             final SingleHomographyPinholeCameraEstimator estimator =
-                    new SingleHomographyPinholeCameraEstimator(homography,
-                            this);
+                    new SingleHomographyPinholeCameraEstimator(homography, this);
 
             reset();
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
 
             final PinholeCamera camera;
             try {
@@ -366,25 +340,22 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
                 continue;
             }
 
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
 
             camera.decompose();
 
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                    camera.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters estimatedIntrinsic = camera.getIntrinsicParameters();
             final Rotation3D estimatedRotation = camera.getCameraRotation();
             final Point3D estimatedCenter = camera.getCameraCenter();
 
             final PinholeCamera estimatedCamera1 = new PinholeCamera(
-                    estimatedIntrinsic, new MatrixRotation3D(),
-                    new InhomogeneousPoint3D());
+                    estimatedIntrinsic, new MatrixRotation3D(), new InhomogeneousPoint3D());
             final PinholeCamera estimatedCamera2 = new PinholeCamera(
                     estimatedIntrinsic, estimatedRotation, estimatedCenter);
 
             final FundamentalMatrix estimatedFundamentalMatrix =
-                    new FundamentalMatrix(estimatedCamera1,
-                            estimatedCamera2);
+                    new FundamentalMatrix(estimatedCamera1, estimatedCamera2);
 
             fundamentalMatrix.normalize();
             estimatedFundamentalMatrix.normalize();
@@ -395,8 +366,7 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
             Arrays.fill(residuals, 1.0);
 
             estimatedFundamentalMatrix.computeEpipoles();
-            final Point2D estimatedEpipoleRight =
-                    estimatedFundamentalMatrix.getRightEpipole();
+            final Point2D estimatedEpipoleRight = estimatedFundamentalMatrix.getRightEpipole();
             final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner(
                     estimatedEpipoleRight, true, inliers, residuals, numPoints,
                     projectedPoints1, projectedPoints2, 1.0, homography);
@@ -404,13 +374,11 @@ public class SingleHomographyPinholeCameraEstimatorTest implements
             final HomogeneousPoint2D refinedEpipole = new HomogeneousPoint2D();
             refiner.refine(refinedEpipole);
 
-            final FundamentalMatrix refinedFundamentalMatrix =
-                    new FundamentalMatrix();
+            final FundamentalMatrix refinedFundamentalMatrix = new FundamentalMatrix();
             HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography,
                     refinedEpipole, refinedFundamentalMatrix);
 
             refinedFundamentalMatrix.normalize();
-
 
             if (!fundamentalMatrix.getInternalMatrix().equals(
                     refinedFundamentalMatrix.getInternalMatrix(),

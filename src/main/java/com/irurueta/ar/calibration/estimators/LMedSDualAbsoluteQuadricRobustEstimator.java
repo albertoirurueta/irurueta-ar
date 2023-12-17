@@ -216,8 +216,9 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<DualAbsoluteQuadric> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<DualAbsoluteQuadric> solutions) {
                                 mSubsetCameras.clear();
                                 for (int samplesIndex : samplesIndices) {
                                     mSubsetCameras.add(mCameras.get(samplesIndex));
@@ -309,6 +310,6 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.LMEDS;
     }
 }

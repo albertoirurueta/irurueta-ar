@@ -29,7 +29,7 @@ import java.util.List;
  * parameters, implementations of this estimator can be used for camera
  * calibration purposes.
  * Depending on the constraints imposed on the intrinsic parameters of the
- * camera, some parameters of the IAC will be known in advance and less
+ * camera, some parameters of the IAC will be known in advance and fewer
  * equations will be needed.
  * If no constraints are imposed, then at least 5 equations will be needed to
  * estimate the DIAC, and hence 3 homographies will be required (2 equations can
@@ -39,14 +39,14 @@ import java.util.List;
  * required, hence only 2 homographies will be needed.
  * 2*n + 1 &lt;= 5 ==&lt; n &lt;= 4 / 2 ==&lt; n &lt;= 2
  * If also principal point is assumed to be known and located at image center
- * (origin of coordinates), then 2 less equations are needed, and hence only
+ * (origin of coordinates), then 2 fewer equations are needed, and hence only
  * 1 homography is needed:
  * 2n + 1 + 2 &lt;= 5 ==&lt; n &lt;= 2 / 2 ==&lt; n &lt;= 1
  * By enabling constraints, results are guaranteed to be more stable (estimation
- * fails less times with an exception) and more accurate, so whenever possible
+ * fails fewer times with an exception) and more accurate, so whenever possible
  * constraints should be enabled. The principal point at origin introduces more
  * stability and accuracy than the skewness constraint, but if possible both
- * should be enabled. By default both constraints are enable.
+ * should be enabled. By default, both constraints are enable.
  */
 public abstract class ImageOfAbsoluteConicEstimator {
 
@@ -71,11 +71,10 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * Constant defining whether aspect ratio of focal distances (i.e. vertical
      * focal distance divided by horizontal focal distance) is known or not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      */
-    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN =
-            true;
+    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN = true;
 
     /**
      * Constant defining default aspect ratio of focal distances. This constant
@@ -112,7 +111,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
      * distance divided by horizontal focal distance) is known or not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be
      * zero, otherwise it is ignored.
@@ -125,7 +124,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -214,7 +213,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * or not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @return true if camera skewness is assumed to be zero, otherwise camera
      * skewness is estimated.
@@ -228,7 +227,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * not.
      * Skewness determines whether LCD sensor cells are properly aligned or not,
      * where zero indicates perfect alignment.
-     * Typically skewness is a value equal or very close to zero.
+     * Typically, skewness is a value equal or very close to zero.
      *
      * @param zeroSkewness true if camera skewness is assumed to be zero,
      *                     otherwise camera skewness is estimated.
@@ -281,7 +280,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -297,7 +296,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -321,7 +320,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -344,7 +343,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * This value is only taken into account if skewness is assumed to be zero
      * and focal distance aspect ratio is marked as known, otherwise it is
      * ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -376,7 +375,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
     /**
      * Indicates whether this instance is locked.
      *
-     * @return true if this estimator is busy estimating a IAC, false
+     * @return true if this estimator is busy estimating an IAC, false
      * otherwise.
      */
     public boolean isLocked() {
@@ -483,13 +482,15 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws LockedException                        if estimator is locked.
      * @throws NotReadyException                      if input has not yet been provided.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
-     *                                                Indeed, if provided homographies belong to the group of affine
-     *                                                transformations (or other groups contained within such as metric or
-     *                                                euclidean ones), this exception will raise because camera movements will
-     *                                                be degenerate. To avoid this exception, homographies must be purely
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided. Indeed,
+     *                                                if provided homographies belong to the group of affine
+     *                                                transformations (or other groups contained within such
+     *                                                as metric or Euclidean ones), this exception will
+     *                                                raise because camera movements will be degenerate. To
+     *                                                avoid this exception, homographies must be purely
      *                                                projective.
      */
     public abstract ImageOfAbsoluteConic estimate() throws LockedException,

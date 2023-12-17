@@ -58,8 +58,8 @@ public class SlamTwoViewsSparseReconstructor extends
 
     /**
      * Process one view of all the available data during the reconstruction.
-     * This method can be called multiple times instead of {@link #start()} to build the reconstruction step by step,
-     * one view at a time.
+     * This method can be called multiple times instead of {@link #start()} to build the reconstruction
+     * step by step, one view at a time.
      *
      * @return true if more views can be processed, false when reconstruction has finished.
      */
@@ -75,10 +75,10 @@ public class SlamTwoViewsSparseReconstructor extends
     }
 
     /**
-     * Called when processing one frame is successfully finished. This can be done to estimate scale on those
-     * implementations where scale can be measured or is already known.
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
      *
-     * @return true if post processing succeeded, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
      */
     @Override
     protected boolean postProcessOne() {

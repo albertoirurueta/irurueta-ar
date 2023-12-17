@@ -126,8 +126,8 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      homography.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than required number of homographies for default settings (i.e.
-     *                                  1 homography).
+     *                                  smaller than required number of homographies for default settings
+     *                                  (i.e. 1 homography).
      */
     public PROSACImageOfAbsoluteConicRobustEstimator(final double[] qualityScores) {
         this();
@@ -142,11 +142,11 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * @param listener      listener to be notified of events such as when
      *                      estimation starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than required number of homographies for default settings (i.e.
-     *                                  1 homography).
+     *                                  smaller than required number of homographies for default settings
+     *                                  (i.e. 1 homography).
      */
-    public PROSACImageOfAbsoluteConicRobustEstimator(final double[] qualityScores,
-                                                     final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+    public PROSACImageOfAbsoluteConicRobustEstimator(
+            final double[] qualityScores, final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -247,7 +247,8 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * @throws LockedException          if robust estimator is locked because an
      *                                  estimation is already in progress.
      * @throws IllegalArgumentException if provided quality scores length is
-     *                                  smaller than minimum required number of homographies (i.e. 1 homography)
+     *                                  smaller than minimum required number of homographies (i.e. 1
+     *                                  homography)
      */
     @Override
     public void setQualityScores(final double[] qualityScores) throws LockedException {
@@ -317,8 +318,9 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<ImageOfAbsoluteConic> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<ImageOfAbsoluteConic> solutions) {
                                 mSubsetHomographies.clear();
                                 for (final int samplesIndex : samplesIndices) {
                                     mSubsetHomographies.add(mHomographies.get(

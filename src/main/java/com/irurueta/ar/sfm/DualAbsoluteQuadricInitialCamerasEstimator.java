@@ -39,7 +39,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
 
     /**
      * Aspect ratio of intrinsic parameters of cameras.
-     * Typically this value is 1.0 if vertical coordinates increase upwards,
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      */
     private double mAspectRatio = DualAbsoluteQuadricEstimator.
@@ -110,7 +110,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      * @throws LockedException                         if estimator is locked.
      * @throws NotReadyException                       if estimator is not ready.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      */
     @Override
     public void estimate() throws LockedException, NotReadyException,
@@ -156,7 +157,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
 
     /**
      * Gets aspect ratio of intrinsic parameters of cameras.
-     * Typically this value is 1.0 if vertical coordinates increase upwards,
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      *
      * @return aspect ratio of intrinsic parameters of cameras.
@@ -167,7 +168,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
 
     /**
      * Sets aspect ratio of intrinsic parameters of cameras.
-     * Typically this value is 1.0 if vertical coordinates increase upwards,
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      *
      * @param aspectRatio aspect ratio of intrinsic parameters of cameras.
@@ -207,7 +208,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      *
      * @param fundamentalMatrix input fundamental matrix to estimate cameras.
      * @param aspectRatio       aspect ratio of intrinsic parameters of cameras.
-     *                          Typically this value is 1.0 if vertical coordinates increase upwards or
+     *                          Typically, this value is 1.0 if vertical coordinates increase upwards or
      *                          -1.0 if it is the opposite.
      * @param leftCamera        instance where left camera will be stored.
      * @param rightCamera       instance where right camera will be stored.

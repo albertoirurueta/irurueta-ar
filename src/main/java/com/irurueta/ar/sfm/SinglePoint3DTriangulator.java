@@ -35,7 +35,7 @@ import java.util.List;
  * cameras are being used. If points or cameras are located very far or at
  * infinity, triangulation will fail when using inhomogeneous methods.
  * Homogeneous methods are suitable for any case, however, if points and
- * cameras are close and well defined, inhomogeneous methods might yield better
+ * cameras are close and well-defined, inhomogeneous methods might yield better
  * accuracy (although the difference is minimal).
  */
 public abstract class SinglePoint3DTriangulator {
@@ -225,7 +225,8 @@ public abstract class SinglePoint3DTriangulator {
      * @throws NotReadyException             if lists of points and cameras don't have the
      *                                       same length or less than 2 views are provided.
      * @throws Point3DTriangulationException if triangulation fails for some
-     *                                       other reason (i.e. degenerate geometry, numerical instabilities, etc).
+     *                                       other reason (i.e. degenerate geometry, numerical
+     *                                       instabilities, etc.).
      */
     public Point3D triangulate() throws LockedException, NotReadyException,
             Point3DTriangulationException {
@@ -247,7 +248,8 @@ public abstract class SinglePoint3DTriangulator {
      * @throws NotReadyException             if lists of points and cameras don't have the
      *                                       same length or less than 2 views are provided.
      * @throws Point3DTriangulationException if triangulation fails for some
-     *                                       other reason (i.e. degenerate geometry, numerical instabilities, etc).
+     *                                       other reason (i.e. degenerate geometry, numerical
+     *                                       instabilities, etc.).
      */
     public void triangulate(final Point3D result) throws LockedException,
             NotReadyException, Point3DTriangulationException {
@@ -571,7 +573,7 @@ public abstract class SinglePoint3DTriangulator {
 
     /**
      * Returns type of triangulator (a combination of homogeneous or
-     * inhomogeneous type along with an LMSE or weighted strategy.
+     * inhomogeneous type along with an LMSE or weighted strategy).
      *
      * @return type of triangulator.
      */
@@ -591,7 +593,8 @@ public abstract class SinglePoint3DTriangulator {
      *                 same position as the camera on the list.
      * @param result   instance where triangulated 3D point is stored.
      * @throws Point3DTriangulationException if triangulation fails for some
-     *                                       other reason (i.e. degenerate geometry, numerical instabilities, etc).
+     *                                       other reason (i.e. degenerate geometry, numerical
+     *                                       instabilities, etc.).
      */
     protected abstract void triangulate(final List<Point2D> points2D,
                                         final List<PinholeCamera> cameras,

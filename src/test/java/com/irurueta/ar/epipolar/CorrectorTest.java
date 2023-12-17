@@ -39,11 +39,10 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
@@ -56,37 +55,33 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with fundamental matrix and type
         final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
 
         // SAMPSON
-        corrector = Corrector.create(fundamentalMatrix,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = Corrector.create(fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
-        corrector = Corrector.create(fundamentalMatrix,
-                CorrectorType.GOLD_STANDARD);
+        corrector = Corrector.create(fundamentalMatrix, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
@@ -95,11 +90,10 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with points and type
@@ -107,39 +101,35 @@ public class CorrectorTest {
         final List<Point2D> rightPoints = new ArrayList<>();
 
         // SAMPSON
-        corrector = Corrector.create(leftPoints, rightPoints,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = Corrector.create(leftPoints, rightPoints, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
-        corrector = Corrector.create(leftPoints, rightPoints,
-                CorrectorType.GOLD_STANDARD);
+        corrector = Corrector.create(leftPoints, rightPoints, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with points, fundamental matrix and type
@@ -149,17 +139,16 @@ public class CorrectorTest {
                 CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
@@ -167,17 +156,16 @@ public class CorrectorTest {
                 CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with listener and type
@@ -192,8 +180,7 @@ public class CorrectorTest {
             }
 
             @Override
-            public void onCorrectProgressChange(final Corrector corrector,
-                                                final float progress) {
+            public void onCorrectProgressChange(final Corrector corrector, final float progress) {
             }
         };
 
@@ -207,11 +194,10 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
@@ -224,87 +210,78 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with fundamental matrix, listener and type
 
         // SAMPSON
-        corrector = Corrector.create(fundamentalMatrix, listener,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = Corrector.create(fundamentalMatrix, listener, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
-        corrector = Corrector.create(fundamentalMatrix, listener,
-                CorrectorType.GOLD_STANDARD);
+        corrector = Corrector.create(fundamentalMatrix, listener, CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with points, listener and type
 
         // SAMPSON
-        corrector = Corrector.create(leftPoints, rightPoints, listener,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = Corrector.create(leftPoints, rightPoints, listener, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
-        corrector = Corrector.create(leftPoints, rightPoints, listener,
-                CorrectorType.GOLD_STANDARD);
+        corrector = Corrector.create(leftPoints, rightPoints, listener, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create with points, fundamental matrix, listener and type
@@ -314,17 +291,16 @@ public class CorrectorTest {
                 listener, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.SAMPSON_CORRECTOR);
+        assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
         assertTrue(corrector instanceof SampsonCorrector);
 
         // GOLD STANDARD
@@ -332,17 +308,16 @@ public class CorrectorTest {
                 listener, CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
         assertTrue(corrector instanceof GoldStandardCorrector);
 
         // create without arguments
@@ -355,60 +330,55 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with fundamental matrix
         corrector = Corrector.create(fundamentalMatrix);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with left and right points
         corrector = Corrector.create(leftPoints, rightPoints);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with left and right points and fundamental matrix
-        corrector = Corrector.create(leftPoints, rightPoints,
-                fundamentalMatrix);
+        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with listener
         corrector = Corrector.create(listener);
@@ -420,59 +390,54 @@ public class CorrectorTest {
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with fundamental matrix and listener
         corrector = Corrector.create(fundamentalMatrix, listener);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with left and right points and listener
         corrector = Corrector.create(leftPoints, rightPoints, listener);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
 
         // create with left and right points, fundamental matrix and listener
-        corrector = Corrector.create(leftPoints, rightPoints,
-                fundamentalMatrix, listener);
+        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, listener);
 
         // check correctness
-        assertSame(corrector.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(corrector.getLeftPoints(), leftPoints);
-        assertSame(corrector.getRightPoints(), rightPoints);
+        assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
+        assertSame(leftPoints, corrector.getLeftPoints());
+        assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(corrector.getProgressDelta(),
-                Corrector.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertSame(corrector.getListener(), listener);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
+        assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
-        assertEquals(corrector.getType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, corrector.getType());
     }
 }

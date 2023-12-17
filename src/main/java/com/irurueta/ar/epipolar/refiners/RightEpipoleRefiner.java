@@ -34,7 +34,7 @@ import java.util.List;
  * Base class to refine the epipole of a fundamental matrix formed by an initial
  * epipole estimation and an estimated homography.
  * Any fundamental matrix can be expressed as F = [e']x*H, where
- * e' is the epipole on the right view and H is a non degenerate homography.
+ * e' is the epipole on the right view and H is a non-degenerate homography.
  * This class refines an initial epipole so that residuals from provided point
  * correspondences generating fundamental matrix F are reduced.
  * This class is especially useful in cases where geometry of the scene is
@@ -60,7 +60,7 @@ public abstract class RightEpipoleRefiner extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      */
@@ -87,7 +87,8 @@ public abstract class RightEpipoleRefiner extends
      * @param refinementStandardDeviation standard deviation used for
      *                                    Levenberg-Marquardt fitting.
      * @param homography                  homography relating samples in two views, which is used
-     *                                    to generate a fundamental matrix and its corresponding epipolar geometry.
+     *                                    to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
      */
     protected RightEpipoleRefiner(
             final Point2D initialEpipoleEstimation,
@@ -114,7 +115,8 @@ public abstract class RightEpipoleRefiner extends
      * @param refinementStandardDeviation standard deviation used for
      *                                    Levenberg-Marquardt fitting.
      * @param homography                  homography relating samples in two views, which is used
-     *                                    to generate a fundamental matrix and its corresponding epipolar geometry.
+     *                                    to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
      */
     protected RightEpipoleRefiner(
             final Point2D initialEpipoleEstimation,
@@ -132,7 +134,7 @@ public abstract class RightEpipoleRefiner extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of such
      * threshold.
      *
@@ -147,7 +149,7 @@ public abstract class RightEpipoleRefiner extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of such
      * threshold.
      *
@@ -224,7 +226,8 @@ public abstract class RightEpipoleRefiner extends
      * @param rightEpipole epipole on right view.
      * @param result       instance where computed fundamental matrix will be stored.
      * @throws InvalidFundamentalMatrixException if provided homography is not
-     *                                           invertible, which would generate a degenerate fundamental matrix.
+     *                                           invertible, which would generate a degenerate
+     *                                           fundamental matrix.
      */
     public static void computeFundamentalMatrix(
             final Transformation2D homography,

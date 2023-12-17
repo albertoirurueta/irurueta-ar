@@ -41,7 +41,7 @@ import java.util.List;
  * inlier matches and their residuals.
  * This class can be used to find a solution that minimizes error of inliers
  * in LMSE terms.
- * Typically a refiner is used by a robust estimator, however it can also be
+ * Typically, a refiner is used by a robust estimator, however it can also be
  * useful in some other situations.
  */
 @SuppressWarnings("DuplicatedCode")
@@ -58,7 +58,7 @@ public class FundamentalMatrixRefiner extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      */
@@ -128,7 +128,7 @@ public class FundamentalMatrixRefiner extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of such
      * threshold.
      *
@@ -143,7 +143,7 @@ public class FundamentalMatrixRefiner extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of such
      * threshold.
      *
@@ -258,23 +258,23 @@ public class FundamentalMatrixRefiner extends
                         private Matrix mInternalMatrix;
 
                         private final GradientEstimator mGradientEstimator =
-                                new GradientEstimator(
-                                        new MultiDimensionFunctionEvaluatorListener() {
+                                new GradientEstimator(new MultiDimensionFunctionEvaluatorListener() {
 
-                                            @Override
-                                            public double evaluate(final double[] params) {
+                                    @Override
+                                    public double evaluate(final double[] params) {
 
-                                                try {
-                                                    mInternalMatrix.fromArray(params);
-                                                    mFundMatrix.setInternalMatrix(mInternalMatrix);
+                                        try {
+                                            mInternalMatrix.fromArray(params);
+                                            mFundMatrix.setInternalMatrix(mInternalMatrix);
 
-                                                    return residual(mFundMatrix, mLeftPoint,
-                                                            mRightPoint);
-                                                } catch (final AlgebraException | InvalidFundamentalMatrixException e) {
-                                                    return initialTotalResidual;
-                                                }
-                                            }
-                                        });
+                                            return residual(mFundMatrix, mLeftPoint,
+                                                    mRightPoint);
+                                        } catch (final AlgebraException
+                                                       | InvalidFundamentalMatrixException e) {
+                                            return initialTotalResidual;
+                                        }
+                                    }
+                                });
 
                         @Override
                         public int getNumberOfDimensions() {

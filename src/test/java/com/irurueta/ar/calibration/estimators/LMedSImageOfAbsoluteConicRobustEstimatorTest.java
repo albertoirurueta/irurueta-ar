@@ -78,69 +78,59 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getHomographies());
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getStopThreshold(),
-                LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test constructor with listener
         estimator = new LMedSImageOfAbsoluteConicRobustEstimator(this);
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
-        assertSame(estimator.getListener(), this);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
         assertNull(estimator.getHomographies());
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getStopThreshold(),
-                LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // test constructor with homographies
         final List<Transformation2D> homographies = new ArrayList<>();
@@ -149,100 +139,84 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         estimator = new LMedSImageOfAbsoluteConicRobustEstimator(homographies);
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getHomographies(), homographies);
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(homographies, estimator.getHomographies());
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getStopThreshold(),
-                LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies =
-                new ArrayList<>();
+        final List<Transformation2D> emptyHomographies = new ArrayList<>();
         estimator = null;
         try {
-            estimator = new LMedSImageOfAbsoluteConicRobustEstimator(
-                    (List<Transformation2D>) null);
+            estimator = new LMedSImageOfAbsoluteConicRobustEstimator((List<Transformation2D>) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMedSImageOfAbsoluteConicRobustEstimator(
-                    emptyHomographies);
+            estimator = new LMedSImageOfAbsoluteConicRobustEstimator(emptyHomographies);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
 
         // test constructor with homographies and listener
-        estimator = new LMedSImageOfAbsoluteConicRobustEstimator(homographies,
-                this);
+        estimator = new LMedSImageOfAbsoluteConicRobustEstimator(homographies, this);
 
         // check default values
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
-        assertSame(estimator.getListener(), this);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
-        assertEquals(estimator.getConfidence(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS);
-        assertSame(estimator.getHomographies(), homographies);
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
+        assertSame(homographies, estimator.getHomographies());
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
-        assertEquals(estimator.getStopThreshold(),
-                LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                0.0);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
+        assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSImageOfAbsoluteConicRobustEstimator(
-                    (List<Transformation2D>) null);
+            estimator = new LMedSImageOfAbsoluteConicRobustEstimator((List<Transformation2D>) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMedSImageOfAbsoluteConicRobustEstimator(
-                    emptyHomographies);
+            estimator = new LMedSImageOfAbsoluteConicRobustEstimator(emptyHomographies);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -255,15 +229,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getStopThreshold(),
-                LMedSImageOfAbsoluteConicRobustEstimator.
-                        DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(LMedSImageOfAbsoluteConicRobustEstimator.DEFAULT_STOP_THRESHOLD,
+                estimator.getStopThreshold(), 0.0);
 
         // set new value
         estimator.setStopThreshold(1.0);
 
         // check correctness
-        assertEquals(estimator.getStopThreshold(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -279,16 +252,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.isZeroSkewness(),
-                ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
+                estimator.isZeroSkewness());
 
         // set new value
-        estimator.setZeroSkewness(
-                !ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
+        estimator.setZeroSkewness(!ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
 
         // check correctness
-        assertEquals(estimator.isZeroSkewness(),
-                !ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
+        assertEquals(!ImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
     }
 
     @Test
@@ -297,18 +268,16 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
 
         // set new value
-        estimator.setPrincipalPointAtOrigin(!ImageOfAbsoluteConicEstimator.
-                DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+        estimator.setPrincipalPointAtOrigin(
+                !ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
 
         // check correctness
-        assertEquals(estimator.isPrincipalPointAtOrigin(),
-                !ImageOfAbsoluteConicEstimator.
-                        DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+        assertEquals(!ImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
+                estimator.isPrincipalPointAtOrigin());
     }
 
     @Test
@@ -317,19 +286,16 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
 
         // set new value
         estimator.setFocalDistanceAspectRatioKnown(
-                !ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+                !ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
 
         // check correctness
-        assertEquals(estimator.isFocalDistanceAspectRatioKnown(),
-                !ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN);
+        assertEquals(!ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
+                estimator.isFocalDistanceAspectRatioKnown());
     }
 
     @Test
@@ -338,15 +304,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                ImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(ImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // set new value
         estimator.setFocalDistanceAspectRatio(0.5);
 
         // check correctness
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -369,7 +334,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
     }
 
@@ -379,15 +344,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getProgressDelta(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_PROGRESS_DELTA,
+                estimator.getProgressDelta(), 0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
 
         // check correctness
-        assertEquals(estimator.getProgressDelta(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getProgressDelta(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -408,14 +372,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getConfidence(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE, 0.0);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_CONFIDENCE,
+                estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.5);
 
         // check correctness
-        assertEquals(estimator.getConfidence(), 0.5, 0.0);
+        assertEquals(0.5, estimator.getConfidence(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -436,14 +400,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 new LMedSImageOfAbsoluteConicRobustEstimator();
 
         // check default value
-        assertEquals(estimator.getMaxIterations(),
-                ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS);
+        assertEquals(ImageOfAbsoluteConicRobustEstimator.DEFAULT_MAX_ITERATIONS,
+                estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(100);
 
         // check correctness
-        assertEquals(estimator.getMaxIterations(), 100);
+        assertEquals(100, estimator.getMaxIterations());
 
         // force IllegalArgumentException
         try {
@@ -461,12 +425,11 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         // check default value
         assertNull(estimator.getHomographies());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getMinNumberOfRequiredHomographies(), 1);
+        assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final int numHomographies = randomizer.nextInt(MIN_NUM_HOMOGRAPHIES,
-                MAX_NUM_HOMOGRAPHIES);
+        final int numHomographies = randomizer.nextInt(MIN_NUM_HOMOGRAPHIES, MAX_NUM_HOMOGRAPHIES);
         final List<Transformation2D> homographies = new ArrayList<>();
         for (int i = 0; i < numHomographies; i++) {
             homographies.add(new ProjectiveTransformation2D());
@@ -475,12 +438,11 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         estimator.setHomographies(homographies);
 
         // check correctness
-        assertSame(estimator.getHomographies(), homographies);
+        assertSame(homographies, estimator.getHomographies());
         assertTrue(estimator.isReady());
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies =
-                new ArrayList<>();
+        final List<Transformation2D> emptyHomographies = new ArrayList<>();
         try {
             estimator.setHomographies(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -541,8 +503,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         for (int j = 0; j < TIMES; j++) {
             // create intrinsic parameters
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
             final double skewness = 0.0;
             final double horizontalPrincipalPoint = 0.0;
@@ -573,8 +534,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             // parameters
             final int nHomographies = randomizer.nextInt(MIN_NUM_HOMOGRAPHIES,
                     MAX_NUM_HOMOGRAPHIES);
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
+            final List<Transformation2D> homographies = new ArrayList<>();
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, STD_ERROR);
             for (int i = 0; i < nHomographies; i++) {
@@ -589,20 +549,16 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
@@ -610,8 +566,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
 
                 // add random noise to projected points with a certain outlier
                 // proportion
-                final List<Point2D> projectedPatternPointsWithError =
-                        new ArrayList<>();
+                final List<Point2D> projectedPatternPointsWithError = new ArrayList<>();
                 for (final Point2D projectedPatternPoint : projectedPatternPoints) {
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier sample
@@ -624,8 +579,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                                         1.0));
                     } else {
                         // inlier
-                        projectedPatternPointsWithError.add(
-                                projectedPatternPoint);
+                        projectedPatternPointsWithError.add(projectedPatternPoint);
                     }
                 }
 
@@ -638,15 +592,13 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                 // enforce a strict threshold to estimate homographies
                 homographyEstimator.setThreshold(STOP_THRESHOLD);
 
-                final ProjectiveTransformation2D homography =
-                        homographyEstimator.estimate();
+                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate IAC
             final LMedSImageOfAbsoluteConicRobustEstimator estimator =
-                    new LMedSImageOfAbsoluteConicRobustEstimator(homographies,
-                            this);
+                    new LMedSImageOfAbsoluteConicRobustEstimator(homographies, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setStopThreshold(STOP_THRESHOLD);
@@ -654,17 +606,17 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
@@ -674,52 +626,40 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getB(), 0.0, 0.0);
-            assertEquals(iac2.getB(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getD(), 0.0, 0.0);
-            assertEquals(iac2.getD(), 0.0, 0.0);
-            assertEquals(iac.getE(), 0.0, 0.0);
-            assertEquals(iac2.getE(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getB(), 0.0);
+            assertEquals(0.0, iac2.getB(), 0.0);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getD(), 0.0);
+            assertEquals(0.0, iac2.getD(), 0.0);
+            assertEquals(0.0, iac.getE(), 0.0);
+            assertEquals(0.0, iac2.getE(), 0.0);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
                 // check intrinsic parameters
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
                 assertEquals(intrinsic.getHorizontalFocalLength(),
-                        intrinsic2.getHorizontalFocalLength(),
-                        VERY_LARGE_ABSOLUTE_ERROR);
+                        intrinsic2.getHorizontalFocalLength(), VERY_LARGE_ABSOLUTE_ERROR);
                 assertEquals(intrinsic.getVerticalFocalLength(),
-                        intrinsic2.getVerticalFocalLength(),
-                        VERY_LARGE_ABSOLUTE_ERROR);
-                assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-                assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                        0.0);
-                assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-                assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+                        intrinsic2.getVerticalFocalLength(), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+                assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+                assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength());
-                skewnessError = Math.abs(intrinsic.getSkewness() -
-                        intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(
-                        intrinsic.getHorizontalPrincipalPoint() -
-                                intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(
-                        intrinsic.getVerticalPrincipalPoint() -
-                                intrinsic2.getVerticalPrincipalPoint());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength());
+                skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                        - intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                        - intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -776,11 +716,11 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         final String msg = "Circles pattern - failed: " + failedRatio * 100.0 +
                 "% succeeded: " + succeededRatio * 100.0 +
@@ -856,10 +796,8 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             final double horizontalPrincipalPoint = 0.0;
             final double verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters(
+                    focalLength, focalLength, horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
 
@@ -879,10 +817,8 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             // Create one random camera for each homography having a random
             // rotation and translation but all having the same intrinsic
             // parameters
-            final int nHomographies = randomizer.nextInt(MIN_NUM_HOMOGRAPHIES,
-                    MAX_NUM_HOMOGRAPHIES);
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
+            final int nHomographies = randomizer.nextInt(MIN_NUM_HOMOGRAPHIES, MAX_NUM_HOMOGRAPHIES);
+            final List<Transformation2D> homographies = new ArrayList<>();
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, STD_ERROR);
             for (int i = 0; i < nHomographies; i++) {
@@ -897,20 +833,16 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                         MIN_ANGLE_DEGREES * Math.PI / 180.0,
                         MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
                 final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
-                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                        MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                        cameraCenterArray);
+                randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                        cameraCenter);
+                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points
@@ -918,8 +850,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
 
                 // add random noise to projected points with a certain outlier
                 // proportion
-                final List<Point2D> projectedPatternPointsWithError =
-                        new ArrayList<>();
+                final List<Point2D> projectedPatternPointsWithError = new ArrayList<>();
                 for (final Point2D projectedPatternPoint : projectedPatternPoints) {
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier sample
@@ -932,8 +863,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
                                         1.0));
                     } else {
                         // inlier
-                        projectedPatternPointsWithError.add(
-                                projectedPatternPoint);
+                        projectedPatternPointsWithError.add(projectedPatternPoint);
                     }
                 }
 
@@ -956,8 +886,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
 
             // Estimate IAC
             final LMedSImageOfAbsoluteConicRobustEstimator estimator =
-                    new LMedSImageOfAbsoluteConicRobustEstimator(homographies,
-                            this);
+                    new LMedSImageOfAbsoluteConicRobustEstimator(homographies, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setStopThreshold(STOP_THRESHOLD);
@@ -965,17 +894,17 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             // check initial state
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
+            assertEquals(0, estimateStart);
+            assertEquals(0, estimateEnd);
+            assertEquals(0, estimateNextIteration);
+            assertEquals(0, estimateProgressChange);
 
             // estimate
             final ImageOfAbsoluteConic iac2 = estimator.estimate();
 
             assertFalse(estimator.isLocked());
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
+            assertEquals(1, estimateStart);
+            assertEquals(1, estimateEnd);
             assertTrue(estimateNextIteration > 0);
             assertTrue(estimateProgressChange >= 0);
             reset();
@@ -985,61 +914,45 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
             iac.normalize();
             iac2.normalize();
 
-            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getB(), 0.0, 0.0);
-            assertEquals(iac2.getB(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(iac.getD(), 0.0, 0.0);
-            assertEquals(iac2.getD(), 0.0, 0.0);
-            assertEquals(iac.getE(), 0.0, 0.0);
-            assertEquals(iac2.getE(), 0.0, 0.0);
-            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()),
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(Math.abs(iac.getA()), Math.abs(iac2.getA()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getB(), 0.0);
+            assertEquals(0.0, iac2.getB(), 0.0);
+            assertEquals(Math.abs(iac.getC()), Math.abs(iac2.getC()), VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, iac.getD(), 0.0);
+            assertEquals(0.0, iac2.getD(), 0.0);
+            assertEquals(0.0, iac.getE(), 0.0);
+            assertEquals(0.0, iac2.getE(), 0.0);
+            assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
                 // check intrinsic parameters
-                final PinholeCameraIntrinsicParameters intrinsic2 =
-                        iac2.getIntrinsicParameters();
+                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
 
-                final boolean validHorizontalFocalLength = Math.abs(
-                        intrinsic.getHorizontalFocalLength() -
-                                intrinsic2.getHorizontalFocalLength()) <
-                        3.0 * ULTRA_LARGE_ABSOLUTE_ERROR;
-                final boolean validVerticalFocalLength = Math.abs(
-                        intrinsic.getVerticalFocalLength() -
-                                intrinsic2.getVerticalFocalLength()) <
-                        3.0 * ULTRA_LARGE_ABSOLUTE_ERROR;
+                final boolean validHorizontalFocalLength = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength()) < 3.0 * ULTRA_LARGE_ABSOLUTE_ERROR;
+                final boolean validVerticalFocalLength = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength()) < 3.0 * ULTRA_LARGE_ABSOLUTE_ERROR;
                 if (validHorizontalFocalLength && validVerticalFocalLength) {
                     assertEquals(intrinsic.getHorizontalFocalLength(),
-                            intrinsic2.getHorizontalFocalLength(),
-                            3.0 * ULTRA_LARGE_ABSOLUTE_ERROR);
+                            intrinsic2.getHorizontalFocalLength(), 3.0 * ULTRA_LARGE_ABSOLUTE_ERROR);
                     assertEquals(intrinsic.getVerticalFocalLength(),
-                            intrinsic2.getVerticalFocalLength(),
-                            3.0 * ULTRA_LARGE_ABSOLUTE_ERROR);
-                    assertEquals(intrinsic.getSkewness(), 0.0, 0.0);
-                    assertEquals(intrinsic2.getSkewness(), 0.0, 0.0);
-                    assertEquals(intrinsic.getHorizontalPrincipalPoint(), 0.0, 0.0);
-                    assertEquals(intrinsic2.getHorizontalPrincipalPoint(), 0.0,
-                            0.0);
-                    assertEquals(intrinsic.getVerticalPrincipalPoint(), 0.0, 0.0);
-                    assertEquals(intrinsic2.getVerticalPrincipalPoint(), 0.0, 0.0);
+                            intrinsic2.getVerticalFocalLength(), 3.0 * ULTRA_LARGE_ABSOLUTE_ERROR);
+                    assertEquals(0.0, intrinsic.getSkewness(), 0.0);
+                    assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
+                    assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
+                    assertEquals(0.0, intrinsic2.getHorizontalPrincipalPoint(), 0.0);
+                    assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
+                    assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                    horizontalFocalDistanceError = Math.abs(
-                            intrinsic.getHorizontalFocalLength() -
-                                    intrinsic2.getHorizontalFocalLength());
-                    verticalFocalDistanceError = Math.abs(
-                            intrinsic.getVerticalFocalLength() -
-                                    intrinsic2.getVerticalFocalLength());
-                    skewnessError = Math.abs(intrinsic.getSkewness() -
-                            intrinsic2.getSkewness());
-                    horizontalPrincipalPointError = Math.abs(
-                            intrinsic.getHorizontalPrincipalPoint() -
-                                    intrinsic2.getHorizontalPrincipalPoint());
-                    verticalPrincipalPointError = Math.abs(
-                            intrinsic.getVerticalPrincipalPoint() -
-                                    intrinsic2.getVerticalPrincipalPoint());
+                    horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                            - intrinsic2.getHorizontalFocalLength());
+                    verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                            - intrinsic2.getVerticalFocalLength());
+                    skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
+                    horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                            - intrinsic2.getHorizontalPrincipalPoint());
+                    verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                            - intrinsic2.getVerticalPrincipalPoint());
 
                     avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                     avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1099,11 +1012,11 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         avgVerticalPrincipalPointError /= total;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(avgHorizontalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalFocalDistanceError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgSkewnessError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgHorizontalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
-        assertEquals(avgVerticalPrincipalPointError, 0.0, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgSkewnessError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
         final String msg = "QR pattern - failed: " + failedRatio * 100.0 +
                 "% succeeded: " + succeededRatio * 100.0 +
@@ -1150,7 +1063,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         final List<Point2D> patternPoints = pattern.getIdealPoints();
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 774.5, 1084.5 | 6.5, -60.5
         Point[1] = 791.5, 840.0 | 23.5, 184.0
@@ -1164,7 +1077,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         sampledPoints1.add(new InhomogeneousPoint2D(231.0, -50.0));
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 382.5, 701.5 | -385.5, 322.5
         Point[1] = 351.0, 473.5 | -417.0, 550.5
@@ -1178,7 +1091,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         sampledPoints2.add(new InhomogeneousPoint2D(-176.0, 370.5));
 
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 988.0, 486.5 | 220.0, 537.5
         Point[1] = 1028.5, 278.5 | 260.5, 745.5
@@ -1192,7 +1105,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         sampledPoints3.add(new InhomogeneousPoint2D(417.5, 525.5));
         
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 576.0, 1404.4166 | -192.0, -380.4166259765625
         Point[1] = 544.5, 1151.5 | -223.5, -127.5
@@ -1206,7 +1119,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         sampledPoints4.add(new InhomogeneousPoint2D(30.5, -323.0));
 
         /*
-        Sampled data (before and after centering coordinates and setting correct y axis 
+        Sampled data (before and after centering coordinates and setting correct y-axis
         direction)
         Point[0] = 913.5, 1596.0 | 145.5, -572.0
         Point[1] = 939.5, 1360.7 | 171.5, -336.699951171875
@@ -1270,17 +1183,17 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         // check initial state
         assertFalse(estimator.isLocked());
         assertTrue(estimator.isReady());
-        assertEquals(estimateStart, 0);
-        assertEquals(estimateEnd, 0);
-        assertEquals(estimateNextIteration, 0);
-        assertEquals(estimateProgressChange, 0);
+        assertEquals(0, estimateStart);
+        assertEquals(0, estimateEnd);
+        assertEquals(0, estimateNextIteration);
+        assertEquals(0, estimateProgressChange);
 
         // estimate
         final ImageOfAbsoluteConic iac = estimator.estimate();
 
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 1);
-        assertEquals(estimateEnd, 1);
+        assertEquals(1, estimateStart);
+        assertEquals(1, estimateEnd);
         assertTrue(estimateNextIteration > 0);
         assertTrue(estimateProgressChange >= 0);
         reset();
@@ -1300,9 +1213,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimatorTest implements
         assertTrue(verticalFocalLength > 0);
         assertEquals(horizontalFocalLength, verticalFocalLength,
                 ABSOLUTE_ERROR);
-        assertEquals(skewness, 0.0, 0.0);
-        assertEquals(horizontalPrincipalPoint, 0.0, 0.0);
-        assertEquals(verticalPrincipalPoint, 0.0, 0.0);
+        assertEquals(0.0, skewness, 0.0);
+        assertEquals(0.0, horizontalPrincipalPoint, 0.0);
+        assertEquals(0.0, verticalPrincipalPoint, 0.0);
 
         final String msg = "Real data focal length: " + horizontalFocalLength;
         Logger.getLogger(LMedSImageOfAbsoluteConicRobustEstimatorTest.class.getName()).

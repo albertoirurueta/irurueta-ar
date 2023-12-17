@@ -93,7 +93,7 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
         final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mCurrentScale);
 
         if (isInitialPairOfViews) {
-            // first pair of views does not require setting translation and rotation
+            // the first pair of views does not require setting translation and rotation
             mReferenceEuclideanTransformation = scaleTransformation;
         } else {
             // additional pairs also need to translate and rotate
@@ -118,19 +118,23 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
             mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
             mPreviousEuclideanEstimatedCamera.setCamera(previousEuclideanCamera);
             mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());
-            mPreviousEuclideanEstimatedCamera.setQualityScore(mPreviousMetricEstimatedCamera.getQualityScore());
+            mPreviousEuclideanEstimatedCamera.setQualityScore(
+                    mPreviousMetricEstimatedCamera.getQualityScore());
             if (mPreviousMetricEstimatedCamera.getCovariance() != null) {
                 mPreviousEuclideanEstimatedCamera.setCovariance(
-                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
+                                sqrScale));
             }
 
             mCurrentEuclideanEstimatedCamera = new EstimatedCamera();
             mCurrentEuclideanEstimatedCamera.setCamera(currentEuclideanCamera);
             mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());
-            mCurrentEuclideanEstimatedCamera.setQualityScore(mCurrentMetricEstimatedCamera.getQualityScore());
+            mCurrentEuclideanEstimatedCamera.setQualityScore(
+                    mCurrentMetricEstimatedCamera.getQualityScore());
             if (mCurrentMetricEstimatedCamera.getCovariance() != null) {
                 mCurrentEuclideanEstimatedCamera.setCovariance(
-                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
+                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
+                                sqrScale));
             }
 
             // transform points

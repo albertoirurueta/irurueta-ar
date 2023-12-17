@@ -39,8 +39,8 @@ import java.util.List;
  * Refines the epipole of a fundamental matrix formed by an initial epipole
  * estimation and an estimated homography.
  * Any fundamental matrix can be expressed as F = [e']x*H, where
- * e' is the epipole on the right view, []x is the skew matrix, and H is a non
- * degenerate homography.
+ * e' is the epipole on the right view, []x is the skew matrix, and H is a
+ * non-degenerate homography.
  * This class refines an initial epipole so that residuals from provided point
  * correspondences generating fundamental matrix F are reduced.
  * This class is especially useful in cases where geometry of the scene is
@@ -48,10 +48,9 @@ import java.util.List;
  * generate an inaccurate fundamental matrix.
  * This implementation uses Levenberg-Marquardt algorithm for a fast cost
  * optimization and uses inhomogeneous points for epipole refinement,
- * which makes it unsuitable for cases when epipoles are are or near infinity
- * (i.e pure lateral translations).
+ * which makes it unsuitable for cases when epipoles are at or near infinity
+ * (i.e. pure lateral translations).
  */
-@SuppressWarnings("ConstantConditions")
 public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
 
     /**
@@ -80,8 +79,8 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      * @param refinementStandardDeviation standard deviation used for
      *                                    Levenberg-Marquardt fitting.
      * @param homography                  homography relating samples in two views, which is
-     *                                    used to generate a fundamental matrix and its corresponding epipolar
-     *                                    geometry.
+     *                                    used to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
      */
     public InhomogeneousRightEpipoleRefiner(
             final Point2D initialEpipoleEstimation,
@@ -112,7 +111,8 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      * @param refinementStandardDeviation standard deviation used for
      *                                    Levenberg-Marquardt fitting.
      * @param homography                  homography relating samples in two views, which is used
-     *                                    to generate a fundamental matrix and its corresponding epipolar geometry.
+     *                                    to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
      */
     public InhomogeneousRightEpipoleRefiner(
             final Point2D initialEpipoleEstimation,
@@ -299,8 +299,7 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
             } while (iterErrorDecreased && numIter < MAX_ITERS);
 
             if (mListener != null) {
-                mListener.onRefineEnd(this, mInitialEstimation, result,
-                        errorDecreased);
+                mListener.onRefineEnd(this, mInitialEstimation, result, errorDecreased);
             }
 
             return errorDecreased;

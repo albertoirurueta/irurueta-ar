@@ -83,7 +83,7 @@ public class SingleHomographyPinholeCameraEstimator {
     /**
      * Constructor with homography.
      *
-     * @param homography homography to estimate canera and intrinsic parameters.
+     * @param homography homography to estimate camera and intrinsic parameters.
      * @throws NullPointerException if provided homography is null.
      */
     public SingleHomographyPinholeCameraEstimator(final Transformation2D homography) {
@@ -97,8 +97,9 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param listener   listener to be notified of events such as when estimation
      *                   starts or ends.
      */
-    public SingleHomographyPinholeCameraEstimator(final Transformation2D homography,
-                                                  final SingleHomographyPinholeCameraEstimatorListener listener) {
+    public SingleHomographyPinholeCameraEstimator(
+            final Transformation2D homography,
+            final SingleHomographyPinholeCameraEstimatorListener listener) {
         internalSetHomography(homography);
         mListener = listener;
     }

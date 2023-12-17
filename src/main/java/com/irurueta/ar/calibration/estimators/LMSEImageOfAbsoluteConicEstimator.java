@@ -27,7 +27,7 @@ import com.irurueta.geometry.estimators.NotReadyException;
 import java.util.List;
 
 /**
- * This class defines an LMSE (Least Mean Square Error) estimator of Image
+ * This class defines an LMSE (the Least Mean Square Error) estimator of Image
  * of Absolute Conic (IAC).
  * Aside from enabling constraints whenever possible to obtain more stable and
  * accurate results, it is also discouraged to enable LMSE solutions, or at
@@ -43,13 +43,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
         ImageOfAbsoluteConicEstimator {
 
     /**
-     * Indicates if by default an LMSE (Least Mean Square Error) solution is
+     * Indicates if by default an LMSE (the Least Mean Square Error) solution is
      * allowed if more homographies than the minimum are provided.
      */
     public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more homographies than the minimum are provided. If false, the
      * exceeding homographies will be ignored and only the first required
      * homographies will be used.
@@ -110,7 +110,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
     }
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more homographies than the minimum are provided. If false, the
      * exceeding homographies will be ignored and only the first required
      * correspondences will be used.
@@ -122,7 +122,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
     }
 
     /**
-     * Specifies if an LMSE (Least Mean Square Error) solution is allowed if
+     * Specifies if an LMSE (the Least Mean Square Error) solution is allowed if
      * more homographies than the minimum are provided. If false, the
      * exceeding homographies will be ignored and only the first required ones
      * will be used.
@@ -144,13 +144,15 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      * @throws LockedException                        if estimator is locked.
      * @throws NotReadyException                      if input has not yet been provided.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided.
-     *                                                Indeed, if provided homographies belong to the group of affine
-     *                                                transformations (or other groups contained within such as metric or
-     *                                                euclidean ones), this exception will raise because camera movements will
-     *                                                be degenerate. To avoid this exception, homographies must be purely
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided. Indeed,
+     *                                                if provided homographies belong to the group of affine
+     *                                                transformations (or other groups contained within
+     *                                                such as metric or Euclidean ones), this exception will
+     *                                                raise because camera movements will be degenerate. To
+     *                                                avoid this exception, homographies must be purely
      *                                                projective.
      */
     @Override
@@ -213,10 +215,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC.
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as
-     *                                                pure parallel translations where no additional data is really
-     *                                                provided.
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided.
      */
     private ImageOfAbsoluteConic estimateNoConstraints()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -379,9 +381,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided
      */
     private ImageOfAbsoluteConic estimateZeroSkewness()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -536,9 +539,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided
      */
     private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -686,9 +690,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided
      */
     private ImageOfAbsoluteConic estimateZeroSkewnessAndPrincipalPointAtOrigin()
             throws ImageOfAbsoluteConicEstimatorException {
@@ -827,9 +832,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided
      */
     private ImageOfAbsoluteConic
     estimateZeroSkewnessAndKnownFocalDistanceAspectRatio()
@@ -983,9 +989,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *
      * @return estimated IAC
      * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
-     *                                                estimation, usually because repeated homographies are provided, or
-     *                                                homographies corresponding to degenerate camera movements such as pure
-     *                                                parallel translations where no additional data is really provided
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided
      */
     private ImageOfAbsoluteConic estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio()
             throws ImageOfAbsoluteConicEstimatorException {

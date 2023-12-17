@@ -281,7 +281,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      */
     public double getDistortionEstimatorThreshold() {
         switch (mDistortionEstimator.getMethod()) {
-            case LMedS:
+            case LMEDS:
                 return ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).
                         getStopThreshold();
             case MSAC:
@@ -290,7 +290,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             case PROSAC:
                 return ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).
                         getThreshold();
-            case PROMedS:
+            case PROMEDS:
                 return ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).
                         getStopThreshold();
             case RANSAC:
@@ -317,7 +317,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
         }
 
         switch (mDistortionEstimator.getMethod()) {
-            case LMedS:
+            case LMEDS:
                 ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).
                         setStopThreshold(distortionEstimatorThreshold);
                 break;
@@ -329,7 +329,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
                 ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).
                         setThreshold(distortionEstimatorThreshold);
                 break;
-            case PROMedS:
+            case PROMEDS:
                 ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).
                         setStopThreshold(distortionEstimatorThreshold);
                 break;
@@ -349,7 +349,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
-     * Typically this value will be close to 1.0, but not exactly 1.0, because
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
@@ -368,7 +368,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * amount of confidence indicates the probability that the estimated
      * homography is correct (i.e. no outliers were used for the estimation,
      * because they were successfully discarded).
-     * Typically this value will be close to 1.0, but not exactly 1.0, because
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
      * a 100% confidence would require an infinite number of iterations.
      * Usually the default value is good enough for most situations, but this
      * setting can be changed for finer adjustments.
@@ -454,7 +454,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
 
         mHomographyQualityScoresRequired =
                 (mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                        mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMedS);
+                        mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);
 
         if (mListener != null) {
             mListener.onCalibrateStart(this);
@@ -522,12 +522,12 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
 
     /**
      * Estimates radial distortion using estimated intrinsic parameters among
-     * all samples to estimate their camera poses to find non distorted points
+     * all samples to estimate their camera poses to find non-distorted points
      * and compare them with the sampled ones.
      *
      * @param idealFallbackPatternMarkers ideal pattern markers coordinates
-     *                                    These coordinates are used as fallback when a given sample does not have
-     *                                    an associated pattern.
+     *                                    These coordinates are used as fallback when a given sample does
+     *                                    not have an associated pattern.
      * @return average re-projection error, obtained after projecting ideal
      * pattern markers using estimated camera poses and then doing a comparison
      * with sampled points taking into account estimated distortion to undo
@@ -556,7 +556,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
 
         double[] qualityScores = null;
         if (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
-                mDistortionMethod == RobustEstimatorMethod.PROMedS) {
+                mDistortionMethod == RobustEstimatorMethod.PROMEDS) {
             qualityScores = new double[totalPoints];
         }
 
@@ -588,7 +588,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
 
             // transformedIdealPatternMarkers are considered the undistorted
             // points, because camera follows a pure pinhole model without
-            // distortion and we have transformed the ideal points using a
+            // distortion, and we have transformed the ideal points using a
             // pure projective homography without distortion.
             // sample.getSampledMarkers() contains the sampled coordinates using
             // the actual camera, which will be distorted
@@ -608,7 +608,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             // if distortion estimator requires quality scores, set them
             if (qualityScores != null &&
                     (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
-                            mDistortionMethod == RobustEstimatorMethod.PROMedS)) {
+                            mDistortionMethod == RobustEstimatorMethod.PROMEDS)) {
 
                 final double sampleQuality = mHomographyQualityScores[sampleCounter];
 

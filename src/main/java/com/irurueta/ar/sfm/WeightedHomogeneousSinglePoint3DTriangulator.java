@@ -321,7 +321,8 @@ public class WeightedHomogeneousSinglePoint3DTriangulator extends
      *                 same position as the camera on the list.
      * @param result   instance where triangulated 3D point is stored.
      * @throws Point3DTriangulationException if triangulation fails for some
-     *                                       other reason (i.e. degenerate geometry, numerical instabilities, etc).
+     *                                       other reason (i.e. degenerate geometry, numerical
+     *                                       instabilities, etc.).
      */
     @Override
     @SuppressWarnings("Duplicates")

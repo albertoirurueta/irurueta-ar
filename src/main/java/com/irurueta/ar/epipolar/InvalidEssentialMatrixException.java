@@ -16,7 +16,7 @@
 package com.irurueta.ar.epipolar;
 
 /**
- * Raised when an essential matrix is not well defined.
+ * Raised when an essential matrix is not well-defined.
  */
 public class InvalidEssentialMatrixException extends
         InvalidFundamentalMatrixException {

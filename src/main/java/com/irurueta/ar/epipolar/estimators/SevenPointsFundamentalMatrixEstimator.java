@@ -72,7 +72,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
     public static final double EPS = Double.MIN_VALUE;
 
     /**
-     * Indicates whether an LMSE (Least Mean Square Error) solution is allowed
+     * Indicates whether an LMSE (the Least Mean Square Error) solution is allowed
      * or not. When an LMSE solution is allowed, more than 7 matched points can
      * be used for fundamental matrix estimation. If LMSE solution is not
      * allowed then only the 7 former matched points will be taken into account.
@@ -110,7 +110,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
     }
 
     /**
-     * Returns boolean indicating whether an LMSE (Least Mean Square Error)
+     * Returns boolean indicating whether an LMSE (the Least Mean Square Error)
      * solution is allowed or not. When an LMSE solution is allowed, more than 8
      * matched points can be used for fundamental matrix estimation. If LMSE
      * solution is not allowed then only the 7 former matched points will be
@@ -123,7 +123,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
     }
 
     /**
-     * Sets boolean indicating whether an LMSE (LEast Mean Square Error)
+     * Sets boolean indicating whether an LMSE (the Least Mean Square Error)
      * solution is allowed or not. When an LMSE solution is allowed, more than 8
      * matched points can be used for fundamental matrix estimation. If LMSE
      * solution is not allowed then only the 7 former matched points will be
@@ -198,7 +198,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @throws NotReadyException                   if estimator is not ready because required
      *                                             input points have not already been provided.
      * @throws FundamentalMatrixEstimatorException if configuration of provided
-     *                                             2D points is degenerate and fundamental matrix estimation fails.
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails.
      */
     public List<FundamentalMatrix> estimateAll() throws LockedException,
             NotReadyException, FundamentalMatrixEstimatorException {
@@ -220,7 +221,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @throws NotReadyException                   if estimator is not ready because required
      *                                             input points have not already been provided.
      * @throws FundamentalMatrixEstimatorException if configuration of provided
-     *                                             2D points is degenerate and fundamental matrix estimation fails.
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails.
      */
     @SuppressWarnings("DuplicatedCode")
     public void estimateAll(final List<FundamentalMatrix> result)
@@ -435,7 +437,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
             // to normalize by Frobenius norm if points are NOT normalized
 
             // The last thing we need to do is to enforce rank 2 on fundamental
-            // matrix, since we know it always is a rank 2 matrix. For that
+            // matrix, since we know it is always a rank 2 matrix. For that
             // reason we know that det(F) = 0.
             // Since the fundamental matrix F is a linear combination of the
             // two matrices F1, F2 we have found then: F = b * F1 + (1.0 - b) *F2
@@ -574,8 +576,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
                     beta3 = root3.getReal();
                     beta3Available = true;
                 }
-            } else if (SecondDegreePolynomialRootsEstimator.isSecondDegree(
-                    params)) {
+            } else if (SecondDegreePolynomialRootsEstimator.isSecondDegree(params)) {
                 // solve second degree polynomial
                 final SecondDegreePolynomialRootsEstimator estimator =
                         new SecondDegreePolynomialRootsEstimator(params);
@@ -656,11 +657,6 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 result.add(f);
             }
 
-            if (result.isEmpty()) {
-                // no valid solution was found
-                throw new FundamentalMatrixEstimatorException();
-            }
-
             if (mListener != null) {
                 mListener.onEstimateEnd(this, result.get(0));
             }
@@ -686,8 +682,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @throws NotReadyException                   if estimator is not ready because required
      *                                             input points have not already been provided.
      * @throws FundamentalMatrixEstimatorException if configuration of provided
-     *                                             2D points is degenerate and fundamental matrix estimation fails or
-     *                                             more than one solution exists.
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails or more than one solution exists.
      */
     @Override
     public FundamentalMatrix estimate() throws LockedException,

@@ -60,8 +60,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @param singularValuesThreshold threshold to determine that both singular
      *                                values are equal.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     *                                         does not have rank 2 or its two non-zero singular values are not equal up
-     *                                         to provided threshold.
+     *                                         does not have rank 2 or its two non-zero singular values
+     *                                         are not equal up to provided threshold.
      * @throws IllegalArgumentException        if provided threshold is negative.
      */
     public EssentialMatrix(final Matrix internalMatrix,
@@ -76,7 +76,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *
      * @param internalMatrix matrix to be set internally.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     *                                         does not have rank 2 or its two non-zero singular values are not equal.
+     *                                         does not have rank 2 or its two non-zero singular values
+     *                                         are not equal.
      */
     public EssentialMatrix(final Matrix internalMatrix)
             throws InvalidEssentialMatrixException {
@@ -84,14 +85,15 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
     }
 
     /**
-     * Constructor from pair of cameras.
+     * Constructor from a pair of cameras.
      *
      * @param leftCamera              camera corresponding to left view.
      * @param rightCamera             camera corresponding to right view.
      * @param singularValuesThreshold threshold to determine that both singular
      *                                values of generated essential matrix are equal.
      * @throws InvalidPairOfCamerasException if provided cameras do not span a
-     *                                       valid epipolar geometry (i.e. they are set in a degenerate configuration).
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate
+     *                                       configuration).
      * @throws IllegalArgumentException      if provided threshold is negative.
      */
     public EssentialMatrix(
@@ -104,12 +106,13 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
     }
 
     /**
-     * Constructor from pair of cameras.
+     * Constructor from a pair of cameras.
      *
      * @param leftCamera  camera corresponding to left view.
      * @param rightCamera camera corresponding to right view.
      * @throws InvalidPairOfCamerasException if provided cameras do not span a
-     *                                       valid epipolar geometry (i.e. they are set in a degenerate configuration).
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate
+     *                                       configuration).
      */
     public EssentialMatrix(
             final PinholeCamera leftCamera,
@@ -223,7 +226,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *
      * @param internalMatrix matrix to be assigned to this instance.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     *                                         does not have rank 2 or its two non-zero singular values are not equal.
+     *                                         does not have rank 2 or its two non-zero singular values
+     *                                         are not equal.
      */
     @Override
     public final void setInternalMatrix(final Matrix internalMatrix)
@@ -240,8 +244,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                singular values are equal.
      * @throws IllegalArgumentException        if provided threshold is negative.
      * @throws InvalidEssentialMatrixException if provided matrix is not 3x3,
-     *                                         does not have rank 2 or its two non-zero singular values are not equal up
-     *                                         to provided threshold.
+     *                                         does not have rank 2 or its two non-zero singular values
+     *                                         are not equal up to provided threshold.
      */
     public final void setInternalMatrix(
             final Matrix internalMatrix,
@@ -316,7 +320,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
     }
 
     /**
-     * Sets essential matrix from provided pair of cameras.
+     * Sets essential matrix from provided a pair of cameras.
      *
      * @param leftCamera  camera corresponding to left view.
      * @param rightCamera camera corresponding to right view.
@@ -333,14 +337,15 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
     }
 
     /**
-     * Sets essential matrix from provided pair of cameras.
+     * Sets essential matrix from provided a pair of cameras.
      *
      * @param leftCamera              camera corresponding to left view.
      * @param rightCamera             camera corresponding to right view.
      * @param singularValuesThreshold threshold to determine that both singular
      *                                values of generated essential matrix are equal.
      * @throws InvalidPairOfCamerasException if provided cameras do not span a
-     *                                       valid epipolar geometry (i.e. they are set in a degenerate configuration).
+     *                                       valid epipolar geometry (i.e. they are set in a degenerate
+     *                                       configuration).
      * @throws IllegalArgumentException      if provided threshold is negative.
      */
     public final void setFromPairOfCameras(

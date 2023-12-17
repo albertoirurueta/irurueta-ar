@@ -1007,7 +1007,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public interface BaseSlamCalibratorListener<D extends BaseCalibrationData> {
         /**
-         * Called when a full sample (accelerometer + gyroscope, etc) has been
+         * Called when a full sample (accelerometer + gyroscope, etc.) has been
          * received.
          *
          * @param calibrator SLAM calibrator.
@@ -1015,7 +1015,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
         void onFullSampleReceived(final BaseSlamCalibrator<D> calibrator);
 
         /**
-         * Called when a full sample (accelerometer + gyroscope, etc) has been
+         * Called when a full sample (accelerometer + gyroscope, etc.) has been
          * received and has already been processed.
          *
          * @param calibrator SLAM calibrator.

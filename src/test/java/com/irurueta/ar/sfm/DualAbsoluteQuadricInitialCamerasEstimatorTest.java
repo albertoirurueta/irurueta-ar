@@ -28,8 +28,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
-        InitialCamerasEstimatorListener {
+public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements InitialCamerasEstimatorListener {
 
     private static final double MIN_RANDOM_VALUE = -100.0;
     private static final double MAX_RANDOM_VALUE = 100.0;
@@ -59,47 +58,41 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
         assertFalse(estimator.isReady());
 
         final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
-        estimator = new DualAbsoluteQuadricInitialCamerasEstimator(
-                fundamentalMatrix);
+        estimator = new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
         assertTrue(estimator.isReady());
 
         estimator = new DualAbsoluteQuadricInitialCamerasEstimator(this);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
         assertFalse(estimator.isReady());
 
-        estimator = new DualAbsoluteQuadricInitialCamerasEstimator(
-                fundamentalMatrix, this);
+        estimator = new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(estimator.getListener(), this);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
         assertTrue(estimator.isReady());
     }
 
@@ -117,7 +110,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
         estimator.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
     }
 
     @Test
@@ -132,7 +125,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -142,20 +135,19 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
                 new DualAbsoluteQuadricInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getAspectRatio(), 0.0);
 
         // set new value
         estimator.setAspectRatio(-1.0);
 
         // check correctness
-        assertEquals(estimator.getAspectRatio(), -1.0, 0.0);
+        assertEquals(-1.0, estimator.getAspectRatio(), 0.0);
     }
 
     @Test
     public void testEstimate() throws InvalidPairOfCamerasException,
-            LockedException, NotReadyException,
-            InitialCamerasEstimationFailedException, CameraException,
-            NotAvailableException, InvalidFundamentalMatrixException {
+            LockedException, NotReadyException, InitialCamerasEstimationFailedException,
+            CameraException, NotAvailableException, InvalidFundamentalMatrixException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -169,8 +161,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -184,28 +175,21 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
                     new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                            focalLength, principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // generate initial cameras from fundamental matrix
             final DualAbsoluteQuadricInitialCamerasEstimator estimator =
-                    new DualAbsoluteQuadricInitialCamerasEstimator(
-                            fundamentalMatrix, this);
+                    new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix, this);
             estimator.setAspectRatio(aspectRatio);
 
             assertTrue(estimator.isReady());
@@ -220,10 +204,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -234,52 +216,44 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             if (Math.abs(intrinsic1b.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getVerticalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             if (Math.abs(intrinsic2b.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getVerticalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             assertNotNull(rotation1b);
             assertNotNull(rotation2b);
@@ -288,8 +262,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -311,22 +284,20 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), LARGE_ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate random 3D points
             final Point3D point3Da = new InhomogeneousPoint3D(
@@ -450,11 +421,9 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGenerateInitialMetricCamerasUsingDAQ1()
-            throws InvalidPairOfCamerasException,
-            InitialCamerasEstimationFailedException, CameraException,
-            NotAvailableException, NotReadyException,
-            InvalidFundamentalMatrixException {
+    public void testGenerateInitialMetricCamerasUsingDAQ1() throws InvalidPairOfCamerasException,
+            InitialCamerasEstimationFailedException, CameraException, NotAvailableException,
+            NotReadyException, InvalidFundamentalMatrixException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -468,8 +437,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPoint = 0.0;
 
@@ -482,38 +450,29 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // generate initial cameras from fundamental matrix
             final PinholeCamera camera1b = new PinholeCamera();
             final PinholeCamera camera2b = new PinholeCamera();
             DualAbsoluteQuadricInitialCamerasEstimator.
-                    generateInitialMetricCamerasUsingDAQ(fundamentalMatrix,
-                            camera1b, camera2b);
+                    generateInitialMetricCamerasUsingDAQ(fundamentalMatrix, camera1b, camera2b);
 
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -524,52 +483,44 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             if (Math.abs(intrinsic1b.getHorizontalFocalLength() - focalLength) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength, LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getVerticalFocalLength() - focalLength) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength, LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getSkewness()) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getSkewness(), 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getHorizontalPrincipalPoint()) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getVerticalPrincipalPoint()) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             if (Math.abs(intrinsic2b.getHorizontalFocalLength() - focalLength) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength, LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getVerticalFocalLength() - focalLength) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength, LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getSkewness()) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getSkewness(), 0.0, LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getHorizontalPrincipalPoint()) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getVerticalPrincipalPoint()) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             assertNotNull(rotation1b);
             assertNotNull(rotation2b);
@@ -578,8 +529,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -601,22 +551,20 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), LARGE_ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate random 3D points
             final Point3D point3Da = new InhomogeneousPoint3D(
@@ -687,10 +635,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
 
     @Test
     public void testGenerateInitialMetricCamerasUsingDAQ2()
-            throws InvalidPairOfCamerasException,
-            InitialCamerasEstimationFailedException, CameraException,
-            NotAvailableException, NotReadyException,
-            InvalidFundamentalMatrixException {
+            throws InvalidPairOfCamerasException, InitialCamerasEstimationFailedException, CameraException,
+            NotAvailableException, NotReadyException, InvalidFundamentalMatrixException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -704,8 +650,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -719,38 +664,30 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
                     new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint,
-                            skewness);
+                            focalLength, principalPoint, principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // generate initial cameras from fundamental matrix
             final PinholeCamera camera1b = new PinholeCamera();
             final PinholeCamera camera2b = new PinholeCamera();
             DualAbsoluteQuadricInitialCamerasEstimator.
-                    generateInitialMetricCamerasUsingDAQ(fundamentalMatrix,
-                            aspectRatio, camera1b, camera2b);
+                    generateInitialMetricCamerasUsingDAQ(fundamentalMatrix, aspectRatio, camera1b,
+                            camera2b);
 
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -761,52 +698,44 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             if (Math.abs(intrinsic1b.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getVerticalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic1b.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             if (Math.abs(intrinsic2b.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getVerticalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength, ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             if (Math.abs(intrinsic2b.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(), 0.0,
-                    ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             assertNotNull(rotation1b);
             assertNotNull(rotation2b);
@@ -815,8 +744,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -838,22 +766,20 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), LARGE_ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate random 3D points
             final Point3D point3Da = new InhomogeneousPoint3D(
@@ -946,7 +872,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimatorTest implements
             fail("LockedException expected but not thrown");
         } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
         } catch (final com.irurueta.geometry.estimators.NotReadyException |
-                InitialCamerasEstimationFailedException ex) {
+                       InitialCamerasEstimationFailedException ex) {
             fail("LockedException expected but not thrown");
         }
         try {

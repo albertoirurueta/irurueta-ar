@@ -80,10 +80,8 @@ public class FundamentalMatrixRefinerTest implements
     private int mRefineEnd;
 
     @Test
-    public void testConstructor() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+    public void testConstructor() throws LockedException, NotReadyException, RobustEstimatorException {
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
         final FundamentalMatrix fundamentalMatrix = estimator.estimate();
         final InliersData inliersData = estimator.getInliersData();
         final BitSet inliers = inliersData.getInliers();
@@ -100,14 +98,14 @@ public class FundamentalMatrixRefinerTest implements
         FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(), 0.0, 0.0);
+        assertEquals(0.0, refiner.getRefinementStandardDeviation(), 0.0);
         assertNull(refiner.getSamples1());
         assertNull(refiner.getSamples2());
         assertFalse(refiner.isReady());
         assertNull(refiner.getInliers());
         assertNull(refiner.getResiduals());
-        assertEquals(refiner.getNumInliers(), 0);
-        assertEquals(refiner.getTotalSamples(), 0);
+        assertEquals(0, refiner.getNumInliers());
+        assertEquals(0, refiner.getTotalSamples());
         assertNull(refiner.getInitialEstimation());
         assertFalse(refiner.isCovarianceKept());
         assertFalse(refiner.isLocked());
@@ -116,20 +114,18 @@ public class FundamentalMatrixRefinerTest implements
 
         // test non-empty constructor
         refiner = new FundamentalMatrixRefiner(fundamentalMatrix, true, inliers,
-                residuals, numInliers, samples1, samples2,
-                refinementStandardDeviation);
+                residuals, numInliers, samples1, samples2, refinementStandardDeviation);
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(),
-                refinementStandardDeviation, 0.0);
-        assertSame(refiner.getSamples1(), samples1);
-        assertSame(refiner.getSamples2(), samples2);
+        assertEquals(refinementStandardDeviation, refiner.getRefinementStandardDeviation(), 0.0);
+        assertSame(samples1, refiner.getSamples1());
+        assertSame(samples2, refiner.getSamples2());
         assertTrue(refiner.isReady());
-        assertSame(refiner.getInliers(), inliers);
-        assertSame(refiner.getResiduals(), residuals);
-        assertEquals(refiner.getNumInliers(), numInliers);
-        assertEquals(refiner.getTotalSamples(), samples1.size());
-        assertSame(refiner.getInitialEstimation(), fundamentalMatrix);
+        assertSame(inliers, refiner.getInliers());
+        assertSame(residuals, refiner.getResiduals());
+        assertEquals(numInliers, refiner.getNumInliers());
+        assertEquals(samples1.size(), refiner.getTotalSamples());
+        assertSame(fundamentalMatrix, refiner.getInitialEstimation());
         assertTrue(refiner.isCovarianceKept());
         assertFalse(refiner.isLocked());
         assertNull(refiner.getCovariance());
@@ -140,16 +136,15 @@ public class FundamentalMatrixRefinerTest implements
                 inliersData, samples1, samples2, refinementStandardDeviation);
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(),
-                refinementStandardDeviation, 0.0);
-        assertSame(refiner.getSamples1(), samples1);
-        assertSame(refiner.getSamples2(), samples2);
+        assertEquals(refinementStandardDeviation, refiner.getRefinementStandardDeviation(), 0.0);
+        assertSame(samples1, refiner.getSamples1());
+        assertSame(samples2, refiner.getSamples2());
         assertTrue(refiner.isReady());
-        assertSame(refiner.getInliers(), inliers);
-        assertSame(refiner.getResiduals(), residuals);
-        assertEquals(refiner.getNumInliers(), numInliers);
-        assertEquals(refiner.getTotalSamples(), samples1.size());
-        assertSame(refiner.getInitialEstimation(), fundamentalMatrix);
+        assertSame(inliers, refiner.getInliers());
+        assertSame(residuals, refiner.getResiduals());
+        assertEquals(numInliers, refiner.getNumInliers());
+        assertEquals(samples1.size(), refiner.getTotalSamples());
+        assertSame(fundamentalMatrix, refiner.getInitialEstimation());
         assertTrue(refiner.isCovarianceKept());
         assertFalse(refiner.isLocked());
         assertNull(refiner.getCovariance());
@@ -167,7 +162,7 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setListener(this);
 
         // check correctness
-        assertSame(refiner.getListener(), this);
+        assertSame(this, refiner.getListener());
     }
 
     @Test
@@ -175,7 +170,7 @@ public class FundamentalMatrixRefinerTest implements
         final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
 
         // check default value
-        assertEquals(refiner.getRefinementStandardDeviation(), 0.0, 0.0);
+        assertEquals(0.0, refiner.getRefinementStandardDeviation(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -184,14 +179,12 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setRefinementStandardDeviation(refinementStandardDeviation);
 
         // check correctness
-        assertEquals(refiner.getRefinementStandardDeviation(),
-                refinementStandardDeviation, 0.0);
+        assertEquals(refinementStandardDeviation, refiner.getRefinementStandardDeviation(), 0.0);
     }
 
     @Test
     public void testGetSetSamples1() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
         final List<Point2D> samples1 = estimator.getLeftPoints();
 
         final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
@@ -203,13 +196,12 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setSamples1(samples1);
 
         // check correctness
-        assertSame(refiner.getSamples1(), samples1);
+        assertSame(samples1, refiner.getSamples1());
     }
 
     @Test
     public void testGetSetSamples2() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
         final List<Point2D> samples2 = estimator.getRightPoints();
 
         final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
@@ -221,14 +213,12 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setSamples2(samples2);
 
         // check correctness
-        assertSame(refiner.getSamples2(), samples2);
+        assertSame(samples2, refiner.getSamples2());
     }
 
     @Test
-    public void testGetSetInliers() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+    public void testGetSetInliers() throws LockedException, NotReadyException, RobustEstimatorException {
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -243,14 +233,12 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setInliers(inliers);
 
         // check correctness
-        assertSame(refiner.getInliers(), inliers);
+        assertSame(inliers, refiner.getInliers());
     }
 
     @Test
-    public void testGetSetResiduals() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+    public void testGetSetResiduals() throws LockedException, NotReadyException, RobustEstimatorException {
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -265,14 +253,12 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setResiduals(residuals);
 
         // check correctness
-        assertSame(refiner.getResiduals(), residuals);
+        assertSame(residuals, refiner.getResiduals());
     }
 
     @Test
-    public void testGetSetNumInliers() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+    public void testGetSetNumInliers() throws LockedException, NotReadyException, RobustEstimatorException {
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -281,13 +267,13 @@ public class FundamentalMatrixRefinerTest implements
         final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner();
 
         // check default value
-        assertEquals(refiner.getNumInliers(), 0);
+        assertEquals(0, refiner.getNumInliers());
 
         // set new value
         refiner.setNumInliers(numInliers);
 
         // check correctness
-        assertEquals(refiner.getNumInliers(), numInliers);
+        assertEquals(numInliers, refiner.getNumInliers());
 
         // Force IllegalArgumentException
         try {
@@ -298,10 +284,8 @@ public class FundamentalMatrixRefinerTest implements
     }
 
     @Test
-    public void testSetInliersData() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                createRobustEstimator();
+    public void testSetInliersData() throws LockedException, NotReadyException, RobustEstimatorException {
+        final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
 
         assertNotNull(estimator.estimate());
         final InliersData inliersData = estimator.getInliersData();
@@ -311,15 +295,15 @@ public class FundamentalMatrixRefinerTest implements
         // check default values
         assertNull(refiner.getInliers());
         assertNull(refiner.getResiduals());
-        assertEquals(refiner.getNumInliers(), 0);
+        assertEquals(0, refiner.getNumInliers());
 
         // set new value
         refiner.setInliersData(inliersData);
 
         // check correctness
-        assertSame(refiner.getInliers(), inliersData.getInliers());
-        assertSame(refiner.getResiduals(), inliersData.getResiduals());
-        assertEquals(refiner.getNumInliers(), inliersData.getNumInliers());
+        assertSame(inliersData.getInliers(), refiner.getInliers());
+        assertSame(inliersData.getResiduals(), refiner.getResiduals());
+        assertEquals(inliersData.getNumInliers(), refiner.getNumInliers());
     }
 
     @Test
@@ -334,7 +318,7 @@ public class FundamentalMatrixRefinerTest implements
         refiner.setInitialEstimation(fundamentalMatrix);
 
         // check correctness
-        assertSame(refiner.getInitialEstimation(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, refiner.getInitialEstimation());
     }
 
     @Test
@@ -352,12 +336,11 @@ public class FundamentalMatrixRefinerTest implements
     }
 
     @Test
-    public void testRefine() throws LockedException, NotReadyException,
-            RobustEstimatorException, RefinerException, NotAvailableException {
+    public void testRefine() throws LockedException, NotReadyException, RobustEstimatorException,
+            RefinerException, NotAvailableException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            final RANSACFundamentalMatrixRobustEstimator estimator =
-                    createRobustEstimator();
+            final RANSACFundamentalMatrixRobustEstimator estimator = createRobustEstimator();
 
             final FundamentalMatrix fundamentalMatrix = estimator.estimate();
             final InliersData inliersData = estimator.getInliersData();
@@ -373,8 +356,8 @@ public class FundamentalMatrixRefinerTest implements
             final FundamentalMatrix result1 = new FundamentalMatrix();
 
             reset();
-            assertEquals(mRefineStart, 0);
-            assertEquals(mRefineEnd, 0);
+            assertEquals(0, mRefineStart);
+            assertEquals(0, mRefineEnd);
 
             if (!refiner.refine(result1)) {
                 continue;
@@ -382,14 +365,13 @@ public class FundamentalMatrixRefinerTest implements
 
             final FundamentalMatrix result2 = refiner.refine();
 
-            assertEquals(mRefineStart, 2);
-            assertEquals(mRefineEnd, 2);
+            assertEquals(2, mRefineStart);
+            assertEquals(2, mRefineEnd);
 
             result1.normalize();
             result2.normalize();
 
-            assertEquals(result1.getInternalMatrix(),
-                    result2.getInternalMatrix());
+            assertEquals(result1.getInternalMatrix(), result2.getInternalMatrix());
 
             numValid++;
             break;
@@ -399,8 +381,7 @@ public class FundamentalMatrixRefinerTest implements
     }
 
 
-    private RANSACFundamentalMatrixRobustEstimator createRobustEstimator()
-            throws LockedException {
+    private RANSACFundamentalMatrixRobustEstimator createRobustEstimator() throws LockedException {
         // randomly create two pinhole cameras
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double alphaEuler1 = 0.0;
@@ -422,10 +403,8 @@ public class FundamentalMatrixRefinerTest implements
         final double verticalFocalLength2 = randomizer.nextDouble(
                 MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS,
-                MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS,
-                MAX_SKEWNESS);
+        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
         final double horizontalPrincipalPoint1 = randomizer.nextDouble(
                 MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
@@ -450,10 +429,8 @@ public class FundamentalMatrixRefinerTest implements
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1,
-                gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2,
-                gammaEuler2);
+        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         final PinholeCameraIntrinsicParameters intrinsic1 =
                 new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
@@ -464,20 +441,16 @@ public class FundamentalMatrixRefinerTest implements
                         verticalFocalLength2, horizontalPrincipalPoint2,
                         verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                center2);
+        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         // generate a random list of 3D points
         final List<Point3D> points3D = new ArrayList<>();
         for (int i = 0; i < nPoints; i++) {
             points3D.add(new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE), randomizer.nextDouble(
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE)));
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
         }
 
         // project 3D points with both cameras

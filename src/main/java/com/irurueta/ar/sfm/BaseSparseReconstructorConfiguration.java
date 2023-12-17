@@ -34,8 +34,8 @@ import java.io.Serializable;
  *
  * @param <T> an actual implementation of a configuration class.
  */
-public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseReconstructorConfiguration<T>> implements
-        Serializable {
+public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseReconstructorConfiguration<T>>
+        implements Serializable {
 
     /**
      * Default robust fundamental matrix estimator method.
@@ -45,7 +45,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             RobustEstimatorMethod.PROSAC;
 
     /**
-     * Default non robust fundamental matrix estimator method used internally within a robust estimator.
+     * Default non-robust fundamental matrix estimator method used internally within a robust estimator.
      * This is only used when general scenes are allowed.
      */
     public static final FundamentalMatrixEstimatorMethod DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
@@ -64,7 +64,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     public static final boolean DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE = false;
 
     /**
-     * Default confidence of robustly estimated fundamental matrix. By default this is 99%.
+     * Default confidence of robustly estimated fundamental matrix. By default, this is 99%.
      * This is only used when general scenes are allowed.
      */
     public static final double DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE =
@@ -72,13 +72,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Default maximum number of iterations to make while robustly estimating fundamental matrix.
-     * By default this is 5000 iterations. This is only used when general scenes are allowed.
+     * By default, this is 5000 iterations. This is only used when general scenes are allowed.
      */
     public static final int DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS =
             FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS;
 
     /**
-     * Default threshold to determine whether samples for robust fundamental matrix estimation are inliers or not.
+     * Default threshold to determine whether samples for robust fundamental matrix estimation are
+     * inliers or not.
      * This is only used when general scenes are allowed.
      */
     public static final double DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD =
@@ -97,14 +98,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     public static final boolean DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS = true;
 
     /**
-     * Default method to use for initial cameras estimation.
+     * Default method to use for initial cameras' estimation.
      */
     public static final InitialCamerasEstimatorMethod DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD =
             InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX;
 
     /**
-     * Indicates whether an homogeneous point triangulator is used for point triangulation when Dual Absolute Quadric
-     * (DAQ) camera initialization is used.
+     * Indicates whether an homogeneous point triangulator is used for point triangulation when Dual
+     * Absolute Quadric (DAQ) camera initialization is used.
      */
     public static final boolean DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR = true;
 
@@ -158,7 +159,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      * This is only used when planar scenes are allowed.
      */
     public static final RobustEstimatorMethod DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD =
-            RobustEstimatorMethod.PROMedS;
+            RobustEstimatorMethod.PROMEDS;
 
     /**
      * Indicates that planar homography is refined by default using all found inliers.
@@ -173,7 +174,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     public static final boolean DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE = false;
 
     /**
-     * Default confidence of robustly estimated planar homography. By default this is 99%.
+     * Default confidence of robustly estimated planar homography. By default, this is 99%.
      * This is only used when planar scenes are allowed.
      */
     public static final double DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE =
@@ -181,7 +182,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Default maximum number of iterations to make while robustly estimating planar
-     * homography. By default this is 5000 iterations.
+     * homography. By default, this is 5000 iterations.
      * This is only used when planar scenes are allowed.
      */
     public static final int DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS =
@@ -255,14 +256,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates that by default EPnP (Efficient Perspective-n-Point) method is NOT
-     * used for additional cameras estimation.
+     * used for additional cameras' estimation.
      */
     public static final boolean DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION =
             false;
 
     /**
      * Indicates that by default UPnP (Uncalibrated Perspective-n-Point) method is
-     * used for additional cameras estimation.
+     * used for additional cameras' estimation.
      */
     public static final boolean DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION =
             true;
@@ -319,7 +320,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     public static final boolean DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS = true;
 
     /**
-     * Default value indicating that fast refinement is used for additional cameras
+     * Default value indicating that fast refinement is used for additional cameras'
      * estimation.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT = true;
@@ -356,7 +357,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS = true;
 
     /**
-     * Default value indicating that skewness is not suggested during additional cameras
+     * Default value indicating that skewness is not suggested during additional cameras'
      * estimation.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED =
@@ -364,28 +365,28 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Default value of skewness to be suggested when suggestion is enabled during
-     * additional cameras estimation.
-     * By default suggested skewness is zero.
+     * additional cameras' estimation.
+     * By default, suggested skewness is zero.
      */
     public static final double DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE =
             PinholeCameraRobustEstimator.DEFAULT_SUGGESTED_SKEWNESS_VALUE;
 
     /**
      * Default value indicating whether horizontal focal length value is suggested or not
-     * during additional cameras estimation. By default this is disabled.
+     * during additional cameras' estimation. By default, this is disabled.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED =
             PinholeCameraRobustEstimator.DEFAULT_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED;
 
     /**
      * Default value indicating whether vertical focal length value is suggested or not
-     * during additional cameras estimation. By default this is disabled.
+     * during additional cameras' estimation. By default, this is disabled.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED =
             PinholeCameraRobustEstimator.DEFAULT_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED;
 
     /**
-     * Default value indicating whether aspect ratio is suggested or not. By default this is
+     * Default value indicating whether aspect ratio is suggested or not. By default, this is
      * disabled.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED =
@@ -393,14 +394,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Default value of aspect ratio to be suggested when suggestion is enabled.
-     * By default suggested aspect ratio is 1.0, although also -1.0 is a typical value
+     * By default, suggested aspect ratio is 1.0, although also -1.0 is a typical value
      * when vertical coordinates increase downwards.
      */
     public static final double DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE =
             PinholeCameraRobustEstimator.DEFAULT_SUGGESTED_ASPECT_RATIO_VALUE;
 
     /**
-     * Default value indicating whether principal point is suggested or not. By default
+     * Default value indicating whether principal point is suggested or not. By default,
      * this is disabled.
      */
     public static final boolean DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED =
@@ -419,14 +420,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD;
 
     /**
-     * Default confidence of robustly triangulated points. By default this is 99%.
+     * Default confidence of robustly triangulated points. By default, this is 99%.
      */
     public static final double DEFAULT_POINT_TRIANGULATOR_CONFIDENCE =
             RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE;
 
     /**
      * Default maximum number of iterations to make while robustly estimating
-     * triangulated points. By default this is 5000 iterations.
+     * triangulated points. By default, this is 5000 iterations.
      */
     public static final int DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS =
             RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS;
@@ -439,7 +440,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             PROSACRobustSinglePoint3DTriangulator.DEFAULT_THRESHOLD;
 
     /**
-     * Method to use for non robust fundamental matrix estimation.
+     * Method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      */
     private FundamentalMatrixEstimatorMethod mNonRobustFundamentalMatrixEstimatorMethod =
@@ -500,7 +501,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
-     * Method to use for initial cameras estimation.
+     * Method to use for initial cameras' estimation.
      */
     private InitialCamerasEstimatorMethod mInitialCamerasEstimatorMethod =
             DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD;
@@ -590,14 +591,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     private boolean mKeepPlanarHomographyCovariance = DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE;
 
     /**
-     * Confidence of robustly estimated planar homography. By default this is 99%.
+     * Confidence of robustly estimated planar homography. By default, this is 99%.
      * This is only used when planar scenes are allowed.
      */
     private double mPlanarHomographyConfidence = DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE;
 
     /**
      * Maximum number of iterations to make while robustly estimating planar homography.
-     * By default this is 5000.
+     * By default, this is 5000.
      * This is only used when planar scenes are allowed.
      */
     private int mPlanarHomographyMaxIterations = DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS;
@@ -639,13 +640,13 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Intrinsic parameters to use for additional cameras estimation when neither
      * Dual Image of Absolute Conic (DIAC) nor Dual Absolute Quadric (DAQ) are used
-     * for intrinsic parameters estimation.
+     * for intrinsic parameters' estimation.
      */
     private PinholeCameraIntrinsicParameters mAdditionalCamerasIntrinsics;
 
     /**
      * Skewness for additional cameras when UPnP (Uncalibrated Perspective-n-Point) method
-     * is used for additional cameras estimation.
+     * is used for additional cameras' estimation.
      */
     private double mAdditionalCamerasSkewness = DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS;
 
@@ -674,7 +675,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether EPnP (Efficient Perspective-n-Point) method is used for additional
-     * cameras estimation. Either EPnP or UPnP must be used for additional cameras
+     * cameras' estimation. Either EPnP or UPnP must be used for additional cameras'
      * estimation.
      */
     private boolean mUseEPnPForAdditionalCamerasEstimation =
@@ -682,8 +683,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether UPnP (Uncalibrated Perspective-n-Point) method is used for
-     * additional cameras estimation. Either EPnP or UPnP must be used for additional
-     * cameras estimation.
+     * additional cameras' estimation. Either EPnP or UPnP must be used for additional
+     * cameras' estimation.
      */
     private boolean mUseUPnPForAdditionalCamerasEstimation =
             DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION;
@@ -730,13 +731,13 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether covariance is kept after refining result of additional
-     * cameras estimation.
+     * cameras' estimation.
      */
     private boolean mKeepCovarianceAdditionalCameras =
             DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS;
 
     /**
-     * Value indicating whether fast refinement is used for additional cameras estimation.
+     * Value indicating whether fast refinement is used for additional cameras' estimation.
      */
     private boolean mAdditionalCamerasUseFastRefinement =
             DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT;
@@ -760,15 +761,17 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Indicates whether inliers must be kept during additional camera estimation.
      */
-    private boolean mAdditionalCamerasComputeAndKeepInliers = DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS;
+    private boolean mAdditionalCamerasComputeAndKeepInliers =
+            DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS;
 
     /**
      * Indicates whether residuals must be computed and kept during additional camera estimation.
      */
-    private boolean mAdditionalCamerasComputeAndKeepResiduals = DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS;
+    private boolean mAdditionalCamerasComputeAndKeepResiduals =
+            DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
-     * Value indicating whether skewness is not suggested during additional cameras
+     * Value indicating whether skewness is not suggested during additional cameras'
      * estimation.
      */
     private boolean mAdditionalCamerasSuggestSkewnessValueEnabled =
@@ -776,59 +779,59 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Value of skewness to be suggested when suggestion is enabled during additional
-     * cameras estimation.
+     * cameras' estimation.
      */
     private double mAdditionalCamerasSuggestedSkewnessValue =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE;
 
     /**
      * Value indicating whether horizontal focal length value is suggested or not
-     * during additional cameras estimation.
+     * during additional cameras' estimation.
      */
     private boolean mAdditionalCamerasSuggestHorizontalFocalLengthEnabled =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED;
 
     /**
-     * Value of suggested horizontal focal length during additional cameras estimation.
+     * Value of suggested horizontal focal length during additional cameras' estimation.
      */
     private double mAdditionalCamerasSuggestedHorizontalFocalLengthValue;
 
     /**
      * Value indicating whether vertical focal length value is suggested or not
-     * during additional cameras estimation.
+     * during additional cameras' estimation.
      */
     private boolean mAdditionalCamerasSuggestVerticalFocalLengthEnabled =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED;
 
     /**
-     * Value of suggested vertical focal length during additional cameras estimation.
+     * Value of suggested vertical focal length during additional cameras' estimation.
      */
     private double mAdditionalCamerasSuggestedVerticalFocalLengthValue;
 
     /**
      * Value indicating whether aspect ratio is suggested or not during
-     * additional cameras estimation.
+     * additional cameras' estimation.
      */
     private boolean mAdditionalCamerasSuggestAspectRatioEnabled =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED;
 
     /**
      * Value of aspect ratio to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional cameras' estimation.
      */
     private double mAdditionalCamerasSuggestedAspectRatioValue =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE;
 
     /**
      * Value indicating whether principal point is suggested or not during
-     * additional cameras estimation.
+     * additional cameras' estimation.
      */
     private boolean mAdditionalCamerasSuggestPrincipalPointEnabled =
             DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED;
 
     /**
      * Value of principal point to be suggested when suggestion is enabled
-     * during additional cameras estimation.
+     * during additional cameras' estimation.
      */
     private InhomogeneousPoint2D mAdditionalCamerasSuggestedPrincipalPointValue;
 
@@ -847,14 +850,14 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
             DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD;
 
     /**
-     * Confidence of robustly triangulated points. By default this is 99%.
+     * Confidence of robustly triangulated points. By default, this is 99%.
      */
     private double mPointTriangulatorConfidence =
             DEFAULT_POINT_TRIANGULATOR_CONFIDENCE;
 
     /**
      * Maximum number of iterations to make while robustly estimating
-     * triangulated points. By default this is 5000 iterations.
+     * triangulated points. By default, this is 5000 iterations.
      */
     private int mPointTriangulatorMaxIterations =
             DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS;
@@ -873,20 +876,20 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets method to use for non robust fundamental matrix estimation.
+     * Gets method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      *
-     * @return method to use for non robust fundamental matrix estimation.
+     * @return method to use for non-robust fundamental matrix estimation.
      */
     public FundamentalMatrixEstimatorMethod getNonRobustFundamentalMatrixEstimatorMethod() {
         return mNonRobustFundamentalMatrixEstimatorMethod;
     }
 
     /**
-     * Sets method to use for non robust fundamental matrix estimation.
+     * Sets method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      *
-     * @param method method to use for non robust fundamental matrix estimation.
+     * @param method method to use for non-robust fundamental matrix estimation.
      * @return this instance so that method can be easily chained.
      */
     public T setNonRobustFundamentalMatrixEstimatorMethod(final FundamentalMatrixEstimatorMethod method) {
@@ -1096,18 +1099,18 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets method to use for initial cameras estimation.
+     * Gets method to use for initial cameras' estimation.
      *
-     * @return method to use for initial cameras estimation.
+     * @return method to use for initial cameras' estimation.
      */
     public InitialCamerasEstimatorMethod getInitialCamerasEstimatorMethod() {
         return mInitialCamerasEstimatorMethod;
     }
 
     /**
-     * Sets method to use for initial cameras estimation.
+     * Sets method to use for initial cameras' estimation.
      *
-     * @param method method to use for initial cameras estimation.
+     * @param method method to use for initial cameras' estimation.
      * @return this instance so that method can be easily chained.
      */
     public T setInitialCamerasEstimatorMethod(final InitialCamerasEstimatorMethod method) {
@@ -1442,7 +1445,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets confidence of robustly estimated planar homography. By default this is 99%.
+     * Gets confidence of robustly estimated planar homography. By default, this is 99%.
      * This is only used when planar scenes are allowed.
      *
      * @return confidence of robustly estimated planar homography.
@@ -1452,7 +1455,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Sets confidence of robustly estimated planar homography. By default this is 99%.
+     * Sets confidence of robustly estimated planar homography. By default, this is 99%.
      * This is only used when planar scenes are allowed.
      *
      * @param planarHomographyConfidence confidence of robustly estimated planar
@@ -1467,7 +1470,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets maximum number of iterations to make while robustly estimating planar
-     * homography. By default this is 5000.
+     * homography. By default, this is 5000.
      * This is only used when planar scenes are allowed.
      *
      * @return maximum number of iterations to make while robustly estimating planar
@@ -1479,7 +1482,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets maximum number of iterations to make while robustly estimating planar
-     * homography. By default this is 5000.
+     * homography. By default, this is 5000.
      * This is only used when planar scenes are allowed.
      *
      * @param planarHomographyMaxIterations maximum number of iterations to make while
@@ -1630,9 +1633,9 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Gets intrinsic parameters to use for additional cameras estimation when neither
      * Dual Image of Absolute Conic (DIAC) nor Dual Absolute Quadric (DAQ) are used for
-     * intrinsic parameters estimation.
+     * estimation of intrinsic parameters.
      *
-     * @return intrinsic parameters to use for additional cameras estimation.
+     * @return intrinsic parameters to use for additional estimation of cameras.
      */
     public PinholeCameraIntrinsicParameters getAdditionalCamerasIntrinsics() {
         return mAdditionalCamerasIntrinsics;
@@ -1641,10 +1644,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Sets intrinsic parameters to use for additional cameras estimation when neither
      * Dual Image of Absolute Conic (DIAC) nor Dual Absolute Quadric (DAQ) are used for
-     * intrinsic parameters estimation.
+     * estimation of intrinsic parameters.
      *
      * @param additionalCamerasIntrinsics intrinsic parameters to use for additional
-     *                                    cameras estimation.
+     *                                    estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasIntrinsics(
@@ -1656,10 +1659,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets skewness for additional cameras when UPnP (Uncalibrated Perspective-n-Point)
-     * method is used for additional cameras estimation.
+     * method is used for additional estimation of cameras.
      *
      * @return skewness for additional cameras when UPnP method is used for additional
-     * cameras estimation.
+     * estimation of cameras.
      */
     public double getAdditionalCamerasSkewness() {
         return mAdditionalCamerasSkewness;
@@ -1667,10 +1670,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets skewness for additional cameras when UPnP (Uncalibrated Perspective-n-Point)
-     * method is used for additional cameras estimation.
+     * method is used for additional estimation of cameras.
      *
      * @param additionalCamerasSkewness skewness for additional cameras when UPnP method is
-     *                                  used for additional cameras estimation.
+     *                                  used for additional estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasSkewness(final double additionalCamerasSkewness) {
@@ -1686,7 +1689,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      * Quadric (DAQ) are estimated to find intrinsic parameters when adding new cameras.
      *
      * @return horizontal coordinate of principal point for additional cameras when
-     * UPnP method is used for additional cameras estimation and neither DIAC or DAQ
+     * UPnP method is used for additional cameras estimation and neither DIAC nor DAQ
      * are estimated to find intrinsic parameters when adding new cameras.
      */
     public double getAdditionalCamerasHorizontalPrincipalPoint() {
@@ -1702,7 +1705,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      * @param additionalCamerasHorizontalPrincipalPoint horizontal coordinate of principal point
      *                                                  for additional cameras when UPnP method is
      *                                                  used for additional cameras estimation and
-     *                                                  neither DIAC or DAQ are estimated to find
+     *                                                  neither DIAC nor DAQ are estimated to find
      *                                                  intrinsic parameters when adding new cameras.
      * @return this instance so that method can be easily chained.
      */
@@ -1720,7 +1723,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      * estimated to find intrinsic parameters when adding new cameras.
      *
      * @return vertical coordinate of principal point for additional cameras when UPnP
-     * method is used for additional cameras estimation and neither DIAC or DAQ are
+     * method is used for additional cameras estimation and neither DIAC nor DAQ are
      * estimated to find intrinsic parameters when adding new cameras.
      */
     public double getAdditionalCamerasVerticalPrincipalPoint() {
@@ -1736,7 +1739,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
      * @param additionalCamerasVerticalPrincipalPoint vertical coordinate of principal
      *                                                point for additional cameras when UPnP
      *                                                method is used for additional cameras
-     *                                                estimation and neither DIAC or DAQ
+     *                                                estimation and neither DIAC nor DAQ
      *                                                are estimated to find intrinsic
      *                                                parameters when adding new cameras.
      * @return this instance so that method can be easily chained.
@@ -1772,8 +1775,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether EPnP (Efficient Perspective-n-Point) method is used for additional
-     * cameras estimation. Either EPnP or UPnP must be used for additional cameras
-     * estimation.
+     * estimation of cameras. Either EPnP or UPnP must be used for additional estimation
+     * of cameras.
      *
      * @return true if EPnP method is used for additional cameras estimation, false
      * otherwise.
@@ -1784,7 +1787,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Specifies whether EPnP (Efficient Perspective-n-Point) method is used for additional
-     * cameras estimation. Either EPnP or UPnP must be used for additional cameras estimation.
+     * estimation of cameras. Either EPnP or UPnP must be used for additional estimation of cameras.
      *
      * @param useEPnPForAdditionalCamerasEstimation true if EPnP method is used for additional
      *                                              cameras estimation, false otherwise.
@@ -1799,8 +1802,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether UPnP (Uncalibrated Perspective-n-Point) method is used for
-     * additional cameras estimation. Either EPnP or UPnP must be used for additional
-     * cameras estimation.
+     * additional estimation of cameras. Either EPnP or UPnP must be used for additional
+     * estimation of cameras.
      *
      * @return true if UPnP method is used for additional cameras estimation, false
      * otherwise.
@@ -1811,8 +1814,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Specifies whether UPnP (Uncalibrated Perspective-n-Point) method is used for
-     * additional cameras estimation. Either EPnP or UPnP must be used for additional
-     * cameras estimation.
+     * additional estimation of cameras. Either EPnP or UPnP must be used for additional
+     * estimation of cameras.
      *
      * @param useUPnPForAdditionalCamerasEstimation true if UPnP method is used for
      *                                              additional cameras estimation, false
@@ -1976,7 +1979,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether covariance is kept after refining result of additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @return true if covariance is kept, false otherwise.
      */
@@ -1985,8 +1988,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Specifies whether covariance is kept after refining result of additional cameras
-     * estimation.
+     * Specifies whether covariance is kept after refining result of additional estimation
+     * of cameras.
      *
      * @param keepCovarianceAdditionalCameras true if covariance is kept, false otherwise.
      * @return this instance so that method can be easily chained.
@@ -1998,8 +2001,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets value indicating whether fast refinement is used for additional cameras
-     * estimation.
+     * Gets value indicating whether fast refinement is used for additional estimation
+     * of cameras.
      *
      * @return true if fast refinement is used for additional cameras estimation,
      * false otherwise.
@@ -2009,8 +2012,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Sets value indicating whether fast refinement is used for additional cameras
-     * estimation.
+     * Sets value indicating whether fast refinement is used for additional estimation
+     * of cameras.
      *
      * @param additionalCamerasUseFastRefinement true if fast refinement is used for
      *                                           additional cameras estimation, false
@@ -2069,7 +2072,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Gets threshold to determine whether samples for robust pinhole camera estimation are inliers or not.
      *
-     * @return threshold to determine whether samples for robust pinhole camera estimation are inliers or not.
+     * @return threshold to determine whether samples for robust pinhole camera estimation are inliers or
+     * not.
      */
     public double getAdditionalCamerasThreshold() {
         return mAdditionalCamerasThreshold;
@@ -2078,8 +2082,8 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Sets threshold to determine whether samples for robust pinhole camera estimation are inliers or not.
      *
-     * @param additionalCamerasThreshold threshold to determine whether samples for robust pinhole camera estimation
-     *                                   are inliers or not.
+     * @param additionalCamerasThreshold threshold to determine whether samples for robust pinhole camera
+     *                                   estimation are inliers or not.
      * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasThreshold(final double additionalCamerasThreshold) {
@@ -2101,11 +2105,12 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Specifies whether inliers must be kept during additional camera estimation.
      *
-     * @param additionalCamerasComputeAndKeepInliers true if inliers must be kept during additional camera estimation,
-     *                                               false otherwise.
+     * @param additionalCamerasComputeAndKeepInliers true if inliers must be kept during additional camera
+     *                                               estimation, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setAdditionalCamerasComputeAndKeepInliers(final boolean additionalCamerasComputeAndKeepInliers) {
+    public T setAdditionalCamerasComputeAndKeepInliers(
+            final boolean additionalCamerasComputeAndKeepInliers) {
         mAdditionalCamerasComputeAndKeepInliers = additionalCamerasComputeAndKeepInliers;
         //noinspection unchecked
         return (T) this;
@@ -2123,10 +2128,12 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     /**
      * Specifies whether residuals must be computed and kept during additional camera estimation.
      *
-     * @param additionalCamerasComputeAndKeepResiduals true if residuals must be computed and kept, false otherwise.
+     * @param additionalCamerasComputeAndKeepResiduals true if residuals must be computed and kept, false
+     *                                                 otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setAdditionalCamerasComputeAndKeepResiduals(final boolean additionalCamerasComputeAndKeepResiduals) {
+    public T setAdditionalCamerasComputeAndKeepResiduals(
+            final boolean additionalCamerasComputeAndKeepResiduals) {
         mAdditionalCamerasComputeAndKeepResiduals = additionalCamerasComputeAndKeepResiduals;
         //noinspection unchecked
         return (T) this;
@@ -2134,7 +2141,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value indicating whether skewness is not suggested during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @return true if skewness is suggested, false otherwise.
      */
@@ -2144,7 +2151,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value indicating whether skewness is not suggested during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @param additionalCamerasSuggestSkewnessValueEnabled true if skewness is suggested,
      *                                                     false otherwise.
@@ -2160,10 +2167,10 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value of skewness to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @return value of skewness to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      */
     public double getAdditionalCamerasSuggestedSkewnessValue() {
         return mAdditionalCamerasSuggestedSkewnessValue;
@@ -2171,11 +2178,11 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value of skewness to be suggested when suggestion is enabled during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @param additionalCamerasSuggestedSkewnessValue value of skewness to be suggested
      *                                                when suggestion is enabled during
-     *                                                additional cameras estimation.
+     *                                                additional estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasSuggestedSkewnessValue(
@@ -2187,7 +2194,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Indicates whether horizontal focal length value is suggested or not during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @return true if horizontal focal length value is suggested, false otherwise.
      */
@@ -2197,7 +2204,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Specifies whether horizontal focal length value is suggested or not during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @param additionalCamerasSuggestHorizontalFocalLengthEnabled true if horizontal focal
      *                                                             length value is suggested, false
@@ -2213,23 +2220,23 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets value of suggested horizontal focal length during additional cameras
-     * estimation.
+     * Gets value of suggested horizontal focal length during additional estimation
+     * of cameras.
      *
-     * @return value of suggested horizontal focal length during additional cameras
-     * estimation.
+     * @return value of suggested horizontal focal length during additional estimation
+     * of cameras.
      */
     public double getAdditionalCamerasSuggestedHorizontalFocalLengthValue() {
         return mAdditionalCamerasSuggestedHorizontalFocalLengthValue;
     }
 
     /**
-     * Sets value of suggested horizontal focal length during additional cameras
-     * estimation.
+     * Sets value of suggested horizontal focal length during additional estimation
+     * of cameras.
      *
      * @param additionalCamerasSuggestedHorizontalFocalLengthValue value of suggested
      *                                                             horizontal focal length during
-     *                                                             additional cameras estimation.
+     *                                                             additional estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasSuggestedHorizontalFocalLengthValue(
@@ -2242,7 +2249,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value indicating whether vertical focal length value is suggested or not
-     * during additional cameras estimation.
+     * during additional estimation of cameras.
      *
      * @return true if vertical focal length value is suggested, false otherwise.
      */
@@ -2252,7 +2259,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value indicating whether vertical focal length value is suggested or not
-     * during additional cameras estimation.
+     * during additional estimation of cameras.
      *
      * @param additionalCamerasSuggestVerticalFocalLengthEnabled true if vertical focal
      *                                                           length is suggested, false
@@ -2268,21 +2275,20 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets value of suggested vertical focal length during additional cameras estimation.
+     * Gets value of suggested vertical focal length during additional estimation of cameras.
      *
-     * @return value of suggested vertical focal length during additional cameras
-     * estimation.
+     * @return value of suggested vertical focal length during additional estimation of cameras.
      */
     public double getAdditionalCamerasSuggestedVerticalFocalLengthValue() {
         return mAdditionalCamerasSuggestedVerticalFocalLengthValue;
     }
 
     /**
-     * Sets value of suggested vertical focal length during additional cameras estimation.
+     * Sets value of suggested vertical focal length during additional estimation of cameras.
      *
      * @param additionalCamerasSuggestedVerticalFocalLengthValue value of suggested vertical
      *                                                           focal length during additional
-     *                                                           cameras estimation.
+     *                                                           estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
     public T setAdditionalCamerasSuggestedVerticalFocalLengthValue(
@@ -2295,7 +2301,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value indicating whether aspect ratio is suggested or not during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @return true if aspect ratio is suggested, false otherwise.
      */
@@ -2305,7 +2311,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value indicating whether aspect ratio is suggested or not during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @param additionalCamerasSuggestAspectRatioEnabled true if aspect ratio is suggested,
      *                                                   false otherwise.
@@ -2321,7 +2327,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value of aspect ratio to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @return value of aspect ratio to be suggested.
      */
@@ -2331,7 +2337,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value of aspect ratio to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @param additionalCamerasSuggestedAspectRatioValue value of aspect ratio to be
      *                                                   suggested.
@@ -2347,7 +2353,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value indicating whether principal point is suggested or not during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @return true if principal point is suggested, false otherwise.
      */
@@ -2357,7 +2363,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value indicating whether principal point is suggested or not during additional
-     * cameras estimation.
+     * estimation of cameras.
      *
      * @param additionalCamerasSuggestPrincipalPointEnabled true if principal point is
      *                                                      suggested, false otherwise.
@@ -2373,7 +2379,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets value of principal point to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @return principal point to be suggested.
      */
@@ -2383,7 +2389,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets value of principal point to be suggested when suggestion is enabled during
-     * additional cameras estimation.
+     * additional estimation of cameras.
      *
      * @param additionalCamerasSuggestedPrincipalPointValue principal point to be
      *                                                      suggested.
@@ -2446,7 +2452,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Gets confidence of robustly triangulated points. By default this is 99%.
+     * Gets confidence of robustly triangulated points. By default, this is 99%.
      *
      * @return confidence of robustly triangulated points.
      */
@@ -2455,7 +2461,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
     }
 
     /**
-     * Sets confidence of robustly triangulated points. By default this is 99%.
+     * Sets confidence of robustly triangulated points. By default, this is 99%.
      *
      * @param pointTriangulatorConfidence confidence of robustly triangulated points.
      * @return this instance so that method can be easily chained.
@@ -2468,7 +2474,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Gets maximum number of iterations to make while robustly estimating triangulated
-     * points. By default this is 5000 iterations.
+     * points. By default, this is 5000 iterations.
      *
      * @return maximum number of iterations to make while robustly estimating
      * triangulated points.
@@ -2479,7 +2485,7 @@ public abstract class BaseSparseReconstructorConfiguration<T extends BaseSparseR
 
     /**
      * Sets maximum number of iterations to make while robustly estimating triangulated
-     * points. By default this is 5000 iterations.
+     * points. By default, this is 5000 iterations.
      *
      * @param pointTriangulatorMaxIterations maximum number of iterations to make while
      *                                       robustly estimating triangulated points.

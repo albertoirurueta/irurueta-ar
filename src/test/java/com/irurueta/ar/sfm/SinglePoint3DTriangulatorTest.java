@@ -41,13 +41,12 @@ public class SinglePoint3DTriangulatorTest {
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedInhomogeneousSinglePoint3DTriangulator);
 
         // Weighted homogeneous
-        triangulator = SinglePoint3DTriangulator.create(Point3DTriangulatorType.
-                WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        triangulator = SinglePoint3DTriangulator.create(
+                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
         assertNull(triangulator.getPoints2D());
@@ -55,8 +54,8 @@ public class SinglePoint3DTriangulatorTest {
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof WeightedHomogeneousSinglePoint3DTriangulator);
 
         // LMSE inhomogeneous
@@ -69,8 +68,8 @@ public class SinglePoint3DTriangulatorTest {
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof LMSEInhomogeneousSinglePoint3DTriangulator);
 
         // LMSE homogeneous
@@ -83,8 +82,8 @@ public class SinglePoint3DTriangulatorTest {
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points and cameras
@@ -101,13 +100,13 @@ public class SinglePoint3DTriangulatorTest {
                 Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof WeightedInhomogeneousSinglePoint3DTriangulator);
 
         // Weighted homogeneous
@@ -115,13 +114,13 @@ public class SinglePoint3DTriangulatorTest {
                 Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof WeightedHomogeneousSinglePoint3DTriangulator);
 
         // LMSE inhomogeneous
@@ -129,13 +128,13 @@ public class SinglePoint3DTriangulatorTest {
                 Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof LMSEInhomogeneousSinglePoint3DTriangulator);
 
         // LMSE homogeneous
@@ -143,76 +142,72 @@ public class SinglePoint3DTriangulatorTest {
                 Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test create with points, cameras and weights
         final double[] weights = new double[2];
 
         // Weighted inhomogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights,
                 Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof WeightedInhomogeneousSinglePoint3DTriangulator);
 
         // Weighted homogeneous
         triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights,
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+                weights, Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof WeightedHomogeneousSinglePoint3DTriangulator);
 
         // LMSE inhomogeneous
         triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights,
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+                weights, Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof LMSEInhomogeneousSinglePoint3DTriangulator);
 
         // LMSE homogeneous
         triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights,
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+                weights, Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR,
+                triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with listener
@@ -236,9 +231,8 @@ public class SinglePoint3DTriangulatorTest {
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedInhomogeneousSinglePoint3DTriangulator);
 
         // Weighted homogeneous
@@ -250,9 +244,8 @@ public class SinglePoint3DTriangulatorTest {
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedHomogeneousSinglePoint3DTriangulator);
 
         // LMSE inhomogeneous
@@ -264,9 +257,8 @@ public class SinglePoint3DTriangulatorTest {
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEInhomogeneousSinglePoint3DTriangulator);
 
         // LMSE homogeneous
@@ -278,133 +270,116 @@ public class SinglePoint3DTriangulatorTest {
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points, cameras and listener
 
         // Weighted inhomogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, listener,
                 Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedInhomogeneousSinglePoint3DTriangulator);
 
         // Weighted homogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, listener,
                 Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedHomogeneousSinglePoint3DTriangulator);
 
         // LMSE inhomogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, listener,
                 Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEInhomogeneousSinglePoint3DTriangulator);
 
         // LMSE homogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, listener,
                 Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points, cameras, weights and listener
 
         // Weighted inhomogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights, listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights, listener,
                 Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedInhomogeneousSinglePoint3DTriangulator);
 
         // Weighted homogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights, listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights, listener,
                 Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.WEIGHTED_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof WeightedHomogeneousSinglePoint3DTriangulator);
 
         // LMSE inhomogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights, listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights, listener,
                 Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEInhomogeneousSinglePoint3DTriangulator);
 
         // LMSE homogeneous
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights, listener,
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights, listener,
                 Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test without arguments
@@ -416,35 +391,31 @@ public class SinglePoint3DTriangulatorTest {
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points and cameras
         triangulator = SinglePoint3DTriangulator.create(points, cameras);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points, cameras and weights
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights);
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
         assertNull(triangulator.getListener());
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with listener
@@ -455,37 +426,32 @@ public class SinglePoint3DTriangulatorTest {
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertFalse(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points, cameras and listener
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                listener);
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, listener);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
 
         // test with points, cameras, weights and listener
-        triangulator = SinglePoint3DTriangulator.create(points, cameras,
-                weights, listener);
+        triangulator = SinglePoint3DTriangulator.create(points, cameras, weights, listener);
 
         // check correctness
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
         assertTrue(triangulator.isReady());
-        assertSame(triangulator.getListener(), listener);
-        assertEquals(triangulator.getType(),
-                Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+        assertSame(listener, triangulator.getListener());
+        assertEquals(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertTrue(triangulator instanceof LMSEHomogeneousSinglePoint3DTriangulator);
     }
 }

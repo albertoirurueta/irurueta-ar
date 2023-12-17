@@ -77,129 +77,119 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testConstructor() throws WrongSizeException {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         // check initial values
         assertNull(estimator.getListener());
         assertNull(estimator.getCalibrationData());
-        assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStatePosition(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getStatePosition(), 0.0);
         final double[] position = new double[3];
         estimator.getStatePosition(position);
-        assertArrayEquals(position, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, position, 0.0);
 
-        assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateVelocity(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getStateVelocity(), 0.0);
         final double[] velocity = new double[3];
         estimator.getStateVelocity(velocity);
-        assertArrayEquals(velocity, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, velocity, 0.0);
 
-        assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-        assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-        assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateAcceleration(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getStateAcceleration(), 0.0);
         final double[] acceleration = new double[3];
         estimator.getStateAcceleration(acceleration);
-        assertArrayEquals(acceleration, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, acceleration, 0.0);
 
-        assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-        assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-        assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-        assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateQuaternionArray(),
-                new double[]{1.0, 0.0, 0.0, 0.0}, 0.0);
+        assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+        assertArrayEquals(new double[]{1.0, 0.0, 0.0, 0.0}, estimator.getStateQuaternionArray(), 0.0);
         final double[] quaternionArray = new double[4];
         estimator.getStateQuaternionArray(quaternionArray);
-        assertArrayEquals(quaternionArray, new double[]{1.0, 0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{1.0, 0.0, 0.0, 0.0}, quaternionArray, 0.0);
 
         Quaternion q = estimator.getStateQuaternion();
-        assertEquals(q.getA(), 1.0, 0.0);
-        assertEquals(q.getB(), 0.0, 0.0);
-        assertEquals(q.getC(), 0.0, 0.0);
-        assertEquals(q.getD(), 0.0, 0.0);
+        assertEquals(1.0, q.getA(), 0.0);
+        assertEquals(0.0, q.getB(), 0.0);
+        assertEquals(0.0, q.getC(), 0.0);
+        assertEquals(0.0, q.getD(), 0.0);
 
         q = new Quaternion();
         estimator.getStateQuaternion(q);
-        assertEquals(q.getA(), 1.0, 0.0);
-        assertEquals(q.getB(), 0.0, 0.0);
-        assertEquals(q.getC(), 0.0, 0.0);
-        assertEquals(q.getD(), 0.0, 0.0);
+        assertEquals(1.0, q.getA(), 0.0);
+        assertEquals(0.0, q.getB(), 0.0);
+        assertEquals(0.0, q.getC(), 0.0);
+        assertEquals(0.0, q.getD(), 0.0);
 
-        assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-        assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-        assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getStateAngularSpeed(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getStateAngularSpeed(), 0.0);
         final double[] angularSpeed = new double[3];
         estimator.getStateAngularSpeed(angularSpeed);
-        assertArrayEquals(angularSpeed, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, angularSpeed, 0.0);
 
         assertFalse(estimator.hasError());
         assertTrue(estimator.isAccumulationEnabled());
-        assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(-1, estimator.getAccelerometerTimestampNanos());
+        assertEquals(-1, estimator.getGyroscopeTimestampNanos());
+        assertEquals(0, estimator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isAccelerometerSampleReceived());
         assertFalse(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
 
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getAccumulatedAccelerationSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getAccumulatedAccelerationSample(), 0.0);
         final double[] accumAcc = new double[3];
         estimator.getAccumulatedAccelerationSample(accumAcc);
-        assertArrayEquals(accumAcc, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAcc, 0.0);
 
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getAccumulatedAngularSpeedSample(), 0.0);
         final double[] accumAngularSpeed = new double[3];
         estimator.getAccumulatedAngularSpeedSample(accumAngularSpeed);
-        assertArrayEquals(accumAngularSpeed, new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAngularSpeed, 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
 
         assertEquals(estimator.getPositionCovarianceMatrix(),
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         KalmanFilter.DEFAULT_MEASUREMENT_NOISE_VARIANCE));
 
-        assertEquals(estimator.getOrientationTimestampNanos(), -1);
+        assertEquals(-1, estimator.getOrientationTimestampNanos());
         assertTrue(estimator.getAccumulatedOrientation() instanceof Quaternion);
-        Quaternion accumulatedOrientation =
-                (Quaternion) estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), 1.0, ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getB(), 0.0, ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getC(), 0.0, ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getD(), 0.0, ABSOLUTE_ERROR);
+        Quaternion accumulatedOrientation = (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(1.0, accumulatedOrientation.getA(), ABSOLUTE_ERROR);
+        assertEquals(0.0, accumulatedOrientation.getB(), ABSOLUTE_ERROR);
+        assertEquals(0.0, accumulatedOrientation.getC(), ABSOLUTE_ERROR);
+        assertEquals(0.0, accumulatedOrientation.getD(), ABSOLUTE_ERROR);
         accumulatedOrientation = new Quaternion();
         estimator.getAccumulatedOrientation(accumulatedOrientation);
-        assertEquals(accumulatedOrientation.getA(), 1.0, ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getB(), 0.0, ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getC(), 0.0, ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getD(), 0.0, ABSOLUTE_ERROR);
+        assertEquals(1.0, accumulatedOrientation.getA(), ABSOLUTE_ERROR);
+        assertEquals(0.0, accumulatedOrientation.getB(), ABSOLUTE_ERROR);
+        assertEquals(0.0, accumulatedOrientation.getC(), ABSOLUTE_ERROR);
+        assertEquals(0.0, accumulatedOrientation.getD(), ABSOLUTE_ERROR);
 
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertFalse(estimator.isOrientationSampleReceived());
         assertNotNull(estimator.getStateCovariance());
     }
 
     @Test
     public void testGetSetListener() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         // initial value
         assertNull(estimator.getListener());
@@ -208,201 +198,188 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
     public void testGetSetCalibrationData() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         // initial value
         assertNull(estimator.getCalibrationData());
 
         // set new value
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
         estimator.setCalibrationData(data);
 
         // check correctness
-        assertSame(estimator.getCalibrationData(), data);
+        assertSame(data, estimator.getCalibrationData());
     }
 
     @Test
     public void testResetPosition() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.resetPosition();
 
-        assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testResetVelocity() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.resetVelocity();
 
-        assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testResetPositionAndVelocity() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.resetPositionAndVelocity();
 
-        assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
 
-        assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testResetAcceleration() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.resetAcceleration();
 
-        assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-        assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-        assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testResetOrientation() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.resetOrientation();
 
-        assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-        assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-        assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-        assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
+        assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testResetAngularSpeed() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.resetAngularSpeed();
 
-        assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-        assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-        assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testReset() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         estimator.reset();
 
-        assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-        assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+        assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
 
-        assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-        assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+        assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
 
-        assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-        assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-        assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
 
-        assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-        assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-        assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-        assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
+        assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
 
-        assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-        assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-        assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), -1);
+        assertEquals(-1, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
     public void testGetStatePositionX() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStatePositionX(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStatePositionX = value;
 
         // check correctness
-        assertEquals(estimator.getStatePositionX(), value, 0.0);
+        assertEquals(value, estimator.getStatePositionX(), 0.0);
     }
 
     @Test
     public void testGetStatePositionY() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStatePositionY(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStatePositionY = value;
 
         // check correctness
-        assertEquals(estimator.getStatePositionY(), value, 0.0);
+        assertEquals(value, estimator.getStatePositionY(), 0.0);
     }
 
     @Test
     public void testGetStatePositionZ() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStatePositionZ = value;
 
         // check correctness
-        assertEquals(estimator.getStatePositionZ(), value, 0.0);
+        assertEquals(value, estimator.getStatePositionZ(), 0.0);
     }
 
     @Test
     public void testGetStatePosition() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -414,14 +391,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mStatePositionZ = valueZ;
 
         // check correctness
-        assertArrayEquals(estimator.getStatePosition(),
-                new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, estimator.getStatePosition(), 0.0);
 
         final double[] position = new double[3];
         estimator.getStatePosition(position);
 
         // check correctness
-        assertArrayEquals(position, new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, position, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -434,59 +410,55 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetStateVelocityX() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStateVelocityX = value;
 
         // check correctness
-        assertEquals(estimator.getStateVelocityX(), value, 0.0);
+        assertEquals(value, estimator.getStateVelocityX(), 0.0);
     }
 
     @Test
     public void testGetStateVelocityY() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStateVelocityY = value;
 
         // check correctness
-        assertEquals(estimator.getStateVelocityY(), value, 0.0);
+        assertEquals(value, estimator.getStateVelocityY(), 0.0);
     }
 
     @Test
     public void testGetStateVelocityZ() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStateVelocityZ = value;
 
         // check correctness
-        assertEquals(estimator.getStateVelocityZ(), value, 0.0);
+        assertEquals(value, estimator.getStateVelocityZ(), 0.0);
     }
 
     @Test
     public void testGetStateVelocity() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -498,14 +470,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mStateVelocityZ = valueZ;
 
         // check correctness
-        assertArrayEquals(estimator.getStateVelocity(),
-                new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, estimator.getStateVelocity(), 0.0);
 
         final double[] velocity = new double[3];
         estimator.getStateVelocity(velocity);
 
         // check correctness
-        assertArrayEquals(velocity, new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, velocity, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -518,59 +489,55 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetStateAccelerationX() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStateAccelerationX = value;
 
         // check correctness
-        assertEquals(estimator.getStateAccelerationX(), value, 0.0);
+        assertEquals(value, estimator.getStateAccelerationX(), 0.0);
     }
 
     @Test
     public void testGetStateAccelerationY() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStateAccelerationY = value;
 
         // check correctness
-        assertEquals(estimator.getStateAccelerationY(), value, 0.0);
+        assertEquals(value, estimator.getStateAccelerationY(), 0.0);
     }
 
     @Test
     public void testGetStateAccelerationZ() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mStateAccelerationZ = value;
 
         // check correctness
-        assertEquals(estimator.getStateAccelerationZ(), value, 0.0);
+        assertEquals(value, estimator.getStateAccelerationZ(), 0.0);
     }
 
     @Test
     public void testGetStateAcceleration() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -582,15 +549,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mStateAccelerationZ = valueZ;
 
         // check correctness
-        assertArrayEquals(estimator.getStateAcceleration(),
-                new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, estimator.getStateAcceleration(), 0.0);
 
         final double[] acceleration = new double[3];
         estimator.getStateAcceleration(acceleration);
 
         // check correctness
-        assertArrayEquals(acceleration, new double[]{valueX, valueY, valueZ},
-                0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, acceleration, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -603,86 +568,80 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetStateQuaternionA() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateQuaternionA = value;
 
         // check correctness
-        assertEquals(estimator.getStateQuaternionA(), value, 0.0);
+        assertEquals(value, estimator.getStateQuaternionA(), 0.0);
     }
 
     @Test
     public void testGetStateQuaternionB() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateQuaternionB = value;
 
         // check correctness
-        assertEquals(estimator.getStateQuaternionB(), value, 0.0);
+        assertEquals(value, estimator.getStateQuaternionB(), 0.0);
     }
 
     @Test
     public void testGetStateQuaternionC() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateQuaternionC = value;
 
         // check correctness
-        assertEquals(estimator.getStateQuaternionC(), value, 0.0);
+        assertEquals(value, estimator.getStateQuaternionC(), 0.0);
     }
 
     @Test
     public void testGetStateQuaternionD() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateQuaternionD = value;
 
         // check correctness
-        assertEquals(estimator.getStateQuaternionD(), value, 0.0);
+        assertEquals(value, estimator.getStateQuaternionD(), 0.0);
     }
 
     @Test
     public void testGetStateQuaternionArray() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertArrayEquals(estimator.getStateQuaternionArray(),
-                new double[]{1.0, 0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{1.0, 0.0, 0.0, 0.0}, estimator.getStateQuaternionArray(), 0.0);
 
         // set new values
         final double valueA = randomizer.nextDouble();
@@ -695,14 +654,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mStateQuaternionD = valueD;
 
         // check correctness
-        assertArrayEquals(estimator.getStateQuaternionArray(),
-                new double[]{valueA, valueB, valueC, valueD}, 0.0);
+        assertArrayEquals(new double[]{valueA, valueB, valueC, valueD},
+                estimator.getStateQuaternionArray(), 0.0);
 
         final double[] quaternion = new double[4];
         estimator.getStateQuaternionArray(quaternion);
 
-        assertArrayEquals(quaternion,
-                new double[]{valueA, valueB, valueC, valueD}, 0.0);
+        assertArrayEquals(new double[]{valueA, valueB, valueC, valueD}, quaternion, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[5];
@@ -715,18 +673,17 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetStateQuaternion() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
         Quaternion q = estimator.getStateQuaternion();
 
-        assertEquals(q.getA(), 1.0, 0.0);
-        assertEquals(q.getB(), 0.0, 0.0);
-        assertEquals(q.getC(), 0.0, 0.0);
-        assertEquals(q.getD(), 0.0, 0.0);
+        assertEquals(1.0, q.getA(), 0.0);
+        assertEquals(0.0, q.getB(), 0.0);
+        assertEquals(0.0, q.getC(), 0.0);
+        assertEquals(0.0, q.getD(), 0.0);
 
         // set new values
         final double valueA = randomizer.nextDouble();
@@ -741,84 +698,79 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         // check correctness
         q = estimator.getStateQuaternion();
 
-        assertEquals(q.getA(), valueA, 0.0);
-        assertEquals(q.getB(), valueB, 0.0);
-        assertEquals(q.getC(), valueC, 0.0);
-        assertEquals(q.getD(), valueD, 0.0);
+        assertEquals(valueA, q.getA(), 0.0);
+        assertEquals(valueB, q.getB(), 0.0);
+        assertEquals(valueC, q.getC(), 0.0);
+        assertEquals(valueD, q.getD(), 0.0);
 
         q = new Quaternion();
         estimator.getStateQuaternion(q);
 
-        assertEquals(q.getA(), valueA, 0.0);
-        assertEquals(q.getB(), valueB, 0.0);
-        assertEquals(q.getC(), valueC, 0.0);
-        assertEquals(q.getD(), valueD, 0.0);
+        assertEquals(valueA, q.getA(), 0.0);
+        assertEquals(valueB, q.getB(), 0.0);
+        assertEquals(valueC, q.getC(), 0.0);
+        assertEquals(valueD, q.getD(), 0.0);
     }
 
     @Test
     public void testGetStateAngularSpeedX() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateAngularSpeedX = value;
 
         // check correctness
-        assertEquals(estimator.getStateAngularSpeedX(), value, 0.0);
+        assertEquals(value, estimator.getStateAngularSpeedX(), 0.0);
     }
 
     @Test
     public void testGetStateAngularSpeedY() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateAngularSpeedY = value;
 
         // check correctness
-        assertEquals(estimator.getStateAngularSpeedY(), value, 0.0);
+        assertEquals(value, estimator.getStateAngularSpeedY(), 0.0);
     }
 
     @Test
     public void testGetStateAngularSpeedZ() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mStateAngularSpeedZ = value;
 
         // check correctness
-        assertEquals(estimator.getStateAngularSpeedZ(), value, 0.0);
+        assertEquals(value, estimator.getStateAngularSpeedZ(), 0.0);
     }
 
     @Test
     public void testGetStateAngularSpeed() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial value
-        assertArrayEquals(estimator.getStateAngularSpeed(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getStateAngularSpeed(), 0.0);
 
         // set new value
         final double valueX = randomizer.nextDouble();
@@ -829,15 +781,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mStateAngularSpeedZ = valueZ;
 
         // check correctness
-        assertArrayEquals(estimator.getStateAngularSpeed(),
-                new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, estimator.getStateAngularSpeed(), 0.0);
 
         final double[] angularSpeed = new double[3];
         estimator.getStateAngularSpeed(angularSpeed);
 
         // check correctness
-        assertArrayEquals(angularSpeed, new double[]{valueX, valueY, valueZ},
-                0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, angularSpeed, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -850,8 +800,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testHasError() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         assertFalse(estimator.hasError());
 
@@ -862,8 +811,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testIsAccumulationEnabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         assertTrue(estimator.isAccumulationEnabled());
 
@@ -874,75 +822,70 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetAccelerometerTimestampNanos() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
+        assertEquals(-1, estimator.getAccelerometerTimestampNanos());
 
         // set new value
         estimator.mAccelerometerTimestampNanos = 1000;
 
         // check correctness
-        assertEquals(estimator.getAccelerometerTimestampNanos(), 1000);
+        assertEquals(1000, estimator.getAccelerometerTimestampNanos());
     }
 
     @Test
     public void testGetGyroscopeTimestampNanos() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
+        assertEquals(-1, estimator.getGyroscopeTimestampNanos());
 
         // set new value
         estimator.mGyroscopeTimestampNanos = 2000;
 
         // check correctness
-        assertEquals(estimator.getGyroscopeTimestampNanos(), 2000);
+        assertEquals(2000, estimator.getGyroscopeTimestampNanos());
     }
 
     @Test
     public void testGetOrientationTimestampNanos() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getOrientationTimestampNanos(), -1);
+        assertEquals(-1, estimator.getOrientationTimestampNanos());
 
         // set new value
         estimator.mOrientationTimestampNanos = 3000;
 
         // check correctness
-        assertEquals(estimator.getOrientationTimestampNanos(), 3000);
+        assertEquals(3000, estimator.getOrientationTimestampNanos());
     }
 
     @Test
     public void testGetAccumulatedAccelerometerSamplesAndIsAccelerometerSampleReceived() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
+        assertEquals(0, estimator.getAccumulatedAccelerometerSamples());
         assertFalse(estimator.isAccelerometerSampleReceived());
 
         // set new value
         estimator.mAccumulatedAccelerometerSamples = 10;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 10);
+        assertEquals(10, estimator.getAccumulatedAccelerometerSamples());
         assertTrue(estimator.isAccelerometerSampleReceived());
     }
 
     @Test
     public void testGetAccumulatedGyroscopeSamplesAndIsGyroscopeSampleReceived() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(0, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isGyroscopeSampleReceived());
 
         // set new value
         estimator.mAccumulatedGyroscopeSamples = 20;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 20);
+        assertEquals(20, estimator.getAccumulatedGyroscopeSamples());
         assertTrue(estimator.isGyroscopeSampleReceived());
     }
 
@@ -950,62 +893,58 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     public void testGetAccumulatedOrientationAndIsOrientationSampleReceived() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertFalse(estimator.isOrientationSampleReceived());
 
         // set new value
-        final Quaternion q = new Quaternion(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble(),
-                randomizer.nextDouble());
+        final Quaternion q = new Quaternion(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble(), randomizer.nextDouble());
         estimator.mAccumulatedOrientation = q;
 
         // check correctness
-        final Quaternion accumulatedOrientation =
-                (Quaternion) estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), q.getA(), ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getB(), q.getB(), ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getC(), q.getC(), ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getD(), q.getD(), ABSOLUTE_ERROR);
+        final Quaternion accumulatedOrientation = (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(q.getA(), accumulatedOrientation.getA(), ABSOLUTE_ERROR);
+        assertEquals(q.getB(), accumulatedOrientation.getB(), ABSOLUTE_ERROR);
+        assertEquals(q.getC(), accumulatedOrientation.getC(), ABSOLUTE_ERROR);
+        assertEquals(q.getD(), accumulatedOrientation.getD(), ABSOLUTE_ERROR);
     }
 
     @Test
     public void testIsFullSampleAvailable() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(0, estimator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, estimator.getAccumulatedGyroscopeSamples());
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertFalse(estimator.isAccelerometerSampleReceived());
         assertFalse(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
 
         estimator.mAccumulatedAccelerometerSamples = 1;
 
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(1, estimator.getAccumulatedAccelerometerSamples());
+        assertEquals(0, estimator.getAccumulatedGyroscopeSamples());
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertTrue(estimator.isAccelerometerSampleReceived());
         assertFalse(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
 
         estimator.mAccumulatedGyroscopeSamples = 2;
 
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 2);
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(1, estimator.getAccumulatedAccelerometerSamples());
+        assertEquals(2, estimator.getAccumulatedGyroscopeSamples());
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertTrue(estimator.isAccelerometerSampleReceived());
         assertTrue(estimator.isGyroscopeSampleReceived());
         assertFalse(estimator.isFullSampleAvailable());
 
         estimator.mAccumulatedOrientationSamples = 3;
 
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 2);
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 3);
+        assertEquals(1, estimator.getAccumulatedAccelerometerSamples());
+        assertEquals(2, estimator.getAccumulatedGyroscopeSamples());
+        assertEquals(3, estimator.getAccumulatedOrientationSamples());
         assertTrue(estimator.isAccelerometerSampleReceived());
         assertTrue(estimator.isGyroscopeSampleReceived());
         assertTrue(estimator.isFullSampleAvailable());
@@ -1013,44 +952,41 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetAccumulatedAccelerationSampleX() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleX(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleX = value;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), value, 0.0);
+        assertEquals(value, estimator.getAccumulatedAccelerationSampleX(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAccelerationSampleY() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleY(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleY = value;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(), value, 0.0);
+        assertEquals(value, estimator.getAccumulatedAccelerationSampleY(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAccelerationSampleZ() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleZ(), 0.0);
 
         final double value = randomizer.nextDouble();
         estimator.mAccumulatedAccelerationSampleZ = value;
@@ -1061,13 +997,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetAccumulatedAccelerationSample() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertArrayEquals(estimator.getAccumulatedAccelerationSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getAccumulatedAccelerationSample(), 0.0);
 
         // set new values
         final double valueX = randomizer.nextDouble();
@@ -1078,15 +1012,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mAccumulatedAccelerationSampleZ = valueZ;
 
         // check correctness
-        assertArrayEquals(estimator.getAccumulatedAccelerationSample(),
-                new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, estimator.getAccumulatedAccelerationSample(),
+                0.0);
 
         final double[] acceleration = new double[3];
         estimator.getAccumulatedAccelerationSample(acceleration);
 
         // check correctness
-        assertArrayEquals(acceleration, new double[]{valueX, valueY, valueZ},
-                0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, acceleration, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -1099,64 +1032,59 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testGetAccumulatedAngularSpeedSampleX() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleX = value;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), value, 0.0);
+        assertEquals(value, estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAngularSpeedSampleY() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleY = value;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), value, 0.0);
+        assertEquals(value, estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAngularSpeedSampleZ() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
 
         // set new value
         final double value = randomizer.nextDouble();
         estimator.mAccumulatedAngularSpeedSampleZ = value;
 
         // check correctness
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), value, 0.0);
+        assertEquals(value, estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
     }
 
     @Test
     public void testGetAccumulatedAngularSpeedSample() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(),
-                new double[]{0.0, 0.0, 0.0}, 0.0);
+        assertArrayEquals(new double[]{0.0, 0.0, 0.0}, estimator.getAccumulatedAngularSpeedSample(), 0.0);
 
         // set new value
         final double valueX = randomizer.nextDouble();
@@ -1167,14 +1095,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.mAccumulatedAngularSpeedSampleZ = valueZ;
 
         // check correctness
-        assertArrayEquals(estimator.getAccumulatedAngularSpeedSample(),
-                new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, estimator.getAccumulatedAngularSpeedSample(),
+                0.0);
 
         final double[] speed = new double[3];
         estimator.getAccumulatedAngularSpeedSample(speed);
 
         // check correctness
-        assertArrayEquals(speed, new double[]{valueX, valueY, valueZ}, 0.0);
+        assertArrayEquals(new double[]{valueX, valueY, valueZ}, speed, 0.0);
 
         // Force IllegalArgumentException
         final double[] wrong = new double[4];
@@ -1187,8 +1115,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testUpdateAccelerometerSampleWithAccumulationDisabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
         estimator.setAccumulationEnabled(false);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1199,25 +1126,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         final float accelerationZ = randomizer.nextFloat();
 
         // check initial values
-        assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
+        assertEquals(-1, estimator.getAccelerometerTimestampNanos());
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(0, estimator.getAccumulatedAccelerometerSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
-        estimator.updateAccelerometerSample(timestamp, accelerationX,
-                accelerationY, accelerationZ);
+        estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
 
         // check correctness
         assertEquals(estimator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(),
-                accelerationX, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(),
-                accelerationY, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(),
-                accelerationZ, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 1);
+        assertEquals(accelerationX, estimator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(accelerationY, estimator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(accelerationZ, estimator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(1, estimator.getAccumulatedAccelerometerSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // test again but using an array
@@ -1228,14 +1151,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.updateAccelerometerSample(timestamp, acceleration);
 
         // check correctness
-        assertEquals(estimator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(),
-                acceleration[0], 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(),
-                acceleration[1], 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(),
-                acceleration[2], 0.0);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 2);
+        assertEquals(timestamp, estimator.getAccelerometerTimestampNanos());
+        assertEquals(acceleration[0], estimator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(acceleration[1], estimator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(acceleration[2], estimator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(2, estimator.getAccumulatedAccelerometerSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // Force IllegalArgumentException
@@ -1249,18 +1169,17 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testUpdateAccelerometerSampleWithAccumulationEnabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
         estimator.setAccumulationEnabled(true);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getAccelerometerTimestampNanos(), -1);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), 0);
+        assertEquals(-1, estimator.getAccelerometerTimestampNanos());
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(0, estimator.getAccumulatedAccelerometerSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // update with several samples
@@ -1281,26 +1200,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             avgAccelerationY += accelerationY / TIMES;
             avgAccelerationZ += accelerationZ / TIMES;
 
-            estimator.updateAccelerometerSample(timestamp, accelerationX,
-                    accelerationY, accelerationZ);
+            estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
         }
 
         // check correctness
         assertEquals(estimator.getAccelerometerTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAccelerationSampleX(),
-                avgAccelerationX, ABSOLUTE_ERROR);
-        assertEquals(estimator.getAccumulatedAccelerationSampleY(),
-                avgAccelerationY, ABSOLUTE_ERROR);
-        assertEquals(estimator.getAccumulatedAccelerationSampleZ(),
-                avgAccelerationZ, ABSOLUTE_ERROR);
-        assertEquals(estimator.getAccumulatedAccelerometerSamples(), TIMES);
+        assertEquals(avgAccelerationX, estimator.getAccumulatedAccelerationSampleX(), ABSOLUTE_ERROR);
+        assertEquals(avgAccelerationY, estimator.getAccumulatedAccelerationSampleY(), ABSOLUTE_ERROR);
+        assertEquals(avgAccelerationZ, estimator.getAccumulatedAccelerationSampleZ(), ABSOLUTE_ERROR);
+        assertEquals(TIMES, estimator.getAccumulatedAccelerometerSamples());
         assertFalse(estimator.isFullSampleAvailable());
     }
 
     @Test
     public void testUpdateGyroscopeSampleWithAccumulationDisabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
         estimator.setAccumulationEnabled(false);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1311,25 +1225,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         final float angularSpeedZ = randomizer.nextFloat();
 
         // check initial values
-        assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(-1, estimator.getGyroscopeTimestampNanos());
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(0, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
-        estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY,
-                angularSpeedZ);
+        estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
 
         // check correctness
-        assertEquals(estimator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(),
-                angularSpeedX, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(),
-                angularSpeedY, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(),
-                angularSpeedZ, 0.0);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 1);
+        assertEquals(timestamp, estimator.getGyroscopeTimestampNanos());
+        assertEquals(angularSpeedX, estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(angularSpeedY, estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(angularSpeedZ, estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(1, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // test again but using an array
@@ -1340,14 +1250,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.updateGyroscopeSample(timestamp, angularSpeed);
 
         // check correctness
-        assertEquals(estimator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(),
-                angularSpeed[0], 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(),
-                angularSpeed[1], 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(),
-                angularSpeed[2], 0.0);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 2);
+        assertEquals(timestamp, estimator.getGyroscopeTimestampNanos());
+        assertEquals(angularSpeed[0], estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(angularSpeed[1], estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(angularSpeed[2], estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(2, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // Force IllegalArgumentException
@@ -1361,18 +1268,17 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testUpdateGyroscopeSampleWithAccumulationEnabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
         estimator.setAccumulationEnabled(true);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getGyroscopeTimestampNanos(), -1);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), 0);
+        assertEquals(-1, estimator.getGyroscopeTimestampNanos());
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(0.0, estimator.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(0, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // update with several samples
@@ -1393,26 +1299,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             avgAngularSpeedY += angularSpeedY / TIMES;
             avgAngularSpeedZ += angularSpeedZ / TIMES;
 
-            estimator.updateGyroscopeSample(timestamp, angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
         }
 
         // check correctness
-        assertEquals(estimator.getGyroscopeTimestampNanos(), timestamp);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleX(),
-                avgAngularSpeedX, ABSOLUTE_ERROR);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleY(),
-                avgAngularSpeedY, ABSOLUTE_ERROR);
-        assertEquals(estimator.getAccumulatedAngularSpeedSampleZ(),
-                avgAngularSpeedZ, ABSOLUTE_ERROR);
-        assertEquals(estimator.getAccumulatedGyroscopeSamples(), TIMES);
+        assertEquals(timestamp, estimator.getGyroscopeTimestampNanos());
+        assertEquals(avgAngularSpeedX, estimator.getAccumulatedAngularSpeedSampleX(), ABSOLUTE_ERROR);
+        assertEquals(avgAngularSpeedY, estimator.getAccumulatedAngularSpeedSampleY(), ABSOLUTE_ERROR);
+        assertEquals(avgAngularSpeedZ, estimator.getAccumulatedAngularSpeedSampleZ(), ABSOLUTE_ERROR);
+        assertEquals(TIMES, estimator.getAccumulatedGyroscopeSamples());
         assertFalse(estimator.isFullSampleAvailable());
     }
 
     @Test
     public void testUpdateOrientationSampleWithAccumulationDisabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
         estimator.setAccumulationEnabled(false);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1422,49 +1323,44 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         final double orientationB = randomizer.nextDouble();
         final double orientationC = randomizer.nextDouble();
         final double orientationD = randomizer.nextDouble();
-        final Quaternion orientation = new Quaternion(orientationA, orientationB,
-                orientationC, orientationD);
+        final Quaternion orientation = new Quaternion(orientationA, orientationB, orientationC, orientationD);
 
         // check initial values
-        assertEquals(estimator.getOrientationTimestampNanos(), -1);
-        Quaternion accumulatedOrientation =
-                (Quaternion) estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), 1.0, 0.0);
-        assertEquals(accumulatedOrientation.getB(), 0.0, 0.0);
-        assertEquals(accumulatedOrientation.getC(), 0.0, 0.0);
-        assertEquals(accumulatedOrientation.getD(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(-1, estimator.getOrientationTimestampNanos());
+        Quaternion accumulatedOrientation = (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(1.0, accumulatedOrientation.getA(), 0.0);
+        assertEquals(0.0, accumulatedOrientation.getB(), 0.0);
+        assertEquals(0.0, accumulatedOrientation.getC(), 0.0);
+        assertEquals(0.0, accumulatedOrientation.getD(), 0.0);
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         estimator.updateOrientationSample(timestamp, orientation);
 
         // check correctness
-        assertEquals(estimator.getOrientationTimestampNanos(), timestamp);
-        accumulatedOrientation =
-                (Quaternion) estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), orientationA, 0.0);
-        assertEquals(accumulatedOrientation.getB(), orientationB, 0.0);
-        assertEquals(accumulatedOrientation.getC(), orientationC, 0.0);
-        assertEquals(accumulatedOrientation.getD(), orientationD, 0.0);
+        assertEquals(timestamp, estimator.getOrientationTimestampNanos());
+        accumulatedOrientation = (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(orientationA, accumulatedOrientation.getA(), 0.0);
+        assertEquals(orientationB, accumulatedOrientation.getB(), 0.0);
+        assertEquals(orientationC, accumulatedOrientation.getC(), 0.0);
+        assertEquals(orientationD, accumulatedOrientation.getD(), 0.0);
     }
 
     @Test
     public void testUpdateOrientationSampleWithAccumulationEnabled() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
         estimator.setAccumulationEnabled(true);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // check initial values
-        assertEquals(estimator.getOrientationTimestampNanos(), -1);
-        Quaternion accumulatedOrientation =
-                (Quaternion) estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), 1.0, 0.0);
-        assertEquals(accumulatedOrientation.getB(), 0.0, 0.0);
-        assertEquals(accumulatedOrientation.getC(), 0.0, 0.0);
-        assertEquals(accumulatedOrientation.getD(), 0.0, 0.0);
-        assertEquals(estimator.getAccumulatedOrientationSamples(), 0);
+        assertEquals(-1, estimator.getOrientationTimestampNanos());
+        Quaternion accumulatedOrientation = (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(1.0, accumulatedOrientation.getA(), 0.0);
+        assertEquals(0.0, accumulatedOrientation.getB(), 0.0);
+        assertEquals(0.0, accumulatedOrientation.getC(), 0.0);
+        assertEquals(0.0, accumulatedOrientation.getD(), 0.0);
+        assertEquals(0, estimator.getAccumulatedOrientationSamples());
         assertFalse(estimator.isFullSampleAvailable());
 
         // update with several samples
@@ -1473,8 +1369,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         double orientationB;
         double orientationC;
         double orientationD;
-        double avgOrientationA = 0.0, avgOrientationB = 0.0,
-                avgOrientationC = 0.0, avgOrientationD = 0.0;
+        double avgOrientationA = 0.0, avgOrientationB = 0.0, avgOrientationC = 0.0, avgOrientationD = 0.0;
         Quaternion orientation = new Quaternion();
         double norm;
         for (int i = 0; i < TIMES; i++) {
@@ -1483,10 +1378,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             orientationB = randomizer.nextDouble();
             orientationC = randomizer.nextDouble();
             orientationD = randomizer.nextDouble();
-            norm = Math.sqrt(orientationA * orientationA +
-                    orientationB * orientationB +
-                    orientationC * orientationC +
-                    orientationD * orientationD);
+            norm = Math.sqrt(orientationA * orientationA + orientationB * orientationB +
+                    orientationC * orientationC + orientationD * orientationD);
             orientationA /= norm;
             orientationB /= norm;
             orientationC /= norm;
@@ -1507,36 +1400,30 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
         // check correctness
         assertEquals(estimator.getOrientationTimestampNanos(), timestamp);
-        accumulatedOrientation =
-                (Quaternion) estimator.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation.getA(), avgOrientationA,
-                ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getB(), avgOrientationB,
-                ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getC(), avgOrientationC,
-                ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation.getD(), avgOrientationD,
-                ABSOLUTE_ERROR);
+        accumulatedOrientation = (Quaternion) estimator.getAccumulatedOrientation();
+        assertEquals(avgOrientationA, accumulatedOrientation.getA(), ABSOLUTE_ERROR);
+        assertEquals(avgOrientationB, accumulatedOrientation.getB(), ABSOLUTE_ERROR);
+        assertEquals(avgOrientationC, accumulatedOrientation.getC(), ABSOLUTE_ERROR);
+        assertEquals(avgOrientationD, accumulatedOrientation.getD(), ABSOLUTE_ERROR);
     }
 
     @Test
     public void testGetMostRecentTimestampNanos() {
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         final long timestamp = System.currentTimeMillis();
         estimator.mAccelerometerTimestampNanos = timestamp;
         estimator.mGyroscopeTimestampNanos = timestamp + 1000;
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), timestamp + 1000);
+        assertEquals(timestamp + 1000, estimator.getMostRecentTimestampNanos());
 
         estimator.mAccelerometerTimestampNanos = timestamp + 2000;
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), timestamp + 2000);
+        assertEquals(timestamp + 2000, estimator.getMostRecentTimestampNanos());
 
         estimator.mOrientationTimestampNanos = timestamp + 3000;
 
-        assertEquals(estimator.getMostRecentTimestampNanos(), timestamp + 3000);
+        assertEquals(timestamp + 3000, estimator.getMostRecentTimestampNanos());
     }
 
     @Test
@@ -1545,8 +1432,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
             estimator.setListener(this);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1559,52 +1445,54 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
 
             // check initial value
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
 
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
@@ -1612,70 +1500,70 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct has no effect until we predict again
-            estimator.correctWithPositionMeasure(
-                    positionX, positionY, positionZ, positionCovariance);
+            estimator.correctWithPositionMeasure(positionX, positionY, positionZ, positionCovariance);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict again
             timestamp += DELTA_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 2);
-            assertEquals(fullSampleProcessed, 2);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(2, fullSampleReceived);
+            assertEquals(2, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(
-                    positionX, positionY, positionZ, positionCovariance);
+            estimator.correctWithPositionMeasure(positionX, positionY, positionZ, positionCovariance);
 
             // expected velocities
             final double vx = VELOCITY_GAIN * positionX;
@@ -1683,36 +1571,32 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double vz = VELOCITY_GAIN * positionZ;
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), positionX,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityZ(), vz, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            Quaternion stateQuaternion = estimator.getStateQuaternion();
+            assertEquals(positionX, estimator.getStatePositionX(), ABSOLUTE_ERROR);
+            assertEquals(positionY, estimator.getStatePositionY(), ABSOLUTE_ERROR);
+            assertEquals(positionZ, estimator.getStatePositionZ(), ABSOLUTE_ERROR);
+            assertEquals(vx, estimator.getStateVelocityX(), ABSOLUTE_ERROR);
+            assertEquals(vy, estimator.getStateVelocityY(), ABSOLUTE_ERROR);
+            assertEquals(vz, estimator.getStateVelocityZ(), ABSOLUTE_ERROR);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
-            assertEquals(stateQuaternion.getA(), 1.0, 0.0);
-            assertEquals(stateQuaternion.getB(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(1.0, stateQuaternion.getA(), 0.0);
+            assertEquals(0.0, stateQuaternion.getB(), 0.0);
+            assertEquals(0.0, stateQuaternion.getC(), 0.0);
+            assertEquals(0.0, stateQuaternion.getD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);
+            assertEquals(1, correctWithPositionMeasure);
+            assertEquals(1, correctedWithPositionMeasure);
 
             // Force IllegalArgumentException (wrong covariance matrix size)
             final Matrix wrong = new Matrix(4, 4);
             try {
-                estimator.correctWithPositionMeasure(
-                        positionX, positionY, positionZ, wrong);
+                estimator.correctWithPositionMeasure(positionX, positionY, positionZ, wrong);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (final IllegalArgumentException ignore) {
             }
@@ -1720,13 +1604,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     }
 
     @Test
-    public void testCorrectWithPositionMeasureArrayAndCovariance()
-            throws AlgebraException {
+    public void testCorrectWithPositionMeasureArrayAndCovariance() throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
             estimator.setListener(this);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1736,56 +1618,58 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double positionZ = randomizer.nextDouble();
             final double[] position = new double[]{positionX, positionY, positionZ};
 
-            final Matrix positionCovariance = Matrix.identity(3, 3).
-                    multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
+            final Matrix positionCovariance = Matrix.identity(3, 3)
+                    .multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
 
             // check initial value
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
 
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
@@ -1793,65 +1677,67 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position, positionCovariance);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict again
             timestamp += DELTA_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 2);
-            assertEquals(fullSampleProcessed, 2);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(2, fullSampleReceived);
+            assertEquals(2, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct providing a certain position (it is not ignored this time)
             estimator.correctWithPositionMeasure(position, positionCovariance);
@@ -1862,30 +1748,27 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double vz = VELOCITY_GAIN * positionZ;
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), positionX,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityZ(), vz, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+            assertEquals(positionX, estimator.getStatePositionX(), ABSOLUTE_ERROR);
+            assertEquals(positionY, estimator.getStatePositionY(), ABSOLUTE_ERROR);
+            assertEquals(positionZ, estimator.getStatePositionZ(), ABSOLUTE_ERROR);
+            assertEquals(vx, estimator.getStateVelocityX(), ABSOLUTE_ERROR);
+            assertEquals(vy, estimator.getStateVelocityY(), ABSOLUTE_ERROR);
+            assertEquals(vz, estimator.getStateVelocityZ(), ABSOLUTE_ERROR);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
             Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
-            assertEquals(stateQuaternion.getA(), 1.0, 0.0);
-            assertEquals(stateQuaternion.getB(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(1.0, stateQuaternion.getA(), 0.0);
+            assertEquals(0.0, stateQuaternion.getB(), 0.0);
+            assertEquals(0.0, stateQuaternion.getC(), 0.0);
+            assertEquals(0.0, stateQuaternion.getD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);
+            assertEquals(1, correctWithPositionMeasure);
+            assertEquals(1, correctedWithPositionMeasure);
 
             // Force IllegalArgumentException (wrong covariance matrix size)
             final Matrix wrongCov = new Matrix(4, 4);
@@ -1911,8 +1794,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
             estimator.setListener(this);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1920,59 +1802,60 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double positionX = randomizer.nextDouble();
             final double positionY = randomizer.nextDouble();
             final double positionZ = randomizer.nextDouble();
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX,
-                    positionY, positionZ);
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX, positionY, positionZ);
 
             final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
 
             // check initial value
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
 
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
@@ -1980,65 +1863,67 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position, positionCovariance);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict again
             timestamp += DELTA_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 2);
-            assertEquals(fullSampleProcessed, 2);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(2, fullSampleReceived);
+            assertEquals(2, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct providing a certain position (it is not ignored this time)
             estimator.correctWithPositionMeasure(position, positionCovariance);
@@ -2049,30 +1934,27 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double vz = VELOCITY_GAIN * positionZ;
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), positionX,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityZ(), vz, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+            assertEquals(positionX, estimator.getStatePositionX(), ABSOLUTE_ERROR);
+            assertEquals(positionY, estimator.getStatePositionY(), ABSOLUTE_ERROR);
+            assertEquals(positionZ, estimator.getStatePositionZ(), ABSOLUTE_ERROR);
+            assertEquals(vx, estimator.getStateVelocityX(), ABSOLUTE_ERROR);
+            assertEquals(vy, estimator.getStateVelocityY(), ABSOLUTE_ERROR);
+            assertEquals(vz, estimator.getStateVelocityZ(), ABSOLUTE_ERROR);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
             final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
-            assertEquals(stateQuaternion.getA(), 1.0, 0.0);
-            assertEquals(stateQuaternion.getB(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(1.0, stateQuaternion.getA(), 0.0);
+            assertEquals(0.0, stateQuaternion.getB(), 0.0);
+            assertEquals(0.0, stateQuaternion.getC(), 0.0);
+            assertEquals(0.0, stateQuaternion.getD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);
+            assertEquals(1, correctWithPositionMeasure);
+            assertEquals(1, correctedWithPositionMeasure);
 
             // Force IllegalArgumentException (wrong covariance matrix size)
             final Matrix wrong = new Matrix(4, 4);
@@ -2087,13 +1969,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     @Test
     public void testGetSetPositionCovarianceMatrix() throws AlgebraException {
 
-        final AbsoluteOrientationSlamEstimator estimator =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
         // check initial value
-        assertEquals(estimator.getPositionCovarianceMatrix(),
-                Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
-                        KalmanFilter.DEFAULT_MEASUREMENT_NOISE_VARIANCE));
+        assertEquals(Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
+                KalmanFilter.DEFAULT_MEASUREMENT_NOISE_VARIANCE), estimator.getPositionCovarianceMatrix());
 
         // set new value
         final Matrix positionCovariance = Matrix.identity(3, 3).
@@ -2102,8 +1982,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator.setPositionCovarianceMatrix(positionCovariance);
 
         // check correctness
-        assertEquals(estimator.getPositionCovarianceMatrix(),
-                positionCovariance);
+        assertEquals(positionCovariance, estimator.getPositionCovarianceMatrix());
 
         // Force IllegalArgumentException
         final Matrix wrong = new Matrix(4, 4);
@@ -2120,8 +1999,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
             estimator.setListener(this);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -2135,52 +2013,54 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             estimator.setPositionCovarianceMatrix(positionCovariance);
 
             // check initial value
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
 
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
@@ -2188,70 +2068,70 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct has no effect until we predict again
-            estimator.correctWithPositionMeasure(positionX, positionY,
-                    positionZ);
+            estimator.correctWithPositionMeasure(positionX, positionY, positionZ);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict again
             timestamp += DELTA_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 2);
-            assertEquals(fullSampleProcessed, 2);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(2, fullSampleReceived);
+            assertEquals(2, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct providing a certain position (it is not ignored this time)
-            estimator.correctWithPositionMeasure(positionX, positionY,
-                    positionZ);
+            estimator.correctWithPositionMeasure(positionX, positionY, positionZ);
 
             // expected velocities
             final double vx = VELOCITY_GAIN * positionX;
@@ -2259,30 +2139,27 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double vz = VELOCITY_GAIN * positionZ;
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), positionX,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityZ(), vz, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+            assertEquals(positionX, estimator.getStatePositionX(), ABSOLUTE_ERROR);
+            assertEquals(positionY, estimator.getStatePositionY(), ABSOLUTE_ERROR);
+            assertEquals(positionZ, estimator.getStatePositionZ(), ABSOLUTE_ERROR);
+            assertEquals(vx, estimator.getStateVelocityX(), ABSOLUTE_ERROR);
+            assertEquals(vy, estimator.getStateVelocityY(), ABSOLUTE_ERROR);
+            assertEquals(vz, estimator.getStateVelocityZ(), ABSOLUTE_ERROR);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
             Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
-            assertEquals(stateQuaternion.getA(), 1.0, 0.0);
-            assertEquals(stateQuaternion.getB(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(1.0, stateQuaternion.getA(), 0.0);
+            assertEquals(0.0, stateQuaternion.getB(), 0.0);
+            assertEquals(0.0, stateQuaternion.getC(), 0.0);
+            assertEquals(0.0, stateQuaternion.getD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);
+            assertEquals(1, correctWithPositionMeasure);
+            assertEquals(1, correctedWithPositionMeasure);
         }
     }
 
@@ -2292,8 +2169,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
             estimator.setListener(this);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -2308,52 +2184,54 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             estimator.setPositionCovarianceMatrix(positionCovariance);
 
             // check initial value
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
 
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
@@ -2361,65 +2239,67 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict again
             timestamp += DELTA_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 2);
-            assertEquals(fullSampleProcessed, 2);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(2, fullSampleReceived);
+            assertEquals(2, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct providing a certain position (it is not ignored this time)
             estimator.correctWithPositionMeasure(position);
@@ -2430,30 +2310,27 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double vz = VELOCITY_GAIN * positionZ;
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), positionX,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityZ(), vz, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+            assertEquals(positionX, estimator.getStatePositionX(), ABSOLUTE_ERROR);
+            assertEquals(positionY, estimator.getStatePositionY(), ABSOLUTE_ERROR);
+            assertEquals(positionZ, estimator.getStatePositionZ(), ABSOLUTE_ERROR);
+            assertEquals(vx, estimator.getStateVelocityX(), ABSOLUTE_ERROR);
+            assertEquals(vy, estimator.getStateVelocityY(), ABSOLUTE_ERROR);
+            assertEquals(vz, estimator.getStateVelocityZ(), ABSOLUTE_ERROR);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
             final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
-            assertEquals(stateQuaternion.getA(), 1.0, 0.0);
-            assertEquals(stateQuaternion.getB(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(1.0, stateQuaternion.getA(), 0.0);
+            assertEquals(0.0, stateQuaternion.getB(), 0.0);
+            assertEquals(0.0, stateQuaternion.getC(), 0.0);
+            assertEquals(0.0, stateQuaternion.getD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);
+            assertEquals(1, correctWithPositionMeasure);
+            assertEquals(1, correctedWithPositionMeasure);
 
             // Force IllegalArgumentException
             final double[] wrong = new double[4];
@@ -2466,13 +2343,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     }
 
     @Test
-    public void testCorrectWithPositionMeasurePointWithoutCovariance()
-            throws AlgebraException {
+    public void testCorrectWithPositionMeasurePointWithoutCovariance() throws AlgebraException {
         for (int t = 0; t < REPEAT_TIMES; t++) {
             reset();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
             estimator.setListener(this);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -2480,60 +2355,61 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double positionX = randomizer.nextDouble();
             final double positionY = randomizer.nextDouble();
             final double positionZ = randomizer.nextDouble();
-            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX,
-                    positionY, positionZ);
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(positionX, positionY, positionZ);
 
             final Matrix positionCovariance = Matrix.identity(3, 3).
                     multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
             estimator.setPositionCovarianceMatrix(positionCovariance);
 
             // check initial value
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
 
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
 
             assertTrue(estimator.isAccelerometerSampleReceived());
             assertTrue(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 0);
-            assertEquals(fullSampleProcessed, 0);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(0, fullSampleReceived);
+            assertEquals(0, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             final Quaternion orientation = new Quaternion();
             estimator.updateOrientationSample(timestamp, orientation);
@@ -2541,65 +2417,67 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             assertFalse(estimator.isAccelerometerSampleReceived());
             assertFalse(estimator.isGyroscopeSampleReceived());
             assertFalse(estimator.isOrientationSampleReceived());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct has no effect until we predict again
             estimator.correctWithPositionMeasure(position);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 1);
-            assertEquals(fullSampleProcessed, 1);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(1, fullSampleReceived);
+            assertEquals(1, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // predict again
             timestamp += DELTA_NANOS;
-            estimator.updateAccelerometerSample(timestamp, 0.0f, 0.0f, 0.0f);
-            estimator.updateGyroscopeSample(timestamp, 0.0f, 0.0f, 0.0f);
+            estimator.updateAccelerometerSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
+            estimator.updateGyroscopeSample(timestamp,
+                    0.0f, 0.0f, 0.0f);
             estimator.updateOrientationSample(timestamp, orientation);
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionY(), 0.0, 0.0);
-            assertEquals(estimator.getStatePositionZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityX(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityY(), 0.0, 0.0);
-            assertEquals(estimator.getStateVelocityZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionA(), 1.0, 0.0);
-            assertEquals(estimator.getStateQuaternionB(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionC(), 0.0, 0.0);
-            assertEquals(estimator.getStateQuaternionD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(0.0, estimator.getStatePositionX(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionY(), 0.0);
+            assertEquals(0.0, estimator.getStatePositionZ(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityX(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityY(), 0.0);
+            assertEquals(0.0, estimator.getStateVelocityZ(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
+            assertEquals(1.0, estimator.getStateQuaternionA(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionB(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionC(), 0.0);
+            assertEquals(0.0, estimator.getStateQuaternionD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(fullSampleReceived, 2);
-            assertEquals(fullSampleProcessed, 2);
-            assertEquals(correctWithPositionMeasure, 0);
-            assertEquals(correctedWithPositionMeasure, 0);
+            assertEquals(2, fullSampleReceived);
+            assertEquals(2, fullSampleProcessed);
+            assertEquals(0, correctWithPositionMeasure);
+            assertEquals(0, correctedWithPositionMeasure);
 
             // correct providing a certain position (it is not ignored this time)
             estimator.correctWithPositionMeasure(position);
@@ -2610,30 +2488,27 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double vz = VELOCITY_GAIN * positionZ;
 
             // check correctness
-            assertEquals(estimator.getStatePositionX(), positionX,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionY(), positionY,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStatePositionZ(), positionZ,
-                    ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityX(), vx, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityY(), vy, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateVelocityZ(), vz, ABSOLUTE_ERROR);
-            assertEquals(estimator.getStateAccelerationX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAccelerationZ(), 0.0, 0.0);
+            assertEquals(positionX, estimator.getStatePositionX(), ABSOLUTE_ERROR);
+            assertEquals(positionY, estimator.getStatePositionY(), ABSOLUTE_ERROR);
+            assertEquals(positionZ, estimator.getStatePositionZ(), ABSOLUTE_ERROR);
+            assertEquals(vx, estimator.getStateVelocityX(), ABSOLUTE_ERROR);
+            assertEquals(vy, estimator.getStateVelocityY(), ABSOLUTE_ERROR);
+            assertEquals(vz, estimator.getStateVelocityZ(), ABSOLUTE_ERROR);
+            assertEquals(0.0, estimator.getStateAccelerationX(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationY(), 0.0);
+            assertEquals(0.0, estimator.getStateAccelerationZ(), 0.0);
             final Quaternion stateQuaternion = estimator.getStateQuaternion();
             stateQuaternion.normalize();
-            assertEquals(stateQuaternion.getA(), 1.0, 0.0);
-            assertEquals(stateQuaternion.getB(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getC(), 0.0, 0.0);
-            assertEquals(stateQuaternion.getD(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedX(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedY(), 0.0, 0.0);
-            assertEquals(estimator.getStateAngularSpeedZ(), 0.0, 0.0);
+            assertEquals(1.0, stateQuaternion.getA(), 0.0);
+            assertEquals(0.0, stateQuaternion.getB(), 0.0);
+            assertEquals(0.0, stateQuaternion.getC(), 0.0);
+            assertEquals(0.0, stateQuaternion.getD(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedX(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedY(), 0.0);
+            assertEquals(0.0, estimator.getStateAngularSpeedZ(), 0.0);
             assertFalse(estimator.hasError());
-            assertEquals(correctWithPositionMeasure, 1);
-            assertEquals(correctedWithPositionMeasure, 1);
+            assertEquals(1, correctWithPositionMeasure);
+            assertEquals(1, correctedWithPositionMeasure);
 
             // Force IllegalArgumentException (wrong covariance matrix size)
             final Matrix wrong = new Matrix(4, 4);
@@ -2648,7 +2523,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testCreateCalibrator() {
-        //noinspection ConstantConditions
+        //noinspection ConstantValue
         assertTrue(AbsoluteOrientationSlamEstimator.createCalibrator()
                 instanceof AbsoluteOrientationSlamCalibrator);
     }
@@ -2676,18 +2551,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -2736,12 +2607,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -2766,8 +2637,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -2810,10 +2680,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -2858,19 +2726,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -2890,8 +2752,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -2904,8 +2765,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -2941,8 +2801,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -2960,8 +2819,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -2979,29 +2837,23 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
@@ -3010,15 +2862,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -3051,18 +2900,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -3111,12 +2956,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -3141,8 +2986,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -3185,10 +3029,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -3233,19 +3075,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -3265,8 +3101,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -3279,8 +3114,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -3316,8 +3150,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -3335,8 +3168,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -3354,46 +3186,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -3426,18 +3248,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -3486,12 +3304,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -3516,8 +3334,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -3560,10 +3377,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -3608,19 +3423,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -3640,8 +3449,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -3654,8 +3462,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -3691,8 +3498,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -3710,8 +3516,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -3729,42 +3534,33 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
                     filteredPos.distanceTo(groundTruthPos) <
@@ -3801,18 +3597,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -3861,12 +3653,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -3891,8 +3683,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -3935,10 +3726,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -3983,19 +3772,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -4015,8 +3798,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -4029,8 +3811,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -4066,8 +3847,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -4085,8 +3865,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -4104,46 +3883,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+            final boolean positionImproved = filteredPos.distanceTo(groundTruthPos) <
+                    predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -4166,12 +3935,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double gtSpeedY = randomizer.nextDouble();
             final double gtSpeedZ = randomizer.nextDouble();
             final int period = N_PREDICTION_SAMPLES / 2;
-            final int offsetAccelerationX = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAccelerationY = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAccelerationZ = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationX = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAccelerationY = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAccelerationZ = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
             final float amplitudeAccelerationX = randomizer.nextFloat();
             final float amplitudeAccelerationY = randomizer.nextFloat();
             final float amplitudeAccelerationZ = randomizer.nextFloat();
@@ -4192,18 +3958,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -4252,12 +4014,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -4282,8 +4044,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -4336,10 +4097,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -4384,19 +4143,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -4416,8 +4169,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -4430,8 +4182,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -4467,8 +4218,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -4486,8 +4236,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -4505,46 +4254,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
-            final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+            final boolean positionImproved = filteredPos.distanceTo(groundTruthPos) <
+                    predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -4570,12 +4309,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtAccelerationY = 0.0f;
             final float gtAccelerationZ = 0.0f;
             final int period = N_PREDICTION_SAMPLES / 2;
-            final int offsetAngularSpeedX = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAngularSpeedY = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAngularSpeedZ = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedX = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedY = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedZ = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
             final float amplitudeAngularSpeedX = randomizer.nextFloat();
             final float amplitudeAngularSpeedY = randomizer.nextFloat();
             final float amplitudeAngularSpeedZ = randomizer.nextFloat();
@@ -4591,18 +4327,14 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionA = 1.0f, gtQuaternionB = 0.0f,
                     gtQuaternionC = 0.0f, gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -4651,12 +4383,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -4681,8 +4413,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -4735,10 +4466,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -4783,19 +4512,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -4815,8 +4538,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -4829,8 +4551,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -4866,8 +4587,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -4885,8 +4605,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -4904,46 +4623,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved || positionImproved) {
                 numSuccess++;
@@ -4972,8 +4681,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtAngularSpeedY = randomizer.nextFloat();
             final float gtAngularSpeedZ = randomizer.nextFloat();
             final Quaternion gtQuaternion = new Quaternion(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
             final float gtQuaternionA = (float) gtQuaternion.getA();
             final float gtQuaternionB = (float) gtQuaternion.getB();
             final float gtQuaternionC = (float) gtQuaternion.getC();
@@ -4983,14 +4691,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -5039,12 +4744,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -5069,8 +4774,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -5113,10 +4817,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -5161,19 +4863,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -5193,8 +4889,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -5207,8 +4902,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -5244,8 +4938,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -5263,8 +4956,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -5282,46 +4974,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved || positionImproved) {
                 numSuccess++;
@@ -5344,12 +5026,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double gtSpeedY = randomizer.nextDouble();
             final double gtSpeedZ = randomizer.nextDouble();
             final int period = N_PREDICTION_SAMPLES / 2;
-            final int offsetAccelerationX = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAccelerationY = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAccelerationZ = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationX = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAccelerationY = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAccelerationZ = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
             final float amplitudeAccelerationX = randomizer.nextFloat();
             final float amplitudeAccelerationY = randomizer.nextFloat();
             final float amplitudeAccelerationZ = randomizer.nextFloat();
@@ -5366,25 +5045,20 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtAngularSpeedY = randomizer.nextFloat();
             final float gtAngularSpeedZ = randomizer.nextFloat();
             final Quaternion gtQuaternion = new Quaternion(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
             final float gtQuaternionA = (float) gtQuaternion.getA();
             final float gtQuaternionB = (float) gtQuaternion.getB();
             final float gtQuaternionC = (float) gtQuaternion.getC();
             final float gtQuaternionD = (float) gtQuaternion.getD();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -5433,12 +5107,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -5463,8 +5137,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -5517,10 +5190,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -5565,19 +5236,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -5597,8 +5262,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -5611,8 +5275,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -5648,8 +5311,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -5667,8 +5329,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -5686,46 +5347,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved || positionImproved) {
                 numSuccess++;
@@ -5751,12 +5402,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtAccelerationY = randomizer.nextFloat();
             final float gtAccelerationZ = randomizer.nextFloat();
             final int period = N_PREDICTION_SAMPLES / 2;
-            final int offsetAngularSpeedX = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAngularSpeedY = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAngularSpeedZ = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedX = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedY = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedZ = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
             final float amplitudeAngularSpeedX = randomizer.nextFloat();
             final float amplitudeAngularSpeedY = randomizer.nextFloat();
             final float amplitudeAngularSpeedZ = randomizer.nextFloat();
@@ -5770,25 +5418,20 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     2.0 * Math.PI / (double) period *
                             (double) (-offsetAngularSpeedZ)));
             final Quaternion gtQuaternion = new Quaternion(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
             final float gtQuaternionA = (float) gtQuaternion.getA();
             final float gtQuaternionB = (float) gtQuaternion.getB();
             final float gtQuaternionC = (float) gtQuaternion.getC();
             final float gtQuaternionD = (float) gtQuaternion.getD();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -5837,12 +5480,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -5867,8 +5510,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -5921,10 +5563,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -5969,19 +5609,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -6001,8 +5635,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -6015,8 +5648,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -6052,8 +5684,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -6071,8 +5702,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -6090,46 +5720,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved || positionImproved) {
                 numSuccess++;
@@ -6158,25 +5778,20 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             float gtAngularSpeedY = randomizer.nextFloat();
             float gtAngularSpeedZ = randomizer.nextFloat();
             final Quaternion gtQuaternion = new Quaternion(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
             final float gtQuaternionA = (float) gtQuaternion.getA();
             float gtQuaternionB = (float) gtQuaternion.getB();
             float gtQuaternionC = (float) gtQuaternion.getC();
             float gtQuaternionD = (float) gtQuaternion.getD();
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -6225,12 +5840,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             x[0] = gtPositionX;
@@ -6255,8 +5870,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] gtU = new double[13];
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -6307,10 +5921,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
@@ -6355,19 +5967,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -6387,8 +5993,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -6401,8 +6006,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -6438,8 +6042,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -6457,8 +6060,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -6476,46 +6078,36 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion = estimator.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimator.getStatePositionX(),
-                    estimator.getStatePositionY(),
+                    estimator.getStatePositionX(), estimator.getStatePositionY(),
                     estimator.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -6529,8 +6121,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     public void testPredictionNoMotionWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < 5 * REPEAT_TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
@@ -6549,12 +6140,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final AbsoluteOrientationSlamCalibrator calibrator =
-                    createFinishedCalibrator(accelerationOffsetX,
-                            accelerationOffsetY, accelerationOffsetZ,
-                            angularOffsetX, angularOffsetY, angularOffsetZ,
-                            noiseRandomizer);
-            final AbsoluteOrientationSlamCalibrationData calibration =
-                    calibrator.getCalibrationData();
+                    createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final AbsoluteOrientationSlamCalibrationData calibration = calibrator.getCalibrationData();
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -6575,22 +6163,18 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final AbsoluteOrientationSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -6658,12 +6242,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             final double[] uWithOffset = new double[13];
@@ -6691,13 +6275,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] xWithOffset = Arrays.copyOf(x, x.length);
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -6748,20 +6330,15 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 estimatorWithCalibration.updateAccelerometerSample(timestamp,
-                        accelerationWithOffsetX, accelerationWithOffsetY,
-                        accelerationWithOffsetZ);
+                        accelerationWithOffsetX, accelerationWithOffsetY, accelerationWithOffsetZ);
                 estimatorWithCalibration.updateGyroscopeSample(timestamp,
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp,
-                        orientation);
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
 
@@ -6813,33 +6390,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY - lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ - lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY - lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ - lastAngularSpeedWithOffsetZ;
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -6859,8 +6424,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
@@ -6874,8 +6438,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset, uWithOffset, DELTA_SECONDS,
+                            xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -6888,8 +6452,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -6933,8 +6496,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
@@ -6952,8 +6514,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -6971,8 +6532,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -6990,30 +6550,24 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
@@ -7022,15 +6576,13 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
             final InhomogeneousPoint3D groundTruthPos =
                     new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -7064,12 +6616,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final AbsoluteOrientationSlamCalibrator calibrator =
-                    createFinishedCalibrator(accelerationOffsetX,
-                            accelerationOffsetY, accelerationOffsetZ,
-                            angularOffsetX, angularOffsetY, angularOffsetZ,
-                            noiseRandomizer);
-            final AbsoluteOrientationSlamCalibrationData calibration =
-                    calibrator.getCalibrationData();
+                    createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final AbsoluteOrientationSlamCalibrationData calibration = calibrator.getCalibrationData();
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -7090,22 +6639,18 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final AbsoluteOrientationSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -7157,8 +6702,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaAccelerationWithOffsetX;
             double deltaAccelerationWithOffsetY;
             double deltaAccelerationWithOffsetZ;
-            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY,
-                    deltaAngularSpeedWithOffsetZ;
+            double deltaAngularSpeedWithOffsetX, deltaAngularSpeedWithOffsetY, deltaAngularSpeedWithOffsetZ;
 
             double lastGtAccelerationX = 0.0;
             double lastGtAccelerationY = 0.0;
@@ -7172,12 +6716,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             final double[] uWithOffset = new double[13];
@@ -7205,13 +6749,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] xWithOffset = Arrays.copyOf(x, x.length);
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -7262,20 +6804,15 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 estimatorWithCalibration.updateAccelerometerSample(timestamp,
-                        accelerationWithOffsetX, accelerationWithOffsetY,
-                        accelerationWithOffsetZ);
+                        accelerationWithOffsetX, accelerationWithOffsetY, accelerationWithOffsetZ);
                 estimatorWithCalibration.updateGyroscopeSample(timestamp,
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp,
-                        orientation);
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
 
@@ -7327,33 +6864,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY - lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ - lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY - lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ - lastAngularSpeedWithOffsetZ;
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -7373,8 +6898,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
@@ -7388,8 +6912,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset, uWithOffset, DELTA_SECONDS,
+                            xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -7402,8 +6926,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -7447,8 +6970,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
@@ -7466,8 +6988,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -7485,8 +7006,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -7504,30 +7024,24 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
@@ -7536,15 +7050,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -7558,8 +7069,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     public void testPredictionConstantAccelerationWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < 2 * REPEAT_TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
@@ -7578,12 +7088,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final AbsoluteOrientationSlamCalibrator calibrator =
-                    createFinishedCalibrator(accelerationOffsetX,
-                            accelerationOffsetY, accelerationOffsetZ,
-                            angularOffsetX, angularOffsetY, angularOffsetZ,
-                            noiseRandomizer);
-            final AbsoluteOrientationSlamCalibrationData calibration =
-                    calibrator.getCalibrationData();
+                    createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final AbsoluteOrientationSlamCalibrationData calibration = calibrator.getCalibrationData();
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -7604,22 +7111,18 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final AbsoluteOrientationSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -7687,12 +7190,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             final double[] uWithOffset = new double[13];
@@ -7720,13 +7223,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] xWithOffset = Arrays.copyOf(x, x.length);
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -7777,20 +7278,15 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 estimatorWithCalibration.updateAccelerometerSample(timestamp,
-                        accelerationWithOffsetX, accelerationWithOffsetY,
-                        accelerationWithOffsetZ);
+                        accelerationWithOffsetX, accelerationWithOffsetY, accelerationWithOffsetZ);
                 estimatorWithCalibration.updateGyroscopeSample(timestamp,
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp,
-                        orientation);
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
 
@@ -7842,33 +7338,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY - lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ - lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY - lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ - lastAngularSpeedWithOffsetZ;
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -7888,8 +7372,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
@@ -7903,8 +7386,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset, uWithOffset, DELTA_SECONDS,
+                            xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -7917,8 +7400,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -7962,8 +7444,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
@@ -7981,8 +7462,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -8000,8 +7480,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -8019,47 +7498,37 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(),
-                    estimatorWithCalibration.getStatePositionY(),
+                    estimatorWithCalibration.getStatePositionX(), estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -8074,8 +7543,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     public void testPredictionRotationOnlyWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < 5 * REPEAT_TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
@@ -8094,12 +7562,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final AbsoluteOrientationSlamCalibrator calibrator =
-                    createFinishedCalibrator(accelerationOffsetX,
-                            accelerationOffsetY, accelerationOffsetZ,
-                            angularOffsetX, angularOffsetY, angularOffsetZ,
-                            noiseRandomizer);
-            final AbsoluteOrientationSlamCalibrationData calibration =
-                    calibrator.getCalibrationData();
+                    createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final AbsoluteOrientationSlamCalibrationData calibration = calibrator.getCalibrationData();
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -8120,22 +7585,18 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final AbsoluteOrientationSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -8202,12 +7663,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             final double[] uWithOffset = new double[13];
@@ -8235,13 +7696,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] xWithOffset = Arrays.copyOf(x, x.length);
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -8292,20 +7751,15 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 estimatorWithCalibration.updateAccelerometerSample(timestamp,
-                        accelerationWithOffsetX, accelerationWithOffsetY,
-                        accelerationWithOffsetZ);
+                        accelerationWithOffsetX, accelerationWithOffsetY, accelerationWithOffsetZ);
                 estimatorWithCalibration.updateGyroscopeSample(timestamp,
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp,
-                        orientation);
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
 
@@ -8357,33 +7811,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY - lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ - lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY - lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ - lastAngularSpeedWithOffsetZ;
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -8403,8 +7845,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
@@ -8418,8 +7859,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset, uWithOffset, DELTA_SECONDS,
+                            xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -8432,8 +7873,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -8477,8 +7917,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
@@ -8496,8 +7935,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -8515,8 +7953,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -8534,47 +7971,37 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(),
-                    estimatorWithCalibration.getStatePositionY(),
+                    estimatorWithCalibration.getStatePositionX(), estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -8588,8 +8015,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     public void testPredictionVariableAccelerationWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < 10 * REPEAT_TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
@@ -8608,12 +8034,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final AbsoluteOrientationSlamCalibrator calibrator =
-                    createFinishedCalibrator(accelerationOffsetX,
-                            accelerationOffsetY, accelerationOffsetZ,
-                            angularOffsetX, angularOffsetY, angularOffsetZ,
-                            noiseRandomizer);
-            final AbsoluteOrientationSlamCalibrationData calibration =
-                    calibrator.getCalibrationData();
+                    createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final AbsoluteOrientationSlamCalibrationData calibration = calibrator.getCalibrationData();
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -8624,12 +8047,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double gtSpeedY = randomizer.nextDouble();
             final double gtSpeedZ = randomizer.nextDouble();
             final int period = N_PREDICTION_SAMPLES / 2;
-            final int offsetAccelerationX = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAccelerationY = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAccelerationZ = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
+            final int offsetAccelerationX = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAccelerationY = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAccelerationZ = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
             final float amplitudeAccelerationX = randomizer.nextFloat();
             final float amplitudeAccelerationY = randomizer.nextFloat();
             final float amplitudeAccelerationZ = randomizer.nextFloat();
@@ -8650,22 +8070,18 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final AbsoluteOrientationSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -8727,12 +8143,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             final double[] uWithOffset = new double[13];
@@ -8760,13 +8176,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] xWithOffset = Arrays.copyOf(x, x.length);
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -8827,20 +8241,15 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 estimatorWithCalibration.updateAccelerometerSample(timestamp,
-                        accelerationWithOffsetX, accelerationWithOffsetY,
-                        accelerationWithOffsetZ);
+                        accelerationWithOffsetX, accelerationWithOffsetY, accelerationWithOffsetZ);
                 estimatorWithCalibration.updateGyroscopeSample(timestamp,
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp,
-                        orientation);
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
 
@@ -8888,26 +8297,17 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY - lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ - lastAccelerationWithOffsetZ;
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -8927,8 +8327,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
@@ -8953,8 +8352,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -8994,8 +8392,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
@@ -9013,8 +8410,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -9032,8 +8428,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -9051,47 +8446,37 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(),
-                    estimatorWithCalibration.getStatePositionY(),
+                    estimatorWithCalibration.getStatePositionX(), estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved && positionImproved) {
                 numSuccess++;
@@ -9105,8 +8490,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
     public void testPredictionVariableAngularSpeedWithNoiseAndCalibration() {
         int numSuccess = 0;
         for (int t = 0; t < REPEAT_TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
@@ -9125,12 +8509,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final AbsoluteOrientationSlamCalibrator calibrator =
-                    createFinishedCalibrator(accelerationOffsetX,
-                            accelerationOffsetY, accelerationOffsetZ,
-                            angularOffsetX, angularOffsetY, angularOffsetZ,
-                            noiseRandomizer);
-            final AbsoluteOrientationSlamCalibrationData calibration =
-                    calibrator.getCalibrationData();
+                    createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                            angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final AbsoluteOrientationSlamCalibrationData calibration = calibrator.getCalibrationData();
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -9144,12 +8525,9 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtAccelerationY = 0.0f;
             final float gtAccelerationZ = 0.0f;
             final int period = N_PREDICTION_SAMPLES / 2;
-            final int offsetAngularSpeedX = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAngularSpeedY = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
-            final int offsetAngularSpeedZ = randomizer.nextInt(0,
-                    N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedX = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedY = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
+            final int offsetAngularSpeedZ = randomizer.nextInt(0, N_PREDICTION_SAMPLES);
             final float amplitudeAngularSpeedX = randomizer.nextFloat();
             final float amplitudeAngularSpeedY = randomizer.nextFloat();
             final float amplitudeAngularSpeedZ = randomizer.nextFloat();
@@ -9167,22 +8545,18 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final float gtQuaternionC = 0.0f;
             final float gtQuaternionD = 0.0f;
 
-            final AbsoluteOrientationSlamEstimator estimator =
-                    new AbsoluteOrientationSlamEstimator();
+            final AbsoluteOrientationSlamEstimator estimator = new AbsoluteOrientationSlamEstimator();
 
             final AbsoluteOrientationSlamEstimator estimatorWithCalibration =
                     new AbsoluteOrientationSlamEstimator();
             estimatorWithCalibration.setCalibrationData(calibration);
 
             final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
             final GaussianRandomizer orientationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ORIENTATION_NOISE_STANDARD_DEVIATION);
+                    new GaussianRandomizer(new Random(), 0.0, ORIENTATION_NOISE_STANDARD_DEVIATION);
 
             long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
             float accelerationX;
@@ -9250,12 +8624,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             double deltaGtAngularSpeedX;
             double deltaGtAngularSpeedY;
             double deltaGtAngularSpeedZ;
-            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion lastGtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final Quaternion deltaGtOrientation = new Quaternion();
             final Quaternion orientation = new Quaternion();
-            final Quaternion gtOrientation = new Quaternion(gtQuaternionA,
-                    gtQuaternionB, gtQuaternionC, gtQuaternionD);
+            final Quaternion gtOrientation = new Quaternion(gtQuaternionA, gtQuaternionB, gtQuaternionC,
+                    gtQuaternionD);
             final double[] x = new double[16];
             final double[] u = new double[13];
             final double[] uWithOffset = new double[13];
@@ -9283,13 +8657,11 @@ public class AbsoluteOrientationSlamEstimatorTest implements
             final double[] xWithOffset = Arrays.copyOf(x, x.length);
 
             // set initial state
-            estimator.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimator.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
-            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ,
-                    gtSpeedX, gtSpeedY, gtSpeedZ,
+            estimatorWithCalibration.reset(gtPositionX, gtPositionY, gtPositionZ, gtSpeedX, gtSpeedY, gtSpeedZ,
                     gtAccelerationX, gtAccelerationY, gtAccelerationZ,
                     gtQuaternionA, gtQuaternionB, gtQuaternionC, gtQuaternionD,
                     gtAngularSpeedX, gtAngularSpeedY, gtAngularSpeedZ);
@@ -9350,20 +8722,15 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 gtOrientation.setC(gtQuaternionC);
                 gtOrientation.setD(gtQuaternionD);
 
-                estimator.updateAccelerometerSample(timestamp,
-                        accelerationX, accelerationY, accelerationZ);
-                estimator.updateGyroscopeSample(timestamp,
-                        angularSpeedX, angularSpeedY, angularSpeedZ);
+                estimator.updateAccelerometerSample(timestamp, accelerationX, accelerationY, accelerationZ);
+                estimator.updateGyroscopeSample(timestamp, angularSpeedX, angularSpeedY, angularSpeedZ);
                 estimator.updateOrientationSample(timestamp, orientation);
 
                 estimatorWithCalibration.updateAccelerometerSample(timestamp,
-                        accelerationWithOffsetX, accelerationWithOffsetY,
-                        accelerationWithOffsetZ);
+                        accelerationWithOffsetX, accelerationWithOffsetY, accelerationWithOffsetZ);
                 estimatorWithCalibration.updateGyroscopeSample(timestamp,
-                        angularSpeedWithOffsetX, angularSpeedWithOffsetY,
-                        angularSpeedWithOffsetZ);
-                estimatorWithCalibration.updateOrientationSample(timestamp,
-                        orientation);
+                        angularSpeedWithOffsetX, angularSpeedWithOffsetY, angularSpeedWithOffsetZ);
+                estimatorWithCalibration.updateOrientationSample(timestamp, orientation);
 
                 timestamp += DELTA_NANOS;
 
@@ -9415,33 +8782,21 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     deltaOrientation.combine(orientation);
                     deltaOrientation.normalize();
 
-                    deltaAccelerationWithOffsetX = accelerationWithOffsetX -
-                            lastAccelerationWithOffsetX;
-                    deltaAccelerationWithOffsetY = accelerationWithOffsetY -
-                            lastAccelerationWithOffsetY;
-                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ -
-                            lastAccelerationWithOffsetZ;
+                    deltaAccelerationWithOffsetX = accelerationWithOffsetX - lastAccelerationWithOffsetX;
+                    deltaAccelerationWithOffsetY = accelerationWithOffsetY - lastAccelerationWithOffsetY;
+                    deltaAccelerationWithOffsetZ = accelerationWithOffsetZ - lastAccelerationWithOffsetZ;
 
-                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX -
-                            lastAngularSpeedWithOffsetX;
-                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY -
-                            lastAngularSpeedWithOffsetY;
-                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ -
-                            lastAngularSpeedWithOffsetZ;
+                    deltaAngularSpeedWithOffsetX = angularSpeedWithOffsetX - lastAngularSpeedWithOffsetX;
+                    deltaAngularSpeedWithOffsetY = angularSpeedWithOffsetY - lastAngularSpeedWithOffsetY;
+                    deltaAngularSpeedWithOffsetZ = angularSpeedWithOffsetZ - lastAngularSpeedWithOffsetZ;
 
-                    deltaGtAccelerationX = gtAccelerationX -
-                            lastGtAccelerationX;
-                    deltaGtAccelerationY = gtAccelerationY -
-                            lastGtAccelerationY;
-                    deltaGtAccelerationZ = gtAccelerationZ -
-                            lastGtAccelerationZ;
+                    deltaGtAccelerationX = gtAccelerationX - lastGtAccelerationX;
+                    deltaGtAccelerationY = gtAccelerationY - lastGtAccelerationY;
+                    deltaGtAccelerationZ = gtAccelerationZ - lastGtAccelerationZ;
 
-                    deltaGtAngularSpeedX = gtAngularSpeedX -
-                            lastGtAngularSpeedX;
-                    deltaGtAngularSpeedY = gtAngularSpeedY -
-                            lastGtAngularSpeedY;
-                    deltaGtAngularSpeedZ = gtAngularSpeedZ -
-                            lastGtAngularSpeedZ;
+                    deltaGtAngularSpeedX = gtAngularSpeedX - lastGtAngularSpeedX;
+                    deltaGtAngularSpeedY = gtAngularSpeedY - lastGtAngularSpeedY;
+                    deltaGtAngularSpeedZ = gtAngularSpeedZ - lastGtAngularSpeedZ;
 
                     lastGtOrientation.inverse(deltaGtOrientation);
                     deltaGtOrientation.combine(gtOrientation);
@@ -9461,8 +8816,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     u[10] = deltaAngularSpeedX;
                     u[11] = deltaAngularSpeedY;
                     u[12] = deltaAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(x, u,
-                            DELTA_SECONDS, x);
+                    StatePredictor.predictWithRotationAdjustment(x, u, DELTA_SECONDS, x);
 
                     // we also take into account control signals with offset
                     uWithOffset[0] = deltaOrientation.getA();
@@ -9476,8 +8830,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     uWithOffset[10] = deltaAngularSpeedWithOffsetX;
                     uWithOffset[11] = deltaAngularSpeedWithOffsetY;
                     uWithOffset[12] = deltaAngularSpeedWithOffsetZ;
-                    StatePredictor.predictWithRotationAdjustment(xWithOffset,
-                            uWithOffset, DELTA_SECONDS, xWithOffset);
+                    StatePredictor.predictWithRotationAdjustment(xWithOffset, uWithOffset, DELTA_SECONDS,
+                            xWithOffset);
 
                     gtU[0] = deltaGtOrientation.getA();
                     gtU[1] = deltaGtOrientation.getB();
@@ -9490,8 +8844,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     gtU[10] = deltaGtAngularSpeedX;
                     gtU[11] = deltaGtAngularSpeedY;
                     gtU[12] = deltaGtAngularSpeedZ;
-                    StatePredictor.predictWithRotationAdjustment(gtX, gtU,
-                            DELTA_SECONDS, gtX);
+                    StatePredictor.predictWithRotationAdjustment(gtX, gtU, DELTA_SECONDS, gtX);
 
                     lastAccelerationX = accelerationX;
                     lastAccelerationY = accelerationY;
@@ -9535,8 +8888,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimatorWithCalibration.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimatorWithCalibration.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimatorWithCalibration.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Filtered - positionX: " + estimator.getStatePositionX() +
                     ", positionY: " + estimator.getStatePositionY() +
@@ -9554,8 +8906,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + estimator.getStateAngularSpeedX() +
                     ", angularSpeedY: " + estimator.getStateAngularSpeedY() +
                     ", angularSpeedZ: " + estimator.getStateAngularSpeedZ();
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Prediction - positionX: " + x[0] +
                     ", positionY: " + x[1] +
@@ -9573,8 +8924,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + x[13] +
                     ", angularSpeedY: " + x[14] +
                     ", angularSpeedZ: " + x[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             msg = "Ground truth - positionX: " + gtX[0] +
                     ", positionY: " + gtX[1] +
@@ -9592,47 +8942,37 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                     ", angularSpeedX: " + gtX[13] +
                     ", angularSpeedY: " + gtX[14] +
                     ", angularSpeedZ: " + gtX[15];
-            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(
-                    Level.INFO, msg);
+            Logger.getLogger(SlamEstimatorTest.class.getSimpleName()).log(Level.INFO, msg);
 
             // rotate random point with quaternions and check that filtered
             // quaternion is closer to ground truth than predicted quaternion
             final InhomogeneousPoint3D randomPoint = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(), randomizer.nextDouble(),
-                    randomizer.nextDouble());
+                    randomizer.nextDouble(), randomizer.nextDouble(), randomizer.nextDouble());
 
             final Quaternion filteredQuaternion =
                     estimatorWithCalibration.getStateQuaternion();
-            final Quaternion predictedQuaternion = new Quaternion(
-                    x[3], x[4], x[5], x[6]);
-            final Quaternion groundTruthQuaternion = new Quaternion(
-                    gtX[3], gtX[4], gtX[5], gtX[6]);
+            final Quaternion predictedQuaternion = new Quaternion(x[3], x[4], x[5], x[6]);
+            final Quaternion groundTruthQuaternion = new Quaternion(gtX[3], gtX[4], gtX[5], gtX[6]);
 
             final Point3D filteredRotated = filteredQuaternion.rotate(randomPoint);
             final Point3D predictedRotated = predictedQuaternion.rotate(randomPoint);
-            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(
-                    randomPoint);
+            final Point3D groundTruthRotated = groundTruthQuaternion.rotate(randomPoint);
 
-            final boolean rotationImproved =
-                    filteredRotated.distanceTo(groundTruthRotated) <
-                            predictedRotated.distanceTo(groundTruthRotated);
+            final boolean rotationImproved = filteredRotated.distanceTo(groundTruthRotated) <
+                    predictedRotated.distanceTo(groundTruthRotated);
 
             // check that filtered position is closer to ground truth than
             // predicted position, and hence Kalman filter improves results
             final InhomogeneousPoint3D filteredPos = new InhomogeneousPoint3D(
-                    estimatorWithCalibration.getStatePositionX(),
-                    estimatorWithCalibration.getStatePositionY(),
+                    estimatorWithCalibration.getStatePositionX(), estimatorWithCalibration.getStatePositionY(),
                     estimatorWithCalibration.getStatePositionZ());
 
-            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(
-                    x[0], x[1], x[2]);
+            final InhomogeneousPoint3D predictedPos = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
-            final InhomogeneousPoint3D groundTruthPos =
-                    new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
+            final InhomogeneousPoint3D groundTruthPos = new InhomogeneousPoint3D(gtX[0], gtX[1], gtX[2]);
 
             final boolean positionImproved =
-                    filteredPos.distanceTo(groundTruthPos) <
-                            predictedPos.distanceTo(groundTruthPos);
+                    filteredPos.distanceTo(groundTruthPos) < predictedPos.distanceTo(groundTruthPos);
 
             if (rotationImproved || positionImproved) {
                 numSuccess++;
@@ -9644,14 +8984,12 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
     @Test
     public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
-        final AbsoluteOrientationSlamEstimator estimator1 =
-                new AbsoluteOrientationSlamEstimator();
+        final AbsoluteOrientationSlamEstimator estimator1 = new AbsoluteOrientationSlamEstimator();
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        final AbsoluteOrientationSlamCalibrationData data =
-                new AbsoluteOrientationSlamCalibrationData();
+        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
         estimator1.setCalibrationData(data);
         final double statePositionX = randomizer.nextDouble();
         estimator1.mStatePositionX = statePositionX;
@@ -9692,9 +9030,8 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator1.mOrientationTimestampNanos = 3000;
         estimator1.mAccumulatedAccelerometerSamples = 10;
         estimator1.mAccumulatedGyroscopeSamples = 20;
-        final Quaternion q = new Quaternion(randomizer.nextDouble(),
-                randomizer.nextDouble(), randomizer.nextDouble(),
-                randomizer.nextDouble());
+        final Quaternion q = new Quaternion(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble(), randomizer.nextDouble());
         estimator1.mAccumulatedOrientation = q;
         final double accumulatedAccelerationSampleX = randomizer.nextDouble();
         estimator1.mAccumulatedAccelerationSampleX = accumulatedAccelerationSampleX;
@@ -9708,55 +9045,47 @@ public class AbsoluteOrientationSlamEstimatorTest implements
         estimator1.mAccumulatedAngularSpeedSampleY = accumulatedAngularSpeedSampleY;
         final double accumulatedAngularSpeedSampleZ = randomizer.nextDouble();
         estimator1.mAccumulatedAngularSpeedSampleZ = accumulatedAngularSpeedSampleZ;
-        final Matrix positionCovariance = Matrix.identity(3, 3).
-                multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
+        final Matrix positionCovariance = Matrix.identity(3, 3)
+                .multiplyByScalarAndReturnNew(ABSOLUTE_ERROR);
         estimator1.setPositionCovarianceMatrix(positionCovariance);
 
         // check
-        assertSame(estimator1.getCalibrationData(), data);
-        assertEquals(estimator1.getStatePositionX(), statePositionX, 0.0);
-        assertEquals(estimator1.getStatePositionY(), statePositionY, 0.0);
-        assertEquals(estimator1.getStatePositionZ(), statePositionZ, 0.0);
-        assertEquals(estimator1.getStateVelocityX(), stateVelocityX, 0.0);
-        assertEquals(estimator1.getStateVelocityY(), stateVelocityY, 0.0);
-        assertEquals(estimator1.getStateVelocityZ(), stateVelocityZ, 0.0);
-        assertEquals(estimator1.getStateAccelerationX(), stateAccelerationX, 0.0);
-        assertEquals(estimator1.getStateAccelerationY(), stateAccelerationY, 0.0);
-        assertEquals(estimator1.getStateAccelerationZ(), stateAccelerationZ, 0.0);
-        assertEquals(estimator1.getStateQuaternionA(), stateQuaternionA, 0.0);
-        assertEquals(estimator1.getStateQuaternionB(), stateQuaternionB, 0.0);
-        assertEquals(estimator1.getStateQuaternionC(), stateQuaternionC, 0.0);
-        assertEquals(estimator1.getStateQuaternionD(), stateQuaternionD, 0.0);
-        assertEquals(estimator1.getStateAngularSpeedX(), stateAngularSpeedX, 0.0);
-        assertEquals(estimator1.getStateAngularSpeedY(), stateAngularSpeedY, 0.0);
-        assertEquals(estimator1.getStateAngularSpeedZ(), stateAngularSpeedZ, 0.0);
+        assertSame(data, estimator1.getCalibrationData());
+        assertEquals(statePositionX, estimator1.getStatePositionX(), 0.0);
+        assertEquals(statePositionY, estimator1.getStatePositionY(), 0.0);
+        assertEquals(statePositionZ, estimator1.getStatePositionZ(), 0.0);
+        assertEquals(stateVelocityX, estimator1.getStateVelocityX(), 0.0);
+        assertEquals(stateVelocityY, estimator1.getStateVelocityY(), 0.0);
+        assertEquals(stateVelocityZ, estimator1.getStateVelocityZ(), 0.0);
+        assertEquals(stateAccelerationX, estimator1.getStateAccelerationX(), 0.0);
+        assertEquals(stateAccelerationY, estimator1.getStateAccelerationY(), 0.0);
+        assertEquals(stateAccelerationZ, estimator1.getStateAccelerationZ(), 0.0);
+        assertEquals(stateQuaternionA, estimator1.getStateQuaternionA(), 0.0);
+        assertEquals(stateQuaternionB, estimator1.getStateQuaternionB(), 0.0);
+        assertEquals(stateQuaternionC, estimator1.getStateQuaternionC(), 0.0);
+        assertEquals(stateQuaternionD, estimator1.getStateQuaternionD(), 0.0);
+        assertEquals(stateAngularSpeedX, estimator1.getStateAngularSpeedX(), 0.0);
+        assertEquals(stateAngularSpeedY, estimator1.getStateAngularSpeedY(), 0.0);
+        assertEquals(stateAngularSpeedZ, estimator1.getStateAngularSpeedZ(), 0.0);
         assertTrue(estimator1.hasError());
         assertFalse(estimator1.isAccumulationEnabled());
-        assertEquals(estimator1.getAccelerometerTimestampNanos(), 1000);
-        assertEquals(estimator1.getGyroscopeTimestampNanos(), 2000);
-        assertEquals(estimator1.getOrientationTimestampNanos(), 3000);
-        assertEquals(estimator1.getAccumulatedAccelerometerSamples(), 10);
-        assertEquals(estimator1.getAccumulatedGyroscopeSamples(), 20);
-        final Quaternion accumulatedOrientation1 =
-                (Quaternion) estimator1.getAccumulatedOrientation();
-        assertEquals(accumulatedOrientation1.getA(), q.getA(), ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation1.getB(), q.getB(), ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation1.getC(), q.getC(), ABSOLUTE_ERROR);
-        assertEquals(accumulatedOrientation1.getD(), q.getD(), ABSOLUTE_ERROR);
-        assertEquals(estimator1.getAccumulatedAccelerationSampleX(),
-                accumulatedAccelerationSampleX, 0.0);
-        assertEquals(estimator1.getAccumulatedAccelerationSampleY(),
-                accumulatedAccelerationSampleY, 0.0);
-        assertEquals(estimator1.getAccumulatedAccelerationSampleZ(),
-                accumulatedAccelerationSampleZ, 0.0);
-        assertEquals(estimator1.getAccumulatedAngularSpeedSampleX(),
-                accumulatedAngularSpeedSampleX, 0.0);
-        assertEquals(estimator1.getAccumulatedAngularSpeedSampleY(),
-                accumulatedAngularSpeedSampleY, 0.0);
-        assertEquals(estimator1.getAccumulatedAngularSpeedSampleZ(),
-                accumulatedAngularSpeedSampleZ, 0.0);
-        assertEquals(estimator1.getPositionCovarianceMatrix(),
-                positionCovariance);
+        assertEquals(1000, estimator1.getAccelerometerTimestampNanos());
+        assertEquals(2000, estimator1.getGyroscopeTimestampNanos());
+        assertEquals(3000, estimator1.getOrientationTimestampNanos());
+        assertEquals(10, estimator1.getAccumulatedAccelerometerSamples());
+        assertEquals(20, estimator1.getAccumulatedGyroscopeSamples());
+        final Quaternion accumulatedOrientation1 = (Quaternion) estimator1.getAccumulatedOrientation();
+        assertEquals(q.getA(), accumulatedOrientation1.getA(), ABSOLUTE_ERROR);
+        assertEquals(q.getB(), accumulatedOrientation1.getB(), ABSOLUTE_ERROR);
+        assertEquals(q.getC(), accumulatedOrientation1.getC(), ABSOLUTE_ERROR);
+        assertEquals( q.getD(), accumulatedOrientation1.getD(), ABSOLUTE_ERROR);
+        assertEquals(accumulatedAccelerationSampleX, estimator1.getAccumulatedAccelerationSampleX(), 0.0);
+        assertEquals(accumulatedAccelerationSampleY, estimator1.getAccumulatedAccelerationSampleY(), 0.0);
+        assertEquals(accumulatedAccelerationSampleZ, estimator1.getAccumulatedAccelerationSampleZ(), 0.0);
+        assertEquals(accumulatedAngularSpeedSampleX, estimator1.getAccumulatedAngularSpeedSampleX(), 0.0);
+        assertEquals(accumulatedAngularSpeedSampleY, estimator1.getAccumulatedAngularSpeedSampleY(), 0.0);
+        assertEquals(accumulatedAngularSpeedSampleZ, estimator1.getAccumulatedAngularSpeedSampleZ(), 0.0);
+        assertEquals(positionCovariance, estimator1.getPositionCovarianceMatrix());
 
         final byte[] bytes = SerializationHelper.serialize(estimator1);
         final AbsoluteOrientationSlamEstimator estimator2 = SerializationHelper.deserialize(bytes);
@@ -9766,53 +9095,31 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 estimator2.getCalibrationData().getControlLength());
         assertEquals(estimator1.getCalibrationData().getStateLength(),
                 estimator2.getCalibrationData().getStateLength());
-        assertEquals(estimator1.getStatePositionX(),
-                estimator2.getStatePositionX(), 0.0);
-        assertEquals(estimator1.getStatePositionY(),
-                estimator2.getStatePositionY(), 0.0);
-        assertEquals(estimator1.getStatePositionZ(),
-                estimator2.getStatePositionZ(), 0.0);
-        assertEquals(estimator1.getStateVelocityX(),
-                estimator2.getStateVelocityX(), 0.0);
-        assertEquals(estimator1.getStateVelocityY(),
-                estimator2.getStateVelocityY(), 0.0);
-        assertEquals(estimator1.getStateVelocityZ(),
-                estimator2.getStateVelocityZ(), 0.0);
-        assertEquals(estimator1.getStateAccelerationX(),
-                estimator2.getStateAccelerationX(), 0.0);
-        assertEquals(estimator1.getStateAccelerationY(),
-                estimator2.getStateAccelerationY(), 0.0);
-        assertEquals(estimator1.getStateAccelerationZ(),
-                estimator2.getStateAccelerationZ(), 0.0);
-        assertEquals(estimator1.getStateQuaternionA(),
-                estimator2.getStateQuaternionA(), 0.0);
-        assertEquals(estimator1.getStateQuaternionB(),
-                estimator2.getStateQuaternionB(), 0.0);
-        assertEquals(estimator1.getStateQuaternionC(),
-                estimator2.getStateQuaternionC(), 0.0);
-        assertEquals(estimator1.getStateQuaternionD(),
-                estimator2.getStateQuaternionD(), 0.0);
-        assertEquals(estimator1.getStateAngularSpeedX(),
-                estimator2.getStateAngularSpeedX(), 0.0);
-        assertEquals(estimator1.getStateAngularSpeedY(),
-                estimator2.getStateAngularSpeedY(), 0.0);
-        assertEquals(estimator1.getStateAngularSpeedZ(),
-                estimator2.getStateAngularSpeedZ(), 0.0);
+        assertEquals(estimator1.getStatePositionX(), estimator2.getStatePositionX(), 0.0);
+        assertEquals(estimator1.getStatePositionY(), estimator2.getStatePositionY(), 0.0);
+        assertEquals(estimator1.getStatePositionZ(), estimator2.getStatePositionZ(), 0.0);
+        assertEquals(estimator1.getStateVelocityX(), estimator2.getStateVelocityX(), 0.0);
+        assertEquals(estimator1.getStateVelocityY(), estimator2.getStateVelocityY(), 0.0);
+        assertEquals(estimator1.getStateVelocityZ(), estimator2.getStateVelocityZ(), 0.0);
+        assertEquals(estimator1.getStateAccelerationX(), estimator2.getStateAccelerationX(), 0.0);
+        assertEquals(estimator1.getStateAccelerationY(), estimator2.getStateAccelerationY(), 0.0);
+        assertEquals(estimator1.getStateAccelerationZ(), estimator2.getStateAccelerationZ(), 0.0);
+        assertEquals(estimator1.getStateQuaternionA(), estimator2.getStateQuaternionA(), 0.0);
+        assertEquals(estimator1.getStateQuaternionB(), estimator2.getStateQuaternionB(), 0.0);
+        assertEquals(estimator1.getStateQuaternionC(), estimator2.getStateQuaternionC(), 0.0);
+        assertEquals(estimator1.getStateQuaternionD(), estimator2.getStateQuaternionD(), 0.0);
+        assertEquals(estimator1.getStateAngularSpeedX(), estimator2.getStateAngularSpeedX(), 0.0);
+        assertEquals(estimator1.getStateAngularSpeedY(), estimator2.getStateAngularSpeedY(), 0.0);
+        assertEquals(estimator1.getStateAngularSpeedZ(), estimator2.getStateAngularSpeedZ(), 0.0);
         assertEquals(estimator1.hasError(), estimator2.hasError());
-        assertEquals(estimator1.isAccumulationEnabled(),
-                estimator2.isAccumulationEnabled());
-        assertEquals(estimator1.getAccelerometerTimestampNanos(),
-                estimator2.getAccelerometerTimestampNanos());
-        assertEquals(estimator1.getGyroscopeTimestampNanos(),
-                estimator2.getGyroscopeTimestampNanos());
-        assertEquals(estimator1.getOrientationTimestampNanos(),
-                estimator2.getOrientationTimestampNanos());
+        assertEquals(estimator1.isAccumulationEnabled(), estimator2.isAccumulationEnabled());
+        assertEquals(estimator1.getAccelerometerTimestampNanos(), estimator2.getAccelerometerTimestampNanos());
+        assertEquals(estimator1.getGyroscopeTimestampNanos(), estimator2.getGyroscopeTimestampNanos());
+        assertEquals(estimator1.getOrientationTimestampNanos(), estimator2.getOrientationTimestampNanos());
         assertEquals(estimator1.getAccumulatedAccelerometerSamples(),
                 estimator2.getAccumulatedAccelerometerSamples());
-        assertEquals(estimator1.getAccumulatedGyroscopeSamples(),
-                estimator2.getAccumulatedGyroscopeSamples());
-        final Quaternion accumulatedOrientation2 =
-                (Quaternion) estimator2.getAccumulatedOrientation();
+        assertEquals(estimator1.getAccumulatedGyroscopeSamples(), estimator2.getAccumulatedGyroscopeSamples());
+        final Quaternion accumulatedOrientation2 = (Quaternion) estimator2.getAccumulatedOrientation();
         assertEquals(accumulatedOrientation1, accumulatedOrientation2);
         assertEquals(estimator1.getAccumulatedAccelerationSampleX(),
                 estimator2.getAccumulatedAccelerationSampleX(), 0.0);
@@ -9826,8 +9133,7 @@ public class AbsoluteOrientationSlamEstimatorTest implements
                 estimator2.getAccumulatedAngularSpeedSampleY(), 0.0);
         assertEquals(estimator1.getAccumulatedAngularSpeedSampleZ(),
                 estimator2.getAccumulatedAngularSpeedSampleZ(), 0.0);
-        assertEquals(estimator1.getPositionCovarianceMatrix(),
-                estimator2.getPositionCovarianceMatrix());
+        assertEquals(estimator1.getPositionCovarianceMatrix(), estimator2.getPositionCovarianceMatrix());
     }
 
     @Override
@@ -9918,5 +9224,4 @@ public class AbsoluteOrientationSlamEstimatorTest implements
 
         return calibrator;
     }
-
 }

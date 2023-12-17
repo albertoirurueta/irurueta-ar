@@ -58,7 +58,7 @@ public class AbsoluteOrientationSlamCalibrator extends
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
-     * time..
+     * time.
      */
     private long mLastTimestampNanos = -1;
 

@@ -32,7 +32,7 @@ import java.util.List;
  * fundamental or essential matrix), do not lie perfectly on the corresponding
  * epipolar plane or epipolar lines.
  * The consequence is that triangularization of these matches will fail or
- * produce inacurate results.
+ * produce inaccurate results.
  * By fixing matched points using a corrector following a given epipolar
  * geometry, this effect is alleviated.
  * This corrector uses the Sampson approximation which is capable to remove

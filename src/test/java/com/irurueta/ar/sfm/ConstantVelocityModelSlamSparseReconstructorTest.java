@@ -135,7 +135,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
     @Test
     public void testConstructor() {
-        assertEquals(ConstantVelocityModelSlamSparseReconstructor.MIN_NUMBER_OF_VIEWS, 2);
+        assertEquals(2, ConstantVelocityModelSlamSparseReconstructor.MIN_NUMBER_OF_VIEWS);
 
         final ConstantVelocityModelSlamSparseReconstructorConfiguration configuration =
                 new ConstantVelocityModelSlamSparseReconstructorConfiguration();
@@ -146,15 +146,17 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                             final ConstantVelocityModelSlamSparseReconstructor reconstructor,
                             final double positionX, final double positionY, final double positionZ,
                             final double velocityX, final double velocityY, final double velocityZ,
-                            final double accelerationX, final double accelerationY, final double accelerationZ,
-                            final double quaternionA, final double quaternionB, final double quaternionC,
-                            final double quaternionD, final double angularSpeedX, final double angularSpeedY,
+                            final double accelerationX, final double accelerationY,
+                            final double accelerationZ, final double quaternionA,
+                            final double quaternionB, final double quaternionC, final double quaternionD,
+                            final double angularSpeedX, final double angularSpeedY,
                             final double angularSpeedZ, final Matrix covariance) {
                     }
 
                     @Override
-                    public void onSlamCameraEstimated(final ConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                                      final PinholeCamera camera) {
+                    public void onSlamCameraEstimated(
+                            final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                            final PinholeCamera camera) {
                     }
 
                     @Override
@@ -174,14 +176,16 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                     @Override
                     public void onSamplesAccepted(
-                            final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                            final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                            final int viewId,
                             final List<Sample2D> previousViewTrackedSamples,
                             final List<Sample2D> currentViewTrackedSamples) {
                     }
 
                     @Override
                     public void onSamplesRejected(
-                            final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                            final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                            final int viewId,
                             final List<Sample2D> previousViewTrackedSamples,
                             final List<Sample2D> currentViewTrackedSamples) {
                     }
@@ -257,12 +261,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
         // check default values
         assertNotNull(reconstructor.getConfiguration());
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
         assertNull(reconstructor.getCurrentMetricEstimatedCamera());
         assertNull(reconstructor.getPreviousMetricEstimatedCamera());
@@ -270,7 +274,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
         assertNull(reconstructor.getPreviousEuclideanEstimatedCamera());
         assertNull(reconstructor.getActiveMetricReconstructedPoints());
         assertNull(reconstructor.getActiveEuclideanReconstructedPoints());
-        assertEquals(reconstructor.getCurrentScale(), BaseSparseReconstructor.DEFAULT_SCALE, 0.0);
+        assertEquals(BaseSparseReconstructor.DEFAULT_SCALE, reconstructor.getCurrentScale(), 0.0);
         assertNull(reconstructor.getPreviousViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -282,13 +286,13 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
         reconstructor = new ConstantVelocityModelSlamSparseReconstructor(configuration, listener);
 
         // check default values
-        assertSame(reconstructor.getConfiguration(), configuration);
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(configuration, reconstructor.getConfiguration());
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
         assertNull(reconstructor.getCurrentMetricEstimatedCamera());
         assertNull(reconstructor.getPreviousMetricEstimatedCamera());
@@ -296,7 +300,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
         assertNull(reconstructor.getPreviousEuclideanEstimatedCamera());
         assertNull(reconstructor.getActiveMetricReconstructedPoints());
         assertNull(reconstructor.getActiveEuclideanReconstructedPoints());
-        assertEquals(reconstructor.getCurrentScale(), BaseSparseReconstructor.DEFAULT_SCALE, 0.0);
+        assertEquals(BaseSparseReconstructor.DEFAULT_SCALE, reconstructor.getCurrentScale(), 0.0);
         assertNull(reconstructor.getPreviousViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -308,8 +312,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseTwoViews()
             throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
         int numValid = 0;
@@ -331,16 +334,15 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final float angularOffsetZ = 0.0f;
 
             final ConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
             final ConstantVelocityModelSlamCalibrationData calibrationData
                     = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -383,8 +385,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -400,8 +401,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -415,16 +415,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -441,28 +437,20 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -478,10 +466,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -495,12 +481,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -517,9 +500,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -538,12 +519,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -559,7 +537,6 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -574,10 +551,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final ConstantVelocityModelSlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -659,7 +638,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesAccepted(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -667,7 +647,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesRejected(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -688,7 +669,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                             for (int i = 0; i < numPoints1; i++) {
                                 match = new MatchedSamples();
                                 match.setSamples(new Sample2D[]{
-                                        previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
+                                        previousViewTrackedSamples.get(i),
+                                        currentViewTrackedSamples.get(i)
                                 });
                                 match.setViewIds(new int[]{previousViewId, currentViewId});
                                 matches.add(match);
@@ -792,20 +774,22 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix,
+                    reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints,
+                    reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -816,21 +800,19 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -853,10 +835,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -902,8 +882,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -913,8 +892,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -930,8 +908,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             // check that scale error is less than 5%
             assertTrue(Math.abs(baseline / mScale - 1.0) < RELATIVE_ERROR);
 
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(mScale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mScale);
 
             int numValidPoints = 0;
             double scaleX;
@@ -943,10 +920,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i), rescaledPoint);
 
-                // euclidean and rescaled points match
+                // Euclidean and rescaled points match
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
                 scaleX = point.getInhomX() / rescaledPoint.getInhomX();
@@ -970,7 +946,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -1003,14 +979,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseTwoViews()
             throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
+            final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
             final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
                     new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
@@ -1034,16 +1008,15 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final ConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
             final ConstantVelocityModelSlamCalibrationData calibrationData
                     = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -1086,8 +1059,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final double angularSpeedX = angularSpeeds[0];
             final double angularSpeedY = angularSpeeds[1];
             final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
+            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -1103,8 +1075,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1120,16 +1091,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1146,28 +1113,20 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -1183,10 +1142,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -1200,12 +1157,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1222,9 +1176,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -1243,12 +1195,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1263,7 +1212,6 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 } while (!front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -1285,10 +1233,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final ConstantVelocityModelSlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -1373,36 +1323,24 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final float[] accelerationWithNoise = new float[3];
                                 final float[] angularSpeedWithNoise = new float[3];
                                 for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ =
-                                            accelerationRandomizer.nextFloat();
+                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                    noiseAngularSpeedX =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ =
-                                            angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                    accelerationWithNoiseX = (float) accelerationX +
-                                            noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY +
-                                            noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ +
-                                            noiseAccelerationZ;
+                                    accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                                    accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                                    accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
                                     accelerationWithNoise[0] = accelerationWithNoiseX;
                                     accelerationWithNoise[1] = accelerationWithNoiseY;
                                     accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                    angularSpeedWithNoiseX = (float) angularSpeedX +
-                                            noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeedY +
-                                            noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeedZ +
-                                            noiseAngularSpeedZ;
+                                    angularSpeedWithNoiseX = (float) angularSpeedX + noiseAngularSpeedX;
+                                    angularSpeedWithNoiseY = (float) angularSpeedY + noiseAngularSpeedY;
+                                    angularSpeedWithNoiseZ = (float) angularSpeedZ + noiseAngularSpeedZ;
                                     angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                                     angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                                     angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
@@ -1418,7 +1356,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesAccepted(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -1426,7 +1365,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesRejected(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -1446,7 +1386,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                             for (int i = 0; i < numPoints1; i++) {
                                 match = new MatchedSamples();
                                 match.setSamples(new Sample2D[]{
-                                        previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
+                                        previousViewTrackedSamples.get(i),
+                                        currentViewTrackedSamples.get(i)
                                 });
                                 match.setViewIds(new int[]{previousViewId, currentViewId});
                                 matches.add(match);
@@ -1498,22 +1439,26 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                         }
 
                         @Override
-                        public void onStart(final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                        public void onStart(
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
                             mStarted = true;
                         }
 
                         @Override
-                        public void onFinish(final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                        public void onFinish(
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
                             mFinished = true;
                         }
 
                         @Override
-                        public void onCancel(final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                        public void onCancel(
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
                             mCancelled = true;
                         }
 
                         @Override
-                        public void onFail(final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                        public void onFail(
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor) {
                             mFailed = true;
                         }
                     };
@@ -1546,20 +1491,22 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix,
+                    reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints,
+                    reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -1570,21 +1517,19 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -1607,10 +1552,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -1656,8 +1599,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -1667,8 +1609,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -1684,8 +1625,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             // check that scale error is less than 5%
             assertTrue(Math.abs(baseline / mScale - 1.0) < RELATIVE_ERROR);
 
-            final MetricTransformation3D scaleTransformation
-                    = new MetricTransformation3D(mScale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mScale);
 
             int numValidPoints = 0;
             double scaleX;
@@ -1697,10 +1637,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i), rescaledPoint);
 
-                // euclidean and rescaled points match
+                // Euclidean and rescaled points match
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
                 scaleX = point.getInhomX() / rescaledPoint.getInhomX();
@@ -1724,7 +1663,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -1752,8 +1691,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             numValid++;
@@ -1766,8 +1704,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseThreeViews()
             throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
         int numValid = 0;
@@ -1790,15 +1727,15 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             final ConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
                     accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
+                    accelerationOffsetZ, angularOffsetX, angularOffsetY, angularOffsetZ,
+                    noiseRandomizer);
             final ConstantVelocityModelSlamCalibrationData calibrationData
                     = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -1854,8 +1791,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final double angularSpeed2X = angularSpeeds[0];
             final double angularSpeed2Y = angularSpeeds[1];
             final double angularSpeed2Z = angularSpeeds[2];
-            Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            Quaternion diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -1885,8 +1821,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final double angularSpeed3X = angularSpeeds[0];
             final double angularSpeed3Y = angularSpeeds[1];
             final double angularSpeed3Z = angularSpeeds[2];
-            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y,
-                    angularSpeed3Z);
+            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
@@ -1903,11 +1838,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1927,20 +1860,14 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
-            accelerationX2 = accelerationY2 = accelerationZ2
-                    = 2 * cameraSeparation2;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
+            accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1957,28 +1884,20 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -1994,12 +1913,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -2015,12 +1931,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2037,9 +1950,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -2065,12 +1976,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2086,7 +1994,6 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -2105,10 +2012,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final ConstantVelocityModelSlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -2234,7 +2143,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesAccepted(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -2242,7 +2152,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesRejected(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -2448,20 +2359,22 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix,
+                    reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints,
+                    reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -2474,21 +2387,19 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) && !fundamentalMatrix1.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) || fundamentalMatrix1.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -2522,10 +2433,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -2587,8 +2496,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -2598,8 +2506,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -2609,8 +2516,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -2641,8 +2547,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
-                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start),
-                        rescaledPoint);
+                scaleTransformation.transform(metricReconstructedPoints3D.get(i - start), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
@@ -2678,7 +2583,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -2694,7 +2599,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             for (int i = 0; i < numPoints2; i++) {
                 final Point3D point = points3D2.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i + numPoints1 - start);
+                final Point3D euclideanPoint =
+                        euclideanReconstructedPoints3D.get(i + numPoints1 - start);
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
@@ -2735,7 +2641,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -2754,8 +2660,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale2 - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // check scales
@@ -2776,8 +2681,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
     @Test
     public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseThreeViews()
             throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, RotationException {
 
         int numValid = 0;
@@ -2807,16 +2711,15 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
             final ConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
+                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
+                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
             final ConstantVelocityModelSlamCalibrationData calibrationData
                     = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -2872,8 +2775,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final double angularSpeed2X = angularSpeeds[0];
             final double angularSpeed2Y = angularSpeeds[1];
             final double angularSpeed2Z = angularSpeeds[2];
-            Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            Quaternion diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
             final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
@@ -2903,8 +2805,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             final double angularSpeed3X = angularSpeeds[0];
             final double angularSpeed3Y = angularSpeeds[1];
             final double angularSpeed3Z = angularSpeeds[2];
-            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y,
-                    angularSpeed3Z);
+            diffRotation2 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
@@ -2921,11 +2822,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -2945,20 +2844,14 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ
-                    = 2 * cameraSeparation;
-            accelerationX2 = accelerationY2 = accelerationZ2
-                    = 2 * cameraSeparation2;
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
+            accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -2975,28 +2868,20 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -3012,12 +2897,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -3033,12 +2915,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -3055,9 +2934,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -3083,12 +2960,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -3104,7 +2978,6 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -3130,10 +3003,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final ConstantVelocityModelSlamSparseReconstructor reconstructor,
                                 final double positionX, final double positionY, final double positionZ,
                                 final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
+                                final double accelerationX, final double accelerationY,
+                                final double accelerationZ, final double quaternionA,
+                                final double quaternionB, final double quaternionC,
+                                final double quaternionD, final double angularSpeedX,
+                                final double angularSpeedY, final double angularSpeedZ,
+                                final Matrix covariance) {
                             mSlamDataAvailable++;
                             mSlamCovariance = covariance;
                         }
@@ -3218,36 +3093,24 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final float[] accelerationWithNoise = new float[3];
                                 final float[] angularSpeedWithNoise = new float[3];
                                 for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ =
-                                            accelerationRandomizer.nextFloat();
+                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                    noiseAngularSpeedX =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ =
-                                            angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                    accelerationWithNoiseX = (float) accelerationX +
-                                            noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY +
-                                            noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ +
-                                            noiseAccelerationZ;
+                                    accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                                    accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                                    accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
                                     accelerationWithNoise[0] = accelerationWithNoiseX;
                                     accelerationWithNoise[1] = accelerationWithNoiseY;
                                     accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                    angularSpeedWithNoiseX = (float) angularSpeed2X +
-                                            noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeed2Y +
-                                            noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeed2Z +
-                                            noiseAngularSpeedZ;
+                                    angularSpeedWithNoiseX = (float) angularSpeed2X + noiseAngularSpeedX;
+                                    angularSpeedWithNoiseY = (float) angularSpeed2Y + noiseAngularSpeedY;
+                                    angularSpeedWithNoiseZ = (float) angularSpeed2Z + noiseAngularSpeedZ;
                                     angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                                     angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                                     angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
@@ -3296,8 +3159,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 float noiseAccelerationX;
                                 float noiseAccelerationY;
                                 float noiseAccelerationZ;
-                                float noiseAngularSpeedX, noiseAngularSpeedY,
-                                        noiseAngularSpeedZ;
+                                float noiseAngularSpeedX, noiseAngularSpeedY, noiseAngularSpeedZ;
 
                                 float accelerationWithNoiseX;
                                 float accelerationWithNoiseY;
@@ -3309,36 +3171,24 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                                 final float[] accelerationWithNoise = new float[3];
                                 final float[] angularSpeedWithNoise = new float[3];
                                 for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY =
-                                            accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ =
-                                            accelerationRandomizer.nextFloat();
+                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
+                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                    noiseAngularSpeedX =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY =
-                                            angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ =
-                                            angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                    accelerationWithNoiseX = (float) accelerationX2 +
-                                            noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY2 +
-                                            noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ2 +
-                                            noiseAccelerationZ;
+                                    accelerationWithNoiseX = (float) accelerationX2 + noiseAccelerationX;
+                                    accelerationWithNoiseY = (float) accelerationY2 + noiseAccelerationY;
+                                    accelerationWithNoiseZ = (float) accelerationZ2 + noiseAccelerationZ;
                                     accelerationWithNoise[0] = accelerationWithNoiseX;
                                     accelerationWithNoise[1] = accelerationWithNoiseY;
                                     accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                    angularSpeedWithNoiseX = (float) angularSpeed3X +
-                                            noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeed3Y +
-                                            noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeed3Z +
-                                            noiseAngularSpeedZ;
+                                    angularSpeedWithNoiseX = (float) angularSpeed3X + noiseAngularSpeedX;
+                                    angularSpeedWithNoiseY = (float) angularSpeed3Y + noiseAngularSpeedY;
+                                    angularSpeedWithNoiseZ = (float) angularSpeed3Z + noiseAngularSpeedZ;
                                     angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
                                     angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
                                     angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
@@ -3354,7 +3204,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesAccepted(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -3362,7 +3213,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
                         @Override
                         public void onSamplesRejected(
-                                final ConstantVelocityModelSlamSparseReconstructor reconstructor, final int viewId,
+                                final ConstantVelocityModelSlamSparseReconstructor reconstructor,
+                                final int viewId,
                                 final List<Sample2D> previousViewTrackedSamples,
                                 final List<Sample2D> currentViewTrackedSamples) {
                             mViewCount++;
@@ -3567,11 +3419,12 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix,
+                    reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
             assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
@@ -3579,7 +3432,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
             assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
+            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(),
+                    mEuclideanReconstructedPoints);
             assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
@@ -3597,8 +3451,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                             getInternalMatrix(), ABSOLUTE_ERROR) &&
                     !fundamentalMatrix1.getInternalMatrix().
                             multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
+                                            getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
@@ -3606,8 +3460,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                             getInternalMatrix(), ABSOLUTE_ERROR) ||
                     fundamentalMatrix1.getInternalMatrix().
                             multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
+                                            getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -3706,8 +3560,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -3717,8 +3570,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -3728,8 +3580,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -3795,7 +3646,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -3811,7 +3662,8 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
 
             for (int i = 0; i < numPoints2; i++) {
                 final Point3D point = points3D2.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i + numPoints1 - start);
+                final Point3D euclideanPoint =
+                        euclideanReconstructedPoints3D.get(i + numPoints1 - start);
 
                 // check metric points
                 final Point3D rescaledPoint = Point3D.create();
@@ -3850,7 +3702,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
                     numValidPoints++;
                 }
 
-                // check euclidean points
+                // check Euclidean points
                 scaleX = point.getInhomX() / euclideanPoint.getInhomX();
                 scaleY = point.getInhomY() / euclideanPoint.getInhomY();
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
@@ -3869,8 +3721,7 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
             }
 
             double scaleRelativeError = Math.abs(baseline / mScale2 - 1.0);
-            LOGGER.log(Level.INFO,
-                    "Baseline relative error without noise: {0,number,0.000%}",
+            LOGGER.log(Level.INFO, "Baseline relative error without noise: {0,number,0.000%}",
                     scaleRelativeError);
 
             // check scales
@@ -3905,9 +3756,9 @@ public class ConstantVelocityModelSlamSparseReconstructorTest {
     }
 
     private ConstantVelocityModelSlamCalibrator createFinishedCalibrator(
-            final float accelerationOffsetX, final float accelerationOffsetY, final float accelerationOffsetZ,
-            final float angularOffsetX, final float angularOffsetY, final float angularOffsetZ,
-            final GaussianRandomizer noiseRandomizer) {
+            final float accelerationOffsetX, final float accelerationOffsetY,
+            final float accelerationOffsetZ, final float angularOffsetX, final float angularOffsetY,
+            final float angularOffsetZ, final GaussianRandomizer noiseRandomizer) {
         final ConstantVelocityModelSlamCalibrator calibrator =
                 ConstantVelocityModelSlamEstimator.createCalibrator();
         calibrator.setConvergenceThreshold(ABSOLUTE_ERROR);

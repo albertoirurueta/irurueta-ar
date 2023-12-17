@@ -33,7 +33,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
     public static final double DEFAULT_QUALITY_SCORE = 1.0;
 
     /**
-     * Id to identify this instance. This is useful in case that this data is
+     * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
     private String mId;
@@ -56,12 +56,12 @@ public class EstimatedFundamentalMatrix implements Serializable {
     private Matrix mCovariance;
 
     /**
-     * Id of first view related by fundamental matrix.
+     * ID of first view related by fundamental matrix.
      */
     private int mViewId1;
 
     /**
-     * Id of second view related by fundamental matrix.
+     * ID of second view related by fundamental matrix.
      */
     private int mViewId2;
 

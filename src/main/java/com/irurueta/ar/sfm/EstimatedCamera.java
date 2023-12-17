@@ -31,13 +31,13 @@ public class EstimatedCamera implements Serializable {
     public static final double DEFAULT_QUALITY_SCORE = 1.0;
 
     /**
-     * Id to identify this instance. This is useful in case that this data is
+     * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
     private String mId;
 
     /**
-     * Id of view for which camera has been estimated.
+     * ID of view for which camera has been estimated.
      */
     private int mViewId;
 

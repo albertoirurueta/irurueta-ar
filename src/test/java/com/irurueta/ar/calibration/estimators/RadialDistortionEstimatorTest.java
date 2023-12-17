@@ -28,8 +28,7 @@ public class RadialDistortionEstimatorTest {
 
     @Test
     public void testCreate() {
-        RadialDistortionEstimator estimator =
-                RadialDistortionEstimator.create();
+        RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
 
         // check correctness
         assertNull(estimator.getListener());
@@ -38,8 +37,7 @@ public class RadialDistortionEstimatorTest {
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // test with type
         estimator = RadialDistortionEstimator.create(
@@ -52,8 +50,8 @@ public class RadialDistortionEstimatorTest {
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         estimator = RadialDistortionEstimator.create(
                 RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
@@ -65,14 +63,13 @@ public class RadialDistortionEstimatorTest {
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
     }
 
     @Test
     public void testGetSetDistortedUndistortedPoints() throws LockedException {
-        final RadialDistortionEstimator estimator =
-                RadialDistortionEstimator.create();
+        final RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
 
         // check default values
         assertNull(estimator.getDistortedPoints());
@@ -89,8 +86,8 @@ public class RadialDistortionEstimatorTest {
         estimator.setPoints(distortedPoints, undistortedPoints);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
@@ -118,8 +115,7 @@ public class RadialDistortionEstimatorTest {
 
     @Test
     public void testGetSetDistortionCenter() throws LockedException {
-        final RadialDistortionEstimator estimator =
-                RadialDistortionEstimator.create();
+        final RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
 
         // check default value
         assertNull(estimator.getDistortionCenter());
@@ -129,13 +125,12 @@ public class RadialDistortionEstimatorTest {
         estimator.setDistortionCenter(center);
 
         // check correctness
-        assertSame(estimator.getDistortionCenter(), center);
+        assertSame(center, estimator.getDistortionCenter());
     }
 
     @Test
     public void testAreValidLists() {
-        final RadialDistortionEstimator estimator =
-                RadialDistortionEstimator.create();
+        final RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
 
         final List<Point2D> distortedPoints = new ArrayList<>();
         final List<Point2D> undistortedPoints = new ArrayList<>();
@@ -145,8 +140,7 @@ public class RadialDistortionEstimatorTest {
         }
         final List<Point2D> emptyPoints = new ArrayList<>();
 
-        assertTrue(estimator.areValidPoints(distortedPoints,
-                undistortedPoints));
+        assertTrue(estimator.areValidPoints(distortedPoints, undistortedPoints));
         assertFalse(estimator.areValidPoints(emptyPoints, undistortedPoints));
         assertFalse(estimator.areValidPoints(distortedPoints, emptyPoints));
         assertFalse(estimator.areValidPoints(null, undistortedPoints));

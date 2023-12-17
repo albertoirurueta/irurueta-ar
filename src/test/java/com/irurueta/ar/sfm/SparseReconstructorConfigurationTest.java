@@ -28,7 +28,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("ConstantConditions")
 public class SparseReconstructorConfigurationTest {
 
     @Test
@@ -36,128 +35,118 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default values
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getInitialCamerasEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getInitialCamerasAspectRatio(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getPrincipalPointX(), 0.0, 0.0);
-        assertEquals(cfg.getPrincipalPointY(), 0.0, 0.0);
-        assertEquals(cfg.getInitialCamerasCorrectorType(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE);
-        assertEquals(cfg.getInitialCamerasMarkValidTriangulatedPoints(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getInitialCamerasEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO,
+                cfg.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(0.0, cfg.getPrincipalPointX(), 0.0);
+        assertEquals(0.0, cfg.getPrincipalPointY(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE,
+                cfg.getInitialCamerasCorrectorType());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getInitialCamerasMarkValidTriangulatedPoints());
         assertNull(cfg.getInitialIntrinsic1());
         assertNull(cfg.getInitialIntrinsic2());
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE);
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE);
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getUseDAQForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
-        assertEquals(cfg.getUseDIACForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDAQForAdditionalCamerasIntrinsics());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDIACForAdditionalCamerasIntrinsics());
         assertNull(cfg.getAdditionalCamerasIntrinsics());
-        assertEquals(cfg.getAdditionalCamerasSkewness(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS, 0.0);
-        assertEquals(cfg.getAdditionalCamerasHorizontalPrincipalPoint(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT, 0.0);
-        assertEquals(cfg.getAdditionalCamerasVerticalPrincipalPoint(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT, 0.0);
-        assertEquals(cfg.getAdditionalCamerasAspectRatio(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getUseEPnPForAdditionalCamerasEstimation(),
-                SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
-        assertEquals(cfg.getUseUPnPForAdditionalCamerasEstimation(),
-                SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
-        assertEquals(cfg.getAdditionalCamerasRobustEstimationMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD);
-        assertEquals(cfg.getAdditionalCamerasAllowPlanarConfiguration(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION);
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension2(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2);
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension3(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3);
-        assertEquals(cfg.getAdditionalCamerasPlanarThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD, 0.0);
-        assertEquals(cfg.areAdditionalCamerasRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS);
-        assertEquals(cfg.isAdditionalCamerasCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS);
-        assertEquals(cfg.getAdditionalCamerasUseFastRefinement(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT);
-        assertEquals(cfg.getAdditionalCamerasConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE, 0.0);
-        assertEquals(cfg.getAdditionalCamerasMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS);
-        assertEquals(cfg.getAdditionalCamerasThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD, 0.0);
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedSkewnessValue(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestAspectRatioEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedAspectRatioValue(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS,
+                cfg.getAdditionalCamerasSkewness(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT,
+                cfg.getAdditionalCamerasHorizontalPrincipalPoint(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT,
+                cfg.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO,
+                cfg.getAdditionalCamerasAspectRatio(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseEPnPForAdditionalCamerasEstimation());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseUPnPForAdditionalCamerasEstimation());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD,
+                cfg.getAdditionalCamerasRobustEstimationMethod());
+        assertTrue(cfg.getAdditionalCamerasAllowPlanarConfiguration());
+        assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension2());
+        assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension3());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD,
+                cfg.getAdditionalCamerasPlanarThreshold(), 0.0);
+        assertTrue(cfg.areAdditionalCamerasRefined());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS,
+                cfg.isAdditionalCamerasCovarianceKept());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT,
+                cfg.getAdditionalCamerasUseFastRefinement());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE,
+                cfg.getAdditionalCamerasConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS,
+                cfg.getAdditionalCamerasMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD,
+                cfg.getAdditionalCamerasThreshold(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getAdditionalCamerasComputeAndKeepInliers());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getAdditionalCamerasComputeAndKeepResiduals());
+        assertFalse(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE,
+                cfg.getAdditionalCamerasSuggestedSkewnessValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled());
+        assertEquals(0.0, cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled());
+        assertEquals(0.0, cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestAspectRatioEnabled());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE,
+                cfg.getAdditionalCamerasSuggestedAspectRatioValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled());
         assertNull(cfg.getAdditionalCamerasSuggestedPrincipalPointValue());
-        assertEquals(cfg.isHomogeneousPointTriangulatorUsed(),
-                SparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getRobustPointTriangulatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD);
-        assertEquals(cfg.getPointTriangulatorConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPointTriangulatorMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS);
-        assertEquals(cfg.getPointTriangulatorThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD, 0.0);
+        assertTrue(cfg.isHomogeneousPointTriangulatorUsed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD,
+                cfg.getRobustPointTriangulatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE,
+                cfg.getPointTriangulatorConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS,
+                cfg.getPointTriangulatorMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD,
+                cfg.getPointTriangulatorThreshold(), 0.0);
     }
 
     @Test
@@ -165,180 +154,164 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = SparseReconstructorConfiguration.make();
 
         // check default values
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getInitialCamerasEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getInitialCamerasAspectRatio(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getPrincipalPointX(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X, 0.0);
-        assertEquals(cfg.getPrincipalPointY(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
-        assertEquals(cfg.getInitialCamerasCorrectorType(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE);
-        assertEquals(cfg.getInitialCamerasMarkValidTriangulatedPoints(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getInitialCamerasEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO,
+                cfg.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X,
+                cfg.getPrincipalPointX(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y,
+                cfg.getPrincipalPointY(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE,
+                cfg.getInitialCamerasCorrectorType());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getInitialCamerasMarkValidTriangulatedPoints());
         assertNull(cfg.getInitialIntrinsic1());
         assertNull(cfg.getInitialIntrinsic2());
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE);
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE);
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getUseDAQForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
-        assertEquals(cfg.getUseDIACForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDAQForAdditionalCamerasIntrinsics());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDIACForAdditionalCamerasIntrinsics());
         assertNull(cfg.getAdditionalCamerasIntrinsics());
-        assertEquals(cfg.getAdditionalCamerasSkewness(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS, 0.0);
-        assertEquals(cfg.getAdditionalCamerasHorizontalPrincipalPoint(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT, 0.0);
-        assertEquals(cfg.getAdditionalCamerasVerticalPrincipalPoint(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT, 0.0);
-        assertEquals(cfg.getAdditionalCamerasAspectRatio(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getUseEPnPForAdditionalCamerasEstimation(),
-                SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
-        assertEquals(cfg.getUseUPnPForAdditionalCamerasEstimation(),
-                SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
-        assertEquals(cfg.getAdditionalCamerasRobustEstimationMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD);
-        assertEquals(cfg.getAdditionalCamerasAllowPlanarConfiguration(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION);
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension2(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2);
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension3(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3);
-        assertEquals(cfg.getAdditionalCamerasPlanarThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD, 0.0);
-        assertEquals(cfg.areAdditionalCamerasRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS);
-        assertEquals(cfg.isAdditionalCamerasCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS);
-        assertEquals(cfg.getAdditionalCamerasUseFastRefinement(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT);
-        assertEquals(cfg.getAdditionalCamerasConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE, 0.0);
-        assertEquals(cfg.getAdditionalCamerasMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS);
-        assertEquals(cfg.getAdditionalCamerasThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD, 0.0);
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedSkewnessValue(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestAspectRatioEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED);
-        assertEquals(cfg.getAdditionalCamerasSuggestedAspectRatioValue(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE, 0.0);
-        assertEquals(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS,
+                cfg.getAdditionalCamerasSkewness(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT,
+                cfg.getAdditionalCamerasHorizontalPrincipalPoint(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT,
+                cfg.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO,
+                cfg.getAdditionalCamerasAspectRatio(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseEPnPForAdditionalCamerasEstimation());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseUPnPForAdditionalCamerasEstimation());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD,
+                cfg.getAdditionalCamerasRobustEstimationMethod());
+        assertTrue(cfg.getAdditionalCamerasAllowPlanarConfiguration());
+        assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension2());
+        assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension3());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD,
+                cfg.getAdditionalCamerasPlanarThreshold(), 0.0);
+        assertTrue(cfg.areAdditionalCamerasRefined());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS,
+                cfg.isAdditionalCamerasCovarianceKept());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT,
+                cfg.getAdditionalCamerasUseFastRefinement());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE,
+                cfg.getAdditionalCamerasConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS,
+                cfg.getAdditionalCamerasMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD,
+                cfg.getAdditionalCamerasThreshold(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getAdditionalCamerasComputeAndKeepInliers());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getAdditionalCamerasComputeAndKeepResiduals());
+        assertFalse(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE,
+                cfg.getAdditionalCamerasSuggestedSkewnessValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled());
+        assertEquals(0.0, cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled());
+        assertEquals(0.0, cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestAspectRatioEnabled());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE,
+                cfg.getAdditionalCamerasSuggestedAspectRatioValue(), 0.0);
+        assertFalse(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled());
         assertNull(cfg.getAdditionalCamerasSuggestedPrincipalPointValue());
-        assertEquals(cfg.isHomogeneousPointTriangulatorUsed(),
-                SparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getRobustPointTriangulatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD);
-        assertEquals(cfg.getPointTriangulatorConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPointTriangulatorMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS);
-        assertEquals(cfg.getPointTriangulatorThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD, 0.0);
+        assertTrue(cfg.isHomogeneousPointTriangulatorUsed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD,
+                cfg.getRobustPointTriangulatorMethod());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE,
+                cfg.getPointTriangulatorConfidence(), 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS,
+                cfg.getPointTriangulatorMaxIterations());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD,
+                cfg.getPointTriangulatorThreshold(), 0.0);
     }
 
     @Test
     public void testGetSetNonRobustFundamentalMatrixEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setNonRobustFundamentalMatrixEstimatorMethod(
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM), cfg);
+        assertSame(cfg, cfg.setNonRobustFundamentalMatrixEstimatorMethod(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM));
 
         // check correctness
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
     }
 
     @Test
     public void testGetSetRobustFundamentalMatrixEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setRobustFundamentalMatrixEstimatorMethod(
-                RobustEstimatorMethod.LMedS), cfg);
+        assertSame(cfg, cfg.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.LMEDS));
 
         // check correctness
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, cfg.getRobustFundamentalMatrixEstimatorMethod());
     }
 
     @Test
     public void testIsSetFundamentalMatrixRefined() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                SparseReconstructorConfiguration.
-                        DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixRefined(false), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixRefined(false));
 
         // check correctness
         assertFalse(cfg.isFundamentalMatrixRefined());
@@ -346,15 +319,14 @@ public class SparseReconstructorConfigurationTest {
 
     @Test
     public void testIsSetFundamentalMatrixCovarianceKept() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixCovarianceKept(true), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixCovarianceKept(true));
 
         // check correctness
         assertTrue(cfg.isFundamentalMatrixCovarianceKept());
@@ -362,63 +334,59 @@ public class SparseReconstructorConfigurationTest {
 
     @Test
     public void testGetSetFundamentalMatrixConfidence() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixConfidence(0.7), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixConfidence(0.7));
 
         // check correctness
-        assertEquals(cfg.getFundamentalMatrixConfidence(), 0.7, 0.0);
+        assertEquals(0.7, cfg.getFundamentalMatrixConfidence(), 0.0);
     }
 
     @Test
     public void testGetSetFundamentalMatrixMaxIterations() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixMaxIterations(10), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixMaxIterations(10));
 
         // check correctness
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(), 10);
+        assertEquals(10, cfg.getFundamentalMatrixMaxIterations());
     }
 
     @Test
     public void testGetSetFundamentalMatrixThreshold() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixThreshold(2.0), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixThreshold(2.0));
 
         // check correctness
-        assertEquals(cfg.getFundamentalMatrixThreshold(), 2.0, 0.0);
+        assertEquals(2.0, cfg.getFundamentalMatrixThreshold(), 0.0);
     }
 
     @Test
     public void testGetSetFundamentalMatrixComputeAndKeepInliers() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixComputeAndKeepInliers(false), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixComputeAndKeepInliers(false));
 
         // check correctness
         assertFalse(cfg.getFundamentalMatrixComputeAndKeepInliers());
@@ -426,15 +394,14 @@ public class SparseReconstructorConfigurationTest {
 
     @Test
     public void testGetSetFundamentalMatrixComputeAndKeepResiduals() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
 
         // set new value
-        assertSame(cfg.setFundamentalMatrixComputeAndKeepResiduals(false), cfg);
+        assertSame(cfg, cfg.setFundamentalMatrixComputeAndKeepResiduals(false));
 
         // check correctness
         assertFalse(cfg.getFundamentalMatrixComputeAndKeepResiduals());
@@ -442,34 +409,31 @@ public class SparseReconstructorConfigurationTest {
 
     @Test
     public void testGetSetInitialCamerasEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getInitialCamerasEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getInitialCamerasEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setInitialCamerasEstimatorMethod(
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC),
-                cfg);
+        assertSame(cfg, cfg.setInitialCamerasEstimatorMethod(
+                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC));
 
         // check correctness
-        assertEquals(cfg.getInitialCamerasEstimatorMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
+                cfg.getInitialCamerasEstimatorMethod());
     }
 
     @Test
     public void testGetSetDaqUseHomogeneousPointTriangulator() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
 
         // set new value
-        assertSame(cfg.setDaqUseHomogeneousPointTriangulator(false), cfg);
+        assertSame(cfg, cfg.setDaqUseHomogeneousPointTriangulator(false));
 
         // check correctness
         assertFalse(cfg.getDaqUseHomogeneousPointTriangulator());
@@ -477,83 +441,74 @@ public class SparseReconstructorConfigurationTest {
 
     @Test
     public void testGetSetInitialCamerasAspectRatio() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getInitialCamerasAspectRatio(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO,
+                cfg.getInitialCamerasAspectRatio(), 0.0);
 
         // set new value
-        assertSame(cfg.setInitialCamerasAspectRatio(0.5), cfg);
+        assertSame(cfg, cfg.setInitialCamerasAspectRatio(0.5));
 
         // check correctness
-        assertEquals(cfg.getInitialCamerasAspectRatio(), 0.5, 0.0);
+        assertEquals(0.5, cfg.getInitialCamerasAspectRatio(), 0.0);
     }
 
     @Test
     public void testGetSetPrincipalPointX() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPrincipalPointX(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X,
+                cfg.getPrincipalPointX(), 0.0);
 
         // set new value
-        assertSame(cfg.setPrincipalPointX(10.0), cfg);
+        assertSame(cfg, cfg.setPrincipalPointX(10.0));
 
         // check correctness
-        assertEquals(cfg.getPrincipalPointX(), 10.0, 0.0);
+        assertEquals(10.0, cfg.getPrincipalPointX(), 0.0);
     }
 
     @Test
     public void testGetSetPrincipalPointY() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPrincipalPointY(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y,
+                cfg.getPrincipalPointY(), 0.0);
 
         // set new value
-        assertSame(cfg.setPrincipalPointY(10.0), cfg);
+        assertSame(cfg, cfg.setPrincipalPointY(10.0));
 
         // check correctness
-        assertEquals(cfg.getPrincipalPointY(), 10.0, 0.0);
+        assertEquals(10.0, cfg.getPrincipalPointY(), 0.0);
     }
 
     @Test
     public void testGetSetInitialCamerasCorrectorType() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getInitialCamerasCorrectorType(),
-                SparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE,
+                cfg.getInitialCamerasCorrectorType());
 
         // set new value
-        assertSame(cfg.setInitialCamerasCorrectorType(
-                CorrectorType.GOLD_STANDARD), cfg);
+        assertSame(cfg, cfg.setInitialCamerasCorrectorType(CorrectorType.GOLD_STANDARD));
 
         // check correctness
-        assertEquals(cfg.getInitialCamerasCorrectorType(),
-                CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, cfg.getInitialCamerasCorrectorType());
     }
 
     @Test
     public void testGetSetInitialCamerasMarkValidTriangulatedPoints() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getInitialCamerasMarkValidTriangulatedPoints(),
-                SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getInitialCamerasMarkValidTriangulatedPoints());
 
         // set new value
-        assertSame(cfg.setInitialCamerasMarkValidTriangulatedPoints(false),
-                cfg);
+        assertSame(cfg, cfg.setInitialCamerasMarkValidTriangulatedPoints(false));
 
         // check correctness
         assertFalse(cfg.getInitialCamerasMarkValidTriangulatedPoints());
@@ -561,552 +516,500 @@ public class SparseReconstructorConfigurationTest {
 
     @Test
     public void testGetSetInitialIntrinsic1() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getInitialIntrinsic1());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters();
-        assertSame(cfg.setInitialIntrinsic1(intrinsic), cfg);
+        final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters();
+        assertSame(cfg, cfg.setInitialIntrinsic1(intrinsic));
 
         // check correctness
-        assertSame(cfg.getInitialIntrinsic1(), intrinsic);
+        assertSame(intrinsic, cfg.getInitialIntrinsic1());
     }
 
     @Test
     public void testGetSetInitialIntrinsic2() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getInitialIntrinsic2());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters();
-        assertSame(cfg.setInitialIntrinsic2(intrinsic), cfg);
+        final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters();
+        assertSame(cfg, cfg.setInitialIntrinsic2(intrinsic));
 
         // check correctness
-        assertSame(cfg.getInitialIntrinsic2(), intrinsic);
+        assertSame(intrinsic, cfg.getInitialIntrinsic2());
     }
 
     @Test
     public void testIsSetGeneralSceneAllowed() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
 
         // set new value
-        assertSame(cfg.setGeneralSceneAllowed(
-                !SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE), cfg);
+        assertSame(cfg, cfg.setGeneralSceneAllowed(
+                !SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE));
 
         // check correctness
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                !SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
     }
 
     @Test
     public void testIsSetPlanarSceneAllowed() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
 
         // set new value
-        assertSame(cfg.setPlanarSceneAllowed(
-                !SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE), cfg);
+        assertSame(cfg, cfg.setPlanarSceneAllowed(
+                !SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE));
 
         // check correctness
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                !SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
     }
 
     @Test
     public void testGetSetRobustPlanarHomographyEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setRobustPlanarHomographyEstimatorMethod(
-                RobustEstimatorMethod.RANSAC), cfg);
+        assertSame(cfg, cfg.setRobustPlanarHomographyEstimatorMethod(RobustEstimatorMethod.RANSAC));
 
         // check correctness
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg.getRobustPlanarHomographyEstimatorMethod());
     }
 
     @Test
     public void testIsSetPlanarHomographyRefined() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyRefined(
-                !SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyRefined(
+                !SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY));
 
         // check correctness
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                !SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
     }
 
     @Test
     public void testIsSetPlanarHomographyCovarianceKept() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyCovarianceKept(
-                !SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyCovarianceKept(
+                !SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE));
 
         // check correctness
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                !SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
     }
 
     @Test
     public void testGetSetPlanarHomographyConfidence() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
 
         // set new value
-        assertSame(cfg.setPlanarHomographyConfidence(0.5), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyConfidence(0.5));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyConfidence(), 0.5, 0.0);
+        assertEquals(0.5, cfg.getPlanarHomographyConfidence(), 0.0);
     }
 
     @Test
     public void testGetSetPlanarHomographyMaxIterations() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyMaxIterations(100), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyMaxIterations(100));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyMaxIterations(), 100);
+        assertEquals(100, cfg.getPlanarHomographyMaxIterations());
     }
 
     @Test
     public void testGetSetPlanarHomographyThreshold() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setPlanarHomographyThreshold(0.5), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyThreshold(0.5));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyThreshold(), 0.5, 0.0);
+        assertEquals(0.5, cfg.getPlanarHomographyThreshold(), 0.0);
     }
 
     @Test
     public void testGetSetPlanarHomographyComputeAndKeepInliers() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyComputeAndKeepInliers(
-                !SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyComputeAndKeepInliers(
+                !SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS));
 
         // check correctness
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                !SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
     }
 
     @Test
     public void testGetSetPlanarHomographyComputeAndKeepResiduals() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
 
         // set new value
-        assertSame(cfg.setPlanarHomographyComputeAndKeepResiduals(
-                !SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS), cfg);
+        assertSame(cfg, cfg.setPlanarHomographyComputeAndKeepResiduals(
+                !SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS));
 
         // check correctness
-        assertEquals(!cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
     }
 
     @Test
     public void testGetSetUseDAQForAdditionalCamerasIntrinsics() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getUseDAQForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDAQForAdditionalCamerasIntrinsics());
 
         // set new value
-        assertSame(cfg.setUseDAQForAdditionalCamerasIntrinics(
-                !SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS), cfg);
+        assertSame(cfg, cfg.setUseDAQForAdditionalCamerasIntrinics(
+                !SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS));
 
         // check correctness
-        assertEquals(!cfg.getUseDAQForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDAQForAdditionalCamerasIntrinsics());
     }
 
     @Test
     public void testGetSetUseDIACForAdditionalCamerasIntrinsics() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getUseDIACForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDIACForAdditionalCamerasIntrinsics());
 
         // set new value
-        assertSame(cfg.setUseDIACForAdditionalCamerasIntrinsics(
-                !SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS), cfg);
+        assertSame(cfg, cfg.setUseDIACForAdditionalCamerasIntrinsics(
+                !SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS));
 
         // check correctness
-        assertEquals(!cfg.getUseDIACForAdditionalCamerasIntrinsics(),
-                SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
+                cfg.getUseDIACForAdditionalCamerasIntrinsics());
     }
 
     @Test
     public void testGetSetAdditionalCamerasIntrinsics() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getAdditionalCamerasIntrinsics());
 
         // set new value
         final PinholeCameraIntrinsicParameters intrinsics = new PinholeCameraIntrinsicParameters();
-        assertSame(cfg.setAdditionalCamerasIntrinsics(intrinsics), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasIntrinsics(intrinsics));
 
         // check correctness
-        assertSame(cfg.getAdditionalCamerasIntrinsics(), intrinsics);
+        assertSame(intrinsics, cfg.getAdditionalCamerasIntrinsics());
     }
 
     @Test
     public void testGetSetAdditionalCamerasSkewness() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasSkewness(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS,
+                cfg.getAdditionalCamerasSkewness(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSkewness(1e-3), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSkewness(1e-3));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasSkewness(), 1e-3, 0.0);
+        assertEquals(1e-3, cfg.getAdditionalCamerasSkewness(), 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasHorizontalPrincipalPoint() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasHorizontalPrincipalPoint(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT,
+                cfg.getAdditionalCamerasHorizontalPrincipalPoint(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasHorizontalPrincipalPoint(320), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasHorizontalPrincipalPoint(320.0));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasHorizontalPrincipalPoint(), 320, 0.0);
+        assertEquals(320.0, cfg.getAdditionalCamerasHorizontalPrincipalPoint(), 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasVerticalPrincipalPoint() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasVerticalPrincipalPoint(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT,
+                cfg.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasVerticalPrincipalPoint(240), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasVerticalPrincipalPoint(240.0));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasVerticalPrincipalPoint(), 240, 0.0);
+        assertEquals(240.0, cfg.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasAspectRatio() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasAspectRatio(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO,
+                cfg.getAdditionalCamerasAspectRatio(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasAspectRatio(-1.0), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasAspectRatio(-1.0));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasAspectRatio(), -1.0, 0.0);
+        assertEquals(-1.0, cfg.getAdditionalCamerasAspectRatio(), 0.0);
     }
 
     @Test
     public void testGetSetUseEPnPForAdditionalCamerasEstimation() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getUseEPnPForAdditionalCamerasEstimation(),
-                SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseEPnPForAdditionalCamerasEstimation());
 
         // set new value
-        assertSame(cfg.setUseEPnPForAdditionalCamerasEstimation(
-                !SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION), cfg);
+        assertSame(cfg, cfg.setUseEPnPForAdditionalCamerasEstimation(
+                !SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION));
 
         // check correctness
-        assertEquals(cfg.getUseEPnPForAdditionalCamerasEstimation(),
-                !SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseEPnPForAdditionalCamerasEstimation());
     }
 
     @Test
     public void testGetSetUseUPnPForAdditionalCamerasEstimation() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getUseUPnPForAdditionalCamerasEstimation(),
-                SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseUPnPForAdditionalCamerasEstimation());
 
         // set new value
-        assertSame(cfg.setUseUPnPForAdditionalCamerasEstimation(
-                !SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION), cfg);
+        assertSame(cfg, cfg.setUseUPnPForAdditionalCamerasEstimation(
+                !SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION));
 
         // check correctness
-        assertEquals(cfg.getUseUPnPForAdditionalCamerasEstimation(),
-                !SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
+                cfg.getUseUPnPForAdditionalCamerasEstimation());
     }
 
     @Test
     public void testGetSetAdditionalCamerasRobustEstimationMethod() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasRobustEstimationMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD,
+                cfg.getAdditionalCamerasRobustEstimationMethod());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasRobustEstimationMethod(
-                RobustEstimatorMethod.LMedS), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasRobustEstimationMethod(RobustEstimatorMethod.LMEDS));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasRobustEstimationMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, cfg.getAdditionalCamerasRobustEstimationMethod());
     }
 
     @Test
     public void testGetSetAdditionalCamerasAllowPlanarConfiguration() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasAllowPlanarConfiguration(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION);
+        assertTrue(cfg.getAdditionalCamerasAllowPlanarConfiguration());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasAllowPlanarConfiguration(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasAllowPlanarConfiguration(false));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasAllowPlanarConfiguration(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_PLANAR_CONFIGURATION);
+        assertFalse(cfg.getAdditionalCamerasAllowPlanarConfiguration());
     }
 
     @Test
     public void testGetSetAdditionalCamerasAllowNullspaceDimension2() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension2(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2);
+        assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension2());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasAllowNullspaceDimension2(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasAllowNullspaceDimension2(false));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension2(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION2);
+        assertFalse(cfg.getAdditionalCamerasAllowNullspaceDimension2());
     }
 
     @Test
     public void testGetSetAdditionalCamerasAllowNullspaceDimension3() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension3(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3);
+        assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension3());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasAllowNullspaceDimension3(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasAllowNullspaceDimension3(false));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasAllowNullspaceDimension3(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ALLOW_NULLSPACE_DIMENSION3);
+        assertFalse(cfg.getAdditionalCamerasAllowNullspaceDimension3());
     }
 
     @Test
     public void testGetSetAdditionalCamerasPlanarThreshold() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasPlanarThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD,
+                cfg.getAdditionalCamerasPlanarThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasPlanarThreshold(1e-3), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasPlanarThreshold(1e-3));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasPlanarThreshold(), 1e-3, 0.0);
+        assertEquals(1e-3, cfg.getAdditionalCamerasPlanarThreshold(), 0.0);
     }
 
     @Test
     public void testAreSetAdditionalCamerasRefined() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.areAdditionalCamerasRefined(),
-                SparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS);
+        assertTrue(cfg.areAdditionalCamerasRefined());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasRefined(
-                !SparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasRefined(false));
 
         // check correctness
-        assertEquals(cfg.areAdditionalCamerasRefined(),
-                !SparseReconstructorConfiguration.DEFAULT_REFINE_ADDITIONAL_CAMERAS);
+        assertFalse(cfg.areAdditionalCamerasRefined());
     }
 
     @Test
     public void testIsSetAdditionalCamerasCovarianceKept() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isAdditionalCamerasCovarianceKept(),
-                SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS,
+                cfg.isAdditionalCamerasCovarianceKept());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasCovarianceKept(
-                !SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasCovarianceKept(
+                !SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS));
 
         // check correctness
-        assertEquals(cfg.isAdditionalCamerasCovarianceKept(),
-                !SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS,
+                cfg.isAdditionalCamerasCovarianceKept());
     }
 
     @Test
     public void testGetSetAdditionalCamerasUseFastRefinement() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasUseFastRefinement(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT,
+                cfg.getAdditionalCamerasUseFastRefinement());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasUseFastRefinement(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasUseFastRefinement(
+                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasUseFastRefinement(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT,
+                cfg.getAdditionalCamerasUseFastRefinement());
     }
 
     @Test
     public void testGetSetAdditionalCamerasConfidence() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE,
+                cfg.getAdditionalCamerasConfidence(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasConfidence(0.8), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasConfidence(0.8));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasConfidence(), 0.8, 0.0);
+        assertEquals(0.8, cfg.getAdditionalCamerasConfidence(), 0.0);
     }
 
     @Test
     public void testGetSetAdditionalCamerasMaxIterations() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS,
+                cfg.getAdditionalCamerasMaxIterations());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasMaxIterations(100), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasMaxIterations(100));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasMaxIterations(), 100);
+        assertEquals(100, cfg.getAdditionalCamerasMaxIterations());
     }
 
     @Test
     public void testGetSetAdditionalCamerasThreshold() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD,
+                cfg.getAdditionalCamerasThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasThreshold(2.0), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasThreshold(2.0));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasThreshold(), 2.0, 0.0);
+        assertEquals(2.0, cfg.getAdditionalCamerasThreshold(), 0.0);
     }
 
     @Test
@@ -1114,16 +1017,16 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepInliers(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getAdditionalCamerasComputeAndKeepInliers());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasComputeAndKeepInliers(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasComputeAndKeepInliers(
+                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepInliers(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getAdditionalCamerasComputeAndKeepInliers());
     }
 
     @Test
@@ -1131,118 +1034,101 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepResiduals(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getAdditionalCamerasComputeAndKeepResiduals());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasComputeAndKeepResiduals(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasComputeAndKeepResiduals(
+                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasComputeAndKeepResiduals(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getAdditionalCamerasComputeAndKeepResiduals());
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestSkewnessValueEnabled() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED);
+        assertFalse(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestSkewnessValueEnabled(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestSkewnessValueEnabled(true));
 
         // check correctness
-        assertEquals(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_SKEWNESS_VALUE_ENABLED);
+        assertTrue(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled());
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedSkewnessValue() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasSuggestedSkewnessValue(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE,
+                cfg.getAdditionalCamerasSuggestedSkewnessValue(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestedSkewnessValue(1e-3), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestedSkewnessValue(1e-3));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasSuggestedSkewnessValue(), 1e-3, 0.0);
+        assertEquals(1e-3, cfg.getAdditionalCamerasSuggestedSkewnessValue(), 0.0);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestHorizontalFocalLengthEnabled() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED);
+        assertFalse(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestHorizontalFocalLengthEnabled(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED),
-                cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestHorizontalFocalLengthEnabled(true));
 
         // check correctness
-        assertEquals(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_HORIZONTAL_FOCAL_LENGTH_ENABLED);
+        assertTrue(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled());
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedHorizontalFocalLengthValue() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0, 0.0);
+        assertEquals(0.0, cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestedHorizontalFocalLengthValue(320), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestedHorizontalFocalLengthValue(320.0));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 320, 0.0);
+        assertEquals(320.0, cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0);
     }
 
     @Test
     public void testIsSetAdditionalCamerasSuggestVerticalFocalLengthEnabled() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED);
+        assertFalse(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestVerticalFocalLengthEnabled(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED),
-                cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestVerticalFocalLengthEnabled(true));
 
         // check correctness
-        assertEquals(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_VERTICAL_FOCAL_LENGTH_ENABLED);
+        assertTrue(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled());
     }
 
     @Test
     public void testGetSetAdditionalCamerasSuggestedVerticalFocalLengthValue() {
-        final SparseReconstructorConfiguration cfg =
-                new SparseReconstructorConfiguration();
+        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0, 0.0);
+        assertEquals(0.0, cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestedVerticalFocalLengthValue(240), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestedVerticalFocalLengthValue(240.0));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 240, 0.0);
+        assertEquals(240.0, cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0);
     }
 
     @Test
@@ -1250,16 +1136,13 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isAdditionalCamerasSuggestAspectRatioEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED);
+        assertFalse(cfg.isAdditionalCamerasSuggestAspectRatioEnabled());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestAspectRatioEnabled(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestAspectRatioEnabled(true));
 
         // check correctness
-        assertEquals(cfg.isAdditionalCamerasSuggestAspectRatioEnabled(),
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_ASPECT_RATIO_ENABLED);
+        assertTrue(cfg.isAdditionalCamerasSuggestAspectRatioEnabled());
     }
 
     @Test
@@ -1267,14 +1150,14 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getAdditionalCamerasSuggestedAspectRatioValue(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE,
+                cfg.getAdditionalCamerasSuggestedAspectRatioValue(), 0.0);
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestedAspectRatioValue(1.1), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestedAspectRatioValue(1.1));
 
         // check correctness
-        assertEquals(cfg.getAdditionalCamerasSuggestedAspectRatioValue(), 1.1, 0.0);
+        assertEquals(1.1, cfg.getAdditionalCamerasSuggestedAspectRatioValue(), 0.0);
     }
 
     @Test
@@ -1282,12 +1165,10 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled(),
-                SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED);
+        assertFalse(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled());
 
         // set new value
-        assertSame(cfg.setAdditionalCamerasSuggestPrincipalPointEnabled(
-                !SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGEST_PRINCIPAL_POINT_ENABLED), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestPrincipalPointEnabled(true));
     }
 
     @Test
@@ -1299,10 +1180,10 @@ public class SparseReconstructorConfigurationTest {
 
         // set new value
         final InhomogeneousPoint2D principalPoint = new InhomogeneousPoint2D();
-        assertSame(cfg.setAdditionalCamerasSuggestedPrincipalPointValue(principalPoint), cfg);
+        assertSame(cfg, cfg.setAdditionalCamerasSuggestedPrincipalPointValue(principalPoint));
 
         // check correctness
-        assertSame(cfg.getAdditionalCamerasSuggestedPrincipalPointValue(), principalPoint);
+        assertSame(principalPoint, cfg.getAdditionalCamerasSuggestedPrincipalPointValue());
     }
 
     @Test
@@ -1310,16 +1191,13 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isHomogeneousPointTriangulatorUsed(),
-                SparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
+        assertTrue(cfg.isHomogeneousPointTriangulatorUsed());
 
         // set new value
-        assertSame(cfg.setHomogeneousPointTriangulatorUsed(
-                !SparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR), cfg);
+        assertSame(cfg, cfg.setHomogeneousPointTriangulatorUsed(false));
 
         // check correctness
-        assertEquals(cfg.isHomogeneousPointTriangulatorUsed(),
-                !SparseReconstructorConfiguration.DEFAULT_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
+        assertFalse(cfg.isHomogeneousPointTriangulatorUsed());
     }
 
     @Test
@@ -1327,14 +1205,14 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getRobustPointTriangulatorMethod(),
-                SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD,
+                cfg.getRobustPointTriangulatorMethod());
 
         // set new value
-        assertSame(cfg.setRobustPointTriangulatorMethod(RobustEstimatorMethod.MSAC), cfg);
+        assertSame(cfg, cfg.setRobustPointTriangulatorMethod(RobustEstimatorMethod.MSAC));
 
         // check correctness
-        assertEquals(cfg.getRobustPointTriangulatorMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(RobustEstimatorMethod.MSAC, cfg.getRobustPointTriangulatorMethod());
     }
 
     @Test
@@ -1342,14 +1220,14 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPointTriangulatorConfidence(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE,
+                cfg.getPointTriangulatorConfidence(), 0.0);
 
         // set new value
-        assertSame(cfg.setPointTriangulatorConfidence(0.8), cfg);
+        assertSame(cfg, cfg.setPointTriangulatorConfidence(0.8));
 
         // check correctness
-        assertEquals(cfg.getPointTriangulatorConfidence(), 0.8, 0.0);
+        assertEquals(0.8, cfg.getPointTriangulatorConfidence(), 0.0);
     }
 
     @Test
@@ -1357,14 +1235,14 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPointTriangulatorMaxIterations(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS,
+                cfg.getPointTriangulatorMaxIterations());
 
         // set new value
-        assertSame(cfg.setPointTriangulatorMaxIterations(100), cfg);
+        assertSame(cfg, cfg.setPointTriangulatorMaxIterations(100));
 
         // check correctness
-        assertEquals(cfg.getPointTriangulatorMaxIterations(), 100);
+        assertEquals(100, cfg.getPointTriangulatorMaxIterations());
     }
 
     @Test
@@ -1372,14 +1250,14 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.getPointTriangulatorThreshold(),
-                SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD, 0.0);
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD,
+                cfg.getPointTriangulatorThreshold(), 0.0);
 
         // set new value
-        assertSame(cfg.setPointTriangulatorThreshold(1e-3), cfg);
+        assertSame(cfg, cfg.setPointTriangulatorThreshold(1e-3));
 
         // check correctness
-        assertEquals(cfg.getPointTriangulatorThreshold(), 1e-3, 0.0);
+        assertEquals(1e-3, cfg.getPointTriangulatorThreshold(), 0.0);
     }
 
     @Test
@@ -1387,7 +1265,8 @@ public class SparseReconstructorConfigurationTest {
         final SparseReconstructorConfiguration cfg1 = new SparseReconstructorConfiguration();
 
         // set new values
-        cfg1.setNonRobustFundamentalMatrixEstimatorMethod(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
         cfg1.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.RANSAC);
         cfg1.setFundamentalMatrixRefined(false);
         cfg1.setFundamentalMatrixCovarianceKept(true);
@@ -1427,7 +1306,7 @@ public class SparseReconstructorConfigurationTest {
         cfg1.setAdditionalCamerasAspectRatio(0.99);
         cfg1.setUseEPnPForAdditionalCamerasEstimation(true);
         cfg1.setUseUPnPForAdditionalCamerasEstimation(false);
-        cfg1.setAdditionalCamerasRobustEstimationMethod(RobustEstimatorMethod.LMedS);
+        cfg1.setAdditionalCamerasRobustEstimationMethod(RobustEstimatorMethod.LMEDS);
         cfg1.setAdditionalCamerasAllowPlanarConfiguration(false);
         cfg1.setAdditionalCamerasAllowNullspaceDimension2(false);
         cfg1.setAdditionalCamerasAllowNullspaceDimension3(false);
@@ -1458,136 +1337,114 @@ public class SparseReconstructorConfigurationTest {
         cfg1.setPointTriangulatorThreshold(0.5);
 
         // check
-        assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
-        assertEquals(cfg1.getRobustFundamentalMatrixEstimatorMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
+                cfg1.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg1.getRobustFundamentalMatrixEstimatorMethod());
         assertFalse(cfg1.isFundamentalMatrixRefined());
         assertTrue(cfg1.isFundamentalMatrixCovarianceKept());
-        assertEquals(cfg1.getFundamentalMatrixConfidence(), 0.8, 0.0);
-        assertEquals(cfg1.getFundamentalMatrixMaxIterations(), 500);
-        assertEquals(cfg1.getFundamentalMatrixThreshold(), 0.5, 0.0);
+        assertEquals(0.8, cfg1.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(500, cfg1.getFundamentalMatrixMaxIterations());
+        assertEquals(0.5, cfg1.getFundamentalMatrixThreshold(), 0.0);
         assertFalse(cfg1.getFundamentalMatrixComputeAndKeepInliers());
         assertFalse(cfg1.getFundamentalMatrixComputeAndKeepResiduals());
-        assertEquals(cfg1.getInitialCamerasEstimatorMethod(),
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
+                cfg1.getInitialCamerasEstimatorMethod());
         assertFalse(cfg1.getDaqUseHomogeneousPointTriangulator());
-        assertEquals(cfg1.getInitialCamerasAspectRatio(), 0.9, 0.0);
-        assertEquals(cfg1.getPrincipalPointX(), 0.1, 0.0);
-        assertEquals(cfg1.getPrincipalPointY(), -0.1, 0.0);
-        assertEquals(cfg1.getInitialCamerasCorrectorType(),
-                CorrectorType.GOLD_STANDARD);
+        assertEquals(0.9, cfg1.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(0.1, cfg1.getPrincipalPointX(), 0.0);
+        assertEquals(-0.1, cfg1.getPrincipalPointY(), 0.0);
+        assertEquals(CorrectorType.GOLD_STANDARD, cfg1.getInitialCamerasCorrectorType());
         assertFalse(cfg1.getInitialCamerasMarkValidTriangulatedPoints());
-        assertSame(cfg1.getInitialIntrinsic1(), intrinsic1a);
-        assertSame(cfg1.getInitialIntrinsic2(), intrinsic1b);
+        assertSame(intrinsic1a, cfg1.getInitialIntrinsic1());
+        assertSame(intrinsic1b, cfg1.getInitialIntrinsic2());
         assertFalse(cfg1.isGeneralSceneAllowed());
         assertFalse(cfg1.isPlanarSceneAllowed());
-        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
-                RobustEstimatorMethod.RANSAC);
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg1.getRobustPlanarHomographyEstimatorMethod());
         assertFalse(cfg1.isPlanarHomographyRefined());
         assertTrue(cfg1.isPlanarHomographyCovarianceKept());
-        assertEquals(cfg1.getPlanarHomographyConfidence(), 0.8, 0.0);
-        assertEquals(cfg1.getPlanarHomographyMaxIterations(), 500);
-        assertEquals(cfg1.getPlanarHomographyThreshold(), 1e-5, 0.0);
+        assertEquals(0.8, cfg1.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(500, cfg1.getPlanarHomographyMaxIterations());
+        assertEquals(1e-5, cfg1.getPlanarHomographyThreshold(), 0.0);
         assertFalse(cfg1.getPlanarHomographyComputeAndKeepInliers());
         assertFalse(cfg1.getPlanarHomographyComputeAndKeepResiduals());
         assertFalse(cfg1.getUseDAQForAdditionalCamerasIntrinsics());
         assertTrue(cfg1.getUseDIACForAdditionalCamerasIntrinsics());
-        assertSame(cfg1.getAdditionalCamerasIntrinsics(), additionalIntrinsics1);
-        assertEquals(cfg1.getAdditionalCamerasSkewness(), 1e-3, 0.0);
-        assertEquals(cfg1.getAdditionalCamerasHorizontalPrincipalPoint(), -1e-3, 0.0);
-        assertEquals(cfg1.getAdditionalCamerasVerticalPrincipalPoint(), 1e-3, 0.0);
-        assertEquals(cfg1.getAdditionalCamerasAspectRatio(), 0.99, 0.0);
+        assertSame(additionalIntrinsics1, cfg1.getAdditionalCamerasIntrinsics());
+        assertEquals(1e-3, cfg1.getAdditionalCamerasSkewness(), 0.0);
+        assertEquals(-1e-3, cfg1.getAdditionalCamerasHorizontalPrincipalPoint(), 0.0);
+        assertEquals(1e-3, cfg1.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
+        assertEquals(0.99, cfg1.getAdditionalCamerasAspectRatio(), 0.0);
         assertTrue(cfg1.getUseEPnPForAdditionalCamerasEstimation());
         assertFalse(cfg1.getUseUPnPForAdditionalCamerasEstimation());
-        assertEquals(cfg1.getAdditionalCamerasRobustEstimationMethod(),
-                RobustEstimatorMethod.LMedS);
+        assertEquals(RobustEstimatorMethod.LMEDS, cfg1.getAdditionalCamerasRobustEstimationMethod());
         assertFalse(cfg1.getAdditionalCamerasAllowPlanarConfiguration());
         assertFalse(cfg1.getAdditionalCamerasAllowNullspaceDimension2());
         assertFalse(cfg1.getAdditionalCamerasAllowNullspaceDimension3());
-        assertEquals(cfg1.getAdditionalCamerasPlanarThreshold(), 1e9, 0.0);
+        assertEquals(1e9, cfg1.getAdditionalCamerasPlanarThreshold(), 0.0);
         assertFalse(cfg1.areAdditionalCamerasRefined());
         assertFalse(cfg1.isAdditionalCamerasCovarianceKept());
         assertFalse(cfg1.getAdditionalCamerasUseFastRefinement());
-        assertEquals(cfg1.getAdditionalCamerasConfidence(), 0.9, 0.0);
-        assertEquals(cfg1.getAdditionalCamerasMaxIterations(), 500);
-        assertEquals(cfg1.getAdditionalCamerasThreshold(), 0.5, 0.0);
+        assertEquals(0.9, cfg1.getAdditionalCamerasConfidence(), 0.0);
+        assertEquals(500, cfg1.getAdditionalCamerasMaxIterations());
+        assertEquals(0.5, cfg1.getAdditionalCamerasThreshold(), 0.0);
         assertFalse(cfg1.getAdditionalCamerasComputeAndKeepInliers());
         assertFalse(cfg1.getAdditionalCamerasComputeAndKeepResiduals());
         assertTrue(cfg1.isAdditionalCamerasSuggestSkewnessValueEnabled());
-        assertEquals(cfg1.getAdditionalCamerasSuggestedSkewnessValue(), 1e-3, 0.0);
+        assertEquals(1e-3, cfg1.getAdditionalCamerasSuggestedSkewnessValue(), 0.0);
         assertTrue(cfg1.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled());
-        assertEquals(cfg1.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 1.0, 0.0);
+        assertEquals(1.0, cfg1.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0);
         assertTrue(cfg1.isAdditionalCamerasSuggestVerticalFocalLengthEnabled());
-        assertEquals(cfg1.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 2.0, 0.0);
+        assertEquals(2.0, cfg1.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0);
         assertTrue(cfg1.isAdditionalCamerasSuggestAspectRatioEnabled());
-        assertEquals(cfg1.getAdditionalCamerasSuggestedAspectRatioValue(), 0.99, 0.0);
+        assertEquals(0.99, cfg1.getAdditionalCamerasSuggestedAspectRatioValue(), 0.0);
         assertTrue(cfg1.isAdditionalCamerasSuggestPrincipalPointEnabled());
-        assertSame(cfg1.getAdditionalCamerasSuggestedPrincipalPointValue(), additionalPrincipalPoint);
+        assertSame(additionalPrincipalPoint, cfg1.getAdditionalCamerasSuggestedPrincipalPointValue());
         assertFalse(cfg1.isHomogeneousPointTriangulatorUsed());
-        assertEquals(cfg1.getRobustPointTriangulatorMethod(), RobustEstimatorMethod.RANSAC);
-        assertEquals(cfg1.getPointTriangulatorConfidence(), 0.8, 0.0);
-        assertEquals(cfg1.getPointTriangulatorMaxIterations(), 500);
-        assertEquals(cfg1.getPointTriangulatorThreshold(), 0.5, 0.0);
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg1.getRobustPointTriangulatorMethod());
+        assertEquals(0.8, cfg1.getPointTriangulatorConfidence(), 0.0);
+        assertEquals(500, cfg1.getPointTriangulatorMaxIterations());
+        assertEquals(0.5, cfg1.getPointTriangulatorThreshold(), 0.0);
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(cfg1);
         final SparseReconstructorConfiguration cfg2 = SerializationHelper.deserialize(bytes);
 
         // check
-        // check
         assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
                 cfg2.getNonRobustFundamentalMatrixEstimatorMethod());
         assertEquals(cfg1.getRobustFundamentalMatrixEstimatorMethod(),
                 cfg2.getRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(cfg1.isFundamentalMatrixRefined(),
-                cfg2.isFundamentalMatrixRefined());
-        assertEquals(cfg1.isFundamentalMatrixCovarianceKept(),
-                cfg2.isFundamentalMatrixCovarianceKept());
-        assertEquals(cfg1.getFundamentalMatrixConfidence(),
-                cfg2.getFundamentalMatrixConfidence(), 0.0);
-        assertEquals(cfg1.getFundamentalMatrixMaxIterations(),
-                cfg2.getFundamentalMatrixMaxIterations());
-        assertEquals(cfg1.getFundamentalMatrixThreshold(),
-                cfg2.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(cfg1.isFundamentalMatrixRefined(), cfg2.isFundamentalMatrixRefined());
+        assertEquals(cfg1.isFundamentalMatrixCovarianceKept(), cfg2.isFundamentalMatrixCovarianceKept());
+        assertEquals(cfg1.getFundamentalMatrixConfidence(), cfg2.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(cfg1.getFundamentalMatrixMaxIterations(), cfg2.getFundamentalMatrixMaxIterations());
+        assertEquals(cfg1.getFundamentalMatrixThreshold(), cfg2.getFundamentalMatrixThreshold(), 0.0);
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepInliers(),
                 cfg2.getFundamentalMatrixComputeAndKeepInliers());
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepResiduals(),
                 cfg2.getFundamentalMatrixComputeAndKeepResiduals());
-        assertEquals(cfg1.getInitialCamerasEstimatorMethod(),
-                cfg2.getInitialCamerasEstimatorMethod());
+        assertEquals(cfg1.getInitialCamerasEstimatorMethod(), cfg2.getInitialCamerasEstimatorMethod());
         assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(),
                 cfg2.getDaqUseHomogeneousPointTriangulator());
-        assertEquals(cfg1.getInitialCamerasAspectRatio(),
-                cfg2.getInitialCamerasAspectRatio(), 0.0);
-        assertEquals(cfg1.getPrincipalPointX(),
-                cfg2.getPrincipalPointX(), 0.0);
-        assertEquals(cfg1.getPrincipalPointY(),
-                cfg2.getPrincipalPointY(), 0.0);
-        assertEquals(cfg1.getInitialCamerasCorrectorType(),
-                cfg2.getInitialCamerasCorrectorType());
+        assertEquals(cfg1.getInitialCamerasAspectRatio(), cfg2.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(cfg1.getPrincipalPointX(), cfg2.getPrincipalPointX(), 0.0);
+        assertEquals(cfg1.getPrincipalPointY(), cfg2.getPrincipalPointY(), 0.0);
+        assertEquals(cfg1.getInitialCamerasCorrectorType(), cfg2.getInitialCamerasCorrectorType());
         assertEquals(cfg1.getInitialCamerasMarkValidTriangulatedPoints(),
                 cfg2.getInitialCamerasMarkValidTriangulatedPoints());
         assertEquals(cfg1.getInitialIntrinsic1().getInternalMatrix(),
                 cfg2.getInitialIntrinsic1().getInternalMatrix());
         assertEquals(cfg1.getInitialIntrinsic2().getInternalMatrix(),
                 cfg2.getInitialIntrinsic2().getInternalMatrix());
-        assertEquals(cfg1.isGeneralSceneAllowed(),
-                cfg2.isGeneralSceneAllowed());
-        assertEquals(cfg1.isPlanarSceneAllowed(),
-                cfg2.isPlanarSceneAllowed());
+        assertEquals(cfg1.isGeneralSceneAllowed(), cfg2.isGeneralSceneAllowed());
+        assertEquals(cfg1.isPlanarSceneAllowed(), cfg2.isPlanarSceneAllowed());
         assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
                 cfg2.getRobustPlanarHomographyEstimatorMethod());
-        assertEquals(cfg1.isPlanarHomographyRefined(),
-                cfg2.isPlanarHomographyRefined());
-        assertEquals(cfg1.isPlanarHomographyCovarianceKept(),
-                cfg2.isPlanarHomographyCovarianceKept());
-        assertEquals(cfg1.getPlanarHomographyConfidence(),
-                cfg2.getPlanarHomographyConfidence(), 0.0);
-        assertEquals(cfg1.getPlanarHomographyMaxIterations(),
-                cfg2.getPlanarHomographyMaxIterations());
-        assertEquals(cfg1.getPlanarHomographyThreshold(),
-                cfg2.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(cfg1.isPlanarHomographyRefined(), cfg2.isPlanarHomographyRefined());
+        assertEquals(cfg1.isPlanarHomographyCovarianceKept(), cfg2.isPlanarHomographyCovarianceKept());
+        assertEquals(cfg1.getPlanarHomographyConfidence(), cfg2.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(cfg1.getPlanarHomographyMaxIterations(), cfg2.getPlanarHomographyMaxIterations());
+        assertEquals(cfg1.getPlanarHomographyThreshold(), cfg2.getPlanarHomographyThreshold(), 0.0);
         assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
                 cfg2.getPlanarHomographyComputeAndKeepInliers());
         assertEquals(cfg1.getPlanarHomographyComputeAndKeepResiduals(),
@@ -1598,14 +1455,12 @@ public class SparseReconstructorConfigurationTest {
                 cfg2.getUseDIACForAdditionalCamerasIntrinsics());
         assertEquals(cfg1.getAdditionalCamerasIntrinsics().getInternalMatrix(),
                 cfg2.getAdditionalCamerasIntrinsics().getInternalMatrix());
-        assertEquals(cfg1.getAdditionalCamerasSkewness(),
-                cfg2.getAdditionalCamerasSkewness(), 0.0);
+        assertEquals(cfg1.getAdditionalCamerasSkewness(), cfg2.getAdditionalCamerasSkewness(), 0.0);
         assertEquals(cfg1.getAdditionalCamerasHorizontalPrincipalPoint(),
                 cfg2.getAdditionalCamerasHorizontalPrincipalPoint(), 0.0);
         assertEquals(cfg1.getAdditionalCamerasVerticalPrincipalPoint(),
                 cfg2.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
-        assertEquals(cfg1.getAdditionalCamerasAspectRatio(),
-                cfg2.getAdditionalCamerasAspectRatio(), 0.0);
+        assertEquals(cfg1.getAdditionalCamerasAspectRatio(), cfg2.getAdditionalCamerasAspectRatio(), 0.0);
         assertEquals(cfg1.getUseEPnPForAdditionalCamerasEstimation(),
                 cfg2.getUseEPnPForAdditionalCamerasEstimation());
         assertEquals(cfg1.getUseUPnPForAdditionalCamerasEstimation(),
@@ -1620,18 +1475,13 @@ public class SparseReconstructorConfigurationTest {
                 cfg2.getAdditionalCamerasAllowNullspaceDimension3());
         assertEquals(cfg1.getAdditionalCamerasPlanarThreshold(),
                 cfg2.getAdditionalCamerasPlanarThreshold(), 0.0);
-        assertEquals(cfg1.areAdditionalCamerasRefined(),
-                cfg2.areAdditionalCamerasRefined());
-        assertEquals(cfg1.isAdditionalCamerasCovarianceKept(),
-                cfg2.isAdditionalCamerasCovarianceKept());
+        assertEquals(cfg1.areAdditionalCamerasRefined(), cfg2.areAdditionalCamerasRefined());
+        assertEquals(cfg1.isAdditionalCamerasCovarianceKept(), cfg2.isAdditionalCamerasCovarianceKept());
         assertEquals(cfg1.getAdditionalCamerasUseFastRefinement(),
                 cfg2.getAdditionalCamerasUseFastRefinement());
-        assertEquals(cfg1.getAdditionalCamerasConfidence(),
-                cfg2.getAdditionalCamerasConfidence(), 0.0);
-        assertEquals(cfg1.getAdditionalCamerasMaxIterations(),
-                cfg2.getAdditionalCamerasMaxIterations());
-        assertEquals(cfg1.getAdditionalCamerasThreshold(),
-                cfg2.getAdditionalCamerasThreshold(), 0.0);
+        assertEquals(cfg1.getAdditionalCamerasConfidence(), cfg2.getAdditionalCamerasConfidence(), 0.0);
+        assertEquals(cfg1.getAdditionalCamerasMaxIterations(), cfg2.getAdditionalCamerasMaxIterations());
+        assertEquals(cfg1.getAdditionalCamerasThreshold(), cfg2.getAdditionalCamerasThreshold(), 0.0);
         assertEquals(cfg1.getAdditionalCamerasComputeAndKeepInliers(),
                 cfg2.getAdditionalCamerasComputeAndKeepInliers());
         assertEquals(cfg1.getAdditionalCamerasComputeAndKeepResiduals(),
@@ -1656,15 +1506,10 @@ public class SparseReconstructorConfigurationTest {
                 cfg2.isAdditionalCamerasSuggestPrincipalPointEnabled());
         assertEquals(cfg1.getAdditionalCamerasSuggestedPrincipalPointValue(),
                 cfg2.getAdditionalCamerasSuggestedPrincipalPointValue());
-        assertEquals(cfg1.isHomogeneousPointTriangulatorUsed(),
-                cfg2.isHomogeneousPointTriangulatorUsed());
-        assertEquals(cfg1.getRobustPointTriangulatorMethod(),
-                cfg2.getRobustPointTriangulatorMethod());
-        assertEquals(cfg1.getPointTriangulatorConfidence(),
-                cfg2.getPointTriangulatorConfidence(), 0.0);
-        assertEquals(cfg1.getPointTriangulatorMaxIterations(),
-                cfg2.getPointTriangulatorMaxIterations());
-        assertEquals(cfg1.getPointTriangulatorThreshold(),
-                cfg2.getPointTriangulatorThreshold(), 0.0);
+        assertEquals(cfg1.isHomogeneousPointTriangulatorUsed(), cfg2.isHomogeneousPointTriangulatorUsed());
+        assertEquals(cfg1.getRobustPointTriangulatorMethod(), cfg2.getRobustPointTriangulatorMethod());
+        assertEquals(cfg1.getPointTriangulatorConfidence(), cfg2.getPointTriangulatorConfidence(), 0.0);
+        assertEquals(cfg1.getPointTriangulatorMaxIterations(), cfg2.getPointTriangulatorMaxIterations());
+        assertEquals(cfg1.getPointTriangulatorThreshold(), cfg2.getPointTriangulatorThreshold(), 0.0);
     }
 }

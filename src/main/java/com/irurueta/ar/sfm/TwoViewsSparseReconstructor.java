@@ -54,11 +54,11 @@ public class TwoViewsSparseReconstructor extends
      * Called when processing one frame is successfully finished. This can be done to estimate scale on those
      * implementations where scale can be measured or is already known.
      *
-     * @return true if post processing succeeded, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
      */
     @Override
     protected boolean postProcessOne() {
-        // no need for post processing when computing metric reconstruction
+        // no need for post-processing when computing metric reconstruction
         return true;
     }
 }

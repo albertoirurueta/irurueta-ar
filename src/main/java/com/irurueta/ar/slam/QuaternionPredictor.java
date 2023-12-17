@@ -41,9 +41,9 @@ public class QuaternionPredictor {
      * by the rate of rotation along axes x,y,z (roll, pitch, yaw).
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt          time interval to compute prediction expressed in seconds.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
@@ -175,9 +175,9 @@ public class QuaternionPredictor {
      * exact method.
      *
      * @param q         quaternion to be updated.
-     * @param wx        angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy        angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz        angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt        time interval to compute prediction expressed in seconds.
      * @param result    instance where update quaternion is stored.
      * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
@@ -220,9 +220,9 @@ public class QuaternionPredictor {
      * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt          time interval to compute prediction expressed in seconds.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
@@ -261,9 +261,9 @@ public class QuaternionPredictor {
      * method.
      *
      * @param q      quaternion to be updated.
-     * @param wx     angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy     angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz     angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx     angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy     angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz     angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt     time interval to compute prediction expressed in seconds.
      * @param result instance where update quaternion is stored.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
@@ -298,9 +298,9 @@ public class QuaternionPredictor {
      * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt          time interval to compute prediction expressed in seconds.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
@@ -352,9 +352,9 @@ public class QuaternionPredictor {
      * method.
      *
      * @param q         quaternion to be updated.
-     * @param wx        angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy        angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz        angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt        time interval to compute prediction expressed in seconds.
      * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
      * @param jacobianW jacobian wrt angular speed. Must be 4x3.
@@ -400,9 +400,9 @@ public class QuaternionPredictor {
      * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt          time interval to compute prediction expressed in seconds.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
@@ -444,9 +444,9 @@ public class QuaternionPredictor {
      * method.
      *
      * @param q  quaternion to be updated.
-     * @param wx angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt time interval to compute prediction expressed in seconds.
      * @return a new quaternion containing updated quaternion.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
@@ -484,9 +484,9 @@ public class QuaternionPredictor {
      * time interval of 1 second.
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
      * @param result      instance where update quaternion is stored.
@@ -534,9 +534,9 @@ public class QuaternionPredictor {
      * time interval of 1 second and exact method.
      *
      * @param q         quaternion to be updated.
-     * @param wx        angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy        angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz        angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param result    instance where update quaternion is stored.
      * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
      * @param jacobianW jacobian wrt angular speed. Must be 4x3.
@@ -577,9 +577,9 @@ public class QuaternionPredictor {
      * time interval of 1 second.
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
      * @param result      instance where update quaternion is stored.
@@ -618,9 +618,9 @@ public class QuaternionPredictor {
      * time interval of 1 second and exact method.
      *
      * @param q      quaternion to be updated.
-     * @param wx     angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy     angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz     angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx     angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy     angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz     angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param result instance where update quaternion is stored.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
@@ -654,9 +654,9 @@ public class QuaternionPredictor {
      * time interval of 1 second.
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
      * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
@@ -701,9 +701,9 @@ public class QuaternionPredictor {
      * time interval of 1 second and exact method.
      *
      * @param q         quaternion to be updated.
-     * @param wx        angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy        angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz        angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
      * @param jacobianW jacobian wrt angular speed. Must be 4x3.
      * @return a new quaternion containing updated quaternion.
@@ -743,9 +743,9 @@ public class QuaternionPredictor {
      * time interval of 1 second.
      *
      * @param q           quaternion to be updated.
-     * @param wx          angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy          angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz          angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param exactMethod true to use exact method, false to use "Tustin"
      *                    method.
      * @return a new quaternion containing updated quaternion.
@@ -781,9 +781,9 @@ public class QuaternionPredictor {
      * time interval of 1 second and exact method.
      *
      * @param q  quaternion to be updated.
-     * @param wx angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @return a new quaternion containing updated quaternion.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
@@ -816,9 +816,9 @@ public class QuaternionPredictor {
      *
      * @param q          quaternion to be updated.
      * @param dq         adjustment of rotation to be combined with input quaternion.
-     * @param wx         angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy         angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz         angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx         angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy         angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz         angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt         time interval to compute prediction expressed in seconds.
      * @param result     instance where updated quaternion is stored.
      * @param jacobianQ  jacobian wrt input quaternion. Must be 4x4.
@@ -934,9 +934,9 @@ public class QuaternionPredictor {
      *
      * @param q      quaternion to be updated.
      * @param dq     adjustment of rotation to be combined with input quaternion.
-     * @param wx     angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy     angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz     angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx     angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy     angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz     angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt     time interval to compute prediction expressed in seconds.
      * @param result instance where updated quaternion is stored.
      */
@@ -964,7 +964,8 @@ public class QuaternionPredictor {
     public static void predictWithRotationAdjustment(
             final Quaternion q, final Quaternion dq,
             final double[] w, final double dt, final Quaternion result) {
-        predictWithRotationAdjustment(q, dq, w, dt, result, null, null, null);
+        predictWithRotationAdjustment(q, dq, w, dt, result, null, null,
+                null);
     }
 
     /**
@@ -974,9 +975,9 @@ public class QuaternionPredictor {
      *
      * @param q          quaternion to be updated.
      * @param dq         adjustment of rotation to be combined with input quaternion.
-     * @param wx         angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy         angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz         angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx         angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy         angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz         angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt         time interval to compute prediction expressed in seconds.
      * @param jacobianQ  jacobian wrt input quaternion. Must be 4x4.
      * @param jacobianDQ jacobian wrt dq quaternion. Must be 4x4.
@@ -1029,9 +1030,9 @@ public class QuaternionPredictor {
      *
      * @param q  quaternion to be updated.
      * @param dq adjustment of rotation to be combined with input quaternion.
-     * @param wx angular speed in x axis (roll axis). Expressed in rad/s.
-     * @param wy angular speed in y axis (pitch axis). Expressed in rad/s.
-     * @param wz angular speed in z axis (yaw axis). Expressed in rad/s.
+     * @param wx angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz angular speed in z-axis (yaw axis). Expressed in rad/s.
      * @param dt time interval to compute prediction expressed in seconds.
      * @return a new updated quaternion.
      */

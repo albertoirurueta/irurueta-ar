@@ -37,13 +37,13 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
         SinglePoint3DTriangulator {
 
     /**
-     * Indicates if by default an LMSE (Least Mean Square Error) is allowed if
+     * Indicates if by default an LMSE (the Least Mean Square Error) is allowed if
      * more correspondences than the minimum are provided.
      */
     public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
@@ -106,7 +106,7 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
     }
 
     /**
-     * Indicates if an LMSE (Least Mean Square Error) solution is allowed if
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 2 first matches
      * corresponding to the first 2 views will be used.
@@ -118,7 +118,7 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
     }
 
     /**
-     * Specifies if an LMSE (Least Mean Square Error) solution is allowed if
+     * Specifies if an LMSE (the Least Mean Square Error) solution is allowed if
      * more correspondences than the minimum are provided. If false, the
      * exceeding correspondences will be ignored and only the 2 first matches
      * corresponding to the first 2 views will be used.
@@ -157,7 +157,8 @@ public class LMSEHomogeneousSinglePoint3DTriangulator extends
      *                 same position as the camera on the list.
      * @param result   instance where triangulated 3D point is stored.
      * @throws Point3DTriangulationException if triangulation fails for some
-     *                                       other reason (i.e. degenerate geometry, numerical instabilities, etc).
+     *                                       other reason (i.e. degenerate geometry, numerical
+     *                                       instabilities, etc.).
      */
     @SuppressWarnings("DuplicatedCode")
     @Override

@@ -16,11 +16,11 @@
 package com.irurueta.ar.sfm;
 
 /**
- * Indicates method used for initial cameras estimation.
+ * Indicates method used for initial estimation of cameras.
  */
 public enum InitialCamerasEstimatorMethod {
     /**
-     * Uses a two step method based on the estimation of the Dual Absolute
+     * Uses a two-step method based on the estimation of the Dual Absolute
      * Quadric (DAQ) to estimate camera intrinsic parameters, and then those
      * intrinsic parameters are used to estimate initial cameras using the
      * essential matrix.
@@ -44,11 +44,11 @@ public enum InitialCamerasEstimatorMethod {
      * (DIAC) by solving the Kruppa equations.
      * This method requires that principal point is not close to zero (typically
      * coordinates of the center of the image are provided assuming that origin
-     * is at bottom-left corner, (unless aspect ratio is negative and origin is
+     * is at bottom-left corner, unless aspect ratio is negative and origin is
      * considered to be at top-left corner).
      * This method also requires that cameras pose has enough rotation (i.e.
      * are not too parallel).
-     * This method might fail or produce poor results if this requirements are
+     * This method might fail or produce poor results if these requirements are
      * not met.
      */
     DUAL_IMAGE_OF_ABSOLUTE_CONIC,

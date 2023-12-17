@@ -36,89 +36,74 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
                 new AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration();
 
         // check default values
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getInitialCamerasEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getInitialCamerasAspectRatio(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getPrincipalPointX(),
-                TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X, 0.0);
-        assertEquals(cfg.getPrincipalPointY(),
-                TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
-        assertEquals(cfg.getInitialCamerasCorrectorType(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE);
-        assertEquals(cfg.getInitialCamerasMarkValidTriangulatedPoints(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE, cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD, cfg.getInitialCamerasEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, cfg.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X,
+                cfg.getPrincipalPointX(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y,
+                cfg.getPrincipalPointY(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE, cfg.getInitialCamerasCorrectorType());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getInitialCamerasMarkValidTriangulatedPoints());
         assertNull(cfg.getInitialIntrinsic1());
         assertNull(cfg.getInitialIntrinsic2());
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE);
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE);
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
         assertNull(cfg.getCalibrationData());
-        assertEquals(cfg.isNotifyAvailableSlamDataEnabled(),
-                SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
-        assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
-                SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
+        assertEquals(SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE,
+                cfg.isNotifyAvailableSlamDataEnabled());
+        assertEquals(SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA,
+                cfg.isNotifyEstimatedSlamCameraEnabled());
     }
 
     @Test
@@ -127,89 +112,74 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
                 AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.make();
 
         // check default values
-        assertEquals(cfg.getNonRobustFundamentalMatrixEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.getRobustFundamentalMatrixEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);
-        assertEquals(cfg.isFundamentalMatrixRefined(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_FUNDAMENTAL_MATRIX);
-        assertEquals(cfg.isFundamentalMatrixCovarianceKept(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE);
-        assertEquals(cfg.getFundamentalMatrixConfidence(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, 0.0);
-        assertEquals(cfg.getFundamentalMatrixMaxIterations(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS);
-        assertEquals(cfg.getFundamentalMatrixThreshold(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, 0.0);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepInliers(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getFundamentalMatrixComputeAndKeepResiduals(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(cfg.getInitialCamerasEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD);
-        assertEquals(cfg.getDaqUseHomogeneousPointTriangulator(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR);
-        assertEquals(cfg.getInitialCamerasAspectRatio(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO, 0.0);
-        assertEquals(cfg.getPrincipalPointX(),
-                TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X, 0.0);
-        assertEquals(cfg.getPrincipalPointY(),
-                TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y, 0.0);
-        assertEquals(cfg.getInitialCamerasCorrectorType(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE);
-        assertEquals(cfg.getInitialCamerasMarkValidTriangulatedPoints(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getNonRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+                cfg.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
+                cfg.isFundamentalMatrixRefined());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
+                cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
+                cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
+                cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
+                cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getFundamentalMatrixComputeAndKeepInliers());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getFundamentalMatrixComputeAndKeepResiduals());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD,
+                cfg.getInitialCamerasEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
+                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO,
+                cfg.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X,
+                cfg.getPrincipalPointX(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y,
+                cfg.getPrincipalPointY(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE,
+                cfg.getInitialCamerasCorrectorType());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+                cfg.getInitialCamerasMarkValidTriangulatedPoints());
         assertNull(cfg.getInitialIntrinsic1());
         assertNull(cfg.getInitialIntrinsic2());
-        assertEquals(cfg.isGeneralSceneAllowed(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE);
-        assertEquals(cfg.isPlanarSceneAllowed(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE);
-        assertEquals(cfg.getRobustPlanarHomographyEstimatorMethod(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD);
-        assertEquals(cfg.isPlanarHomographyRefined(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY);
-        assertEquals(cfg.isPlanarHomographyCovarianceKept(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE);
-        assertEquals(cfg.getPlanarHomographyConfidence(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, 0.0);
-        assertEquals(cfg.getPlanarHomographyMaxIterations(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS);
-        assertEquals(cfg.getPlanarHomographyThreshold(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, 0.0);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepInliers(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(cfg.getPlanarHomographyComputeAndKeepResiduals(),
-                TwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
+                cfg.isGeneralSceneAllowed());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
+                cfg.isPlanarSceneAllowed());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+                cfg.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
+                cfg.isPlanarHomographyRefined());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
+                cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
+                cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
+                cfg.getPlanarHomographyMaxIterations());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
+                cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+                cfg.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(TwoViewsSparseReconstructorConfiguration.
+                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+                cfg.getPlanarHomographyComputeAndKeepResiduals());
         assertNull(cfg.getCalibrationData());
-        assertEquals(cfg.isNotifyAvailableSlamDataEnabled(),
-                SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
-        assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
-                SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
+        assertEquals(SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE,
+                cfg.isNotifyAvailableSlamDataEnabled());
+        assertEquals(SlamTwoViewsSparseReconstructorConfiguration.DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA,
+                cfg.isNotifyEstimatedSlamCameraEnabled());
     }
 
     @Test
@@ -226,7 +196,7 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
         assertSame(cfg, cfg.setCalibrationData(calibrationData));
 
         // check correctness
-        assertSame(cfg.getCalibrationData(), calibrationData);
+        assertSame(calibrationData, cfg.getCalibrationData());
     }
 
     @Test
@@ -235,19 +205,17 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
                 new AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isNotifyAvailableSlamDataEnabled(),
-                AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
+        assertEquals(AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
+                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
 
         // set new value
-        assertSame(cfg.setNotifyAvailableSlamDataEnabled(
+        assertSame(cfg, cfg.setNotifyAvailableSlamDataEnabled(
                 !AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE), cfg);
+                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE));
 
         // check correctness
-        assertEquals(cfg.isNotifyAvailableSlamDataEnabled(),
-                !AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE);
+        assertEquals(!AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
+                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
     }
 
     @Test
@@ -256,19 +224,17 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
                 new AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
-                AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
+        assertEquals(AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
+                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
 
         // set new value
-        assertSame(cfg.setNotifyEstimatedSlamCameraEnabled(
+        assertSame(cfg, cfg.setNotifyEstimatedSlamCameraEnabled(
                 !AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA), cfg);
+                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA));
 
         // check correctness
-        assertEquals(cfg.isNotifyEstimatedSlamCameraEnabled(),
-                !AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA);
+        assertEquals(!AbsoluteOrientationSlamTwoViewsSparseReconstructorConfiguration.
+                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
     }
 
     @Test
@@ -279,8 +245,7 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
         // set new values
         cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
-        cfg1.setRobustFundamentalMatrixEstimatorMethod(
-                RobustEstimatorMethod.LMedS);
+        cfg1.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.LMEDS);
         cfg1.setFundamentalMatrixRefined(false);
         cfg1.setFundamentalMatrixCovarianceKept(true);
         cfg1.setFundamentalMatrixConfidence(0.9);
@@ -288,8 +253,7 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
         cfg1.setFundamentalMatrixThreshold(0.5);
         cfg1.setFundamentalMatrixComputeAndKeepInliers(false);
         cfg1.setFundamentalMatrixComputeAndKeepResiduals(false);
-        cfg1.setInitialCamerasEstimatorMethod(
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        cfg1.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
         cfg1.setDaqUseHomogeneousPointTriangulator(false);
         cfg1.setInitialCamerasAspectRatio(0.7);
         cfg1.setPrincipalPointX(1e-3);
@@ -318,8 +282,7 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
         // check
         assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
                 cfg1.getNonRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(RobustEstimatorMethod.LMedS,
-                cfg1.getRobustFundamentalMatrixEstimatorMethod());
+        assertEquals(RobustEstimatorMethod.LMEDS, cfg1.getRobustFundamentalMatrixEstimatorMethod());
         assertFalse(cfg1.isFundamentalMatrixRefined());
         assertTrue(cfg1.isFundamentalMatrixCovarianceKept());
         assertEquals(0.9, cfg1.getFundamentalMatrixConfidence(), 0.0);
@@ -333,18 +296,16 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
         assertEquals(0.7, cfg1.getInitialCamerasAspectRatio(), 0.0);
         assertEquals(1e-3, cfg1.getPrincipalPointX(), 0.0);
         assertEquals(-1e-3, cfg1.getPrincipalPointY(), 0.0);
-        assertEquals(CorrectorType.GOLD_STANDARD,
-                cfg1.getInitialCamerasCorrectorType());
+        assertEquals(CorrectorType.GOLD_STANDARD, cfg1.getInitialCamerasCorrectorType());
         assertFalse(cfg1.getInitialCamerasMarkValidTriangulatedPoints());
         assertSame(intrinsic1, cfg1.getInitialIntrinsic1());
         assertSame(intrinsic2, cfg1.getInitialIntrinsic2());
         assertFalse(cfg1.isGeneralSceneAllowed());
         assertFalse(cfg1.isPlanarSceneAllowed());
-        assertEquals(RobustEstimatorMethod.RANSAC,
-                cfg1.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(RobustEstimatorMethod.RANSAC, cfg1.getRobustPlanarHomographyEstimatorMethod());
         assertFalse(cfg1.isPlanarHomographyRefined());
         assertTrue(cfg1.isPlanarHomographyCovarianceKept());
-        assertEquals(cfg1.getPlanarHomographyConfidence(), 0.9, 0.0);
+        assertEquals(0.9, cfg1.getPlanarHomographyConfidence(), 0.0);
         assertEquals(500, cfg1.getPlanarHomographyMaxIterations());
         assertEquals(1e-4, cfg1.getPlanarHomographyThreshold(), 0.0);
         assertFalse(cfg1.getPlanarHomographyComputeAndKeepInliers());
@@ -363,63 +324,45 @@ public class AbsoluteOrientationSlamTwoViewsSparseReconstructorConfigurationTest
                 cfg2.getNonRobustFundamentalMatrixEstimatorMethod());
         assertEquals(cfg1.getRobustFundamentalMatrixEstimatorMethod(),
                 cfg2.getRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(cfg1.isFundamentalMatrixRefined(),
-                cfg2.isFundamentalMatrixRefined());
-        assertEquals(cfg1.isFundamentalMatrixCovarianceKept(),
-                cfg2.isFundamentalMatrixCovarianceKept());
+        assertEquals(cfg1.isFundamentalMatrixRefined(), cfg2.isFundamentalMatrixRefined());
+        assertEquals(cfg1.isFundamentalMatrixCovarianceKept(), cfg2.isFundamentalMatrixCovarianceKept());
         assertEquals(cfg1.getFundamentalMatrixConfidence(),
                 cfg2.getFundamentalMatrixConfidence(), 0.0);
-        assertEquals(cfg1.getFundamentalMatrixMaxIterations(),
-                cfg2.getFundamentalMatrixMaxIterations());
+        assertEquals(cfg1.getFundamentalMatrixMaxIterations(), cfg2.getFundamentalMatrixMaxIterations());
         assertEquals(cfg1.getFundamentalMatrixThreshold(),
                 cfg2.getFundamentalMatrixThreshold(), 0.0);
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepInliers(),
                 cfg2.getFundamentalMatrixComputeAndKeepInliers());
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepResiduals(),
                 cfg2.getFundamentalMatrixComputeAndKeepResiduals());
-        assertEquals(cfg1.getInitialCamerasEstimatorMethod(),
-                cfg2.getInitialCamerasEstimatorMethod());
+        assertEquals(cfg1.getInitialCamerasEstimatorMethod(), cfg2.getInitialCamerasEstimatorMethod());
         assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(),
                 cfg2.getDaqUseHomogeneousPointTriangulator());
-        assertEquals(cfg1.getInitialCamerasAspectRatio(),
-                cfg2.getInitialCamerasAspectRatio(), 0.0);
-        assertEquals(cfg1.getPrincipalPointX(),
-                cfg2.getPrincipalPointX(), 0.0);
-        assertEquals(cfg1.getPrincipalPointY(),
-                cfg2.getPrincipalPointY(), 0.0);
-        assertEquals(cfg1.getInitialCamerasCorrectorType(),
-                cfg2.getInitialCamerasCorrectorType());
+        assertEquals(cfg1.getInitialCamerasAspectRatio(), cfg2.getInitialCamerasAspectRatio(), 0.0);
+        assertEquals(cfg1.getPrincipalPointX(), cfg2.getPrincipalPointX(), 0.0);
+        assertEquals(cfg1.getPrincipalPointY(), cfg2.getPrincipalPointY(), 0.0);
+        assertEquals(cfg1.getInitialCamerasCorrectorType(), cfg2.getInitialCamerasCorrectorType());
         assertEquals(cfg1.getInitialCamerasMarkValidTriangulatedPoints(),
                 cfg2.getInitialCamerasMarkValidTriangulatedPoints());
         assertEquals(cfg1.getInitialIntrinsic1().getInternalMatrix(),
                 cfg2.getInitialIntrinsic1().getInternalMatrix());
         assertEquals(cfg1.getInitialIntrinsic2().getInternalMatrix(),
                 cfg2.getInitialIntrinsic2().getInternalMatrix());
-        assertEquals(cfg1.isGeneralSceneAllowed(),
-                cfg2.isGeneralSceneAllowed());
-        assertEquals(cfg1.isPlanarSceneAllowed(),
-                cfg2.isPlanarSceneAllowed());
+        assertEquals(cfg1.isGeneralSceneAllowed(), cfg2.isGeneralSceneAllowed());
+        assertEquals(cfg1.isPlanarSceneAllowed(), cfg2.isPlanarSceneAllowed());
         assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
                 cfg2.getRobustPlanarHomographyEstimatorMethod());
-        assertEquals(cfg1.isPlanarHomographyRefined(),
-                cfg2.isPlanarHomographyRefined());
-        assertEquals(cfg1.isPlanarHomographyCovarianceKept(),
-                cfg2.isPlanarHomographyCovarianceKept());
-        assertEquals(cfg1.getPlanarHomographyConfidence(),
-                cfg2.getPlanarHomographyConfidence(), 0.0);
-        assertEquals(cfg1.getPlanarHomographyMaxIterations(),
-                cfg2.getPlanarHomographyMaxIterations());
-        assertEquals(cfg1.getPlanarHomographyThreshold(),
-                cfg2.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(cfg1.isPlanarHomographyRefined(), cfg2.isPlanarHomographyRefined());
+        assertEquals(cfg1.isPlanarHomographyCovarianceKept(), cfg2.isPlanarHomographyCovarianceKept());
+        assertEquals(cfg1.getPlanarHomographyConfidence(), cfg2.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(cfg1.getPlanarHomographyMaxIterations(), cfg2.getPlanarHomographyMaxIterations());
+        assertEquals(cfg1.getPlanarHomographyThreshold(), cfg2.getPlanarHomographyThreshold(), 0.0);
         assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
                 cfg2.getPlanarHomographyComputeAndKeepInliers());
         assertEquals(cfg1.getPlanarHomographyComputeAndKeepResiduals(),
                 cfg2.getPlanarHomographyComputeAndKeepResiduals());
-        assertNotSame(cfg1.getCalibrationData(),
-                cfg2.getCalibrationData());
-        assertEquals(cfg1.isNotifyAvailableSlamDataEnabled(),
-                cfg2.isNotifyAvailableSlamDataEnabled());
-        assertEquals(cfg1.isNotifyEstimatedSlamCameraEnabled(),
-                cfg2.isNotifyEstimatedSlamCameraEnabled());
+        assertNotSame(cfg1.getCalibrationData(), cfg2.getCalibrationData());
+        assertEquals(cfg1.isNotifyAvailableSlamDataEnabled(), cfg2.isNotifyAvailableSlamDataEnabled());
+        assertEquals(cfg1.isNotifyEstimatedSlamCameraEnabled(), cfg2.isNotifyEstimatedSlamCameraEnabled());
     }
 }

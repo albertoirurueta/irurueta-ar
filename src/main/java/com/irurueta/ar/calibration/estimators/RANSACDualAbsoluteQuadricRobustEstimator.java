@@ -100,8 +100,9 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if not enough cameras are provided for
      *                                  default settings. Hence, at least 2 cameras must be provided.
      */
-    public RANSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras,
-                                                    final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public RANSACDualAbsoluteQuadricRobustEstimator(
+            final List<PinholeCamera> cameras,
+            final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
         mThreshold = DEFAULT_THRESHOLD;
     }
@@ -184,8 +185,8 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<DualAbsoluteQuadric> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
                                 mSubsetCameras.clear();
                                 for (final int samplesIndex : samplesIndices) {
                                     mSubsetCameras.add(mCameras.get(samplesIndex));

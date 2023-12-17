@@ -92,15 +92,16 @@ public abstract class BasePairedViewsSparseReconstructor<
     protected List<ReconstructedPoint3D> mMetricReconstructedPoints;
 
     /**
-     * Transformation to set reference frame on estimated pair of euclidean cameras.
-     * This is used when estimating new pair of euclidean cameras to transform such pair to
-     * the location and rotation of last estimated euclidean camera so that the first camera
+     * Transformation to set reference frame on estimated pair of Euclidean cameras.
+     * This is used when estimating a new pair of Euclidean cameras to transform such pair to
+     * the location and rotation of the last estimated Euclidean camera so that the first camera
      * of the pair is not referred to the world origin.
      */
     protected MetricTransformation3D mReferenceEuclideanTransformation;
 
     /**
-     * Current estimated scale. This will typically converge to a constant value as more views are processed.
+     * Current estimated scale. This will typically converge to a constant value as more views are
+     * processed.
      * The smaller the variance of estimated scale, the more accurate the scale will be.
      */
     protected double mCurrentScale = DEFAULT_SCALE;
@@ -111,12 +112,12 @@ public abstract class BasePairedViewsSparseReconstructor<
     protected EstimatedCamera mCurrentEuclideanEstimatedCamera;
 
     /**
-     * Previous estimated camera in euclidean stratum (i.e. with actual scale).
+     * Previous estimated camera in Euclidean stratum (i.e. with actual scale).
      */
     protected EstimatedCamera mPreviousEuclideanEstimatedCamera;
 
     /**
-     * Reconstructed 3D points for current pair of views in euclidean stratum (i.e. with actual
+     * Reconstructed 3D points for current pair of views in Euclidean stratum (i.e. with actual
      * scale).
      */
     protected List<ReconstructedPoint3D> mEuclideanReconstructedPoints;
@@ -144,22 +145,22 @@ public abstract class BasePairedViewsSparseReconstructor<
     protected volatile boolean mRunning;
 
     /**
-     * Id of previous view.
+     * ID of previous view.
      */
     protected int mPreviousViewId = 0;
 
     /**
-     * Id of current view.
+     * ID of current view.
      */
     protected int mCurrentViewId;
 
     /**
-     * Center of current euclidean camera on last view pair.
+     * Center of current Euclidean camera on last view pair.
      */
     protected Point3D mLastEuclideanCameraCenter = new InhomogeneousPoint3D();
 
     /**
-     * Rotation of current euclidean camera on last view pair.
+     * Rotation of current Euclidean camera on last view pair.
      */
     protected Rotation3D mLastEuclideanCameraRotation;
 
@@ -216,7 +217,7 @@ public abstract class BasePairedViewsSparseReconstructor<
 
     /**
      * Transformation to set reference frame on estimated pair of metric cameras.
-     * This is used when estimating new pair of metric cameras to transform such pair to
+     * This is used when estimating a new pair of metric cameras to transform such pair to
      * the location and rotation of last estimated metric camera so that the first camera of
      * the pair is not referred to the world origin.
      */
@@ -324,7 +325,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Gets estimated euclidean camera for previous view (i.e. with actual scale).
+     * Gets estimated Euclidean camera for previous view (i.e. with actual scale).
      *
      * @return previous estimated euclidean camera.
      */
@@ -333,7 +334,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Gets euclidean reconstructed 3D points (i.e. with actual scale) for current
+     * Gets Euclidean reconstructed 3D points (i.e. with actual scale) for current
      * pair of views.
      *
      * @return active euclidean reconstructed 3D points.
@@ -343,7 +344,8 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Gets current estimated scale. This will typically converge to a constant value as more views are processed.
+     * Gets current estimated scale. This will typically converge to a constant value as more views are
+     * processed.
      * The smaller the variance of estimated scale, the more accurate the scale will be.
      *
      * @return current estimated scale.
@@ -371,7 +373,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Process one view pair of all the available data during the reconstruction.
+     * Process one view-pair of all the available data during the reconstruction.
      * This method can be called multiple times instead of {@link #start()} to build the
      * reconstruction step by step, one view pair at a time.
      * This method is useful when data is gathered on real time from a camera and the
@@ -477,7 +479,8 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Resets this instance so that a reconstruction can be started from the beginning without cancelling current one.
+     * Resets this instance so that a reconstruction can be started from the beginning without cancelling
+     * current one.
      */
     public void reset() {
         if (mPreviousViewSamples != null) {
@@ -536,7 +539,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     /**
      * Transforms cameras on current pair of views so that they are referred to
      * last kept location and rotation and upgrades cameras from metric stratum to
-     * euclidean stratum.
+     * Euclidean stratum.
      *
      * @param isInitialPairOfViews   true if initial pair of views is being processed, false otherwise.
      * @param hasAbsoluteOrientation true if absolute orientation is required, false otherwise.
@@ -735,7 +738,7 @@ public abstract class BasePairedViewsSparseReconstructor<
 
     /**
      * Estimates fundamental matrix for provided matches, when 3D points lay in
-     * a general non degenerate 3D configuration.
+     * a general non-degenerate 3D configuration.
      *
      * @param matches pairs of matches to find fundamental matrix.
      * @param viewId1 id of first view.
@@ -810,7 +813,7 @@ public abstract class BasePairedViewsSparseReconstructor<
                     mConfiguration.getFundamentalMatrixMaxIterations());
 
             switch (mConfiguration.getRobustFundamentalMatrixEstimatorMethod()) {
-                case LMedS:
+                case LMEDS:
                     ((LMedSFundamentalMatrixRobustEstimator) estimator).
                             setStopThreshold(mConfiguration.
                                     getFundamentalMatrixThreshold());
@@ -820,7 +823,7 @@ public abstract class BasePairedViewsSparseReconstructor<
                             setThreshold(mConfiguration.
                                     getFundamentalMatrixThreshold());
                     break;
-                case PROMedS:
+                case PROMEDS:
                     ((PROMedSFundamentalMatrixRobustEstimator) estimator).
                             setStopThreshold(mConfiguration.
                                     getFundamentalMatrixThreshold());
@@ -967,7 +970,7 @@ public abstract class BasePairedViewsSparseReconstructor<
                     mConfiguration.getPlanarHomographyMaxIterations());
 
             switch (mConfiguration.getRobustPlanarHomographyEstimatorMethod()) {
-                case LMedS:
+                case LMEDS:
                     ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                             homographyEstimator).setStopThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
@@ -977,7 +980,7 @@ public abstract class BasePairedViewsSparseReconstructor<
                             homographyEstimator).setThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
                     break;
-                case PROMedS:
+                case PROMEDS:
                     ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                             homographyEstimator).setStopThreshold(
                             mConfiguration.getPlanarHomographyThreshold());
@@ -1089,7 +1092,7 @@ public abstract class BasePairedViewsSparseReconstructor<
     }
 
     /**
-     * Estimates pair of cameras and reconstructed points.
+     * Estimates a pair of cameras and reconstructed points.
      *
      * @param isInitialPairOfViews true if initial pair of views is being processed,
      *                             false otherwise.
@@ -1122,7 +1125,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      */
     private boolean estimateInitialCamerasAndPointsDAQAndEssential(
             final boolean isInitialPairOfViews) {
-        // for non initial view, keep last center and rotation
+        // for non-initial view, keep last center and rotation
         if (!isInitialPairOfViews && keepLastCenterAndRotation()) {
             return false;
         }
@@ -1192,7 +1195,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsDAQ(final boolean isInitialPairOfViews) {
-        // for non initial view, keep last center and rotation
+        // for non-initial view, keep last center and rotation
         if (!isInitialPairOfViews && keepLastCenterAndRotation()) {
             return false;
         }
@@ -1352,7 +1355,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsDIAC(final boolean isInitialPairOfViews) {
-        // for non initial view, keep last center and rotation
+        // for non-initial view, keep last center and rotation
         if (!isInitialPairOfViews && keepLastCenterAndRotation()) {
             return false;
         }
@@ -1438,7 +1441,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsEssential(final boolean isInitialPairOfViews) {
-        // for non initial view, keep last center and rotation
+        // for non-initial view, keep last center and rotation
         if (!isInitialPairOfViews && keepLastCenterAndRotation()) {
             return false;
         }
@@ -1576,7 +1579,7 @@ public abstract class BasePairedViewsSparseReconstructor<
             return true;
         }
 
-        // keep last euclidean center and rotation
+        // keep last Euclidean center and rotation
         final PinholeCamera euclideanCamera = mCurrentEuclideanEstimatedCamera.getCamera();
         if (euclideanCamera == null) {
             return true;

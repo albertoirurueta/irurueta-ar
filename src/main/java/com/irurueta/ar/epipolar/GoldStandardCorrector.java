@@ -43,13 +43,13 @@ import java.util.List;
 public class GoldStandardCorrector extends Corrector {
 
     /**
-     * Indicates that correction must fallback to Sampson method if Gold
+     * Indicates that correction must use Sampson method as a fallback if Gold
      * Standard correction fails.
      */
     public static final boolean DEFAULT_FALLBACK_TO_SAMPSON_ENABLED = true;
 
     /**
-     * Indicates whether correction must fallback to Sampson method if Gold
+     * Indicates whether correction must use Sampson method as a fallback if Gold
      * Standard correction fails.
      */
     private boolean mFallbackToSampsonEnabled;
@@ -159,7 +159,7 @@ public class GoldStandardCorrector extends Corrector {
     }
 
     /**
-     * Indicates whether correction must fallback to Sampson method if Gold
+     * Indicates whether correction must use Sampson method as a fallback if Gold
      * Standard correction fails.
      * If true, whenever the correction of a matched pair of points fails,
      * its correction will be done with Sampson method instead. This allows
@@ -167,24 +167,24 @@ public class GoldStandardCorrector extends Corrector {
      * results in those points where Gold Standard method failed.
      * If false, whenever a single pair of matched pair of points fails to
      * be corrected, the algorithm stops and no points are corrected at all.
-     * By default fallback is enabled.
+     * By default, fallback is enabled.
      *
-     * @return true if fallback is enabled, false otherwise..
+     * @return true if fallback is enabled, false otherwise.
      */
     public boolean isFallbackToSampsonEnabled() {
         return mFallbackToSampsonEnabled;
     }
 
     /**
-     * Sets boolean indicating whether correction must fallback to Sampson
-     * method if Gold Standard correction fails.
+     * Sets boolean indicating whether correction must use Sampson
+     * method as a fallback if Gold Standard correction fails.
      * If true, whenever the correction of a matched pair of points fails,
      * its correction will be done with Sampson method instead. This allows
      * to continue correcting all points at the expense of getting worse
      * results in those points where Gold Standard method failed.
      * If false, whenever a single pair of matched pair of points fails to
      * be corrected, the algorithm stops and no points are corrected at all.
-     * By default fallback is enabled.
+     * By default, fallback is enabled.
      *
      * @param fallback true to enable fallback, false otherwise.
      * @throws LockedException if this instance is locked doing computations.

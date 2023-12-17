@@ -76,54 +76,45 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-
         final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
-        estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                fundamentalMatrix);
+        estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(fundamentalMatrix);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_TRIANGULATE_POINTS, estimator.arePointsTriangulated());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
-
 
         final List<Point2D> leftPoints = new ArrayList<>();
         leftPoints.add(Point2D.create());
         final List<Point2D> rightPoints = new ArrayList<>();
         rightPoints.add(Point2D.create());
-        estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(leftPoints,
-                rightPoints);
+        estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(leftPoints, rightPoints);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -131,32 +122,27 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                    leftPoints, null);
+            estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(leftPoints, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                    null, rightPoints);
+            estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(null, rightPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -166,23 +152,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 fundamentalMatrix, leftPoints, rightPoints);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertTrue(estimator.isReady());
         assertSame(estimator.getLeftPoints(), leftPoints);
         assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -206,22 +189,19 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -230,48 +210,41 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 fundamentalMatrix, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
-
 
         estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(leftPoints,
                 rightPoints, this);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -296,23 +269,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 fundamentalMatrix, leftPoints, rightPoints, this);
 
         // check default values
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
-        assertSame(estimator.getListener(), this);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(estimator.getMethod(),
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
-        assertEquals(estimator.arePointsTriangulated(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                EssentialMatrixInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
+        assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
+                estimator.areValidTriangulatedPointsMarked());
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
@@ -347,7 +317,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         estimator.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
-        assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
+        assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
     }
 
     @Test
@@ -362,7 +332,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -372,13 +342,13 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getAspectRatio(), 0.0);
 
         // set new value
         estimator.setAspectRatio(-1.0);
 
         // check correctness
-        assertEquals(estimator.getAspectRatio(), -1.0, 0.0);
+        assertEquals(-1.0, estimator.getAspectRatio(), 0.0);
     }
 
     @Test
@@ -388,16 +358,15 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getPrincipalPointX(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getPrincipalPointX(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                MAX_PRINCIPAL_POINT);
+        final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
         estimator.setPrincipalPointX(principalPointX);
 
         // check correctness
-        assertEquals(estimator.getPrincipalPointX(), principalPointX, 0.0);
+        assertEquals(principalPointX, estimator.getPrincipalPointX(), 0.0);
     }
 
     @Test
@@ -407,7 +376,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getPrincipalPointY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getPrincipalPointY(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -416,7 +385,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         estimator.setPrincipalPointY(principalPointY);
 
         // check correctness
-        assertEquals(estimator.getPrincipalPointY(), principalPointY, 0.0);
+        assertEquals(principalPointY, estimator.getPrincipalPointY(), 0.0);
     }
 
     @Test
@@ -426,20 +395,18 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getPrincipalPointX(), 0.0, 0.0);
-        assertEquals(estimator.getPrincipalPointY(), 0.0, 0.0);
+        assertEquals(0.0, estimator.getPrincipalPointX(), 0.0);
+        assertEquals(0.0, estimator.getPrincipalPointY(), 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                MAX_PRINCIPAL_POINT);
-        final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                MAX_PRINCIPAL_POINT);
+        final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
         estimator.setPrincipalPoint(principalPointX, principalPointY);
 
         // check correctness
-        assertEquals(estimator.getPrincipalPointX(), principalPointX, 0.0);
-        assertEquals(estimator.getPrincipalPointY(), principalPointY, 0.0);
+        assertEquals(principalPointX, estimator.getPrincipalPointX(), 0.0);
+        assertEquals(principalPointY, estimator.getPrincipalPointY(), 0.0);
     }
 
     @Test
@@ -456,7 +423,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         estimator.setLeftPoints(leftPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
     }
 
     @Test
@@ -473,7 +440,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         estimator.setRightPoints(rightPoints);
 
         // check correctness
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(rightPoints, estimator.getRightPoints());
     }
 
     @Test
@@ -494,8 +461,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
         estimator.setLeftAndRightPoints(leftPoints, rightPoints);
 
         // check correctness
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
 
         // Force IllegalArgumentException
         try {
@@ -524,13 +491,13 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.getCorrectorType(), Corrector.DEFAULT_TYPE);
+        assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
 
         // set new value
         estimator.setCorrectorType(CorrectorType.GOLD_STANDARD);
 
         // check correctness
-        assertEquals(estimator.getCorrectorType(), CorrectorType.GOLD_STANDARD);
+        assertEquals(CorrectorType.GOLD_STANDARD, estimator.getCorrectorType());
     }
 
     @Test
@@ -540,19 +507,16 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.arePointsTriangulated(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
 
         // set new value
         estimator.setPointsTriangulated(
-                !DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
+                !DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS);
 
         // check correctness
-        assertEquals(estimator.arePointsTriangulated(),
-                !DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_TRIANGULATE_POINTS);
+        assertEquals(!DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
+                estimator.arePointsTriangulated());
     }
 
     @Test
@@ -562,19 +526,16 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 new DualImageOfAbsoluteConicInitialCamerasEstimator();
 
         // check default value
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
 
         // set new value
         estimator.setValidTriangulatedPointsMarked(
-                !DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+                !DualImageOfAbsoluteConicInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
 
         // check correctness
-        assertEquals(estimator.areValidTriangulatedPointsMarked(),
-                !DualImageOfAbsoluteConicInitialCamerasEstimator.
-                        DEFAULT_MARK_VALID_TRIANGULATED_POINTS);
+        assertEquals(!DualImageOfAbsoluteConicInitialCamerasEstimator.
+                DEFAULT_MARK_VALID_TRIANGULATED_POINTS, estimator.areValidTriangulatedPointsMarked());
     }
 
     @Test
@@ -598,14 +559,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -616,27 +574,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -648,24 +599,22 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             } catch (final KruppaDualImageOfAbsoluteConicEstimatorException e) {
                 continue;
             }
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    diac.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
             if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
                     ABSOLUTE_ERROR) {
                 continue;
             }
 
-            assertEquals(intrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
+            assertEquals(intrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
                     ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -682,28 +631,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -723,8 +664,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -740,14 +680,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -765,9 +702,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -800,18 +735,14 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             final PinholeCamera camera1b = estimator.getEstimatedLeftCamera();
             final PinholeCamera camera2b = estimator.getEstimatedRightCamera();
-            final List<Point3D> triangulatedPoints =
-                    estimator.getTriangulatedPoints();
-            final BitSet validTriangulatedPoints =
-                    estimator.getValidTriangulatedPoints();
+            final List<Point3D> triangulatedPoints = estimator.getTriangulatedPoints();
+            final BitSet validTriangulatedPoints = estimator.getValidTriangulatedPoints();
 
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -819,25 +750,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -857,12 +780,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -871,8 +792,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -894,21 +814,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -927,15 +846,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -952,10 +867,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -974,8 +887,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -989,8 +901,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
@@ -1000,16 +911,14 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 }
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0 && numValidEqual > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0
+                    && numValidEqual > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.
-                    transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.
-                    transformAndReturnNew(camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1070,14 +979,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -1088,23 +994,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
                     new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
@@ -1119,24 +1019,21 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             } catch (final KruppaDualImageOfAbsoluteConicEstimatorException e) {
                 continue;
             }
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    diac.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
-            assertEquals(intrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
+            assertEquals(intrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
                     ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -1153,28 +1050,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -1194,8 +1083,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -1211,14 +1099,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -1236,9 +1121,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -1266,10 +1149,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -1277,25 +1158,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -1315,12 +1188,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -1330,8 +1201,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -1353,21 +1223,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -1380,15 +1249,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1405,10 +1270,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -1427,8 +1290,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -1448,10 +1310,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1503,14 +1363,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -1521,27 +1378,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -1553,24 +1403,21 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             } catch (final KruppaDualImageOfAbsoluteConicEstimatorException e) {
                 continue;
             }
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    diac.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
-            assertEquals(intrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
+            assertEquals(intrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
                     ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -1587,28 +1434,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -1628,8 +1467,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -1645,14 +1483,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -1668,9 +1503,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -1698,10 +1531,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -1709,25 +1540,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -1747,12 +1570,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -1784,21 +1605,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -1811,15 +1631,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1836,10 +1652,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -1879,10 +1693,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1934,14 +1746,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -1952,27 +1761,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -2000,8 +1802,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -2018,28 +1819,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -2076,14 +1869,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -2101,9 +1891,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -2134,10 +1922,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -2145,25 +1931,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength, ABSOLUTE_ERROR);
+            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength, ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -2183,12 +1961,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -2198,8 +1974,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -2221,21 +1996,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -2254,15 +2028,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -2279,10 +2049,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -2321,8 +2089,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
                 // check that triangulated point after recovering scale matches
                 // original point
-                if (worldPoint.equals(scaledTriangulatedPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (worldPoint.equals(scaledTriangulatedPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidEqual++;
                 }
             }
@@ -2388,14 +2155,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -2406,27 +2170,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -2438,11 +2195,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             } catch (final KruppaDualImageOfAbsoluteConicEstimatorException e) {
                 continue;
             }
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    diac.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
@@ -2454,8 +2209,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -2472,28 +2226,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -2513,8 +2259,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -2530,14 +2275,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -2554,9 +2296,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -2587,10 +2327,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -2598,25 +2336,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -2636,12 +2366,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -2651,8 +2379,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -2674,22 +2401,21 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
 
             if (epipole2.distanceTo(epipole2b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -2708,15 +2434,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -2733,10 +2455,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -2755,8 +2475,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -2770,8 +2489,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
@@ -2787,10 +2505,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -2840,14 +2556,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -2858,23 +2571,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
                     new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
@@ -2889,11 +2596,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             } catch (final KruppaDualImageOfAbsoluteConicEstimatorException e) {
                 continue;
             }
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    diac.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
@@ -2923,31 +2628,22 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -2980,14 +2676,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -2999,9 +2692,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -3036,25 +2727,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -3074,12 +2757,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -3089,8 +2770,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -3109,13 +2789,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    VERY_LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), VERY_LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -3128,15 +2806,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -3153,10 +2827,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -3175,8 +2847,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -3190,16 +2861,13 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -3254,14 +2922,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -3272,27 +2937,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -3307,8 +2965,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
@@ -3320,8 +2977,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -3338,28 +2994,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -3379,8 +3027,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -3396,14 +3043,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -3421,9 +3065,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -3443,8 +3085,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int numValid = DualImageOfAbsoluteConicInitialCamerasEstimator.
                     generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
                             principalPointX, principalPointY, aspectRatio, leftPoints,
-                            rightPoints, CorrectorType.GOLD_STANDARD, camera1b,
-                            camera2b);
+                            rightPoints, CorrectorType.GOLD_STANDARD, camera1b, camera2b);
 
             // check correctness
             assertEquals(numValid, nPoints);
@@ -3452,10 +3093,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -3463,25 +3102,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -3501,12 +3132,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -3516,8 +3145,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -3536,15 +3164,14 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -3557,15 +3184,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -3582,10 +3205,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -3604,8 +3225,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -3619,16 +3239,13 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -3676,14 +3293,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -3694,27 +3308,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
                     new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                            focalLength, principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -3726,11 +3333,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             } catch (final KruppaDualImageOfAbsoluteConicEstimatorException e) {
                 continue;
             }
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    diac.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
@@ -3742,8 +3347,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -3760,28 +3364,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -3801,8 +3397,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -3817,14 +3412,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1 +
                                     principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1 +
                                     principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1 +
                                     principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
@@ -3836,9 +3428,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -3865,10 +3455,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -3876,25 +3464,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -3914,12 +3494,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -3929,8 +3507,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -3949,12 +3526,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
             final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
 
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -3973,15 +3549,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -3998,10 +3570,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -4020,8 +3590,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -4035,13 +3604,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
-                if (worldPoint.equals(scaledTriangulatedPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (worldPoint.equals(scaledTriangulatedPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidEqual++;
                 }
             }
@@ -4052,10 +3619,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -4107,14 +3672,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES_KRUPPA,
                     MAX_ANGLE_DEGREES_KRUPPA) * Math.PI / 180.0;
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double aspectRatio = 1.0;
             final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
-            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT,
-                    MAX_PRINCIPAL_POINT);
+            final double principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final double principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
             final double cameraSeparation = randomizer.nextDouble(
                     MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
@@ -4125,27 +3687,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY,
-                            skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1,
-                    camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
@@ -4160,8 +3715,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final PinholeCameraIntrinsicParameters intrinsic2 =
                     diac.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) >
-                    ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - focalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
 
@@ -4173,8 +3727,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(intrinsic2.getVerticalPrincipalPoint(),
                     intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(),
-                    ABSOLUTE_ERROR);
+            assertEquals(intrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
 
             // create 3D points laying in front of both cameras
 
@@ -4191,28 +3744,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -4232,8 +3777,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints =
-                    new ArrayList<>();
+            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
             Point2D leftPoint;
             Point2D rightPoint;
             final List<Point2D> leftPoints = new ArrayList<>();
@@ -4267,9 +3811,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 worldPoints.add(worldPoint);
 
                 // check that world point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project world point into both cameras
@@ -4296,10 +3838,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b =
-                    camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b =
-                    camera2b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
 
             final Rotation3D rotation1b = camera1b.getCameraRotation();
             final Rotation3D rotation2b = camera2b.getCameraRotation();
@@ -4307,25 +3847,17 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final Point3D center1b = camera1b.getCameraCenter();
             final Point3D center2b = camera2b.getCameraCenter();
 
-            assertEquals(intrinsic1b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic1b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic1b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic1b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic1b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            assertEquals(intrinsic2b.getHorizontalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalFocalLength(), focalLength,
-                    ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getSkewness(), 0.0, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getHorizontalPrincipalPoint(),
-                    principalPointX, ABSOLUTE_ERROR);
-            assertEquals(intrinsic2b.getVerticalPrincipalPoint(),
-                    principalPointY, ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(focalLength, intrinsic2b.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(0.0, intrinsic2b.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(principalPointX, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(principalPointY, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
             final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
                     rotation1b.inverseRotationAndReturnNew());
@@ -4345,12 +3877,10 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             final double invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
-            assertEquals(distanceB, 1.0, ABSOLUTE_ERROR);
+            assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation =
-                    scaleTransformation.inverseAndReturnNew();
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
             final MetricTransformation3D invScaleTransformation2 =
                     new MetricTransformation3D(invScaleFactor);
 
@@ -4360,8 +3890,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(
-                    camera1b, camera2b);
+            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
@@ -4383,23 +3912,22 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             if (epipole1.distanceTo(epipole1a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
 
             if (epipole2.distanceTo(epipole2a) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2a), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             if (epipole1.distanceTo(epipole1b) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole1.distanceTo(epipole1b), 0.0, ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
 
             if (epipole2.distanceTo(epipole2b) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(epipole2.distanceTo(epipole2b), 0.0,
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
@@ -4418,15 +3946,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(
-                        rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(
-                        leftPoint);
+                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -4443,10 +3967,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 final Plane epipolarPlane1b = camera1b.backProject(line1b);
                 final Plane epipolarPlane2b = camera2b.backProject(line2b);
 
-                assertTrue(epipolarPlane1a.equals(epipolarPlane2a,
-                        ABSOLUTE_ERROR));
-                assertTrue(epipolarPlane1b.equals(epipolarPlane2b,
-                        ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
+                assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
 
                 // check that 3D point and both camera centers for each pair of
                 // cameras belong to their corresponding epipolar plane
@@ -4465,8 +3987,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -4480,13 +4001,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
 
                 // recover scale in triangulated point
-                scaledTriangulatedPoint = invScaleTransformation.
-                        transformAndReturnNew(triangulatedPoint);
+                scaledTriangulatedPoint = invScaleTransformation.transformAndReturnNew(triangulatedPoint);
 
                 // check that triangulated point after recovering scale matches
                 // original point
-                if (worldPoint.equals(scaledTriangulatedPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (worldPoint.equals(scaledTriangulatedPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidEqual++;
                 }
             }
@@ -4497,10 +4016,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(
-                    camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(
-                    camera2b);
+            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -4514,8 +4031,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
 
             final Matrix camera2Matrix = camera2.getInternalMatrix();
             final Matrix camera2cMatrix = camera2c.getInternalMatrix();
-            assertTrue(camera2Matrix.equals(camera2cMatrix,
-                    LARGE_ABSOLUTE_ERROR));
+            assertTrue(camera2Matrix.equals(camera2cMatrix, LARGE_ABSOLUTE_ERROR));
 
             if (numValidTimes > 0) {
                 break;
@@ -4550,7 +4066,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             fail("LockedException expected but not thrown");
         } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
         } catch (final com.irurueta.geometry.estimators.NotReadyException |
-                InitialCamerasEstimationFailedException ex) {
+                       InitialCamerasEstimationFailedException ex) {
             fail("LockedException expected but not thrown");
         }
         try {

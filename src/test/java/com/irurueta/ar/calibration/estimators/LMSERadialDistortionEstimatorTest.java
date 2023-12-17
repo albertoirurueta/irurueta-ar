@@ -34,8 +34,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class LMSERadialDistortionEstimatorTest implements
-        RadialDistortionEstimatorListener {
+public class LMSERadialDistortionEstimatorTest implements RadialDistortionEstimatorListener {
 
     private static final double MIN_POINT_VALUE = -1.0;
     private static final double MAX_POINT_VALUE = 1.0;
@@ -54,41 +53,36 @@ public class LMSERadialDistortionEstimatorTest implements
     @Test
     public void testConstructor() {
         // test constructor without parameters
-        LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check correctness
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // test constructor with listener
         estimator = new LMSERadialDistortionEstimator(this);
@@ -97,34 +91,30 @@ public class LMSERadialDistortionEstimatorTest implements
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // test constructor with distorted/undistorted points
         final List<Point2D> distortedPoints = new ArrayList<>();
@@ -134,107 +124,93 @@ public class LMSERadialDistortionEstimatorTest implements
             undistortedPoints.add(Point2D.create());
         }
 
-        estimator = new LMSERadialDistortionEstimator(distortedPoints,
-                undistortedPoints);
+        estimator = new LMSERadialDistortionEstimator(distortedPoints, undistortedPoints);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
         estimator = null;
         try {
-            estimator = new LMSERadialDistortionEstimator(emptyPoints,
-                    undistortedPoints);
+            estimator = new LMSERadialDistortionEstimator(emptyPoints, undistortedPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMSERadialDistortionEstimator(emptyPoints,
-                    emptyPoints);
+            estimator = new LMSERadialDistortionEstimator(emptyPoints, emptyPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMSERadialDistortionEstimator(null,
-                    undistortedPoints);
+            estimator = new LMSERadialDistortionEstimator(null, undistortedPoints);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMSERadialDistortionEstimator(distortedPoints,
-                    null);
+            estimator = new LMSERadialDistortionEstimator(distortedPoints, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
 
         // test constructor with distorted/undistorted points and listener
-        estimator = new LMSERadialDistortionEstimator(distortedPoints,
-                undistortedPoints, this);
+        estimator = new LMSERadialDistortionEstimator(distortedPoints, undistortedPoints, this);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         estimator = null;
@@ -272,34 +248,30 @@ public class LMSERadialDistortionEstimatorTest implements
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // test constructor with distortion center and listener
         estimator = new LMSERadialDistortionEstimator(center, this);
@@ -307,95 +279,81 @@ public class LMSERadialDistortionEstimatorTest implements
         // check correctness
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // test constructor with distorted/undistorted points and distortion
         // center
-        estimator = new LMSERadialDistortionEstimator(distortedPoints,
-                undistortedPoints, center);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        estimator = new LMSERadialDistortionEstimator(distortedPoints, undistortedPoints, center);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMSERadialDistortionEstimator(emptyPoints,
-                    undistortedPoints, center);
+            estimator = new LMSERadialDistortionEstimator(emptyPoints, undistortedPoints, center);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMSERadialDistortionEstimator(emptyPoints,
-                    emptyPoints, center);
+            estimator = new LMSERadialDistortionEstimator(emptyPoints, emptyPoints, center);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMSERadialDistortionEstimator(null,
-                    undistortedPoints, center);
+            estimator = new LMSERadialDistortionEstimator(null, undistortedPoints, center);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new LMSERadialDistortionEstimator(distortedPoints,
-                    null, center);
+            estimator = new LMSERadialDistortionEstimator(distortedPoints, null, center);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -405,37 +363,36 @@ public class LMSERadialDistortionEstimatorTest implements
         // center
         estimator = new LMSERadialDistortionEstimator(distortedPoints,
                 undistortedPoints, center, this);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
+        //noinspection EqualsWithItself
         assertEquals(estimator.getMinNumberOfMatchedPoints(),
                 estimator.getMinNumberOfMatchedPoints());
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         estimator = null;
@@ -468,8 +425,7 @@ public class LMSERadialDistortionEstimatorTest implements
 
     @Test
     public void testGetSetDistortedUndistortedPoints() throws LockedException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default values
         assertNull(estimator.getDistortedPoints());
@@ -486,8 +442,8 @@ public class LMSERadialDistortionEstimatorTest implements
         estimator.setPoints(distortedPoints, undistortedPoints);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
@@ -515,15 +471,12 @@ public class LMSERadialDistortionEstimatorTest implements
 
     @Test
     public void testGetSetDistortionCenter() throws LockedException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default value
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
 
         // set new value
         final Point2D center = Point2D.create();
@@ -531,32 +484,28 @@ public class LMSERadialDistortionEstimatorTest implements
         estimator.setDistortionCenter(center);
 
         // check correctness
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(center.getInhomX(), estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
     }
 
     @Test
     public void testGetSetHorizontalFocalLength() throws LockedException,
             RadialDistortionException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
 
         // set new value
         estimator.setHorizontalFocalLength(2.0);
 
         // check correctness
-        assertEquals(estimator.getHorizontalFocalLength(), 2.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                2.0, 0.0);
+        assertEquals(2.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -569,22 +518,20 @@ public class LMSERadialDistortionEstimatorTest implements
     @Test
     public void testGetSetVerticalFocalLength() throws LockedException,
             RadialDistortionException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
 
         // set new value
         estimator.setVerticalFocalLength(2.0);
 
         // check correctness
-        assertEquals(estimator.getVerticalFocalLength(), 2.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                2.0, 0.0);
+        assertEquals(2.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -596,37 +543,33 @@ public class LMSERadialDistortionEstimatorTest implements
 
     @Test
     public void testGetSetSkew() throws LockedException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
 
         // set new value
         estimator.setSkew(1.0);
 
         // check correctness
-        assertEquals(estimator.getSkew(), 1.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getSkew(), 0.0);
+        assertEquals(1.0, estimator.getIntrinsic().getSkewness(), 0.0);
     }
 
     @Test
     public void testSetIntrinsic() throws LockedException,
             RadialDistortionException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default values
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
 
         // set new values
         final Point2D center = new InhomogeneousPoint2D(1.0, 2.0);
@@ -634,11 +577,11 @@ public class LMSERadialDistortionEstimatorTest implements
         estimator.setIntrinsic(center, 3.0, 4.0, 5.0);
 
         // check correctness
-        assertEquals(estimator.getDistortionCenter().getInhomX(), 1.0, 0.0);
-        assertEquals(estimator.getDistortionCenter().getInhomY(), 2.0, 0.0);
-        assertEquals(estimator.getHorizontalFocalLength(), 3.0, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(), 4.0, 0.0);
-        assertEquals(estimator.getSkew(), 5.0, 0.0);
+        assertEquals(1.0, estimator.getDistortionCenter().getInhomX(), 0.0);
+        assertEquals(2.0, estimator.getDistortionCenter().getInhomY(), 0.0);
+        assertEquals(3.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(4.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, estimator.getSkew(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -649,19 +592,20 @@ public class LMSERadialDistortionEstimatorTest implements
 
         // set new values
         PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters(1.0, 2.0, 3.0, 4.0, 5.0);
+                new PinholeCameraIntrinsicParameters(1.0, 2.0,
+                        3.0, 4.0, 5.0);
         estimator.setIntrinsic(intrinsic);
 
         // check correctness
-        assertEquals(estimator.getDistortionCenter().getInhomX(), 3.0, 0.0);
-        assertEquals(estimator.getDistortionCenter().getInhomY(), 4.0, 0.0);
-        assertEquals(estimator.getHorizontalFocalLength(), 1.0, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(), 2.0, 0.0);
-        assertEquals(estimator.getSkew(), 5.0, 0.0);
+        assertEquals(3.0, estimator.getDistortionCenter().getInhomX(), 0.0);
+        assertEquals(4.0, estimator.getDistortionCenter().getInhomY(), 0.0);
+        assertEquals(1.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, estimator.getSkew(), 0.0);
 
         // Force RadialDistortionException
-        intrinsic = new PinholeCameraIntrinsicParameters(0.0, 0.0, 3.0, 4.0,
-                5.0);
+        intrinsic = new PinholeCameraIntrinsicParameters(0.0, 0.0,
+                3.0, 4.0, 5.0);
         try {
             estimator.setIntrinsic(intrinsic);
             fail("RadialDistortionException expected but not thrown");
@@ -672,22 +616,18 @@ public class LMSERadialDistortionEstimatorTest implements
     @Test
     public void testGetSetNumKParamsAndGetMinNumberOfMatchedPoints()
             throws LockedException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default values
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getNumKParams());
+        assertEquals(estimator.getNumKParams(), RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getNumKParams());
 
         // set new value
         estimator.setNumKParams(3);
 
         // check correctness
-        assertEquals(estimator.getNumKParams(), 3);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getNumKParams());
+        assertEquals(3, estimator.getNumKParams());
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getNumKParams());
 
         // Force IllegalArgumentException
         try {
@@ -699,26 +639,23 @@ public class LMSERadialDistortionEstimatorTest implements
 
     @Test
     public void testIsSetLMSESolutionAllowed() throws LockedException {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
 
         // set new value
-        estimator.setLMSESolutionAllowed(
-                !LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        estimator.setLMSESolutionAllowed(!LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
 
         // check default value
-        assertEquals(estimator.isLMSESolutionAllowed(),
-                !LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        assertEquals(!LMSERadialDistortionEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
+                estimator.isLMSESolutionAllowed());
     }
 
     @Test
     public void testAreValidPoints() {
-        final LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator();
+        final LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator();
 
         final List<Point2D> distortedPoints = new ArrayList<>();
         final List<Point2D> undistortedPoints = new ArrayList<>();
@@ -728,8 +665,7 @@ public class LMSERadialDistortionEstimatorTest implements
         }
         final List<Point2D> emptyPoints = new ArrayList<>();
 
-        assertTrue(estimator.areValidPoints(distortedPoints,
-                undistortedPoints));
+        assertTrue(estimator.areValidPoints(distortedPoints, undistortedPoints));
         assertFalse(estimator.areValidPoints(emptyPoints, undistortedPoints));
         assertFalse(estimator.areValidPoints(distortedPoints, emptyPoints));
         assertFalse(estimator.areValidPoints(null, undistortedPoints));
@@ -738,8 +674,7 @@ public class LMSERadialDistortionEstimatorTest implements
 
     @Test
     public void testEstimate() throws NotSupportedException, LockedException,
-            NotReadyException, RadialDistortionEstimatorException,
-            DistortionException {
+            NotReadyException, RadialDistortionEstimatorException, DistortionException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
@@ -765,9 +700,8 @@ public class LMSERadialDistortionEstimatorTest implements
         }
 
         // test estimation when LMSE is not allowed
-        LMSERadialDistortionEstimator estimator =
-                new LMSERadialDistortionEstimator(distortedPoints,
-                        undistortedPoints, center, this);
+        LMSERadialDistortionEstimator estimator = new LMSERadialDistortionEstimator(distortedPoints,
+                undistortedPoints, center, this);
 
         assertFalse(estimator.isLMSESolutionAllowed());
         assertEquals(distortion.getCenter().getInhomX(),
@@ -783,23 +717,23 @@ public class LMSERadialDistortionEstimatorTest implements
 
         assertTrue(estimator.isReady());
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 0);
-        assertEquals(estimateEnd, 0);
-        assertEquals(estimationProgressChange, 0);
+        assertEquals(0, estimateStart);
+        assertEquals(0, estimateEnd);
+        assertEquals(0, estimationProgressChange);
 
         RadialDistortion distortion2 = estimator.estimate();
 
         // check correctness
         assertTrue(estimator.isReady());
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 1);
-        assertEquals(estimateEnd, 1);
+        assertEquals(1, estimateStart);
+        assertEquals(1, estimateEnd);
         assertTrue(estimationProgressChange >= 0);
         reset();
 
-        assertEquals(distortion2.getK1(), k1, ABSOLUTE_ERROR);
-        assertEquals(distortion2.getK2(), k2, ABSOLUTE_ERROR);
-        assertEquals(distortion2.getCenter(), center);
+        assertEquals(k1, distortion2.getK1(), ABSOLUTE_ERROR);
+        assertEquals(k2, distortion2.getK2(), ABSOLUTE_ERROR);
+        assertEquals(center, distortion2.getCenter());
 
         // test estimation when LMSE is allowed
         estimator = new LMSERadialDistortionEstimator(distortedPoints,
@@ -810,23 +744,23 @@ public class LMSERadialDistortionEstimatorTest implements
 
         assertTrue(estimator.isReady());
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 0);
-        assertEquals(estimateEnd, 0);
-        assertEquals(estimationProgressChange, 0);
+        assertEquals(0, estimateStart);
+        assertEquals(0, estimateEnd);
+        assertEquals(0, estimationProgressChange);
 
         distortion2 = estimator.estimate();
 
         // check correctness
         assertTrue(estimator.isReady());
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 1);
-        assertEquals(estimateEnd, 1);
+        assertEquals(1, estimateStart);
+        assertEquals(1, estimateEnd);
         assertTrue(estimationProgressChange >= 0);
         reset();
 
-        assertEquals(distortion2.getK1(), k1, ABSOLUTE_ERROR);
-        assertEquals(distortion2.getK2(), k2, ABSOLUTE_ERROR);
-        assertEquals(distortion2.getCenter(), center);
+        assertEquals(k1, distortion2.getK1(), ABSOLUTE_ERROR);
+        assertEquals(k2, distortion2.getK2(), ABSOLUTE_ERROR);
+        assertEquals(center, distortion2.getCenter());
     }
 
     @Override

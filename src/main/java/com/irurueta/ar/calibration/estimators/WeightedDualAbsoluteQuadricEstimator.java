@@ -21,6 +21,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.Utils;
 import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.BaseQuadric;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
@@ -336,8 +337,8 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @throws NotReadyException                     if no valid input data has already been
      *                                               provided.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because input data is not valid or numerically
-     *                                               unstable.
+     *                                               estimation, usually because input data is not valid or
+     *                                               numerically unstable.
      */
     @Override
     public void estimate(final DualAbsoluteQuadric result)
@@ -410,10 +411,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadric
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or
-     *                                               cameras corresponding to critical motion sequences such as pure
-     *                                               parallel translations are provided, where no additional data is
-     *                                               really provided.
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
      */
     private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
             DualAbsoluteQuadric result)
@@ -426,12 +427,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     mSortWeights, nCams);
             final boolean[] selected = selection.getSelected();
 
-            final Matrix a = new Matrix(DualAbsoluteQuadric.N_PARAMS,
-                    DualAbsoluteQuadric.N_PARAMS);
-            final Matrix row = new Matrix(4, DualAbsoluteQuadric.N_PARAMS);
-            final Matrix transRow = new Matrix(DualAbsoluteQuadric.N_PARAMS, 4);
-            final Matrix tmp = new Matrix(DualAbsoluteQuadric.N_PARAMS,
-                    DualAbsoluteQuadric.N_PARAMS);
+            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final Matrix row = new Matrix(4, BaseQuadric.N_PARAMS);
+            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 4);
+            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
 
             Matrix cameraMatrix;
             double p11;
@@ -540,10 +539,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadrics
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or
-     *                                               cameras corresponding to critical motion sequences such as pure
-     *                                               parallel translations are provided, where no additional data is
-     *                                               really provided.
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
      */
     private void estimateZeroSkewnessAndPrincipalPointAtOrigin(
             final DualAbsoluteQuadric result)
@@ -556,12 +555,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     mSortWeights, nCams);
             final boolean[] selected = selection.getSelected();
 
-            final Matrix a = new Matrix(DualAbsoluteQuadric.N_PARAMS,
-                    DualAbsoluteQuadric.N_PARAMS);
-            final Matrix row = new Matrix(3, DualAbsoluteQuadric.N_PARAMS);
-            final Matrix transRow = new Matrix(DualAbsoluteQuadric.N_PARAMS, 3);
-            final Matrix tmp = new Matrix(DualAbsoluteQuadric.N_PARAMS,
-                    DualAbsoluteQuadric.N_PARAMS);
+            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final Matrix row = new Matrix(3, BaseQuadric.N_PARAMS);
+            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 3);
+            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
 
             Matrix cameraMatrix;
             double p11;
@@ -661,10 +658,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param result instance where resulting estimated Dual Absolute Quadrics
      *               will be stored.
      * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
-     *                                               estimation, usually because repeated cameras are provided, or
-     *                                               cameras corresponding to critical motion sequences such as pure
-     *                                               parallel translations are provided, where no additional data is
-     *                                               really provided.
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
      */
     private void estimatePrincipalPointAtOrigin(
             DualAbsoluteQuadric result)
@@ -677,12 +674,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     mSortWeights, nCams);
             final boolean[] selected = selection.getSelected();
 
-            final Matrix a = new Matrix(DualAbsoluteQuadric.N_PARAMS,
-                    DualAbsoluteQuadric.N_PARAMS);
-            final Matrix row = new Matrix(2, DualAbsoluteQuadric.N_PARAMS);
-            final Matrix transRow = new Matrix(DualAbsoluteQuadric.N_PARAMS, 2);
-            final Matrix tmp = new Matrix(DualAbsoluteQuadric.N_PARAMS,
-                    DualAbsoluteQuadric.N_PARAMS);
+            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final Matrix row = new Matrix(2, BaseQuadric.N_PARAMS);
+            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 2);
+            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
 
             Matrix cameraMatrix;
             double p11;

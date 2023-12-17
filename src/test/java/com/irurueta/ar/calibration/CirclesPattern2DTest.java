@@ -32,13 +32,11 @@ public class CirclesPattern2DTest {
         final CirclesPattern2D pattern = new CirclesPattern2D();
 
         // check default values
-        assertEquals(pattern.getPointSeparation(),
-                CirclesPattern2D.DEFAULT_POINT_SEPARATION, 0.0);
-        assertEquals(pattern.getCols(), CirclesPattern2D.DEFAULT_COLS);
-        assertEquals(pattern.getRows(), CirclesPattern2D.DEFAULT_ROWS);
-        assertEquals(pattern.getType(), Pattern2DType.CIRCLES);
-        assertEquals(pattern.getNumberOfPoints(),
-                CirclesPattern2D.DEFAULT_NUMBER_OF_POINTS);
+        assertEquals(CirclesPattern2D.DEFAULT_POINT_SEPARATION, pattern.getPointSeparation(), 0.0);
+        assertEquals(CirclesPattern2D.DEFAULT_COLS, pattern.getCols());
+        assertEquals(CirclesPattern2D.DEFAULT_ROWS, pattern.getRows());
+        assertEquals(Pattern2DType.CIRCLES, pattern.getType());
+        assertEquals(CirclesPattern2D.DEFAULT_NUMBER_OF_POINTS, pattern.getNumberOfPoints());
     }
 
     @Test
@@ -46,14 +44,13 @@ public class CirclesPattern2DTest {
         final CirclesPattern2D pattern = new CirclesPattern2D();
 
         // check default value
-        assertEquals(pattern.getPointSeparation(),
-                CirclesPattern2D.DEFAULT_POINT_SEPARATION, 0.0);
+        assertEquals(CirclesPattern2D.DEFAULT_POINT_SEPARATION, pattern.getPointSeparation(), 0.0);
 
         // set new value
         pattern.setPointSeparation(1.0);
 
         // check correctness
-        assertEquals(pattern.getPointSeparation(), 1.0, 0.0);
+        assertEquals(1.0, pattern.getPointSeparation(), 0.0);
 
         // force IllegalArgumentException
         try {
@@ -68,17 +65,15 @@ public class CirclesPattern2DTest {
         final CirclesPattern2D pattern = new CirclesPattern2D();
 
         // check default value
-        assertEquals(pattern.getCols(), CirclesPattern2D.DEFAULT_COLS);
-        assertEquals(pattern.getNumberOfPoints(),
-                CirclesPattern2D.DEFAULT_NUMBER_OF_POINTS);
+        assertEquals(CirclesPattern2D.DEFAULT_COLS, pattern.getCols());
+        assertEquals(CirclesPattern2D.DEFAULT_NUMBER_OF_POINTS, pattern.getNumberOfPoints());
 
         // set new value
         pattern.setCols(2);
 
         // check correctness
-        assertEquals(pattern.getCols(), 2);
-        assertEquals(pattern.getNumberOfPoints(),
-                pattern.getRows() * pattern.getCols());
+        assertEquals(2, pattern.getCols());
+        assertEquals(pattern.getRows() * pattern.getCols(), pattern.getNumberOfPoints());
 
         // force IllegalArgumentException
         try {
@@ -93,17 +88,15 @@ public class CirclesPattern2DTest {
         final CirclesPattern2D pattern = new CirclesPattern2D();
 
         // check default value
-        assertEquals(pattern.getRows(), CirclesPattern2D.DEFAULT_ROWS);
-        assertEquals(pattern.getNumberOfPoints(),
-                CirclesPattern2D.DEFAULT_NUMBER_OF_POINTS);
+        assertEquals(CirclesPattern2D.DEFAULT_ROWS, pattern.getRows());
+        assertEquals(CirclesPattern2D.DEFAULT_NUMBER_OF_POINTS, pattern.getNumberOfPoints());
 
         // set new value
         pattern.setRows(2);
 
         // check correctness
-        assertEquals(pattern.getRows(), 2);
-        assertEquals(pattern.getNumberOfPoints(),
-                pattern.getRows() * pattern.getCols());
+        assertEquals(2, pattern.getRows());
+        assertEquals(pattern.getRows() * pattern.getCols(), pattern.getNumberOfPoints());
 
         // force IllegalArgumentException
         try {
@@ -122,32 +115,32 @@ public class CirclesPattern2DTest {
 
         final List<Point2D> points = pattern.getIdealPoints();
 
-        assertEquals(points.get(0).getInhomX(), 0.0, 0.0);
-        assertEquals(points.get(0).getInhomY(), 0.0, 0.0);
+        assertEquals(0.0, points.get(0).getInhomX(), 0.0);
+        assertEquals(0.0, points.get(0).getInhomY(), 0.0);
 
-        assertEquals(points.get(1).getInhomX(), 2.0, 0.0);
-        assertEquals(points.get(1).getInhomY(), 0.0, 0.0);
+        assertEquals(2.0, points.get(1).getInhomX(), 0.0);
+        assertEquals(0.0, points.get(1).getInhomY(), 0.0);
 
-        assertEquals(points.get(2).getInhomX(), 4.0, 0.0);
-        assertEquals(points.get(2).getInhomY(), 0.0, 0.0);
+        assertEquals(4.0, points.get(2).getInhomX(), 0.0);
+        assertEquals(0.0, points.get(2).getInhomY(), 0.0);
 
-        assertEquals(points.get(3).getInhomX(), 1.0, 0.0);
-        assertEquals(points.get(3).getInhomY(), 1.0, 0.0);
+        assertEquals(1.0, points.get(3).getInhomX(), 0.0);
+        assertEquals(1.0, points.get(3).getInhomY(), 0.0);
 
-        assertEquals(points.get(4).getInhomX(), 3.0, 0.0);
-        assertEquals(points.get(4).getInhomY(), 1.0, 0.0);
+        assertEquals(3.0, points.get(4).getInhomX(), 0.0);
+        assertEquals(1.0, points.get(4).getInhomY(), 0.0);
 
-        assertEquals(points.get(5).getInhomX(), 5.0, 0.0);
-        assertEquals(points.get(5).getInhomY(), 1.0, 0.0);
+        assertEquals(5.0, points.get(5).getInhomX(), 0.0);
+        assertEquals(1.0, points.get(5).getInhomY(), 0.0);
 
-        assertEquals(points.get(6).getInhomX(), 0.0, 0.0);
-        assertEquals(points.get(6).getInhomY(), 2.0, 0.0);
+        assertEquals(0.0, points.get(6).getInhomX(), 0.0);
+        assertEquals(2.0, points.get(6).getInhomY(), 0.0);
 
-        assertEquals(points.get(7).getInhomX(), 2.0, 0.0);
-        assertEquals(points.get(7).getInhomY(), 2.0, 0.0);
+        assertEquals(2.0, points.get(7).getInhomX(), 0.0);
+        assertEquals(2.0, points.get(7).getInhomY(), 0.0);
 
-        assertEquals(points.get(8).getInhomX(), 4.0, 0.0);
-        assertEquals(points.get(8).getInhomY(), 2.0, 0.0);
+        assertEquals(4.0, points.get(8).getInhomX(), 0.0);
+        assertEquals(2.0, points.get(8).getInhomY(), 0.0);
 
         assertEquals(points.size(), pattern.getNumberOfPoints());
     }
@@ -162,9 +155,9 @@ public class CirclesPattern2DTest {
         pattern1.setRows(2);
 
         // check
-        assertEquals(pattern1.getPointSeparation(), 1.0, 0.0);
-        assertEquals(pattern1.getCols(), 2);
-        assertEquals(pattern1.getRows(), 2);
+        assertEquals(1.0, pattern1.getPointSeparation(), 0.0);
+        assertEquals(2, pattern1.getCols());
+        assertEquals(2, pattern1.getRows());
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(pattern1);

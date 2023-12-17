@@ -42,9 +42,10 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
      * @param previousViewId                 id of previous view.
      * @param currentViewId                  id of current view.
      * @param previousViewTrackedSamples     tracked samples from previous view.
-     * @param currentViewTrackedSamples      tracked samples from previous view containing points of interest on
-     *                                       current view.
-     * @param currentViewNewlySpawnedSamples new created samples containing points of interest on current view.
+     * @param currentViewTrackedSamples      tracked samples from previous view containing points of
+     *                                       interest on current view.
+     * @param currentViewNewlySpawnedSamples new created samples containing points of interest on current
+     *                                       view.
      */
     void onRequestSamples(final R reconstructor, final int previousViewId, final int currentViewId,
                           final List<Sample2D> previousViewTrackedSamples,
@@ -82,7 +83,7 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
 
     /**
      * Finds matches for provided samples.
-     * Typically implementations will need to search for closest points of tracked
+     * Typically, implementations will need to search for closest points of tracked
      * points in previous view within the whole list of samples in previous view.
      * The implementation might choose to search for other matches or even include
      * samples from previous views to increase the accuracy of reconstructed
@@ -130,7 +131,8 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
 
     /**
      * Called when reconstructed points have been estimated from a series of 2D
-     * matches. Reconstructed points returned on this event are defined in a metric stratum (i.e. up to scale).
+     * matches. Reconstructed points returned on this event are defined in a metric stratum (i.e. up to
+     * scale).
      * This event can be used to store reconstructed points and their associated data.
      *
      * @param reconstructor re-constructor raising this event.
@@ -141,34 +143,38 @@ public interface BaseSparseReconstructorListener<R extends BaseSparseReconstruct
                                               final List<ReconstructedPoint3D> points);
 
     /**
-     * Called when cameras for provided matched pair of views have been estimated in an euclidean stratum (when possible
-     * and up to a certain accuracy).
-     * Except {@link SparseReconstructor}, which can only make estimations in a metric stratum, other rec-onstructor
-     * implementations either have calibration knowledge to estimate scale, or use SLAM techniques by mixing additional
-     * sensor data (i.e. gyroscope and accelerometer) to estimate such scale.
+     * Called when cameras for provided matched pair of views have been estimated in an Euclidean stratum
+     * (when possible and up to a certain accuracy).
+     * Except {@link SparseReconstructor}, which can only make estimations in a metric stratum, other
+     * reconstructor implementations either have calibration knowledge to estimate scale, or use SLAM
+     * techniques by mixing additional sensor data (i.e. gyroscope and accelerometer) to estimate such
+     * scale.
      *
      * @param reconstructor  re-constructor raising this event.
      * @param previousViewId id of previous view (i.e. first view).
      * @param currentViewId  id of current view (i.e. second view).
-     * @param scale          estimated scale. This will typically converge to a constant value as more views are
-     *                       processed. The smaller the variance of estimated scale, the more accurate the scale will
-     *                       be.
+     * @param scale          estimated scale. This will typically converge to a constant value as more
+     *                       views are processed. The smaller the variance of estimated scale, the more
+     *                       accurate the scale will be.
      * @param previousCamera estimated camera for previous view.
      * @param currentCamera  estimated camera for current view.
      */
-    void onEuclideanCameraEstimated(final R reconstructor, final int previousViewId, final int currentViewId,
-                                    final double scale, final EstimatedCamera previousCamera,
+    void onEuclideanCameraEstimated(final R reconstructor, final int previousViewId,
+                                    final int currentViewId, final double scale,
+                                    final EstimatedCamera previousCamera,
                                     final EstimatedCamera currentCamera);
 
     /**
      * Called when reconstructed points have been estimated from a series of 2D matches.
-     * Except {@link SparseReconstructor}, which can only make estimations in a metric stratum, other re-constructor
-     * implementations either have calibration knowledge to estimate scale, or use SLAM techniques by mixing additional
-     * sensor data (i.e. gyroscope and accelerometer) to estimate such scale.
+     * Except {@link SparseReconstructor}, which can only make estimations in a metric stratum, other
+     * re-constructor implementations either have calibration knowledge to estimate scale, or use SLAM
+     * techniques by mixing additional sensor data (i.e. gyroscope and accelerometer) to estimate such
+     * scale.
      *
      * @param reconstructor re-constructor raising this event.
-     * @param scale         estimated scale. This will typically converge to a constant value as more views are
-     *                      processed. The smaller the variance of estimated scale, the more accurate the scale will be.
+     * @param scale         estimated scale. This will typically converge to a constant value as more views
+     *                      are processed. The smaller the variance of estimated scale, the more accurate
+     *                      the scale will be.
      * @param points        reconstructed 3D points.
      */
     void onEuclideanReconstructedPointsEstimated(final R reconstructor, final double scale,

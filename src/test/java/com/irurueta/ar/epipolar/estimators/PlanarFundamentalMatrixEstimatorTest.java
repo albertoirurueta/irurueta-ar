@@ -37,8 +37,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class PlanarFundamentalMatrixEstimatorTest implements
-        PlanarFundamentalMatrixEstimatorListener {
+public class PlanarFundamentalMatrixEstimatorTest implements PlanarFundamentalMatrixEstimatorListener {
 
     private static final double MIN_FOCAL_LENGTH = 750.0;
     private static final double MAX_FOCAL_LENGTH = 1500.0;
@@ -72,8 +71,7 @@ public class PlanarFundamentalMatrixEstimatorTest implements
     @Test
     public void testConstructor() {
         // empty constructor
-        PlanarFundamentalMatrixEstimator estimator =
-                new PlanarFundamentalMatrixEstimator();
+        PlanarFundamentalMatrixEstimator estimator = new PlanarFundamentalMatrixEstimator();
 
         // check default values
         assertNull(estimator.getHomography());
@@ -84,19 +82,15 @@ public class PlanarFundamentalMatrixEstimatorTest implements
         assertFalse(estimator.isReady());
 
         // constructor with input data
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
-        final PinholeCameraIntrinsicParameters leftIntrinsics =
-                new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsics =
-                new PinholeCameraIntrinsicParameters();
-        estimator = new PlanarFundamentalMatrixEstimator(homography,
-                leftIntrinsics, rightIntrinsics);
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
+        final PinholeCameraIntrinsicParameters leftIntrinsics = new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsics = new PinholeCameraIntrinsicParameters();
+        estimator = new PlanarFundamentalMatrixEstimator(homography, leftIntrinsics, rightIntrinsics);
 
         // check correctness
-        assertSame(estimator.getHomography(), homography);
-        assertSame(estimator.getLeftIntrinsics(), leftIntrinsics);
-        assertSame(estimator.getRightIntrinsics(), rightIntrinsics);
+        assertSame(homography, estimator.getHomography());
+        assertSame(leftIntrinsics, estimator.getLeftIntrinsics());
+        assertSame(rightIntrinsics, estimator.getRightIntrinsics());
         assertNull(estimator.getListener());
 
         // constructor with input data and listener
@@ -104,67 +98,60 @@ public class PlanarFundamentalMatrixEstimatorTest implements
                 leftIntrinsics, rightIntrinsics, this);
 
         // check correctness
-        assertSame(estimator.getHomography(), homography);
-        assertSame(estimator.getLeftIntrinsics(), leftIntrinsics);
-        assertSame(estimator.getRightIntrinsics(), rightIntrinsics);
-        assertSame(estimator.getListener(), this);
+        assertSame(homography, estimator.getHomography());
+        assertSame(leftIntrinsics, estimator.getLeftIntrinsics());
+        assertSame(rightIntrinsics, estimator.getRightIntrinsics());
+        assertSame(this, estimator.getListener());
     }
 
     @Test
     public void testGetSetHomography() throws LockedException {
-        final PlanarFundamentalMatrixEstimator estimator =
-                new PlanarFundamentalMatrixEstimator();
+        final PlanarFundamentalMatrixEstimator estimator = new PlanarFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getHomography());
 
         // set new value
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
         estimator.setHomography(homography);
 
         // check correctness
-        assertSame(estimator.getHomography(), homography);
+        assertSame(homography, estimator.getHomography());
     }
 
     @Test
     public void testGetSetLeftIntrinsics() throws LockedException {
-        final PlanarFundamentalMatrixEstimator estimator =
-                new PlanarFundamentalMatrixEstimator();
+        final PlanarFundamentalMatrixEstimator estimator = new PlanarFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getLeftIntrinsics());
 
         // set new value
-        final PinholeCameraIntrinsicParameters leftIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters leftIntrinsics = new PinholeCameraIntrinsicParameters();
         estimator.setLeftIntrinsics(leftIntrinsics);
 
         // check correctness
-        assertSame(estimator.getLeftIntrinsics(), leftIntrinsics);
+        assertSame(leftIntrinsics, estimator.getLeftIntrinsics());
     }
 
     @Test
     public void testGetSetRightIntrinsics() throws LockedException {
-        final PlanarFundamentalMatrixEstimator estimator =
-                new PlanarFundamentalMatrixEstimator();
+        final PlanarFundamentalMatrixEstimator estimator = new PlanarFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getRightIntrinsics());
 
         // set new value
-        final PinholeCameraIntrinsicParameters rightIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsics = new PinholeCameraIntrinsicParameters();
         estimator.setRightIntrinsics(rightIntrinsics);
 
         // check correctness
-        assertSame(estimator.getRightIntrinsics(), rightIntrinsics);
+        assertSame(rightIntrinsics, estimator.getRightIntrinsics());
     }
 
     @Test
     public void testGetSetListener() {
-        final PlanarFundamentalMatrixEstimator estimator =
-                new PlanarFundamentalMatrixEstimator();
+        final PlanarFundamentalMatrixEstimator estimator = new PlanarFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -173,21 +160,17 @@ public class PlanarFundamentalMatrixEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
-    public void testEstimate() throws InvalidPairOfCamerasException,
-            AlgebraException, CameraException, LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException,
-            NotAvailableException {
+    public void testEstimate() throws InvalidPairOfCamerasException, AlgebraException, CameraException,
+            LockedException, NotReadyException, FundamentalMatrixEstimatorException, NotAvailableException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double focalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPointX = 0.0;
             final double principalPointY = 0.0;
@@ -210,8 +193,7 @@ public class PlanarFundamentalMatrixEstimatorTest implements
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -219,18 +201,13 @@ public class PlanarFundamentalMatrixEstimatorTest implements
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
@@ -248,28 +225,20 @@ public class PlanarFundamentalMatrixEstimatorTest implements
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -284,8 +253,7 @@ public class PlanarFundamentalMatrixEstimatorTest implements
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -295,8 +263,7 @@ public class PlanarFundamentalMatrixEstimatorTest implements
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -342,9 +309,7 @@ public class PlanarFundamentalMatrixEstimatorTest implements
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -364,11 +329,9 @@ public class PlanarFundamentalMatrixEstimatorTest implements
             // estimate homography
             final ProjectiveTransformation2DRobustEstimator homographyEstimator =
                     ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                            projectedPoints1, projectedPoints2,
-                            RobustEstimatorMethod.RANSAC);
+                            projectedPoints1, projectedPoints2, RobustEstimatorMethod.RANSAC);
             ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                    homographyEstimator).setThreshold(
-                    HOMOGRAPHY_ESTIMATOR_THRESHOLD);
+                    homographyEstimator).setThreshold(HOMOGRAPHY_ESTIMATOR_THRESHOLD);
             ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                     homographyEstimator).setComputeAndKeepInliersEnabled(true);
             ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
@@ -386,22 +349,17 @@ public class PlanarFundamentalMatrixEstimatorTest implements
             // check errors on estimated homography
             boolean failed = false;
             for (int i = 0; i < numPoints; i++) {
-                projectedPoint1 = new InhomogeneousPoint2D(
-                        projectedPoints1.get(i));
-                projectedPoint2 = new InhomogeneousPoint2D(
-                        projectedPoints2.get(i));
+                projectedPoint1 = new InhomogeneousPoint2D(projectedPoints1.get(i));
+                projectedPoint2 = new InhomogeneousPoint2D(projectedPoints2.get(i));
 
-                final InhomogeneousPoint2D projectedPoint2b =
-                        new InhomogeneousPoint2D();
+                final InhomogeneousPoint2D projectedPoint2b = new InhomogeneousPoint2D();
                 homography.transform(projectedPoint1, projectedPoint2b);
 
-                if (!projectedPoint2.equals(projectedPoint2b,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (!projectedPoint2.equals(projectedPoint2b, LARGE_ABSOLUTE_ERROR)) {
                     failed = true;
                     break;
                 }
-                assertTrue(projectedPoint2.equals(projectedPoint2b,
-                        LARGE_ABSOLUTE_ERROR));
+                assertTrue(projectedPoint2.equals(projectedPoint2b, LARGE_ABSOLUTE_ERROR));
             }
 
             if (failed) {
@@ -409,23 +367,21 @@ public class PlanarFundamentalMatrixEstimatorTest implements
             }
 
             final PlanarFundamentalMatrixEstimator estimator =
-                    new PlanarFundamentalMatrixEstimator(homography, intrinsic1,
-                            intrinsic2, this);
+                    new PlanarFundamentalMatrixEstimator(homography, intrinsic1, intrinsic2, this);
 
             reset();
-            assertEquals(mEstimateStart, 0);
-            assertEquals(mEstimateEnd, 0);
+            assertEquals(0, mEstimateStart);
+            assertEquals(0, mEstimateEnd);
             assertFalse(estimator.isLocked());
             assertTrue(estimator.isReady());
 
             final List<FundamentalMatrix> result1 = estimator.estimate();
-            final List<FundamentalMatrix> result2 =
-                    new ArrayList<>();
+            final List<FundamentalMatrix> result2 = new ArrayList<>();
             estimator.estimate(result2);
 
             // check correctness
-            assertEquals(mEstimateStart, 2);
-            assertEquals(mEstimateEnd, 2);
+            assertEquals(2, mEstimateStart);
+            assertEquals(2, mEstimateEnd);
 
             assertEquals(result1.size(), result2.size());
             assertTrue(result1.size() == 2 || result1.size() == 4);
@@ -452,8 +408,7 @@ public class PlanarFundamentalMatrixEstimatorTest implements
     }
 
     private static boolean areEqualUpToScale(
-            FundamentalMatrix fundamentalMatrix1,
-            FundamentalMatrix fundamentalMatrix2)
+            final FundamentalMatrix fundamentalMatrix1, final FundamentalMatrix fundamentalMatrix2)
             throws NotAvailableException, NotReadyException {
 
         // normalize to increase accuracy
@@ -464,8 +419,8 @@ public class PlanarFundamentalMatrixEstimatorTest implements
         final Matrix f2a = fundamentalMatrix2.getInternalMatrix();
         final Matrix f2b = f2a.multiplyByScalarAndReturnNew(-1.0);
 
-        return f1.equals(f2a, PlanarFundamentalMatrixEstimatorTest.ABSOLUTE_ERROR) ||
-                f1.equals(f2b, PlanarFundamentalMatrixEstimatorTest.ABSOLUTE_ERROR);
+        return f1.equals(f2a, PlanarFundamentalMatrixEstimatorTest.ABSOLUTE_ERROR)
+                || f1.equals(f2b, PlanarFundamentalMatrixEstimatorTest.ABSOLUTE_ERROR);
     }
 
     @Override

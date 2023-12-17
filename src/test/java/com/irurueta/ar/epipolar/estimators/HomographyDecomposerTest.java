@@ -83,32 +83,27 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         assertFalse(decomposer.isReady());
 
         // test constructor with homography and intrinsics
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
-        final PinholeCameraIntrinsicParameters leftIntrinsics =
-                new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsics =
-                new PinholeCameraIntrinsicParameters();
-        decomposer = new HomographyDecomposer(homography, leftIntrinsics,
-                rightIntrinsics);
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
+        final PinholeCameraIntrinsicParameters leftIntrinsics = new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsics = new PinholeCameraIntrinsicParameters();
+        decomposer = new HomographyDecomposer(homography, leftIntrinsics, rightIntrinsics);
 
         // check default values
-        assertSame(decomposer.getHomography(), homography);
-        assertSame(decomposer.getLeftIntrinsics(), leftIntrinsics);
-        assertSame(decomposer.getRightIntrinsics(), rightIntrinsics);
+        assertSame(homography, decomposer.getHomography());
+        assertSame(leftIntrinsics, decomposer.getLeftIntrinsics());
+        assertSame(rightIntrinsics, decomposer.getRightIntrinsics());
         assertNull(decomposer.getListener());
         assertFalse(decomposer.isLocked());
         assertTrue(decomposer.isReady());
 
         // test constructor with homography, intrinsics and listener
-        decomposer = new HomographyDecomposer(homography, leftIntrinsics,
-                rightIntrinsics, this);
+        decomposer = new HomographyDecomposer(homography, leftIntrinsics, rightIntrinsics, this);
 
         // check default values
-        assertSame(decomposer.getHomography(), homography);
-        assertSame(decomposer.getLeftIntrinsics(), leftIntrinsics);
-        assertSame(decomposer.getRightIntrinsics(), rightIntrinsics);
-        assertSame(decomposer.getListener(), this);
+        assertSame(homography, decomposer.getHomography());
+        assertSame(leftIntrinsics, decomposer.getLeftIntrinsics());
+        assertSame(rightIntrinsics, decomposer.getRightIntrinsics());
+        assertSame(this, decomposer.getListener());
         assertFalse(decomposer.isLocked());
         assertTrue(decomposer.isReady());
     }
@@ -121,12 +116,11 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         assertNull(decomposer.getHomography());
 
         // set new value
-        final ProjectiveTransformation2D homography =
-                new ProjectiveTransformation2D();
+        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
         decomposer.setHomography(homography);
 
         // check correctness
-        assertSame(decomposer.getHomography(), homography);
+        assertSame(homography, decomposer.getHomography());
     }
 
     @Test
@@ -136,12 +130,11 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         // check default value
         assertNull(decomposer.getLeftIntrinsics());
 
-        final PinholeCameraIntrinsicParameters leftIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters leftIntrinsics = new PinholeCameraIntrinsicParameters();
         decomposer.setLeftIntrinsics(leftIntrinsics);
 
         // check correctness
-        assertSame(decomposer.getLeftIntrinsics(), leftIntrinsics);
+        assertSame(leftIntrinsics, decomposer.getLeftIntrinsics());
     }
 
     @Test
@@ -151,12 +144,11 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         // check default value
         assertNull(decomposer.getRightIntrinsics());
 
-        final PinholeCameraIntrinsicParameters rightIntrinsics =
-                new PinholeCameraIntrinsicParameters();
+        final PinholeCameraIntrinsicParameters rightIntrinsics = new PinholeCameraIntrinsicParameters();
         decomposer.setRightIntrinsics(rightIntrinsics);
 
         // check correctness
-        assertSame(decomposer.getRightIntrinsics(), rightIntrinsics);
+        assertSame(rightIntrinsics, decomposer.getRightIntrinsics());
     }
 
     @Test
@@ -170,7 +162,7 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         decomposer.setListener(this);
 
         // check correctness
-        assertSame(decomposer.getListener(), this);
+        assertSame(this, decomposer.getListener());
     }
 
     @Test
@@ -178,10 +170,8 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double focalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
+            final double focalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final double focalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
             final double skewness = 0.0;
             final double principalPointX = 0.0;
             final double principalPointY = 0.0;
@@ -204,8 +194,7 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION,
-                    MAX_CAMERA_SEPARATION);
+                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -213,15 +202,11 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
@@ -239,28 +224,20 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -275,8 +252,7 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -286,8 +262,7 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -306,18 +281,13 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -333,9 +303,7 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -355,11 +323,9 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             // estimate homography
             final ProjectiveTransformation2DRobustEstimator homographyEstimator =
                     ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                            projectedPoints1, projectedPoints2,
-                            RobustEstimatorMethod.RANSAC);
+                            projectedPoints1, projectedPoints2, RobustEstimatorMethod.RANSAC);
             ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                    homographyEstimator).setThreshold(
-                    HOMOGRAPHY_ESTIMATOR_THRESHOLD);
+                    homographyEstimator).setThreshold(HOMOGRAPHY_ESTIMATOR_THRESHOLD);
             ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
                     homographyEstimator).setComputeAndKeepInliersEnabled(true);
             ((RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
@@ -377,22 +343,17 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             // check errors on estimated homography
             boolean failed = false;
             for (int i = 0; i < numPoints; i++) {
-                projectedPoint1 = new InhomogeneousPoint2D(
-                        projectedPoints1.get(i));
-                projectedPoint2 = new InhomogeneousPoint2D(
-                        projectedPoints2.get(i));
+                projectedPoint1 = new InhomogeneousPoint2D(projectedPoints1.get(i));
+                projectedPoint2 = new InhomogeneousPoint2D(projectedPoints2.get(i));
 
-                final InhomogeneousPoint2D projectedPoint2b =
-                        new InhomogeneousPoint2D();
+                final InhomogeneousPoint2D projectedPoint2b = new InhomogeneousPoint2D();
                 homography.transform(projectedPoint1, projectedPoint2b);
 
-                if (!projectedPoint2.equals(projectedPoint2b,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (!projectedPoint2.equals(projectedPoint2b, LARGE_ABSOLUTE_ERROR)) {
                     failed = true;
                     break;
                 }
-                assertTrue(projectedPoint2.equals(projectedPoint2b,
-                        LARGE_ABSOLUTE_ERROR));
+                assertTrue(projectedPoint2.equals(projectedPoint2b, LARGE_ABSOLUTE_ERROR));
             }
 
             if (failed) {
@@ -400,23 +361,19 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             }
 
             final HomographyDecomposer homographyDecomposer =
-                    new HomographyDecomposer(homography, intrinsic1, intrinsic2,
-                            this);
+                    new HomographyDecomposer(homography, intrinsic1, intrinsic2, this);
 
             reset();
             assertFalse(decomposer.isLocked());
             assertTrue(decomposer.isReady());
-            assertEquals(decomposeStart, 0);
-            assertEquals(decomposeEnd, 0);
+            assertEquals(0, decomposeStart);
+            assertEquals(0, decomposeEnd);
 
-            final List<HomographyDecomposition> result1 =
-                    homographyDecomposer.decompose();
-            final List<HomographyDecomposition> result2 =
-                    new ArrayList<>();
+            final List<HomographyDecomposition> result1 = homographyDecomposer.decompose();
+            final List<HomographyDecomposition> result2 = new ArrayList<>();
             homographyDecomposer.decompose(result2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
             fundamentalMatrix.normalize();
 
             // check that both results are equal
@@ -427,35 +384,30 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
             boolean atLeastOneValidFundamentalMatrix = false;
             for (int i = 0; i < result1.size(); i++) {
                 // check that both result1 and result2 are equal
-                assertEquals(result1.get(i).getPlaneDistance(),
-                        result2.get(i).getPlaneDistance(), ABSOLUTE_ERROR);
-                assertArrayEquals(result1.get(i).getPlaneNormal(),
-                        result2.get(i).getPlaneNormal(), ABSOLUTE_ERROR);
+                assertEquals(result1.get(i).getPlaneDistance(), result2.get(i).getPlaneDistance(),
+                        ABSOLUTE_ERROR);
+                assertArrayEquals(result1.get(i).getPlaneNormal(), result2.get(i).getPlaneNormal(),
+                        ABSOLUTE_ERROR);
                 assertEquals(result1.get(i).getTransformation().getRotation(),
                         result2.get(i).getTransformation().getRotation());
-                assertArrayEquals(result1.get(i).getTransformation().
-                                getTranslation(),
-                        result2.get(i).getTransformation().getTranslation(),
-                        ABSOLUTE_ERROR);
+                assertArrayEquals(result1.get(i).getTransformation().getTranslation(),
+                        result2.get(i).getTransformation().getTranslation(), ABSOLUTE_ERROR);
 
                 // check that each homography decomposition generates the
                 // original homography
-                if (validDecomposition(homography, result1.get(i), intrinsic1,
-                        intrinsic2)) {
+                if (validDecomposition(homography, result1.get(i), intrinsic1, intrinsic2)) {
                     numValidDecompositions++;
                 }
 
                 // check that at least one of the fundamental matrices generated
                 // by one of the solutions is valid (up to scale)
                 final HomographyDecomposition decomposition = result1.get(i);
-                final Rotation3D rotation = decomposition.getTransformation().
-                        getRotation();
-                final Point2D translation = new HomogeneousPoint2D(decomposition.
-                        getTransformation().getTranslation());
-                final EssentialMatrix essential1 = new EssentialMatrix(rotation,
-                        translation);
-                final FundamentalMatrix fundamentalMatrixB = essential1.
-                        toFundamentalMatrix(intrinsic1, intrinsic2);
+                final Rotation3D rotation = decomposition.getTransformation().getRotation();
+                final Point2D translation = new HomogeneousPoint2D(decomposition.getTransformation()
+                        .getTranslation());
+                final EssentialMatrix essential1 = new EssentialMatrix(rotation, translation);
+                final FundamentalMatrix fundamentalMatrixB = essential1.toFundamentalMatrix(intrinsic1,
+                        intrinsic2);
                 fundamentalMatrixB.normalize();
                 if (areEqualUpToScale(fundamentalMatrix, fundamentalMatrixB)) {
                     atLeastOneValidFundamentalMatrix = true;
@@ -497,12 +449,10 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         final Matrix k2 = intrinsic2.getInternalMatrix();
 
         final double d = decomposition.getPlaneDistance();
-        final Matrix r = decomposition.getTransformation().getRotation().
-                asInhomogeneousMatrix();
-        final Matrix t = Matrix.newFromArray(decomposition.getTransformation().
-                getTranslation(), true);
-        final Matrix transN = Matrix.newFromArray(decomposition.getPlaneNormal(),
-                false);
+        final Matrix r = decomposition.getTransformation().getRotation().asInhomogeneousMatrix();
+        final Matrix t = Matrix.newFromArray(decomposition.getTransformation().getTranslation(),
+                true);
+        final Matrix transN = Matrix.newFromArray(decomposition.getPlaneNormal(), false);
 
         final Matrix tmp1 = r.multiplyByScalarAndReturnNew(d);
         final Matrix tmp2 = t.multiplyAndReturnNew(transN);
@@ -515,8 +465,7 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
     }
 
     private static boolean areEqualUpToScale(
-            FundamentalMatrix fundamentalMatrix1,
-            FundamentalMatrix fundamentalMatrix2)
+            FundamentalMatrix fundamentalMatrix1, FundamentalMatrix fundamentalMatrix2)
             throws NotAvailableException, NotReadyException {
 
         // normalize to increase accuracy
@@ -527,8 +476,8 @@ public class HomographyDecomposerTest implements HomographyDecomposerListener {
         final Matrix f2a = fundamentalMatrix2.getInternalMatrix();
         final Matrix f2b = f2a.multiplyByScalarAndReturnNew(-1.0);
 
-        return f1.equals(f2a, HomographyDecomposerTest.ABSOLUTE_ERROR) || f1.equals(f2b,
-                HomographyDecomposerTest.ABSOLUTE_ERROR);
+        return f1.equals(f2a, HomographyDecomposerTest.ABSOLUTE_ERROR)
+                || f1.equals(f2b, HomographyDecomposerTest.ABSOLUTE_ERROR);
     }
 
     private void reset() {

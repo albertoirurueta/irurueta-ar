@@ -194,7 +194,8 @@ public abstract class InitialCamerasEstimator {
      * @throws LockedException                         if estimator is locked.
      * @throws NotReadyException                       if estimator is not ready.
      * @throws InitialCamerasEstimationFailedException if estimation of cameras
-     *                                                 fails for some reason, typically due to numerical instabilities.
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
      */
     public abstract void estimate() throws LockedException, NotReadyException,
             InitialCamerasEstimationFailedException;

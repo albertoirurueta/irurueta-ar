@@ -40,7 +40,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
     /**
      * Constant defining default threshold to determine whether samples are
      * inliers or not.
-     * By default 1.0 is considered a good value for cases where 2D point
+     * By default, 1.0 is considered a good value for cases where 2D point
      * measures are done on pixels, since typically the minimum resolution is 1
      * pixel.
      */
@@ -120,7 +120,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
     /**
      * Returns threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @return threshold to determine whether points are inliers or not when
@@ -133,7 +133,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
     /**
      * Sets threshold to determine whether points are inliers or not when
      * testing possible estimation solutions.
-     * The threshold refers to the amount of error (i.e. euclidean distance) a
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
      * possible solution has on projected 2D points.
      *
      * @param threshold threshold to be set.

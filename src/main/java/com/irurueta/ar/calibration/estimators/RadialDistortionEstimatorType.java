@@ -21,7 +21,7 @@ package com.irurueta.ar.calibration.estimators;
  */
 public enum RadialDistortionEstimatorType {
     /**
-     * Radial distortion estimator using LMSE (Least Mean Square Error)
+     * Radial distortion estimator using LMSE (the Least Mean Square Error)
      * solutions.
      */
     LMSE_RADIAL_DISTORTION_ESTIMATOR,

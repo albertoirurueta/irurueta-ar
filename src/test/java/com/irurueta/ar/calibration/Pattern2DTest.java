@@ -26,12 +26,12 @@ public class Pattern2DTest {
     public void testCreate() {
         Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
 
-        assertEquals(pattern.getType(), Pattern2DType.QR);
+        assertEquals(Pattern2DType.QR, pattern.getType());
         assertTrue(pattern instanceof QRPattern2D);
 
         pattern = Pattern2D.create(Pattern2DType.CIRCLES);
 
-        assertEquals(pattern.getType(), Pattern2DType.CIRCLES);
+        assertEquals(Pattern2DType.CIRCLES, pattern.getType());
         assertTrue(pattern instanceof CirclesPattern2D);
     }
 }

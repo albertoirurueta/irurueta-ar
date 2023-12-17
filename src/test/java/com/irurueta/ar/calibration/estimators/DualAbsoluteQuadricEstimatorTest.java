@@ -41,66 +41,61 @@ public class DualAbsoluteQuadricEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(
-                DualAbsoluteQuadricEstimatorType.
-                        LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof LMSEDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(
-                DualAbsoluteQuadricEstimatorType.
-                        WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof WeightedDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         // test create with listener
         estimator = DualAbsoluteQuadricEstimator.create(this);
@@ -109,66 +104,61 @@ public class DualAbsoluteQuadricEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(this,
-                DualAbsoluteQuadricEstimatorType.
-                        LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof LMSEDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(this,
-                DualAbsoluteQuadricEstimatorType.
-                        WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof WeightedDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertNull(estimator.getCameras());
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         // test create with cameras
         final List<PinholeCamera> cameras = new ArrayList<>();
@@ -181,66 +171,61 @@ public class DualAbsoluteQuadricEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
         assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(cameras,
-                DualAbsoluteQuadricEstimatorType.
-                        LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof LMSEDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
-        assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertSame(cameras, estimator.getCameras());
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(cameras,
-                DualAbsoluteQuadricEstimatorType.
-                        WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof WeightedDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getListener());
-        assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertSame(cameras, estimator.getCameras());
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         // test create with cameras and listener
         estimator = DualAbsoluteQuadricEstimator.create(cameras, this);
@@ -249,72 +234,66 @@ public class DualAbsoluteQuadricEstimatorTest implements
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(cameras, this,
-                DualAbsoluteQuadricEstimatorType.
-                        LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof LMSEDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
 
         estimator = DualAbsoluteQuadricEstimator.create(cameras, this,
-                DualAbsoluteQuadricEstimatorType.
-                        WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+                DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
 
         assertTrue(estimator instanceof WeightedDualAbsoluteQuadricEstimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
-        assertEquals(estimator.getFocalDistanceAspectRatio(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
         assertFalse(estimator.isLocked());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertSame(estimator.getCameras(), cameras);
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getType(), DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR);
+        assertEquals(DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
+                estimator.getType());
     }
 
     @Test
     public void testIsSetZeroSkewness() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertTrue(estimator.isZeroSkewness());
@@ -328,8 +307,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -343,8 +321,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetFocalDistanceAspectRatioKnown() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -358,21 +335,18 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
-        assertEquals(estimator.getFocalDistanceAspectRatio(),
-                DualAbsoluteQuadricEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
+                estimator.getFocalDistanceAspectRatio(), 0.0);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO,
-                MAX_ASPECT_RATIO);
+        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
         estimator.setFocalDistanceAspectRatio(aspectRatio);
 
         // check correctness
-        assertEquals(estimator.getFocalDistanceAspectRatio(), aspectRatio, 0.0);
+        assertEquals(aspectRatio, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -384,8 +358,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetSingularityEnforced() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertTrue(estimator.isSingularityEnforced());
@@ -399,8 +372,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsSetEnforcedSingularityValidated() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertTrue(estimator.isEnforcedSingularityValidated());
@@ -414,19 +386,17 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetSetDeterminantThreshold() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
-        assertEquals(estimator.getDeterminantThreshold(),
-                DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
+                estimator.getDeterminantThreshold(), 0.0);
 
         // set new value
         estimator.setDeterminantThreshold(1e-3);
 
         // check correctness
-        assertEquals(estimator.getDeterminantThreshold(), 1e-3, 0.0);
+        assertEquals(1e-3, estimator.getDeterminantThreshold(), 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -448,7 +418,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
         estimator.setListener(this);
 
         // check correctness
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
     }
 
     @Test
@@ -466,7 +436,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
         estimator.setCameras(cameras);
 
         // check correctness
-        assertSame(estimator.getCameras(), cameras);
+        assertSame(cameras, estimator.getCameras());
 
         // Force IllegalArgumentException
         cameras.clear();
@@ -480,50 +450,48 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testGetMinNumberOfRequiredCameras() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 2);
+        assertEquals(2, estimator.getMinNumberOfRequiredCameras());
 
         // disable principal point at origin
         estimator.setPrincipalPointAtOrigin(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), -1);
+        assertEquals(-1, estimator.getMinNumberOfRequiredCameras());
 
         // disable zero skewness
         estimator.setPrincipalPointAtOrigin(true);
         estimator.setZeroSkewness(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 4);
+        assertEquals(4, estimator.getMinNumberOfRequiredCameras());
 
         // disable focal distance aspect ratio known
         estimator.setZeroSkewness(true);
         estimator.setFocalDistanceAspectRatioKnown(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
+        assertEquals(3, estimator.getMinNumberOfRequiredCameras());
 
         // disable zero skewness and singularity enforcement
         estimator.setZeroSkewness(false);
         estimator.setSingularityEnforced(false);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 5);
+        assertEquals(5, estimator.getMinNumberOfRequiredCameras());
 
         // disable focal distance aspect ratio known and singularity enforcement
         estimator.setZeroSkewness(true);
 
         // check correctness
-        assertEquals(estimator.getMinNumberOfRequiredCameras(), 3);
+        assertEquals(3, estimator.getMinNumberOfRequiredCameras());
     }
 
     @Test
     public void testAreValidConstraints() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertTrue(estimator.areValidConstraints());
@@ -557,8 +525,7 @@ public class DualAbsoluteQuadricEstimatorTest implements
 
     @Test
     public void testIsReady() throws LockedException {
-        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.
-                create();
+        final DualAbsoluteQuadricEstimator estimator = DualAbsoluteQuadricEstimator.create();
 
         // check default value
         assertNull(estimator.getCameras());

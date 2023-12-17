@@ -25,7 +25,7 @@ import java.util.List;
  * of a pattern to be used for camera calibration.
  * Coordinates of points returned by a pattern will be measured values in
  * the real world (expressed in meters). Measures are ideal values not affected
- * by any kind of distortion and as precise as possible so they can be used for
+ * by any kind of distortion and as precise as possible, so they can be used for
  * camera calibration.
  */
 public abstract class Pattern2D {

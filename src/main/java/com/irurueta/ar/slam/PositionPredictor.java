@@ -65,17 +65,17 @@ public class PositionPredictor {
             final double ax, final double ay, final double az, final double dt,
             final InhomogeneousPoint3D result, final Matrix jacobianR,
             final Matrix jacobianV, final Matrix jacobianA) {
-        if (jacobianR != null && (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
+        if (jacobianR != null && (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
             throw new IllegalArgumentException("jacobian wrt r must be 3x3");
         }
-        if (jacobianV != null && (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianV.getColumns() != SPEED_COMPONENTS)) {
+        if (jacobianV != null && (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianV.getColumns() != SPEED_COMPONENTS)) {
             throw new IllegalArgumentException(
                     "jacobian wrt speed must be 3x3");
         }
-        if (jacobianA != null && (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
+        if (jacobianA != null && (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
             throw new IllegalArgumentException(
                     "jacobian wrt acceleration must be 3x3");
         }
@@ -198,7 +198,7 @@ public class PositionPredictor {
     /**
      * Predicts the updated position assuming no acceleration.
      *
-     * @param r         current position. Expresed in meters.
+     * @param r         current position. Expressed in meters.
      * @param vx        velocity in x-axis. Expressed in m/s.
      * @param vy        velocity in y-axis. Expressed in m/s.
      * @param vz        velocity in z-axis. Expressed in m/s.
@@ -413,7 +413,8 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static InhomogeneousPoint3D predict(
-            final InhomogeneousPoint3D r, final double vx, final double vy, final double vz, final double dt) {
+            final InhomogeneousPoint3D r, final double vx, final double vy, final double vz,
+            final double dt) {
         final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         predict(r, vx, vy, vz, dt, result);
         return result;
@@ -489,20 +490,20 @@ public class PositionPredictor {
             final double ax, final double ay, final double az, final double dt,
             final InhomogeneousPoint3D result, final Matrix jacobianR, final Matrix jacobianDR,
             final Matrix jacobianV, final Matrix jacobianA) {
-        if (jacobianR != null && (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
+        if (jacobianR != null && (jacobianR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
             throw new IllegalArgumentException("jacobian wrt r must be 3x3");
         }
-        if (jacobianDR != null && (jacobianDR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianDR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
+        if (jacobianDR != null && (jacobianDR.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianDR.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH)) {
             throw new IllegalArgumentException("jacobian wrt dr must be 3x3");
         }
-        if (jacobianV != null && (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianV.getColumns() != SPEED_COMPONENTS)) {
+        if (jacobianV != null && (jacobianV.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianV.getColumns() != SPEED_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt speed must be 3x3");
         }
-        if (jacobianA != null && (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||
-                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
+        if (jacobianA != null && (jacobianA.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH
+                || jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
             throw new IllegalArgumentException(
                     "jacobian wrt acceleration must be 3x3");
         }
@@ -601,9 +602,9 @@ public class PositionPredictor {
      *                                  have proper size or dr, v or a do not have length 3.
      */
     public static void predictWithPositionAdjustment(
-            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a, final double dt,
-            final InhomogeneousPoint3D result, final Matrix jacobianR, final Matrix jacobianDR,
-            final Matrix jacobianV, final Matrix jacobianA) {
+            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a,
+            final double dt, final InhomogeneousPoint3D result, final Matrix jacobianR,
+            final Matrix jacobianDR, final Matrix jacobianV, final Matrix jacobianA) {
         if (dr.length != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
             throw new IllegalArgumentException("dr must have length 3");
         }
@@ -632,8 +633,8 @@ public class PositionPredictor {
      * @throws IllegalArgumentException if dr, v or a do not have length 3.
      */
     public static void predictWithPositionAdjustment(
-            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a, final double dt,
-            final InhomogeneousPoint3D result) {
+            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a,
+            final double dt, final InhomogeneousPoint3D result) {
         predictWithPositionAdjustment(r, dr, v, a, dt, result, null, null, null,
                 null);
     }

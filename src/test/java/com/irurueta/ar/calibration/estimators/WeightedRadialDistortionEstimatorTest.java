@@ -33,8 +33,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class WeightedRadialDistortionEstimatorTest implements
-        RadialDistortionEstimatorListener {
+public class WeightedRadialDistortionEstimatorTest implements RadialDistortionEstimatorListener {
 
     private static final double MIN_POINT_VALUE = -2.0;
     private static final double MAX_POINT_VALUE = 2.0;
@@ -56,46 +55,40 @@ public class WeightedRadialDistortionEstimatorTest implements
     @Test
     public void testConstructor() {
         // test constructor without parameters
-        WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check correctness
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS,
+                estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // test constructor with listener
         estimator = new WeightedRadialDistortionEstimator(this);
@@ -104,39 +97,33 @@ public class WeightedRadialDistortionEstimatorTest implements
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // test constructor with distorted/undistorted points
         final List<Point2D> distortedPoints = new ArrayList<>();
@@ -147,60 +134,52 @@ public class WeightedRadialDistortionEstimatorTest implements
             undistortedPoints.add(Point2D.create());
         }
 
-        estimator = new WeightedRadialDistortionEstimator(distortedPoints,
-                undistortedPoints, weights);
+        estimator = new WeightedRadialDistortionEstimator(distortedPoints, undistortedPoints, weights);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
         assertSame(estimator.getWeights(), weights);
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
         final double[] shortWeights = new double[1];
         estimator = null;
         try {
-            estimator = new WeightedRadialDistortionEstimator(emptyPoints,
-                    undistortedPoints, weights);
+            estimator = new WeightedRadialDistortionEstimator(emptyPoints, undistortedPoints, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator = new WeightedRadialDistortionEstimator(emptyPoints,
-                    emptyPoints, weights);
+            estimator = new WeightedRadialDistortionEstimator(emptyPoints, emptyPoints, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -229,42 +208,37 @@ public class WeightedRadialDistortionEstimatorTest implements
                 undistortedPoints, weights, this);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
         assertEquals(estimator.getMinNumberOfMatchedPoints(),
                 estimator.getMinNumberOfMatchedPoints());
-        assertSame(estimator.getWeights(), weights);
+        assertSame(weights, estimator.getWeights());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertTrue(estimator.isReady());
         assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         estimator = null;
@@ -307,40 +281,34 @@ public class WeightedRadialDistortionEstimatorTest implements
         // check correctness
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // test constructor with distortion center and listener
         estimator = new WeightedRadialDistortionEstimator(center, this);
@@ -348,81 +316,69 @@ public class WeightedRadialDistortionEstimatorTest implements
         // check correctness
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
         assertNull(estimator.getWeights());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // test constructor with distorted/undistorted points and distortion
         // center
         estimator = new WeightedRadialDistortionEstimator(distortedPoints,
                 undistortedPoints, weights, center);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertSame(estimator.getWeights(), weights);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertSame(weights, estimator.getWeights());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         estimator = null;
@@ -462,42 +418,36 @@ public class WeightedRadialDistortionEstimatorTest implements
         // center
         estimator = new WeightedRadialDistortionEstimator(distortedPoints,
                 undistortedPoints, weights, center, this);
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getMinNumberOfMatchedPoints());
-        assertSame(estimator.getWeights(), weights);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        //noinspection EqualsWithItself
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getMinNumberOfMatchedPoints());
+        assertSame(weights, estimator.getWeights());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getListener(), this);
+        assertSame(this, estimator.getListener());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getType(),
-                RadialDistortionEstimatorType.
-                        WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
+                estimator.getType());
 
         // Force IllegalArgumentException
         estimator = null;
@@ -515,8 +465,7 @@ public class WeightedRadialDistortionEstimatorTest implements
         }
         try {
             estimator = new WeightedRadialDistortionEstimator(
-                    null, undistortedPoints, weights, center,
-                    this);
+                    null, undistortedPoints, weights, center, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -537,8 +486,7 @@ public class WeightedRadialDistortionEstimatorTest implements
 
     @Test
     public void testGetSetListsAndWeights() throws LockedException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default values
         assertNull(estimator.getDistortedPoints());
@@ -554,20 +502,18 @@ public class WeightedRadialDistortionEstimatorTest implements
             undistortedPoints.add(Point2D.create());
         }
 
-        estimator.setPointsAndWeights(distortedPoints, undistortedPoints,
-                weights);
+        estimator.setPointsAndWeights(distortedPoints, undistortedPoints, weights);
 
         // check correctness
-        assertSame(estimator.getDistortedPoints(), distortedPoints);
-        assertSame(estimator.getUndistortedPoints(), undistortedPoints);
-        assertSame(estimator.getWeights(), weights);
+        assertSame(distortedPoints, estimator.getDistortedPoints());
+        assertSame(undistortedPoints, estimator.getUndistortedPoints());
+        assertSame(weights, estimator.getWeights());
 
         // Force IllegalArgumentException
         final List<Point2D> emptyPoints = new ArrayList<>();
         final double[] shortWeights = new double[1];
         try {
-            estimator.setPointsAndWeights(emptyPoints, undistortedPoints,
-                    weights);
+            estimator.setPointsAndWeights(emptyPoints, undistortedPoints, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -577,20 +523,17 @@ public class WeightedRadialDistortionEstimatorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator.setPointsAndWeights(null,
-                    undistortedPoints, weights);
+            estimator.setPointsAndWeights(null, undistortedPoints, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator.setPointsAndWeights(distortedPoints, null,
-                    weights);
+            estimator.setPointsAndWeights(distortedPoints, null, weights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            estimator.setPointsAndWeights(distortedPoints, undistortedPoints,
-                    shortWeights);
+            estimator.setPointsAndWeights(distortedPoints, undistortedPoints, shortWeights);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -598,8 +541,7 @@ public class WeightedRadialDistortionEstimatorTest implements
 
     @Test
     public void testAreValidPointsAndWeights() {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         final List<Point2D> distortedPoints = new ArrayList<>();
         final List<Point2D> undistortedPoints = new ArrayList<>();
@@ -610,32 +552,25 @@ public class WeightedRadialDistortionEstimatorTest implements
         }
         final List<Point2D> emptyPoints = new ArrayList<>();
 
-        assertTrue(estimator.areValidPointsAndWeights(distortedPoints,
-                undistortedPoints, weights));
-        assertFalse(estimator.areValidPointsAndWeights(emptyPoints,
-                undistortedPoints, weights));
-        assertFalse(estimator.areValidPointsAndWeights(distortedPoints,
-                emptyPoints, weights));
-        assertFalse(estimator.areValidPointsAndWeights(null,
-                undistortedPoints, weights));
-        assertFalse(estimator.areValidPointsAndWeights(distortedPoints,
-                null, weights));
+        assertTrue(estimator.areValidPointsAndWeights(distortedPoints, undistortedPoints, weights));
+        assertFalse(estimator.areValidPointsAndWeights(emptyPoints, undistortedPoints, weights));
+        assertFalse(estimator.areValidPointsAndWeights(distortedPoints, emptyPoints, weights));
+        assertFalse(estimator.areValidPointsAndWeights(null, undistortedPoints, weights));
+        assertFalse(estimator.areValidPointsAndWeights(distortedPoints, null, weights));
     }
 
     @Test
     public void testGetSetMaxPoints() throws LockedException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getMaxPoints(),
-                WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_MAX_POINTS, estimator.getMaxPoints());
 
         // set new value
         estimator.setMaxPoints(10);
 
         // check correctness
-        assertEquals(estimator.getMaxPoints(), 10);
+        assertEquals(10, estimator.getMaxPoints());
 
         // Force IllegalArgumentException
         try {
@@ -647,33 +582,29 @@ public class WeightedRadialDistortionEstimatorTest implements
 
     @Test
     public void testIsSetSortWeightsEnabled() throws LockedException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.isSortWeightsEnabled(),
-                WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
 
         // set new value
         estimator.setSortWeightsEnabled(
                 !WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
 
         // check correctness
-        assertEquals(estimator.isSortWeightsEnabled(),
-                !WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS);
+        assertEquals(!WeightedRadialDistortionEstimator.DEFAULT_SORT_WEIGHTS,
+                estimator.isSortWeightsEnabled());
     }
 
     @Test
     public void testGetSetDistortionCenter() throws LockedException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default value
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                0.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                0.0, 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
 
         // set new value
         final Point2D center = Point2D.create();
@@ -681,32 +612,27 @@ public class WeightedRadialDistortionEstimatorTest implements
         estimator.setDistortionCenter(center);
 
         // check correctness
-        assertSame(estimator.getDistortionCenter(), center);
-        assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(),
-                center.getInhomX(), 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(),
-                center.getInhomY(), 0.0);
+        assertSame(center, estimator.getDistortionCenter());
+        assertEquals(center.getInhomX(), estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center.getInhomY(), estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
     }
 
     @Test
-    public void testGetSetHorizontalFocalLength() throws LockedException,
-            RadialDistortionException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+    public void testGetSetHorizontalFocalLength() throws LockedException, RadialDistortionException {
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
 
         // set new value
         estimator.setHorizontalFocalLength(2.0);
 
         // check correctness
-        assertEquals(estimator.getHorizontalFocalLength(), 2.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getHorizontalFocalLength(),
-                2.0, 0.0);
+        assertEquals(2.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -717,24 +643,21 @@ public class WeightedRadialDistortionEstimatorTest implements
     }
 
     @Test
-    public void testGetSetVerticalFocalLength() throws LockedException,
-            RadialDistortionException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+    public void testGetSetVerticalFocalLength() throws LockedException, RadialDistortionException {
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
 
         // set new value
         estimator.setVerticalFocalLength(2.0);
 
         // check correctness
-        assertEquals(estimator.getVerticalFocalLength(), 2.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getVerticalFocalLength(),
-                2.0, 0.0);
+        assertEquals(2.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -746,37 +669,32 @@ public class WeightedRadialDistortionEstimatorTest implements
 
     @Test
     public void testGetSetSkew() throws LockedException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default value
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW,
+                estimator.getIntrinsic().getSkewness(), 0.0);
 
         // set new value
         estimator.setSkew(1.0);
 
         // check correctness
-        assertEquals(estimator.getSkew(), 1.0, 0.0);
-        assertEquals(estimator.getIntrinsic().getSkewness(), 1.0, 0.0);
+        assertEquals(1.0, estimator.getSkew(), 0.0);
+        assertEquals(1.0, estimator.getIntrinsic().getSkewness(), 0.0);
     }
 
     @Test
-    public void testSetIntrinsic() throws LockedException,
-            RadialDistortionException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+    public void testSetIntrinsic() throws LockedException, RadialDistortionException {
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default values
         assertNull(estimator.getDistortionCenter());
-        assertEquals(estimator.getHorizontalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(),
-                RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH, 0.0);
-        assertEquals(estimator.getSkew(),
-                RadialDistortionEstimator.DEFAULT_SKEW, 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_FOCAL_LENGTH,
+                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
 
         // set new values
         final Point2D center = new InhomogeneousPoint2D(1.0, 2.0);
@@ -784,11 +702,11 @@ public class WeightedRadialDistortionEstimatorTest implements
         estimator.setIntrinsic(center, 3.0, 4.0, 5.0);
 
         // check correctness
-        assertEquals(estimator.getDistortionCenter().getInhomX(), 1.0, 0.0);
-        assertEquals(estimator.getDistortionCenter().getInhomY(), 2.0, 0.0);
-        assertEquals(estimator.getHorizontalFocalLength(), 3.0, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(), 4.0, 0.0);
-        assertEquals(estimator.getSkew(), 5.0, 0.0);
+        assertEquals(1.0, estimator.getDistortionCenter().getInhomX(), 0.0);
+        assertEquals(2.0, estimator.getDistortionCenter().getInhomY(), 0.0);
+        assertEquals(3.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(4.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, estimator.getSkew(), 0.0);
 
         // Force RadialDistortionException
         try {
@@ -799,19 +717,20 @@ public class WeightedRadialDistortionEstimatorTest implements
 
         // set new values
         PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters(1.0, 2.0, 3.0, 4.0, 5.0);
+                new PinholeCameraIntrinsicParameters(1.0, 2.0,
+                        3.0, 4.0, 5.0);
         estimator.setIntrinsic(intrinsic);
 
         // check correctness
-        assertEquals(estimator.getDistortionCenter().getInhomX(), 3.0, 0.0);
-        assertEquals(estimator.getDistortionCenter().getInhomY(), 4.0, 0.0);
-        assertEquals(estimator.getHorizontalFocalLength(), 1.0, 0.0);
-        assertEquals(estimator.getVerticalFocalLength(), 2.0, 0.0);
-        assertEquals(estimator.getSkew(), 5.0, 0.0);
+        assertEquals(3.0, estimator.getDistortionCenter().getInhomX(), 0.0);
+        assertEquals(4.0, estimator.getDistortionCenter().getInhomY(), 0.0);
+        assertEquals(1.0, estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(2.0, estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(5.0, estimator.getSkew(), 0.0);
 
         // Force RadialDistortionException
-        intrinsic = new PinholeCameraIntrinsicParameters(0.0, 0.0, 3.0, 4.0,
-                5.0);
+        intrinsic = new PinholeCameraIntrinsicParameters(0.0, 0.0,
+                3.0, 4.0, 5.0);
         try {
             estimator.setIntrinsic(intrinsic);
             fail("RadialDistortionException expected but not thrown");
@@ -822,22 +741,18 @@ public class WeightedRadialDistortionEstimatorTest implements
     @Test
     public void testGetSetNumKParamsAndGetMinNumberOfMatchedPoints()
             throws LockedException {
-        final WeightedRadialDistortionEstimator estimator =
-                new WeightedRadialDistortionEstimator();
+        final WeightedRadialDistortionEstimator estimator = new WeightedRadialDistortionEstimator();
 
         // check default values
-        assertEquals(estimator.getNumKParams(),
-                RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getNumKParams());
+        assertEquals(RadialDistortionEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getNumKParams());
 
         // set new value
         estimator.setNumKParams(3);
 
         // check correctness
-        assertEquals(estimator.getNumKParams(), 3);
-        assertEquals(estimator.getMinNumberOfMatchedPoints(),
-                estimator.getNumKParams());
+        assertEquals(3, estimator.getNumKParams());
+        assertEquals(estimator.getMinNumberOfMatchedPoints(), estimator.getNumKParams());
 
         // Force IllegalArgumentException
         try {
@@ -848,9 +763,8 @@ public class WeightedRadialDistortionEstimatorTest implements
     }
 
     @Test
-    public void testEstimate() throws NotSupportedException, LockedException,
-            NotReadyException, RadialDistortionEstimatorException,
-            DistortionException {
+    public void testEstimate() throws NotSupportedException, LockedException, NotReadyException,
+            RadialDistortionEstimatorException, DistortionException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
@@ -873,8 +787,7 @@ public class WeightedRadialDistortionEstimatorTest implements
 
             undistortedPoints.add(undistortedPoint);
             distortedPoints.add(distortion.distort(undistortedPoint));
-            weights[i] = randomizer.nextDouble(MIN_WEIGHT_VALUE,
-                    MAX_WEIGHT_VALUE);
+            weights[i] = randomizer.nextDouble(MIN_WEIGHT_VALUE, MAX_WEIGHT_VALUE);
         }
 
         final WeightedRadialDistortionEstimator estimator =
@@ -883,22 +796,22 @@ public class WeightedRadialDistortionEstimatorTest implements
 
         assertTrue(estimator.isReady());
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 0);
-        assertEquals(estimateEnd, 0);
-        assertEquals(estimationProgressChange, 0);
+        assertEquals(0, estimateStart);
+        assertEquals(0, estimateEnd);
+        assertEquals(0, estimationProgressChange);
 
         final RadialDistortion distortion2 = estimator.estimate();
 
         // check correctness
         assertTrue(estimator.isReady());
         assertFalse(estimator.isLocked());
-        assertEquals(estimateStart, 1);
-        assertEquals(estimateEnd, 1);
+        assertEquals(1, estimateStart);
+        assertEquals(1, estimateEnd);
         assertTrue(estimationProgressChange >= 0);
         reset();
 
-        assertEquals(distortion2.getK1(), k1, ABSOLUTE_ERROR);
-        assertEquals(distortion2.getK2(), k2, ABSOLUTE_ERROR);
+        assertEquals(k1, distortion2.getK1(), ABSOLUTE_ERROR);
+        assertEquals(k2, distortion2.getK2(), ABSOLUTE_ERROR);
         assertEquals(distortion2.getCenter(), center);
     }
 

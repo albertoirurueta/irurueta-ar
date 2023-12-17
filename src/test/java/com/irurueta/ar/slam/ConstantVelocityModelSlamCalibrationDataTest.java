@@ -34,33 +34,28 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
 
     @Test
     public void testConstructorGetControlLengthAndGetStateLength() {
-        final ConstantVelocityModelSlamCalibrationData data =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data = new ConstantVelocityModelSlamCalibrationData();
 
         // check initial values
-        assertEquals(data.getControlLength(),
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH);
-        assertEquals(data.getStateLength(),
-                ConstantVelocityModelSlamEstimator.STATE_LENGTH);
+        assertEquals(ConstantVelocityModelSlamEstimator.CONTROL_LENGTH, data.getControlLength());
+        assertEquals(ConstantVelocityModelSlamEstimator.STATE_LENGTH, data.getStateLength());
         assertNull(data.getControlMean());
         assertNull(data.getControlCovariance());
     }
 
     @Test
     public void testGetSetControlMean() {
-        final ConstantVelocityModelSlamCalibrationData data =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data = new ConstantVelocityModelSlamCalibrationData();
 
         // check initial value
         assertNull(data.getControlMean());
 
         // set new value
-        final double[] mean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         data.setControlMean(mean);
 
         // check correctness
-        assertSame(data.getControlMean(), mean);
+        assertSame(mean, data.getControlMean());
 
         // Force IllegalArgumentException
         final double[] wrong = new double[1];
@@ -73,8 +68,7 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
 
     @Test
     public void testGetSetControlCovariance() throws WrongSizeException {
-        final ConstantVelocityModelSlamCalibrationData data =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data = new ConstantVelocityModelSlamCalibrationData();
 
         // check initial value
         assertNull(data.getControlCovariance());
@@ -86,7 +80,7 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
         data.setControlCovariance(cov);
 
         // check correctness
-        assertSame(data.getControlCovariance(), cov);
+        assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
         final Matrix wrong = new Matrix(1, 1);
@@ -99,20 +93,18 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
 
     @Test
     public void testSetControlMeanAndCovariance() throws WrongSizeException {
-        final ConstantVelocityModelSlamCalibrationData data =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data = new ConstantVelocityModelSlamCalibrationData();
 
         // set new values
-        final double[] mean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         final Matrix cov = new Matrix(
                 ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
                 ConstantVelocityModelSlamEstimator.CONTROL_LENGTH);
         data.setControlMeanAndCovariance(mean, cov);
 
         // check correctness
-        assertSame(data.getControlMean(), mean);
-        assertSame(data.getControlCovariance(), cov);
+        assertSame(mean, data.getControlMean());
+        assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
         final double[] wrongMean = new double[1];
@@ -131,30 +123,24 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
     }
 
     @Test
-    public void testPropagateWithControlJacobian() throws WrongSizeException,
-            InvalidCovarianceMatrixException {
+    public void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
 
         final Matrix cov = Matrix.identity(
                 ConstantVelocityModelSlamEstimator.CONTROL_LENGTH,
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH).
-                multiplyByScalarAndReturnNew(1e-3);
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH).multiplyByScalarAndReturnNew(1e-3);
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double[] mean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
 
-        final ConstantVelocityModelSlamCalibrationData data =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data = new ConstantVelocityModelSlamCalibrationData();
         data.setControlMeanAndCovariance(mean, cov);
 
         final Matrix jacobian = Matrix.identity(
                 ConstantVelocityModelSlamEstimator.STATE_LENGTH,
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH).
-                multiplyByScalarAndReturnNew(2.0);
+                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH).multiplyByScalarAndReturnNew(2.0);
 
-        final MultivariateNormalDist dist = data.propagateWithControlJacobian(
-                jacobian);
+        final MultivariateNormalDist dist = data.propagateWithControlJacobian(jacobian);
         final MultivariateNormalDist dist2 = new MultivariateNormalDist();
         data.propagateWithControlJacobian(jacobian, dist2);
 
@@ -165,24 +151,20 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
         assertTrue(dist.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
         assertTrue(dist2.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
 
-        assertArrayEquals(dist.getMean(),
-                new double[ConstantVelocityModelSlamEstimator.STATE_LENGTH],
+        assertArrayEquals(new double[ConstantVelocityModelSlamEstimator.STATE_LENGTH], dist.getMean(),
                 0.0);
-        assertArrayEquals(dist2.getMean(),
-                new double[ConstantVelocityModelSlamEstimator.STATE_LENGTH],
+        assertArrayEquals(new double[ConstantVelocityModelSlamEstimator.STATE_LENGTH], dist2.getMean(),
                 0.0);
     }
 
     @Test
     public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
-        final ConstantVelocityModelSlamCalibrationData data1 =
-                new ConstantVelocityModelSlamCalibrationData();
+        final ConstantVelocityModelSlamCalibrationData data1 = new ConstantVelocityModelSlamCalibrationData();
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer();
 
-        final double[] mean = new double[
-                ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
+        final double[] mean = new double[ConstantVelocityModelSlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
         data1.setControlMean(mean);
         final Matrix cov = new Matrix(
@@ -191,8 +173,8 @@ public class ConstantVelocityModelSlamCalibrationDataTest {
         data1.setControlMeanAndCovariance(mean, cov);
 
         // check correctness
-        assertSame(data1.getControlMean(), mean);
-        assertSame(data1.getControlCovariance(), cov);
+        assertSame(mean, data1.getControlMean());
+        assertSame(cov, data1.getControlCovariance());
 
         // serialize and deserialize
         final byte[] bytes = SerializationHelper.serialize(data1);

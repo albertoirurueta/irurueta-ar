@@ -34,7 +34,7 @@ import com.irurueta.numerical.polynomials.Polynomial;
  * This estimator allows enforcing a known aspect ratio as well.
  * The DIAC can be used to obtain the intrinsic parameters of a pair of
  * cameras related by a fundamental matrix.
- * Hence this class can be used for auto-calibration purposes.
+ * Hence, this class can be used for auto-calibration purposes.
  * Notice that the {@link DualAbsoluteQuadricEstimator} is a more robust method of
  * auto-calibration.
  * This class is based on:
@@ -65,7 +65,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * Constant defining whether aspect ratio of focal distance (i.e. vertical
      * focal distance divided by horizontal focal distance) is known or not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      */
     public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN =
@@ -97,7 +97,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
      * distance divided by horizontal focal distance) is known or not.
      * Notice that focal distance aspect ratio is not related to image aspect
-     * ratio. Typically LCD sensor cells are square and hence aspect ratio of
+     * ratio. Typically, LCD sensor cells are square and hence aspect ratio of
      * focal distances is known and equal to 1.
      */
     private boolean mFocalDistanceAspectRatioKnown;
@@ -105,7 +105,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     /**
      * Contains aspect ratio of focal distances (i.e. vertical focal distance
      * divided by horizontal focal distance).
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distance is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -234,7 +234,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
@@ -250,7 +250,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * vertical focal distance divided by horizontal focal distance) is known or
      * not.
      * Notice that focal distance aspect ratio is not related to image size
-     * aspect ratio. Typically LCD sensor cells are square and hence aspect
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      * This value is only taken into account if skewness is assumed to be
      * otherwise it is ignored.
@@ -271,7 +271,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     /**
      * Returns aspect ratio of focal distances (i.e. vertical focal distance
      * divided by horizontal focal distance).
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -293,7 +293,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * divided by horizontal focal distance).
      * This value is only taken into account if aspect ratio is marked as known,
      * otherwise it is ignored.
-     * By default this is 1.0, since it is taken into account that typically
+     * By default, this is 1.0, since it is taken into account that typically
      * LCD sensor cells are square and hence aspect ratio focal distances is
      * known and equal to 1.
      * Notice that focal distance aspect ratio is not related to image size
@@ -401,9 +401,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @throws LockedException                                  if estimator is locked.
      * @throws NotReadyException                                if input has not yet been provided.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental
-     *                                                          matrix corresponds to degenerate camera movements, or
-     *                                                          because of numerical instabilities.
+     *                                                          occurs during estimation, usually because
+     *                                                          fundamental matrix corresponds to
+     *                                                          degenerate camera movements, or because of
+     *                                                          numerical instabilities.
      */
     public DualImageOfAbsoluteConic estimate() throws LockedException,
             NotReadyException,
@@ -421,9 +422,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @throws LockedException                                  if estimator is locked.
      * @throws NotReadyException                                if input has not yet been provided.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental
-     *                                                          matrix corresponds to degenerate camera movements, or
-     *                                                          because of numerical instabilities.
+     *                                                          occurs during estimation, usually because
+     *                                                          fundamental matrix corresponds to
+     *                                                          degenerate camera movements, or because of
+     *                                                          numerical instabilities.
      */
     public void estimate(final DualImageOfAbsoluteConic result)
             throws LockedException, NotReadyException,
@@ -490,9 +492,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *
      * @param result instance where estimated DIAC will be stored.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental
-     *                                                          matrix corresponds to degenerate camera movements, or
-     *                                                          because of numerical instabilities.
+     *                                                          occurs during estimation, usually because
+     *                                                          fundamental matrix corresponds to
+     *                                                          degenerate camera movements, or because of
+     *                                                          numerical instabilities.
      */
     private void estimateUnknownAspectRatio(final DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
@@ -854,9 +857,10 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *
      * @param result instance where estimated DIAC will be stored.
      * @throws KruppaDualImageOfAbsoluteConicEstimatorException if an error
-     *                                                          occurs during estimation, usually because fundamental
-     *                                                          matrix corresponds to degenerate camera movements, or
-     *                                                          because of numerical instabilities.
+     *                                                          occurs during estimation, usually because
+     *                                                          fundamental matrix corresponds to
+     *                                                          degenerate camera movements, or because of
+     *                                                          numerical instabilities.
      */
     private void estimateKnownAspectRatio(final DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
@@ -1138,8 +1142,8 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             final double polyU, final double polyV, final double polyW) throws NumericalException {
         Complex[] roots;
         try {
-            final Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
-                    polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
+            final Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG,
+                    polyH, polyI, polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
             roots = poly1.getRoots();
         } catch (final NumericalException ex1) {
             // if solution for poly1 fails, try with second polynomial
@@ -1183,8 +1187,8 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             final double polyQ, final double polyR) throws NumericalException {
         Complex[] roots;
         try {
-            final Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
-                    polyJ, polyK, polyL);
+            final Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG,
+                    polyH, polyI, polyJ, polyK, polyL);
             roots = poly3.getRoots();
         } catch (final NumericalException e3) {
             try {

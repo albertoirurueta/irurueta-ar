@@ -110,7 +110,7 @@ public interface BasePairedViewsSparseReconstructorListener<
 
     /**
      * Called when cameras for provided matched pair of views have been estimated in an
-     * euclidean stratum (up to certain translation and rotation).
+     * Euclidean stratum (up to certain translation and rotation).
      * Implementations using SLAM techniques by mixing additional sensor data (i.e.
      * gyroscope and accelerometer) to estimate scale of each view pair, might also have
      * some inaccuracies in estimated scale.
@@ -120,8 +120,8 @@ public interface BasePairedViewsSparseReconstructorListener<
      * @param viewId2       id of current view (i.e. 2nd view).
      * @param scale         estimated scale. When using SLAM this is estimated up to a certain
      *                      accuracy.
-     * @param camera1       estimated euclidean camera for previous view (i.e. 1st view).
-     * @param camera2       estimated euclidean camera for current view (i.e. 2nd view).
+     * @param camera1       estimated Euclidean camera for previous view (i.e. 1st view).
+     * @param camera2       estimated Euclidean camera for current view (i.e. 2nd view).
      */
     void onEuclideanCameraPairEstimated(final R reconstructor, final int viewId1, final int viewId2,
                                         final double scale, final EstimatedCamera camera1,
@@ -129,14 +129,14 @@ public interface BasePairedViewsSparseReconstructorListener<
 
     /**
      * Called when reconstructed points have been estimated from a series of 2D matches in a
-     * pair of views in an euclidean stratum (up to certain translation and rotation).
+     * pair of views in an Euclidean stratum (up to certain translation and rotation).
      *
      * @param reconstructor re-constructor raising this event.
      * @param viewId1       id of previous view (i.e. 1st view).
      * @param viewId2       id of current view (i.e. 2nd view).
      * @param scale         estimated scale. When using SLAM this is estimated up to a certain
      *                      accuracy.
-     * @param points        reconstructed 3D points in euclidean space.
+     * @param points        reconstructed 3D points in Euclidean space.
      */
     void onEuclideanReconstructedPointsEstimated(final R reconstructor,
                                                  final int viewId1, final int viewId2, final double scale,
@@ -150,9 +150,10 @@ public interface BasePairedViewsSparseReconstructorListener<
      *
      * @param reconstructor re-constructor raising this event.
      * @param viewId        id of view whose parameters are requested.
-     * @return intrinsic parameters if known, false otherwise.
+     * @return intrinsic parameters if known, null otherwise.
      */
-    PinholeCameraIntrinsicParameters onIntrinsicParametersRequested(final R reconstructor, final int viewId);
+    PinholeCameraIntrinsicParameters onIntrinsicParametersRequested(
+            final R reconstructor, final int viewId);
 
     /**
      * Called when reconstruction starts.

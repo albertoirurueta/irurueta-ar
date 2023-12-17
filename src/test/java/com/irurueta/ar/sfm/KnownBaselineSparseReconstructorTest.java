@@ -118,7 +118,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testConstructor() {
-        assertEquals(KnownBaselineSparseReconstructor.MIN_NUMBER_OF_VIEWS, 2);
+        assertEquals(2, KnownBaselineSparseReconstructor.MIN_NUMBER_OF_VIEWS);
 
         final KnownBaselineSparseReconstructorConfiguration configuration =
                 new KnownBaselineSparseReconstructorConfiguration();
@@ -224,12 +224,12 @@ public class KnownBaselineSparseReconstructorTest {
 
         // check default values
         assertNotNull(reconstructor.getConfiguration());
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
         assertNull(reconstructor.getCurrentMetricEstimatedCamera());
         assertNull(reconstructor.getPreviousMetricEstimatedCamera());
@@ -237,7 +237,7 @@ public class KnownBaselineSparseReconstructorTest {
         assertNull(reconstructor.getPreviousEuclideanEstimatedCamera());
         assertNull(reconstructor.getActiveMetricReconstructedPoints());
         assertNull(reconstructor.getActiveEuclideanReconstructedPoints());
-        assertEquals(reconstructor.getCurrentScale(), BaseSparseReconstructor.DEFAULT_SCALE, 0.0);
+        assertEquals(BaseSparseReconstructor.DEFAULT_SCALE, reconstructor.getCurrentScale(), 0.0);
         assertNull(reconstructor.getPreviousViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -249,13 +249,13 @@ public class KnownBaselineSparseReconstructorTest {
         reconstructor = new KnownBaselineSparseReconstructor(configuration, listener);
 
         // check default values
-        assertSame(reconstructor.getConfiguration(), configuration);
-        assertSame(reconstructor.getListener(), listener);
+        assertSame(configuration, reconstructor.getConfiguration());
+        assertSame(listener, reconstructor.getListener());
         assertFalse(reconstructor.isRunning());
         assertFalse(reconstructor.isCancelled());
         assertFalse(reconstructor.hasFailed());
         assertFalse(reconstructor.isFinished());
-        assertEquals(reconstructor.getViewCount(), 0);
+        assertEquals(0, reconstructor.getViewCount());
         assertNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
         assertNull(reconstructor.getCurrentMetricEstimatedCamera());
         assertNull(reconstructor.getPreviousMetricEstimatedCamera());
@@ -263,7 +263,7 @@ public class KnownBaselineSparseReconstructorTest {
         assertNull(reconstructor.getPreviousEuclideanEstimatedCamera());
         assertNull(reconstructor.getActiveMetricReconstructedPoints());
         assertNull(reconstructor.getActiveEuclideanReconstructedPoints());
-        assertEquals(reconstructor.getCurrentScale(), BaseSparseReconstructor.DEFAULT_SCALE, 0.0);
+        assertEquals(BaseSparseReconstructor.DEFAULT_SCALE, reconstructor.getCurrentScale(), 0.0);
         assertNull(reconstructor.getPreviousViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewTrackedSamples());
         assertNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -273,10 +273,8 @@ public class KnownBaselineSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsEssentialTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testGeneralPointsEssentialTwoViews() throws InvalidPairOfCamerasException, AlgebraException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
         int numValid = 0;
@@ -286,8 +284,8 @@ public class KnownBaselineSparseReconstructorTest {
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -311,8 +309,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -323,18 +320,13 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -351,31 +343,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -388,10 +371,8 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -405,12 +386,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -427,9 +405,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -448,12 +424,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -469,7 +442,6 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -662,20 +634,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -686,21 +658,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -723,10 +691,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -757,13 +723,11 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             assertEquals(mScale, baseline, LARGE_ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -779,10 +743,8 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter1 = scaledCamera1.getCameraCenter();
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -863,21 +825,17 @@ public class KnownBaselineSparseReconstructorTest {
             // check that points are correct
             boolean validPoints = true;
             for (int i = 0; i < numPoints1; i++) {
-                if (!points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
+                if (!points3D1.get(i).equals(scaledReconstructionPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
+                if (!points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -893,10 +851,8 @@ public class KnownBaselineSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDIACTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testGeneralPointsDIACTwoViews() throws InvalidPairOfCamerasException, AlgebraException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
         int numValid = 0;
@@ -907,8 +863,7 @@ public class KnownBaselineSparseReconstructorTest {
                     InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_DIAC,
-                    MAX_FOCAL_LENGTH_DIAC);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_DIAC, MAX_FOCAL_LENGTH_DIAC);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = randomizer.nextDouble(
@@ -917,8 +872,8 @@ public class KnownBaselineSparseReconstructorTest {
                     MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY, skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setPrincipalPointX(principalPointX);
@@ -947,18 +902,13 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -975,31 +925,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -1012,10 +953,8 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -1029,12 +968,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC,
-                            MAX_LAMBDA_DIAC);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC,
-                            MAX_LAMBDA_DIAC);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_DIAC,
-                            MAX_LAMBDA_DIAC);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1057,9 +993,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -1082,12 +1016,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC,
-                            MAX_LAMBDA_DIAC);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC,
-                            MAX_LAMBDA_DIAC);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_DIAC,
-                            MAX_LAMBDA_DIAC);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1107,7 +1038,6 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -1297,10 +1227,8 @@ public class KnownBaselineSparseReconstructorTest {
 
             // check correctness
             assertTrue(mStarted);
-            //noinspection ConstantConditions
             assertTrue(mFinished);
             assertFalse(mCancelled);
-            //noinspection ConstantConditions
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertFalse(reconstructor.isFirstView());
@@ -1308,20 +1236,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -1332,21 +1260,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -1369,10 +1293,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that most of the points are in front of both cameras
@@ -1409,13 +1331,11 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             assertEquals(mScale, baseline, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -1428,15 +1348,11 @@ public class KnownBaselineSparseReconstructorTest {
             scaledCamera1.decompose();
             scaledCamera2.decompose();
 
-            final Point3D scaledCenter1 = new InhomogeneousPoint3D(
-                    scaledCamera1.getCameraCenter());
-            final Point3D scaledCenter2 = new InhomogeneousPoint3D(
-                    scaledCamera2.getCameraCenter());
+            final Point3D scaledCenter1 = new InhomogeneousPoint3D(scaledCamera1.getCameraCenter());
+            final Point3D scaledCenter2 = new InhomogeneousPoint3D(scaledCamera2.getCameraCenter());
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -1464,8 +1380,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -1475,8 +1390,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -1491,8 +1405,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -1502,8 +1415,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -1542,8 +1454,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsDAQAndEssentialZeroPrincipalPointTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -1556,8 +1467,7 @@ public class KnownBaselineSparseReconstructorTest {
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = 0.0;
@@ -1582,8 +1492,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -1594,18 +1503,13 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -1622,31 +1526,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -1659,10 +1554,8 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -1677,12 +1570,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1705,9 +1595,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project 3D point into both cameras
@@ -1730,12 +1618,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -1755,7 +1640,6 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -1888,8 +1772,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedEuclideanCamera1 = previousCamera;
                             mEstimatedEuclideanCamera2 = currentCamera;
                             mScale = scale;
@@ -1904,32 +1787,28 @@ public class KnownBaselineSparseReconstructorTest {
                         }
 
                         @Override
-                        public void onStart(
-                                final KnownBaselineSparseReconstructor reconstructor) {
+                        public void onStart(final KnownBaselineSparseReconstructor reconstructor) {
                             mStarted = true;
                         }
 
                         @Override
-                        public void onFinish(
-                                final KnownBaselineSparseReconstructor reconstructor) {
+                        public void onFinish(final KnownBaselineSparseReconstructor reconstructor) {
                             mFinished = true;
                         }
 
                         @Override
-                        public void onCancel(
-                                final KnownBaselineSparseReconstructor reconstructor) {
+                        public void onCancel(final KnownBaselineSparseReconstructor reconstructor) {
                             mCancelled = true;
                         }
 
                         @Override
-                        public void onFail(
-                                final KnownBaselineSparseReconstructor reconstructor) {
+                        public void onFail(final KnownBaselineSparseReconstructor reconstructor) {
                             mFailed = true;
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -1952,20 +1831,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -1976,21 +1855,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -2013,10 +1888,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -2047,13 +1920,11 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             assertEquals(mScale, baseline, LARGE_ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -2066,15 +1937,11 @@ public class KnownBaselineSparseReconstructorTest {
             scaledCamera1.decompose();
             scaledCamera2.decompose();
 
-            final Point3D scaledCenter1 = new InhomogeneousPoint3D(
-                    scaledCamera1.getCameraCenter());
-            final Point3D scaledCenter2 = new InhomogeneousPoint3D(
-                    scaledCamera2.getCameraCenter());
+            final Point3D scaledCenter1 = new InhomogeneousPoint3D(scaledCamera1.getCameraCenter());
+            final Point3D scaledCenter2 = new InhomogeneousPoint3D(scaledCamera2.getCameraCenter());
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -2102,34 +1969,27 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(scaledIntrinsic2.getHorizontalFocalLength(),
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -2139,8 +1999,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -2159,21 +2018,17 @@ public class KnownBaselineSparseReconstructorTest {
             // check that points are correct
             boolean validPoints = true;
             for (int i = 0; i < numPoints1; i++) {
-                if (!points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
+                if (!points3D1.get(i).equals(scaledReconstructionPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
+                if (!points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -2189,10 +2044,8 @@ public class KnownBaselineSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDAQAndEssentialTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testGeneralPointsDAQAndEssentialTwoViews() throws InvalidPairOfCamerasException,
+            AlgebraException, CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
         int numValid = 0;
@@ -2204,16 +2057,13 @@ public class KnownBaselineSparseReconstructorTest {
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL,
-                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
             final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL,
-                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
@@ -2234,8 +2084,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -2246,18 +2095,13 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -2274,28 +2118,20 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
             final SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     planesIntersectionMatrix);
@@ -2311,10 +2147,8 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -2329,12 +2163,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2357,9 +2188,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project 3D point into both cameras
@@ -2382,12 +2211,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -2407,7 +2233,6 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -2522,8 +2347,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedMetricCamera1 = previousCamera;
                             mEstimatedMetricCamera2 = currentCamera;
                         }
@@ -2531,8 +2355,7 @@ public class KnownBaselineSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -2540,8 +2363,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedEuclideanCamera1 = previousCamera;
                             mEstimatedEuclideanCamera2 = currentCamera;
                             mScale = scale;
@@ -2576,8 +2398,8 @@ public class KnownBaselineSparseReconstructorTest {
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -2600,20 +2422,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -2624,21 +2446,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -2661,10 +2479,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -2695,16 +2511,14 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             if (Math.abs(mScale - baseline) > ABSOLUTE_ERROR) {
                 continue;
             }
             assertEquals(mScale, baseline, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -2717,10 +2531,8 @@ public class KnownBaselineSparseReconstructorTest {
             scaledCamera1.decompose();
             scaledCamera2.decompose();
 
-            final Point3D scaledCenter1 = new InhomogeneousPoint3D(
-                    scaledCamera1.getCameraCenter());
-            final Point3D scaledCenter2 = new InhomogeneousPoint3D(
-                    scaledCamera2.getCameraCenter());
+            final Point3D scaledCenter1 = new InhomogeneousPoint3D(scaledCamera1.getCameraCenter());
+            final Point3D scaledCenter2 = new InhomogeneousPoint3D(scaledCamera2.getCameraCenter());
 
             final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
                     scaledCamera1.getIntrinsicParameters();
@@ -2753,8 +2565,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(),
                     LARGE_ABSOLUTE_ERROR);
@@ -2766,21 +2577,17 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -2790,8 +2597,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -2810,21 +2616,17 @@ public class KnownBaselineSparseReconstructorTest {
             // check that points are correct
             boolean validPoints = true;
             for (int i = 0; i < numPoints1; i++) {
-                if (!points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
+                if (!points3D1.get(i).equals(scaledReconstructionPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
+                if (!points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -2840,10 +2642,8 @@ public class KnownBaselineSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDAQTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testGeneralPointsDAQTwoViews() throws InvalidPairOfCamerasException, AlgebraException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, com.irurueta.geometry.estimators.LockedException,
             RobustEstimatorException {
 
@@ -2856,16 +2656,13 @@ public class KnownBaselineSparseReconstructorTest {
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL,
-                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
             final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL,
-                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
@@ -2886,8 +2683,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -2898,18 +2694,13 @@ public class KnownBaselineSparseReconstructorTest {
             final double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -2926,31 +2717,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -2963,10 +2745,8 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<Point3D> points3D1 = new ArrayList<>();
@@ -2981,12 +2761,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -3009,9 +2786,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(leftFront);
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 // project 3D point into both cameras
@@ -3030,12 +2805,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL,
-                            MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -3055,7 +2827,6 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(rightFront);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -3166,8 +2937,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedMetricCamera1 = previousCamera;
                             mEstimatedMetricCamera2 = currentCamera;
                         }
@@ -3175,8 +2945,7 @@ public class KnownBaselineSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -3184,586 +2953,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            mEstimatedEuclideanCamera1 = previousCamera;
-                            mEstimatedEuclideanCamera2 = currentCamera;
-                            mScale = scale;
-                        }
-
-                        @Override
-                        public void onEuclideanReconstructedPointsEstimated(
-                                KnownBaselineSparseReconstructor reconstructor, double scale,
-                                List<ReconstructedPoint3D> points) {
-                            mEuclideanReconstructedPoints = points;
-                            mScale = scale;
-                        }
-
-                        @Override
-                        public void onStart(final KnownBaselineSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
-
-                        @Override
-                        public void onFinish(final KnownBaselineSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
-
-                        @Override
-                        public void onCancel(final KnownBaselineSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
-
-                        @Override
-                        public void onFail(final KnownBaselineSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
-
-            if (maxTriesReached) {
-                continue;
-            }
-
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
-
-            // check initial values
-            reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
-            assertFalse(reconstructor.isFinished());
-
-            reconstructor.start();
-
-            // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
-            assertTrue(reconstructor.isFinished());
-            assertFalse(reconstructor.isFirstView());
-            assertFalse(reconstructor.isSecondView());
-            assertTrue(reconstructor.isAdditionalView());
-            assertTrue(reconstructor.getViewCount() > 0);
-            assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
-            assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
-            assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
-            assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
-            assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
-            assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
-            assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
-            assertNotNull(reconstructor.getPreviousViewTrackedSamples());
-            assertNotNull(reconstructor.getCurrentViewTrackedSamples());
-            assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
-
-            // check that estimated fundamental matrix is correct
-            fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
-
-            // matrices are equal up to scale
-            if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
-
-            // check that reconstructed points are in a metric stratum (up to a
-            // certain scale)
-            final PinholeCamera estimatedMetricCamera1 = mEstimatedMetricCamera1.getCamera();
-            final PinholeCamera estimatedMetricCamera2 = mEstimatedMetricCamera2.getCamera();
-            assertNotSame(mEstimatedMetricCamera1, mEstimatedEuclideanCamera1);
-            assertNotSame(mEstimatedMetricCamera2, mEstimatedEuclideanCamera2);
-
-            final PinholeCamera estimatedEuclideanCamera1 = mEstimatedEuclideanCamera1.getCamera();
-            final PinholeCamera estimatedEuclideanCamera2 = mEstimatedEuclideanCamera2.getCamera();
-
-            assertNotSame(mMetricReconstructedPoints, mEuclideanReconstructedPoints);
-
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-            }
-
-            final MetricTransformation3DRobustEstimator transformationEstimator =
-                    MetricTransformation3DRobustEstimator.create(
-                            metricReconstructedPoints3D, points3D1,
-                            RobustEstimatorMethod.LMedS);
-
-            final MetricTransformation3D transformation =
-                    transformationEstimator.estimate();
-
-            final PinholeCamera transformedCamera1 =
-                    transformation.transformAndReturnNew(estimatedMetricCamera1);
-            final PinholeCamera transformedCamera2 =
-                    transformation.transformAndReturnNew(estimatedMetricCamera2);
-
-            // check cameras intrinsics are correct (rotation, center and points
-            // might contain large errors and for that reason we do not checked)
-            transformedCamera1.decompose();
-            transformedCamera2.decompose();
-
-            estimatedEuclideanCamera1.decompose();
-            estimatedEuclideanCamera2.decompose();
-
-            final PinholeCameraIntrinsicParameters transformedIntrinsic1 =
-                    transformedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters transformedIntrinsic2 =
-                    transformedCamera2.getIntrinsicParameters();
-
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic1 =
-                    estimatedEuclideanCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic2 =
-                    estimatedEuclideanCamera2.getIntrinsicParameters();
-
-            if (Math.abs(transformedIntrinsic1.getHorizontalFocalLength() - intrinsic.getHorizontalFocalLength()) >
-                    LARGE_ABSOLUTE_ERROR) {
-                continue;
-            }
-            assertEquals(transformedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-
-            assertEquals(transformedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-
-            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-
-            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(),
-                    LARGE_ABSOLUTE_ERROR);
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testPlanarPointsEssentialTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineSparseReconstructorConfiguration configuration =
-                    new KnownBaselineSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
-
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = 0.0;
-            final double principalPointY = 0.0;
-
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY, skewness);
-            intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
-
-            configuration.setInitialIntrinsic1(intrinsic);
-            configuration.setInitialIntrinsic2(intrinsic);
-
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
-
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
-
-            double baseline = center1.distanceTo(center2);
-            configuration.setBaseline(baseline);
-
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
-
-            // create 3D points laying in front of both cameras and laying in a plane
-
-            // 1st find an approximate central point by intersecting the axis
-            // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
-            planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
-
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
-
-            planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
-
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
-
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
-            decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
-                    v.getElementAt(0, 3),
-                    v.getElementAt(1, 3),
-                    v.getElementAt(2, 3),
-                    v.getElementAt(3, 3));
-
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
-
-            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
-            plane.normalize();
-
-            final double planeA = plane.getA();
-            final double planeB = plane.getB();
-            final double planeC = plane.getC();
-            final double planeD = plane.getD();
-
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-
-            HomogeneousPoint3D point3D;
-            final List<HomogeneousPoint3D> points3D1 = new ArrayList<>();
-            Point2D projectedPoint1;
-            Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
-            boolean front1;
-            boolean front2;
-            for (int i = 0; i < numPoints1; i++) {
-                // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
-                do {
-                    // get a random point belonging to the plane
-                    // a*x + b*y + c*z + d*w = 0
-                    // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
-                    final double homX;
-                    final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
-                    } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
-                    }
-
-                    point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
-
-                    assertTrue(plane.isLocus(point3D));
-
-                    front1 = camera1.isPointInFrontOfCamera(point3D);
-                    front2 = camera2.isPointInFrontOfCamera(point3D);
-                    if (numTry > MAX_TRIES) {
-                        fail("max tries reached");
-                    }
-                    numTry++;
-                } while (!front1 || !front2);
-                points3D1.add(point3D);
-
-                // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
-                assertTrue(front1);
-                //noinspection ConstantConditions
-                assertTrue(front2);
-
-                // project 3D point into both cameras
-                projectedPoint1 = new InhomogeneousPoint2D();
-                camera1.project(point3D, projectedPoint1);
-                projectedPoints1.add(projectedPoint1);
-
-                projectedPoint2 = new InhomogeneousPoint2D();
-                camera2.project(point3D, projectedPoint2);
-                projectedPoints2.add(projectedPoint2);
-            }
-
-            Point2D projectedPoint2b;
-            final List<Point2D> projectedPoints2b = new ArrayList<>();
-            for (int i = 0; i < numPoints2; i++) {
-                // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
-                do {
-                    // get a random point belonging to the plane
-                    // a*x + b*y + c*z + d*w = 0
-                    // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
-                    final double homX;
-                    final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
-                    if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
-                    } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
-                    }
-
-                    point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
-
-                    assertTrue(plane.isLocus(point3D));
-
-                    front2 = camera2.isPointInFrontOfCamera(point3D);
-                    if (numTry > MAX_TRIES) {
-                        fail("max tries reached");
-                    }
-                    numTry++;
-                } while (!front2);
-
-                // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
-                assertTrue(front2);
-
-                projectedPoint2b = new InhomogeneousPoint2D();
-                camera2.project(point3D, projectedPoint2b);
-                projectedPoints2b.add(projectedPoint2b);
-            }
-
-            final KnownBaselineSparseReconstructorListener listener =
-                    new KnownBaselineSparseReconstructorListener() {
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
-                        }
-
-                        @Override
-                        public void onRequestSamples(
-                                final KnownBaselineSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final List<Sample2D> currentViewNewlySpawnedSamples) {
-
-                            previousViewTrackedSamples.clear();
-                            currentViewTrackedSamples.clear();
-                            currentViewNewlySpawnedSamples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                // spawned samples
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewNewlySpawnedSamples.add(sample);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineSparseReconstructor reconstructor, final int viewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
-                        }
-
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineSparseReconstructor reconstructor, final int viewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
-                        }
-
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineSparseReconstructor reconstructor,
-                                final List<Sample2D> allPreviousViewSamples,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final int previousViewId, final int currentViewId,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
-
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints1; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
-                                });
-                                match.setViewIds(new int[]{previousViewId, currentViewId});
-                                matches.add(match);
-                            }
-                        }
-
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
-
-                        @Override
-                        public void onMetricCameraEstimated(
-                                final KnownBaselineSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            mEstimatedMetricCamera1 = previousCamera;
-                            mEstimatedMetricCamera2 = currentCamera;
-                        }
-
-                        @Override
-                        public void onMetricReconstructedPointsEstimated(
-                                final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mMetricReconstructedPoints = points;
-                        }
-
-                        @Override
-                        public void onEuclideanCameraEstimated(
-                                final KnownBaselineSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedEuclideanCamera1 = previousCamera;
                             mEstimatedEuclideanCamera2 = currentCamera;
                             mScale = scale;
@@ -3798,8 +2988,535 @@ public class KnownBaselineSparseReconstructorTest {
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            if (maxTriesReached) {
+                continue;
+            }
+
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
+
+            // check initial values
+            reset();
+            assertFalse(mStarted);
+            assertFalse(mFinished);
+            assertFalse(mCancelled);
+            assertFalse(mFailed);
+            assertFalse(reconstructor.isFinished());
+
+            reconstructor.start();
+
+            // check correctness
+            assertTrue(mStarted);
+            assertTrue(mFinished);
+            assertFalse(mCancelled);
+            assertFalse(mFailed);
+            assertTrue(reconstructor.isFinished());
+            assertFalse(reconstructor.isFirstView());
+            assertFalse(reconstructor.isSecondView());
+            assertTrue(reconstructor.isAdditionalView());
+            assertTrue(reconstructor.getViewCount() > 0);
+            assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
+            assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
+            assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
+            assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
+            assertNotNull(reconstructor.getPreviousViewTrackedSamples());
+            assertNotNull(reconstructor.getCurrentViewTrackedSamples());
+            assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
+
+            // check that estimated fundamental matrix is correct
+            fundamentalMatrix.normalize();
+            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+
+            // matrices are equal up to scale
+            if (!fundamentalMatrix.getInternalMatrix().equals(
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(fundamentalMatrix.getInternalMatrix().equals(
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
+
+            // check that reconstructed points are in a metric stratum (up to a
+            // certain scale)
+            final PinholeCamera estimatedMetricCamera1 = mEstimatedMetricCamera1.getCamera();
+            final PinholeCamera estimatedMetricCamera2 = mEstimatedMetricCamera2.getCamera();
+            assertNotSame(mEstimatedMetricCamera1, mEstimatedEuclideanCamera1);
+            assertNotSame(mEstimatedMetricCamera2, mEstimatedEuclideanCamera2);
+
+            final PinholeCamera estimatedEuclideanCamera1 = mEstimatedEuclideanCamera1.getCamera();
+            final PinholeCamera estimatedEuclideanCamera2 = mEstimatedEuclideanCamera2.getCamera();
+
+            assertNotSame(mMetricReconstructedPoints, mEuclideanReconstructedPoints);
+
+            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
+            for (int i = 0; i < numPoints1; i++) {
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+            }
+
+            final MetricTransformation3DRobustEstimator transformationEstimator =
+                    MetricTransformation3DRobustEstimator.create(metricReconstructedPoints3D, points3D1,
+                            RobustEstimatorMethod.LMEDS);
+
+            final MetricTransformation3D transformation = transformationEstimator.estimate();
+
+            final PinholeCamera transformedCamera1 =
+                    transformation.transformAndReturnNew(estimatedMetricCamera1);
+            final PinholeCamera transformedCamera2 =
+                    transformation.transformAndReturnNew(estimatedMetricCamera2);
+
+            // check cameras intrinsics are correct (rotation, center and points
+            // might contain large errors and for that reason we do not checked)
+            transformedCamera1.decompose();
+            transformedCamera2.decompose();
+
+            estimatedEuclideanCamera1.decompose();
+            estimatedEuclideanCamera2.decompose();
+
+            final PinholeCameraIntrinsicParameters transformedIntrinsic1 =
+                    transformedCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters transformedIntrinsic2 =
+                    transformedCamera2.getIntrinsicParameters();
+
+            final PinholeCameraIntrinsicParameters euclideanIntrinsic1 =
+                    estimatedEuclideanCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters euclideanIntrinsic2 =
+                    estimatedEuclideanCamera2.getIntrinsicParameters();
+
+            if (Math.abs(transformedIntrinsic1.getHorizontalFocalLength() -
+                    intrinsic.getHorizontalFocalLength()) > LARGE_ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertEquals(transformedIntrinsic1.getHorizontalFocalLength(),
+                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getVerticalFocalLength(),
+                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getHorizontalPrincipalPoint(),
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getVerticalPrincipalPoint(),
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+
+            assertEquals(transformedIntrinsic2.getHorizontalFocalLength(),
+                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getVerticalFocalLength(),
+                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getHorizontalPrincipalPoint(),
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getVerticalPrincipalPoint(),
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+
+            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
+                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
+                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+
+            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(),
+                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
+                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
+                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
+                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testPlanarPointsEssentialTwoViews() throws InvalidPairOfCamerasException, AlgebraException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
+            com.irurueta.geometry.NotAvailableException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final KnownBaselineSparseReconstructorConfiguration configuration =
+                    new KnownBaselineSparseReconstructorConfiguration();
+            configuration.setInitialCamerasEstimatorMethod(
+                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final double skewness = 0.0;
+            final double principalPointX = 0.0;
+            final double principalPointY = 0.0;
+
+            final PinholeCameraIntrinsicParameters intrinsic =
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
+            intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
+
+            configuration.setInitialIntrinsic1(intrinsic);
+            configuration.setInitialIntrinsic2(intrinsic);
+
+            final double alphaEuler1 = 0.0;
+            final double betaEuler1 = 0.0;
+            final double gammaEuler1 = 0.0;
+            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+
+            final double cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+
+            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final Point3D center2 = new InhomogeneousPoint3D(
+                    center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation,
+                    center1.getInhomZ() + cameraSeparation);
+
+            double baseline = center1.distanceTo(center2);
+            configuration.setBaseline(baseline);
+
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+
+            // create 3D points laying in front of both cameras and laying in a plane
+
+            // 1st find an approximate central point by intersecting the axis
+            // planes of both cameras
+            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
+            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
+            final Matrix planesIntersectionMatrix = new Matrix(
+                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
+
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
+
+            planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
+
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
+
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    planesIntersectionMatrix);
+            decomposer.decompose();
+            final Matrix v = decomposer.getV();
+            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+                    v.getElementAt(0, 3),
+                    v.getElementAt(1, 3),
+                    v.getElementAt(2, 3),
+                    v.getElementAt(3, 3));
+
+            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
+            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
+            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
+                    0.5);
+
+            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+            plane.normalize();
+
+            final double planeA = plane.getA();
+            final double planeB = plane.getB();
+            final double planeC = plane.getC();
+            final double planeD = plane.getD();
+
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+
+            HomogeneousPoint3D point3D;
+            final List<HomogeneousPoint3D> points3D1 = new ArrayList<>();
+            Point2D projectedPoint1;
+            Point2D projectedPoint2;
+            final List<Point2D> projectedPoints1 = new ArrayList<>();
+            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            boolean front1;
+            boolean front2;
+            for (int i = 0; i < numPoints1; i++) {
+                // generate points and ensure they lie in front of both cameras
+                int numTry = 0;
+                do {
+                    // get a random point belonging to the plane
+                    // a*x + b*y + c*z + d*w = 0
+                    // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
+                    final double homX;
+                    final double homY;
+                    final double homW = 1.0;
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    if (Math.abs(planeB) > ABSOLUTE_ERROR) {
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
+                    } else {
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
+                    }
+
+                    point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
+
+                    assertTrue(plane.isLocus(point3D));
+
+                    front1 = camera1.isPointInFrontOfCamera(point3D);
+                    front2 = camera2.isPointInFrontOfCamera(point3D);
+                    if (numTry > MAX_TRIES) {
+                        fail("max tries reached");
+                    }
+                    numTry++;
+                } while (!front1 || !front2);
+                points3D1.add(point3D);
+
+                // check that 3D point is in front of both cameras
+                assertTrue(front1);
+                assertTrue(front2);
+
+                // project 3D point into both cameras
+                projectedPoint1 = new InhomogeneousPoint2D();
+                camera1.project(point3D, projectedPoint1);
+                projectedPoints1.add(projectedPoint1);
+
+                projectedPoint2 = new InhomogeneousPoint2D();
+                camera2.project(point3D, projectedPoint2);
+                projectedPoints2.add(projectedPoint2);
+            }
+
+            Point2D projectedPoint2b;
+            final List<Point2D> projectedPoints2b = new ArrayList<>();
+            for (int i = 0; i < numPoints2; i++) {
+                // generate points and ensure they lie in front of both cameras
+                int numTry = 0;
+                do {
+                    // get a random point belonging to the plane
+                    // a*x + b*y + c*z + d*w = 0
+                    // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
+                    final double homX;
+                    final double homY;
+                    final double homW = 1.0;
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    if (Math.abs(planeB) > ABSOLUTE_ERROR) {
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
+                                planeB;
+                    } else {
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
+                                planeA;
+                    }
+
+                    point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
+
+                    assertTrue(plane.isLocus(point3D));
+
+                    front2 = camera2.isPointInFrontOfCamera(point3D);
+                    if (numTry > MAX_TRIES) {
+                        fail("max tries reached");
+                    }
+                    numTry++;
+                } while (!front2);
+
+                // check that 3D point is in front of both cameras
+                assertTrue(front2);
+
+                projectedPoint2b = new InhomogeneousPoint2D();
+                camera2.project(point3D, projectedPoint2b);
+                projectedPoints2b.add(projectedPoint2b);
+            }
+
+            final KnownBaselineSparseReconstructorListener listener =
+                    new KnownBaselineSparseReconstructorListener() {
+                        @Override
+                        public boolean hasMoreViewsAvailable(
+                                final KnownBaselineSparseReconstructor reconstructor) {
+                            return mViewCount < 2;
+                        }
+
+                        @Override
+                        public void onRequestSamples(
+                                final KnownBaselineSparseReconstructor reconstructor,
+                                final int previousViewId, final int currentViewId,
+                                final List<Sample2D> previousViewTrackedSamples,
+                                final List<Sample2D> currentViewTrackedSamples,
+                                final List<Sample2D> currentViewNewlySpawnedSamples) {
+
+                            previousViewTrackedSamples.clear();
+                            currentViewTrackedSamples.clear();
+                            currentViewNewlySpawnedSamples.clear();
+
+                            Sample2D sample;
+                            if (mViewCount == 0) {
+                                // first view
+                                for (int i = 0; i < numPoints1; i++) {
+                                    sample = new Sample2D();
+                                    sample.setPoint(projectedPoints1.get(i));
+                                    sample.setViewId(currentViewId);
+                                    currentViewTrackedSamples.add(sample);
+                                }
+                            } else {
+                                // second view
+                                for (int i = 0; i < numPoints1; i++) {
+                                    sample = new Sample2D();
+                                    sample.setPoint(projectedPoints1.get(i));
+                                    sample.setViewId(previousViewId);
+                                    previousViewTrackedSamples.add(sample);
+                                }
+
+                                for (int i = 0; i < numPoints1; i++) {
+                                    sample = new Sample2D();
+                                    sample.setPoint(projectedPoints2.get(i));
+                                    sample.setViewId(currentViewId);
+                                    currentViewTrackedSamples.add(sample);
+                                }
+
+                                // spawned samples
+                                for (int i = 0; i < numPoints2; i++) {
+                                    sample = new Sample2D();
+                                    sample.setPoint(projectedPoints2b.get(i));
+                                    sample.setViewId(currentViewId);
+                                    currentViewNewlySpawnedSamples.add(sample);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onSamplesAccepted(
+                                final KnownBaselineSparseReconstructor reconstructor, final int viewId,
+                                final List<Sample2D> previousViewTrackedSamples,
+                                final List<Sample2D> currentViewTrackedSamples) {
+                            mViewCount++;
+                        }
+
+                        @Override
+                        public void onSamplesRejected(
+                                final KnownBaselineSparseReconstructor reconstructor, final int viewId,
+                                final List<Sample2D> previousViewTrackedSamples,
+                                final List<Sample2D> currentViewTrackedSamples) {
+                            mViewCount++;
+                        }
+
+                        @Override
+                        public void onRequestMatches(
+                                final KnownBaselineSparseReconstructor reconstructor,
+                                final List<Sample2D> allPreviousViewSamples,
+                                final List<Sample2D> previousViewTrackedSamples,
+                                final List<Sample2D> currentViewTrackedSamples,
+                                final int previousViewId, final int currentViewId,
+                                final List<MatchedSamples> matches) {
+                            matches.clear();
+
+                            MatchedSamples match;
+                            for (int i = 0; i < numPoints1; i++) {
+                                match = new MatchedSamples();
+                                match.setSamples(new Sample2D[]{
+                                        previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
+                                });
+                                match.setViewIds(new int[]{previousViewId, currentViewId});
+                                matches.add(match);
+                            }
+                        }
+
+                        @Override
+                        public void onFundamentalMatrixEstimated(
+                                final KnownBaselineSparseReconstructor reconstructor,
+                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                        }
+
+                        @Override
+                        public void onMetricCameraEstimated(
+                                final KnownBaselineSparseReconstructor reconstructor,
+                                final int previousViewId, final int currentViewId,
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                            mEstimatedMetricCamera1 = previousCamera;
+                            mEstimatedMetricCamera2 = currentCamera;
+                        }
+
+                        @Override
+                        public void onMetricReconstructedPointsEstimated(
+                                final KnownBaselineSparseReconstructor reconstructor,
+                                final List<MatchedSamples> matches,
+                                final List<ReconstructedPoint3D> points) {
+                            mMetricReconstructedPoints = points;
+                        }
+
+                        @Override
+                        public void onEuclideanCameraEstimated(
+                                final KnownBaselineSparseReconstructor reconstructor,
+                                final int previousViewId, final int currentViewId, final double scale,
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                            mEstimatedEuclideanCamera1 = previousCamera;
+                            mEstimatedEuclideanCamera2 = currentCamera;
+                            mScale = scale;
+                        }
+
+                        @Override
+                        public void onEuclideanReconstructedPointsEstimated(
+                                final KnownBaselineSparseReconstructor reconstructor, final double scale,
+                                final List<ReconstructedPoint3D> points) {
+                            mEuclideanReconstructedPoints = points;
+                            mScale = scale;
+                        }
+
+                        @Override
+                        public void onStart(final KnownBaselineSparseReconstructor reconstructor) {
+                            mStarted = true;
+                        }
+
+                        @Override
+                        public void onFinish(final KnownBaselineSparseReconstructor reconstructor) {
+                            mFinished = true;
+                        }
+
+                        @Override
+                        public void onCancel(final KnownBaselineSparseReconstructor reconstructor) {
+                            mCancelled = true;
+                        }
+
+                        @Override
+                        public void onFail(final KnownBaselineSparseReconstructor reconstructor) {
+                            mFailed = true;
+                        }
+                    };
+
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -3816,7 +3533,6 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertTrue(mStarted);
-            //noinspection ConstantConditions
             assertTrue(mFinished);
             assertFalse(mCancelled);
             assertFalse(mFailed);
@@ -3827,24 +3543,25 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
-            if (mEstimatedFundamentalMatrix == null || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
+            if (mEstimatedFundamentalMatrix == null
+                    || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
                 continue;
             }
 
@@ -3853,21 +3570,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -3890,10 +3603,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -3924,16 +3635,14 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             if (Math.abs(mScale - baseline) > ABSOLUTE_ERROR) {
                 continue;
             }
             assertEquals(mScale, baseline, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -3949,10 +3658,8 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter1 = scaledCamera1.getCameraCenter();
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -3980,8 +3687,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -3991,8 +3697,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -4002,8 +3707,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -4013,8 +3717,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -4052,11 +3755,9 @@ public class KnownBaselineSparseReconstructorTest {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -4072,10 +3773,8 @@ public class KnownBaselineSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsDIACTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testPlanarPointsDIACTwoViews() throws InvalidPairOfCamerasException, AlgebraException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
         int numValid = 0;
@@ -4087,8 +3786,7 @@ public class KnownBaselineSparseReconstructorTest {
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = randomizer.nextDouble(
@@ -4097,8 +3795,8 @@ public class KnownBaselineSparseReconstructorTest {
                     MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY, skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setPrincipalPointX(principalPointX);
@@ -4116,8 +3814,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -4128,18 +3825,13 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in a plane
 
@@ -4156,31 +3848,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -4192,8 +3875,7 @@ public class KnownBaselineSparseReconstructorTest {
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -4203,10 +3885,8 @@ public class KnownBaselineSparseReconstructorTest {
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -4225,18 +3905,13 @@ public class KnownBaselineSparseReconstructorTest {
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -4252,9 +3927,7 @@ public class KnownBaselineSparseReconstructorTest {
                 } while (!front1 || !front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -4279,18 +3952,14 @@ public class KnownBaselineSparseReconstructorTest {
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                         homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
                                 MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -4305,7 +3974,6 @@ public class KnownBaselineSparseReconstructorTest {
                 } while (!front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -4416,8 +4084,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedMetricCamera1 = previousCamera;
                             mEstimatedMetricCamera2 = currentCamera;
                         }
@@ -4425,8 +4092,7 @@ public class KnownBaselineSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -4434,8 +4100,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedEuclideanCamera1 = previousCamera;
                             mEstimatedEuclideanCamera2 = currentCamera;
                             mScale = scale;
@@ -4474,8 +4139,8 @@ public class KnownBaselineSparseReconstructorTest {
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -4492,10 +4157,8 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertTrue(mStarted);
-            //noinspection ConstantConditions
             assertTrue(mFinished);
             assertFalse(mCancelled);
-            //noinspection ConstantConditions
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertFalse(reconstructor.isFirstView());
@@ -4504,24 +4167,25 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
-            if (mEstimatedFundamentalMatrix == null || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
+            if (mEstimatedFundamentalMatrix == null
+                    || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
                 continue;
             }
 
@@ -4530,21 +4194,19 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), LARGE_ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix().
                             multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), LARGE_ABSOLUTE_ERROR)) {
+                                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), LARGE_ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix().
                             multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), LARGE_ABSOLUTE_ERROR));
+                                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -4567,10 +4229,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that most of the points are in front of both cameras
@@ -4607,8 +4267,7 @@ public class KnownBaselineSparseReconstructorTest {
             assertEquals(mScale, baseline, ABSOLUTE_ERROR);
 
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -4618,10 +4277,8 @@ public class KnownBaselineSparseReconstructorTest {
             scaledCamera1.decompose();
             scaledCamera2.decompose();
 
-            final Point3D scaledCenter1 = new InhomogeneousPoint3D(
-                    scaledCamera1.getCameraCenter());
-            final Point3D scaledCenter2 = new InhomogeneousPoint3D(
-                    scaledCamera2.getCameraCenter());
+            final Point3D scaledCenter1 = new InhomogeneousPoint3D(scaledCamera1.getCameraCenter());
+            final Point3D scaledCenter2 = new InhomogeneousPoint3D(scaledCamera2.getCameraCenter());
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
 
@@ -4645,8 +4302,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testPlanarPointsDAQAndEssentialZeroPrincipalPointTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -4659,8 +4315,7 @@ public class KnownBaselineSparseReconstructorTest {
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = 0.0;
@@ -4670,8 +4325,8 @@ public class KnownBaselineSparseReconstructorTest {
             configuration.setPrincipalPointY(principalPointY);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY, skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             final double alphaEuler1 = 0.0;
@@ -4685,8 +4340,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -4697,18 +4351,13 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in a plane
 
@@ -4725,31 +4374,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -4761,8 +4401,7 @@ public class KnownBaselineSparseReconstructorTest {
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -4772,10 +4411,8 @@ public class KnownBaselineSparseReconstructorTest {
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             final List<HomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -4798,15 +4435,11 @@ public class KnownBaselineSparseReconstructorTest {
                     final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
                             MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -4823,9 +4456,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -4850,18 +4481,13 @@ public class KnownBaselineSparseReconstructorTest {
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -4876,7 +4502,6 @@ public class KnownBaselineSparseReconstructorTest {
                 } while (!front2);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -4987,8 +4612,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedMetricCamera1 = previousCamera;
                             mEstimatedMetricCamera2 = currentCamera;
                         }
@@ -4996,8 +4620,7 @@ public class KnownBaselineSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -5005,8 +4628,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedEuclideanCamera1 = previousCamera;
                             mEstimatedEuclideanCamera2 = currentCamera;
                             mScale = scale;
@@ -5045,8 +4667,8 @@ public class KnownBaselineSparseReconstructorTest {
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -5063,10 +4685,8 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertTrue(mStarted);
-            //noinspection ConstantConditions
             assertTrue(mFinished);
             assertFalse(mCancelled);
-            //noinspection ConstantConditions
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertFalse(reconstructor.isFirstView());
@@ -5075,24 +4695,25 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
-            if (mEstimatedFundamentalMatrix == null || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
+            if (mEstimatedFundamentalMatrix == null
+                    || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
                 continue;
             }
 
@@ -5101,21 +4722,19 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), LARGE_ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), LARGE_ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix().
+                    multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), LARGE_ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), LARGE_ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix().
+                    multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -5138,10 +4757,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
@@ -5161,12 +4778,10 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -5210,11 +4825,9 @@ public class KnownBaselineSparseReconstructorTest {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -5230,10 +4843,8 @@ public class KnownBaselineSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsDAQTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    public void testPlanarPointsDAQTwoViews() throws InvalidPairOfCamerasException, AlgebraException,
+            CameraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
         int numValid = 0;
@@ -5245,23 +4856,20 @@ public class KnownBaselineSparseReconstructorTest {
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL,
-                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
             final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL,
-                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
             final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY, skewness);
+                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                            principalPointX, principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             final double alphaEuler1 = 0.0;
@@ -5275,8 +4883,7 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -5287,18 +4894,13 @@ public class KnownBaselineSparseReconstructorTest {
             final double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in a plane
 
@@ -5315,31 +4917,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -5351,8 +4944,7 @@ public class KnownBaselineSparseReconstructorTest {
             final double[] principalAxis1 = camera1.getPrincipalAxisArray();
             final double[] principalAxis2 = camera2.getPrincipalAxisArray();
             final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
-                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2),
-                    0.5);
+                    ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
             final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
@@ -5362,10 +4954,8 @@ public class KnownBaselineSparseReconstructorTest {
             final double planeC = plane.getC();
             final double planeD = plane.getD();
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -5385,18 +4975,13 @@ public class KnownBaselineSparseReconstructorTest {
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -5416,9 +5001,7 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -5447,18 +5030,13 @@ public class KnownBaselineSparseReconstructorTest {
                     final double homX;
                     final double homY;
                     final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE);
+                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
-                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homY = -(planeA * homX + planeC * homZ + planeD * homW) /
-                                planeB;
+                        homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
                     } else {
-                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR,
-                                MAX_RANDOM_VALUE_PLANAR);
-                        homX = -(planeB * homY + planeC * homZ + planeD * homW) /
-                                planeA;
+                        homY = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
+                        homX = -(planeB * homY + planeC * homZ + planeD * homW) / planeA;
                     }
 
                     point3D = new HomogeneousPoint3D(homX, homY, homZ, homW);
@@ -5477,7 +5055,6 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -5592,8 +5169,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedMetricCamera1 = previousCamera;
                             mEstimatedMetricCamera2 = currentCamera;
                         }
@@ -5610,8 +5186,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             mEstimatedEuclideanCamera1 = previousCamera;
                             mEstimatedEuclideanCamera2 = currentCamera;
                             mScale = scale;
@@ -5668,10 +5243,8 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertTrue(mStarted);
-            //noinspection ConstantConditions
             assertTrue(mFinished);
             assertFalse(mCancelled);
-            //noinspection ConstantConditions
             assertFalse(mFailed);
             assertTrue(reconstructor.isFinished());
             assertFalse(reconstructor.isFirstView());
@@ -5680,24 +5253,25 @@ public class KnownBaselineSparseReconstructorTest {
                 continue;
             }
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera1);
+            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera1);
+            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
-            if (mEstimatedFundamentalMatrix == null || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
+            if (mEstimatedFundamentalMatrix == null
+                    || mEstimatedFundamentalMatrix.getFundamentalMatrix() == null) {
                 continue;
             }
 
@@ -5706,21 +5280,19 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), LARGE_ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), LARGE_ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix().
+                    multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), LARGE_ABSOLUTE_ERROR) ||
-                    fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), LARGE_ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix().
+                    multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -5749,8 +5321,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialEPnPAdditionalIntrinsicThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -5797,11 +5368,9 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation1 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -5816,22 +5385,15 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -5848,31 +5410,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -5885,12 +5438,9 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -5906,12 +5456,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -5928,9 +5475,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -5956,12 +5501,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -5977,7 +5519,6 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -6186,8 +5727,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedMetricCamera2 == null) {
                                 mEstimatedMetricCamera1 = previousCamera;
                                 mEstimatedMetricCamera2 = currentCamera;
@@ -6200,8 +5740,7 @@ public class KnownBaselineSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -6209,8 +5748,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedEuclideanCamera2 == null) {
                                 mEstimatedEuclideanCamera1 = previousCamera;
                                 mEstimatedEuclideanCamera2 = currentCamera;
@@ -6260,8 +5798,8 @@ public class KnownBaselineSparseReconstructorTest {
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -6285,20 +5823,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -6311,21 +5849,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR) 
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), 
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR) 
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), 
+                    ABSOLUTE_ERROR));
 
 
             // check that reconstructed points are in a metric stratum (up to a
@@ -6359,10 +5893,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of at least 1st two cameras
@@ -6397,8 +5929,7 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             if (Math.abs(mScale - baseline) > ABSOLUTE_ERROR) {
                 continue;
@@ -6409,8 +5940,7 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(mScale2, baseline, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -6430,12 +5960,9 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
             final Point3D scaledCenter3 = scaledCamera3.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic3 =
-                    scaledCamera3.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic3 = scaledCamera3.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -6472,8 +5999,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -6483,8 +6009,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -6494,8 +6019,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getVerticalPrincipalPoint(),
@@ -6505,8 +6029,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -6516,8 +6039,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -6527,8 +6049,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -6561,11 +6082,9 @@ public class KnownBaselineSparseReconstructorTest {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -6574,23 +6093,19 @@ public class KnownBaselineSparseReconstructorTest {
             }
 
             for (int i = 0; i < numPoints2; i++) {
-                if (!points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -6607,8 +6122,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialEPnPDAQThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -6619,8 +6133,8 @@ public class KnownBaselineSparseReconstructorTest {
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -6654,11 +6168,9 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation1 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -6673,24 +6185,16 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
-            final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(
-                    camera2, camera3);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera2, camera3);
 
             // create 3D points laying in front of both cameras
 
@@ -6707,31 +6211,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -6744,12 +6239,9 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -6765,12 +6257,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -6787,9 +6276,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -6815,12 +6302,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -6836,7 +6320,6 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -7044,8 +6527,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedMetricCamera2 == null) {
                                 mEstimatedMetricCamera1 = previousCamera;
                                 mEstimatedMetricCamera2 = currentCamera;
@@ -7058,8 +6540,7 @@ public class KnownBaselineSparseReconstructorTest {
                         @Override
                         public void onMetricReconstructedPointsEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
+                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
                             mMetricReconstructedPoints = points;
                         }
 
@@ -7067,8 +6548,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedEuclideanCamera2 == null) {
                                 mEstimatedEuclideanCamera1 = previousCamera;
                                 mEstimatedEuclideanCamera2 = currentCamera;
@@ -7143,19 +6623,19 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertNotSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertNotSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
             assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
@@ -7170,37 +6650,31 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) || fundamentalMatrix1.getInternalMatrix()
+                    .multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR));
             if (!fundamentalMatrix2.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix2.getInternalMatrix().
+                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) && !fundamentalMatrix2.getInternalMatrix().
                             multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix2.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix2.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR) 
+                    || fundamentalMatrix2.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(), 
+                    ABSOLUTE_ERROR));
 
 
             // check that reconstructed points are in a metric stratum (up to a
@@ -7231,10 +6705,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of at least 1st two cameras
@@ -7269,8 +6741,7 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             if (Math.abs(mScale - baseline) > ABSOLUTE_ERROR) {
                 continue;
@@ -7281,8 +6752,7 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(mScale2, baseline, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -7302,12 +6772,9 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
             final Point3D scaledCenter3 = scaledCamera3.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic3 =
-                    scaledCamera3.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic3 = scaledCamera3.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -7344,8 +6811,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -7355,8 +6821,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -7374,8 +6839,7 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(scaledIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getVerticalPrincipalPoint(),
@@ -7385,8 +6849,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -7396,8 +6859,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -7415,8 +6877,7 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -7449,11 +6910,9 @@ public class KnownBaselineSparseReconstructorTest {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -7462,23 +6921,19 @@ public class KnownBaselineSparseReconstructorTest {
             }
 
             for (int i = 0; i < numPoints2; i++) {
-                if (!points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -7495,8 +6950,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialEPnPDIACThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -7509,8 +6963,7 @@ public class KnownBaselineSparseReconstructorTest {
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_DIAC,
-                    MAX_FOCAL_LENGTH_DIAC);
+            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_DIAC, MAX_FOCAL_LENGTH_DIAC);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPointX = randomizer.nextDouble(
@@ -7549,11 +7002,9 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation1 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_DIAC,
-                    MAX_CAMERA_SEPARATION_DIAC);
+                    MIN_CAMERA_SEPARATION_DIAC, MAX_CAMERA_SEPARATION_DIAC);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_DIAC,
-                    MAX_CAMERA_SEPARATION_DIAC);
+                    MIN_CAMERA_SEPARATION_DIAC, MAX_CAMERA_SEPARATION_DIAC);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -7568,24 +7019,16 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
-            final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(
-                    camera2, camera3);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera2, camera3);
 
             // create 3D points laying in front of both cameras
 
@@ -7602,31 +7045,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -7639,12 +7073,9 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             Point2D projectedPoint1;
@@ -7660,12 +7091,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -7686,9 +7114,7 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -7717,12 +7143,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -7742,7 +7165,6 @@ public class KnownBaselineSparseReconstructorTest {
                 }
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -7954,8 +7376,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedMetricCamera2 == null) {
                                 mEstimatedMetricCamera1 = previousCamera;
                                 mEstimatedMetricCamera2 = currentCamera;
@@ -7977,8 +7398,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedEuclideanCamera2 == null) {
                                 mEstimatedEuclideanCamera1 = previousCamera;
                                 mEstimatedEuclideanCamera2 = currentCamera;
@@ -8057,18 +7477,18 @@ public class KnownBaselineSparseReconstructorTest {
             if (mEstimatedMetricCamera3 == null) {
                 continue;
             }
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -8082,37 +7502,30 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
             if (!fundamentalMatrix2.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix2.getInternalMatrix().
+                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR) && !fundamentalMatrix2.getInternalMatrix().
                             multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(),
+                            ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix2.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix2.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix2.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix2.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix2.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
 
             // check that reconstructed points are in a metric stratum (up to a
@@ -8146,10 +7559,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of at least 1st two cameras
@@ -8219,10 +7630,8 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter1 = scaledCamera1.getCameraCenter();
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -8250,8 +7659,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -8261,8 +7669,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -8272,8 +7679,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -8283,8 +7689,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -8309,8 +7714,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialUPnPThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -8321,8 +7725,8 @@ public class KnownBaselineSparseReconstructorTest {
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -8356,11 +7760,9 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation1 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -8375,22 +7777,15 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -8407,31 +7802,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -8444,12 +7830,9 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -8465,12 +7848,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -8515,12 +7895,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -8536,7 +7913,6 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -8843,20 +8219,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -8869,21 +8245,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -8913,10 +8285,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of at least 1st two cameras
@@ -8951,14 +8321,12 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             assertEquals(mScale, baseline, LARGE_ABSOLUTE_ERROR);
             assertEquals(mScale2, baseline, LARGE_ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -8978,12 +8346,9 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
             final Point3D scaledCenter3 = scaledCamera3.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic3 =
-                    scaledCamera3.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic3 = scaledCamera3.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -9020,8 +8385,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -9031,8 +8395,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -9050,8 +8413,7 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(scaledIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic3.getVerticalPrincipalPoint(),
@@ -9061,8 +8423,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -9072,8 +8433,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -9091,8 +8451,7 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
@@ -9125,11 +8484,9 @@ public class KnownBaselineSparseReconstructorTest {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -9138,23 +8495,19 @@ public class KnownBaselineSparseReconstructorTest {
             }
 
             for (int i = 0; i < numPoints2; i++) {
-                if (!points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -9171,8 +8524,7 @@ public class KnownBaselineSparseReconstructorTest {
 
     @Test
     public void testGeneralPointsEssentialDLTThreeViews()
-            throws InvalidPairOfCamerasException, AlgebraException,
-            CameraException,
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
             com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
@@ -9183,8 +8535,8 @@ public class KnownBaselineSparseReconstructorTest {
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
+            final double focalLength = randomizer.nextDouble(
+                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
             final double aspectRatio = configuration.getInitialCamerasAspectRatio();
             final double skewness = 0.0;
             final double principalPoint = 0.0;
@@ -9218,11 +8570,9 @@ public class KnownBaselineSparseReconstructorTest {
                     MAX_ANGLE_DEGREES) * Math.PI / 180.0;
 
             final double cameraSeparation1 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
             final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
             final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             final Point3D center2 = new InhomogeneousPoint3D(
@@ -9237,22 +8587,15 @@ public class KnownBaselineSparseReconstructorTest {
             double baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1,
-                    center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2,
-                    center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3,
-                    center3);
+            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(
-                    camera1, camera2);
+            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
@@ -9269,31 +8612,22 @@ public class KnownBaselineSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
             planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
 
-            planesIntersectionMatrix.setElementAt(1, 0,
-                    horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1,
-                    horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2,
-                    horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3,
-                    horizontalPlane1.getD());
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
 
             planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
             planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
             planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
             planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
 
-            planesIntersectionMatrix.setElementAt(3, 0,
-                    horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1,
-                    horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2,
-                    horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3,
-                    horizontalPlane2.getD());
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
             final Matrix v = decomposer.getV();
             final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
@@ -9306,12 +8640,9 @@ public class KnownBaselineSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0,
-                    numPoints1 - MIN_TRACKED_POINTS);
+            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
             final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
@@ -9327,12 +8658,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -9349,9 +8677,7 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D1.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front1);
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 // project 3D point into both cameras
@@ -9377,12 +8703,9 @@ public class KnownBaselineSparseReconstructorTest {
                 // generate points and ensure they lie in front of both cameras
                 int numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
                     point3D = new InhomogeneousPoint3D(
                             centralCommonPoint.getInhomX() + lambdaX,
@@ -9398,7 +8721,6 @@ public class KnownBaselineSparseReconstructorTest {
                 points3D2.add(point3D);
 
                 // check that 3D point is in front of both cameras
-                //noinspection ConstantConditions
                 assertTrue(front2);
 
                 projectedPoint2b = new InhomogeneousPoint2D();
@@ -9607,8 +8929,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onMetricCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedMetricCamera2 == null) {
                                 mEstimatedMetricCamera1 = previousCamera;
                                 mEstimatedMetricCamera2 = currentCamera;
@@ -9630,8 +8951,7 @@ public class KnownBaselineSparseReconstructorTest {
                         public void onEuclideanCameraEstimated(
                                 final KnownBaselineSparseReconstructor reconstructor,
                                 final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
+                                final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
                             if (mEstimatedEuclideanCamera2 == null) {
                                 mEstimatedEuclideanCamera1 = previousCamera;
                                 mEstimatedEuclideanCamera2 = currentCamera;
@@ -9681,8 +9001,8 @@ public class KnownBaselineSparseReconstructorTest {
                         }
                     };
 
-            final KnownBaselineSparseReconstructor reconstructor = new KnownBaselineSparseReconstructor(configuration,
-                    listener);
+            final KnownBaselineSparseReconstructor reconstructor =
+                    new KnownBaselineSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
@@ -9706,20 +9026,20 @@ public class KnownBaselineSparseReconstructorTest {
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(reconstructor.getCurrentEstimatedFundamentalMatrix(), mEstimatedFundamentalMatrix);
+            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(reconstructor.getCurrentMetricEstimatedCamera(), mEstimatedMetricCamera3);
+            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(reconstructor.getPreviousMetricEstimatedCamera(), mEstimatedMetricCamera2);
+            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(reconstructor.getCurrentEuclideanEstimatedCamera(), mEstimatedEuclideanCamera3);
+            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(reconstructor.getPreviousEuclideanEstimatedCamera(), mEstimatedEuclideanCamera2);
+            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(reconstructor.getActiveMetricReconstructedPoints(), mMetricReconstructedPoints);
+            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(reconstructor.getActiveEuclideanReconstructedPoints(), mEuclideanReconstructedPoints);
-            assertEquals(reconstructor.getCurrentScale(), mScale2, 0.0);
+            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
@@ -9732,21 +9052,17 @@ public class KnownBaselineSparseReconstructorTest {
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) &&
-                    !fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                            getInternalMatrix(), ABSOLUTE_ERROR) ||
-                    fundamentalMatrix1.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().
-                                    getInternalMatrix(), ABSOLUTE_ERROR));
+                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
@@ -9776,10 +9092,8 @@ public class KnownBaselineSparseReconstructorTest {
             final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
             final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
             for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of at least 1st two cameras
@@ -9814,14 +9128,12 @@ public class KnownBaselineSparseReconstructorTest {
 
             // transform points and cameras to account for scale change
             baseline = center1.distanceTo(center2);
-            final double estimatedBaseline = estimatedCenter1.distanceTo(
-                    estimatedCenter2);
+            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
             final double scale = baseline / estimatedBaseline;
             assertEquals(mScale, baseline, LARGE_ABSOLUTE_ERROR);
             assertEquals(mScale2, baseline, LARGE_ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scale);
 
             final PinholeCamera scaledCamera1 =
                     scaleTransformation.transformAndReturnNew(estimatedMetricCamera1);
@@ -9841,12 +9153,9 @@ public class KnownBaselineSparseReconstructorTest {
             final Point3D scaledCenter2 = scaledCamera2.getCameraCenter();
             final Point3D scaledCenter3 = scaledCamera3.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters scaledIntrinsic1 =
-                    scaledCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic2 =
-                    scaledCamera2.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters scaledIntrinsic3 =
-                    scaledCamera3.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic1 = scaledCamera1.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic2 = scaledCamera2.getIntrinsicParameters();
+            final PinholeCameraIntrinsicParameters scaledIntrinsic3 = scaledCamera3.getIntrinsicParameters();
 
             final Rotation3D scaledRotation1 = scaledCamera1.getCameraRotation();
             final Rotation3D scaledRotation2 = scaledCamera2.getCameraRotation();
@@ -9883,8 +9192,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic1.getVerticalPrincipalPoint(),
@@ -9894,8 +9202,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(scaledIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(scaledIntrinsic2.getVerticalPrincipalPoint(),
@@ -9913,12 +9220,10 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(scaledIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            if (Math.abs(scaledIntrinsic3.getSkewness() -
-                    intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
+            if (Math.abs(scaledIntrinsic3.getSkewness() - intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(scaledIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(scaledIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             if (Math.abs(scaledIntrinsic3.getHorizontalPrincipalPoint() -
                     intrinsic.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
@@ -9936,8 +9241,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
@@ -9947,8 +9251,7 @@ public class KnownBaselineSparseReconstructorTest {
                     intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
                     intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
@@ -9966,12 +9269,10 @@ public class KnownBaselineSparseReconstructorTest {
             }
             assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
                     intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            if (Math.abs(euclideanIntrinsic3.getSkewness() -
-                    intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
+            if (Math.abs(euclideanIntrinsic3.getSkewness() - intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(euclideanIntrinsic3.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
             if (Math.abs(euclideanIntrinsic3.getHorizontalPrincipalPoint() -
                     intrinsic.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
@@ -10008,11 +9309,9 @@ public class KnownBaselineSparseReconstructorTest {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D1.get(i).equals(
-                        scaledReconstructionPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(scaledReconstructionPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D1.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i - start),
+                assertTrue(points3D1.get(i).equals(euclideanReconstructedPoints3D.get(i - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 
@@ -10021,23 +9320,19 @@ public class KnownBaselineSparseReconstructorTest {
             }
 
             for (int i = 0; i < numPoints2; i++) {
-                if (!points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                if (!points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                if (!points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
                 }
-                assertTrue(points3D2.get(i).equals(
-                        scaledReconstructionPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(scaledReconstructionPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
-                assertTrue(points3D2.get(i).equals(
-                        euclideanReconstructedPoints3D.get(i + numPoints1 - start),
+                assertTrue(points3D2.get(i).equals(euclideanReconstructedPoints3D.get(i + numPoints1 - start),
                         LARGE_ABSOLUTE_ERROR));
             }
 

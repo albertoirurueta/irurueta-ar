@@ -38,7 +38,7 @@ public class MSACFundamentalMatrixRobustEstimator extends
     /**
      * Constant defining default threshold to determine whether points are
      * inliers or not.
-     * By default 1.0 is considered a good value for cases where measures are
+     * By default, 1.0 is considered a good value for cases where measures are
      * done in pixels, since typically the minimum resolution is 1 pixel.
      */
     public static final double DEFAULT_THRESHOLD = 1.0;
@@ -252,8 +252,9 @@ public class MSACFundamentalMatrixRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<FundamentalMatrix> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<FundamentalMatrix> solutions) {
 
                                 mSubsetLeftPoints.clear();
                                 mSubsetRightPoints.clear();
@@ -353,7 +354,7 @@ public class MSACFundamentalMatrixRobustEstimator extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      *

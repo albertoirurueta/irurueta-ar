@@ -288,8 +288,8 @@ public class LMedSFundamentalMatrixRobustEstimator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<FundamentalMatrix> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
 
                                 mSubsetLeftPoints.clear();
                                 mSubsetRightPoints.clear();
@@ -303,8 +303,8 @@ public class LMedSFundamentalMatrixRobustEstimator extends
                             }
 
                             @Override
-                            public double computeResidual(final FundamentalMatrix currentEstimation,
-                                                          final int i) {
+                            public double computeResidual(
+                                    final FundamentalMatrix currentEstimation, final int i) {
                                 final Point2D leftPoint = mLeftPoints.get(i);
                                 final Point2D rightPoint = mRightPoints.get(i);
                                 return residual(currentEstimation, leftPoint, rightPoint);
@@ -382,7 +382,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.LMEDS;
     }
 
     /**
@@ -390,7 +390,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * refinement.
      * Returned value gives an indication of how much variance each residual
      * has.
-     * Typically this value is related to the threshold used on each robust
+     * Typically, this value is related to the threshold used on each robust
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      *
