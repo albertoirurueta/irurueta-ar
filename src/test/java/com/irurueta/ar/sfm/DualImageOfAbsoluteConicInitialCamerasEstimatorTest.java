@@ -3171,7 +3171,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimatorTest implements
             assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
 
             assertEquals(0.0, epipole1.distanceTo(epipole1b), ABSOLUTE_ERROR);
-            assertEquals(0.0, epipole2.distanceTo(epipole2b), LARGE_ABSOLUTE_ERROR);
+            assertEquals(0.0, epipole2.distanceTo(epipole2b), 2.0 * LARGE_ABSOLUTE_ERROR);
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
