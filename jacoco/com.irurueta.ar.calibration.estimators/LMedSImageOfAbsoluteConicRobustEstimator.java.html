@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMedSImageOfAbsoluteConicRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">LMedSImageOfAbsoluteConicRobustEstimator.java</span></div><h1>LMedSImageOfAbsoluteConicRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best Image of AbsoluteConic (IAC) for provided collection of
+ * homographies (2D transformations) using LMedS algorithm.
+ */
+public class LMedSImageOfAbsoluteConicRobustEstimator extends
+        ImageOfAbsoluteConicRobustEstimator {
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used
+     * to keep the algorithm iterating in case that best estimated threshold
+     * using median of residuals is not small enough. Once a solution is found
+     * that generates a threshold below this value, the algorithm will stop.
+     * Threshold is defined by equations h1'*IAC*h2 = 0 and
+     * h1'*IAC*h1 = h2'*IAC*h2 --&amp;lt; h1'*IAC*h1 - h2'*IAC*h2 = 0, where
+     * h1 and h2 are the 1st and 2nd columns of an homography (2D
+     * transformation).
+     * These equations are derived from the fact that rotation matrices are
+     * orthonormal.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-6;
+
+    /**
+     * Minimum value that can be set as stop threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;
+
+    /**
+     * Constructor.
+     */
+    public LMedSImageOfAbsoluteConicRobustEstimator() {
+<span class="fc" id="L79">        super();</span>
+<span class="fc" id="L80">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     */
+    public LMedSImageOfAbsoluteConicRobustEstimator(
+            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L91">        super(listener);</span>
+<span class="fc" id="L92">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    public LMedSImageOfAbsoluteConicRobustEstimator(
+            final List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L106">        super(homographies);</span>
+<span class="fc" id="L107">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    public LMedSImageOfAbsoluteConicRobustEstimator(
+            final List&lt;Transformation2D&gt; homographies,
+            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L124">        super(homographies, listener);</span>
+<span class="fc" id="L125">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L126">    }</span>
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L148">        return mStopThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L175">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L178">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L180">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L181">    }</span>
+
+    /**
+     * Estimates Image of Absolute Conic (IAC).
+     *
+     * @return estimated IAC.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public ImageOfAbsoluteConic estimate() throws LockedException,
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L199">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L202">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L205">        final LMedSRobustEstimator&lt;ImageOfAbsoluteConic&gt; innerEstimator =</span>
+                new LMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L207">                        new LMedSRobustEstimatorListener&lt;ImageOfAbsoluteConic&gt;() {</span>
+
+                            // subset of homographies picked on each iteration
+<span class="fc" id="L210">                            private final List&lt;Transformation2D&gt; mSubsetHomographies =</span>
+                                    new ArrayList&lt;&gt;();
+
+                            @Override
+                            public int getTotalSamples() {
+<span class="fc" id="L215">                                return mHomographies.size();</span>
+                            }
+
+                            @Override
+                            public int getSubsetSize() {
+<span class="fc" id="L220">                                return mIACEstimator.getMinNumberOfRequiredHomographies();</span>
+                            }
+
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List&lt;ImageOfAbsoluteConic&gt; solutions) {
+<span class="fc" id="L227">                                mSubsetHomographies.clear();</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">                                for (final int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L229">                                    mSubsetHomographies.add(mHomographies.get(samplesIndex));</span>
+                                }
+
+                                try {
+<span class="fc" id="L233">                                    mIACEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L234">                                    mIACEstimator.setHomographies(mSubsetHomographies);</span>
+
+<span class="fc" id="L236">                                    final ImageOfAbsoluteConic iac = mIACEstimator.estimate();</span>
+<span class="fc" id="L237">                                    solutions.add(iac);</span>
+<span class="nc" id="L238">                                } catch (final Exception e) {</span>
+                                    // if anything fails, no solution is added
+<span class="fc" id="L240">                                }</span>
+<span class="fc" id="L241">                            }</span>
+
+                            @Override
+                            public double computeResidual(
+                                    final ImageOfAbsoluteConic currentEstimation, final int i) {
+<span class="fc" id="L246">                                return residual(currentEstimation, mHomographies.get(i));</span>
+                            }
+
+                            @Override
+                            public boolean isReady() {
+<span class="fc" id="L251">                                return LMedSImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
+                            }
+
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L258">                                    mListener.onEstimateStart(</span>
+                                            LMedSImageOfAbsoluteConicRobustEstimator.this);
+                                }
+<span class="fc" id="L261">                            }</span>
+
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
+<span class="pc bpc" id="L266" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L267">                                    mListener.onEstimateEnd(</span>
+                                            LMedSImageOfAbsoluteConicRobustEstimator.this);
+                                }
+<span class="fc" id="L270">                            }</span>
+
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator,
+                                    final int iteration) {
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L277">                                    mListener.onEstimateNextIteration(</span>
+                                            LMedSImageOfAbsoluteConicRobustEstimator.this,
+                                            iteration);
+                                }
+<span class="fc" id="L281">                            }</span>
+
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator,
+                                    final float progress) {
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L288">                                    mListener.onEstimateProgressChange(</span>
+                                            LMedSImageOfAbsoluteConicRobustEstimator.this,
+                                            progress);
+                                }
+<span class="fc" id="L292">                            }</span>
+                        });
+
+        try {
+<span class="fc" id="L296">            mLocked = true;</span>
+<span class="fc" id="L297">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L298">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L299">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L300">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L301">            return innerEstimator.estimate();</span>
+<span class="nc" id="L302">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L303">            throw new LockedException(e);</span>
+<span class="nc" id="L304">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L305">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L307">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation
+     *
+     * @return method being used for robust estimation
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L318">        return RobustEstimatorMethod.LMEDS;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

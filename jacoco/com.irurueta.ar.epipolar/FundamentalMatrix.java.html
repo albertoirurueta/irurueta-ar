@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FundamentalMatrix.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar</a> &gt; <span class="el_source">FundamentalMatrix.java</span></div><h1>FundamentalMatrix.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.DecomposerException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.algebra.Utils;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.GeometryException;
+import com.irurueta.geometry.HomogeneousPoint2D;
+import com.irurueta.geometry.Line2D;
+import com.irurueta.geometry.NotAvailableException;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.io.Serializable;
+
+/**
+ * The fundamental matrix describes the epipolar geometry for a pair of cameras.
+ * Epipoles are the projections of the opposite camera against the other.
+ * By means of point correspondences it is possible to estimate the fundamental
+ * matrix, which can later be used to estimate the associated pair of cameras.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class FundamentalMatrix implements Serializable {
+    /**
+     * Number of rows of fundamental matrix.
+     */
+    public static final int FUNDAMENTAL_MATRIX_ROWS = 3;
+
+    /**
+     * Number of columns of fundamental matrix.
+     */
+    public static final int FUNDAMENTAL_MATRIX_COLS = 3;
+
+    /**
+     * Rank of fundamental matrix.
+     */
+    public static final int FUNDAMENTAL_MATRIX_RANK = 2;
+
+    /**
+     * Contains the internal representation of the fundamental matrix, which is
+     * a 3x3 matrix having rank 2 defined up to scale.
+     */
+    protected Matrix mInternalMatrix;
+
+    /**
+     * Indicates whether fundamental matrix has been normalized. Normalization
+     * can be used to increase the accuracy of estimations, since fundamental
+     * matrix is defined up to scale.
+     */
+    protected boolean mNormalized;
+
+    /**
+     * Epipole for left view. Corresponds to the projection of the center of the
+     * right camera on the left view.
+     */
+    protected Point2D mLeftEpipole;
+
+    /**
+     * Epipole for right view. Corresponds to the projection of the center of
+     * the left camera on the right view.
+     */
+    protected Point2D mRightEpipole;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L88">    public FundamentalMatrix() {</span>
+<span class="fc" id="L89">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param internalMatrix matrix to be set internally.
+     * @throws InvalidFundamentalMatrixException if provided matrix is not 3x3
+     *                                           or does not have rank 2.
+     */
+    public FundamentalMatrix(final Matrix internalMatrix)
+<span class="fc" id="L99">            throws InvalidFundamentalMatrixException {</span>
+<span class="fc" id="L100">        internalSetInternalMatrix(internalMatrix);</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Constructor from a pair of cameras.
+     *
+     * @param leftCamera  camera corresponding to left view.
+     * @param rightCamera camera corresponding to right view.
+     * @throws InvalidPairOfCamerasException if provided cameras do not span a
+     *                                       valid epipolar geometry (i.e. they are planed in a degenerate
+     *                                       configuration).
+     */
+    public FundamentalMatrix(final PinholeCamera leftCamera,
+<span class="fc" id="L113">                             final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {</span>
+<span class="fc" id="L114">        internalSetFromPairOfCameras(leftCamera, rightCamera);</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Constructor from an homography and right epipole.
+     *
+     * @param homography   2D homography.
+     * @param rightEpipole right epipole.
+     * @throws InvalidFundamentalMatrixException if resulting fundamental matrix
+     *                                           is invalid, typically because of numerical instabilities.
+     */
+    public FundamentalMatrix(final Transformation2D homography, final Point2D rightEpipole)
+<span class="fc" id="L126">            throws InvalidFundamentalMatrixException {</span>
+<span class="fc" id="L127">        internalSetFromHomography(homography, rightEpipole);</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Returns a copy of the internal matrix assigned to this instance.
+     *
+     * @return copy of the internal matrix.
+     * @throws NotAvailableException if internal matrix has not yet been
+     *                               provided.
+     */
+    public Matrix getInternalMatrix() throws NotAvailableException {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (!isInternalMatrixAvailable()) {</span>
+<span class="fc" id="L139">            throw new NotAvailableException();</span>
+        }
+<span class="fc" id="L141">        return new Matrix(mInternalMatrix);</span>
+    }
+
+    /**
+     * Sets internal matrix associated to this instance.
+     * This method makes a copy of provided matrix.
+     *
+     * @param internalMatrix matrix to be assigned to this instance.
+     * @throws InvalidFundamentalMatrixException if provided matrix is not 3x3
+     *                                           or does not have rank 2.
+     */
+    public void setInternalMatrix(final Matrix internalMatrix)
+            throws InvalidFundamentalMatrixException {
+<span class="fc" id="L154">        internalSetInternalMatrix(internalMatrix);</span>
+<span class="fc" id="L155">    }</span>
+
+    /**
+     * Method used internally to set the internal matrix associated to this
+     * instance.
+     * This method makes a copy of provided matrix.
+     *
+     * @param internalMatrix matrix to be assigned to this instance.
+     * @throws InvalidFundamentalMatrixException if provided matrix is not 3x3
+     *                                           or does not have rank 2.
+     */
+    private void internalSetInternalMatrix(final Matrix internalMatrix)
+            throws InvalidFundamentalMatrixException {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (!isValidInternalMatrix(internalMatrix)) {</span>
+<span class="fc" id="L169">            throw new InvalidFundamentalMatrixException();</span>
+        }
+
+        // because provided matrix is valid, we proceed to setting it
+
+<span class="fc" id="L174">        mInternalMatrix = new Matrix(internalMatrix);</span>
+<span class="fc" id="L175">        mNormalized = false;</span>
+<span class="fc" id="L176">        mLeftEpipole = mRightEpipole = null;</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Returns a boolean indicating whether provided matrix is a valid
+     * fundamental matrix (i.e. has size 3x3 and rank 2).
+     *
+     * @param internalMatrix matrix to be checked.
+     * @return true if provided matrix is a valid fundamental matrix, false
+     * otherwise.
+     */
+    public static boolean isValidInternalMatrix(final Matrix internalMatrix) {
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (internalMatrix == null) {</span>
+<span class="nc" id="L189">            return false;</span>
+        }
+
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if (internalMatrix.getColumns() != FUNDAMENTAL_MATRIX_COLS ||</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">                internalMatrix.getRows() != FUNDAMENTAL_MATRIX_ROWS) {</span>
+<span class="fc" id="L194">            return false;</span>
+        }
+
+        try {
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            if (Utils.rank(internalMatrix) != FUNDAMENTAL_MATRIX_RANK) {</span>
+<span class="fc" id="L199">                return false;</span>
+            }
+<span class="fc" id="L201">        } catch (final DecomposerException e) {</span>
+            // an exception might be raised if matrix is not numerically
+            // valid (i.e. contains infinity or nan values)
+<span class="fc" id="L204">            return false;</span>
+<span class="fc" id="L205">        }</span>
+
+<span class="fc" id="L207">        return true;</span>
+    }
+
+    /**
+     * Sets fundamental matrix from provided pair of cameras.
+     *
+     * @param leftCamera  camera corresponding to left view.
+     * @param rightCamera camera corresponding to right view.
+     * @throws InvalidPairOfCamerasException if provided cameras do not span a
+     *                                       valid epipolar geometry (i.e. they are planed in a degenerate
+     *                                       configuration).
+     */
+    public void setFromPairOfCameras(
+            final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
+<span class="fc" id="L222">        internalSetFromPairOfCameras(leftCamera, rightCamera);</span>
+<span class="fc" id="L223">    }</span>
+
+    /**
+     * Internal method to set fundamental matrix from provided a pair of cameras.
+     *
+     * @param leftCamera  camera corresponding to left view.
+     * @param rightCamera camera corresponding to right view.
+     * @throws InvalidPairOfCamerasException if provided cameras do not span a
+     *                                       valid epipolar geometry (i.e. they are planed in a degenerate
+     *                                       configuration).
+     */
+    private void internalSetFromPairOfCameras(
+            final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
+        try {
+            // normalize cameras to increase accuracy of results and fix their
+            // signs if needed
+<span class="fc" id="L240">            leftCamera.normalize();</span>
+<span class="fc" id="L241">            rightCamera.normalize();</span>
+
+<span class="fc bfc" id="L243" title="All 2 branches covered.">            if (!leftCamera.isCameraSignFixed()) {</span>
+<span class="fc" id="L244">                leftCamera.fixCameraSign();</span>
+            }
+<span class="fc bfc" id="L246" title="All 2 branches covered.">            if (!rightCamera.isCameraSignFixed()) {</span>
+<span class="fc" id="L247">                rightCamera.fixCameraSign();</span>
+            }
+
+            // left epipole consists on the projection of right camera center
+            // (C') using left camera P
+<span class="fc bfc" id="L252" title="All 2 branches covered.">            if (!rightCamera.isCameraCenterAvailable()) {</span>
+                // if camera center is not available, we need to decompose such
+                // camera
+<span class="fc" id="L255">                rightCamera.decompose(false, true);</span>
+            }
+
+<span class="fc" id="L258">            final Point3D rightCameraCenter = rightCamera.getCameraCenter();</span>
+<span class="fc" id="L259">            final Point2D leftEpipole = leftCamera.project(rightCameraCenter);</span>
+            // normalize to increase accuracy
+<span class="fc" id="L261">            leftEpipole.normalize();</span>
+
+            // compute skew matrix of left epipole
+<span class="fc" id="L264">            final Matrix skewLeftEpipoleMatrix = Utils.skewMatrix(</span>
+<span class="fc" id="L265">                    leftEpipole.asArray());</span>
+            // transSkewLeftEpipoleMatrix = skewLeftEpipoleMatrix
+<span class="fc" id="L267">            skewLeftEpipoleMatrix.transpose();</span>
+
+            // compute transposed of internal left pinhole camera
+<span class="fc" id="L270">            Matrix transLeftCameraMatrix = leftCamera.getInternalMatrix().</span>
+<span class="fc" id="L271">                    transposeAndReturnNew();</span>
+
+            // compute transposed of internal right pinhole camera
+<span class="fc" id="L274">            Matrix transRightCameraMatrix = rightCamera.getInternalMatrix().</span>
+<span class="fc" id="L275">                    transposeAndReturnNew();</span>
+
+            // compute pseudo-inverse of transposed right pinhole camera
+<span class="fc" id="L278">            Matrix pseudoTransRightCameraMatrix = Utils.pseudoInverse(</span>
+                    transRightCameraMatrix);
+
+            // compute pseudoTransRightCameraMatrix * transLeftCameraMatrix *
+            // transSkewLeftEpipoleMatrix
+<span class="fc" id="L283">            transLeftCameraMatrix.multiply(skewLeftEpipoleMatrix);</span>
+            // fundamentalMatrix = pseudoTransRightCameraMatrix
+<span class="fc" id="L285">            pseudoTransRightCameraMatrix.multiply(transLeftCameraMatrix);</span>
+
+            // test that resulting matrix is 3x3 and rank 2, otherwise provided
+            // cameras span a degenerate epipolar geometry and are not valid
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">            if (!isValidInternalMatrix(pseudoTransRightCameraMatrix)) {</span>
+<span class="nc" id="L290">                throw new InvalidPairOfCamerasException();</span>
+            }
+
+<span class="fc" id="L293">            mInternalMatrix = pseudoTransRightCameraMatrix;</span>
+<span class="fc" id="L294">            mNormalized = false;</span>
+<span class="fc" id="L295">            mLeftEpipole = mRightEpipole = null;</span>
+<span class="nc" id="L296">        } catch (final InvalidPairOfCamerasException e) {</span>
+<span class="nc" id="L297">            throw e;</span>
+<span class="nc" id="L298">        } catch (final AlgebraException | GeometryException e) {</span>
+<span class="nc" id="L299">            throw new InvalidPairOfCamerasException(e);</span>
+<span class="fc" id="L300">        }</span>
+<span class="fc" id="L301">    }</span>
+
+    /**
+     * Sets fundamental matrix from provided 2D homography and right epipole.
+     *
+     * @param homography   2D homography.
+     * @param rightEpipole right epipole.
+     * @throws InvalidFundamentalMatrixException if resulting fundamental matrix
+     *                                           is invalid, typically because of numerical instabilities.
+     */
+    public void setFromHomography(final Transformation2D homography,
+                                  final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
+<span class="fc" id="L313">        internalSetFromHomography(homography, rightEpipole);</span>
+<span class="fc" id="L314">    }</span>
+
+    /**
+     * Internal method to sets fundamental matrix from provided 2D homography
+     * and right epipole.
+     *
+     * @param homography   2D homography.
+     * @param rightEpipole right epipole.
+     * @throws InvalidFundamentalMatrixException if resulting fundamental matrix
+     *                                           is invalid, typically because of numerical instabilities.
+     */
+    private void internalSetFromHomography(
+            final Transformation2D homography,
+            final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
+
+<span class="fc" id="L329">        rightEpipole.normalize();</span>
+
+<span class="fc" id="L331">        Matrix f = null;</span>
+        try {
+<span class="fc" id="L333">            f = Utils.skewMatrix(new double[]{</span>
+<span class="fc" id="L334">                    rightEpipole.getHomX(),</span>
+<span class="fc" id="L335">                    rightEpipole.getHomY(),</span>
+<span class="fc" id="L336">                    rightEpipole.getHomW()</span>
+            });
+
+<span class="fc" id="L339">            f.multiply(homography.asMatrix());</span>
+<span class="nc" id="L340">        } catch (final WrongSizeException ignore) {</span>
+            // never happens
+<span class="fc" id="L342">        }</span>
+
+
+        // test that resulting matrix is 3x3 and rank 2, otherwise provided
+        // matrix is numerically unstable and not valid
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">        if (!isValidInternalMatrix(f)) {</span>
+<span class="nc" id="L348">            throw new InvalidFundamentalMatrixException();</span>
+        }
+
+<span class="fc" id="L351">        mInternalMatrix = f;</span>
+<span class="fc" id="L352">    }</span>
+
+    /**
+     * Indicates whether this instance has its internal matrix set.
+     *
+     * @return true if internal matrix has been set, false otherwise.
+     */
+    public boolean isInternalMatrixAvailable() {
+<span class="fc bfc" id="L360" title="All 2 branches covered.">        return mInternalMatrix != null;</span>
+    }
+
+    /**
+     * Returns epipolar line on left view corresponding to point on right view.
+     *
+     * @param rightPoint a point on the right view.
+     * @return epipolar line on left view.
+     * @throws NotReadyException if internal matrix has not yet been set.
+     */
+    public Line2D getLeftEpipolarLine(final Point2D rightPoint)
+            throws NotReadyException {
+<span class="fc" id="L372">        final Line2D line = new Line2D();</span>
+<span class="fc" id="L373">        leftEpipolarLine(rightPoint, line);</span>
+<span class="fc" id="L374">        return line;</span>
+    }
+
+    /**
+     * Computes epipolar line on left view corresponding to point on right view.
+     *
+     * @param rightPoint a point on the right view.
+     * @param result     line instance where result will be stored.
+     * @throws NotReadyException if internal matrix has not yet been set.
+     */
+    public void leftEpipolarLine(Point2D rightPoint, final Line2D result)
+            throws NotReadyException {
+
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">        if (!isInternalMatrixAvailable()) {</span>
+<span class="nc" id="L388">            throw new NotReadyException();</span>
+        }
+
+        //make sure that point is homogeneous
+<span class="fc bfc" id="L392" title="All 2 branches covered.">        if (rightPoint.getType() != CoordinatesType.HOMOGENEOUS_COORDINATES) {</span>
+<span class="fc" id="L393">            rightPoint = new HomogeneousPoint2D(rightPoint);</span>
+        }
+
+        // normalize to increase accuracy
+<span class="fc" id="L397">        rightPoint.normalize();</span>
+<span class="fc" id="L398">        normalize();</span>
+
+        // compute transposed fundamental matrix
+<span class="fc" id="L401">        final Matrix transFundMatrix = mInternalMatrix.transposeAndReturnNew();</span>
+
+        // compute left epipolar line as the product of transposed fundamental
+        // matrix with homogeneous right 2D point
+<span class="fc" id="L405">        final double[] rightPointArray = rightPoint.asArray();</span>
+<span class="fc" id="L406">        final Matrix rightPointMatrix = Matrix.newFromArray(rightPointArray, true);</span>
+
+        try {
+<span class="fc" id="L409">            final Matrix leftEpipolarLineMatrix = transFundMatrix.</span>
+<span class="fc" id="L410">                    multiplyAndReturnNew(rightPointMatrix);</span>
+
+<span class="fc" id="L412">            result.setParameters(leftEpipolarLineMatrix.getBuffer());</span>
+<span class="nc" id="L413">        } catch (final WrongSizeException ignore) {</span>
+            // this exception will never occur
+<span class="fc" id="L415">        }</span>
+
+        // normalize line to increase accuracy
+<span class="fc" id="L418">        result.normalize();</span>
+<span class="fc" id="L419">    }</span>
+
+    /**
+     * Returns epipolar line on right view corresponding to point on left view.
+     *
+     * @param leftPoint a point on the left view.
+     * @return epipolar line on right view.
+     * @throws NotReadyException if internal matrix has not yet been set.
+     */
+    public Line2D getRightEpipolarLine(final Point2D leftPoint)
+            throws NotReadyException {
+<span class="fc" id="L430">        final Line2D line = new Line2D();</span>
+<span class="fc" id="L431">        rightEpipolarLine(leftPoint, line);</span>
+<span class="fc" id="L432">        return line;</span>
+    }
+
+    /**
+     * Computes epipolar line on right view corresponding to point on left view.
+     *
+     * @param leftPoint a point on the left view.
+     * @param result    line instance where result will be stored.
+     * @throws NotReadyException if internal matrix has not yet been set.
+     */
+    public void rightEpipolarLine(Point2D leftPoint, final Line2D result)
+            throws NotReadyException {
+
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">        if (!isInternalMatrixAvailable()) {</span>
+<span class="nc" id="L446">            throw new NotReadyException();</span>
+        }
+
+        // make sure that point is homogeneous
+<span class="fc bfc" id="L450" title="All 2 branches covered.">        if (leftPoint.getType() != CoordinatesType.HOMOGENEOUS_COORDINATES) {</span>
+<span class="fc" id="L451">            leftPoint = new HomogeneousPoint2D(leftPoint);</span>
+        }
+
+        // normalize to increase accuracy
+<span class="fc" id="L455">        leftPoint.normalize();</span>
+<span class="fc" id="L456">        normalize();</span>
+
+        // compute right epipolar line as the product of fundamental matrix with
+        // homogeneous left 2D point
+<span class="fc" id="L460">        final double[] leftPointArray = leftPoint.asArray();</span>
+<span class="fc" id="L461">        final Matrix leftPointMatrix = Matrix.newFromArray(leftPointArray, true);</span>
+        try {
+<span class="fc" id="L463">            final Matrix rightEpipolarPointMatrix =</span>
+<span class="fc" id="L464">                    mInternalMatrix.multiplyAndReturnNew(leftPointMatrix);</span>
+
+<span class="fc" id="L466">            result.setParameters(rightEpipolarPointMatrix.getBuffer());</span>
+<span class="nc" id="L467">        } catch (final WrongSizeException ignore) {</span>
+            // this exception will never occur
+<span class="fc" id="L469">        }</span>
+
+        // normalize line to increase accuracy
+<span class="fc" id="L472">        result.normalize();</span>
+<span class="fc" id="L473">    }</span>
+
+    /**
+     * Returns left epipole, which corresponds to the center of right camera
+     * projected on left view.
+     *
+     * @return left epipole.
+     * @throws NotAvailableException if epipoles haven't been computed.
+     */
+    public Point2D getLeftEpipole() throws NotAvailableException {
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">        if (!areEpipolesAvailable()) {</span>
+<span class="nc" id="L484">            throw new NotAvailableException();</span>
+        }
+
+<span class="fc" id="L487">        return mLeftEpipole;</span>
+    }
+
+    /**
+     * Returns right epipole, which corresponds to the center of left camera
+     * projected on right view.
+     *
+     * @return right epipole.
+     * @throws NotAvailableException if epipoles haven't been computed.
+     */
+    public Point2D getRightEpipole() throws NotAvailableException {
+<span class="pc bpc" id="L498" title="1 of 2 branches missed.">        if (!areEpipolesAvailable()) {</span>
+<span class="nc" id="L499">            throw new NotAvailableException();</span>
+        }
+
+<span class="fc" id="L502">        return mRightEpipole;</span>
+    }
+
+    /**
+     * Normalizes the internal representation of this instance.
+     * Normalization is done to increase accuracy of computations with this
+     * instance.
+     *
+     * @throws NotReadyException if internal matrix has not already been set.
+     */
+    public void normalize() throws NotReadyException {
+<span class="fc bfc" id="L513" title="All 2 branches covered.">        if (!mNormalized) {</span>
+<span class="fc bfc" id="L514" title="All 2 branches covered.">            if (!isInternalMatrixAvailable()) {</span>
+<span class="fc" id="L515">                throw new NotReadyException();</span>
+            }
+
+<span class="fc" id="L518">            final double norm = Utils.normF(mInternalMatrix);</span>
+
+<span class="fc" id="L520">            mInternalMatrix.multiplyByScalar(1.0 / norm);</span>
+
+<span class="fc" id="L522">            mNormalized = true;</span>
+        }
+<span class="fc" id="L524">    }</span>
+
+    /**
+     * Indicates whether this instance is currently normalized or not.
+     *
+     * @return true if this instance is normalized, false otherwise.
+     */
+    public boolean isNormalized() {
+<span class="fc" id="L532">        return mNormalized;</span>
+    }
+
+    /**
+     * Computes the left and right epipoles of this instance.
+     *
+     * @throws NotReadyException                 if an internal matrix has not yet been
+     *                                           provided.
+     * @throws InvalidFundamentalMatrixException if internal matrix is
+     *                                           numerically unstable and epipoles couldn't be computed.
+     */
+    public void computeEpipoles() throws NotReadyException,
+            InvalidFundamentalMatrixException {
+<span class="pc bpc" id="L545" title="1 of 2 branches missed.">        if (!isInternalMatrixAvailable()) {</span>
+<span class="nc" id="L546">            throw new NotReadyException();</span>
+        }
+
+        // to increase accuracy
+<span class="fc" id="L550">        normalize();</span>
+
+        // compute SVD of internal fundamental matrix with singular values
+        // ordered from largest to smallest. Since fundamental matrix has rank 2,
+        // last singular value is zero
+
+        // F = U*S*V'
+<span class="fc" id="L557">        final SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
+                mInternalMatrix);
+
+        try {
+<span class="fc" id="L561">            decomposer.decompose();</span>
+
+<span class="fc" id="L563">            final Matrix u = decomposer.getU();</span>
+<span class="fc" id="L564">            final Matrix v = decomposer.getV();</span>
+<span class="fc" id="L565">            final double[] array = new double[</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH];
+
+            // left epipole is the last column of V (right null-space)
+<span class="fc" id="L569">            v.getSubmatrixAsArray(0, 2, 2, 2, array);</span>
+<span class="fc" id="L570">            mLeftEpipole = new HomogeneousPoint2D(array);</span>
+
+            // right epipole is the last column of U (left null-space)
+<span class="fc" id="L573">            u.getSubmatrixAsArray(0, 2, 2, 2, array);</span>
+<span class="fc" id="L574">            mRightEpipole = new HomogeneousPoint2D(array);</span>
+<span class="nc" id="L575">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L576">            throw new InvalidFundamentalMatrixException(e);</span>
+<span class="fc" id="L577">        }</span>
+<span class="fc" id="L578">    }</span>
+
+    /**
+     * Indicates whether epipoles have been computed and are available for
+     * retrieval.
+     *
+     * @return true if epipoles are available, false otherwise.
+     */
+    @SuppressWarnings(&quot;BooleanMethodIsAlwaysInverted&quot;)
+    public boolean areEpipolesAvailable() {
+<span class="pc bpc" id="L588" title="1 of 4 branches missed.">        return mLeftEpipole != null &amp;&amp; mRightEpipole != null;</span>
+    }
+
+    /**
+     * Generates a pair of cameras in any arbitrary projective space which
+     * produce this fundamental matrix.
+     * This method can be used to obtain a pair of cameras related by this
+     * fundamental matrix in order to initialize geometry and get an initial set
+     * of cameras.
+     * However, because cameras are in any arbitrary projective space, they need
+     * to be transformed into a metric space using a Dual Absolute Quadric
+     * estimator.
+     *
+     * @param leftCamera                    instance where left camera will be stored.
+     * @param rightCamera                   instance where right camera will be stored.
+     * @param referencePlaneDirectorVectorX x coordinate of reference plane
+     *                                      director vector. This can be any arbitrary value, however
+     *                                      typically the reference plane is assumed to be the plane at
+     *                                      infinity, hence the value typically is zero.
+     * @param referencePlaneDirectorVectorY y coordinate of reference plane
+     *                                      director vector. This can be any arbitrary value, however
+     *                                      typically the reference plane is assumed to be the plane at
+     *                                      infinity, hence the value typically is zero.
+     * @param referencePlaneDirectorVectorZ z coordinate of reference plane
+     *                                      director vector. This can be any arbitrary value, however
+     *                                      typically the reference plane is assumed to be the plane at
+     *                                      infinity, hence the value typically is zero.
+     * @param scaleFactor                   scale factor defining the length of the baseline in
+     *                                      a metric stratum. This can be any value, since cameras are
+     *                                      obtained in an arbitrary projective stratum. However, even if
+     *                                      the stratum was metric, cameras can only be defined up to scale.
+     *                                      A typical value is a scale factor of one.
+     * @throws InvalidFundamentalMatrixException if internal matrix is numerically unstable and epipoles
+     *                                           couldn't be computed.
+     * @throws NotReadyException                 if an internal matrix has not yet been
+     *                                           provided.
+     */
+    public void generateCamerasInArbitraryProjectiveSpace(
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera,
+            final double referencePlaneDirectorVectorX,
+            final double referencePlaneDirectorVectorY,
+            final double referencePlaneDirectorVectorZ,
+            final double scaleFactor) throws InvalidFundamentalMatrixException,
+            NotReadyException {
+
+<span class="fc" id="L633">        normalize();</span>
+
+        try {
+<span class="fc bfc" id="L636" title="All 2 branches covered.">            if (!areEpipolesAvailable()) {</span>
+<span class="fc" id="L637">                computeEpipoles();</span>
+            }
+<span class="fc" id="L639">            final Point2D rightEpipole = getRightEpipole();</span>
+<span class="fc" id="L640">            rightEpipole.normalize();</span>
+
+<span class="fc" id="L642">            final Matrix e2 = new Matrix(</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH, 1);
+<span class="fc" id="L644">            e2.setElementAtIndex(0, rightEpipole.getHomX());</span>
+<span class="fc" id="L645">            e2.setElementAtIndex(1, rightEpipole.getHomY());</span>
+<span class="fc" id="L646">            e2.setElementAtIndex(2, rightEpipole.getHomW());</span>
+
+<span class="fc" id="L648">            final Matrix tmp = Utils.skewMatrix(e2);</span>
+<span class="fc" id="L649">            tmp.multiply(mInternalMatrix);</span>
+
+<span class="pc bpc" id="L651" title="2 of 6 branches missed.">            if (referencePlaneDirectorVectorX != 0.0 ||</span>
+                    referencePlaneDirectorVectorY != 0.0 ||
+                    referencePlaneDirectorVectorZ != 0.0) {
+<span class="fc" id="L654">                final Matrix tmp2 = new Matrix(</span>
+                        1, Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L656">                tmp2.setElementAtIndex(0, referencePlaneDirectorVectorX);</span>
+<span class="fc" id="L657">                tmp2.setElementAtIndex(1, referencePlaneDirectorVectorY);</span>
+<span class="fc" id="L658">                tmp2.setElementAtIndex(2, referencePlaneDirectorVectorZ);</span>
+<span class="fc" id="L659">                final Matrix tmp3 = e2.multiplyAndReturnNew(tmp2);</span>
+
+<span class="fc" id="L661">                tmp.add(tmp3);</span>
+            }
+
+<span class="fc" id="L664">            e2.multiplyByScalar(scaleFactor);</span>
+
+<span class="fc" id="L666">            final Matrix leftCameraMatrix = Matrix.identity(</span>
+                    PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+                    PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
+
+<span class="fc" id="L670">            final Matrix rightCameraMatrix = new Matrix(</span>
+                    PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+                    PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
+<span class="fc" id="L673">            rightCameraMatrix.setSubmatrix(0, 0, 2, 2, tmp);</span>
+<span class="fc" id="L674">            rightCameraMatrix.setSubmatrix(0, 3, 2, 3, e2);</span>
+
+<span class="fc" id="L676">            leftCamera.setInternalMatrix(leftCameraMatrix);</span>
+<span class="fc" id="L677">            rightCamera.setInternalMatrix(rightCameraMatrix);</span>
+
+<span class="nc" id="L679">        } catch (final NotAvailableException | WrongSizeException ignore) {</span>
+            // never happens
+<span class="fc" id="L681">        }</span>
+<span class="fc" id="L682">    }</span>
+
+    /**
+     * Generates a pair of cameras in any arbitrary projective space which
+     * produce this fundamental matrix.
+     * This method can be used to obtain a pair of cameras related by this
+     * fundamental matrix in order to initialize geometry and get an initial set
+     * of cameras.
+     * However, because cameras are in any arbitrary projective space, they need
+     * to be transformed into a metric space using a Dual Absolute Quadric
+     * estimator.
+     * This method assumes that the reference plane is the plane at infinity and
+     * that scale factor is one.
+     *
+     * @param leftCamera  instance where left camera will be stored.
+     * @param rightCamera instance where right camera will be stored.
+     * @throws InvalidFundamentalMatrixException if internal matrix is
+     *                                           numerically unstable and epipoles couldn't be computed.
+     * @throws NotReadyException                 if an internal matrix has not yet been
+     *                                           provided.
+     */
+    public void generateCamerasInArbitraryProjectiveSpace(
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InvalidFundamentalMatrixException, NotReadyException {
+<span class="fc" id="L706">        generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera,</span>
+                0.0, 0.0, 0.0, 1.0);
+<span class="fc" id="L708">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,1067 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QuaternionPredictor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">QuaternionPredictor.java</span></div><h1>QuaternionPredictor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.ArrayUtils;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.Quaternion;
+import com.irurueta.geometry.RotationUtils;
+
+/**
+ * Utility class to predict rotations.
+ */
+public class QuaternionPredictor {
+    /**
+     * Number of components on angular speed.
+     */
+    public static final int ANGULAR_SPEED_COMPONENTS = 3;
+
+    /**
+     * Constructor.
+     */
+    private QuaternionPredictor() {
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x,y,z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where updated quaternion is stored.
+     * @param jacobianQ   jacobian wrt input quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final double dt, final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
+
+<span class="fc bfc" id="L62" title="All 4 branches covered.">        if (jacobianQ != null &amp;&amp; (jacobianQ.getRows() != Quaternion.N_PARAMS ||</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                jacobianQ.getColumns() != Quaternion.N_PARAMS)) {</span>
+<span class="fc" id="L64">            throw new IllegalArgumentException(&quot;jacobian wrt q must be 4x4&quot;);</span>
+        }
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        if (jacobianW != null &amp;&amp; (jacobianW.getRows() != Quaternion.N_PARAMS ||</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                jacobianW.getColumns() != ANGULAR_SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L68">            throw new IllegalArgumentException(&quot;jacobian wrt w must be 4x3&quot;);</span>
+        }
+
+<span class="fc" id="L71">        final double[] w = new double[]{wx, wy, wz};</span>
+
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (exactMethod) {</span>
+            // exact jacobians and rotation
+
+<span class="fc" id="L76">            ArrayUtils.multiplyByScalar(w, dt, w);</span>
+<span class="fc" id="L77">            Quaternion.rotationVectorToQuaternion(w, result, jacobianW);</span>
+<span class="fc" id="L78">            Matrix jacobianQ2 = null;</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            if (jacobianW != null) {</span>
+<span class="fc" id="L80">                jacobianW.multiplyByScalar(dt);</span>
+                try {
+<span class="fc" id="L82">                    jacobianQ2 = new Matrix(Quaternion.N_PARAMS,</span>
+                            Quaternion.N_PARAMS);
+<span class="nc" id="L84">                } catch (final WrongSizeException ignore) {</span>
+                    // never happens
+<span class="fc" id="L86">                }</span>
+            }
+<span class="fc" id="L88">            Quaternion.product(q, result, result, jacobianQ, jacobianQ2);</span>
+
+<span class="pc bpc" id="L90" title="1 of 4 branches missed.">            if (jacobianW != null &amp;&amp; jacobianQ2 != null) {</span>
+                try {
+<span class="fc" id="L92">                    jacobianQ2.multiply(jacobianW);</span>
+<span class="fc" id="L93">                    jacobianW.copyFrom(jacobianQ2);</span>
+<span class="nc" id="L94">                } catch (final WrongSizeException ignore) {</span>
+                    // never happens
+<span class="fc" id="L96">                }</span>
+            }
+<span class="fc" id="L98">        } else {</span>
+            // tustin integration - fits with jacobians
+<span class="fc" id="L100">            Matrix skewW = RotationUtils.w2omega(w);</span>
+            try {
+<span class="fc" id="L102">                final Matrix qMatrix = new Matrix(Quaternion.N_PARAMS, 1);</span>
+<span class="fc" id="L103">                qMatrix.setElementAtIndex(0, q.getA());</span>
+<span class="fc" id="L104">                qMatrix.setElementAtIndex(1, q.getB());</span>
+<span class="fc" id="L105">                qMatrix.setElementAtIndex(2, q.getC());</span>
+<span class="fc" id="L106">                qMatrix.setElementAtIndex(3, q.getD());</span>
+<span class="fc" id="L107">                skewW.multiply(qMatrix);</span>
+<span class="nc" id="L108">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="fc" id="L110">            }</span>
+
+<span class="fc" id="L112">            skewW.multiplyByScalar(0.5 * dt);</span>
+
+<span class="fc" id="L114">            result.setA(q.getA() + skewW.getElementAtIndex(0));</span>
+<span class="fc" id="L115">            result.setB(q.getB() + skewW.getElementAtIndex(1));</span>
+<span class="fc" id="L116">            result.setC(q.getC() + skewW.getElementAtIndex(2));</span>
+<span class="fc" id="L117">            result.setD(q.getD() + skewW.getElementAtIndex(3));</span>
+
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            if (jacobianQ != null) {</span>
+                try {
+                    // reset w values to reuse the same array as they might have been
+                    // modified
+<span class="fc" id="L123">                    w[0] = wx;</span>
+<span class="fc" id="L124">                    w[1] = wy;</span>
+<span class="fc" id="L125">                    w[2] = wz;</span>
+
+<span class="fc" id="L127">                    skewW = RotationUtils.w2omega(w);</span>
+<span class="fc" id="L128">                    jacobianQ.copyFrom(Matrix.identity(Quaternion.N_PARAMS,</span>
+                            Quaternion.N_PARAMS));
+<span class="fc" id="L130">                    jacobianQ.add(skewW);</span>
+<span class="fc" id="L131">                    jacobianQ.multiplyByScalar(0.5 * dt);</span>
+<span class="nc" id="L132">                } catch (final WrongSizeException ignore) {</span>
+                    // never happens
+<span class="fc" id="L134">                }</span>
+            }
+
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (jacobianW != null) {</span>
+<span class="fc" id="L138">                RotationUtils.quaternionToConjugatedPiMatrix(q, jacobianW);</span>
+<span class="fc" id="L139">                jacobianW.multiplyByScalar(0.5 * dt);</span>
+            }
+        }
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size, or w does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w, final double dt,
+            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (w.length != ANGULAR_SPEED_COMPONENTS) {</span>
+<span class="fc" id="L166">            throw new IllegalArgumentException(&quot;w must have length 3&quot;);</span>
+        }
+<span class="fc" id="L168">        predict(q, w[0], w[1], w[2], dt, exactMethod, result, jacobianQ,</span>
+                jacobianW);
+<span class="fc" id="L170">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using
+     * exact method.
+     *
+     * @param q         quaternion to be updated.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where update quaternion is stored.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy,
+            final double wz, final double dt, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
+<span class="fc" id="L193">        predict(q, wx, wy, wz, dt, true, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q         quaternion to be updated.
+     * @param w         array containing angular speed in the 3 axis (x = roll,
+     *                  y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where update quaternion is stored.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w, final double dt,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L215">        predict(q, w, dt, true, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy,
+            final double wz, final double dt, final boolean exactMethod, final Quaternion result) {
+<span class="fc" id="L235">        predict(q, wx, wy, wz, dt, exactMethod, result, null, null);</span>
+<span class="fc" id="L236">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @throws IllegalArgumentException if w does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w, final double dt,
+            final boolean exactMethod, final Quaternion result) {
+<span class="fc" id="L255">        predict(q, w, dt, exactMethod, result, null, null);</span>
+<span class="fc" id="L256">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q      quaternion to be updated.
+     * @param wx     angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy     angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz     angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where update quaternion is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy,
+            final double wz, final double dt, final Quaternion result) {
+<span class="fc" id="L274">        predict(q, wx, wy, wz, dt, result, null, null);</span>
+<span class="fc" id="L275">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q      quaternion to be updated.
+     * @param w      array containing angular speed in the 3 axis (x = roll,
+     *               y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where update quaternion is stored.
+     * @throws IllegalArgumentException if w does not have length 3
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w, final double dt,
+            final Quaternion result) {
+<span class="fc" id="L293">        predict(q, w, dt, result, null, null);</span>
+<span class="fc" id="L294">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double wx,
+            final double wy, final double wz, final double dt, final boolean exactMethod,
+            final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L318">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L319">        predict(q, wx, wy, wz, dt, exactMethod, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L320">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size or w does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double[] w,
+            final double dt, final boolean exactMethod,
+            final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L344">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L345">        predict(q, w, dt, exactMethod, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L346">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q         quaternion to be updated.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final double dt, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L369">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L370">        predict(q, wx, wy, wz, dt, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L371">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q         quaternion to be updated.
+     * @param w         array containing angular speed in the 3 axis (x = roll,
+     *                  y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double[] w,
+            final double dt, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L393">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L394">        predict(q, w, dt, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L395">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @return a new quaternion containing updated quaternion.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final double dt, final boolean exactMethod) {
+<span class="fc" id="L415">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L416">        predict(q, wx, wy, wz, dt, exactMethod, result);</span>
+<span class="fc" id="L417">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw).
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt          time interval to compute prediction expressed in seconds.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if w does not have length 3
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double[] w,
+                                     final double dt, final boolean exactMethod) {
+<span class="fc" id="L436">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L437">        predict(q, w, dt, exactMethod, result);</span>
+<span class="fc" id="L438">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q  quaternion to be updated.
+     * @param wx angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new quaternion containing updated quaternion.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double wx,
+                                     final double wy, final double wz, final double dt) {
+<span class="fc" id="L456">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L457">        predict(q, wx, wy, wz, dt, result);</span>
+<span class="fc" id="L458">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) using exact
+     * method.
+     *
+     * @param q  quaternion to be updated.
+     * @param w  array containing angular speed in the 3 axis (x = roll,
+     *           y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if w does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double[] w,
+                                     final double dt) {
+<span class="fc" id="L476">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L477">        predict(q, w, dt, result);</span>
+<span class="fc" id="L478">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
+<span class="fc" id="L503">        predict(q, wx, wy, wz, 1.0, exactMethod, result, jacobianQ,</span>
+                jacobianW);
+<span class="fc" id="L505">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w,
+            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
+<span class="fc" id="L528">        predict(q, w, 1.0, exactMethod, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L529">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q         quaternion to be updated.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param result    instance where update quaternion is stored.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L550">        predict(q, wx, wy, wz, 1.0, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L551">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q         quaternion to be updated.
+     * @param w         array containing angular speed in the 3 axis (x = roll,
+     *                  y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param result    instance where update quaternion is stored.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L571">        predict(q, w, 1.0, result, jacobianQ, jacobianW);</span>
+<span class="fc" id="L572">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy,
+            final double wz, final boolean exactMethod, final Quaternion result) {
+<span class="fc" id="L591">        predict(q, wx, wy, wz, 1.0, exactMethod, result);</span>
+<span class="fc" id="L592">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param result      instance where update quaternion is stored.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double[] w,
+            final boolean exactMethod, final Quaternion result) {
+<span class="fc" id="L612">        predict(q, w, 1.0, exactMethod, result);</span>
+<span class="fc" id="L613">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q      quaternion to be updated.
+     * @param wx     angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy     angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz     angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param result instance where update quaternion is stored.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final Quaternion result) {
+<span class="fc" id="L630">        predict(q, wx, wy, wz, 1.0, result);</span>
+<span class="fc" id="L631">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q      quaternion to be updated.
+     * @param w      array containing angular speed in the 3 axis (x = roll,
+     *               y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param result instance where update quaternion is stored.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(final Quaternion q, final double[] w,
+                               final Quaternion result) {
+<span class="fc" id="L648">        predict(q, w, 1.0, result);</span>
+<span class="fc" id="L649">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final boolean exactMethod, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L672">        return predict(q, wx, wy, wz, 1.0, exactMethod, jacobianQ, jacobianW);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @param jacobianQ   jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW   jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double[] w,
+            final boolean exactMethod, final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L695">        return predict(q, w, 1.0, exactMethod, jacobianQ, jacobianW);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q         quaternion to be updated.
+     * @param wx        angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy        angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz        angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L717">        return predict(q, wx, wy, wz, 1.0, jacobianQ, jacobianW);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q         quaternion to be updated.
+     * @param w         array containing angular speed in the 3 axis (x = roll,
+     *                  y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param jacobianQ jacobian wrt quaternion. Must be 4x4.
+     * @param jacobianW jacobian wrt angular speed. Must be 4x3.
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double[] w,
+                                     final Matrix jacobianQ, final Matrix jacobianW) {
+<span class="fc" id="L737">        return predict(q, w, 1.0, jacobianQ, jacobianW);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param wx          angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy          angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz          angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @return a new quaternion containing updated quaternion.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(
+            final Quaternion q, final double wx, final double wy, final double wz,
+            final boolean exactMethod) {
+<span class="fc" id="L757">        return predict(q, wx, wy, wz, 1.0, exactMethod);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second.
+     *
+     * @param q           quaternion to be updated.
+     * @param w           array containing angular speed in the 3 axis (x = roll,
+     *                    y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @param exactMethod true to use exact method, false to use &quot;Tustin&quot;
+     *                    method.
+     * @return a new quaternion containing updated quaternion.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double[] w,
+                                     final boolean exactMethod) {
+<span class="fc" id="L775">        return predict(q, w, 1.0, exactMethod);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q  quaternion to be updated.
+     * @param wx angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @return a new quaternion containing updated quaternion.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double wx,
+                                     final double wy, final double wz) {
+<span class="fc" id="L792">        return predict(q, wx, wy, wz, 1.0);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by the rate of rotation along axes x, y, z (roll, pitch, yaw) assuming a
+     * time interval of 1 second and exact method.
+     *
+     * @param q quaternion to be updated.
+     * @param w array containing angular speed in the 3 axis (x = roll,
+     *          y = pitch, z = yaw). Expressed in rad/se. Must have length 3
+     * @return a new quaternion containing updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;qpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static Quaternion predict(final Quaternion q, final double[] w) {
+<span class="fc" id="L809">        return predict(q, w, 1.0);</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes
+     * x,y,z (roll, pitch, yaw).
+     *
+     * @param q          quaternion to be updated.
+     * @param dq         adjustment of rotation to be combined with input quaternion.
+     * @param wx         angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy         angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz         angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param result     instance where updated quaternion is stored.
+     * @param jacobianQ  jacobian wrt input quaternion. Must be 4x4.
+     * @param jacobianDQ jacobian wrt dq quaternion. Must be 4x4.
+     * @param jacobianW  jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     */
+    public static void predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double wx, final double wy, final double wz, final double dt,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianDQ,
+            final Matrix jacobianW) {
+
+<span class="fc bfc" id="L836" title="All 4 branches covered.">        if (jacobianQ != null &amp;&amp; (jacobianQ.getRows() != Quaternion.N_PARAMS ||</span>
+<span class="pc bpc" id="L837" title="1 of 2 branches missed.">                jacobianQ.getColumns() != Quaternion.N_PARAMS)) {</span>
+<span class="fc" id="L838">            throw new IllegalArgumentException(&quot;jacobian wrt q must be 4x4&quot;);</span>
+        }
+<span class="fc bfc" id="L840" title="All 4 branches covered.">        if (jacobianDQ != null &amp;&amp; (jacobianDQ.getRows() != Quaternion.N_PARAMS ||</span>
+<span class="pc bpc" id="L841" title="1 of 2 branches missed.">                jacobianDQ.getColumns() != Quaternion.N_PARAMS)) {</span>
+<span class="fc" id="L842">            throw new IllegalArgumentException(&quot;jacobian wrt dq must be 4x4&quot;);</span>
+        }
+<span class="fc bfc" id="L844" title="All 4 branches covered.">        if (jacobianW != null &amp;&amp; (jacobianW.getRows() != Quaternion.N_PARAMS ||</span>
+<span class="pc bpc" id="L845" title="1 of 2 branches missed.">                jacobianW.getColumns() != ANGULAR_SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L846">            throw new IllegalArgumentException(&quot;jacobian wrt w must be 4x3&quot;);</span>
+        }
+
+<span class="fc" id="L849">        final double[] w = new double[]{wx, wy, wz};</span>
+
+<span class="fc" id="L851">        ArrayUtils.multiplyByScalar(w, dt, w);</span>
+<span class="fc" id="L852">        Quaternion.rotationVectorToQuaternion(w, result, jacobianW);</span>
+<span class="fc" id="L853">        Matrix jacobianQ2 = null;</span>
+<span class="fc bfc" id="L854" title="All 2 branches covered.">        if (jacobianW != null) {</span>
+<span class="fc" id="L855">            jacobianW.multiplyByScalar(dt);</span>
+        }
+<span class="fc bfc" id="L857" title="All 2 branches covered.">        if (jacobianW != null) {</span>
+            try {
+<span class="fc" id="L859">                jacobianQ2 = new Matrix(Quaternion.N_PARAMS,</span>
+                        Quaternion.N_PARAMS);
+<span class="nc" id="L861">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="fc" id="L863">            }</span>
+        }
+<span class="fc" id="L865">        Quaternion.product(dq, result, result, jacobianDQ, jacobianQ2);</span>
+
+<span class="fc" id="L867">        Matrix jacobianQ3 = null;</span>
+<span class="pc bpc" id="L868" title="1 of 4 branches missed.">        if (jacobianDQ != null || jacobianW != null) {</span>
+            try {
+<span class="fc" id="L870">                jacobianQ3 = new Matrix(Quaternion.N_PARAMS,</span>
+                        Quaternion.N_PARAMS);
+<span class="nc" id="L872">            } catch (final WrongSizeException ignore) {</span>
+                // never happens
+<span class="fc" id="L874">            }</span>
+        }
+<span class="fc" id="L876">        Quaternion.product(q, result, result, jacobianQ, jacobianQ3);</span>
+
+        // chain rule
+<span class="fc bfc" id="L879" title="All 2 branches covered.">        if (jacobianQ3 != null) {</span>
+<span class="pc bpc" id="L880" title="1 of 2 branches missed.">            if (jacobianDQ != null) {</span>
+                try {
+<span class="fc" id="L882">                    Matrix tmp = jacobianQ3.multiplyAndReturnNew(jacobianDQ);</span>
+<span class="fc" id="L883">                    jacobianDQ.copyFrom(tmp);</span>
+<span class="nc" id="L884">                } catch (final WrongSizeException ignore) {</span>
+                    // never happens
+<span class="fc" id="L886">                }</span>
+            }
+
+            // chain rule (jacobianW is already multiplied by dt)
+<span class="pc bpc" id="L890" title="2 of 4 branches missed.">            if (jacobianW != null &amp;&amp; jacobianQ2 != null) {</span>
+                try {
+<span class="fc" id="L892">                    jacobianQ3.multiply(jacobianQ2);</span>
+<span class="fc" id="L893">                    jacobianQ3.multiply(jacobianW);</span>
+<span class="fc" id="L894">                    jacobianW.copyFrom(jacobianQ3);</span>
+<span class="nc" id="L895">                } catch (final WrongSizeException ignore) {</span>
+                    // never happens
+<span class="fc" id="L897">                }</span>
+            }
+        }
+<span class="fc" id="L900">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes x, y,
+     * z (roll, pitch, yaw).
+     *
+     * @param q          quaternion to be updated.
+     * @param dq         adjustment of rotation to be combined with input quaternion.
+     * @param w          angular speed (x, y, z axes). Expressed in rad/s. Must have
+     *                   length 3.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param result     instance where updated quaternion is stored.
+     * @param jacobianQ  jacobian wrt input quaternion. Must be 4x4.
+     * @param jacobianDQ jacobian wrt dq quaternion. Must be 4x4.
+     * @param jacobianW  jacobian wrt angular speed. Must be 4x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size or if w does not have length 3.
+     */
+    public static void predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double[] w, final double dt, final Quaternion result,
+            final Matrix jacobianQ, final Matrix jacobianDQ, final Matrix jacobianW) {
+<span class="fc bfc" id="L923" title="All 2 branches covered.">        if (w.length != ANGULAR_SPEED_COMPONENTS) {</span>
+<span class="fc" id="L924">            throw new IllegalArgumentException(&quot;w must have length 3&quot;);</span>
+        }
+<span class="fc" id="L926">        predictWithRotationAdjustment(q, dq, w[0], w[1], w[2], dt, result,</span>
+                jacobianQ, jacobianDQ, jacobianW);
+<span class="fc" id="L928">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes
+     * x, y, z (roll, pitch, yaw).
+     *
+     * @param q      quaternion to be updated.
+     * @param dq     adjustment of rotation to be combined with input quaternion.
+     * @param wx     angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy     angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz     angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated quaternion is stored.
+     */
+    public static void predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double wx, final double wy, final double wz, final double dt,
+            final Quaternion result) {
+<span class="fc" id="L947">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, null, null,</span>
+                null);
+<span class="fc" id="L949">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes x,y,z
+     * (roll, pitch, yaw).
+     *
+     * @param q      quaternion to be updated.
+     * @param dq     adjustment of rotation to be combined with input quaternion.
+     * @param w      angular speed (x, y, z axes). Expressed in rad/s. Must have
+     *               length 3.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated quaternion is stored.
+     * @throws IllegalArgumentException if w does not have length 3.
+     */
+    public static void predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double[] w, final double dt, final Quaternion result) {
+<span class="fc" id="L967">        predictWithRotationAdjustment(q, dq, w, dt, result, null, null,</span>
+                null);
+<span class="fc" id="L969">    }</span>
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes x,y,z
+     * (roll, pitch, yaw).
+     *
+     * @param q          quaternion to be updated.
+     * @param dq         adjustment of rotation to be combined with input quaternion.
+     * @param wx         angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy         angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz         angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param jacobianQ  jacobian wrt input quaternion. Must be 4x4.
+     * @param jacobianDQ jacobian wrt dq quaternion. Must be 4x4.
+     * @param jacobianW  jacobian wrt angular speed. Must be 4x3.
+     * @return a new updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     */
+    public static Quaternion predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double wx, final double wy, final double wz, final double dt,
+            final Matrix jacobianQ, final Matrix jacobianDQ, final Matrix jacobianW) {
+<span class="fc" id="L993">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L994">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, jacobianQ,</span>
+                jacobianDQ, jacobianW);
+<span class="fc" id="L996">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes x,y,z
+     * (roll, pitch, yaw).
+     *
+     * @param q          quaternion to be updated.
+     * @param dq         adjustment of rotation to be combined with input quaternion.
+     * @param w          angular speed (x,y,z axes). Expressed in rad/s. Must have length
+     *                   3.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param jacobianQ  jacobian wrt input quaternion. Must be 4x4.
+     * @param jacobianDQ jacobian wrt dq quaternion. Must be 4x4.
+     * @param jacobianW  jacobian wrt angular speed. Must be 4x3.
+     * @return a new updated quaternion.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     */
+    public static Quaternion predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double[] w, final double dt, final Matrix jacobianQ,
+            final Matrix jacobianDQ, final Matrix jacobianW) {
+<span class="fc" id="L1020">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L1021">        predictWithRotationAdjustment(q, dq, w, dt, result, jacobianQ,</span>
+                jacobianDQ, jacobianW);
+<span class="fc" id="L1023">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes x,y,z
+     * (roll, pitch, yaw).
+     *
+     * @param q  quaternion to be updated.
+     * @param dq adjustment of rotation to be combined with input quaternion.
+     * @param wx angular speed in x-axis (roll axis). Expressed in rad/s.
+     * @param wy angular speed in y-axis (pitch axis). Expressed in rad/s.
+     * @param wz angular speed in z-axis (yaw axis). Expressed in rad/s.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new updated quaternion.
+     */
+    public static Quaternion predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq,
+            final double wx, final double wy, final double wz, final double dt) {
+<span class="fc" id="L1042">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L1043">        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result);</span>
+<span class="fc" id="L1044">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated quaternion after a rotation in body frame expressed
+     * by provided rotation dq and by provided rate of rotation along axes x,y,z
+     * (roll, pitch, yaw).
+     *
+     * @param q  quaternion to be updated.
+     * @param dq adjustment of rotation to be combined with input quaternion.
+     * @param w  angular speed (x, y, z axes). Expressed in rad/s. Must have
+     *           length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new updated quaternion.
+     * @throws IllegalArgumentException if w does not have length 3.
+     */
+    public static Quaternion predictWithRotationAdjustment(
+            final Quaternion q, final Quaternion dq, final double[] w, final double dt) {
+<span class="fc" id="L1062">        final Quaternion result = new Quaternion();</span>
+<span class="fc" id="L1063">        predictWithRotationAdjustment(q, dq, w, dt, result);</span>
+<span class="fc" id="L1064">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

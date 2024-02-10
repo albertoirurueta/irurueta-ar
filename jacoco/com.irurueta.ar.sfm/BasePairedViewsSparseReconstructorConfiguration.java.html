@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BasePairedViewsSparseReconstructorConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">BasePairedViewsSparseReconstructorConfiguration.java</span></div><h1>BasePairedViewsSparseReconstructorConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.ar.epipolar.CorrectorType;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator;
+import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.io.Serializable;
+
+/**
+ * Base class containing configuration for a paired view based sparse re-constructor.
+ *
+ * @param &lt;T&gt; an actual implementation of a configuration class.
+ */
+public abstract class BasePairedViewsSparseReconstructorConfiguration&lt;
+        T extends BasePairedViewsSparseReconstructorConfiguration&lt;T&gt;&gt; implements Serializable {
+
+    /**
+     * Default robust fundamental matrix estimator method.
+     * This is only used when general scenes are allowed.
+     */
+    public static final RobustEstimatorMethod
+<span class="fc" id="L40">            DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =</span>
+            RobustEstimatorMethod.PROSAC;
+
+    /**
+     * Default non-robust fundamental matrix estimator method used internally within a
+     * robust estimator.
+     * This is only used when general scenes are allowed.
+     */
+    public static final FundamentalMatrixEstimatorMethod
+<span class="fc" id="L49">            DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =</span>
+            FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;
+
+    /**
+     * Indicates that estimated fundamental matrix is refined by default using all found
+     * inliers.
+     * This is only used when general scenes are allowed.
+     */
+    public static final boolean DEFAULT_REFINE_FUNDAMENTAL_MATRIX = true;
+
+    /**
+     * Indicates that fundamental matrix covariance is kept by default after the estimation.
+     * This is only used when general scenes are allowed.
+     */
+    public static final boolean DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE =
+            false;
+
+    /**
+     * Default confidence of robustly estimated fundamental matrix. By default, this is 99%.
+     * This is only used when general scenes are allowed.
+     */
+    public static final double DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE =
+            FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE;
+
+    /**
+     * Default maximum number of iterations to make while robustly estimating fundamental
+     * matrix. By default, this is 5000 iterations.
+     * This is only used when general scenes are allowed.
+     */
+    public static final int DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS =
+            FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS;
+
+    /**
+     * Default threshold to determine whether samples for robust fundamental matrix
+     * estimation are inliers or not.
+     * This is only used when general scenes are allowed.
+     */
+    public static final double DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD =
+            PROSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD;
+
+    /**
+     * Default value indicating that inlier data is kept after robust fundamental matrix
+     * estimation.
+     * This is only used when general scenes are allowed.
+     */
+    public static final boolean DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS = true;
+
+    /**
+     * Default value indicating that residual data is kept after robust fundamental matrix
+     * estimation.
+     * This is only used when general scenes are allowed.
+     */
+    public static final boolean DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS = true;
+
+    /**
+     * Default method to use for paired cameras' estimation.
+     * Each pair of cameras is computed as an initial pair of cameras, however they are
+     * appended to the last pair of cameras using the last known camera location and rotation.
+     */
+<span class="fc" id="L108">    public static final InitialCamerasEstimatorMethod DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD =</span>
+            InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX;
+
+    /**
+     * Indicates whether an homogeneous point triangulator is used for point triangulation when
+     * Dual Absolute Quadric (DAQ) camera initialization is used.
+     */
+    public static final boolean DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR = true;
+
+    /**
+     * Default aspect ratio for paired cameras.
+     */
+    public static final double DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO = 1.0;
+
+    /**
+     * Default horizontal principal point value to use for paired cameras estimation
+     * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ) methods.
+     */
+    public static final double DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X = 0.0;
+
+    /**
+     * Default vertical principal point value to use for paired cameras estimation
+     * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ) methods.
+     */
+    public static final double DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y = 0.0;
+
+    /**
+     * Default corrector type to use for point triangulation when pairs of cameras
+     * are being estimated using either Dual Image of Absolute Conic (DIAC), Dual Absolute
+     * Quadric (DAQ) or essential matrix methods.
+     */
+<span class="fc" id="L139">    public static final CorrectorType DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE =</span>
+            CorrectorType.SAMPSON_CORRECTOR;
+
+    /**
+     * Default value indicating whether valid triangulated points are marked during
+     * paired cameras estimation using either Dual Image of Absolute Conic (DIAC) or essential
+     * matrix methods.
+     */
+    public static final boolean DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS = true;
+
+    /**
+     * Indicates whether a general (points are laying in a general 3D position) scene
+     * is allowed.
+     * When true, an initial geometry estimation is attempted for planar points.
+     */
+    public static final boolean DEFAULT_ALLOW_GENERAL_SCENE = true;
+
+    /**
+     * Indicates whether a planar (points laying in a 3D plane) scene is allowed.
+     * When true, an initial geometry estimation is attempted for planar points.
+     */
+    public static final boolean DEFAULT_ALLOW_PLANAR_SCENE = true;
+
+    /**
+     * Default robust planar homography estimator method.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L166">    public static final RobustEstimatorMethod DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD =</span>
+            RobustEstimatorMethod.PROMEDS;
+
+    /**
+     * Indicates that planar homography is refined by default using all found inliers.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final boolean DEFAULT_REFINE_PLANAR_HOMOGRAPHY = true;
+
+    /**
+     * Indicates that planar homography covariance is kept by default after estimation.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final boolean DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE = false;
+
+    /**
+     * Default confidence of robustly estimated planar homography. By default, is is 99%.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final double DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE =
+            ProjectiveTransformation2DRobustEstimator.DEFAULT_CONFIDENCE;
+
+    /**
+     * Default maximum number of iterations to make while robustly estimating planar
+     * homography. By default, this is 5000 iterations.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final int DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS =
+            ProjectiveTransformation2DRobustEstimator.DEFAULT_MAX_ITERATIONS;
+
+    /**
+     * Default threshold to determine whether samples for robust projective 2D
+     * transformation estimation are inliers or not.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final double DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD = 1e-3;
+
+    /**
+     * Default value indicating that inlier data is kept after robust planar homography
+     * estimation.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final boolean DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS = true;
+
+    /**
+     * Default value indicating that residual data is kept after robust planar homography
+     * estimation.
+     * This is only used when planar scenes are allowed.
+     */
+    public static final boolean DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS = true;
+
+    /**
+     * Indicates whether intrinsic parameters are known by default.
+     * When intrinsic parameters are known, essential matrix method is used for paired
+     * camera estimation.
+     * If intrinsic parameters are unknown, pairs of cameras are auto-calibrated using
+     * either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic) methods.
+     */
+    public static final boolean DEFAULT_KNOWN_INTRINSIC_PARAMETERS = false;
+
+    /**
+     * Method to use for non-robust fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L230">    private FundamentalMatrixEstimatorMethod</span>
+            mNonRobustFundamentalMatrixEstimatorMethod =
+            DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD;
+
+    /**
+     * Method to use for robust fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L238">    private RobustEstimatorMethod mRobustFundamentalMatrixEstimatorMethod =</span>
+            DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD;
+
+    /**
+     * Indicates whether estimated fundamental matrix is refined among all found
+     * inliers.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L246">    private boolean mRefineFundamentalMatrix =</span>
+            DEFAULT_REFINE_FUNDAMENTAL_MATRIX;
+
+    /**
+     * Indicates whether covariance of estimated fundamental matrix is kept
+     * after the estimation.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L254">    private boolean mKeepFundamentalMatrixCovariance =</span>
+            DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE;
+
+    /**
+     * Confidence of robustly estimated fundamental matrix.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L261">    private double mFundamentalMatrixConfidence =</span>
+            DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE;
+
+    /**
+     * Maximum number of iterations to robustly estimate fundamental matrix.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L268">    private int mFundamentalMatrixMaxIterations =</span>
+            DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS;
+
+    /**
+     * Threshold to determine whether samples for robust fundamental matrix
+     * estimation are inliers or not.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L276">    private double mFundamentalMatrixThreshold =</span>
+            DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD;
+
+    /**
+     * Indicates whether inliers must be kept during robust fundamental matrix
+     * estimation.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L284">    private boolean mFundamentalMatrixComputeAndKeepInliers =</span>
+            DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS;
+
+    /**
+     * Indicates whether residuals must be computed and kept during robust
+     * fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     */
+<span class="fc" id="L292">    private boolean mFundamentalMatrixComputeAndKeepResiduals =</span>
+            DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS;
+
+    /**
+     * Method to use for paired cameras' estimation.
+     */
+<span class="fc" id="L298">    private InitialCamerasEstimatorMethod mPairedCamerasEstimatorMethod =</span>
+            DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD;
+
+    /**
+     * Indicates whether an homogeneous point triangulator is used for point
+     * triangulation when Dual Absolute Quadric (DAQ) camera initialization is
+     * used.
+     */
+<span class="fc" id="L306">    private boolean mDaqUseHomogeneousPointTriangulator =</span>
+            DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR;
+
+    /**
+     * Aspect ratio for paired cameras.
+     */
+<span class="fc" id="L312">    private double mPairedCamerasAspectRatio = DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO;</span>
+
+    /**
+     * Horizontal principal point value to use for paired cameras estimation
+     * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ)
+     * methods.
+     */
+<span class="fc" id="L319">    private double mPrincipalPointX =</span>
+            DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X;
+
+    /**
+     * Vertical principal point value to use for paired cameras estimation
+     * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ)
+     * methods.
+     */
+<span class="fc" id="L327">    private double mPrincipalPointY =</span>
+            DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y;
+
+    /**
+     * Corrector type to use for point triangulation when pairs of cameras are
+     * being estimated using either Dual Image of Absolute Conic (DIAC) or
+     * essential matrix methods or null if no corrector is used.
+     */
+<span class="fc" id="L335">    private CorrectorType mPairedCamerasCorrectorType =</span>
+            DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE;
+
+    /**
+     * Value indicating whether valid triangulated points are marked during
+     * paired cameras estimation using either Dual Image of Absolute Conic
+     * (DIAC) or essential matrix methods.
+     */
+<span class="fc" id="L343">    private boolean mPairedCamerasMarkValidTriangulatedPoints =</span>
+            DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS;
+
+    /**
+     * Indicates whether intrinsic parameters are known.
+     * When intrinsic parameters are known, essential matrix method is used for paired
+     * camera estimation.
+     * If intrinsic parameters are unknown, pairs of cameras are auto-calibrated using
+     * either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic) methods.
+     */
+<span class="fc" id="L353">    private boolean mKnownIntrinsicParameters = DEFAULT_KNOWN_INTRINSIC_PARAMETERS;</span>
+
+    /**
+     * Indicates whether a general scene (points laying in a general 3D
+     * position) is allowed.
+     * When true, an initial geometry estimation is attempted for general
+     * points.
+     */
+<span class="fc" id="L361">    private boolean mAllowGeneralScene = DEFAULT_ALLOW_GENERAL_SCENE;</span>
+
+    /**
+     * Indicates whether a planar scene (points laying in a 3D plane) is allowed.
+     * When true, an initial geometry estimation is attempted for planar points.
+     */
+<span class="fc" id="L367">    private boolean mAllowPlanarScene = DEFAULT_ALLOW_PLANAR_SCENE;</span>
+
+    /**
+     * Robust method to use for planar homograpy estimation.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L373">    private RobustEstimatorMethod mRobustPlanarHomographyEstimatorMethod =</span>
+            DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD;
+
+    /**
+     * Indicates whether planar homography is refined using all found inliers or
+     * not.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L381">    private boolean mRefinePlanarHomography = DEFAULT_REFINE_PLANAR_HOMOGRAPHY;</span>
+
+    /**
+     * Indicates whether planar homography covariance is kept after estimation.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L387">    private boolean mKeepPlanarHomographyCovariance =</span>
+            DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE;
+
+    /**
+     * Confidence of robustly estimated planar homography. By default, this is
+     * 99%.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L395">    private double mPlanarHomographyConfidence =</span>
+            DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE;
+
+    /**
+     * Maximum number of iterations to make while robustly estimating planar
+     * homography. By default, this is 5000.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L403">    private int mPlanarHomographyMaxIterations =</span>
+            DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS;
+
+    /**
+     * Threshold to determine whether samples for robust projective 2D
+     * transformation estimation are inliers or not.
+     */
+<span class="fc" id="L410">    private double mPlanarHomographyThreshold =</span>
+            DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD;
+
+    /**
+     * Value indicating that inlier data is kept after robust planar homography
+     * estimation.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L418">    private boolean mPlanarHomographyComputeAndKeepInliers =</span>
+            DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS;
+
+    /**
+     * Value indicating that residual data is kept after robust planar
+     * homography estimation.
+     * This is only used when planar scenes are allowed.
+     */
+<span class="fc" id="L426">    private boolean mPlanarHomographyComputeAndKeepResiduals =</span>
+            DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L432">    protected BasePairedViewsSparseReconstructorConfiguration() {</span>
+<span class="fc" id="L433">    }</span>
+
+    /**
+     * Gets method to use for non-robust fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @return method to use for non-robust fundamental matrix estimation.
+     */
+    public FundamentalMatrixEstimatorMethod getNonRobustFundamentalMatrixEstimatorMethod() {
+<span class="fc" id="L442">        return mNonRobustFundamentalMatrixEstimatorMethod;</span>
+    }
+
+    /**
+     * Sets method to use for non-robust fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @param method method to use for non-robust fundamental matrix estimation.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setNonRobustFundamentalMatrixEstimatorMethod(final FundamentalMatrixEstimatorMethod method) {
+<span class="fc" id="L453">        mNonRobustFundamentalMatrixEstimatorMethod = method;</span>
+        //noinspection all
+<span class="fc" id="L455">        return (T) this;</span>
+    }
+
+    /**
+     * Gets method to use for robust fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @return method to use for robust fundamental matrix estimation.
+     */
+    public RobustEstimatorMethod getRobustFundamentalMatrixEstimatorMethod() {
+<span class="fc" id="L465">        return mRobustFundamentalMatrixEstimatorMethod;</span>
+    }
+
+    /**
+     * Sets method to use for robust fundamental matrix estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @param method method to use for robust fundamental matrix estimation.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setRobustFundamentalMatrixEstimatorMethod(final RobustEstimatorMethod method) {
+<span class="fc" id="L476">        mRobustFundamentalMatrixEstimatorMethod = method;</span>
+        //noinspection all
+<span class="fc" id="L478">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether estimated fundamental matrix is refined among all found inliers.
+     * This is only used when general scenes are allowed.
+     *
+     * @return true if fundamental matrix is refined, false otherwise.
+     */
+    public boolean isFundamentalMatrixRefined() {
+<span class="fc" id="L488">        return mRefineFundamentalMatrix;</span>
+    }
+
+    /**
+     * Specifies whether estimated fundamental matrix is refined among all found inliers.
+     * This is only used when general scenes are allowed.
+     *
+     * @param refineFundamentalMatrix true if fundamental matrix is refined, false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixRefined(final boolean refineFundamentalMatrix) {
+<span class="fc" id="L499">        mRefineFundamentalMatrix = refineFundamentalMatrix;</span>
+        //noinspection unchecked
+<span class="fc" id="L501">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether covariance of estimated fundamental matrix is kept after the
+     * estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @return true if covariance is kept, false otherwise.
+     */
+    public boolean isFundamentalMatrixCovarianceKept() {
+<span class="fc" id="L512">        return mKeepFundamentalMatrixCovariance;</span>
+    }
+
+    /**
+     * Specifies whether covariance of estimated fundamental matrix is kept after the
+     * estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @param keepFundamentalMatrixCovariance true if covariance is kept, false
+     *                                        otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixCovarianceKept(
+            final boolean keepFundamentalMatrixCovariance) {
+<span class="fc" id="L526">        mKeepFundamentalMatrixCovariance = keepFundamentalMatrixCovariance;</span>
+        //noinspection unchecked
+<span class="fc" id="L528">        return (T) this;</span>
+    }
+
+    /**
+     * Gets confidence of robustly estimated fundamental matrix.
+     * This is only used when general scenes are allowed.
+     *
+     * @return confidence of robustly estimated fundamental matrix.
+     */
+    public double getFundamentalMatrixConfidence() {
+<span class="fc" id="L538">        return mFundamentalMatrixConfidence;</span>
+    }
+
+    /**
+     * Sets confidence of robustly estimated fundamental matrix.
+     * This is only used when general scenes are allowed.
+     *
+     * @param fundamentalMatrixConfidence confidence of robustly estimated fundamental
+     *                                    matrix.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixConfidence(final double fundamentalMatrixConfidence) {
+<span class="fc" id="L550">        mFundamentalMatrixConfidence = fundamentalMatrixConfidence;</span>
+        //noinspection unchecked
+<span class="fc" id="L552">        return (T) this;</span>
+    }
+
+    /**
+     * Gets maximum number of iterations to robustly estimate fundamental matrix.
+     * This is only used when general scenes are allowed.
+     *
+     * @return maximum number of iterations to robustly estimate fundamental matrix.
+     */
+    public int getFundamentalMatrixMaxIterations() {
+<span class="fc" id="L562">        return mFundamentalMatrixMaxIterations;</span>
+    }
+
+    /**
+     * Sets maximum number of iterations to robustly estimate fundamental matrix.
+     * This is only used when general scenes are allowed.
+     *
+     * @param fundamentalMatrixMaxIterations maximum number of iterations to robustly
+     *                                       estimate fundamental matrix.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixMaxIterations(final int fundamentalMatrixMaxIterations) {
+<span class="fc" id="L574">        mFundamentalMatrixMaxIterations = fundamentalMatrixMaxIterations;</span>
+        //noinspection unchecked
+<span class="fc" id="L576">        return (T) this;</span>
+    }
+
+    /**
+     * Gets threshold to determine whether samples for robust fundamental matrix
+     * estimation are inliers or not.
+     * This is only used when general scenes are allowed.
+     *
+     * @return threshold to determine whether samples for robust fundamental matrix
+     * estimation are inliers or not.
+     */
+    public double getFundamentalMatrixThreshold() {
+<span class="fc" id="L588">        return mFundamentalMatrixThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine whether samples for robust fundamental matrix
+     * estimation are inliers or not.
+     * This is only used when general scenes are allowed.
+     *
+     * @param fundamentalMatrixThreshold threshold to determine whether samples for
+     *                                   robust fundamental matrix estimation are inliers
+     *                                   or not.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixThreshold(final double fundamentalMatrixThreshold) {
+<span class="fc" id="L602">        mFundamentalMatrixThreshold = fundamentalMatrixThreshold;</span>
+        //noinspection unchecked
+<span class="fc" id="L604">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether inliers must be kept during robust fundamental matrix
+     * estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @return true if inliers must be kept during robust fundamental matrix estimation,
+     * false otherwise.
+     */
+    public boolean getFundamentalMatrixComputeAndKeepInliers() {
+<span class="fc" id="L616">        return mFundamentalMatrixComputeAndKeepInliers;</span>
+    }
+
+    /**
+     * Specifies whether inliers must be kept during robust fundamental matrix
+     * estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @param fundamentalMatrixComputeAndKeepInliers true if inliers must be kept
+     *                                               during robust fundamental matrix
+     *                                               estimation, false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixComputeAndKeepInliers(
+            final boolean fundamentalMatrixComputeAndKeepInliers) {
+<span class="fc" id="L631">        mFundamentalMatrixComputeAndKeepInliers =</span>
+                fundamentalMatrixComputeAndKeepInliers;
+        //noinspection unchecked
+<span class="fc" id="L634">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether residuals must be computed and kept during robust fundamental
+     * matrix estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @return true if residuals must be computed and kept, false otherwise.
+     */
+    public boolean getFundamentalMatrixComputeAndKeepResiduals() {
+<span class="fc" id="L645">        return mFundamentalMatrixComputeAndKeepResiduals;</span>
+    }
+
+    /**
+     * Specifies whether residuals must be computed and kept during robust fundamental
+     * matrix estimation.
+     * This is only used when general scenes are allowed.
+     *
+     * @param fundamentalMatrixComputeAndKeepResiduals true if residuals must be computed
+     *                                                 and kept, false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setFundamentalMatrixComputeAndKeepResiduals(
+            final boolean fundamentalMatrixComputeAndKeepResiduals) {
+<span class="fc" id="L659">        mFundamentalMatrixComputeAndKeepResiduals =</span>
+                fundamentalMatrixComputeAndKeepResiduals;
+        //noinspection unchecked
+<span class="fc" id="L662">        return (T) this;</span>
+    }
+
+    /**
+     * Gets method to use for paired cameras' estimation.
+     *
+     * @return method to use for paired cameras' estimation.
+     */
+    public InitialCamerasEstimatorMethod getPairedCamerasEstimatorMethod() {
+<span class="fc" id="L671">        return mPairedCamerasEstimatorMethod;</span>
+    }
+
+    /**
+     * Sets method to use for paired cameras' estimation.
+     *
+     * @param method method to use for paired cameras' estimation.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPairedCamerasEstimatorMethod(final InitialCamerasEstimatorMethod method) {
+<span class="fc" id="L681">        mPairedCamerasEstimatorMethod = method;</span>
+        //noinspection unchecked
+<span class="fc" id="L683">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether an homogeneous point triangulator is used for point
+     * triangulation when Dual Absolute Quadric (DAQ) camera initialization is
+     * used.
+     *
+     * @return true if homogeneous point triangulator is used, false if an
+     * inhomogeneous point triangulator is used instead.
+     */
+    public boolean getDaqUseHomogeneousPointTriangulator() {
+<span class="fc" id="L695">        return mDaqUseHomogeneousPointTriangulator;</span>
+    }
+
+    /**
+     * Specifies whether an homogeneous point triangulator is used for point
+     * triangulation when Dual Absolute Quadric (DAQ) camera initialization is used.
+     *
+     * @param daqUseHomogeneousPointTriangulator true if homogeneous point triangulator
+     *                                           is used, false if an inhomogeneous point
+     *                                           triangulator is used instead.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setDaqUseHomogeneousPointTriangulator(
+            final boolean daqUseHomogeneousPointTriangulator) {
+<span class="fc" id="L709">        mDaqUseHomogeneousPointTriangulator = daqUseHomogeneousPointTriangulator;</span>
+        //noinspection unchecked
+<span class="fc" id="L711">        return (T) this;</span>
+    }
+
+    /**
+     * Gets aspect ratio for paired cameras estimation using DAQ or DIAC methods.
+     *
+     * @return aspect ratio for initial cameras using DAQ or DIAC methods.
+     */
+    public double getPairedCamerasAspectRatio() {
+<span class="fc" id="L720">        return mPairedCamerasAspectRatio;</span>
+    }
+
+    /**
+     * Sets aspect ratio for paired cameras estimation using DAQ or DIAC methods.
+     *
+     * @param pairedCamerasAspectRatio aspect ratio for paired cameras using DAQ or
+     *                                 DIAC methods.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPairedCamerasAspectRatio(final double pairedCamerasAspectRatio) {
+<span class="fc" id="L731">        mPairedCamerasAspectRatio = pairedCamerasAspectRatio;</span>
+        //noinspection unchecked
+<span class="fc" id="L733">        return (T) this;</span>
+    }
+
+    /**
+     * Gets horizontal principal point value to use for paired cameras estimation using
+     * Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ) methods.
+     *
+     * @return horizontal principal point value to use for paired cameras estimation
+     * using DIAC or DAQ methods.
+     */
+    public double getPrincipalPointX() {
+<span class="fc" id="L744">        return mPrincipalPointX;</span>
+    }
+
+    /**
+     * Sets horizontal principal point value to use for paired cameras estimation using
+     * DIAC or DAQ methods.
+     *
+     * @param principalPointX horizontal principal point value to use for paired cameras
+     *                        estimation using DIAC or DAQ methods.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPrincipalPointX(final double principalPointX) {
+<span class="fc" id="L756">        mPrincipalPointX = principalPointX;</span>
+        //noinspection unchecked
+<span class="fc" id="L758">        return (T) this;</span>
+    }
+
+    /**
+     * Gets vertical principal point value to use for paired cameras estimation
+     * using DIAC or DAQ methods.
+     *
+     * @return vertical principal point value to use for paired cameras estimation
+     * using DIAC or DAQ methods.
+     */
+    public double getPrincipalPointY() {
+<span class="fc" id="L769">        return mPrincipalPointY;</span>
+    }
+
+    /**
+     * Sets vertical principal point value to use for paired cameras estimation using
+     * DIAC or DAQ methods.
+     *
+     * @param principalPointY vertical principal point value to use for initial cameras
+     *                        estimation using DIAC or DAQ methods.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPrincipalPointY(final double principalPointY) {
+<span class="fc" id="L781">        mPrincipalPointY = principalPointY;</span>
+        //noinspection unchecked
+<span class="fc" id="L783">        return (T) this;</span>
+    }
+
+    /**
+     * Gets corrector type to use for point triangulation when pairs of cameras are
+     * being estimated using either DIAC or essential matrix methods or null if no
+     * corrector is used.
+     *
+     * @return corrector type to use for point triangulation when initial cameras are
+     * being estimated using either DIAC or essential matrix methods or null if no
+     * corrector is used.
+     */
+    public CorrectorType getPairedCamerasCorrectorType() {
+<span class="fc" id="L796">        return mPairedCamerasCorrectorType;</span>
+    }
+
+    /**
+     * Sets corrector type to use for point triangulation when pairs of cameras are
+     * being estimated using either DIAC or essential matrix methods or null if no
+     * corrector is used.
+     *
+     * @param type corrector type to use for point triangulation when pairs of cameras
+     *             are being estimated using either DIAC or essential matrix methods
+     *             or null if no corrector is used.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPairedCamerasCorrectorType(final CorrectorType type) {
+<span class="fc" id="L810">        mPairedCamerasCorrectorType = type;</span>
+        //noinspection unchecked
+<span class="fc" id="L812">        return (T) this;</span>
+    }
+
+    /**
+     * Gets value indicating whether valid triangulated points are marked during paired
+     * cameras estimation using either DIAC or essential matrix methods.
+     *
+     * @return value indicating whether valid triangulated points are marked during
+     * paired cameras estimation using either DIAC or essential matrix methods.
+     */
+    public boolean getPairedCamerasMarkValidTriangulatedPoints() {
+<span class="fc" id="L823">        return mPairedCamerasMarkValidTriangulatedPoints;</span>
+    }
+
+    /**
+     * Sets value indicating whether valid triangulated points are marked during paired
+     * cameras estimation using either DIAC or essential matrix methods.
+     *
+     * @param pairedCamerasMarkValidTriangulatedPoints value indicating whether valid
+     *                                                 triangulated points are marked during
+     *                                                 paired cameras estimation using either
+     *                                                 DIAC or essential matrix methods.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPairedCamerasMarkValidTriangulatedPoints(
+            final boolean pairedCamerasMarkValidTriangulatedPoints) {
+<span class="fc" id="L838">        mPairedCamerasMarkValidTriangulatedPoints =</span>
+                pairedCamerasMarkValidTriangulatedPoints;
+        //noinspection unchecked
+<span class="fc" id="L841">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether intrinsic parameters are known.
+     * When instrinsic parameters are known, essential matrix method can be used for
+     * paired camera estimation.
+     * If intrinsic parameters are unknown, pairs of cameras should be auto-calibrated
+     * using either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic)
+     * methods.
+     *
+     * @return true if intrinsic parameters are known, false otherwise.
+     */
+    public boolean areIntrinsicParametersKnown() {
+<span class="fc" id="L855">        return mKnownIntrinsicParameters;</span>
+    }
+
+    /**
+     * Specifies whether intrinsic parameters are known.
+     * When intrinsic parameters are known, essential matrix method can be used for
+     * paired camera estimation.
+     * If intrinsic parameters are unknown, pairs of cameras should be auto-calibrated
+     * using either DAQ (Dual Absolute Quadric) or DIAC (Dual Image of Absolute Conic)
+     * methods.
+     *
+     * @param intrinsicParametersKnown true if intrinsic parameters are known, false
+     *                                 otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setIntrinsicParametersKnown(final boolean intrinsicParametersKnown) {
+<span class="fc" id="L871">        mKnownIntrinsicParameters = intrinsicParametersKnown;</span>
+        //noinspection unchecked
+<span class="fc" id="L873">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether a general scene (points laying in a general 3D position) is
+     * allowed.
+     * When true, an initial geometry estimation is attempted for general points.
+     *
+     * @return true if general scene is allowed, false otherwise.
+     */
+    public boolean isGeneralSceneAllowed() {
+<span class="fc" id="L884">        return mAllowGeneralScene;</span>
+    }
+
+    /**
+     * Specifies whether a general scene (points laying in a general 3D position) is
+     * allowed.
+     * When true, an initial geometry estimation is attempted for general points.
+     *
+     * @param allowGeneralScene true if general scene is allowed, false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setGeneralSceneAllowed(final boolean allowGeneralScene) {
+<span class="fc" id="L896">        mAllowGeneralScene = allowGeneralScene;</span>
+        //noinspection unchecked
+<span class="fc" id="L898">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether a planar scene (points laying in a 3D plane) is allowed or
+     * not.
+     * When true, an initial geometry estimation is attempted for planar points.
+     *
+     * @return true if planar scene is allowed, false otherwise.
+     */
+    public boolean isPlanarSceneAllowed() {
+<span class="fc" id="L909">        return mAllowPlanarScene;</span>
+    }
+
+    /**
+     * specifies whether a planar scene (points laying in a 3D plane) is allowed or
+     * not.
+     * When true, an initial geometry estimation is attempted for planar points.
+     *
+     * @param allowPlanarScene true if planar scene is allowed, false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarSceneAllowed(final boolean allowPlanarScene) {
+<span class="fc" id="L921">        mAllowPlanarScene = allowPlanarScene;</span>
+        //noinspection unchecked
+<span class="fc" id="L923">        return (T) this;</span>
+    }
+
+    /**
+     * Gets robust method to use for planar homography estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return robust method to use for planar homography estimation.
+     */
+    public RobustEstimatorMethod getRobustPlanarHomographyEstimatorMethod() {
+<span class="fc" id="L933">        return mRobustPlanarHomographyEstimatorMethod;</span>
+    }
+
+    /**
+     * Sets robust method to use for planar homography estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param robustPlanarHomographyEstimatorMethod robust method to use for planar
+     *                                              homography estimation.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setRobustPlanarHomographyEstimatorMethod(
+            final RobustEstimatorMethod robustPlanarHomographyEstimatorMethod) {
+<span class="fc" id="L946">        mRobustPlanarHomographyEstimatorMethod = robustPlanarHomographyEstimatorMethod;</span>
+        //noinspection unchecked
+<span class="fc" id="L948">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether planar homography is refined using all found inliers or not.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return true if planar homography is refined, false otherwise.
+     */
+    public boolean isPlanarHomographyRefined() {
+<span class="fc" id="L958">        return mRefinePlanarHomography;</span>
+    }
+
+    /**
+     * Specifies whether planar homography is refined using all found inliers or not.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param refinePlanarHomography true if planar homography must be refined, false
+     *                               otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyRefined(final boolean refinePlanarHomography) {
+<span class="fc" id="L970">        mRefinePlanarHomography = refinePlanarHomography;</span>
+        //noinspection unchecked
+<span class="fc" id="L972">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether planar homography covariance is kept after estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return true if planar homography covariance is kept, false otherwise.
+     */
+    public boolean isPlanarHomographyCovarianceKept() {
+<span class="fc" id="L982">        return mKeepPlanarHomographyCovariance;</span>
+    }
+
+    /**
+     * Specifies whether planar homography covariance is kept after estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param keepPlanarHomographyCovariance true if planar homography covariance is
+     *                                       kept, false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyCovarianceKept(final boolean keepPlanarHomographyCovariance) {
+<span class="fc" id="L994">        mKeepPlanarHomographyCovariance = keepPlanarHomographyCovariance;</span>
+        //noinspection unchecked
+<span class="fc" id="L996">        return (T) this;</span>
+    }
+
+    /**
+     * Gets confidence of robustly estimated planar homography. By default, this is 99%.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return confidence of robustly estimated planar homography.
+     */
+    public double getPlanarHomographyConfidence() {
+<span class="fc" id="L1006">        return mPlanarHomographyConfidence;</span>
+    }
+
+    /**
+     * Sets confidence of robustly estimated planar homography. By default, this is 99%.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param planarHomographyConfidence confidence of robustly estimated planar
+     *                                   homography.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyConfidence(final double planarHomographyConfidence) {
+<span class="fc" id="L1018">        mPlanarHomographyConfidence = planarHomographyConfidence;</span>
+        //noinspection unchecked
+<span class="fc" id="L1020">        return (T) this;</span>
+    }
+
+    /**
+     * Gets maximum number of iterations to make while robustly estimating planar
+     * homography. By default, this is 5000.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return maximum number of iterations to make while robustly estimating planar
+     * homography.
+     */
+    public int getPlanarHomographyMaxIterations() {
+<span class="fc" id="L1032">        return mPlanarHomographyMaxIterations;</span>
+    }
+
+    /**
+     * Sets maximum number of iterations to make while robustly estimating planar
+     * homography. By default, this is 5000.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param planarHomographyMaxIterations maximum number of iterations to make while
+     *                                      robustly estimating planar homography.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyMaxIterations(final int planarHomographyMaxIterations) {
+<span class="fc" id="L1045">        mPlanarHomographyMaxIterations = planarHomographyMaxIterations;</span>
+        //noinspection unchecked
+<span class="fc" id="L1047">        return (T) this;</span>
+    }
+
+    /**
+     * Gets threshold to determine whether samples for robust projective 2D
+     * transformation estimation are inliers or not.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return threshold to robustly estimate projective 2D transformation.
+     */
+    public double getPlanarHomographyThreshold() {
+<span class="fc" id="L1058">        return mPlanarHomographyThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine whether samples for robust projective 2D
+     * transformation estimation are inliers or not.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param planarHomographyThreshold threshold to robustly estimate projective 2D
+     *                                  transformation.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyThreshold(final double planarHomographyThreshold) {
+<span class="fc" id="L1071">        mPlanarHomographyThreshold = planarHomographyThreshold;</span>
+        //noinspection unchecked
+<span class="fc" id="L1073">        return (T) this;</span>
+    }
+
+    /**
+     * Gets value indicating that inlier data is kept after robust planar homography
+     * estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return true if inlier data is kept, false otherwise.
+     */
+    public boolean getPlanarHomographyComputeAndKeepInliers() {
+<span class="fc" id="L1084">        return mPlanarHomographyComputeAndKeepInliers;</span>
+    }
+
+    /**
+     * Specifies whether inlier data is kept after robust planar homography estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param planarHomographyComputeAndKeepInliers true if inlier data is kept, false
+     *                                              otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyComputeAndKeepInliers(
+            final boolean planarHomographyComputeAndKeepInliers) {
+<span class="fc" id="L1097">        mPlanarHomographyComputeAndKeepInliers = planarHomographyComputeAndKeepInliers;</span>
+        //noinspection unchecked
+<span class="fc" id="L1099">        return (T) this;</span>
+    }
+
+    /**
+     * Gets value indicating that residual data is kept after robust planar homography
+     * estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @return true if residual data is kept, false otherwise.
+     */
+    public boolean getPlanarHomographyComputeAndKeepResiduals() {
+<span class="fc" id="L1110">        return mPlanarHomographyComputeAndKeepResiduals;</span>
+    }
+
+    /**
+     * Sets value indicating that residual data is kept after robust planar homography
+     * estimation.
+     * This is only used when planar scenes are allowed.
+     *
+     * @param planarHomographyComputeAndKeepResiduals true if residual data is kept, false
+     *                                                otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setPlanarHomographyComputeAndKeepResiduals(
+            final boolean planarHomographyComputeAndKeepResiduals) {
+<span class="fc" id="L1124">        mPlanarHomographyComputeAndKeepResiduals =</span>
+                planarHomographyComputeAndKeepResiduals;
+        //noinspection unchecked
+<span class="fc" id="L1127">        return (T) this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMedSFundamentalMatrixRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.estimators</a> &gt; <span class="el_source">LMedSFundamentalMatrixRobustEstimator.java</span></div><h1>LMedSFundamentalMatrixRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.estimators;
+
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best fundamental matrix for provided collections of matched 2D
+ * points using LMedS algorithm.
+ */
+public class LMedSFundamentalMatrixRobustEstimator extends
+        FundamentalMatrixRobustEstimator {
+
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used
+     * to keep the algorithm iterating in case that best estimated threshold
+     * using median of residuals is not small enough. Once a solution is found
+     * that generates a threshold below this value, the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-3;
+
+    /**
+     * Minimum allowed stop threshold value.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
+<span class="fc" id="L87">        super(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L88">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L89">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param listener                  listener to be notified of events such as when estimation
+     *                                  starts, ends or its progress significantly changes.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L102">        super(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L103">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L119">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="fc" id="L120">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @param listener                  listener to be notified of events such as when estimation
+     *                                  starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L139">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="fc" id="L140">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L141">    }</span>
+
+    /**
+     * Constructor.
+     */
+    public LMedSFundamentalMatrixRobustEstimator() {
+<span class="fc" id="L147">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L158">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
+<span class="fc" id="L159">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on right view.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(final List&lt;Point2D&gt; leftPoints,
+                                                 final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L171">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,</span>
+                rightPoints);
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on right view.
+     * @param listener    listener to be notified of events such as when estimation
+     *                    starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public LMedSFundamentalMatrixRobustEstimator(final List&lt;Point2D&gt; leftPoints,
+                                                 final List&lt;Point2D&gt; rightPoints,
+                                                 final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L188">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,</span>
+                rightPoints, listener);
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L212">        return mStopThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L239">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L242">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L245">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L246">    }</span>
+
+    /**
+     * Estimates a radial distortion using a robust estimator and
+     * the best set of matched 2D points found using the robust estimator.
+     *
+     * @return a radial distortion.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @Override
+    public FundamentalMatrix estimate() throws LockedException,
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L263" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L264">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L267">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L270">        final LMedSRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
+                new LMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L272">                        new LMedSRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
+
+                            // subset of left points
+<span class="fc" id="L275">                            private final List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
+
+                            // subset of right points
+<span class="fc" id="L278">                            private final List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
+
+                            @Override
+                            public int getTotalSamples() {
+<span class="fc" id="L282">                                return mLeftPoints.size();</span>
+                            }
+
+                            @Override
+                            public int getSubsetSize() {
+<span class="fc" id="L287">                                return getMinRequiredPoints();</span>
+                            }
+
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List&lt;FundamentalMatrix&gt; solutions) {
+
+<span class="fc" id="L294">                                mSubsetLeftPoints.clear();</span>
+<span class="fc" id="L295">                                mSubsetRightPoints.clear();</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">                                for (final int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L297">                                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
+<span class="fc" id="L298">                                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
+                                }
+
+<span class="fc" id="L301">                                nonRobustEstimate(solutions, mSubsetLeftPoints,</span>
+                                        mSubsetRightPoints);
+<span class="fc" id="L303">                            }</span>
+
+                            @Override
+                            public double computeResidual(
+                                    final FundamentalMatrix currentEstimation, final int i) {
+<span class="fc" id="L308">                                final Point2D leftPoint = mLeftPoints.get(i);</span>
+<span class="fc" id="L309">                                final Point2D rightPoint = mRightPoints.get(i);</span>
+<span class="fc" id="L310">                                return residual(currentEstimation, leftPoint, rightPoint);</span>
+                            }
+
+                            @Override
+                            public boolean isReady() {
+<span class="fc" id="L315">                                return LMedSFundamentalMatrixRobustEstimator.this.isReady();</span>
+                            }
+
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
+<span class="pc bpc" id="L321" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L322">                                    mListener.onEstimateStart(</span>
+                                            LMedSFundamentalMatrixRobustEstimator.this);
+                                }
+<span class="fc" id="L325">                            }</span>
+
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
+<span class="pc bpc" id="L330" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L331">                                    mListener.onEstimateEnd(</span>
+                                            LMedSFundamentalMatrixRobustEstimator.this);
+                                }
+<span class="fc" id="L334">                            }</span>
+
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator,
+                                    final int iteration) {
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L341">                                    mListener.onEstimateNextIteration(</span>
+                                            LMedSFundamentalMatrixRobustEstimator.this,
+                                            iteration);
+                                }
+<span class="fc" id="L345">                            }</span>
+
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator,
+                                    final float progress) {
+<span class="pc bpc" id="L351" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L352">                                    mListener.onEstimateProgressChange(</span>
+                                            LMedSFundamentalMatrixRobustEstimator.this,
+                                            progress);
+                                }
+<span class="fc" id="L356">                            }</span>
+                        });
+
+        try {
+<span class="fc" id="L360">            mLocked = true;</span>
+<span class="fc" id="L361">            mInliersData = null;</span>
+<span class="fc" id="L362">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L363">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L364">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L365">            innerEstimator.setStopThreshold(mStopThreshold);</span>
+<span class="fc" id="L366">            FundamentalMatrix result = innerEstimator.estimate();</span>
+<span class="fc" id="L367">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L368">            return attemptRefine(result);</span>
+<span class="nc" id="L369">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L370">            throw new LockedException(e);</span>
+<span class="nc" id="L371">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L372">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L374">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L385">        return RobustEstimatorMethod.LMEDS;</span>
+    }
+
+    /**
+     * Gets standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically, this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of
+     * such threshold.
+     *
+     * @return standard deviation used for refinement.
+     */
+    @Override
+    protected double getRefinementStandardDeviation() {
+<span class="fc" id="L401">        final LMedSRobustEstimator.LMedSInliersData inliersData =</span>
+<span class="fc" id="L402">                (LMedSRobustEstimator.LMedSInliersData) getInliersData();</span>
+<span class="fc" id="L403">        return inliersData.getEstimatedThreshold();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

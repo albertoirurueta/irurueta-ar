@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROMedSFundamentalMatrixRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.estimators</a> &gt; <span class="el_source">PROMedSFundamentalMatrixRobustEstimator.java</span></div><h1>PROMedSFundamentalMatrixRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.estimators;
+
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.PROMedSRobustEstimator;
+import com.irurueta.numerical.robust.PROMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best fundamental matrix for provided collections of matched 2D
+ * points using PROMedS algorithm.
+ */
+public class PROMedSFundamentalMatrixRobustEstimator extends
+        FundamentalMatrixRobustEstimator {
+
+    /**
+     * Default non-robust method to estimate a fundamental matrix.
+     */
+    public static final FundamentalMatrixEstimatorMethod
+<span class="fc" id="L42">            DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =</span>
+            FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;
+
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used
+     * to keep the algorithm iterating in case that best estimated threshold
+     * using median of residuals is not small enough. Once a solution is found
+     * that generates a threshold below this value, the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-3;
+
+    /**
+     * Minimum allowed stop threshold value.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double mStopThreshold;
+
+    /**
+     * Quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] mQualityScores;
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
+<span class="fc" id="L100">        super(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L101">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param listener                  listener to be notified of events such as when
+     *                                  estimation starts, ends or its progress significantly changes.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L115">        super(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L116">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 8 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L132">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (leftPoints.size() &lt; EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {</span>
+<span class="nc" id="L134">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L136">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L137">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @param listener                  listener to be notified of events such as when estimation
+     *                                  starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 8 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L155">        super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (leftPoints.size() &lt; EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {</span>
+<span class="nc" id="L157">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L159">        mStopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param qualityScores             quality scores corresponding to each provided pair
+     *                                  of matched points.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 7 matched pair of points).
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final double[] qualityScores) {
+<span class="fc" id="L175">        this(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L176">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param qualityScores             quality scores corresponding to each provided pair
+     *                                  of matched points.
+     * @param listener                  listener to be notified of events such as when
+     *                                  estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 7 matched pair of points).
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final double[] qualityScores,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L195">        this(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L196">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param qualityScores             quality scores corresponding to each provided pair
+     *                                  of matched points.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @throws IllegalArgumentException if provided list of points or quality
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final double[] qualityScores, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L216">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints);</span>
+<span class="fc" id="L217">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L218">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param qualityScores             quality scores corresponding to each provided pair
+     *                                  of matched points.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @param listener                  listener to be notified of events such as when estimation
+     *                                  starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points or quality
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final double[] qualityScores, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L240">        this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);</span>
+<span class="fc" id="L241">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L242">    }</span>
+
+    /**
+     * Constructor.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator() {
+<span class="fc" id="L248">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="fc" id="L249">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L259">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);</span>
+<span class="fc" id="L260">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on right view.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 8 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L272">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, rightPoints);</span>
+<span class="fc" id="L273">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on right view.
+     * @param listener    listener to be notified of events such as when estimation
+     *                    starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 8 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L288">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,</span>
+                rightPoints, listener);
+<span class="fc" id="L290">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided pair
+     *                      of matched points.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 7 matched pair of points).
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(final double[] qualityScores) {
+<span class="fc" id="L301">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores);</span>
+<span class="fc" id="L302">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided pair
+     *                      of matched points.
+     * @param listener      listener to be notified of events such as when
+     *                      estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 7 matched pair of points).
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final double[] qualityScores, final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L316">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,</span>
+                listener);
+<span class="fc" id="L318">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided pair
+     *                      of matched points.
+     * @param leftPoints    2D points on left view.
+     * @param rightPoints   2D points on right view.
+     * @throws IllegalArgumentException if provided list of points or quality
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final double[] qualityScores, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L334">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints, rightPoints);</span>
+<span class="fc" id="L335">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided pair
+     *                      of matched points.
+     * @param leftPoints    2D points on left view.
+     * @param rightPoints   2D points on right view.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points or quality
+     *                                  scores do not have the same length or their length is less
+     *                                  than 7 points.
+     */
+    public PROMedSFundamentalMatrixRobustEstimator(
+            final double[] qualityScores, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints, final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L353">        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints,</span>
+                rightPoints, listener);
+<span class="fc" id="L355">    }</span>
+
+    /**
+     * Sets matched 2D points on both left and right views.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @throws LockedException          if this fundamental matrix estimator is locked.
+     * @throws IllegalArgumentException if provided matched points on left and
+     *                                  right views do not have the same length or if their length is
+     *                                  less than 8 points.
+     */
+    @Override
+    public void setPoints(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints)
+            throws LockedException {
+<span class="fc bfc" id="L370" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L371">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        if (leftPoints.size() &lt; EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {</span>
+<span class="fc" id="L374">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L376">        super.setPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L377">    }</span>
+
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L400">        return mStopThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L427">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L429" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L430">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L433">        mStopThreshold = stopThreshold;</span>
+<span class="fc" id="L434">    }</span>
+
+    /**
+     * Returns quality scores corresponding to each provided pair of points.
+     * The larger the score value the better the quality of the sampled matched
+     * pair of points.
+     *
+     * @return quality scores corresponding to each pair of points.
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L445">        return mQualityScores;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided pair of points.
+     * The larger the score value the better the quality of the sampled matched
+     * pair of points.
+     *
+     * @param qualityScores quality scores corresponding to each pair of points.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than MINIMUM_SIZE (i.e. 3 samples).
+     */
+    @Override
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="fc bfc" id="L461" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L462">            throw new LockedException();</span>
+        }
+<span class="fc" id="L464">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L465">    }</span>
+
+    /**
+     * Returns value indicating whether required data has been provided so that
+     * fundamental matrix estimation can start.
+     * This is true when input data (i.e. 7 pairs of matched 2D points and their
+     * quality scores) are provided.
+     * If true, estimator is ready to compute a fundamental matrix, otherwise
+     * more data needs to be provided.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc bfc" id="L479" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L480" title="1 of 2 branches missed.">                mQualityScores.length == mLeftPoints.size();</span>
+    }
+
+    /**
+     * Estimates a radial distortion using a robust estimator and
+     * the best set of matched 2D points found using the robust estimator.
+     *
+     * @return a radial distortion.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public FundamentalMatrix estimate() throws LockedException,
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L499" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L500">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L502" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L503">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L506">        final PROMedSRobustEstimator&lt;FundamentalMatrix&gt; innerEstimator =</span>
+                new PROMedSRobustEstimator&lt;&gt;(
+<span class="fc" id="L508">                        new PROMedSRobustEstimatorListener&lt;FundamentalMatrix&gt;() {</span>
+
+                            // subset of left points
+<span class="fc" id="L511">                            private final List&lt;Point2D&gt; mSubsetLeftPoints = new ArrayList&lt;&gt;();</span>
+
+                            // subset of right points
+<span class="fc" id="L514">                            private final List&lt;Point2D&gt; mSubsetRightPoints = new ArrayList&lt;&gt;();</span>
+
+                            @Override
+                            public double getThreshold() {
+<span class="fc" id="L518">                                return mStopThreshold;</span>
+                            }
+
+                            @Override
+                            public int getTotalSamples() {
+<span class="fc" id="L523">                                return mLeftPoints.size();</span>
+                            }
+
+                            @Override
+                            public int getSubsetSize() {
+<span class="fc" id="L528">                                return getMinRequiredPoints();</span>
+                            }
+
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List&lt;FundamentalMatrix&gt; solutions) {
+
+<span class="fc" id="L535">                                mSubsetLeftPoints.clear();</span>
+<span class="fc" id="L536">                                mSubsetRightPoints.clear();</span>
+<span class="fc bfc" id="L537" title="All 2 branches covered.">                                for (final int samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L538">                                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));</span>
+<span class="fc" id="L539">                                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));</span>
+                                }
+
+<span class="fc" id="L542">                                nonRobustEstimate(solutions, mSubsetLeftPoints, mSubsetRightPoints);</span>
+<span class="fc" id="L543">                            }</span>
+
+                            @Override
+                            public double computeResidual(
+                                    final FundamentalMatrix currentEstimation, final int i) {
+<span class="fc" id="L548">                                final Point2D leftPoint = mLeftPoints.get(i);</span>
+<span class="fc" id="L549">                                final Point2D rightPoint = mRightPoints.get(i);</span>
+<span class="fc" id="L550">                                return residual(currentEstimation, leftPoint, rightPoint);</span>
+                            }
+
+                            @Override
+                            public boolean isReady() {
+<span class="fc" id="L555">                                return PROMedSFundamentalMatrixRobustEstimator.this.isReady();</span>
+                            }
+
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
+<span class="pc bpc" id="L561" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L562">                                    mListener.onEstimateStart(</span>
+                                            PROMedSFundamentalMatrixRobustEstimator.this);
+                                }
+<span class="fc" id="L565">                            }</span>
+
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator) {
+<span class="pc bpc" id="L570" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L571">                                    mListener.onEstimateEnd(</span>
+                                            PROMedSFundamentalMatrixRobustEstimator.this);
+                                }
+<span class="fc" id="L574">                            }</span>
+
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator,
+                                    final int iteration) {
+<span class="pc bpc" id="L580" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L581">                                    mListener.onEstimateNextIteration(</span>
+                                            PROMedSFundamentalMatrixRobustEstimator.this,
+                                            iteration);
+                                }
+<span class="fc" id="L585">                            }</span>
+
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator&lt;FundamentalMatrix&gt; estimator,
+                                    final float progress) {
+<span class="nc bnc" id="L591" title="All 2 branches missed.">                                if (mListener != null) {</span>
+<span class="nc" id="L592">                                    mListener.onEstimateProgressChange(</span>
+                                            PROMedSFundamentalMatrixRobustEstimator.this,
+                                            progress);
+                                }
+<span class="nc" id="L596">                            }</span>
+
+                            @Override
+                            public double[] getQualityScores() {
+<span class="fc" id="L600">                                return mQualityScores;</span>
+                            }
+                        });
+
+        try {
+<span class="fc" id="L605">            mLocked = true;</span>
+<span class="fc" id="L606">            mInliersData = null;</span>
+<span class="fc" id="L607">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L608">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L609">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L610">            FundamentalMatrix result = innerEstimator.estimate();</span>
+<span class="fc" id="L611">            mInliersData = innerEstimator.getInliersData();</span>
+<span class="fc" id="L612">            return attemptRefine(result);</span>
+<span class="nc" id="L613">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L614">            throw new LockedException(e);</span>
+<span class="nc" id="L615">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L616">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L618">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L629">        return RobustEstimatorMethod.PROMEDS;</span>
+    }
+
+    /**
+     * Gets standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically, this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of
+     * such threshold.
+     *
+     * @return standard deviation used for refinement.
+     */
+    @Override
+    protected double getRefinementStandardDeviation() {
+<span class="fc" id="L645">        final PROMedSRobustEstimator.PROMedSInliersData inliersData =</span>
+<span class="fc" id="L646">                (PROMedSRobustEstimator.PROMedSInliersData) getInliersData();</span>
+<span class="fc" id="L647">        return inliersData.getEstimatedThreshold();</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided pair of matched
+     * points.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     *
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than 8 points.
+     */
+    private void internalSetQualityScores(final double[] qualityScores) {
+<span class="fc bfc" id="L661" title="All 2 branches covered.">        if (qualityScores.length &lt; getMinRequiredPoints()) {</span>
+<span class="fc" id="L662">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L665">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L666">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

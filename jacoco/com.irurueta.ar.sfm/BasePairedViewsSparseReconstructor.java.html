@@ -1,0 +1,1638 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BasePairedViewsSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">BasePairedViewsSparseReconstructor.java</span></div><h1>BasePairedViewsSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicEstimator;
+import com.irurueta.ar.calibration.estimators.LMSEImageOfAbsoluteConicEstimator;
+import com.irurueta.ar.epipolar.Corrector;
+import com.irurueta.ar.epipolar.EpipolarException;
+import com.irurueta.ar.epipolar.EssentialMatrix;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.estimators.EightPointsFundamentalMatrixEstimator;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.LMedSFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.MSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROMedSFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.RANSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.SevenPointsFundamentalMatrixEstimator;
+import com.irurueta.geometry.*;
+import com.irurueta.geometry.estimators.LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.estimators.PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.PointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.numerical.robust.InliersData;
+
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+
+/**
+ * Base class in charge of estimating cameras and 3D reconstructed points from sparse
+ * image point correspondences in pairs of views.
+ * Views are processed in pairs so that fundamental matrix is estimated and pairs of
+ * cameras and reconstructed points are computed.
+ * Because view pairs are processed separately, the scale of each view pair is
+ * estimated individually, hence the scale will need to be
+ *
+ * @param &lt;C&gt; type of configuration.
+ * @param &lt;R&gt; type of re-constructor.
+ * @param &lt;L&gt; type of listener.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public abstract class BasePairedViewsSparseReconstructor&lt;
+        C extends BasePairedViewsSparseReconstructorConfiguration&lt;C&gt;,
+        R extends BasePairedViewsSparseReconstructor&lt;C, R, L&gt;,
+        L extends BasePairedViewsSparseReconstructorListener&lt;R&gt;&gt; {
+
+    /**
+     * Minimum required number of views.
+     */
+    public static final int MIN_NUMBER_OF_VIEWS = 2;
+
+    /**
+     * Default scale.
+     */
+    protected static final double DEFAULT_SCALE = 1.0;
+
+    /**
+     * Current estimated camera in a metric stratum (i.e. up to scale).
+     */
+    protected EstimatedCamera mCurrentMetricEstimatedCamera;
+
+    /**
+     * Previous estimated camera in a metric stratum (i.e. up to scale).
+     */
+    protected EstimatedCamera mPreviousMetricEstimatedCamera;
+
+    /**
+     * Reconstructed 3D points for current pair of views in a metric stratum (i.e. up to scale).
+     */
+    protected List&lt;ReconstructedPoint3D&gt; mMetricReconstructedPoints;
+
+    /**
+     * Transformation to set reference frame on estimated pair of Euclidean cameras.
+     * This is used when estimating a new pair of Euclidean cameras to transform such pair to
+     * the location and rotation of the last estimated Euclidean camera so that the first camera
+     * of the pair is not referred to the world origin.
+     */
+    protected MetricTransformation3D mReferenceEuclideanTransformation;
+
+    /**
+     * Current estimated scale. This will typically converge to a constant value as more views are
+     * processed.
+     * The smaller the variance of estimated scale, the more accurate the scale will be.
+     */
+<span class="fc" id="L107">    protected double mCurrentScale = DEFAULT_SCALE;</span>
+
+    /**
+     * Current estimated camera in euclidean stratum (i.e. with actual scale).
+     */
+    protected EstimatedCamera mCurrentEuclideanEstimatedCamera;
+
+    /**
+     * Previous estimated camera in Euclidean stratum (i.e. with actual scale).
+     */
+    protected EstimatedCamera mPreviousEuclideanEstimatedCamera;
+
+    /**
+     * Reconstructed 3D points for current pair of views in Euclidean stratum (i.e. with actual
+     * scale).
+     */
+    protected List&lt;ReconstructedPoint3D&gt; mEuclideanReconstructedPoints;
+
+    /**
+     * Configuration for this re-constructor.
+     */
+    protected C mConfiguration;
+
+    /**
+     * Listener in charge of handling events such as when reconstruction starts,
+     * ends, when certain data is needed or when estimation of data has been
+     * computed.
+     */
+    protected L mListener;
+
+    /**
+     * Indicates whether reconstruction has failed or not.
+     */
+    protected volatile boolean mFailed;
+
+    /**
+     * Indicates whether reconstruction is running or not.
+     */
+    protected volatile boolean mRunning;
+
+    /**
+     * ID of previous view.
+     */
+<span class="fc" id="L150">    protected int mPreviousViewId = 0;</span>
+
+    /**
+     * ID of current view.
+     */
+    protected int mCurrentViewId;
+
+    /**
+     * Center of current Euclidean camera on last view pair.
+     */
+<span class="fc" id="L160">    protected Point3D mLastEuclideanCameraCenter = new InhomogeneousPoint3D();</span>
+
+    /**
+     * Rotation of current Euclidean camera on last view pair.
+     */
+    protected Rotation3D mLastEuclideanCameraRotation;
+
+    /**
+     * Center of current metric camera on last view pair.
+     */
+    private Point3D mLastMetricCameraCenter;
+
+    /**
+     * Rotation of current metric camera on last view pair.
+     */
+    private Rotation3D mLastMetricCameraRotation;
+
+    /**
+     * Inverse metric camera rotation. This is reused for memory efficiency.
+     */
+    private Rotation3D mInvMetricCameraRotation;
+
+    /**
+     * Current estimated fundamental matrix.
+     */
+    private EstimatedFundamentalMatrix mCurrentEstimatedFundamentalMatrix;
+
+    /**
+     * Indicates whether reconstruction has been cancelled or not.
+     */
+    private volatile boolean mCancelled;
+
+    /**
+     * Counter of number of processed views.
+     */
+    private int mViewCount;
+
+    /**
+     * Indicates whether reconstruction has finished or not.
+     */
+<span class="fc" id="L200">    private boolean mFinished = false;</span>
+
+    /**
+     * Samples on previous view.
+     */
+    private List&lt;Sample2D&gt; mPreviousViewSamples;
+
+    /**
+     * Samples on last processed view (i.e. current view).
+     */
+    private List&lt;Sample2D&gt; mCurrentViewSamples;
+
+    /**
+     * Matches between first and current view.
+     * Views are always processed in pairs.
+     */
+<span class="fc" id="L216">    private final List&lt;MatchedSamples&gt; mMatches = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Transformation to set reference frame on estimated pair of metric cameras.
+     * This is used when estimating a new pair of metric cameras to transform such pair to
+     * the location and rotation of last estimated metric camera so that the first camera of
+     * the pair is not referred to the world origin.
+     */
+    private EuclideanTransformation3D mReferenceMetricTransformation;
+
+    /**
+     * Constructor.
+     *
+     * @param configuration configuration for this re-constructor.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
+     */
+<span class="fc" id="L234">    protected BasePairedViewsSparseReconstructor(final C configuration, final L listener) {</span>
+<span class="pc bpc" id="L235" title="2 of 4 branches missed.">        if (configuration == null || listener == null) {</span>
+<span class="nc" id="L236">            throw new NullPointerException();</span>
+        }
+<span class="fc" id="L238">        mConfiguration = configuration;</span>
+<span class="fc" id="L239">        mListener = listener;</span>
+<span class="fc" id="L240">    }</span>
+
+    /**
+     * Gets configuration for this re-constructor.
+     *
+     * @return configuration for this reconstructor.
+     */
+    public C getConfiguration() {
+<span class="fc" id="L248">        return mConfiguration;</span>
+    }
+
+    /**
+     * Gets listener in charge of handling events such as when reconstruction
+     * starts, ends, when certain data is needed or when estimation of data has
+     * been computed.
+     *
+     * @return listener in charge of handling events.
+     */
+    public L getListener() {
+<span class="fc" id="L259">        return mListener;</span>
+    }
+
+    /**
+     * Indicates whether reconstruction is running or not.
+     *
+     * @return true if reconstruction is running, false if reconstruction has
+     * stopped for any reason.
+     */
+    public boolean isRunning() {
+<span class="fc" id="L269">        return mRunning;</span>
+    }
+
+    /**
+     * Indicates whether reconstruction has been cancelled or not.
+     *
+     * @return true if reconstruction has been cancelled, false otherwise.
+     */
+    public boolean isCancelled() {
+<span class="fc" id="L278">        return mCancelled;</span>
+    }
+
+    /**
+     * Indicates whether reconstruction has failed or not.
+     *
+     * @return true if reconstruction has failed, false otherwise.
+     */
+    public boolean hasFailed() {
+<span class="fc" id="L287">        return mFailed;</span>
+    }
+
+    /**
+     * Indicates whether the reconstruction has finished.
+     *
+     * @return true if reconstruction has finished, false otherwise.
+     */
+    public boolean isFinished() {
+<span class="fc" id="L296">        return mFinished;</span>
+    }
+
+    /**
+     * Gets counter of number of processed views.
+     *
+     * @return counter of number of processed views.
+     */
+    public int getViewCount() {
+<span class="fc" id="L305">        return mViewCount;</span>
+    }
+
+    /**
+     * Gets estimated fundamental matrix for current view.
+     * This fundamental matrix relates current view with the previously processed one.
+     *
+     * @return current estimated fundamental matrix.
+     */
+    public EstimatedFundamentalMatrix getCurrentEstimatedFundamentalMatrix() {
+<span class="fc" id="L315">        return mCurrentEstimatedFundamentalMatrix;</span>
+    }
+
+    /**
+     * Gets estimated euclidean camera for current view (i.e. with actual scale).
+     *
+     * @return current estimated euclidean camera.
+     */
+    public EstimatedCamera getCurrentEuclideanEstimatedCamera() {
+<span class="fc" id="L324">        return mCurrentEuclideanEstimatedCamera;</span>
+    }
+
+    /**
+     * Gets estimated Euclidean camera for previous view (i.e. with actual scale).
+     *
+     * @return previous estimated euclidean camera.
+     */
+    public EstimatedCamera getPreviousEuclideanEstimatedCamera() {
+<span class="fc" id="L333">        return mPreviousEuclideanEstimatedCamera;</span>
+    }
+
+    /**
+     * Gets Euclidean reconstructed 3D points (i.e. with actual scale) for current
+     * pair of views.
+     *
+     * @return active euclidean reconstructed 3D points.
+     */
+    public List&lt;ReconstructedPoint3D&gt; getEuclideanReconstructedPoints() {
+<span class="fc" id="L343">        return mEuclideanReconstructedPoints;</span>
+    }
+
+    /**
+     * Gets current estimated scale. This will typically converge to a constant value as more views are
+     * processed.
+     * The smaller the variance of estimated scale, the more accurate the scale will be.
+     *
+     * @return current estimated scale.
+     */
+    public double getCurrentScale() {
+<span class="fc" id="L354">        return mCurrentScale;</span>
+    }
+
+    /**
+     * Gets samples on previous view.
+     *
+     * @return samples on previous view.
+     */
+    public List&lt;Sample2D&gt; getPreviousViewSamples() {
+<span class="fc" id="L363">        return mPreviousViewSamples;</span>
+    }
+
+    /**
+     * Gets samples on current view.
+     *
+     * @return samples on current view.
+     */
+    public List&lt;Sample2D&gt; getCurrentViewSamples() {
+<span class="fc" id="L372">        return mCurrentViewSamples;</span>
+    }
+
+    /**
+     * Process one view-pair of all the available data during the reconstruction.
+     * This method can be called multiple times instead of {@link #start()} to build the
+     * reconstruction step by step, one view pair at a time.
+     * This method is useful when data is gathered on real time from a camera and the
+     * number of views is unknown.
+     *
+     * @return true if more views can be processed, false when reconstruction has finished.
+     */
+    public boolean processOneViewPair() {
+<span class="fc bfc" id="L385" title="All 4 branches covered.">        if (mViewCount == 0 &amp;&amp; !mRunning) {</span>
+
+<span class="fc" id="L387">            reset();</span>
+<span class="fc" id="L388">            mRunning = true;</span>
+
+            //noinspection unchecked
+<span class="fc" id="L391">            mListener.onStart((R) this);</span>
+        }
+
+        //noinspection unchecked
+<span class="fc bfc" id="L395" title="All 2 branches covered.">        if (!mListener.hasMoreViewsAvailable((R) this)) {</span>
+            //noinspection unchecked
+<span class="fc" id="L397">            mListener.onFinish((R) this);</span>
+<span class="fc" id="L398">            mRunning = false;</span>
+<span class="fc" id="L399">            mFinished = true;</span>
+<span class="fc" id="L400">            return false;</span>
+        }
+
+<span class="fc" id="L403">        mPreviousViewSamples = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L404">        mCurrentViewSamples = new ArrayList&lt;&gt;();</span>
+        //noinspection unchecked
+<span class="fc" id="L406">        mListener.onRequestSamplesForCurrentViewPair((R) this,</span>
+                mViewCount, mViewCount + 1,
+                mPreviousViewSamples, mCurrentViewSamples);
+
+        final boolean processed;
+<span class="fc" id="L411">        mCurrentEstimatedFundamentalMatrix = null;</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">        if (isFirstViewPair()) {</span>
+            // for first view we simply keep samples (if enough are provided)
+<span class="fc" id="L414">            processed = processFirstViewPair();</span>
+        } else {
+<span class="fc" id="L416">            processed = processAdditionalViewPair();</span>
+        }
+
+<span class="fc bfc" id="L419" title="All 2 branches covered.">        if (processed) {</span>
+<span class="fc" id="L420">            mViewCount += 2;</span>
+        }
+
+<span class="fc bfc" id="L423" title="All 2 branches covered.">        if (mCancelled) {</span>
+            //noinspection unchecked
+<span class="fc" id="L425">            mListener.onCancel((R) this);</span>
+        }
+
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">        return !mFinished;</span>
+    }
+
+    /**
+     * Indicates whether current view pair is the first one.
+     *
+     * @return true if current view pair is the first one, false otherwise.
+     */
+    public boolean isFirstViewPair() {
+<span class="fc bfc" id="L437" title="All 2 branches covered.">        return mViewCount == 0;</span>
+    }
+
+    /**
+     * Indicates whether current view pair is an additional one.
+     *
+     * @return true if current view pair is an additional one, false otherwise.
+     */
+    public boolean isAdditionalViewPair() {
+<span class="fc bfc" id="L446" title="All 2 branches covered.">        return !isFirstViewPair();</span>
+    }
+
+    /**
+     * Starts reconstruction of all available data to reconstruct the whole scene.
+     * If reconstruction has already started and is running, calling this method
+     * has no effect.
+     * This method is useful when all data is available before starting the reconstruction.
+     */
+    public void start() {
+<span class="pc bpc" id="L456" title="1 of 2 branches missed.">        if (mRunning) {</span>
+            // already started
+<span class="nc" id="L458">            return;</span>
+        }
+
+<span class="fc bfc" id="L461" title="All 2 branches covered.">        while (processOneViewPair()) {</span>
+<span class="fc bfc" id="L462" title="All 2 branches covered.">            if (mCancelled) {</span>
+<span class="fc" id="L463">                break;</span>
+            }
+        }
+<span class="fc" id="L466">    }</span>
+
+    /**
+     * Cancels reconstruction.
+     * If reconstruction has already been cancelled, calling this method has no effect.
+     */
+    public void cancel() {
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">        if (mCancelled) {</span>
+            // already cancelled
+<span class="nc" id="L475">            return;</span>
+        }
+
+<span class="fc" id="L478">        mCancelled = true;</span>
+<span class="fc" id="L479">    }</span>
+
+    /**
+     * Resets this instance so that a reconstruction can be started from the beginning without cancelling
+     * current one.
+     */
+    public void reset() {
+<span class="pc bpc" id="L486" title="1 of 2 branches missed.">        if (mPreviousViewSamples != null) {</span>
+<span class="nc" id="L487">            mPreviousViewSamples.clear();</span>
+        }
+<span class="pc bpc" id="L489" title="1 of 2 branches missed.">        if (mCurrentViewSamples != null) {</span>
+<span class="nc" id="L490">            mCurrentViewSamples.clear();</span>
+        }
+
+<span class="fc" id="L493">        mMatches.clear();</span>
+
+<span class="fc" id="L495">        mCancelled = mFailed = false;</span>
+<span class="fc" id="L496">        mViewCount = 0;</span>
+<span class="fc" id="L497">        mRunning = false;</span>
+
+<span class="fc" id="L499">        mCurrentEstimatedFundamentalMatrix = null;</span>
+<span class="fc" id="L500">        mCurrentMetricEstimatedCamera = mPreviousMetricEstimatedCamera = null;</span>
+<span class="fc" id="L501">        mMetricReconstructedPoints = null;</span>
+<span class="fc" id="L502">        mCurrentScale = DEFAULT_SCALE;</span>
+<span class="fc" id="L503">        mCurrentEuclideanEstimatedCamera = mPreviousEuclideanEstimatedCamera = null;</span>
+<span class="fc" id="L504">        mEuclideanReconstructedPoints = null;</span>
+
+<span class="fc" id="L506">        mPreviousViewId = 0;</span>
+<span class="fc" id="L507">        mCurrentViewId = 0;</span>
+
+<span class="fc" id="L509">        mFinished = false;</span>
+<span class="fc" id="L510">    }</span>
+
+    /**
+     * Gets estimated metric camera for current view (i.e. up to scale).
+     *
+     * @return current estimated metric camera.
+     */
+    protected EstimatedCamera getCurrentMetricEstimatedCamera() {
+<span class="fc" id="L518">        return mCurrentMetricEstimatedCamera;</span>
+    }
+
+    /**
+     * Gets estimated camera for previous view (i.e. up to scale).
+     *
+     * @return previous estimated metric camera.
+     */
+    protected EstimatedCamera getPreviousMetricEstimatedCamera() {
+<span class="fc" id="L527">        return mPreviousMetricEstimatedCamera;</span>
+    }
+
+    /**
+     * Gets metric reconstructed 3D points (i.e. up to scale) for current pair of views.
+     *
+     * @return active metric reconstructed 3D points.
+     */
+    protected List&lt;ReconstructedPoint3D&gt; getMetricReconstructedPoints() {
+<span class="fc" id="L536">        return mMetricReconstructedPoints;</span>
+    }
+
+    /**
+     * Transforms cameras on current pair of views so that they are referred to
+     * last kept location and rotation and upgrades cameras from metric stratum to
+     * Euclidean stratum.
+     *
+     * @param isInitialPairOfViews   true if initial pair of views is being processed, false otherwise.
+     * @param hasAbsoluteOrientation true if absolute orientation is required, false otherwise.
+     * @return true if cameras were successfully transformed.
+     */
+    protected boolean transformPairOfCamerasAndPoints(final boolean isInitialPairOfViews,
+                                                      final boolean hasAbsoluteOrientation) {
+<span class="fc bfc" id="L550" title="All 2 branches covered.">        if (isInitialPairOfViews) {</span>
+            // initial pair does not need transformation
+<span class="fc" id="L552">            return true;</span>
+        }
+
+<span class="pc bpc" id="L555" title="2 of 4 branches missed.">        if (mPreviousMetricEstimatedCamera == null || mCurrentMetricEstimatedCamera == null) {</span>
+<span class="nc" id="L556">            return false;</span>
+        }
+
+<span class="fc" id="L559">        final PinholeCamera previousMetricCamera = mPreviousMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L560">        final PinholeCamera currentMetricCamera = mCurrentMetricEstimatedCamera.getCamera();</span>
+<span class="pc bpc" id="L561" title="2 of 4 branches missed.">        if (previousMetricCamera == null || currentMetricCamera == null) {</span>
+<span class="nc" id="L562">            return false;</span>
+        }
+
+<span class="fc bfc" id="L565" title="All 2 branches covered.">        if (mInvMetricCameraRotation == null) {</span>
+<span class="fc" id="L566">            mInvMetricCameraRotation = mLastMetricCameraRotation.inverseRotationAndReturnNew();</span>
+        } else {
+<span class="fc" id="L568">            mLastMetricCameraRotation.inverseRotation(mInvMetricCameraRotation);</span>
+        }
+
+<span class="fc bfc" id="L571" title="All 2 branches covered.">        if (mReferenceMetricTransformation == null) {</span>
+<span class="fc" id="L572">            mReferenceMetricTransformation = new EuclideanTransformation3D(mInvMetricCameraRotation);</span>
+        } else {
+<span class="fc" id="L574">            mReferenceMetricTransformation.setRotation(mInvMetricCameraRotation);</span>
+        }
+<span class="fc" id="L576">        mReferenceMetricTransformation.setTranslation(mLastMetricCameraCenter);</span>
+
+        try {
+<span class="fc" id="L579">            mReferenceMetricTransformation.transform(previousMetricCamera);</span>
+<span class="fc" id="L580">            mReferenceMetricTransformation.transform(currentMetricCamera);</span>
+
+            Point3D p;
+<span class="fc bfc" id="L583" title="All 2 branches covered.">            for (final ReconstructedPoint3D metricReconstructedPoint : mMetricReconstructedPoints) {</span>
+<span class="fc" id="L584">                p = metricReconstructedPoint.getPoint();</span>
+<span class="fc" id="L585">                mReferenceMetricTransformation.transform(p, p);</span>
+<span class="fc" id="L586">            }</span>
+<span class="fc" id="L587">            return true;</span>
+<span class="nc" id="L588">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L589">            return false;</span>
+        }
+    }
+
+    /**
+     * Processes data for the first view pair.
+     *
+     * @return true if view pair was successfully processed, false otherwise.
+     */
+    private boolean processFirstViewPair() {
+<span class="fc" id="L599">        return processViewPair(true);</span>
+    }
+
+    /**
+     * Processes data for an additional view pair.
+     *
+     * @return true if view pair was successfully processed, false otherwise.
+     */
+    private boolean processAdditionalViewPair() {
+<span class="fc" id="L608">        return processViewPair(false);</span>
+    }
+
+    /**
+     * Processed data for a view pair.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed,
+     *                             false otherwise.
+     * @return true if view pair was successfully processed, false otherwise.
+     */
+    private boolean processViewPair(final boolean isInitialPairOfViews) {
+        // for second view, check that we have enough samples
+<span class="pc bpc" id="L620" title="1 of 2 branches missed.">        if (hasEnoughSamples(mCurrentViewSamples)) {</span>
+
+            // find matches
+<span class="fc" id="L623">            mMatches.clear();</span>
+<span class="fc" id="L624">            int viewId1 = mViewCount;</span>
+<span class="fc" id="L625">            int viewId2 = mViewCount + 1;</span>
+            //noinspection unchecked
+<span class="fc" id="L627">            mListener.onRequestMatches((R) this, viewId1, viewId2,</span>
+                    mPreviousViewSamples, mCurrentViewSamples, mMatches);
+
+<span class="pc bpc" id="L630" title="1 of 2 branches missed.">            if (hasEnoughMatches(mMatches)) {</span>
+                // if enough matches are retrieved, attempt to compute
+                // fundamental matrix
+<span class="pc bpc" id="L633" title="1 of 2 branches missed.">                if ((mConfiguration.isGeneralSceneAllowed() &amp;&amp;</span>
+<span class="fc bfc" id="L634" title="All 2 branches covered.">                        estimateFundamentalMatrix(mMatches, viewId1, viewId2)) ||</span>
+<span class="pc bpc" id="L635" title="1 of 2 branches missed.">                        (mConfiguration.isPlanarSceneAllowed() &amp;&amp;</span>
+<span class="fc bfc" id="L636" title="All 2 branches covered.">                                estimatePlanarFundamentalMatrix(mMatches, viewId1, viewId2))) {</span>
+                    // fundamental matrix could be estimated
+                    // noinspection unchecked
+<span class="fc" id="L639">                    mListener.onSamplesAccepted((R) this, viewId1, viewId2,</span>
+                            mPreviousViewSamples, mCurrentViewSamples);
+<span class="fc" id="L641">                    mPreviousViewId = viewId1;</span>
+<span class="fc" id="L642">                    mCurrentViewId = viewId2;</span>
+
+                    //noinspection unchecked
+<span class="fc" id="L645">                    mListener.onFundamentalMatrixEstimated((R) this, viewId1, viewId2,</span>
+                            mCurrentEstimatedFundamentalMatrix);
+
+<span class="fc bfc" id="L648" title="All 2 branches covered.">                    if (estimatePairOfCamerasAndPoints(isInitialPairOfViews)) {</span>
+                        //noinspection unchecked
+<span class="fc" id="L650">                        mListener.onEuclideanCameraPairEstimated((R) this,</span>
+                                mPreviousViewId, mCurrentViewId, mCurrentScale,
+                                mPreviousEuclideanEstimatedCamera,
+                                mCurrentEuclideanEstimatedCamera);
+                        //noinspection unchecked
+<span class="fc" id="L655">                        mListener.onEuclideanReconstructedPointsEstimated((R) this,</span>
+                                mPreviousViewId, mCurrentViewId, mCurrentScale,
+                                mEuclideanReconstructedPoints);
+<span class="fc" id="L658">                        return true;</span>
+                    } else {
+                        // pair of cameras estimation failed
+<span class="fc" id="L661">                        mFailed = true;</span>
+                        //noinspection unchecked
+<span class="fc" id="L663">                        mListener.onFail((R) this);</span>
+<span class="fc" id="L664">                        return false;</span>
+                    }
+                } else {
+                    // estimation of fundamental matrix failed
+                    //noinspection unchecked
+<span class="fc" id="L669">                    mListener.onSamplesRejected((R) this,</span>
+                            mPreviousViewId, mCurrentViewId,
+                            mPreviousViewSamples, mCurrentViewSamples);
+<span class="fc" id="L672">                    return false;</span>
+                }
+            }
+        }
+
+        //noinspection unchecked
+<span class="nc" id="L678">        mListener.onSamplesRejected((R) this,</span>
+                mPreviousViewId, mCurrentViewId,
+                mPreviousViewSamples, mCurrentViewSamples);
+<span class="nc" id="L681">        return false;</span>
+    }
+
+    /**
+     * Indicates whether implementations of a re-constructor uses absolute orientation or
+     * not.
+     *
+     * @return true if absolute orientation is used, false, otherwise.
+     */
+    protected abstract boolean hasAbsoluteOrientation();
+
+    /**
+     * Indicates whether there are enough samples to estimate a fundamental
+     * matrix.
+     *
+     * @param samples samples to check.
+     * @return true if there are enough samples, false otherwise.
+     */
+    private boolean hasEnoughSamples(final List&lt;Sample2D&gt; samples) {
+<span class="pc bpc" id="L700" title="1 of 2 branches missed.">        return hasEnoughSamplesOrMatches(samples != null ? samples.size() : 0);</span>
+    }
+
+    /**
+     * Indicates whether there are enough matches to estimate a fundamental
+     * matrix.
+     *
+     * @param matches matches to check.
+     * @return true if there are enough matches, false otherwise.
+     */
+    private boolean hasEnoughMatches(final List&lt;MatchedSamples&gt; matches) {
+<span class="pc bpc" id="L711" title="1 of 2 branches missed.">        return hasEnoughSamplesOrMatches(matches != null ? matches.size() : 0);</span>
+    }
+
+    /**
+     * Indicates whether there are enough matches or samples to estimate a
+     * fundamental matrix.
+     *
+     * @param count number of matches or samples.
+     * @return true if there are enough matches or samples, false otherwise.
+     */
+    private boolean hasEnoughSamplesOrMatches(final int count) {
+<span class="pc bpc" id="L722" title="1 of 2 branches missed.">        if (mConfiguration.isGeneralSceneAllowed()) {</span>
+<span class="pc bpc" id="L723" title="1 of 2 branches missed.">            if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==</span>
+                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+<span class="nc bnc" id="L725" title="All 2 branches missed.">                return count &gt;= EightPointsFundamentalMatrixEstimator.</span>
+                        MIN_REQUIRED_POINTS;
+<span class="pc bpc" id="L727" title="1 of 2 branches missed.">            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==</span>
+                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+<span class="pc bpc" id="L729" title="1 of 2 branches missed.">                return count &gt;= SevenPointsFundamentalMatrixEstimator.</span>
+                        MIN_REQUIRED_POINTS;
+            }
+<span class="nc bnc" id="L732" title="All 2 branches missed.">        } else if (mConfiguration.isPlanarSceneAllowed()) {</span>
+<span class="nc bnc" id="L733" title="All 2 branches missed.">            return count &gt;= ProjectiveTransformation2DRobustEstimator.</span>
+                    MINIMUM_SIZE;
+        }
+<span class="nc" id="L736">        return false;</span>
+    }
+
+    /**
+     * Estimates fundamental matrix for provided matches, when 3D points lay in
+     * a general non-degenerate 3D configuration.
+     *
+     * @param matches pairs of matches to find fundamental matrix.
+     * @param viewId1 id of first view.
+     * @param viewId2 id of second view.
+     * @return true if estimation succeeded, false otherwise.
+     */
+    private boolean estimateFundamentalMatrix(final List&lt;MatchedSamples&gt; matches,
+                                              final int viewId1, final int viewId2) {
+<span class="pc bpc" id="L750" title="1 of 2 branches missed.">        if (matches == null) {</span>
+<span class="nc" id="L751">            return false;</span>
+        }
+
+<span class="fc" id="L754">        final int count = matches.size();</span>
+<span class="fc" id="L755">        final List&lt;Sample2D&gt; leftSamples = new ArrayList&lt;&gt;(count);</span>
+<span class="fc" id="L756">        final List&lt;Sample2D&gt; rightSamples = new ArrayList&lt;&gt;(count);</span>
+<span class="fc" id="L757">        final List&lt;Point2D&gt; leftPoints = new ArrayList&lt;&gt;(count);</span>
+<span class="fc" id="L758">        final List&lt;Point2D&gt; rightPoints = new ArrayList&lt;&gt;(count);</span>
+<span class="fc" id="L759">        final double[] qualityScores = new double[count];</span>
+        double principalPointX;
+        double principalPointY;
+<span class="fc bfc" id="L762" title="All 2 branches covered.">        if (mConfiguration.getPairedCamerasEstimatorMethod() ==</span>
+                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
+<span class="fc bfc" id="L764" title="All 2 branches covered.">                mConfiguration.getPairedCamerasEstimatorMethod() ==</span>
+                        InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+<span class="fc" id="L766">            principalPointX = mConfiguration.getPrincipalPointX();</span>
+<span class="fc" id="L767">            principalPointY = mConfiguration.getPrincipalPointY();</span>
+        } else {
+<span class="fc" id="L769">            principalPointX = principalPointY = 0.0;</span>
+        }
+
+<span class="fc" id="L772">        int i = 0;</span>
+<span class="fc bfc" id="L773" title="All 2 branches covered.">        for (final MatchedSamples match : matches) {</span>
+<span class="fc" id="L774">            final Sample2D[] samples = match.getSamples();</span>
+<span class="pc bpc" id="L775" title="1 of 2 branches missed.">            if (samples.length != MIN_NUMBER_OF_VIEWS) {</span>
+<span class="nc" id="L776">                return false;</span>
+            }
+
+<span class="fc" id="L779">            leftSamples.add(samples[0]);</span>
+<span class="fc" id="L780">            rightSamples.add(samples[1]);</span>
+
+<span class="fc" id="L782">            final Point2D leftPoint = Point2D.create();</span>
+<span class="fc" id="L783">            leftPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L784">                    samples[0].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L785">                    samples[0].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L786">            leftPoints.add(leftPoint);</span>
+
+<span class="fc" id="L788">            final Point2D rightPoint = Point2D.create();</span>
+<span class="fc" id="L789">            rightPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L790">                    samples[1].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L791">                    samples[1].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L792">            rightPoints.add(rightPoint);</span>
+
+<span class="fc" id="L794">            qualityScores[i] = match.getQualityScore();</span>
+<span class="fc" id="L795">            i++;</span>
+<span class="fc" id="L796">        }</span>
+
+        try {
+<span class="fc" id="L799">            final FundamentalMatrixRobustEstimator estimator =</span>
+<span class="fc" id="L800">                    FundamentalMatrixRobustEstimator.create(leftPoints,</span>
+                            rightPoints, qualityScores, mConfiguration.
+<span class="fc" id="L802">                                    getRobustFundamentalMatrixEstimatorMethod());</span>
+<span class="fc" id="L803">            estimator.setNonRobustFundamentalMatrixEstimatorMethod(</span>
+                    mConfiguration.
+<span class="fc" id="L805">                            getNonRobustFundamentalMatrixEstimatorMethod());</span>
+<span class="fc" id="L806">            estimator.setResultRefined(</span>
+<span class="fc" id="L807">                    mConfiguration.isFundamentalMatrixRefined());</span>
+<span class="fc" id="L808">            estimator.setCovarianceKept(</span>
+<span class="fc" id="L809">                    mConfiguration.isFundamentalMatrixCovarianceKept());</span>
+<span class="fc" id="L810">            estimator.setConfidence(</span>
+<span class="fc" id="L811">                    mConfiguration.getFundamentalMatrixConfidence());</span>
+<span class="fc" id="L812">            estimator.setMaxIterations(</span>
+<span class="fc" id="L813">                    mConfiguration.getFundamentalMatrixMaxIterations());</span>
+
+<span class="pc bpc" id="L815" title="5 of 6 branches missed.">            switch (mConfiguration.getRobustFundamentalMatrixEstimatorMethod()) {</span>
+                case LMEDS:
+<span class="nc" id="L817">                    ((LMedSFundamentalMatrixRobustEstimator) estimator).</span>
+<span class="nc" id="L818">                            setStopThreshold(mConfiguration.</span>
+<span class="nc" id="L819">                                    getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L820">                    break;</span>
+                case MSAC:
+<span class="nc" id="L822">                    ((MSACFundamentalMatrixRobustEstimator) estimator).</span>
+<span class="nc" id="L823">                            setThreshold(mConfiguration.</span>
+<span class="nc" id="L824">                                    getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L825">                    break;</span>
+                case PROMEDS:
+<span class="nc" id="L827">                    ((PROMedSFundamentalMatrixRobustEstimator) estimator).</span>
+<span class="nc" id="L828">                            setStopThreshold(mConfiguration.</span>
+<span class="nc" id="L829">                                    getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L830">                    break;</span>
+                case PROSAC:
+<span class="fc" id="L832">                    final PROSACFundamentalMatrixRobustEstimator prosacEstimator =</span>
+                            (PROSACFundamentalMatrixRobustEstimator) estimator;
+<span class="fc" id="L834">                    prosacEstimator.setThreshold(</span>
+<span class="fc" id="L835">                            mConfiguration.getFundamentalMatrixThreshold());</span>
+<span class="fc" id="L836">                    prosacEstimator.setComputeAndKeepInliersEnabled(</span>
+                            mConfiguration.
+<span class="fc" id="L838">                                    getFundamentalMatrixComputeAndKeepInliers());</span>
+<span class="fc" id="L839">                    prosacEstimator.setComputeAndKeepResidualsEnabled(</span>
+                            mConfiguration.
+<span class="fc" id="L841">                                    getFundamentalMatrixComputeAndKeepResiduals());</span>
+<span class="fc" id="L842">                    break;</span>
+                case RANSAC:
+<span class="nc" id="L844">                    final RANSACFundamentalMatrixRobustEstimator ransacEstimator =</span>
+                            (RANSACFundamentalMatrixRobustEstimator) estimator;
+<span class="nc" id="L846">                    ransacEstimator.setThreshold(</span>
+<span class="nc" id="L847">                            mConfiguration.getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L848">                    ransacEstimator.setComputeAndKeepInliersEnabled(</span>
+                            mConfiguration.
+<span class="nc" id="L850">                                    getFundamentalMatrixComputeAndKeepInliers());</span>
+<span class="nc" id="L851">                    ransacEstimator.setComputeAndKeepResidualsEnabled(</span>
+                            mConfiguration.
+<span class="nc" id="L853">                                    getFundamentalMatrixComputeAndKeepResiduals());</span>
+<span class="nc" id="L854">                    break;</span>
+                default:
+                    break;
+            }
+
+
+<span class="fc" id="L860">            final FundamentalMatrix fundamentalMatrix = estimator.estimate();</span>
+
+<span class="fc" id="L862">            mCurrentEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();</span>
+<span class="fc" id="L863">            mCurrentEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L864">            mCurrentEstimatedFundamentalMatrix.setViewId1(viewId1);</span>
+<span class="fc" id="L865">            mCurrentEstimatedFundamentalMatrix.setViewId2(viewId2);</span>
+<span class="fc" id="L866">            mCurrentEstimatedFundamentalMatrix.setCovariance(</span>
+<span class="fc" id="L867">                    estimator.getCovariance());</span>
+
+            // determine quality score and inliers
+<span class="fc" id="L870">            final InliersData inliersData = estimator.getInliersData();</span>
+<span class="pc bpc" id="L871" title="1 of 2 branches missed.">            if (inliersData != null) {</span>
+<span class="fc" id="L872">                final int numInliers = inliersData.getNumInliers();</span>
+<span class="fc" id="L873">                final BitSet inliers = inliersData.getInliers();</span>
+<span class="fc" id="L874">                final int length = inliers.length();</span>
+<span class="fc" id="L875">                double fundamentalMatrixQualityScore = 0.0;</span>
+<span class="fc bfc" id="L876" title="All 2 branches covered.">                for (i = 0; i &lt; length; i++) {</span>
+<span class="pc bpc" id="L877" title="1 of 2 branches missed.">                    if (inliers.get(i)) {</span>
+                        // inlier
+<span class="fc" id="L879">                        fundamentalMatrixQualityScore +=</span>
+                                qualityScores[i] / numInliers;
+                    }
+                }
+<span class="fc" id="L883">                mCurrentEstimatedFundamentalMatrix.setQualityScore(</span>
+                        fundamentalMatrixQualityScore);
+<span class="fc" id="L885">                mCurrentEstimatedFundamentalMatrix.setInliers(inliers);</span>
+            }
+
+            // store left/right samples
+<span class="fc" id="L889">            mCurrentEstimatedFundamentalMatrix.setLeftSamples(leftSamples);</span>
+<span class="fc" id="L890">            mCurrentEstimatedFundamentalMatrix.setRightSamples(rightSamples);</span>
+
+<span class="fc" id="L892">            return true;</span>
+<span class="fc" id="L893">        } catch (final Exception e) {</span>
+<span class="fc" id="L894">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates fundamental matrix for provided matches, when 3D points lay in
+     * a planar 3D scene.
+     *
+     * @param matches pairs of matches to find fundamental matrix.
+     * @param viewId1 id of first view.
+     * @param viewId2 id of second view.
+     * @return true if estimation succeeded, false otherwise.
+     */
+    private boolean estimatePlanarFundamentalMatrix(
+            final List&lt;MatchedSamples&gt; matches, final int viewId1, final int viewId2) {
+<span class="pc bpc" id="L909" title="1 of 2 branches missed.">        if (matches == null) {</span>
+<span class="nc" id="L910">            return false;</span>
+        }
+
+<span class="fc" id="L913">        final int count = matches.size();</span>
+<span class="fc" id="L914">        final List&lt;Sample2D&gt; leftSamples = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L915">        final List&lt;Sample2D&gt; rightSamples = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L916">        final List&lt;Point2D&gt; leftPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L917">        final List&lt;Point2D&gt; rightPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L918">        final double[] qualityScores = new double[count];</span>
+        final double principalPointX;
+        final double principalPointY;
+<span class="fc bfc" id="L921" title="All 2 branches covered.">        if (mConfiguration.getPairedCamerasEstimatorMethod() ==</span>
+                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
+<span class="fc bfc" id="L923" title="All 2 branches covered.">                mConfiguration.getPairedCamerasEstimatorMethod() ==</span>
+                        InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+<span class="fc" id="L925">            principalPointX = mConfiguration.getPrincipalPointX();</span>
+<span class="fc" id="L926">            principalPointY = mConfiguration.getPrincipalPointY();</span>
+        } else {
+<span class="fc" id="L928">            principalPointX = principalPointY = 0.0;</span>
+        }
+
+<span class="fc" id="L931">        int i = 0;</span>
+<span class="fc bfc" id="L932" title="All 2 branches covered.">        for (final MatchedSamples match : matches) {</span>
+<span class="fc" id="L933">            final Sample2D[] samples = match.getSamples();</span>
+<span class="pc bpc" id="L934" title="1 of 2 branches missed.">            if (samples.length != MIN_NUMBER_OF_VIEWS) {</span>
+<span class="nc" id="L935">                return false;</span>
+            }
+
+<span class="fc" id="L938">            leftSamples.add(samples[0]);</span>
+<span class="fc" id="L939">            rightSamples.add(samples[1]);</span>
+
+<span class="fc" id="L941">            final Point2D leftPoint = Point2D.create();</span>
+<span class="fc" id="L942">            leftPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L943">                    samples[0].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L944">                    samples[0].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L945">            leftPoints.add(leftPoint);</span>
+
+<span class="fc" id="L947">            final Point2D rightPoint = Point2D.create();</span>
+<span class="fc" id="L948">            rightPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L949">                    samples[1].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L950">                    samples[1].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L951">            rightPoints.add(rightPoint);</span>
+
+<span class="fc" id="L953">            qualityScores[i] = match.getQualityScore();</span>
+<span class="fc" id="L954">            i++;</span>
+<span class="fc" id="L955">        }</span>
+
+        try {
+            final PointCorrespondenceProjectiveTransformation2DRobustEstimator
+<span class="fc" id="L959">                    homographyEstimator =</span>
+                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.
+<span class="fc" id="L961">                            create(mConfiguration.</span>
+<span class="fc" id="L962">                                    getRobustPlanarHomographyEstimatorMethod());</span>
+<span class="fc" id="L963">            homographyEstimator.setResultRefined(</span>
+<span class="fc" id="L964">                    mConfiguration.isPlanarHomographyRefined());</span>
+<span class="fc" id="L965">            homographyEstimator.setCovarianceKept(</span>
+<span class="fc" id="L966">                    mConfiguration.isPlanarHomographyCovarianceKept());</span>
+<span class="fc" id="L967">            homographyEstimator.setConfidence(</span>
+<span class="fc" id="L968">                    mConfiguration.getPlanarHomographyConfidence());</span>
+<span class="fc" id="L969">            homographyEstimator.setMaxIterations(</span>
+<span class="fc" id="L970">                    mConfiguration.getPlanarHomographyMaxIterations());</span>
+
+<span class="pc bpc" id="L972" title="5 of 6 branches missed.">            switch (mConfiguration.getRobustPlanarHomographyEstimatorMethod()) {</span>
+                case LMEDS:
+<span class="nc" id="L974">                    ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)</span>
+<span class="nc" id="L975">                            homographyEstimator).setStopThreshold(</span>
+<span class="nc" id="L976">                            mConfiguration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L977">                    break;</span>
+                case MSAC:
+<span class="nc" id="L979">                    ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)</span>
+<span class="nc" id="L980">                            homographyEstimator).setThreshold(</span>
+<span class="nc" id="L981">                            mConfiguration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L982">                    break;</span>
+                case PROMEDS:
+<span class="fc" id="L984">                    ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)</span>
+<span class="fc" id="L985">                            homographyEstimator).setStopThreshold(</span>
+<span class="fc" id="L986">                            mConfiguration.getPlanarHomographyThreshold());</span>
+<span class="fc" id="L987">                    break;</span>
+                case PROSAC:
+<span class="nc" id="L989">                    PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =</span>
+                            (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
+
+<span class="nc" id="L992">                    prosacHomographyEstimator.setThreshold(</span>
+<span class="nc" id="L993">                            mConfiguration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L994">                    prosacHomographyEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="nc" id="L995">                            mConfiguration.getPlanarHomographyComputeAndKeepInliers());</span>
+<span class="nc" id="L996">                    prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="nc" id="L997">                            mConfiguration.getPlanarHomographyComputeAndKeepResiduals());</span>
+<span class="nc" id="L998">                    break;</span>
+                case RANSAC:
+<span class="nc" id="L1000">                    RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =</span>
+                            (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
+
+<span class="nc" id="L1003">                    ransacHomographyEstimator.setThreshold(</span>
+<span class="nc" id="L1004">                            mConfiguration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L1005">                    ransacHomographyEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="nc" id="L1006">                            mConfiguration.getPlanarHomographyComputeAndKeepInliers());</span>
+<span class="nc" id="L1007">                    ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="nc" id="L1008">                            mConfiguration.getPlanarHomographyComputeAndKeepResiduals());</span>
+<span class="nc" id="L1009">                    break;</span>
+                default:
+                    break;
+            }
+
+            final PlanarBestFundamentalMatrixEstimatorAndReconstructor
+<span class="fc" id="L1015">                    fundamentalMatrixEstimator =</span>
+                    new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
+<span class="fc" id="L1017">            fundamentalMatrixEstimator.setHomographyEstimator(</span>
+                    homographyEstimator);
+<span class="fc" id="L1019">            fundamentalMatrixEstimator.setLeftAndRightPoints(leftPoints,</span>
+                    rightPoints);
+<span class="fc" id="L1021">            fundamentalMatrixEstimator.setQualityScores(qualityScores);</span>
+
+<span class="fc" id="L1023">            PinholeCameraIntrinsicParameters intrinsic1 = null;</span>
+<span class="fc" id="L1024">            PinholeCameraIntrinsicParameters intrinsic2 = null;</span>
+<span class="fc bfc" id="L1025" title="All 2 branches covered.">            if (mConfiguration.areIntrinsicParametersKnown()) {</span>
+                //noinspection unchecked
+<span class="fc" id="L1027">                intrinsic1 = mListener.onIntrinsicParametersRequested((R) this, viewId1);</span>
+                //noinspection unchecked
+<span class="fc" id="L1029">                intrinsic2 = mListener.onIntrinsicParametersRequested((R) this, viewId2);</span>
+            }
+<span class="pc bpc" id="L1031" title="1 of 4 branches missed.">            if (intrinsic1 == null &amp;&amp; intrinsic2 == null) {</span>
+                // estimate homography
+<span class="fc" id="L1033">                final ProjectiveTransformation2D homography = homographyEstimator.</span>
+<span class="fc" id="L1034">                        estimate();</span>
+
+                // estimate intrinsic parameters using the Image of Absolute
+                // Conic (IAC)
+<span class="fc" id="L1038">                final List&lt;Transformation2D&gt; homographies = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1039">                homographies.add(homography);</span>
+
+<span class="fc" id="L1041">                final ImageOfAbsoluteConicEstimator iacEstimator =</span>
+                        new LMSEImageOfAbsoluteConicEstimator(homographies);
+<span class="fc" id="L1043">                final ImageOfAbsoluteConic iac = iacEstimator.estimate();</span>
+
+<span class="fc" id="L1045">                intrinsic1 = intrinsic2 = iac.getIntrinsicParameters();</span>
+
+<span class="pc bpc" id="L1047" title="1 of 2 branches missed.">            } else if (intrinsic1 == null) { // &amp;&amp; intrinsic2 != null</span>
+<span class="nc" id="L1048">                intrinsic1 = intrinsic2;</span>
+<span class="pc bpc" id="L1049" title="1 of 2 branches missed.">            } else if (intrinsic2 == null) { // &amp;&amp; intrinsic1 != null</span>
+<span class="nc" id="L1050">                intrinsic2 = intrinsic1;</span>
+            }
+<span class="fc" id="L1052">            fundamentalMatrixEstimator.setLeftIntrinsics(intrinsic1);</span>
+<span class="fc" id="L1053">            fundamentalMatrixEstimator.setRightIntrinsics(intrinsic2);</span>
+
+<span class="fc" id="L1055">            fundamentalMatrixEstimator.estimateAndReconstruct();</span>
+
+<span class="fc" id="L1057">            final FundamentalMatrix fundamentalMatrix =</span>
+<span class="fc" id="L1058">                    fundamentalMatrixEstimator.getFundamentalMatrix();</span>
+
+<span class="fc" id="L1060">            mCurrentEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();</span>
+<span class="fc" id="L1061">            mCurrentEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L1062">            mCurrentEstimatedFundamentalMatrix.setViewId1(viewId1);</span>
+<span class="fc" id="L1063">            mCurrentEstimatedFundamentalMatrix.setViewId2(viewId2);</span>
+
+            // determine quality score and inliers
+<span class="fc" id="L1066">            final InliersData inliersData = homographyEstimator.getInliersData();</span>
+<span class="pc bpc" id="L1067" title="1 of 2 branches missed.">            if (inliersData != null) {</span>
+<span class="fc" id="L1068">                final int numInliers = inliersData.getNumInliers();</span>
+<span class="fc" id="L1069">                final BitSet inliers = inliersData.getInliers();</span>
+<span class="fc" id="L1070">                final int length = inliers.length();</span>
+<span class="fc" id="L1071">                double fundamentalMatrixQualityScore = 0.0;</span>
+<span class="fc bfc" id="L1072" title="All 2 branches covered.">                for (i = 0; i &lt; length; i++) {</span>
+<span class="fc bfc" id="L1073" title="All 2 branches covered.">                    if (inliers.get(i)) {</span>
+                        // inlier
+<span class="fc" id="L1075">                        fundamentalMatrixQualityScore +=</span>
+                                qualityScores[i] / numInliers;
+                    }
+                }
+<span class="fc" id="L1079">                mCurrentEstimatedFundamentalMatrix.setQualityScore(</span>
+                        fundamentalMatrixQualityScore);
+<span class="fc" id="L1081">                mCurrentEstimatedFundamentalMatrix.setInliers(inliers);</span>
+            }
+
+            // store left/right samples
+<span class="fc" id="L1085">            mCurrentEstimatedFundamentalMatrix.setLeftSamples(leftSamples);</span>
+<span class="fc" id="L1086">            mCurrentEstimatedFundamentalMatrix.setRightSamples(rightSamples);</span>
+
+<span class="fc" id="L1088">            return true;</span>
+<span class="fc" id="L1089">        } catch (final Exception e) {</span>
+<span class="fc" id="L1090">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates a pair of cameras and reconstructed points.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed,
+     *                             false otherwise.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimatePairOfCamerasAndPoints(final boolean isInitialPairOfViews) {
+<span class="fc bfc" id="L1103" title="All 4 branches covered.">        switch (mConfiguration.getPairedCamerasEstimatorMethod()) {</span>
+            case ESSENTIAL_MATRIX:
+<span class="fc" id="L1105">                return estimateInitialCamerasAndPointsEssential(isInitialPairOfViews);</span>
+            case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
+<span class="fc" id="L1107">                return estimateInitialCamerasAndPointsDIAC(isInitialPairOfViews);</span>
+            case DUAL_ABSOLUTE_QUADRIC:
+<span class="fc" id="L1109">                return estimateInitialCamerasAndPointsDAQ(isInitialPairOfViews);</span>
+            case DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX:
+            default:
+<span class="fc" id="L1112">                return estimateInitialCamerasAndPointsDAQAndEssential(isInitialPairOfViews);</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the Dual
+     * Absolute Quadric to estimate intrinsic parameters and then use those
+     * intrinsic parameters with the essential matrix.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed,
+     *                             false otherwise.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsDAQAndEssential(
+            final boolean isInitialPairOfViews) {
+        // for non-initial view, keep last center and rotation
+<span class="pc bpc" id="L1129" title="3 of 4 branches missed.">        if (!isInitialPairOfViews &amp;&amp; keepLastCenterAndRotation()) {</span>
+<span class="nc" id="L1130">            return false;</span>
+        }
+
+        try {
+<span class="fc" id="L1134">            final FundamentalMatrix fundamentalMatrix =</span>
+<span class="fc" id="L1135">                    mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();</span>
+
+<span class="fc" id="L1137">            final DualAbsoluteQuadricInitialCamerasEstimator estimator =</span>
+                    new DualAbsoluteQuadricInitialCamerasEstimator(
+                            fundamentalMatrix);
+<span class="fc" id="L1140">            estimator.setAspectRatio(</span>
+<span class="fc" id="L1141">                    mConfiguration.getPairedCamerasAspectRatio());</span>
+<span class="fc" id="L1142">            estimator.estimate();</span>
+
+<span class="fc" id="L1144">            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L1145">            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L1147">            camera1.decompose();</span>
+<span class="fc" id="L1148">            camera2.decompose();</span>
+
+<span class="fc" id="L1150">            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =</span>
+<span class="fc" id="L1151">                    camera1.getIntrinsicParameters();</span>
+<span class="fc" id="L1152">            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =</span>
+<span class="fc" id="L1153">                    camera2.getIntrinsicParameters();</span>
+
+<span class="fc" id="L1155">            final double principalPointX = mConfiguration.getPrincipalPointX();</span>
+<span class="fc" id="L1156">            final double principalPointY = mConfiguration.getPrincipalPointY();</span>
+
+<span class="fc" id="L1158">            final PinholeCameraIntrinsicParameters intrinsic1 =</span>
+                    new PinholeCameraIntrinsicParameters(
+                            intrinsicZeroPrincipalPoint1);
+<span class="fc" id="L1161">            intrinsic1.setHorizontalPrincipalPoint(</span>
+<span class="fc" id="L1162">                    intrinsic1.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L1163">            intrinsic1.setVerticalPrincipalPoint(</span>
+<span class="fc" id="L1164">                    intrinsic1.getVerticalPrincipalPoint() + principalPointY);</span>
+
+<span class="fc" id="L1166">            final PinholeCameraIntrinsicParameters intrinsic2 =</span>
+                    new PinholeCameraIntrinsicParameters(
+                            intrinsicZeroPrincipalPoint2);
+<span class="fc" id="L1169">            intrinsic2.setHorizontalPrincipalPoint(</span>
+<span class="fc" id="L1170">                    intrinsic2.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L1171">            intrinsic2.setVerticalPrincipalPoint(</span>
+<span class="fc" id="L1172">                    intrinsic2.getVerticalPrincipalPoint() + principalPointY);</span>
+
+            // fix fundamental matrix to account for principal point different
+            // from zero
+<span class="fc" id="L1176">            fixFundamentalMatrix(fundamentalMatrix,</span>
+                    intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
+                    intrinsic1, intrinsic2);
+
+<span class="pc bpc" id="L1180" title="1 of 2 branches missed.">            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2) &amp;&amp;</span>
+<span class="pc bpc" id="L1181" title="1 of 2 branches missed.">                    transformPairOfCamerasAndPoints(isInitialPairOfViews,</span>
+<span class="fc" id="L1182">                            hasAbsoluteOrientation());</span>
+<span class="nc" id="L1183">        } catch (final Exception e) {</span>
+<span class="nc" id="L1184">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the Dual
+     * Absolute Quadric.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed,
+     *                             false otherwise.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsDAQ(final boolean isInitialPairOfViews) {
+        // for non-initial view, keep last center and rotation
+<span class="pc bpc" id="L1199" title="3 of 4 branches missed.">        if (!isInitialPairOfViews &amp;&amp; keepLastCenterAndRotation()) {</span>
+<span class="nc" id="L1200">            return false;</span>
+        }
+
+        try {
+<span class="fc" id="L1204">            final FundamentalMatrix fundamentalMatrix =</span>
+<span class="fc" id="L1205">                    mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();</span>
+<span class="fc" id="L1206">            fundamentalMatrix.normalize();</span>
+
+<span class="fc" id="L1208">            final DualAbsoluteQuadricInitialCamerasEstimator estimator =</span>
+                    new DualAbsoluteQuadricInitialCamerasEstimator(
+                            fundamentalMatrix);
+<span class="fc" id="L1211">            estimator.setAspectRatio(</span>
+<span class="fc" id="L1212">                    mConfiguration.getPairedCamerasAspectRatio());</span>
+<span class="fc" id="L1213">            estimator.estimate();</span>
+
+<span class="fc" id="L1215">            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L1216">            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L1218">            camera1.decompose();</span>
+<span class="fc" id="L1219">            camera2.decompose();</span>
+
+<span class="fc" id="L1221">            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =</span>
+<span class="fc" id="L1222">                    camera1.getIntrinsicParameters();</span>
+<span class="fc" id="L1223">            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =</span>
+<span class="fc" id="L1224">                    camera2.getIntrinsicParameters();</span>
+
+<span class="fc" id="L1226">            final double principalPointX = mConfiguration.getPrincipalPointX();</span>
+<span class="fc" id="L1227">            final double principalPointY = mConfiguration.getPrincipalPointY();</span>
+
+<span class="fc" id="L1229">            final PinholeCameraIntrinsicParameters intrinsic1 =</span>
+                    new PinholeCameraIntrinsicParameters(
+                            intrinsicZeroPrincipalPoint1);
+<span class="fc" id="L1232">            intrinsic1.setHorizontalPrincipalPoint(</span>
+<span class="fc" id="L1233">                    intrinsic1.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L1234">            intrinsic1.setVerticalPrincipalPoint(</span>
+<span class="fc" id="L1235">                    intrinsic1.getVerticalPrincipalPoint() + principalPointY);</span>
+<span class="fc" id="L1236">            camera1.setIntrinsicParameters(intrinsic1);</span>
+
+<span class="fc" id="L1238">            final PinholeCameraIntrinsicParameters intrinsic2 =</span>
+                    new PinholeCameraIntrinsicParameters(
+                            intrinsicZeroPrincipalPoint2);
+<span class="fc" id="L1241">            intrinsic2.setHorizontalPrincipalPoint(</span>
+<span class="fc" id="L1242">                    intrinsic2.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L1243">            intrinsic2.setVerticalPrincipalPoint(</span>
+<span class="fc" id="L1244">                    intrinsic2.getVerticalPrincipalPoint() + principalPointY);</span>
+<span class="fc" id="L1245">            camera2.setIntrinsicParameters(intrinsic2);</span>
+
+<span class="fc" id="L1247">            mPreviousMetricEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L1248">            mPreviousMetricEstimatedCamera.setCamera(camera1);</span>
+
+<span class="fc" id="L1250">            mCurrentMetricEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L1251">            mCurrentMetricEstimatedCamera.setCamera(camera2);</span>
+
+            // fix fundamental matrix to account for principal point different
+            // from zero
+<span class="fc" id="L1255">            fixFundamentalMatrix(fundamentalMatrix,</span>
+                    intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
+                    intrinsic1, intrinsic2);
+
+            // triangulate points
+<span class="fc" id="L1260">            Corrector corrector = null;</span>
+<span class="pc bpc" id="L1261" title="1 of 2 branches missed.">            if (mConfiguration.getPairedCamerasCorrectorType() != null) {</span>
+<span class="fc" id="L1262">                corrector = Corrector.create(fundamentalMatrix,</span>
+<span class="fc" id="L1263">                        mConfiguration.getPairedCamerasCorrectorType());</span>
+            }
+
+            // use all points used for fundamental matrix estimation
+<span class="fc" id="L1267">            final List&lt;Sample2D&gt; samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();</span>
+<span class="fc" id="L1268">            final List&lt;Sample2D&gt; samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();</span>
+
+<span class="fc" id="L1270">            final List&lt;Point2D&gt; points1 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1271">            final List&lt;Point2D&gt; points2 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1272">            final int length = samples1.size();</span>
+<span class="fc bfc" id="L1273" title="All 2 branches covered.">            for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L1274">                final Sample2D sample1 = samples1.get(i);</span>
+<span class="fc" id="L1275">                final Sample2D sample2 = samples2.get(i);</span>
+
+<span class="fc" id="L1277">                final Point2D point1 = sample1.getPoint();</span>
+<span class="fc" id="L1278">                final Point2D point2 = sample2.getPoint();</span>
+
+<span class="fc" id="L1280">                points1.add(point1);</span>
+<span class="fc" id="L1281">                points2.add(point2);</span>
+            }
+
+            // correct points if needed
+            final List&lt;Point2D&gt; correctedPoints1;
+            final List&lt;Point2D&gt; correctedPoints2;
+<span class="pc bpc" id="L1287" title="1 of 2 branches missed.">            if (corrector != null) {</span>
+<span class="fc" id="L1288">                corrector.setLeftAndRightPoints(points1, points2);</span>
+<span class="fc" id="L1289">                corrector.correct();</span>
+
+<span class="fc" id="L1291">                correctedPoints1 = corrector.getLeftCorrectedPoints();</span>
+<span class="fc" id="L1292">                correctedPoints2 = corrector.getRightCorrectedPoints();</span>
+            } else {
+<span class="nc" id="L1294">                correctedPoints1 = points1;</span>
+<span class="nc" id="L1295">                correctedPoints2 = points2;</span>
+            }
+
+
+            // triangulate points
+            final SinglePoint3DTriangulator triangulator;
+<span class="pc bpc" id="L1301" title="1 of 2 branches missed.">            if (mConfiguration.getDaqUseHomogeneousPointTriangulator()) {</span>
+<span class="fc" id="L1302">                triangulator = SinglePoint3DTriangulator.create(</span>
+                        Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+            } else {
+<span class="nc" id="L1305">                triangulator = SinglePoint3DTriangulator.create(</span>
+                        Point3DTriangulatorType.
+                                LMSE_INHOMOGENEOUS_TRIANGULATOR);
+            }
+
+<span class="fc" id="L1310">            final List&lt;PinholeCamera&gt; cameras = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1311">            cameras.add(camera1);</span>
+<span class="fc" id="L1312">            cameras.add(camera2);</span>
+
+<span class="fc" id="L1314">            mMetricReconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1315">            final List&lt;Point2D&gt; points = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1316">            final int numPoints = correctedPoints1.size();</span>
+            Point3D triangulatedPoint;
+            ReconstructedPoint3D reconstructedPoint;
+<span class="fc bfc" id="L1319" title="All 2 branches covered.">            for (int i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L1320">                points.clear();</span>
+<span class="fc" id="L1321">                points.add(correctedPoints1.get(i));</span>
+<span class="fc" id="L1322">                points.add(correctedPoints2.get(i));</span>
+
+<span class="fc" id="L1324">                triangulator.setPointsAndCameras(points, cameras);</span>
+<span class="fc" id="L1325">                triangulatedPoint = triangulator.triangulate();</span>
+
+<span class="fc" id="L1327">                reconstructedPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L1328">                reconstructedPoint.setPoint(triangulatedPoint);</span>
+
+                // only points reconstructed in front of both cameras are
+                // considered valid
+<span class="fc" id="L1332">                final boolean front1 = camera1.isPointInFrontOfCamera(</span>
+                        triangulatedPoint);
+<span class="fc" id="L1334">                final boolean front2 = camera2.isPointInFrontOfCamera(</span>
+                        triangulatedPoint);
+<span class="fc bfc" id="L1336" title="All 4 branches covered.">                reconstructedPoint.setInlier(front1 &amp;&amp; front2);</span>
+
+<span class="fc" id="L1338">                mMetricReconstructedPoints.add(reconstructedPoint);</span>
+            }
+
+<span class="fc" id="L1341">            return transformPairOfCamerasAndPoints(isInitialPairOfViews,</span>
+<span class="fc" id="L1342">                    hasAbsoluteOrientation());</span>
+<span class="nc" id="L1343">        } catch (final Exception e) {</span>
+<span class="nc" id="L1344">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using Dual Image of
+     * Absolute Conic.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed,
+     *                             false otherwise.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsDIAC(final boolean isInitialPairOfViews) {
+        // for non-initial view, keep last center and rotation
+<span class="pc bpc" id="L1359" title="3 of 4 branches missed.">        if (!isInitialPairOfViews &amp;&amp; keepLastCenterAndRotation()) {</span>
+<span class="nc" id="L1360">            return false;</span>
+        }
+
+<span class="fc" id="L1363">        final FundamentalMatrix fundamentalMatrix =</span>
+<span class="fc" id="L1364">                mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();</span>
+
+        // use inlier points used for fundamental matrix estimation
+<span class="fc" id="L1367">        final List&lt;Sample2D&gt; samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();</span>
+<span class="fc" id="L1368">        final List&lt;Sample2D&gt; samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();</span>
+
+<span class="fc" id="L1370">        final List&lt;Point2D&gt; points1 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1371">        final List&lt;Point2D&gt; points2 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1372">        final int length = samples1.size();</span>
+<span class="fc bfc" id="L1373" title="All 2 branches covered.">        for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L1374">            final Sample2D sample1 = samples1.get(i);</span>
+<span class="fc" id="L1375">            final Sample2D sample2 = samples2.get(i);</span>
+
+<span class="fc" id="L1377">            final Point2D point1 = sample1.getPoint();</span>
+<span class="fc" id="L1378">            final Point2D point2 = sample2.getPoint();</span>
+
+<span class="fc" id="L1380">            points1.add(point1);</span>
+<span class="fc" id="L1381">            points2.add(point2);</span>
+        }
+
+        try {
+<span class="fc" id="L1385">            final DualImageOfAbsoluteConicInitialCamerasEstimator estimator =</span>
+                    new DualImageOfAbsoluteConicInitialCamerasEstimator(
+                            fundamentalMatrix, points1, points2);
+<span class="fc" id="L1388">            estimator.setPrincipalPoint(mConfiguration.getPrincipalPointX(),</span>
+<span class="fc" id="L1389">                    mConfiguration.getPrincipalPointY());</span>
+<span class="fc" id="L1390">            estimator.setAspectRatio(</span>
+<span class="fc" id="L1391">                    mConfiguration.getPairedCamerasAspectRatio());</span>
+<span class="fc" id="L1392">            estimator.setCorrectorType(</span>
+<span class="fc" id="L1393">                    mConfiguration.getPairedCamerasCorrectorType());</span>
+<span class="fc" id="L1394">            estimator.setPointsTriangulated(true);</span>
+<span class="fc" id="L1395">            estimator.setValidTriangulatedPointsMarked(</span>
+<span class="fc" id="L1396">                    mConfiguration.getPairedCamerasMarkValidTriangulatedPoints());</span>
+
+<span class="fc" id="L1398">            estimator.estimate();</span>
+
+            // store cameras
+<span class="fc" id="L1401">            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L1402">            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L1404">            mPreviousMetricEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L1405">            mPreviousMetricEstimatedCamera.setCamera(camera1);</span>
+
+<span class="fc" id="L1407">            mCurrentMetricEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L1408">            mCurrentMetricEstimatedCamera.setCamera(camera2);</span>
+
+            // store points
+<span class="fc" id="L1411">            final List&lt;Point3D&gt; triangulatedPoints =</span>
+<span class="fc" id="L1412">                    estimator.getTriangulatedPoints();</span>
+<span class="fc" id="L1413">            final BitSet validTriangulatedPoints =</span>
+<span class="fc" id="L1414">                    estimator.getValidTriangulatedPoints();</span>
+
+<span class="fc" id="L1416">            mMetricReconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1417">            final int size = triangulatedPoints.size();</span>
+<span class="fc bfc" id="L1418" title="All 2 branches covered.">            for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L1419">                final ReconstructedPoint3D reconstructedPoint =</span>
+                        new ReconstructedPoint3D();
+<span class="fc" id="L1421">                reconstructedPoint.setPoint(triangulatedPoints.get(i));</span>
+<span class="fc" id="L1422">                reconstructedPoint.setInlier(validTriangulatedPoints.get(i));</span>
+<span class="fc" id="L1423">                mMetricReconstructedPoints.add(reconstructedPoint);</span>
+            }
+
+<span class="fc" id="L1426">            return transformPairOfCamerasAndPoints(isInitialPairOfViews,</span>
+<span class="fc" id="L1427">                    hasAbsoluteOrientation());</span>
+<span class="fc" id="L1428">        } catch (final Exception e) {</span>
+<span class="fc" id="L1429">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the essential
+     * matrix and provided intrinsic parameters that must have been set during
+     * offline calibration.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed,
+     *                             false otherwise.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsEssential(final boolean isInitialPairOfViews) {
+        // for non-initial view, keep last center and rotation
+<span class="pc bpc" id="L1445" title="1 of 4 branches missed.">        if (!isInitialPairOfViews &amp;&amp; keepLastCenterAndRotation()) {</span>
+<span class="nc" id="L1446">            return false;</span>
+        }
+
+<span class="fc" id="L1449">        PinholeCameraIntrinsicParameters intrinsic1 = null;</span>
+<span class="fc" id="L1450">        PinholeCameraIntrinsicParameters intrinsic2 = null;</span>
+<span class="pc bpc" id="L1451" title="1 of 2 branches missed.">        if (mConfiguration.areIntrinsicParametersKnown()) {</span>
+            //noinspection unchecked
+<span class="fc" id="L1453">            intrinsic1 = mListener.onIntrinsicParametersRequested((R) this, mPreviousViewId);</span>
+            //noinspection unchecked
+<span class="fc" id="L1455">            intrinsic2 = mListener.onIntrinsicParametersRequested((R) this, mCurrentViewId);</span>
+        }
+
+<span class="pc bpc" id="L1458" title="2 of 4 branches missed.">        if (intrinsic1 != null &amp;&amp; intrinsic2 != null) {</span>
+<span class="pc bpc" id="L1459" title="1 of 2 branches missed.">            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2) &amp;&amp;</span>
+<span class="pc bpc" id="L1460" title="1 of 2 branches missed.">                    transformPairOfCamerasAndPoints(isInitialPairOfViews,</span>
+<span class="fc" id="L1461">                            hasAbsoluteOrientation());</span>
+        } else {
+            // missing intrinsic parameters
+
+<span class="nc" id="L1465">            mFailed = true;</span>
+            //noinspection unchecked
+<span class="nc" id="L1467">            mListener.onFail((R) this);</span>
+<span class="nc" id="L1468">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the essential
+     * matrix and provided intrinsic parameters that must have been set during
+     * offline calibration.
+     *
+     * @param intrinsic1 intrinsic parameters of 1st camera.
+     * @param intrinsic2 intrinsic parameters of 2nd camera.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsEssential(
+            final PinholeCameraIntrinsicParameters intrinsic1,
+            final PinholeCameraIntrinsicParameters intrinsic2) {
+<span class="fc" id="L1485">        final FundamentalMatrix fundamentalMatrix =</span>
+<span class="fc" id="L1486">                mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();</span>
+
+        // use all points used for fundamental matrix estimation
+<span class="fc" id="L1489">        final List&lt;Sample2D&gt; samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();</span>
+<span class="fc" id="L1490">        final List&lt;Sample2D&gt; samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();</span>
+
+<span class="fc" id="L1492">        final List&lt;Point2D&gt; points1 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1493">        final List&lt;Point2D&gt; points2 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1494">        final int length = samples1.size();</span>
+<span class="fc bfc" id="L1495" title="All 2 branches covered.">        for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L1496">            final Sample2D sample1 = samples1.get(i);</span>
+<span class="fc" id="L1497">            final Sample2D sample2 = samples2.get(i);</span>
+
+<span class="fc" id="L1499">            final Point2D point1 = sample1.getPoint();</span>
+<span class="fc" id="L1500">            final Point2D point2 = sample2.getPoint();</span>
+
+<span class="fc" id="L1502">            points1.add(point1);</span>
+<span class="fc" id="L1503">            points2.add(point2);</span>
+        }
+
+        try {
+<span class="fc" id="L1507">            final EssentialMatrixInitialCamerasEstimator estimator =</span>
+                    new EssentialMatrixInitialCamerasEstimator(
+                            fundamentalMatrix, intrinsic1, intrinsic2,
+                            points1, points2);
+
+<span class="fc" id="L1512">            estimator.setCorrectorType(</span>
+<span class="fc" id="L1513">                    mConfiguration.getPairedCamerasCorrectorType());</span>
+<span class="fc" id="L1514">            estimator.setPointsTriangulated(true);</span>
+<span class="fc" id="L1515">            estimator.setValidTriangulatedPointsMarked(</span>
+<span class="fc" id="L1516">                    mConfiguration.getPairedCamerasMarkValidTriangulatedPoints());</span>
+
+<span class="fc" id="L1518">            estimator.estimate();</span>
+
+            // store cameras
+<span class="fc" id="L1521">            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L1522">            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L1524">            mPreviousMetricEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L1525">            mPreviousMetricEstimatedCamera.setCamera(camera1);</span>
+
+<span class="fc" id="L1527">            mCurrentMetricEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L1528">            mCurrentMetricEstimatedCamera.setCamera(camera2);</span>
+
+            // store points
+<span class="fc" id="L1531">            final List&lt;Point3D&gt; triangulatedPoints =</span>
+<span class="fc" id="L1532">                    estimator.getTriangulatedPoints();</span>
+<span class="fc" id="L1533">            final BitSet validTriangulatedPoints =</span>
+<span class="fc" id="L1534">                    estimator.getValidTriangulatedPoints();</span>
+
+<span class="fc" id="L1536">            mMetricReconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1537">            final int size = triangulatedPoints.size();</span>
+<span class="fc bfc" id="L1538" title="All 2 branches covered.">            for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L1539">                final ReconstructedPoint3D reconstructedPoint =</span>
+                        new ReconstructedPoint3D();
+<span class="fc" id="L1541">                reconstructedPoint.setPoint(triangulatedPoints.get(i));</span>
+<span class="fc" id="L1542">                reconstructedPoint.setInlier(validTriangulatedPoints.get(i));</span>
+<span class="fc" id="L1543">                mMetricReconstructedPoints.add(reconstructedPoint);</span>
+            }
+
+<span class="fc" id="L1546">            return true;</span>
+<span class="nc" id="L1547">        } catch (final Exception e) {</span>
+<span class="nc" id="L1548">            return false;</span>
+        }
+    }
+
+
+    /**
+     * Keeps center and rotation of last camera (current camera on previous view pair).
+     *
+     * @return false if camera and rotation were successfully kept, true otherwise.
+     */
+    private boolean keepLastCenterAndRotation() {
+        // keep last metric center and rotation
+<span class="pc bpc" id="L1560" title="2 of 4 branches missed.">        if (mCurrentMetricEstimatedCamera == null || mCurrentEuclideanEstimatedCamera == null) {</span>
+<span class="nc" id="L1561">            return true;</span>
+        }
+
+<span class="fc" id="L1564">        final PinholeCamera metricCamera = mCurrentMetricEstimatedCamera.getCamera();</span>
+<span class="pc bpc" id="L1565" title="1 of 2 branches missed.">        if (metricCamera == null) {</span>
+<span class="nc" id="L1566">            return true;</span>
+        }
+
+        try {
+            // decompose camera if needed
+<span class="pc bpc" id="L1571" title="1 of 4 branches missed.">            if (!metricCamera.isCameraCenterAvailable() || !metricCamera.isCameraRotationAvailable()) {</span>
+<span class="fc" id="L1572">                metricCamera.decompose();</span>
+            }
+
+<span class="fc" id="L1575">            mLastMetricCameraCenter = metricCamera.getCameraCenter();</span>
+<span class="fc" id="L1576">            mLastMetricCameraRotation = metricCamera.getCameraRotation();</span>
+
+<span class="nc" id="L1578">        } catch (final GeometryException e) {</span>
+<span class="nc" id="L1579">            return true;</span>
+<span class="fc" id="L1580">        }</span>
+
+        // keep last Euclidean center and rotation
+<span class="fc" id="L1583">        final PinholeCamera euclideanCamera = mCurrentEuclideanEstimatedCamera.getCamera();</span>
+<span class="pc bpc" id="L1584" title="1 of 2 branches missed.">        if (euclideanCamera == null) {</span>
+<span class="nc" id="L1585">            return true;</span>
+        }
+
+        try {
+            // decompose camera if needed
+<span class="pc bpc" id="L1590" title="1 of 4 branches missed.">            if (!euclideanCamera.isCameraCenterAvailable() || !euclideanCamera.isCameraRotationAvailable()) {</span>
+<span class="fc" id="L1591">                euclideanCamera.decompose();</span>
+            }
+
+<span class="fc" id="L1594">            mLastEuclideanCameraCenter = euclideanCamera.getCameraCenter();</span>
+<span class="fc" id="L1595">            mLastEuclideanCameraRotation = euclideanCamera.getCameraRotation();</span>
+
+<span class="fc" id="L1597">            return false;</span>
+<span class="nc" id="L1598">        } catch (final GeometryException e) {</span>
+<span class="nc" id="L1599">            return true;</span>
+        }
+    }
+
+    /**
+     * Fixes fundamental matrix to account for principal point different from
+     * zero when using DAQ estimation.
+     *
+     * @param fundamentalMatrix            fundamental matrix to be fixed.
+     * @param intrinsicZeroPrincipalPoint1 intrinsic parameters of camera 1
+     *                                     assuming zero principal point.
+     * @param intrinsicZeroPrincipalPoint2 intrinsic parameters of camera 2
+     *                                     assuming zero principal point.
+     * @param intrinsicPrincipalPoint1     intrinsic parameters of camera 1 using
+     *                                     proper principal point.
+     * @param intrinsicPrincipalPoint2     intrinsic parameters of camera 2 using
+     *                                     proper principal point.
+     * @throws EpipolarException if something fails.
+     * @throws NotReadyException never happens.
+     */
+    private void fixFundamentalMatrix(final FundamentalMatrix fundamentalMatrix,
+                                      final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1,
+                                      final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2,
+                                      final PinholeCameraIntrinsicParameters intrinsicPrincipalPoint1,
+                                      final PinholeCameraIntrinsicParameters intrinsicPrincipalPoint2)
+            throws EpipolarException, NotReadyException {
+
+        // first compute essential matrix as E = K2a'F*K1a
+<span class="fc" id="L1627">        final EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix,</span>
+                intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2);
+<span class="fc" id="L1629">        final FundamentalMatrix fixedFundamentalMatrix =</span>
+<span class="fc" id="L1630">                essential.toFundamentalMatrix(intrinsicPrincipalPoint1,</span>
+                        intrinsicPrincipalPoint2);
+<span class="fc" id="L1632">        fixedFundamentalMatrix.normalize();</span>
+<span class="fc" id="L1633">        mCurrentEstimatedFundamentalMatrix.setFundamentalMatrix(</span>
+                fixedFundamentalMatrix);
+<span class="fc" id="L1635">        mCurrentEstimatedFundamentalMatrix.setCovariance(null);</span>
+<span class="fc" id="L1636">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

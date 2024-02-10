@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeightedDualAbsoluteQuadricEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">WeightedDualAbsoluteQuadricEstimator.java</span></div><h1>WeightedDualAbsoluteQuadricEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.algebra.Utils;
+import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.BaseQuadric;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.robust.WeightSelection;
+import com.irurueta.sorting.SortingException;
+
+import java.util.List;
+
+/**
+ * Implementation of a Dual Absolute Quadric estimator using a weighted solution
+ * for provided pinhole cameras.
+ * This implementation assumes that:
+ * - cameras are arbitrary (usually the initial camera is the identity and must
+ * be discarded) as it creates a numerical degeneracy.
+ * - all provided cameras have the same intrinsic parameters
+ * - it is assumed that skewness is zero, the principal point is at the center
+ * of the image plane (zero), and both horizontal and vertical focal planes are
+ * equal.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class WeightedDualAbsoluteQuadricEstimator extends
+        DualAbsoluteQuadricEstimator {
+
+    /**
+     * Default number of cameras (i.e. correspondences) to be weighted and taken
+     * into account.
+     */
+    public static final int DEFAULT_MAX_CAMERAS = 50;
+
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * cameras are used first.
+     */
+    public static final boolean DEFAULT_SORT_WEIGHTS = true;
+
+    /**
+     * Maximum number of cameras (i.e. correspondences) to be weighted and taken
+     * into account.
+     */
+    private int mMaxCameras;
+
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * cameras are used first.
+     */
+    private boolean mSortWeights;
+
+    /**
+     * Array containing weights for all cameras.
+     */
+    private double[] mWeights;
+
+    /**
+     * Constructor.
+     */
+    public WeightedDualAbsoluteQuadricEstimator() {
+<span class="fc" id="L82">        super();</span>
+<span class="fc" id="L83">        mMaxCameras = DEFAULT_MAX_CAMERAS;</span>
+<span class="fc" id="L84">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L85">        mWeights = null;</span>
+<span class="fc" id="L86">    }</span>
+
+    /**
+     * Constructor with listener.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     */
+    public WeightedDualAbsoluteQuadricEstimator(
+            final DualAbsoluteQuadricEstimatorListener listener) {
+<span class="fc" id="L96">        super(listener);</span>
+<span class="fc" id="L97">        mMaxCameras = DEFAULT_MAX_CAMERAS;</span>
+<span class="fc" id="L98">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L99">        mWeights = null;</span>
+<span class="fc" id="L100">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras list of cameras used to estimate the Dual Absolute Quadric
+     *                (DAQ).
+     * @throws IllegalArgumentException if list of cameras is null.
+     */
+    public WeightedDualAbsoluteQuadricEstimator(final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L110">        super(cameras);</span>
+<span class="fc" id="L111">        mMaxCameras = DEFAULT_MAX_CAMERAS;</span>
+<span class="fc" id="L112">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L113">        mWeights = null;</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras  list of cameras used to estimate the Dual Absolute Quadric
+     *                 (DAQ).
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if list of cameras is null.
+     */
+    public WeightedDualAbsoluteQuadricEstimator(final List&lt;PinholeCamera&gt; cameras,
+                                                final DualAbsoluteQuadricEstimatorListener listener) {
+<span class="fc" id="L127">        super(cameras, listener);</span>
+<span class="fc" id="L128">        mMaxCameras = DEFAULT_MAX_CAMERAS;</span>
+<span class="fc" id="L129">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L130">        mWeights = null;</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras list of cameras used to estimate the Dual Absolute Quadric
+     *                (DAQ).
+     * @param weights array containing a weight amount for each corresponding
+     *                camera. The larger the value of a weight, the most significant the
+     *                corresponding camera data will be.
+     * @throws IllegalArgumentException if provided lists of cameras and weights
+     *                                  don't have the same size or enough cameras.
+     */
+    public WeightedDualAbsoluteQuadricEstimator(final List&lt;PinholeCamera&gt; cameras,
+                                                final double[] weights) {
+<span class="fc" id="L146">        super(cameras);</span>
+<span class="fc" id="L147">        mMaxCameras = DEFAULT_MAX_CAMERAS;</span>
+<span class="fc" id="L148">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+        try {
+<span class="fc" id="L150">            setWeights(weights);</span>
+<span class="nc" id="L151">        } catch (final LockedException ignore) {</span>
+            // never thrown
+<span class="fc" id="L153">        }</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras  list of cameras used to estimate the Dual Absolute Quadric
+     *                 (DAQ).
+     * @param weights  array containing a weight amount for each corresponding
+     *                 camera. The largest the value of a weight, the most significant the
+     *                 corresponding camera data will be.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of cameras and weights
+     *                                  don't have the same size or enough cameras.
+     */
+    public WeightedDualAbsoluteQuadricEstimator(
+            final List&lt;PinholeCamera&gt; cameras,
+            final double[] weights,
+            final DualAbsoluteQuadricEstimatorListener listener) {
+<span class="fc" id="L173">        super(cameras, listener);</span>
+<span class="fc" id="L174">        mMaxCameras = DEFAULT_MAX_CAMERAS;</span>
+<span class="fc" id="L175">        mSortWeights = DEFAULT_SORT_WEIGHTS;</span>
+        try {
+<span class="fc" id="L177">            setWeights(weights);</span>
+<span class="nc" id="L178">        } catch (final LockedException ignore) {</span>
+            // never thrown
+<span class="fc" id="L180">        }</span>
+<span class="fc" id="L181">    }</span>
+
+    /**
+     * Indicates whether provided cameras and weights are valid or not.
+     * Cameras and weights must have the same length to be valid and their
+     * length must be greater than 1.
+     *
+     * @param cameras list of cameras to check.
+     * @param weights array of weights to check.
+     * @return true if cameras and weights are valid, false otherwise.
+     */
+    public static boolean areValidCamerasAndWeights(
+            final List&lt;PinholeCamera&gt; cameras,
+            final double[] weights) {
+<span class="fc bfc" id="L195" title="All 4 branches covered.">        return cameras != null &amp;&amp; weights != null &amp;&amp;</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                cameras.size() == weights.length;</span>
+    }
+
+    /**
+     * Returns array containing a weight amount for each corresponding camera.
+     * The largest the value of a weight, the more significant the corresponding
+     * camera data will be.
+     *
+     * @return weights for each corresponding camera.
+     */
+    public double[] getWeights() {
+<span class="fc" id="L207">        return mWeights;</span>
+    }
+
+    /**
+     * Sets array of camera weight for each corresponding camera.
+     * The largest the value of a weight, the more significant the corresponding
+     * camera data will be.
+     *
+     * @param weights weights for each corresponding camera.
+     * @throws IllegalArgumentException if provided lists of cameras and weights
+     *                                  don't have the same size or enough cameras.
+     * @throws LockedException          if estimator is locked.
+     */
+    public final void setWeights(final double[] weights) throws LockedException {
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (!areValidCamerasAndWeights(mCameras, weights)) {</span>
+<span class="fc" id="L222">            throw new IllegalArgumentException(</span>
+                    &quot;cameras and weights must have the same length&quot;);
+        }
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L226">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L229">        mWeights = weights;</span>
+<span class="fc" id="L230">    }</span>
+
+    /**
+     * Sets list of cameras and corresponding weights.
+     *
+     * @param cameras list of cameras used to estimate the Dual Absolute Quadric
+     *                (DAQ).
+     * @param weights array containing a weight amount for each corresponding
+     *                camera. The largest the value of a weight, the most significant the
+     *                corresponding camera data will be.
+     * @throws IllegalArgumentException if provided lists of cameras and weights
+     *                                  don't have the same size or enough cameras.
+     * @throws LockedException          if estimator is locked.
+     */
+    public void setCamerasAndWeights(
+            final List&lt;PinholeCamera&gt; cameras,
+            final double[] weights) throws LockedException {
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (!areValidCamerasAndWeights(cameras, weights)) {</span>
+<span class="fc" id="L248">            throw new IllegalArgumentException(</span>
+                    &quot;cameras and weights must have the same length&quot;);
+        }
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L252">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L255">        mCameras = cameras;</span>
+<span class="fc" id="L256">        mWeights = weights;</span>
+<span class="fc" id="L257">    }</span>
+
+    /**
+     * Indicates whether weights have already been provided or not.
+     *
+     * @return true if weights have been provided, false otherwise.
+     */
+    public boolean areWeightsAvailable() {
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        return mWeights != null;</span>
+    }
+
+    /**
+     * Gets the maximum number of cameras (i.e. correspondences) to be weighted
+     * and taken into account.
+     *
+     * @return maximum number of cameras.
+     */
+    public int getMaxCameras() {
+<span class="fc" id="L275">        return mMaxCameras;</span>
+    }
+
+    /**
+     * Sets the maximum number of cameras (i.e. correspondences) to be weighted
+     * and taken into account.
+     *
+     * @param maxCameras maximum number of cameras.
+     * @throws IllegalArgumentException if provided value is less than 2.
+     * @throws LockedException          if estimator is locked.
+     */
+    public void setMaxCameras(final int maxCameras) throws LockedException {
+<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L288">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L291">        mMaxCameras = maxCameras;</span>
+<span class="fc" id="L292">    }</span>
+
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * cameras are used first.
+     *
+     * @return true if weights are sorted by default, false otherwise.
+     */
+    public boolean isSortWeightsEnabled() {
+<span class="fc" id="L301">        return mSortWeights;</span>
+    }
+
+    /**
+     * Specifies whether weights are sorted by default so that largest weighted
+     * cameras are used first.
+     *
+     * @param sortWeights true if weights are sorted by default, false
+     *                    otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setSortWeightsEnabled(final boolean sortWeights) throws LockedException {
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L314">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L317">        mSortWeights = sortWeights;</span>
+<span class="fc" id="L318">    }</span>
+
+    /**
+     * Indicates if this estimator is ready to start the estimation.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc bfc" id="L327" title="All 4 branches covered.">        return super.isReady() &amp;&amp; areWeightsAvailable() &amp;&amp;</span>
+<span class="pc bpc" id="L328" title="1 of 2 branches missed.">                mMaxCameras &gt;= getMinNumberOfRequiredCameras();</span>
+    }
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     *
+     * @param result instance where estimated Dual Absolute Quadric (DAQ) will
+     *               be stored.
+     * @throws LockedException                       if estimator is locked.
+     * @throws NotReadyException                     if no valid input data has already been
+     *                                               provided.
+     * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
+     *                                               estimation, usually because input data is not valid or
+     *                                               numerically unstable.
+     */
+    @Override
+    public void estimate(final DualAbsoluteQuadric result)
+            throws LockedException, NotReadyException,
+            DualAbsoluteQuadricEstimatorException {
+
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L349">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L352">            throw new NotReadyException();</span>
+        }
+
+        try {
+<span class="fc" id="L356">            mLocked = true;</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L358">                mListener.onEstimateStart(this);</span>
+            }
+
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">            if (mPrincipalPointAtOrigin) {</span>
+<span class="pc bpc" id="L362" title="1 of 2 branches missed.">                if (mZeroSkewness) {</span>
+<span class="pc bpc" id="L363" title="1 of 2 branches missed.">                    if (mFocalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L364">                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(</span>
+                                result);
+                    } else {
+<span class="nc" id="L367">                        estimateZeroSkewnessAndPrincipalPointAtOrigin(result);</span>
+                    }
+                } else {
+<span class="nc" id="L370">                    estimatePrincipalPointAtOrigin(result);</span>
+                }
+            }
+
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L375">                mListener.onEstimateEnd(this);</span>
+            }
+        } finally {
+<span class="fc" id="L378">            mLocked = false;</span>
+        }
+<span class="fc" id="L380">    }</span>
+
+    /**
+     * Returns type of Dual Absolute Quadric estimator.
+     *
+     * @return type of DAQ estimator.
+     */
+    @Override
+    public DualAbsoluteQuadricEstimatorType getType() {
+<span class="fc" id="L389">        return DualAbsoluteQuadricEstimatorType.</span>
+                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR;
+    }
+
+    /**
+     * Indicates whether current constraints are enough to start the estimation.
+     * In order to obtain a linear solution for the DAQ estimation, we need at
+     * least the principal point at origin constraint.
+     *
+     * @return true if constraints are valid, false otherwise.
+     */
+    @Override
+    public boolean areValidConstraints() {
+<span class="fc bfc" id="L402" title="All 4 branches covered.">        return super.areValidConstraints() &amp;&amp; isZeroSkewness() &amp;&amp;</span>
+<span class="fc bfc" id="L403" title="All 2 branches covered.">                isFocalDistanceAspectRatioKnown();</span>
+    }
+
+    /**
+     * Estimates Dual Absolute Quadric (DAQ) assuming that skewness is zero,
+     * principal point is located at origin of coordinates and that aspect ratio
+     * of focal distances is known.
+     *
+     * @param result instance where resulting estimated Dual Absolute Quadric
+     *               will be stored.
+     * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
+     */
+    private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
+            DualAbsoluteQuadric result)
+            throws DualAbsoluteQuadricEstimatorException {
+
+        try {
+<span class="fc" id="L424">            final int nCams = Math.min(mCameras.size(), mMaxCameras);</span>
+
+<span class="fc" id="L426">            final WeightSelection selection = WeightSelection.selectWeights(mWeights,</span>
+                    mSortWeights, nCams);
+<span class="fc" id="L428">            final boolean[] selected = selection.getSelected();</span>
+
+<span class="fc" id="L430">            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);</span>
+<span class="fc" id="L431">            final Matrix row = new Matrix(4, BaseQuadric.N_PARAMS);</span>
+<span class="fc" id="L432">            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 4);</span>
+<span class="fc" id="L433">            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);</span>
+
+            Matrix cameraMatrix;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
+            int eqCounter;
+<span class="fc" id="L449">            int cameraCounter = 0;</span>
+            double weight;
+<span class="fc" id="L451">            double previousNorm = 1.0;</span>
+<span class="fc bfc" id="L452" title="All 2 branches covered.">            for (final PinholeCamera camera : mCameras) {</span>
+<span class="pc bpc" id="L453" title="1 of 2 branches missed.">                if (selected[cameraCounter]) {</span>
+<span class="fc" id="L454">                    eqCounter = 0;</span>
+
+                    // normalize cameras to increase accuracy
+<span class="fc" id="L457">                    camera.normalize();</span>
+
+<span class="fc" id="L459">                    cameraMatrix = camera.getInternalMatrix();</span>
+
+<span class="fc" id="L461">                    p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="fc" id="L462">                    p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="fc" id="L463">                    p31 = cameraMatrix.getElementAt(2, 0);</span>
+
+<span class="fc" id="L465">                    p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="fc" id="L466">                    p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="fc" id="L467">                    p32 = cameraMatrix.getElementAt(2, 1);</span>
+
+<span class="fc" id="L469">                    p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="fc" id="L470">                    p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="fc" id="L471">                    p33 = cameraMatrix.getElementAt(2, 2);</span>
+
+<span class="fc" id="L473">                    p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="fc" id="L474">                    p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="fc" id="L475">                    p34 = cameraMatrix.getElementAt(2, 3);</span>
+
+<span class="fc" id="L477">                    weight = mWeights[cameraCounter];</span>
+
+                    // 1st row
+<span class="fc" id="L480">                    fill2ndRowAnd1stRowEquation(p11, p21,</span>
+                            p12, p22,
+                            p13, p23,
+                            p14, p24, row, eqCounter);
+<span class="fc" id="L484">                    applyWeight(row, eqCounter, weight);</span>
+<span class="fc" id="L485">                    eqCounter++;</span>
+
+                    // 2nd row
+<span class="fc" id="L488">                    fill3rdRowAnd1stRowEquation(p11, p31,</span>
+                            p12, p32,
+                            p13, p33,
+                            p14, p34, row, eqCounter);
+<span class="fc" id="L492">                    applyWeight(row, eqCounter, weight);</span>
+<span class="fc" id="L493">                    eqCounter++;</span>
+
+                    // 3rd row
+<span class="fc" id="L496">                    fill3rdRowAnd2ndRowEquation(p21, p31,</span>
+                            p22, p32,
+                            p23, p33,
+                            p24, p34, row, eqCounter);
+<span class="fc" id="L500">                    applyWeight(row, eqCounter, weight);</span>
+<span class="fc" id="L501">                    eqCounter++;</span>
+
+                    // 4th row
+<span class="fc" id="L504">                    fill1stRowEqualTo2ndRowEquation(p11, p21,</span>
+                            p12, p22,
+                            p13, p23,
+                            p14, p24, row, eqCounter);
+<span class="fc" id="L508">                    applyWeight(row, eqCounter, weight);</span>
+
+
+                    // transRow = row'
+<span class="fc" id="L512">                    row.transpose(transRow);</span>
+<span class="fc" id="L513">                    transRow.multiply(row, tmp);</span>
+
+<span class="fc" id="L515">                    tmp.multiplyByScalar(1.0 / previousNorm);</span>
+
+                    // a += 1.0 / previousNorm * tmp
+<span class="fc" id="L518">                    a.add(tmp);</span>
+                    // normalize
+<span class="fc" id="L520">                    previousNorm = Utils.normF(a);</span>
+<span class="fc" id="L521">                    a.multiplyByScalar(1.0 / previousNorm);</span>
+                }
+
+<span class="fc" id="L524">                cameraCounter++;</span>
+<span class="fc" id="L525">            }</span>
+
+<span class="fc" id="L527">            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="fc" id="L528">            enforceRank3IfNeeded(decomposer, result);</span>
+
+<span class="nc" id="L530">        } catch (final AlgebraException | SortingException | NumericalException e) {</span>
+<span class="nc" id="L531">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="fc" id="L532">        }</span>
+<span class="fc" id="L533">    }</span>
+
+    /**
+     * Estimates Dual Absolute Quadric (DAQ) assuming that skewness is zero,
+     * and principal point is located at origin of coordinates.
+     *
+     * @param result instance where resulting estimated Dual Absolute Quadrics
+     *               will be stored.
+     * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
+     */
+    private void estimateZeroSkewnessAndPrincipalPointAtOrigin(
+            final DualAbsoluteQuadric result)
+            throws DualAbsoluteQuadricEstimatorException {
+
+        try {
+<span class="nc" id="L552">            final int nCams = Math.min(mCameras.size(), mMaxCameras);</span>
+
+<span class="nc" id="L554">            final WeightSelection selection = WeightSelection.selectWeights(mWeights,</span>
+                    mSortWeights, nCams);
+<span class="nc" id="L556">            final boolean[] selected = selection.getSelected();</span>
+
+<span class="nc" id="L558">            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);</span>
+<span class="nc" id="L559">            final Matrix row = new Matrix(3, BaseQuadric.N_PARAMS);</span>
+<span class="nc" id="L560">            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 3);</span>
+<span class="nc" id="L561">            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);</span>
+
+            Matrix cameraMatrix;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
+            int eqCounter;
+<span class="nc" id="L577">            int cameraCounter = 0;</span>
+            double weight;
+<span class="nc" id="L579">            double previousNorm = 1.0;</span>
+<span class="nc bnc" id="L580" title="All 2 branches missed.">            for (final PinholeCamera camera : mCameras) {</span>
+<span class="nc bnc" id="L581" title="All 2 branches missed.">                if (selected[cameraCounter]) {</span>
+<span class="nc" id="L582">                    eqCounter = 0;</span>
+
+                    // normalize cameras to increase accuracy
+<span class="nc" id="L585">                    camera.normalize();</span>
+
+<span class="nc" id="L587">                    cameraMatrix = camera.getInternalMatrix();</span>
+
+<span class="nc" id="L589">                    p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="nc" id="L590">                    p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="nc" id="L591">                    p31 = cameraMatrix.getElementAt(2, 0);</span>
+
+<span class="nc" id="L593">                    p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="nc" id="L594">                    p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="nc" id="L595">                    p32 = cameraMatrix.getElementAt(2, 1);</span>
+
+<span class="nc" id="L597">                    p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="nc" id="L598">                    p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="nc" id="L599">                    p33 = cameraMatrix.getElementAt(2, 2);</span>
+
+<span class="nc" id="L601">                    p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="nc" id="L602">                    p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="nc" id="L603">                    p34 = cameraMatrix.getElementAt(2, 3);</span>
+
+<span class="nc" id="L605">                    weight = mWeights[cameraCounter];</span>
+
+                    // 1st row
+<span class="nc" id="L608">                    fill2ndRowAnd1stRowEquation(p11, p21,</span>
+                            p12, p22,
+                            p13, p23,
+                            p14, p24, a, eqCounter);
+<span class="nc" id="L612">                    applyWeight(row, eqCounter, weight);</span>
+<span class="nc" id="L613">                    eqCounter++;</span>
+
+                    // 2nd row
+<span class="nc" id="L616">                    fill3rdRowAnd1stRowEquation(p11, p31,</span>
+                            p12, p32,
+                            p13, p33,
+                            p14, p34, a, eqCounter);
+<span class="nc" id="L620">                    applyWeight(row, eqCounter, weight);</span>
+<span class="nc" id="L621">                    eqCounter++;</span>
+
+                    // 3rd row
+<span class="nc" id="L624">                    fill3rdRowAnd2ndRowEquation(p21, p31,</span>
+                            p22, p32,
+                            p23, p33,
+                            p24, p34, a, eqCounter);
+<span class="nc" id="L628">                    applyWeight(row, eqCounter, weight);</span>
+
+                    // transRow = row'
+<span class="nc" id="L631">                    row.transpose(transRow);</span>
+<span class="nc" id="L632">                    transRow.multiply(row, tmp);</span>
+
+<span class="nc" id="L634">                    tmp.multiplyByScalar(1.0 / previousNorm);</span>
+
+                    // a += 1.0 / previousNorm * tmp
+<span class="nc" id="L637">                    a.add(tmp);</span>
+                    // normalize
+<span class="nc" id="L639">                    previousNorm = Utils.normF(a);</span>
+<span class="nc" id="L640">                    a.multiplyByScalar(1.0 / previousNorm);</span>
+                }
+
+<span class="nc" id="L643">                cameraCounter++;</span>
+<span class="nc" id="L644">            }</span>
+
+<span class="nc" id="L646">            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="nc" id="L647">            enforceRank3IfNeeded(decomposer, result);</span>
+
+<span class="nc" id="L649">        } catch (final AlgebraException | SortingException | NumericalException e) {</span>
+<span class="nc" id="L650">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="nc" id="L651">        }</span>
+<span class="nc" id="L652">    }</span>
+
+    /**
+     * Estimates Dual Absolute Quadric (DAQ) assuming that principal point is
+     * zero.
+     *
+     * @param result instance where resulting estimated Dual Absolute Quadrics
+     *               will be stored.
+     * @throws DualAbsoluteQuadricEstimatorException if an error occurs during
+     *                                               estimation, usually because repeated cameras are
+     *                                               provided, or cameras corresponding to critical motion
+     *                                               sequences such as pure parallel translations are
+     *                                               provided, where no additional data is really provided.
+     */
+    private void estimatePrincipalPointAtOrigin(
+            DualAbsoluteQuadric result)
+            throws DualAbsoluteQuadricEstimatorException {
+
+        try {
+<span class="nc" id="L671">            final int nCams = Math.min(mCameras.size(), mMaxCameras);</span>
+
+<span class="nc" id="L673">            final WeightSelection selection = WeightSelection.selectWeights(mWeights,</span>
+                    mSortWeights, nCams);
+<span class="nc" id="L675">            final boolean[] selected = selection.getSelected();</span>
+
+<span class="nc" id="L677">            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);</span>
+<span class="nc" id="L678">            final Matrix row = new Matrix(2, BaseQuadric.N_PARAMS);</span>
+<span class="nc" id="L679">            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 2);</span>
+<span class="nc" id="L680">            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);</span>
+
+            Matrix cameraMatrix;
+            double p11;
+            double p12;
+            double p13;
+            double p14;
+            double p21;
+            double p22;
+            double p23;
+            double p24;
+            double p31;
+            double p32;
+            double p33;
+            double p34;
+            int eqCounter;
+<span class="nc" id="L696">            int cameraCounter = 0;</span>
+            double weight;
+<span class="nc" id="L698">            double previousNorm = 1.0;</span>
+<span class="nc bnc" id="L699" title="All 2 branches missed.">            for (final PinholeCamera camera : mCameras) {</span>
+<span class="nc bnc" id="L700" title="All 2 branches missed.">                if (selected[cameraCounter]) {</span>
+<span class="nc" id="L701">                    eqCounter = 0;</span>
+
+                    // normalize cameras to increase accuracy
+<span class="nc" id="L704">                    camera.normalize();</span>
+
+<span class="nc" id="L706">                    cameraMatrix = camera.getInternalMatrix();</span>
+
+<span class="nc" id="L708">                    p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="nc" id="L709">                    p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="nc" id="L710">                    p31 = cameraMatrix.getElementAt(2, 0);</span>
+
+<span class="nc" id="L712">                    p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="nc" id="L713">                    p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="nc" id="L714">                    p32 = cameraMatrix.getElementAt(2, 1);</span>
+
+<span class="nc" id="L716">                    p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="nc" id="L717">                    p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="nc" id="L718">                    p33 = cameraMatrix.getElementAt(2, 2);</span>
+
+<span class="nc" id="L720">                    p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="nc" id="L721">                    p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="nc" id="L722">                    p34 = cameraMatrix.getElementAt(2, 3);</span>
+
+<span class="nc" id="L724">                    weight = mWeights[cameraCounter];</span>
+
+                    // 1st row
+<span class="nc" id="L727">                    fill3rdRowAnd1stRowEquation(p11, p31,</span>
+                            p12, p32,
+                            p13, p33,
+                            p14, p34, a, eqCounter);
+<span class="nc" id="L731">                    applyWeight(row, eqCounter, weight);</span>
+<span class="nc" id="L732">                    eqCounter++;</span>
+
+                    // 2nd row
+<span class="nc" id="L735">                    fill3rdRowAnd2ndRowEquation(p21, p31,</span>
+                            p22, p32,
+                            p23, p33,
+                            p24, p34, a, eqCounter);
+<span class="nc" id="L739">                    applyWeight(row, eqCounter, weight);</span>
+
+                    // transRow = row'
+<span class="nc" id="L742">                    row.transpose(transRow);</span>
+<span class="nc" id="L743">                    transRow.multiply(row, tmp);</span>
+
+<span class="nc" id="L745">                    tmp.multiplyByScalar(1.0 / previousNorm);</span>
+
+                    // a += 1.0 / previousNorm * tmp
+<span class="nc" id="L748">                    a.add(tmp);</span>
+                    // normalize
+<span class="nc" id="L750">                    previousNorm = Utils.normF(a);</span>
+<span class="nc" id="L751">                    a.multiplyByScalar(1.0 / previousNorm);</span>
+                }
+
+<span class="nc" id="L754">                cameraCounter++;</span>
+<span class="nc" id="L755">            }</span>
+
+<span class="nc" id="L757">            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);</span>
+<span class="nc" id="L758">            enforceRank3IfNeeded(decomposer, result);</span>
+
+<span class="nc" id="L760">        } catch (final AlgebraException | SortingException | NumericalException e) {</span>
+<span class="nc" id="L761">            throw new DualAbsoluteQuadricEstimatorException(e);</span>
+<span class="nc" id="L762">        }</span>
+<span class="nc" id="L763">    }</span>
+
+    /**
+     * Apply provided weight to matrix at provided row.
+     *
+     * @param a      matrix to apply weight to.
+     * @param row    row within matrix to apply weight.
+     * @param weight weight to be applied.
+     */
+    private void applyWeight(final Matrix a, final int row, final double weight) {
+<span class="fc" id="L773">        final int cols = a.getColumns();</span>
+<span class="fc bfc" id="L774" title="All 2 branches covered.">        for (int i = 0; i &lt; cols; i++) {</span>
+<span class="fc" id="L775">            a.setElementAt(row, i, a.getElementAt(row, i) * weight);</span>
+        }
+<span class="fc" id="L777">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

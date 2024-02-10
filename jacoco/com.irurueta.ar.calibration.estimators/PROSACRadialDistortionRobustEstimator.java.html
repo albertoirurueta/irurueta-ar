@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROSACRadialDistortionRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">PROSACRadialDistortionRobustEstimator.java</span></div><h1>PROSACRadialDistortionRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.RadialDistortion;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.PROSACRobustEstimator;
+import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Finds the best radial distortion for provided collections of 2D points using
+ * PROSAC algorithm.
+ */
+public class PROSACRadialDistortionRobustEstimator extends
+        RadialDistortionRobustEstimator {
+
+    /**
+     * Constant defining default threshold to determine whether points are
+     * inliers or not.
+     * By default, 1.0 is considered a good value for cases where measures are
+     * done on pixels, since typically the minimum resolution is 1 pixel.
+     */
+    public static final double DEFAULT_THRESHOLD = 1.0;
+
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to determine whether points are inliers or not when testing
+     * possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. distance) a possible
+     * solution has on a matched pair of points.
+     */
+    private double mThreshold;
+
+    /**
+     * Quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] mQualityScores;
+
+    /**
+     * Constructor.
+     */
+    public PROSACRadialDistortionRobustEstimator() {
+<span class="fc" id="L73">        super();</span>
+<span class="fc" id="L74">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     */
+    public PROSACRadialDistortionRobustEstimator(
+            final RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L85">        super(listener);</span>
+<span class="fc" id="L86">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints) {
+<span class="fc" id="L100">        super(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L101">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param listener          listener to be notified of events such as when
+     *                          estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L118">        super(distortedPoints, undistortedPoints, listener);</span>
+<span class="fc" id="L119">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter  radial distortion center. If null it is assumed
+     *                          to be the origin of coordinates, otherwise this is typically equal to
+     *                          the camera principal point.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final Point2D distortionCenter) {
+<span class="fc" id="L137">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
+<span class="fc" id="L138">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L139">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter  radial distortion center. If null it is assumed
+     *                          to be the origin of coordinates, otherwise this is typically equal to
+     *                          the camera principal point.
+     * @param listener          listener to be notified of events such as when
+     *                          estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final Point2D distortionCenter,
+                                                 final RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L159">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
+<span class="fc" id="L160">        mThreshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided point.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 2 points).
+     */
+    public PROSACRadialDistortionRobustEstimator(final double[] qualityScores) {
+<span class="fc" id="L171">        this();</span>
+<span class="fc" id="L172">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided point.
+     * @param listener      listener to be notified of events such as when
+     *                      estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 2 points).
+     */
+    public PROSACRadialDistortionRobustEstimator(final double[] qualityScores,
+                                                 final RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L186">        this(listener);</span>
+<span class="fc" id="L187">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L188">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param qualityScores     quality scores corresponding to each provided point.
+     * @throws IllegalArgumentException if provided lists of points and quality
+     *                                  scores don't have the same size or their size is smaller than
+     *                                  MIN_NUMBER_OF_POINTS (i.e. 2 points).
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final double[] qualityScores) {
+<span class="fc" id="L204">        this(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L205">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L206">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param qualityScores     quality scores corresponding to each provided point.
+     * @param listener          listener to be notified of events such as when
+     *                          estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists of points or quality
+     *                                  scores don't have the same size or their size is smaller than
+     *                                  MIN_NUMBER_OF_POINTS (i.e. 2 points).
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final double[] qualityScores,
+                                                 final RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L225">        this(distortedPoints, undistortedPoints, listener);</span>
+<span class="fc" id="L226">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L227">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param qualityScores     quality scores corresponding to each provided point.
+     * @param distortionCenter  radial distortion center. If null it is assumed
+     *                          to be the origin of coordinates, otherwise this is typically equal to
+     *                          the camera principal point.
+     * @throws IllegalArgumentException if provided lists of points or quality
+     *                                  scores don't have the same size or their size is smaller than
+     *                                  MIN_NUMBER_OF_POINTS (i.e. 2 points).
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final double[] qualityScores,
+                                                 final Point2D distortionCenter) {
+<span class="fc" id="L247">        this(distortedPoints, undistortedPoints, distortionCenter);</span>
+<span class="fc" id="L248">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L249">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param qualityScores     quality scores corresponding to each provided point.
+     * @param distortionCenter  radial distortion center. If null it is assumed
+     *                          to be the origin of coordinates, otherwise this is typically equal to
+     *                          the camera principal point.
+     * @param listener          listener to be notified of events such as when
+     *                          estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists of points or quality
+     *                                  scores don't have the same size or their size is smaller than
+     *                                  MIN_NUMBER_OF_POINTS (i.e. 2 points).
+     */
+    public PROSACRadialDistortionRobustEstimator(final List&lt;Point2D&gt; distortedPoints,
+                                                 final List&lt;Point2D&gt; undistortedPoints,
+                                                 final double[] qualityScores,
+                                                 final Point2D distortionCenter,
+                                                 final RadialDistortionRobustEstimatorListener listener) {
+<span class="fc" id="L272">        this(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
+<span class="fc" id="L273">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L274">    }</span>
+
+    /**
+     * Returns threshold to determine whether points are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
+     * possible solution has on projected 2D points.
+     *
+     * @return threshold to determine whether points are inliers or not when
+     * testing possible estimation solutions.
+     */
+    public double getThreshold() {
+<span class="fc" id="L286">        return mThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine whether points are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
+     * possible solution has on projected 2D points.
+     *
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setThreshold(final double threshold) throws LockedException {
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L303">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L305" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L306">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L308">        mThreshold = threshold;</span>
+<span class="fc" id="L309">    }</span>
+
+    /**
+     * Returns quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sampled point.
+     *
+     * @return quality scores corresponding to each point.
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L319">        return mQualityScores;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided point.
+     * The larger the score value the better the quality of the sampled point.
+     *
+     * @param qualityScores quality scores corresponding to each point.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than MINIMUM_SIZE (i.e. 2 samples).
+     */
+    @Override
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L335">            throw new LockedException();</span>
+        }
+<span class="fc" id="L337">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L338">    }</span>
+
+    /**
+     * Indicates if estimator is ready to start the radial distortion
+     * estimation.
+     * This is true when input data (i.e. 2D points and quality scores) are
+     * provided and a minimum of 2 points are available.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc bfc" id="L350" title="All 4 branches covered.">        return super.isReady() &amp;&amp; mQualityScores != null &amp;&amp;</span>
+<span class="pc bpc" id="L351" title="1 of 2 branches missed.">                mQualityScores.length == mDistortedPoints.size();</span>
+    }
+
+    /**
+     * Estimates a radial distortion using a robust estimator and
+     * the best set of matched 2D points found using the robust estimator.
+     *
+     * @return a radial distortion.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public RadialDistortion estimate() throws LockedException,
+            NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L370" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L371">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L374">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L377">        final PROSACRobustEstimator&lt;RadialDistortion&gt; innerEstimator =</span>
+                new PROSACRobustEstimator&lt;&gt;(
+<span class="fc" id="L379">                        new PROSACRobustEstimatorListener&lt;RadialDistortion&gt;() {</span>
+
+                            // point to be reused when computing residuals
+<span class="fc" id="L382">                            private final Point2D mTestPoint = Point2D.create(</span>
+                                    CoordinatesType.INHOMOGENEOUS_COORDINATES);
+
+                            // non-robust radial distortion estimator
+<span class="fc" id="L386">                            private final LMSERadialDistortionEstimator mRadialDistortionEstimator =</span>
+                                    new LMSERadialDistortionEstimator();
+
+                            // subset of distorted (i.e. measured) points
+<span class="fc" id="L390">                            private final List&lt;Point2D&gt; mSubsetDistorted = new ArrayList&lt;&gt;();</span>
+
+                            // subset of undistorted (i.e. ideal) points
+<span class="fc" id="L393">                            private final List&lt;Point2D&gt; mSubsetUndistorted = new ArrayList&lt;&gt;();</span>
+
+                            @Override
+                            public double getThreshold() {
+<span class="fc" id="L397">                                return mThreshold;</span>
+                            }
+
+                            @Override
+                            public int getTotalSamples() {
+<span class="fc" id="L402">                                return mDistortedPoints.size();</span>
+                            }
+
+                            @Override
+                            public int getSubsetSize() {
+<span class="fc" id="L407">                                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;</span>
+                            }
+
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List&lt;RadialDistortion&gt; solutions) {
+<span class="fc" id="L413">                                mSubsetDistorted.clear();</span>
+<span class="fc" id="L414">                                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[0]));</span>
+<span class="fc" id="L415">                                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[1]));</span>
+
+<span class="fc" id="L417">                                mSubsetUndistorted.clear();</span>
+<span class="fc" id="L418">                                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[0]));</span>
+<span class="fc" id="L419">                                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[1]));</span>
+
+                                try {
+<span class="fc" id="L422">                                    mRadialDistortionEstimator.setPoints(mDistortedPoints,</span>
+                                            mUndistortedPoints);
+<span class="fc" id="L424">                                    mRadialDistortionEstimator.setPoints(mSubsetDistorted,</span>
+                                            mSubsetUndistorted);
+
+<span class="fc" id="L427">                                    final RadialDistortion distortion = mRadialDistortionEstimator.</span>
+<span class="fc" id="L428">                                            estimate();</span>
+<span class="fc" id="L429">                                    solutions.add(distortion);</span>
+<span class="nc" id="L430">                                } catch (final Exception e) {</span>
+                                    // if anything fails, no solution is added
+<span class="fc" id="L432">                                }</span>
+<span class="fc" id="L433">                            }</span>
+
+                            @Override
+                            public double computeResidual(final RadialDistortion currentEstimation,
+                                                          final int i) {
+<span class="fc" id="L438">                                final Point2D distortedPoint = mDistortedPoints.get(i);</span>
+<span class="fc" id="L439">                                final Point2D undistortedPoint = mUndistortedPoints.get(i);</span>
+
+<span class="fc" id="L441">                                currentEstimation.distort(undistortedPoint, mTestPoint);</span>
+
+<span class="fc" id="L443">                                return mTestPoint.distanceTo(distortedPoint);</span>
+                            }
+
+                            @Override
+                            public boolean isReady() {
+<span class="fc" id="L448">                                return PROSACRadialDistortionRobustEstimator.this.isReady();</span>
+                            }
+
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator&lt;RadialDistortion&gt; estimator) {
+                                try {
+<span class="fc" id="L455">                                    mRadialDistortionEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L456">                                    mRadialDistortionEstimator.setIntrinsic(getIntrinsic());</span>
+<span class="nc" id="L457">                                } catch (final Exception e) {</span>
+<span class="nc" id="L458">                                    Logger.getLogger(</span>
+<span class="nc" id="L459">                                            PROSACRadialDistortionRobustEstimator.class.getName()).</span>
+<span class="nc" id="L460">                                            log(Level.WARNING,</span>
+                                                    &quot;Could not set intrinsic parameters on radial distortion estimator&quot;, e);
+<span class="fc" id="L462">                                }</span>
+
+<span class="pc bpc" id="L464" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L465">                                    mListener.onEstimateStart(</span>
+                                            PROSACRadialDistortionRobustEstimator.this);
+                                }
+<span class="fc" id="L468">                            }</span>
+
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator&lt;RadialDistortion&gt; estimator) {
+<span class="pc bpc" id="L473" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L474">                                    mListener.onEstimateEnd(</span>
+                                            PROSACRadialDistortionRobustEstimator.this);
+                                }
+<span class="fc" id="L477">                            }</span>
+
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator&lt;RadialDistortion&gt; estimator,
+                                    final int iteration) {
+<span class="pc bpc" id="L483" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L484">                                    mListener.onEstimateNextIteration(</span>
+                                            PROSACRadialDistortionRobustEstimator.this,
+                                            iteration);
+                                }
+<span class="fc" id="L488">                            }</span>
+
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator&lt;RadialDistortion&gt; estimator,
+                                    final float progress) {
+<span class="pc bpc" id="L494" title="1 of 2 branches missed.">                                if (mListener != null) {</span>
+<span class="fc" id="L495">                                    mListener.onEstimateProgressChange(</span>
+                                            PROSACRadialDistortionRobustEstimator.this,
+                                            progress);
+                                }
+<span class="fc" id="L499">                            }</span>
+
+                            @Override
+                            public double[] getQualityScores() {
+<span class="fc" id="L503">                                return mQualityScores;</span>
+                            }
+                        });
+
+        try {
+<span class="fc" id="L508">            mLocked = true;</span>
+<span class="fc" id="L509">            innerEstimator.setConfidence(mConfidence);</span>
+<span class="fc" id="L510">            innerEstimator.setMaxIterations(mMaxIterations);</span>
+<span class="fc" id="L511">            innerEstimator.setProgressDelta(mProgressDelta);</span>
+<span class="fc" id="L512">            return innerEstimator.estimate();</span>
+<span class="nc" id="L513">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L514">            throw new LockedException(e);</span>
+<span class="nc" id="L515">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L516">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L518">            mLocked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation
+     *
+     * @return method being used for robust estimation
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L529">        return RobustEstimatorMethod.PROSAC;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided point.
+     * This method is used internally and does not check whether instance is
+     * locked or not
+     *
+     * @param qualityScores quality scores to be set
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than MINIMUM_SIZE
+     */
+    private void internalSetQualityScores(final double[] qualityScores) {
+<span class="fc bfc" id="L542" title="All 2 branches covered.">        if (qualityScores.length &lt; MIN_NUMBER_OF_POINTS) {</span>
+<span class="fc" id="L543">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L546">        mQualityScores = qualityScores;</span>
+<span class="fc" id="L547">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

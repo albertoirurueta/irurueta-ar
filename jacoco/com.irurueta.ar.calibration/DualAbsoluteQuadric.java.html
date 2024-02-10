@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DualAbsoluteQuadric.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration</a> &gt; <span class="el_source">DualAbsoluteQuadric.java</span></div><h1>DualAbsoluteQuadric.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Complex;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.algebra.Utils;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.DualQuadric;
+import com.irurueta.geometry.NonSymmetricMatrixException;
+import com.irurueta.geometry.Plane;
+import com.irurueta.geometry.ProjectiveTransformation3D;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.roots.FirstDegreePolynomialRootsEstimator;
+import com.irurueta.numerical.roots.SecondDegreePolynomialRootsEstimator;
+
+import java.io.Serializable;
+
+/**
+ * The dual absolute quadric is the dual quadric tangent to the plane at
+ * infinity.
+ * The absolute quadric (which is its inverse) contains all planes located
+ * at infinity (x,y,z,0), hence the absolute quadric fulfills
+ * (x,y,z,0)'*Q*(x,y,z,0).
+ * Consequently, the dual absolute quadric fulfills P*Q^-1*P, where P is the
+ * plane at infinity (0,0,0,1) in the metric stratum.
+ * This means that in the metric stratus the dual absolute quadric is equal
+ * (up to scale) to:
+ * [1  0   0   0]
+ * Q =  [0  1   0   0]
+ * [0  0   1   0]
+ * [0  0   0   0]
+ */
+public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
+
+    /**
+     * Constructor.
+     * Initializes the Dual Absolute Quadric assuming metric stratum, where it
+     * is equal to the identity except for the last element which is zero.
+     */
+    public DualAbsoluteQuadric() {
+<span class="fc" id="L57">        super(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);</span>
+<span class="fc" id="L58">    }</span>
+
+    /**
+     * Constructor of this class. This constructor accepts every parameter
+     * describing a dual quadric (parameters a, b, c, d, e, f, g, h, i, j).
+     *
+     * @param a Parameter A of the quadric.
+     * @param b Parameter B of the quadric.
+     * @param c Parameter C of the quadric.
+     * @param d Parameter D of the quadric.
+     * @param e Parameter E of the quadric.
+     * @param f Parameter F of the quadric.
+     * @param g Parameter G of the quadric.
+     * @param h Parameter H of the quadric.
+     * @param i Parameter I of the quadric.
+     * @param j Parameter J of the quadric.
+     */
+    public DualAbsoluteQuadric(
+            final double a, final double b, final double c, final double d, final double e,
+            final double f, final double g, final double h, final double i, final double j) {
+<span class="fc" id="L78">        super(a, b, c, d, e, f, g, h, i, j);</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Constructor from provided dual image of absolute conic and plane at
+     * infinity on an arbitrary projective stratum.
+     *
+     * @param diac            dual image of absolute conic in an arbitrary projective
+     *                        stratum.
+     * @param planeAtInfinity plane at infinity in an arbitrary projective
+     *                        stratum.
+     */
+    public DualAbsoluteQuadric(final DualImageOfAbsoluteConic diac,
+                               final Plane planeAtInfinity) {
+<span class="fc" id="L92">        super();</span>
+<span class="fc" id="L93">        setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Constructor using provided dual image of absolute conic on an arbitrary
+     * affine stratum while keeping the plane at infinity typically used in
+     * a metric stratum (0,0,0,1).
+     *
+     * @param diac dual image of absolute conic.
+     */
+    public DualAbsoluteQuadric(final DualImageOfAbsoluteConic diac) {
+<span class="fc" id="L104">        super();</span>
+
+<span class="fc" id="L106">        diac.normalize();</span>
+
+<span class="fc" id="L108">        final double a = diac.getA();</span>
+<span class="fc" id="L109">        final double b = diac.getC();</span>
+<span class="fc" id="L110">        final double c = diac.getF();</span>
+<span class="fc" id="L111">        final double d = diac.getB();</span>
+<span class="fc" id="L112">        final double e = diac.getE();</span>
+<span class="fc" id="L113">        final double f = diac.getD();</span>
+<span class="fc" id="L114">        setParameters(a, b, c, d, e, f, 0.0, 0.0, 0.0, 0.0);</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Constructor using provided plane at infinity while using the unitary
+     * dual image of absolute conic (the identity).
+     *
+     * @param planeAtInfinity plane at infinity.
+     */
+    public DualAbsoluteQuadric(final Plane planeAtInfinity) {
+<span class="fc" id="L124">        super();</span>
+
+<span class="fc" id="L126">        double planeA = planeAtInfinity.getA();</span>
+<span class="fc" id="L127">        double planeB = planeAtInfinity.getB();</span>
+<span class="fc" id="L128">        double planeC = planeAtInfinity.getC();</span>
+<span class="fc" id="L129">        final double planeD = planeAtInfinity.getD();</span>
+
+        // normalize plane components so that last one is the unit
+<span class="fc" id="L132">        planeA /= planeD;</span>
+<span class="fc" id="L133">        planeB /= planeD;</span>
+<span class="fc" id="L134">        planeC /= planeD;</span>
+
+<span class="fc" id="L136">        final double g = -planeA;</span>
+<span class="fc" id="L137">        final double h = -planeB;</span>
+<span class="fc" id="L138">        final double i = -planeC;</span>
+<span class="fc" id="L139">        final double j = planeA * planeA + planeB * planeB + planeC * planeC;</span>
+
+<span class="fc" id="L141">        setParameters(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, g, h, i, j);</span>
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Constructor of the Dual Absolute Quadric in an arbitrary projective
+     * stratum using a transformation from metric stratum to such projective
+     * space.
+     *
+     * @param metricToProjectiveTransformation transformation from metric to
+     *                                         a projective space.
+     * @throws InvalidTransformationException if provided transformation is
+     *                                        numerically unstable.
+     */
+    public DualAbsoluteQuadric(
+            final ProjectiveTransformation3D metricToProjectiveTransformation)
+<span class="fc" id="L156">            throws InvalidTransformationException {</span>
+<span class="fc" id="L157">        setMetricToProjectiveTransformation(metricToProjectiveTransformation);</span>
+<span class="fc" id="L158">    }</span>
+
+    /**
+     * Sets this dual absolute quadric from provided metric to projective space
+     * transformation.
+     *
+     * @param metricToProjectiveTransformation transformation from metric to a
+     *                                         projective space.
+     * @throws InvalidTransformationException if provided transformation is
+     *                                        numerically unstable.
+     */
+    public final void setMetricToProjectiveTransformation(
+            final ProjectiveTransformation3D metricToProjectiveTransformation)
+            throws InvalidTransformationException {
+<span class="fc" id="L172">        metricToProjectiveTransformation.normalize();</span>
+
+        try {
+            // transformation
+<span class="fc" id="L176">            final Matrix t = metricToProjectiveTransformation.asMatrix();</span>
+
+            // identity except for the last element. This is the DAQ in metric
+            // stratum
+<span class="fc" id="L180">            final Matrix i = Matrix.identity(BASEQUADRIC_MATRIX_ROW_SIZE,</span>
+                    BASEQUADRIC_MATRIX_COLUMN_SIZE);
+<span class="fc" id="L182">            i.setElementAt(3, 3, 0.0);</span>
+
+            // transformation transposed
+<span class="fc" id="L185">            final Matrix tt = t.transposeAndReturnNew();</span>
+
+            // make product t * i * tt
+<span class="fc" id="L188">            t.multiply(i);</span>
+<span class="fc" id="L189">            t.multiply(tt);</span>
+
+<span class="fc" id="L191">            setParameters(t);</span>
+<span class="nc" id="L192">        } catch (final NonSymmetricMatrixException e) {</span>
+<span class="nc" id="L193">            throw new InvalidTransformationException(e);</span>
+<span class="nc" id="L194">        } catch (final WrongSizeException ignore) {</span>
+            // never thrown
+<span class="fc" id="L196">        }</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Obtains the metric to projective stratum transformation defining this
+     * Dual Absolute Quadric.
+     *
+     * @return a new metric to projective space transformation.
+     * @throws InvalidTransformationException if transformation cannot be
+     *                                        determined because dual absolute quadric is numerically
+     *                                        unstable.
+     */
+    public ProjectiveTransformation3D getMetricToProjectiveTransformation()
+            throws InvalidTransformationException {
+<span class="fc" id="L210">        final ProjectiveTransformation3D result = new ProjectiveTransformation3D();</span>
+<span class="fc" id="L211">        getMetricToProjectiveTransformation(result);</span>
+<span class="fc" id="L212">        return result;</span>
+    }
+
+    /**
+     * Obtains the metric to projective stratum transformation defining this
+     * Dual Absolute Quadric.
+     *
+     * @param result instance where metric to projective space transformation
+     *               will be stored.
+     * @throws InvalidTransformationException if transformation cannot be
+     *                                        determined because dual absolute quadric is numerically
+     *                                        unstable.
+     */
+    public void getMetricToProjectiveTransformation(
+            final ProjectiveTransformation3D result)
+            throws InvalidTransformationException {
+        // DAQ can be decomposed as DAQ = H * I * H^t, where
+        // I =   [1  0   0   0]
+        //       [0  1   0   0]
+        //       [0  0   1   0]
+        //       [0  0   0   0]
+        // Hence I can be seen as the eigen values of DAQ's eigen decomposition
+        // and H are the eigenvectors.
+        // From this decomposition, it can be seen that:
+        // - DAQ is singular (has rank 3)
+        // - DAQ is symmetric positive definite (or negative depending on scale
+        // sign, but all eigen values have the same sign).
+        // We know that symmetric positive definite matrices have square roots
+        // such as:
+        // DAQ = M*M^t
+        // Hence the SVD of the square root is equal to:
+        // M = U*S*V^t
+        // And consequently DAQ is:
+        // DAQ = (U*S*V^t)*(U*S*V^t)^t = U*S*V^t*V*S*U^t = U*S*S*U^t
+        // where S is diagonal and contains the singular values of M
+        // and U are the singular vectors of M
+        // Since S is diagonal, then S*S contains the squared singular values on
+        // its diagonal and matrix S*S can be seen as the eigen values of DAQ,
+        // while &quot;U&quot; are the eigen vectors of DAQ
+        // Since we don't care about scale, we can normalize the eigen values of
+        // DAQ, and transformation H is equal to matrix U (up to scale)
+
+        try {
+<span class="fc" id="L255">            final Matrix daqMatrix = asMatrix();</span>
+<span class="fc" id="L256">            final SingularValueDecomposer decomposer = new SingularValueDecomposer(</span>
+                    daqMatrix);
+<span class="fc" id="L258">            decomposer.decompose();</span>
+            // since daq matrix will always be symmetric U = V
+<span class="fc" id="L260">            final Matrix u = decomposer.getU();</span>
+            // we need to undo the effect of possible different singular values
+            // because we want H * I * H^t, so that middle matrix is the identity
+            // except for the last element which is zero.
+            // For that reason we multiply each column of U by the square root
+            // of each singular value
+<span class="fc" id="L266">            final double[] w = decomposer.getSingularValues();</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">            for (int i = 0; i &lt; BASEQUADRIC_MATRIX_COLUMN_SIZE - 1; i++) {</span>
+<span class="fc" id="L268">                final double scalar = Math.sqrt(w[i]);</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">                for (int j = 0; j &lt; BASEQUADRIC_MATRIX_ROW_SIZE; j++) {</span>
+<span class="fc" id="L270">                    u.setElementAt(j, i, scalar * u.getElementAt(j, i));</span>
+                }
+            }
+<span class="fc" id="L273">            result.setT(u);</span>
+<span class="nc" id="L274">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L275">            throw new InvalidTransformationException(e);</span>
+<span class="fc" id="L276">        }</span>
+<span class="fc" id="L277">    }</span>
+
+    /**
+     * Sets this dual absolute quadric from provided dual image of absolute
+     * conic and plane at infinity on an arbitrary projective stratum.
+     *
+     * @param diac            dual image of absolute conic to be set.
+     * @param planeAtInfinity plane at infinity to be set.
+     */
+    public final void setDualImageOfAbsoluteConicAndPlaneAtInfinity(
+            final DualImageOfAbsoluteConic diac, final Plane planeAtInfinity) {
+
+<span class="fc" id="L289">        double planeA = planeAtInfinity.getA();</span>
+<span class="fc" id="L290">        double planeB = planeAtInfinity.getB();</span>
+<span class="fc" id="L291">        double planeC = planeAtInfinity.getC();</span>
+<span class="fc" id="L292">        final double planeD = planeAtInfinity.getD();</span>
+
+        // normalize plane components so that last one is the unit
+<span class="fc" id="L295">        planeA /= planeD;</span>
+<span class="fc" id="L296">        planeB /= planeD;</span>
+<span class="fc" id="L297">        planeC /= planeD;</span>
+
+<span class="fc" id="L299">        final double a = diac.getA();</span>
+<span class="fc" id="L300">        final double b = diac.getC();</span>
+<span class="fc" id="L301">        final double c = diac.getF();</span>
+<span class="fc" id="L302">        final double d = diac.getB();</span>
+<span class="fc" id="L303">        final double e = diac.getE();</span>
+<span class="fc" id="L304">        final double f = diac.getD();</span>
+
+<span class="fc" id="L306">        final double g = -(diac.getA() * planeA + diac.getB() * planeB +</span>
+<span class="fc" id="L307">                diac.getD() * planeC);</span>
+
+<span class="fc" id="L309">        final double h = -(diac.getB() * planeA + diac.getC() * planeB +</span>
+<span class="fc" id="L310">                diac.getE() * planeC);</span>
+
+<span class="fc" id="L312">        final double i = -(diac.getD() * planeA + diac.getE() * planeB +</span>
+<span class="fc" id="L313">                diac.getF() * planeC);</span>
+
+<span class="fc" id="L315">        final double j = -(planeA * g + planeB * h + planeC * i);</span>
+
+<span class="fc" id="L317">        setParameters(a, b, c, d, e, f, g, h, i, j);</span>
+<span class="fc" id="L318">    }</span>
+
+    /**
+     * Gets dual image of absolute conic associated to this dual absolute
+     * quadric in an arbitrary projective stratum.
+     *
+     * @return dual image of absolute conic associated to this dual absolute
+     * quadric.
+     */
+    public DualImageOfAbsoluteConic getDualImageOfAbsoluteConic() {
+<span class="fc" id="L328">        final DualImageOfAbsoluteConic result = new DualImageOfAbsoluteConic();</span>
+<span class="fc" id="L329">        getDualImageOfAbsoluteConic(result);</span>
+<span class="fc" id="L330">        return result;</span>
+    }
+
+    /**
+     * Gets dual image of absolute conic associated to this dual absolute
+     * quadric in an arbitrary projective stratum and stores the result into
+     * provided instance.
+     *
+     * @param result instance where dual image of absolute conic will be stored.
+     */
+    public void getDualImageOfAbsoluteConic(final DualImageOfAbsoluteConic result) {
+<span class="fc" id="L341">        final double a = getA();</span>
+<span class="fc" id="L342">        final double b = getD();</span>
+<span class="fc" id="L343">        final double c = getB();</span>
+<span class="fc" id="L344">        final double d = getF();</span>
+<span class="fc" id="L345">        final double e = getE();</span>
+<span class="fc" id="L346">        final double f = getC();</span>
+<span class="fc" id="L347">        result.setParameters(a, b, c, d, e, f);</span>
+<span class="fc" id="L348">    }</span>
+
+    /**
+     * Sets dual image of absolute conic while keeping current plane at infinity
+     * in an arbitrary projective stratum.
+     *
+     * @param diac dual image of absolute conic to be set.
+     * @throws InvalidPlaneAtInfinityException if plane at infinity to be
+     *                                         preserved when setting DIAC cannot be determined.
+     */
+    public final void setDualImageOfAbsoluteConic(final DualImageOfAbsoluteConic diac)
+            throws InvalidPlaneAtInfinityException {
+<span class="fc" id="L360">        final Plane planeAtInfinity = getPlaneAtInfinity();</span>
+<span class="fc" id="L361">        setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);</span>
+<span class="fc" id="L362">    }</span>
+
+    /**
+     * Gets plane at infinity associated to this dual absolute quadric in an
+     * arbitrary projective stratum.
+     *
+     * @return plane at infinity associated to this dual absolute quadric.
+     * @throws InvalidPlaneAtInfinityException if plane at infinity cannot be
+     *                                         determined.
+     */
+    public Plane getPlaneAtInfinity() throws InvalidPlaneAtInfinityException {
+<span class="fc" id="L373">        final Plane result = new Plane();</span>
+<span class="fc" id="L374">        getPlaneAtInfinity(result);</span>
+<span class="fc" id="L375">        return result;</span>
+    }
+
+    /**
+     * Gets plane at infinity associated to this dual absolute quadric in an
+     * arbitrary projective stratum.
+     *
+     * @param result instance where plane at infinity will be stored.
+     * @throws InvalidPlaneAtInfinityException if plane at infinity cannot be
+     *                                         determined.
+     */
+    public void getPlaneAtInfinity(final Plane result)
+            throws InvalidPlaneAtInfinityException {
+        try {
+<span class="fc" id="L389">            final DualImageOfAbsoluteConic diac = getDualImageOfAbsoluteConic();</span>
+<span class="fc" id="L390">            final Matrix m = diac.asMatrix();</span>
+<span class="fc" id="L391">            Utils.inverse(m, m);</span>
+
+<span class="fc" id="L393">            final double g = getG();</span>
+<span class="fc" id="L394">            final double h = getH();</span>
+<span class="fc" id="L395">            final double i = getI();</span>
+
+<span class="fc" id="L397">            final double planeA = -m.getElementAt(0, 0) * g</span>
+<span class="fc" id="L398">                    - m.getElementAt(0, 1) * h</span>
+<span class="fc" id="L399">                    - m.getElementAt(0, 2) * i;</span>
+
+<span class="fc" id="L401">            final double planeB = -m.getElementAt(1, 0) * g</span>
+<span class="fc" id="L402">                    - m.getElementAt(1, 1) * h</span>
+<span class="fc" id="L403">                    - m.getElementAt(1, 2) * i;</span>
+
+<span class="fc" id="L405">            final double planeC = -m.getElementAt(2, 0) * g</span>
+<span class="fc" id="L406">                    - m.getElementAt(2, 1) * h</span>
+<span class="fc" id="L407">                    - m.getElementAt(2, 2) * i;</span>
+
+            // plane at infinity must be tangent to dual absolute quadric, hence
+            // P^T*Q^-1*P = 0
+            // [planeA planeB planeC planeD]*[a  d   f   g][planeA]
+            //                               [d  b   e   h][planeB] = 0
+            //                               [f  e   c   i][planeC]
+            //                               [g  h   i   j][planeD]
+
+            // [planeA planeB planeC planeD]*[a*planeA + d*planeB + f*planeC + g*planeD]
+            //                               [d*planeA + b*planeB + e*planeC + h*planeD] = 0
+            //                               [f*planeA + e*planeB + c*planeC + i*planeD]
+            //                               [g*planeA + h*planeB + i*planeC + j*planeD]
+
+            // planeA*(a*planeA + d*planeB + f*planeC) +
+            // planeB*(d*planeA + b*planeB + e*planeC) +
+            // planeC*(f*planeA + e*planeB + c*planeC) +
+            // 2*planeD*(g*planeA + h*planeB + i*planeC) + j*planeD*planeD = 0
+
+            // hence we create the 2nd degree polynomial shown above and solve
+            // planeD value
+<span class="fc" id="L428">            final double a = getA();</span>
+<span class="fc" id="L429">            final double b = getB();</span>
+<span class="fc" id="L430">            final double c = getC();</span>
+<span class="fc" id="L431">            final double d = getD();</span>
+<span class="fc" id="L432">            final double e = getE();</span>
+<span class="fc" id="L433">            final double f = getF();</span>
+<span class="fc" id="L434">            final double j = getJ();</span>
+<span class="fc" id="L435">            final double[] polyParams = new double[]{</span>
+                    planeA * (a * planeA + d * planeB + f * planeC) +
+                            planeB * (d * planeA + b * planeB + e * planeC) +
+                            planeC * (f * planeA + e * planeB + c * planeC),
+                    2.0 * (g * planeA + h * planeB + i * planeC),
+                    j
+            };
+
+            double planeD;
+<span class="fc bfc" id="L444" title="All 2 branches covered.">            if (SecondDegreePolynomialRootsEstimator.isSecondDegree(polyParams)) {</span>
+                // second degree
+<span class="fc" id="L446">                final SecondDegreePolynomialRootsEstimator estimator =</span>
+                        new SecondDegreePolynomialRootsEstimator(polyParams);
+
+
+<span class="fc" id="L450">                final boolean hasDoubleRoot = estimator.hasDoubleRoot();</span>
+
+                // a double REAL root (same root happening twice) must be present
+                // because only one plane at infinity should be defined
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">                if (!hasDoubleRoot) {</span>
+<span class="nc" id="L455">                    throw new InvalidPlaneAtInfinityException(</span>
+                            &quot;more than one possible solution&quot;);
+                }
+
+<span class="fc" id="L459">                estimator.estimate();</span>
+
+<span class="fc" id="L461">                final Complex[] roots = estimator.getRoots();</span>
+<span class="fc" id="L462">                planeD = roots[0].getReal();</span>
+<span class="fc" id="L463">            } else {</span>
+                // polynomial is not second degree, attempt to solve as 1 degree
+<span class="pc bpc" id="L465" title="1 of 2 branches missed.">                if (FirstDegreePolynomialRootsEstimator.isFirstDegree(polyParams)) {</span>
+                    // first degree
+<span class="nc" id="L467">                    final FirstDegreePolynomialRootsEstimator estimatorFirst =</span>
+                            new FirstDegreePolynomialRootsEstimator(
+                                    new double[]{polyParams[0], polyParams[1]});
+
+<span class="nc" id="L471">                    estimatorFirst.estimate();</span>
+
+<span class="nc" id="L473">                    final Complex[] roots = estimatorFirst.getRoots();</span>
+<span class="nc" id="L474">                    planeD = roots[0].getReal();</span>
+<span class="nc" id="L475">                } else {</span>
+                    // degenerate polynomial (i.e. metric stratum)
+<span class="fc" id="L477">                    planeD = 1.0;</span>
+                }
+            }
+<span class="fc" id="L480">            result.setParameters(planeA, planeB, planeC, planeD);</span>
+
+<span class="nc" id="L482">        } catch (final AlgebraException | NumericalException e) {</span>
+<span class="nc" id="L483">            throw new InvalidPlaneAtInfinityException(e);</span>
+<span class="fc" id="L484">        }</span>
+<span class="fc" id="L485">    }</span>
+
+    /**
+     * Sets provided plane at infinity at an arbitrary projective stratum while
+     * keeping current dual image of absolute conic.
+     *
+     * @param planeAtInfinity plane at infinity to be set.
+     */
+    public final void setPlaneAtInfinity(final Plane planeAtInfinity) {
+<span class="fc" id="L494">        final DualImageOfAbsoluteConic diac = getDualImageOfAbsoluteConic();</span>
+<span class="fc" id="L495">        setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);</span>
+<span class="fc" id="L496">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

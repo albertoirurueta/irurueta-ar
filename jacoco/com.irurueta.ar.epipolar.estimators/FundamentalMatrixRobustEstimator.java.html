@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FundamentalMatrixRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.estimators</a> &gt; <span class="el_source">FundamentalMatrixRobustEstimator.java</span></div><h1>FundamentalMatrixRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.estimators;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.refiners.FundamentalMatrixRefiner;
+import com.irurueta.geometry.GeometryException;
+import com.irurueta.geometry.Line2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.InliersData;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.List;
+
+/**
+ * This is an abstract class for algorithms to robustly find the best
+ * Fundamental matrix for provided collections of matched 2D points.
+ * Implementations of this class should be able to detect and discard outliers
+ * in order to find the best solution.
+ */
+public abstract class FundamentalMatrixRobustEstimator {
+
+    /**
+     * Default robust estimator method when none is provided.
+     */
+<span class="fc" id="L43">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =</span>
+            RobustEstimatorMethod.PROSAC;
+
+    /**
+     * Default non-robust method to estimate a fundamental matrix.
+     */
+    public static final FundamentalMatrixEstimatorMethod
+<span class="fc" id="L50">            DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =</span>
+            FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;
+
+    /**
+     * Indicates that result is refined by default using Levenberg-Marquardt
+     * fitting algorithm over found inliers.
+     */
+    public static final boolean DEFAULT_REFINE_RESULT = true;
+
+    /**
+     * Indicates that covariance is not kept by default after refining result.
+     */
+    public static final boolean DEFAULT_KEEP_COVARIANCE = false;
+
+    /**
+     * Default amount of progress variation before notifying a change in
+     * estimation progress. By default, this is set to 5%.
+     */
+    public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
+
+    /**
+     * Minimum allowed value for progress delta.
+     */
+    public static final float MIN_PROGRESS_DELTA = 0.0f;
+
+    /**
+     * Maximum allowed value for progress delta.
+     */
+    public static final float MAX_PROGRESS_DELTA = 1.0f;
+
+    /**
+     * Constant defining default confidence of the estimated result, which is
+     * 99%. This means that with a probability of 99% estimation will be
+     * accurate because chosen sub-samples will be inliers.
+     */
+    public static final double DEFAULT_CONFIDENCE = 0.99;
+
+    /**
+     * Default maximum allowed number of iterations.
+     */
+    public static final int DEFAULT_MAX_ITERATIONS = 5000;
+
+    /**
+     * Minimum allowed confidence value.
+     */
+    public static final double MIN_CONFIDENCE = 0.0;
+
+    /**
+     * Maximum allowed confidence value.
+     */
+    public static final double MAX_CONFIDENCE = 1.0;
+
+    /**
+     * Minimum allowed number of iterations.
+     */
+    public static final int MIN_ITERATIONS = 1;
+
+    /**
+     * List of 2D points corresponding to left view.
+     */
+    protected List&lt;Point2D&gt; mLeftPoints;
+
+    /**
+     * List of 2D points corresponding to right view.
+     */
+    protected List&lt;Point2D&gt; mRightPoints;
+
+    /**
+     * Listener to be notified of events such as when estimation starts, ends or
+     * its progress significantly changes.
+     */
+    protected FundamentalMatrixRobustEstimatorListener mListener;
+
+    /**
+     * Indicates if this estimator is locked because an estimation is being
+     * computed.
+     */
+    protected boolean mLocked;
+
+    /**
+     * Amount of progress variation before notifying a progress change during
+     * estimation.
+     */
+    protected float mProgressDelta;
+
+    /**
+     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is
+     * equivalent to 100%). The amount of confidence indicates the probability
+     * that the estimated result is correct. Usually this value will be close
+     * to 1.0, but not exactly 1.0.
+     */
+    protected double mConfidence;
+
+    /**
+     * Maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     */
+    protected int mMaxIterations;
+
+    /**
+     * Data related to inliers found after estimation.
+     */
+    protected InliersData mInliersData;
+
+    /**
+     * Indicates whether result must be refined using Levenberg-Marquardt
+     * fitting algorithm over found inliers.
+     * If true, inliers will be computed and kept in any implementation
+     * regardless of the settings.
+     */
+    protected boolean mRefineResult;
+
+    /**
+     * Indicates whether covariance must be kept after refining result.
+     * This setting is only taken into account if result is refined.
+     */
+    private boolean mKeepCovariance;
+
+    /**
+     * Estimated covariance of estimated fundamental matrix.
+     * This is only available when result has been refined and covariance is
+     * kept.
+     */
+    private Matrix mCovariance;
+
+    /**
+     * Test line to compute epipolar residuals.
+     */
+<span class="fc" id="L179">    private final Line2D mTestLine = new Line2D();</span>
+
+    /**
+     * Internal non robust estimator of fundamental matrix.
+     */
+    private FundamentalMatrixEstimator mFundMatrixEstimator;
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     */
+    protected FundamentalMatrixRobustEstimator(
+<span class="fc" id="L193">            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {</span>
+<span class="fc" id="L194">        mProgressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L195">        mConfidence = DEFAULT_CONFIDENCE;</span>
+<span class="fc" id="L196">        mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L197">        mFundMatrixEstimator = FundamentalMatrixEstimator.create(</span>
+                fundMatrixEstimatorMethod);
+<span class="fc" id="L199">        mRefineResult = DEFAULT_REFINE_RESULT;</span>
+<span class="fc" id="L200">        mKeepCovariance = DEFAULT_KEEP_COVARIANCE;</span>
+<span class="fc" id="L201">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param listener                  listener to be notified of events such as when estimation
+     *                                  starts, ends or its progress significantly changes.
+     */
+    protected FundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L214">        this(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L215">        mListener = listener;</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * Constructor with matched 2D points.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    protected FundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L231">        this(fundMatrixEstimatorMethod);</span>
+<span class="fc" id="L232">        internalSetPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L233">    }</span>
+
+    /**
+     * Constructor with matched 2D points.
+     *
+     * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
+     *                                  estimator.
+     * @param leftPoints                2D points on left view.
+     * @param rightPoints               2D points on right view.
+     * @param listener                  listener to be notified of events such as when estimation
+     *                                  starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    protected FundamentalMatrixRobustEstimator(
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+<span class="fc" id="L251">        this(fundMatrixEstimatorMethod, listener);</span>
+<span class="fc" id="L252">        internalSetPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L253">    }</span>
+
+    /**
+     * Constructor.
+     */
+    protected FundamentalMatrixRobustEstimator() {
+<span class="nc" id="L259">        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD);</span>
+<span class="nc" id="L260">    }</span>
+    
+    /**
+     * Returns non-robust method to estimate a fundamental matrix.
+     *
+     * @return non-robust method to estimate a fundamental matrix.
+     */
+    public FundamentalMatrixEstimatorMethod getNonRobustFundamentalMatrixEstimatorMethod() {
+<span class="fc" id="L268">        return mFundMatrixEstimator.getMethod();</span>
+    }
+
+    /**
+     * Sets non-robust method to estimate a fundamental matrix.
+     *
+     * @param method non-robust method to estimate a fundamental matrix.
+     * @throws LockedException if this fundamental matrix estimator is locked.
+     */
+    public void setNonRobustFundamentalMatrixEstimatorMethod(
+            final FundamentalMatrixEstimatorMethod method) throws LockedException {
+<span class="fc bfc" id="L279" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L280">            throw new LockedException();</span>
+        }
+
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (method != getNonRobustFundamentalMatrixEstimatorMethod()) {</span>
+            // if method changes, recreate internal non-robust fundamental matrix
+            // estimator
+<span class="fc" id="L286">            mFundMatrixEstimator = FundamentalMatrixEstimator.create(method);</span>
+        }
+<span class="fc" id="L288">    }</span>
+
+    /**
+     * Returns matched 2D points on left view.
+     *
+     * @return 2D points on left view.
+     */
+    public List&lt;Point2D&gt; getLeftPoints() {
+<span class="fc" id="L296">        return mLeftPoints;</span>
+    }
+
+    /**
+     * Returns matched 2D points on right view.
+     *
+     * @return 2D points on right view.
+     */
+    public List&lt;Point2D&gt; getRightPoints() {
+<span class="fc" id="L305">        return mRightPoints;</span>
+    }
+
+    /**
+     * Sets matched 2D points on both left and right views.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @throws LockedException          if this fundamental matrix estimator is locked.
+     * @throws IllegalArgumentException if provided matched points on left and
+     *                                  right views do not have the same length or if their length is
+     *                                  less than 7 points.
+     */
+    public void setPoints(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints)
+            throws LockedException {
+<span class="fc bfc" id="L320" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L321">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L324">        internalSetPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L325">    }</span>
+
+    /**
+     * Returns reference to listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     *
+     * @return listener to be notified of events.
+     */
+    public FundamentalMatrixRobustEstimatorListener getListener() {
+<span class="fc" id="L334">        return mListener;</span>
+    }
+
+    /**
+     * Sets listener to be notified of events such as when estimation starts,
+     * ends or its progress significantly changes.
+     *
+     * @param listener listener to be notified of events.
+     * @throws LockedException if robust estimator is locked.
+     */
+    public void setListener(final FundamentalMatrixRobustEstimatorListener listener)
+            throws LockedException {
+<span class="fc bfc" id="L346" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L347">            throw new LockedException();</span>
+        }
+<span class="fc" id="L349">        mListener = listener;</span>
+<span class="fc" id="L350">    }</span>
+
+    /**
+     * Indicates whether listener has been provided and is available for
+     * retrieval.
+     *
+     * @return true if available, false otherwise.
+     */
+    public boolean isListenerAvailable() {
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        return mListener != null;</span>
+    }
+
+    /**
+     * Returns boolean indicating if estimator is locked because estimation is
+     * under progress.
+     *
+     * @return true if estimator is locked, false otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L369">        return mLocked;</span>
+    }
+
+    /**
+     * Returns amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @return amount of progress variation before notifying a progress change
+     * during estimation.
+     */
+    public float getProgressDelta() {
+<span class="fc" id="L380">        return mProgressDelta;</span>
+    }
+
+    /**
+     * Sets amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @param progressDelta amount of progress variation before notifying a
+     *                      progress change during estimation.
+     * @throws IllegalArgumentException if progress delta is less than zero or
+     *                                  greater than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setProgressDelta(final float progressDelta)
+            throws LockedException {
+<span class="fc bfc" id="L396" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L397">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L399" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA ||</span>
+                progressDelta &gt; MAX_PROGRESS_DELTA) {
+<span class="fc" id="L401">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L403">        mProgressDelta = progressDelta;</span>
+<span class="fc" id="L404">    }</span>
+
+    /**
+     * Returns amount of confidence expressed as a value between 0.0 and 1.0
+     * (which is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     *
+     * @return amount of confidence as a value between 0.0 and 1.0.
+     */
+    public double getConfidence() {
+<span class="fc" id="L415">        return mConfidence;</span>
+    }
+
+    /**
+     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which
+     * is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     *
+     * @param confidence confidence to be set as a value between 0.0 and 1.0.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and
+     *                                  1.0.
+     * @throws LockedException          if this estimator is locked because an estimator
+     *                                  is being computed.
+     */
+    public void setConfidence(final double confidence)
+            throws LockedException {
+<span class="fc bfc" id="L432" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L433">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L435" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
+<span class="fc" id="L436">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L438">        mConfidence = confidence;</span>
+<span class="fc" id="L439">    }</span>
+
+    /**
+     * Returns maximum allowed number of iterations. If maximum allowed number
+     * of iterations is achieved without converting to a result when calling
+     * estimate(), a RobustEstimatorException will be raised.
+     *
+     * @return maximum allowed number of iterations.
+     */
+    public int getMaxIterations() {
+<span class="fc" id="L449">        return mMaxIterations;</span>
+    }
+
+    /**
+     * Sets maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     *
+     * @param maxIterations maximum allowed number of iterations to be set.
+     * @throws IllegalArgumentException if provided value is less than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setMaxIterations(final int maxIterations)
+            throws LockedException {
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L465">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L468">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L470">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L471">    }</span>
+
+    /**
+     * Gets data related to inliers found after estimation.
+     *
+     * @return data related to inliers found after estimation.
+     */
+    public InliersData getInliersData() {
+<span class="fc" id="L479">        return mInliersData;</span>
+    }
+
+    /**
+     * Indicates whether result must be refined using Levenberg-Marquardt
+     * fitting algorithm over found inliers.
+     * If true, inliers will be computed and kept in any implementation
+     * regardless of the settings.
+     *
+     * @return true to refine result, false to simply use result found by
+     * robust estimator without further refining.
+     */
+    public boolean isResultRefined() {
+<span class="fc" id="L492">        return mRefineResult;</span>
+    }
+
+    /**
+     * Specifies whether result must be refined using Levenberg-Marquardt
+     * fitting algorithm over found inliers.
+     *
+     * @param refineResult true to refine result, false to simply use result
+     *                     found by robust estimator without further refining.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setResultRefined(final boolean refineResult) throws LockedException {
+<span class="fc bfc" id="L504" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L505">            throw new LockedException();</span>
+        }
+<span class="fc" id="L507">        mRefineResult = refineResult;</span>
+<span class="fc" id="L508">    }</span>
+
+    /**
+     * Indicates whether covariance must be kept after refining result.
+     * This setting is only taken into account if result is refined.
+     *
+     * @return true if covariance must be kept after refining result, false
+     * otherwise.
+     */
+    public boolean isCovarianceKept() {
+<span class="fc" id="L518">        return mKeepCovariance;</span>
+    }
+
+    /**
+     * Specifies whether covariance must be kept after refining result.
+     * This setting is only taken into account if result is refined.
+     *
+     * @param keepCovariance true if covariance must be kept after refining
+     *                       result, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setCovarianceKept(final boolean keepCovariance)
+            throws LockedException {
+<span class="fc bfc" id="L531" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L532">            throw new LockedException();</span>
+        }
+<span class="fc" id="L534">        mKeepCovariance = keepCovariance;</span>
+<span class="fc" id="L535">    }</span>
+
+    /**
+     * Returns minimum number of matched pair of points required to start
+     * the estimation.
+     *
+     * @return minimum number of matched pair of points required to start
+     * the estimation.
+     */
+    public int getMinRequiredPoints() {
+<span class="fc" id="L545">        return mFundMatrixEstimator.getMinRequiredPoints();</span>
+    }
+
+    /**
+     * Returns value indicating whether required data has been provided so that
+     * fundamental matrix estimation can start.
+     * If true, estimator is ready to compute a fundamental matrix, otherwise
+     * more data needs to be provided.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="pc bpc" id="L557" title="1 of 4 branches missed.">        return mLeftPoints != null &amp;&amp; mRightPoints != null &amp;&amp;</span>
+<span class="pc bpc" id="L558" title="1 of 2 branches missed.">                mLeftPoints.size() == mRightPoints.size() &amp;&amp;</span>
+<span class="pc bpc" id="L559" title="1 of 2 branches missed.">                mLeftPoints.size() &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+    }
+
+    /**
+     * Returns quality scores corresponding to each pair of matched points.
+     * The larger the score value the better the quality of the pair of matched
+     * points.
+     * This implementation always returns null.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @return quality scores corresponding to each pair of matched points.
+     */
+    public double[] getQualityScores() {
+<span class="fc" id="L572">        return null;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each pair of matched points.
+     * The larger the score value the better the quality of the pair of matched
+     * points.
+     * This implementation makes no action.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @param qualityScores quality scores corresponding to each pair of matched
+     *                      points.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than minimum required number of homographies.
+     */
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="fc" id="L590">    }</span>
+
+    /**
+     * Gets estimated covariance of estimated fundamental matrix if available.
+     * This is only available when result has been refined and covariance is
+     * kept.
+     *
+     * @return estimated covariance or null.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L600">        return mCovariance;</span>
+    }
+
+    /**
+     * Estimates fundamental matrix.
+     *
+     * @return estimated fundamental matrix.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    public abstract FundamentalMatrix estimate() throws LockedException,
+            NotReadyException, RobustEstimatorException;
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    public abstract RobustEstimatorMethod getMethod();
+
+    /**
+     * Creates a fundamental matrix robust estimator using provided method.
+     *
+     * @param method method of a robust estimator algorithm to estimate the best
+     *               fundamental matrix.
+     * @return an instance of a fundamental matrix robust estimator.
+     */
+    public static FundamentalMatrixRobustEstimator create(
+            final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L633" title="All 5 branches covered.">        switch (method) {</span>
+            case LMEDS:
+<span class="fc" id="L635">                return new LMedSFundamentalMatrixRobustEstimator();</span>
+            case MSAC:
+<span class="fc" id="L637">                return new MSACFundamentalMatrixRobustEstimator();</span>
+            case PROSAC:
+<span class="fc" id="L639">                return new PROSACFundamentalMatrixRobustEstimator();</span>
+            case PROMEDS:
+<span class="fc" id="L641">                return new PROMedSFundamentalMatrixRobustEstimator();</span>
+            case RANSAC:
+            default:
+<span class="fc" id="L644">                return new RANSACFundamentalMatrixRobustEstimator();</span>
+        }
+    }
+
+    /**
+     * Creates a fundamental matrix robust estimator using provided lists of
+     * matched points and provided method.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on left view.
+     * @param method      method of a robust estimator algorithm to estimate the best
+     *                    fundamental matrix.
+     * @return an instance of a fundamental matrix robust estimator.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public static FundamentalMatrixRobustEstimator create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L663" title="All 5 branches covered.">        switch (method) {</span>
+            case LMEDS:
+<span class="fc" id="L665">                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+            case MSAC:
+<span class="fc" id="L668">                return new MSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+            case PROSAC:
+<span class="fc" id="L671">                return new PROSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+            case PROMEDS:
+<span class="fc" id="L674">                return new PROMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+            case RANSAC:
+            default:
+<span class="fc" id="L678">                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+        }
+    }
+
+    /**
+     * Creates a fundamental matrix robust estimator using provided lists of
+     * matched points and provided method.
+     *
+     * @param leftPoints    2D points on left view.
+     * @param rightPoints   2D points on left view.
+     * @param qualityScores quality scores corresponding to each pair of matched
+     *                      points.
+     * @param method        method of a robust estimator algorithm to estimate the best
+     *                      fundamental matrix.
+     * @return an instance of a fundamental matrix robust estimator.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public static FundamentalMatrixRobustEstimator create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final double[] qualityScores, final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L700" title="All 5 branches covered.">        switch (method) {</span>
+            case LMEDS:
+<span class="fc" id="L702">                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+            case MSAC:
+<span class="fc" id="L705">                return new MSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+            case PROSAC:
+<span class="fc" id="L708">                return new PROSACFundamentalMatrixRobustEstimator(qualityScores,</span>
+                        leftPoints, rightPoints);
+            case PROMEDS:
+<span class="fc" id="L711">                return new PROMedSFundamentalMatrixRobustEstimator(</span>
+                        qualityScores, leftPoints, rightPoints);
+            case RANSAC:
+            default:
+<span class="fc" id="L715">                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,</span>
+                        rightPoints);
+        }
+    }
+
+    /**
+     * Creates a fundamental matrix robust estimator using default method.
+     *
+     * @return an instance of a fundamental matrix robust estimator.
+     */
+    public static FundamentalMatrixRobustEstimator create() {
+<span class="fc" id="L726">        return create(DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Creates a fundamental matrix robust estimator using provided lists of
+     * matched points and default method.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on left view.
+     * @return an instance of a fundamental matrix robust estimator.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public static FundamentalMatrixRobustEstimator create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L741">        return create(leftPoints, rightPoints, DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Creates a fundamental matrix robust estimator using provided lists of
+     * matched points and default method.
+     *
+     * @param leftPoints    2D points on left view.
+     * @param rightPoints   2D points on left view.
+     * @param qualityScores quality scores corresponding to each pair of matched
+     *                      points.
+     * @return an instance of a fundamental matrix robust estimator.
+     * @throws IllegalArgumentException if provided list of points do not have
+     *                                  the same length or their length is less than 7 points.
+     */
+    public static FundamentalMatrixRobustEstimator create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final double[] qualityScores) {
+<span class="fc" id="L759">        return create(leftPoints, rightPoints, qualityScores,</span>
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Computes the residual between a fundamental matrix and a pair of matched
+     * points.
+     *
+     * @param fundamentalMatrix a fundamental matrix.
+     * @param leftPoint         left 2D point.
+     * @param rightPoint        right 2D point.
+     * @return residual (distance of point to epipolar line).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    protected double residual(final FundamentalMatrix fundamentalMatrix,
+                              final Point2D leftPoint, final Point2D rightPoint) {
+        try {
+<span class="fc" id="L776">            leftPoint.normalize();</span>
+<span class="fc" id="L777">            rightPoint.normalize();</span>
+<span class="fc" id="L778">            fundamentalMatrix.normalize();</span>
+<span class="fc" id="L779">            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);</span>
+<span class="fc" id="L780">            final double leftDistance = Math.abs(mTestLine.signedDistance(</span>
+                    leftPoint));
+<span class="fc" id="L782">            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);</span>
+<span class="fc" id="L783">            final double rightDistance = Math.abs(mTestLine.signedDistance(</span>
+                    rightPoint));
+            // return average distance as an error residual
+<span class="fc" id="L786">            return 0.5 * (leftDistance + rightDistance);</span>
+<span class="nc" id="L787">        } catch (final NotReadyException e) {</span>
+<span class="nc" id="L788">            return Double.MAX_VALUE;</span>
+        }
+    }
+
+    /**
+     * Estimates a fundamental matrix using a non-robust method and provided
+     * subset of matched points and stores the solution in provided array of
+     * solutions.
+     *
+     * @param solutions         list where solutions will be stored.
+     * @param subsetLeftPoints  subset of left view matched points.
+     * @param subsetRightPoints subset of right view matched points.
+     */
+    protected void nonRobustEstimate(final List&lt;FundamentalMatrix&gt; solutions,
+                                     final List&lt;Point2D&gt; subsetLeftPoints,
+                                     final List&lt;Point2D&gt; subsetRightPoints) {
+        try {
+<span class="fc" id="L805">            mFundMatrixEstimator.setPoints(subsetLeftPoints,</span>
+                    subsetRightPoints);
+<span class="fc bfc" id="L807" title="All 2 branches covered.">            if (mFundMatrixEstimator.getMethod() ==</span>
+                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+<span class="fc" id="L809">                final List&lt;FundamentalMatrix&gt; matrices =</span>
+                        ((SevenPointsFundamentalMatrixEstimator)
+<span class="fc" id="L811">                                mFundMatrixEstimator).estimateAll();</span>
+<span class="fc" id="L812">                solutions.addAll(matrices);</span>
+<span class="fc" id="L813">            } else {</span>
+<span class="fc" id="L814">                solutions.add(mFundMatrixEstimator.estimate());</span>
+            }
+<span class="fc" id="L816">        } catch (final GeometryException e) {</span>
+            // if anything fails, no solution is added
+<span class="fc" id="L818">        }</span>
+<span class="fc" id="L819">    }</span>
+
+    /**
+     * Attempts to refine provided solution if refinement is requested.
+     * This method returns a refined solution or the same provided solution
+     * if refinement is not requested or has failed.
+     * If refinement is enabled, and it is requested to keep covariance, this
+     * method will also keep covariance of refined fundamental matrix.
+     *
+     * @param fundamentalMatrix fundamental matrix estimated by a robust
+     *                          estimator without refinement.
+     * @return solution after refinement (if requested) or the provided
+     * non-refined solution if not requested or if refinement failed.
+     */
+    protected FundamentalMatrix attemptRefine(
+            final FundamentalMatrix fundamentalMatrix) {
+<span class="fc bfc" id="L835" title="All 2 branches covered.">        if (mRefineResult) {</span>
+<span class="fc" id="L836">            final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner(</span>
+<span class="fc" id="L837">                    fundamentalMatrix, mKeepCovariance, getInliersData(),</span>
+                    mLeftPoints, mRightPoints,
+<span class="fc" id="L839">                    getRefinementStandardDeviation());</span>
+
+            try {
+<span class="fc" id="L842">                final FundamentalMatrix result = new FundamentalMatrix();</span>
+<span class="fc" id="L843">                final boolean improved = refiner.refine(result);</span>
+
+<span class="fc bfc" id="L845" title="All 2 branches covered.">                if (mKeepCovariance) {</span>
+                    // keep covariance
+<span class="fc" id="L847">                    mCovariance = refiner.getCovariance();</span>
+                }
+
+<span class="fc bfc" id="L850" title="All 2 branches covered.">                return improved ? result : fundamentalMatrix;</span>
+<span class="fc" id="L851">            } catch (final Exception e) {</span>
+                // refinement failed, so we return input value
+<span class="fc" id="L853">                return fundamentalMatrix;</span>
+            }
+
+        } else {
+<span class="fc" id="L857">            return fundamentalMatrix;</span>
+        }
+    }
+
+    /**
+     * Gets standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically, this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of
+     * such threshold.
+     *
+     * @return standard deviation used for refinement.
+     */
+    protected abstract double getRefinementStandardDeviation();
+
+    /**
+     * Sets matched 2D points on left and right views.
+     * This method does not check whether instance is locked or not.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    private void internalSetPoints(final List&lt;Point2D&gt; leftPoints,
+                                   final List&lt;Point2D&gt; rightPoints) {
+<span class="fc bfc" id="L885" title="All 2 branches covered.">        if (leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L886">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L888" title="All 2 branches covered.">        if (leftPoints.size() &lt; getMinRequiredPoints()) {</span>
+<span class="fc" id="L889">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L892">        mLeftPoints = leftPoints;</span>
+<span class="fc" id="L893">        mRightPoints = rightPoints;</span>
+<span class="fc" id="L894">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

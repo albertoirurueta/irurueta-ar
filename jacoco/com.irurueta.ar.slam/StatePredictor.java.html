@@ -1,0 +1,1357 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatePredictor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">StatePredictor.java</span></div><h1>StatePredictor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Quaternion;
+
+/**
+ * Utility class to predict device state (position, orientation, linear
+ * velocity, linear acceleration and angular velocity).
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class StatePredictor {
+
+    /**
+     * Number of components on angular speed.
+     */
+    public static final int ANGULAR_SPEED_COMPONENTS = 3;
+
+    /**
+     * Number of components of speed.
+     */
+    public static final int SPEED_COMPONENTS = 3;
+
+    /**
+     * Number of components of acceleration.
+     */
+    public static final int ACCELERATION_COMPONENTS = 3;
+
+    /**
+     * Number of components of constant acceleration model state.
+     */
+    public static final int STATE_COMPONENTS = 16;
+
+    /**
+     * Number of components of constant acceleration model control signal.
+     */
+    public static final int CONTROL_COMPONENTS = 9;
+
+    /**
+     * Number of components of constant acceleration model state with position
+     * adjustment.
+     */
+    public static final int STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS = 16;
+
+    /**
+     * Number of components of constant acceleration model with position
+     * adjustment control signal.
+     */
+    public static final int CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS = 12;
+
+    /**
+     * Number of components of constant acceleration model state with rotation
+     * adjustment.
+     */
+    public static final int STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS = 16;
+
+    /**
+     * Number of components of constant acceleration model with rotation
+     * adjustment control signal.
+     */
+    public static final int CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS = 13;
+
+    /**
+     * Number of components of constant acceleration model with position and
+     * rotation adjustment.
+     */
+    public static final int STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS = 16;
+
+    /**
+     * Number of components of constant acceleration model with position and
+     * rotation adjustment control signal.
+     */
+    public static final int CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS = 16;
+
+    /**
+     * Constructor.
+     */
+    private StatePredictor() {
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: linear-velocity-change-x,
+     *                  linear-velocity-change-y, linear-velocity-change-z,
+     *                  linear-acceleration-change-x, linear-acceleration-change-y,
+     *                  linear-acceleration-change-z, angular-velocity-change-x,
+     *                  angular-velocity-change-y, angular-velocity-change-z. Must have length 9.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where updated system model will be stored. Must
+     *                  have length 16.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x9.
+     * @throws IllegalArgumentException if system state array, control array,
+     *                                  result or jacobians do not have proper size.
+     */
+    public static void predict(
+            final double[] x, final double[] u, final double dt,
+            final double[] result, final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (x.length != STATE_COMPONENTS) {</span>
+            // x must have length 16
+<span class="fc" id="L128">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (u.length != CONTROL_COMPONENTS) {</span>
+            // u must have length 9
+<span class="fc" id="L132">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (result.length != STATE_COMPONENTS) {</span>
+            // result must have length 16
+<span class="fc" id="L136">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (jacobianX != null &amp;&amp;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_COMPONENTS ||</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">                        jacobianX.getColumns() != STATE_COMPONENTS)) {</span>
+            // jacobian wrt x must be 16x16
+<span class="fc" id="L142">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if (jacobianU != null &amp;&amp;</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_COMPONENTS ||</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">                        jacobianU.getColumns() != CONTROL_COMPONENTS)) {</span>
+            // jacobian wrt u must be 16x9
+<span class="fc" id="L148">            throw new IllegalArgumentException();</span>
+        }
+
+        // position
+<span class="fc" id="L152">        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+
+        // orientation
+<span class="fc" id="L155">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+
+        // linear velocity
+<span class="fc" id="L158">        double vx = x[7];</span>
+<span class="fc" id="L159">        double vy = x[8];</span>
+<span class="fc" id="L160">        double vz = x[9];</span>
+
+        // linear acceleration
+<span class="fc" id="L163">        double ax = x[10];</span>
+<span class="fc" id="L164">        double ay = x[11];</span>
+<span class="fc" id="L165">        double az = x[12];</span>
+
+        // angular velocity
+<span class="fc" id="L168">        double wx = x[13];</span>
+<span class="fc" id="L169">        double wy = x[14];</span>
+<span class="fc" id="L170">        double wz = x[15];</span>
+
+        // linear velocity change (control)
+<span class="fc" id="L173">        final double uvx = u[0];</span>
+<span class="fc" id="L174">        final double uvy = u[1];</span>
+<span class="fc" id="L175">        final double uvz = u[2];</span>
+
+        // linear acceleration change (control)
+<span class="fc" id="L178">        final double uax = u[3];</span>
+<span class="fc" id="L179">        final double uay = u[4];</span>
+<span class="fc" id="L180">        final double uaz = u[5];</span>
+
+        // angular velocity change (control)
+<span class="fc" id="L183">        final double uwx = u[6];</span>
+<span class="fc" id="L184">        final double uwy = u[7];</span>
+<span class="fc" id="L185">        final double uwz = u[8];</span>
+
+        try {
+            // update velocity
+<span class="fc" id="L189">            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L190">            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L191">            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,</span>
+                    vv, va);
+
+            // update position
+<span class="fc" id="L195">            Matrix rr = null;</span>
+<span class="fc" id="L196">            Matrix rv = null;</span>
+<span class="fc" id="L197">            Matrix ra = null;</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L199">                rr = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L202">                rv = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        SPEED_COMPONENTS);
+<span class="fc" id="L205">                ra = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        ACCELERATION_COMPONENTS);
+            }
+<span class="fc" id="L209">            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</span>
+                    ra);
+
+            // update orientation
+<span class="fc" id="L213">            Matrix qq = null;</span>
+<span class="fc" id="L214">            Matrix qw = null;</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L216">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L217">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+            }
+<span class="fc" id="L219">            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);</span>
+
+            // set updated linear velocity
+<span class="fc" id="L222">            vx = v[0];</span>
+<span class="fc" id="L223">            vy = v[1];</span>
+<span class="fc" id="L224">            vz = v[2];</span>
+
+            // apply control signals
+<span class="fc" id="L227">            vx += uvx;</span>
+<span class="fc" id="L228">            vy += uvy;</span>
+<span class="fc" id="L229">            vz += uvz;</span>
+
+<span class="fc" id="L231">            ax += uax;</span>
+<span class="fc" id="L232">            ay += uay;</span>
+<span class="fc" id="L233">            az += uaz;</span>
+
+<span class="fc" id="L235">            wx += uwx;</span>
+<span class="fc" id="L236">            wy += uwy;</span>
+<span class="fc" id="L237">            wz += uwz;</span>
+
+            // set new state
+<span class="fc" id="L240">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L241">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L242">            result[2] = r.getInhomZ();</span>
+
+<span class="fc" id="L244">            result[3] = q.getA();</span>
+<span class="fc" id="L245">            result[4] = q.getB();</span>
+<span class="fc" id="L246">            result[5] = q.getC();</span>
+<span class="fc" id="L247">            result[6] = q.getD();</span>
+
+<span class="fc" id="L249">            result[7] = vx;</span>
+<span class="fc" id="L250">            result[8] = vy;</span>
+<span class="fc" id="L251">            result[9] = vz;</span>
+
+<span class="fc" id="L253">            result[10] = ax;</span>
+<span class="fc" id="L254">            result[11] = ay;</span>
+<span class="fc" id="L255">            result[12] = az;</span>
+
+<span class="fc" id="L257">            result[13] = wx;</span>
+<span class="fc" id="L258">            result[14] = wy;</span>
+<span class="fc" id="L259">            result[15] = wz;</span>
+
+            // jacobians
+<span class="fc bfc" id="L262" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+                // [Rr   0   Rv  Ra  0  ]
+                // [0    Qq  0   0   Qw ]
+                // [0    0   Vv  Va  0  ]
+                // [0    0   0   eye 0  ]
+                // [0    0   0   0   eye]
+<span class="fc" id="L268">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L269">                jacobianX.setSubmatrix(0, 0, 2, 2,</span>
+                        rr);
+
+<span class="fc" id="L272">                jacobianX.setSubmatrix(3, 3, 6, 6,</span>
+                        qq);
+
+<span class="fc" id="L275">                jacobianX.setSubmatrix(0, 7, 2, 9,</span>
+                        rv);
+
+<span class="fc" id="L278">                jacobianX.setSubmatrix(7, 7, 9, 9,</span>
+                        vv);
+
+<span class="fc" id="L281">                jacobianX.setSubmatrix(0, 10, 2, 12,</span>
+                        ra);
+
+<span class="fc" id="L284">                jacobianX.setSubmatrix(7, 10, 9, 12,</span>
+                        va);
+
+<span class="fc" id="L287">                jacobianX.setSubmatrix(3, 13, 6, 15,</span>
+                        qw);
+
+<span class="fc bfc" id="L290" title="All 2 branches covered.">                for (int i = 10; i &lt; STATE_COMPONENTS; i++) {</span>
+<span class="fc" id="L291">                    jacobianX.setElementAt(i, i, 1.0);</span>
+                }
+            }
+
+<span class="fc bfc" id="L295" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L296">                jacobianU.initialize(0.0);</span>
+
+<span class="fc bfc" id="L298" title="All 2 branches covered.">                for (int i = 7, j = 0; i &lt; STATE_COMPONENTS; i++, j++) {</span>
+<span class="fc" id="L299">                    jacobianU.setElementAt(i, j, 1.0);</span>
+                }
+            }
+<span class="nc" id="L302">        } catch (final WrongSizeException ignore) {</span>
+            // never thrown
+<span class="fc" id="L304">        }</span>
+<span class="fc" id="L305">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x      initial system state containing: position-x, position-y,
+     *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *               length 16.
+     * @param u      perturbations or control signals: linear-velocity-change-x,
+     *               linear-velocity-change-y, linear-velocity-change-z,
+     *               linear-acceleration-change-x, linear-acceleration-change-y,
+     *               linear-acceleration-change-z, angular-velocity-change-x,
+     *               angular-velocity-change-y, angular-velocity-change-z. Must have length 9.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated system model will be stored. Must
+     *               have length 16.
+     * @throws IllegalArgumentException if system state array, control array
+     *                                  or result do not have proper size.
+     */
+    public static void predict(
+            final double[] x, final double[] u, final double dt, final double[] result) {
+<span class="fc" id="L332">        predict(x, u, dt, result, null, null);</span>
+<span class="fc" id="L333">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: linear-velocity-change-x,
+     *                  linear-velocity-change-y, linear-velocity-change-z,
+     *                  linear-acceleration-change-x, linear-acceleration-change-y,
+     *                  linear-acceleration-change-z, angular-velocity-change-x,
+     *                  angular-velocity-change-y, angular-velocity-change-z. Must have length 9.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x9.
+     * @return a new instance containing the updated system state.
+     * @throws IllegalArgumentException if system state array, control array or
+     *                                  jacobians do not have proper size.
+     */
+    public static double[] predict(
+            final double[] x, final double[] u, final double dt,
+            final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc" id="L362">        final double[] result = new double[STATE_COMPONENTS];</span>
+<span class="fc" id="L363">        predict(x, u, dt, result, jacobianX, jacobianU);</span>
+<span class="fc" id="L364">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x  initial system state containing: position-x, position-y,
+     *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *           length 16.
+     * @param u  perturbations or control signals: linear-velocity-change-x,
+     *           linear-velocity-change-y, linear-velocity-change-z,
+     *           linear-acceleration-change-x, linear-acceleration-change-y,
+     *           linear-acceleration-change-z, angular-velocity-change-x,
+     *           angular-velocity-change-y, angular-velocity-change-z. Must have length 9.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing the updated system state.
+     * @throws IllegalArgumentException if system state array or control array
+     *                                  do not have proper size.
+     */
+    public static double[] predict(
+            final double[] x, final double[] u, final double dt) {
+<span class="fc" id="L391">        final double[] result = new double[STATE_COMPONENTS];</span>
+<span class="fc" id="L392">        predict(x, u, dt, result);</span>
+<span class="fc" id="L393">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: position-change-x,
+     *                  position-change-y, position-change-z, linear-velocity-change-x,
+     *                  linear-velocity-change-y, linear-velocity-change-z,
+     *                  linear-acceleration-change-x, linear-acceleration-change-y,
+     *                  linear-acceleration-change-z, angular-velocity-change-x,
+     *                  angular-velocity-change-y, angular-velocity-change-z. Must have length
+     *                  12.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where updated system model will be stored. Must
+     *                  have length 16.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x12.
+     * @throws IllegalArgumentException if system state array, control array,
+     *                                  result array or jacobians do not have proper size.
+     */
+    public static void predictWithPositionAdjustment(
+            final double[] x, final double[] u, final double dt,
+            final double[] result, final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        if (x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
+            // x must have length 16
+<span class="fc" id="L428">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L430" title="All 2 branches covered.">        if (u.length != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
+            // u must have length 12
+<span class="fc" id="L432">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L434" title="All 2 branches covered.">        if (result.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {</span>
+            // result must have length 16
+<span class="fc" id="L436">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        if (jacobianX != null &amp;&amp;</span>
+<span class="fc bfc" id="L439" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">                        jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {</span>
+            // jacobian wrt x must be 16x16
+<span class="fc" id="L442">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc bfc" id="L444" title="All 2 branches covered.">        if (jacobianU != null &amp;&amp;</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L446" title="1 of 2 branches missed.">                        jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {</span>
+            // jacobian wrt u must be 16x12
+<span class="fc" id="L448">            throw new IllegalArgumentException();</span>
+        }
+
+        // position
+<span class="fc" id="L452">        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+
+        // orientation
+<span class="fc" id="L455">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+
+        // linear velocity
+<span class="fc" id="L458">        double vx = x[7];</span>
+<span class="fc" id="L459">        double vy = x[8];</span>
+<span class="fc" id="L460">        double vz = x[9];</span>
+
+        // linear acceleration
+<span class="fc" id="L463">        double ax = x[10];</span>
+<span class="fc" id="L464">        double ay = x[11];</span>
+<span class="fc" id="L465">        double az = x[12];</span>
+
+        // angular velocity
+<span class="fc" id="L468">        double wx = x[13];</span>
+<span class="fc" id="L469">        double wy = x[14];</span>
+<span class="fc" id="L470">        double wz = x[15];</span>
+
+        // position change (control)
+<span class="fc" id="L473">        final double drx = u[0];</span>
+<span class="fc" id="L474">        final double dry = u[1];</span>
+<span class="fc" id="L475">        final double drz = u[2];</span>
+
+        // linear velocity change (control)
+<span class="fc" id="L478">        final double uvx = u[3];</span>
+<span class="fc" id="L479">        final double uvy = u[4];</span>
+<span class="fc" id="L480">        final double uvz = u[5];</span>
+
+        // linear acceleration change (control)
+<span class="fc" id="L483">        final double uax = u[6];</span>
+<span class="fc" id="L484">        final double uay = u[7];</span>
+<span class="fc" id="L485">        final double uaz = u[8];</span>
+
+        // angular velocity change (control)
+<span class="fc" id="L488">        final double uwx = u[9];</span>
+<span class="fc" id="L489">        final double uwy = u[10];</span>
+<span class="fc" id="L490">        final double uwz = u[11];</span>
+
+        try {
+            // update velocity
+<span class="fc" id="L494">            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L495">            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L496">            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,</span>
+                    vv, va);
+
+            // update position
+<span class="fc" id="L500">            Matrix rr = null;</span>
+<span class="fc" id="L501">            Matrix rv = null;</span>
+<span class="fc" id="L502">            Matrix ra = null;</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L504">                rr = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L507">                rv = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        SPEED_COMPONENTS);
+<span class="fc" id="L510">                ra = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        ACCELERATION_COMPONENTS);
+            }
+<span class="fc" id="L514">            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz,</span>
+                    vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
+
+            // update orientation
+<span class="fc" id="L518">            Matrix qq = null;</span>
+<span class="fc" id="L519">            Matrix qw = null;</span>
+<span class="fc bfc" id="L520" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L521">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L522">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+            }
+<span class="fc" id="L524">            q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);</span>
+
+            // set updated linear velocity
+<span class="fc" id="L527">            vx = v[0];</span>
+<span class="fc" id="L528">            vy = v[1];</span>
+<span class="fc" id="L529">            vz = v[2];</span>
+
+            // apply control signals
+<span class="fc" id="L532">            vx += uvx;</span>
+<span class="fc" id="L533">            vy += uvy;</span>
+<span class="fc" id="L534">            vz += uvz;</span>
+
+<span class="fc" id="L536">            ax += uax;</span>
+<span class="fc" id="L537">            ay += uay;</span>
+<span class="fc" id="L538">            az += uaz;</span>
+
+<span class="fc" id="L540">            wx += uwx;</span>
+<span class="fc" id="L541">            wy += uwy;</span>
+<span class="fc" id="L542">            wz += uwz;</span>
+
+            // set new state
+<span class="fc" id="L545">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L546">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L547">            result[2] = r.getInhomZ();</span>
+
+<span class="fc" id="L549">            result[3] = q.getA();</span>
+<span class="fc" id="L550">            result[4] = q.getB();</span>
+<span class="fc" id="L551">            result[5] = q.getC();</span>
+<span class="fc" id="L552">            result[6] = q.getD();</span>
+
+<span class="fc" id="L554">            result[7] = vx;</span>
+<span class="fc" id="L555">            result[8] = vy;</span>
+<span class="fc" id="L556">            result[9] = vz;</span>
+
+<span class="fc" id="L558">            result[10] = ax;</span>
+<span class="fc" id="L559">            result[11] = ay;</span>
+<span class="fc" id="L560">            result[12] = az;</span>
+
+<span class="fc" id="L562">            result[13] = wx;</span>
+<span class="fc" id="L563">            result[14] = wy;</span>
+<span class="fc" id="L564">            result[15] = wz;</span>
+
+            // jacobians
+<span class="fc bfc" id="L567" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+                // [Rr   0   Rv  Ra  0  ]
+                // [0    Qq  0   0   Qw ]
+                // [0    0   Vv  Va  0  ]
+                // [0    0   0   eye 0  ]
+                // [0    0   0   0   eye]
+<span class="fc" id="L573">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L574">                jacobianX.setSubmatrix(0, 0, 2, 2,</span>
+                        rr);
+
+<span class="fc" id="L577">                jacobianX.setSubmatrix(3, 3, 6, 6,</span>
+                        qq);
+
+<span class="fc" id="L580">                jacobianX.setSubmatrix(0, 7, 2, 9,</span>
+                        rv);
+
+<span class="fc" id="L583">                jacobianX.setSubmatrix(7, 7, 9, 9,</span>
+                        vv);
+
+<span class="fc" id="L586">                jacobianX.setSubmatrix(0, 10, 2, 12,</span>
+                        ra);
+
+<span class="fc" id="L589">                jacobianX.setSubmatrix(7, 10, 9, 12,</span>
+                        va);
+
+<span class="fc" id="L592">                jacobianX.setSubmatrix(3, 13, 6, 15,</span>
+                        qw);
+
+<span class="fc bfc" id="L595" title="All 2 branches covered.">                for (int i = 10; i &lt; STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L596">                    jacobianX.setElementAt(i, i, 1.0);</span>
+                }
+            }
+
+<span class="fc bfc" id="L600" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L601">                jacobianU.initialize(0.0);</span>
+
+                // variation of position
+<span class="fc bfc" id="L604" title="All 2 branches covered.">                for (int i = 0; i &lt; Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {</span>
+<span class="fc" id="L605">                    jacobianU.setElementAt(i, i, 1.0);</span>
+                }
+                // variation of linear speed and acceleration, and angular speed
+<span class="fc" id="L608">                for (int i = 7, j = Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="fc bfc" id="L609" title="All 2 branches covered.">                     i &lt; STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++, j++) {</span>
+<span class="fc" id="L610">                    jacobianU.setElementAt(i, j, 1.0);</span>
+                }
+            }
+<span class="nc" id="L613">        } catch (final WrongSizeException ignore) {</span>
+            // never thrown
+<span class="fc" id="L615">        }</span>
+<span class="fc" id="L616">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x      initial system state containing: position-x, position-y,
+     *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *               length 16.
+     * @param u      perturbations or control signals: position-change-x,
+     *               position-change-y, position-change-z, linear-velocity-change-x,
+     *               linear-velocity-change-y, linear-velocity-change-z,
+     *               linear-acceleration-change-x, linear-acceleration-change-y,
+     *               linear-acceleration-change-z, angular-velocity-change-x,
+     *               angular-velocity-change-y, angular-velocity-change-z. Must have length
+     *               12.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated system model will be stored. Must
+     *               have length 16.
+     * @throws IllegalArgumentException if system state array, control array or
+     *                                  result array do not have proper size.
+     */
+    public static void predictWithPositionAdjustment(
+            final double[] x, final double[] u, final double dt, final double[] result) {
+<span class="fc" id="L645">        predictWithPositionAdjustment(x, u, dt, result, null, null);</span>
+<span class="fc" id="L646">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: position-change-x,
+     *                  position-change-y, position-change-z, linear-velocity-change-x,
+     *                  linear-velocity-change-y, linear-velocity-change-z,
+     *                  linear-acceleration-change-x, linear-acceleration-change-y,
+     *                  linear-acceleration-change-z, angular-velocity-change-x,
+     *                  angular-velocity-change-y, angular-velocity-change-z. Must have length
+     *                  12.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x12.
+     * @return a new array containing updated system model.
+     * @throws IllegalArgumentException if system state array, control array
+     *                                  or jacobians do not have proper size.
+     */
+    public static double[] predictWithPositionAdjustment(
+            final double[] x, final double[] u, final double dt,
+            final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc" id="L677">        final double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L678">        predictWithPositionAdjustment(x, u, dt, result, jacobianX, jacobianU);</span>
+<span class="fc" id="L679">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x  initial system state containing: position-x, position-y,
+     *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *           length 16.
+     * @param u  perturbations or control signals: position-change-x,
+     *           position-change-y, position-change-z, linear-velocity-change-x,
+     *           linear-velocity-change-y, linear-velocity-change-z,
+     *           linear-acceleration-change-x, linear-acceleration-change-y,
+     *           linear-acceleration-change-z, angular-velocity-change-x,
+     *           angular-velocity-change-y, angular-velocity-change-z. Must have length
+     *           12.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new array containing updated system model.
+     * @throws IllegalArgumentException if system state array or control array
+     *                                  do not have proper size.
+     */
+    public static double[] predictWithPositionAdjustment(
+            final double[] x, final double[] u, final double dt) {
+<span class="fc" id="L708">        final double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L709">        predictWithPositionAdjustment(x, u, dt, result);</span>
+<span class="fc" id="L710">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: quaternion-change-a,
+     *                  quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *                  linear-velocity-change-x, linear-velocity-change-y,
+     *                  linear-velocity-change-z, linear-acceleration-change-x,
+     *                  linear-acceleration-change-y, linear-acceleration-change-z,
+     *                  angular-velocity-change-x, angular-velocity-change-y,
+     *                  angular-velocity-change-z. Must have length 13.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where updated system model will be stored. Must
+     *                  have length 16.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x13.
+     * @throws IllegalArgumentException if system state array, control array,
+     *                                  result array or jacobians do not have proper size.
+     */
+    public static void predictWithRotationAdjustment(
+            final double[] x, final double[] u, final double dt, final double[] result,
+            final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc bfc" id="L743" title="All 2 branches covered.">        if (x.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L744">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
+        }
+<span class="fc bfc" id="L746" title="All 2 branches covered.">        if (u.length != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L747">            throw new IllegalArgumentException(&quot;u must have length 13&quot;);</span>
+        }
+<span class="fc bfc" id="L749" title="All 2 branches covered.">        if (result.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L750">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
+        }
+<span class="fc bfc" id="L752" title="All 2 branches covered.">        if (jacobianX != null &amp;&amp;</span>
+<span class="fc bfc" id="L753" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L754" title="1 of 2 branches missed.">                        jacobianX.getColumns() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L755">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
+        }
+<span class="fc bfc" id="L757" title="All 2 branches covered.">        if (jacobianU != null &amp;&amp;</span>
+<span class="fc bfc" id="L758" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L759" title="1 of 2 branches missed.">                        jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L760">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);</span>
+        }
+
+        // position
+<span class="fc" id="L764">        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+
+        // orientation
+<span class="fc" id="L767">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+
+        // linear velocity
+<span class="fc" id="L770">        double vx = x[7];</span>
+<span class="fc" id="L771">        double vy = x[8];</span>
+<span class="fc" id="L772">        double vz = x[9];</span>
+
+        // linear acceleration
+<span class="fc" id="L775">        double ax = x[10];</span>
+<span class="fc" id="L776">        double ay = x[11];</span>
+<span class="fc" id="L777">        double az = x[12];</span>
+
+        // angular velocity
+<span class="fc" id="L780">        double wx = x[13];</span>
+<span class="fc" id="L781">        double wy = x[14];</span>
+<span class="fc" id="L782">        double wz = x[15];</span>
+
+        // rotation change (control)
+<span class="fc" id="L785">        final Quaternion dq = new Quaternion(u[0], u[1], u[2], u[3]);</span>
+
+        // linear velocity change (control)
+<span class="fc" id="L788">        final double uvx = u[4];</span>
+<span class="fc" id="L789">        final double uvy = u[5];</span>
+<span class="fc" id="L790">        final double uvz = u[6];</span>
+
+        // linear acceleration change (control)
+<span class="fc" id="L793">        final double uax = u[7];</span>
+<span class="fc" id="L794">        final double uay = u[8];</span>
+<span class="fc" id="L795">        final double uaz = u[9];</span>
+
+        // angular velocity change (control)
+<span class="fc" id="L798">        final double uwx = u[10];</span>
+<span class="fc" id="L799">        final double uwy = u[11];</span>
+<span class="fc" id="L800">        final double uwz = u[12];</span>
+
+        try {
+            // update velocity
+<span class="fc" id="L804">            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L805">            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L806">            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,</span>
+                    vv, va);
+
+            // update position
+<span class="fc" id="L810">            Matrix rr = null;</span>
+<span class="fc" id="L811">            Matrix rv = null;</span>
+<span class="fc" id="L812">            Matrix ra = null;</span>
+<span class="fc bfc" id="L813" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L814">                rr = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L817">                rv = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        SPEED_COMPONENTS);
+<span class="fc" id="L820">                ra = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        ACCELERATION_COMPONENTS);
+            }
+<span class="fc" id="L824">            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,</span>
+                    ra);
+
+            // update orientation
+<span class="fc" id="L828">            Matrix qq = null;</span>
+<span class="fc" id="L829">            Matrix qdq = null;</span>
+<span class="fc" id="L830">            Matrix qw = null;</span>
+<span class="fc bfc" id="L831" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L832">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L833">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+            }
+<span class="fc bfc" id="L835" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L836">                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+            }
+<span class="fc" id="L838">            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq,</span>
+                    wx, wy, wz, dt, qq, qdq, qw);
+
+
+            // set updated linear velocity
+<span class="fc" id="L843">            vx = v[0];</span>
+<span class="fc" id="L844">            vy = v[1];</span>
+<span class="fc" id="L845">            vz = v[2];</span>
+
+            // apply control signals
+<span class="fc" id="L848">            vx += uvx;</span>
+<span class="fc" id="L849">            vy += uvy;</span>
+<span class="fc" id="L850">            vz += uvz;</span>
+
+<span class="fc" id="L852">            ax += uax;</span>
+<span class="fc" id="L853">            ay += uay;</span>
+<span class="fc" id="L854">            az += uaz;</span>
+
+<span class="fc" id="L856">            wx += uwx;</span>
+<span class="fc" id="L857">            wy += uwy;</span>
+<span class="fc" id="L858">            wz += uwz;</span>
+
+            // set new state
+<span class="fc" id="L861">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L862">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L863">            result[2] = r.getInhomZ();</span>
+
+<span class="fc" id="L865">            result[3] = q.getA();</span>
+<span class="fc" id="L866">            result[4] = q.getB();</span>
+<span class="fc" id="L867">            result[5] = q.getC();</span>
+<span class="fc" id="L868">            result[6] = q.getD();</span>
+
+<span class="fc" id="L870">            result[7] = vx;</span>
+<span class="fc" id="L871">            result[8] = vy;</span>
+<span class="fc" id="L872">            result[9] = vz;</span>
+
+<span class="fc" id="L874">            result[10] = ax;</span>
+<span class="fc" id="L875">            result[11] = ay;</span>
+<span class="fc" id="L876">            result[12] = az;</span>
+
+<span class="fc" id="L878">            result[13] = wx;</span>
+<span class="fc" id="L879">            result[14] = wy;</span>
+<span class="fc" id="L880">            result[15] = wz;</span>
+
+            // jacobians
+<span class="fc bfc" id="L883" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+                // [Rr   0   Rv  Ra  0  ]
+                // [0    Qq  0   0   Qw ]
+                // [0    0   Vv  Va  0  ]
+                // [0    0   0   eye 0  ]
+                // [0    0   0   0   eye]
+<span class="fc" id="L889">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L890">                jacobianX.setSubmatrix(0, 0, 2, 2,</span>
+                        rr);
+
+<span class="fc" id="L893">                jacobianX.setSubmatrix(3, 3, 6, 6,</span>
+                        qq);
+
+<span class="fc" id="L896">                jacobianX.setSubmatrix(0, 7, 2, 9,</span>
+                        rv);
+
+<span class="fc" id="L899">                jacobianX.setSubmatrix(7, 7, 9, 9,</span>
+                        vv);
+
+<span class="fc" id="L902">                jacobianX.setSubmatrix(0, 10, 2, 12,</span>
+                        ra);
+
+<span class="fc" id="L905">                jacobianX.setSubmatrix(7, 10, 9, 12,</span>
+                        va);
+
+<span class="fc" id="L908">                jacobianX.setSubmatrix(3, 13, 6, 15,</span>
+                        qw);
+
+<span class="fc bfc" id="L911" title="All 2 branches covered.">                for (int i = 10; i &lt; STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L912">                    jacobianX.setElementAt(i, i, 1.0);</span>
+                }
+            }
+
+<span class="fc bfc" id="L916" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L917">                jacobianU.initialize(0.0);</span>
+
+                // variation of rotation
+<span class="fc" id="L920">                jacobianU.setSubmatrix(3, 0, 6, 3,</span>
+                        qdq);
+
+                // variation of linear speed and acceleration, and angular speed
+<span class="fc" id="L924">                for (int i = 7, j = Quaternion.N_PARAMS;</span>
+<span class="fc bfc" id="L925" title="All 2 branches covered.">                     i &lt; STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {</span>
+<span class="fc" id="L926">                    jacobianU.setElementAt(i, j, 1.0);</span>
+                }
+            }
+<span class="nc" id="L929">        } catch (final WrongSizeException ignore) {</span>
+            // never thrown
+<span class="fc" id="L931">        }</span>
+<span class="fc" id="L932">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x      initial system state containing: position-x, position-y,
+     *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *               length 16.
+     * @param u      perturbations or control signals: quaternion-change-a,
+     *               quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *               linear-velocity-change-x, linear-velocity-change-y,
+     *               linear-velocity-change-z, linear-acceleration-change-x,
+     *               linear-acceleration-change-y, linear-acceleration-change-z,
+     *               angular-velocity-change-x, angular-velocity-change-y,
+     *               angular-velocity-change-z. Must have length 13.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated system model will be stored. Must
+     *               have length 16.
+     * @throws IllegalArgumentException if system state array, control array or
+     *                                  result array do not have proper size.
+     */
+    public static void predictWithRotationAdjustment(
+            final double[] x, final double[] u, final double dt, final double[] result) {
+<span class="fc" id="L961">        predictWithRotationAdjustment(x, u, dt, result, null, null);</span>
+<span class="fc" id="L962">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: quaternion-change-a,
+     *                  quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *                  linear-velocity-change-x, linear-velocity-change-y,
+     *                  linear-velocity-change-z, linear-acceleration-change-x,
+     *                  linear-acceleration-change-y, linear-acceleration-change-z,
+     *                  angular-velocity-change-x, angular-velocity-change-y,
+     *                  angular-velocity-change-z. Must have length 13.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x13.
+     * @return a new array containing updated system model.
+     * @throws IllegalArgumentException if system state array, control array or
+     *                                  jacobians do not have proper size.
+     */
+    public static double[] predictWithRotationAdjustment(
+            final double[] x, final double[] u, final double dt,
+            final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc" id="L993">        final double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L994">        predictWithRotationAdjustment(x, u, dt, result, jacobianX, jacobianU);</span>
+<span class="fc" id="L995">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x  initial system state containing: position-x, position-y,
+     *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *           length 16.
+     * @param u  perturbations or control signals: quaternion-change-a,
+     *           quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *           linear-velocity-change-x, linear-velocity-change-y,
+     *           linear-velocity-change-z, linear-acceleration-change-x,
+     *           linear-acceleration-change-y, linear-acceleration-change-z,
+     *           angular-velocity-change-x, angular-velocity-change-y,
+     *           angular-velocity-change-z. Must have length 13.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new array containing updated system model.
+     * @throws IllegalArgumentException if system state array or control array
+     *                                  do not have proper size.
+     */
+    public static double[] predictWithRotationAdjustment(
+            final double[] x, final double[] u, final double dt) {
+<span class="fc" id="L1024">        final double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L1025">        predictWithRotationAdjustment(x, u, dt, result);</span>
+<span class="fc" id="L1026">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: position-change-x,
+     *                  position-change-y, position-change-z, quaternion-change-a,
+     *                  quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *                  linear-velocity-change-x, linear-velocity-change-y,
+     *                  linear-velocity-change-z, linear-acceleration-change-x,
+     *                  linear-acceleration-change-y, linear-acceleration-change-z,
+     *                  angular-velocity-change-x, angular-velocity-change-y,
+     *                  angular-velocity-change-z. Must have length 16.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where updated system model will be stored. Must
+     *                  have length 16.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x16.
+     * @throws IllegalArgumentException if system state array, control array,
+     *                                  result array or jacobians do not have proper size.
+     */
+    public static void predictWithPositionAndRotationAdjustment(
+            final double[] x, final double[] u, final double dt, final double[] result,
+            final Matrix jacobianX, final Matrix jacobianU) {
+<span class="fc bfc" id="L1060" title="All 2 branches covered.">        if (x.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L1061">            throw new IllegalArgumentException(&quot;x must have length 16&quot;);</span>
+        }
+<span class="fc bfc" id="L1063" title="All 2 branches covered.">        if (u.length != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L1064">            throw new IllegalArgumentException(&quot;u must have length 13&quot;);</span>
+        }
+<span class="fc bfc" id="L1066" title="All 2 branches covered.">        if (result.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {</span>
+<span class="fc" id="L1067">            throw new IllegalArgumentException(&quot;result must have length 16&quot;);</span>
+        }
+<span class="fc bfc" id="L1069" title="All 2 branches covered.">        if (jacobianX != null &amp;&amp;</span>
+<span class="fc bfc" id="L1070" title="All 2 branches covered.">                (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L1071" title="1 of 2 branches missed.">                        jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L1072">            throw new IllegalArgumentException(&quot;jacobian wrt x must be 16x16&quot;);</span>
+        }
+<span class="fc bfc" id="L1074" title="All 2 branches covered.">        if (jacobianU != null &amp;&amp;</span>
+<span class="fc bfc" id="L1075" title="All 2 branches covered.">                (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||</span>
+<span class="pc bpc" id="L1076" title="1 of 2 branches missed.">                        jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {</span>
+<span class="fc" id="L1077">            throw new IllegalArgumentException(&quot;jacobian wrt u must be 16x13&quot;);</span>
+        }
+
+        // position
+<span class="fc" id="L1081">        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);</span>
+
+        // orientation
+<span class="fc" id="L1084">        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);</span>
+
+        // linear velocity
+<span class="fc" id="L1087">        double vx = x[7];</span>
+<span class="fc" id="L1088">        double vy = x[8];</span>
+<span class="fc" id="L1089">        double vz = x[9];</span>
+
+        // linear acceleration
+<span class="fc" id="L1092">        double ax = x[10];</span>
+<span class="fc" id="L1093">        double ay = x[11];</span>
+<span class="fc" id="L1094">        double az = x[12];</span>
+
+        // angular velocity
+<span class="fc" id="L1097">        double wx = x[13];</span>
+<span class="fc" id="L1098">        double wy = x[14];</span>
+<span class="fc" id="L1099">        double wz = x[15];</span>
+
+        // position change (control)
+<span class="fc" id="L1102">        final double drx = u[0];</span>
+<span class="fc" id="L1103">        final double dry = u[1];</span>
+<span class="fc" id="L1104">        final double drz = u[2];</span>
+
+        // rotation change (control)
+<span class="fc" id="L1107">        final Quaternion dq = new Quaternion(u[3], u[4], u[5], u[6]);</span>
+
+        // linear velocity change (control)
+<span class="fc" id="L1110">        final double uvx = u[7];</span>
+<span class="fc" id="L1111">        final double uvy = u[8];</span>
+<span class="fc" id="L1112">        final double uvz = u[9];</span>
+
+        // linear acceleration change (control)
+<span class="fc" id="L1115">        final double uax = u[10];</span>
+<span class="fc" id="L1116">        final double uay = u[11];</span>
+<span class="fc" id="L1117">        final double uaz = u[12];</span>
+
+        // angular velocity change (control)
+<span class="fc" id="L1120">        final double uwx = u[13];</span>
+<span class="fc" id="L1121">        final double uwy = u[14];</span>
+<span class="fc" id="L1122">        final double uwz = u[15];</span>
+
+        try {
+            // update velocity
+<span class="fc" id="L1126">            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);</span>
+<span class="fc" id="L1127">            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);</span>
+<span class="fc" id="L1128">            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);</span>
+
+            // update position
+<span class="fc" id="L1131">            Matrix rr = null;</span>
+<span class="fc" id="L1132">            Matrix rv = null;</span>
+<span class="fc" id="L1133">            Matrix ra = null;</span>
+<span class="fc bfc" id="L1134" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L1135">                rr = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L1138">                rv = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        SPEED_COMPONENTS);
+<span class="fc" id="L1141">                ra = new Matrix(</span>
+                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                        ACCELERATION_COMPONENTS);
+            }
+<span class="fc" id="L1145">            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz,</span>
+                    vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
+
+            // update orientation
+<span class="fc" id="L1149">            Matrix qq = null;</span>
+<span class="fc" id="L1150">            Matrix qdq = null;</span>
+<span class="fc" id="L1151">            Matrix qw = null;</span>
+<span class="fc bfc" id="L1152" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+<span class="fc" id="L1153">                qq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+<span class="fc" id="L1154">                qw = new Matrix(Quaternion.N_PARAMS, ANGULAR_SPEED_COMPONENTS);</span>
+            }
+<span class="fc bfc" id="L1156" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L1157">                qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);</span>
+            }
+<span class="fc" id="L1159">            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq,</span>
+                    wx, wy, wz, dt, qq, qdq, qw);
+
+            // set updated linear velocity
+<span class="fc" id="L1163">            vx = v[0];</span>
+<span class="fc" id="L1164">            vy = v[1];</span>
+<span class="fc" id="L1165">            vz = v[2];</span>
+
+            // apply control signals
+<span class="fc" id="L1168">            vx += uvx;</span>
+<span class="fc" id="L1169">            vy += uvy;</span>
+<span class="fc" id="L1170">            vz += uvz;</span>
+
+<span class="fc" id="L1172">            ax += uax;</span>
+<span class="fc" id="L1173">            ay += uay;</span>
+<span class="fc" id="L1174">            az += uaz;</span>
+
+<span class="fc" id="L1176">            wx += uwx;</span>
+<span class="fc" id="L1177">            wy += uwy;</span>
+<span class="fc" id="L1178">            wz += uwz;</span>
+
+            // set new state
+<span class="fc" id="L1181">            result[0] = r.getInhomX();</span>
+<span class="fc" id="L1182">            result[1] = r.getInhomY();</span>
+<span class="fc" id="L1183">            result[2] = r.getInhomZ();</span>
+
+<span class="fc" id="L1185">            result[3] = q.getA();</span>
+<span class="fc" id="L1186">            result[4] = q.getB();</span>
+<span class="fc" id="L1187">            result[5] = q.getC();</span>
+<span class="fc" id="L1188">            result[6] = q.getD();</span>
+
+<span class="fc" id="L1190">            result[7] = vx;</span>
+<span class="fc" id="L1191">            result[8] = vy;</span>
+<span class="fc" id="L1192">            result[9] = vz;</span>
+
+<span class="fc" id="L1194">            result[10] = ax;</span>
+<span class="fc" id="L1195">            result[11] = ay;</span>
+<span class="fc" id="L1196">            result[12] = az;</span>
+
+<span class="fc" id="L1198">            result[13] = wx;</span>
+<span class="fc" id="L1199">            result[14] = wy;</span>
+<span class="fc" id="L1200">            result[15] = wz;</span>
+
+            // jacobians
+<span class="fc bfc" id="L1203" title="All 2 branches covered.">            if (jacobianX != null) {</span>
+                // [Rr   0   Rv  Ra  0  ]
+                // [0    Qq  0   0   Qw ]
+                // [0    0   Vv  Va  0  ]
+                // [0    0   0   eye 0  ]
+                // [0    0   0   0   eye]
+<span class="fc" id="L1209">                jacobianX.initialize(0.0);</span>
+<span class="fc" id="L1210">                jacobianX.setSubmatrix(0, 0, 2, 2,</span>
+                        rr);
+
+<span class="fc" id="L1213">                jacobianX.setSubmatrix(3, 3, 6, 6,</span>
+                        qq);
+
+<span class="fc" id="L1216">                jacobianX.setSubmatrix(0, 7, 2, 9,</span>
+                        rv);
+
+<span class="fc" id="L1219">                jacobianX.setSubmatrix(7, 7, 9, 9,</span>
+                        vv);
+
+<span class="fc" id="L1222">                jacobianX.setSubmatrix(0, 10, 2, 12,</span>
+                        ra);
+
+<span class="fc" id="L1225">                jacobianX.setSubmatrix(7, 10, 9, 12,</span>
+                        va);
+
+<span class="fc" id="L1228">                jacobianX.setSubmatrix(3, 13, 6, 15,</span>
+                        qw);
+
+<span class="fc bfc" id="L1231" title="All 2 branches covered.">                for (int i = 10; i &lt; STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L1232">                    jacobianX.setElementAt(i, i, 1.0);</span>
+                }
+            }
+
+<span class="fc bfc" id="L1236" title="All 2 branches covered.">            if (jacobianU != null) {</span>
+<span class="fc" id="L1237">                jacobianU.initialize(0.0);</span>
+
+                // variation of position
+<span class="fc bfc" id="L1240" title="All 2 branches covered.">                for (int i = 0; i &lt; Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {</span>
+<span class="fc" id="L1241">                    jacobianU.setElementAt(i, i, 1.0);</span>
+                }
+
+                // variation of rotation
+<span class="fc" id="L1245">                jacobianU.setSubmatrix(3, 3, 6, 6,</span>
+                        qdq);
+
+                // variation of linear speed and acceleration, and angular speed
+<span class="fc bfc" id="L1249" title="All 2 branches covered.">                for (int i = 7; i &lt; STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {</span>
+<span class="fc" id="L1250">                    jacobianU.setElementAt(i, i, 1.0);</span>
+                }
+            }
+<span class="nc" id="L1253">        } catch (final WrongSizeException ignore) {</span>
+            // never thrown
+<span class="fc" id="L1255">        }</span>
+<span class="fc" id="L1256">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x      initial system state containing: position-x, position-y,
+     *               position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *               linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *               linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *               angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *               length 16.
+     * @param u      perturbations or control signals: position-change-x,
+     *               position-change-y, position-change-z, quaternion-change-a,
+     *               quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *               linear-velocity-change-x, linear-velocity-change-y,
+     *               linear-velocity-change-z, linear-acceleration-change-x,
+     *               linear-acceleration-change-y, linear-acceleration-change-z,
+     *               angular-velocity-change-x, angular-velocity-change-y,
+     *               angular-velocity-change-z. Must have length 16.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated system model will be stored. Must
+     *               have length 16.
+     * @throws IllegalArgumentException if system state array, control array or
+     *                                  result array do not have proper size.
+     */
+    public static void predictWithPositionAndRotationAdjustment(
+            final double[] x, final double[] u, final double dt, final double[] result) {
+<span class="fc" id="L1286">        predictWithPositionAndRotationAdjustment(x, u, dt, result, null, null);</span>
+<span class="fc" id="L1287">    }</span>
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x         initial system state containing: position-x, position-y,
+     *                  position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *                  linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *                  linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *                  angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *                  length 16.
+     * @param u         perturbations or control signals: position-change-x,
+     *                  position-change-y, position-change-z, quaternion-change-a,
+     *                  quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *                  linear-velocity-change-x, linear-velocity-change-y,
+     *                  linear-velocity-change-z, linear-acceleration-change-x,
+     *                  linear-acceleration-change-y, linear-acceleration-change-z,
+     *                  angular-velocity-change-x, angular-velocity-change-y,
+     *                  angular-velocity-change-z. Must have length 16.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianX jacobian wrt system state. Must be 16x16.
+     * @param jacobianU jacobian wrt control. must be 16x16.
+     * @return a new array containing updated system model.
+     * @throws IllegalArgumentException if system state array, control array or
+     *                                  jacobians do not have proper size.
+     */
+    public static double[] predictWithPositionAndRotationAdjustment(
+            final double[] x, final double[] u, final double dt, final Matrix jacobianX,
+            final Matrix jacobianU) {
+<span class="fc" id="L1319">        final double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L1320">        predictWithPositionAndRotationAdjustment(x, u, dt, result, jacobianX,</span>
+                jacobianU);
+<span class="fc" id="L1322">        return result;</span>
+    }
+
+    /**
+     * Updates the system model (position, orientation, linear velocity,
+     * linear acceleration and angular velocity) assuming a constant
+     * acceleration model when no acceleration or velocity control signal is
+     * present.
+     *
+     * @param x  initial system state containing: position-x, position-y,
+     *           position-z, quaternion-a, quaternion-b, quaternion-c, quaternion-d,
+     *           linear-velocity-x, linear-velocity-y, linear-velocity-z,
+     *           linear-acceleration-x, linear-acceleration-y, linear-acceleration-z,
+     *           angular-velocity-x, angular-velocity-y, angular-velocity-z. Must have
+     *           length 16.
+     * @param u  perturbations or control signals: position-change-x,
+     *           position-change-y, position-change-z, quaternion-change-a,
+     *           quaternion-change-b, quaternion-change-c, quaternion-change-d,
+     *           linear-velocity-change-x, linear-velocity-change-y,
+     *           linear-velocity-change-z, linear-acceleration-change-x,
+     *           linear-acceleration-change-y, linear-acceleration-change-z,
+     *           angular-velocity-change-x, angular-velocity-change-y,
+     *           angular-velocity-change-z. Must have length 16.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new array containing updated system model.
+     * @throws IllegalArgumentException if system state array, or control array
+     *                                  do not have proper size.
+     */
+    public static double[] predictWithPositionAndRotationAdjustment(
+            final double[] x, final double[] u, final double dt) {
+<span class="fc" id="L1352">        final double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];</span>
+<span class="fc" id="L1353">        predictWithPositionAndRotationAdjustment(x, u, dt, result);</span>
+<span class="fc" id="L1354">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

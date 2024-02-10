@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlternatingCameraCalibrator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration</a> &gt; <span class="el_source">AlternatingCameraCalibrator.java</span></div><h1>AlternatingCameraCalibrator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration;
+
+import com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.MSACRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RANSACRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RadialDistortionRobustEstimatorListener;
+import com.irurueta.geometry.GeometryException;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Calibrates a camera in order to find its intrinsic parameters and radial
+ * distortion by using an alternating technique where first an initial guess
+ * of the intrinsic parameters, rotation and translation is obtained to model
+ * the camera used to sample the calibration pattern, and then the result is
+ * used to find the best possible radial distortion to account for all remaining
+ * errors. The result is then used to undo the distortion effect and calibrate
+ * again to estimate the intrinsic parameters and camera pose. This alternating
+ * process is repeated until convergence is reached.
+ * &lt;p&gt;
+ * This class is based on technique described at:
+ * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical
+ * Report. MSR-TR-98-71. December 2, 1998
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class AlternatingCameraCalibrator extends CameraCalibrator {
+
+    /**
+     * Default maximum number of times to do an alternating iteration to refine
+     * the results.
+     */
+    public static final int DEFAULT_MAX_ITERATIONS = 20;
+
+    /**
+     * Minimum allowed value to be set as max iterations.
+     */
+    public static final int MIN_MAX_ITERATIONS = 1;
+
+    /**
+     * Default threshold to determine that convergence of the result has been
+     * reached.
+     */
+    public static final double DEFAULT_CONVERGENCE_THRESHOLD = 1e-8;
+
+    /**
+     * Minimum allowed value to be set as convergence threshold.
+     */
+    public static final double MIN_CONVERGENCE_THRESHOLD = 0.0;
+
+    /**
+     * Default robust estimator method to be used for radial distortion
+     * estimation.
+     */
+<span class="fc" id="L81">    public static final RobustEstimatorMethod DEFAULT_RADIAL_DISTORTION_METHOD =</span>
+            RobustEstimatorMethod.PROSAC;
+
+    /**
+     * Maximum number of times to do an alternating iteration to refine the
+     * results.
+     */
+    private int mMaxIterations;
+
+    /**
+     * Default threshold to determine that convergence of the result has been
+     * reached.
+     */
+    private double mConvergenceThreshold;
+
+    /**
+     * Robust estimator method to be used for radial distortion estimation.
+     */
+    private RobustEstimatorMethod mDistortionMethod;
+
+    /**
+     * Robust estimator of radial distortion.
+     */
+    private RadialDistortionRobustEstimator mDistortionEstimator;
+
+    /**
+     * Listener for robust estimator of radial distortion.
+     */
+    private RadialDistortionRobustEstimatorListener
+            mDistortionEstimatorListener;
+
+    /**
+     * Indicates progress of radial distortion estimation.
+     */
+    private float mRadialDistortionProgress;
+
+    /**
+     * Overall progress taking into account current number of iteration.
+     */
+    private float mIterProgress;
+
+    /**
+     * Previously notified progress.
+     */
+    private float mPreviousNotifiedProgress;
+
+    /**
+     * Constructor.
+     */
+    public AlternatingCameraCalibrator() {
+<span class="fc" id="L131">        super();</span>
+<span class="fc" id="L132">        mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L133">        mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;</span>
+
+<span class="fc" id="L135">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L136">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pattern 2D pattern to use for calibration.
+     * @param samples samples of the pattern taken with the camera to calibrate.
+     * @throws IllegalArgumentException if not enough samples are provided.
+     */
+    public AlternatingCameraCalibrator(final Pattern2D pattern,
+                                       final List&lt;CameraCalibratorSample&gt; samples) {
+<span class="fc" id="L147">        super(pattern, samples);</span>
+<span class="fc" id="L148">        mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L149">        mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;</span>
+
+<span class="fc" id="L151">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L152">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pattern              2D pattern to use for calibration.
+     * @param samples              samples of the pattern taken with the camera to calibrate.
+     * @param samplesQualityScores quality scores for each sample.
+     * @throws IllegalArgumentException if not enough samples are provided or if
+     *                                  both samples and quality scores do not have the same size.
+     */
+    public AlternatingCameraCalibrator(final Pattern2D pattern,
+                                       final List&lt;CameraCalibratorSample&gt; samples,
+                                       final double[] samplesQualityScores) {
+<span class="fc" id="L166">        super(pattern, samples, samplesQualityScores);</span>
+<span class="fc" id="L167">        mMaxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L168">        mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;</span>
+
+<span class="fc" id="L170">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Returns maximum number of times to do an alternating iteration to refine
+     * the results.
+     *
+     * @return maximum number of times to do an alternating iteration.
+     */
+    public int getMaxIterations() {
+<span class="fc" id="L180">        return mMaxIterations;</span>
+    }
+
+    /**
+     * Sets maximum number of times to do an alternating iteration to refine the
+     * results.
+     *
+     * @param maxIterations maximum number of times to do an alternating
+     *                      iteration.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setMaxIterations(final int maxIterations) throws LockedException {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L194">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (maxIterations &lt; MIN_MAX_ITERATIONS) {</span>
+<span class="fc" id="L197">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L200">        mMaxIterations = maxIterations;</span>
+<span class="fc" id="L201">    }</span>
+
+    /**
+     * Returns threshold to determine that convergence of the result has been
+     * reached.
+     *
+     * @return threshold to determine that convergence of the result has been
+     * reached.
+     */
+    public double getConvergenceThreshold() {
+<span class="fc" id="L211">        return mConvergenceThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine that convergence of the result has been
+     * reached.
+     *
+     * @param convergenceThreshold threshold to determine that convergence of
+     *                             the result has been reached.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is negative.
+     */
+    public void setConvergenceThreshold(final double convergenceThreshold)
+            throws LockedException {
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L226">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">        if (convergenceThreshold &lt; MIN_CONVERGENCE_THRESHOLD) {</span>
+<span class="nc" id="L229">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L232">        mConvergenceThreshold = convergenceThreshold;</span>
+<span class="fc" id="L233">    }</span>
+
+    /**
+     * Returns robust estimator method to be used for radial distortion
+     * estimation.
+     *
+     * @return robust estimator method to be used for radial distortion
+     * estimation.
+     */
+    public RobustEstimatorMethod getDistortionMethod() {
+<span class="fc" id="L243">        return mDistortionMethod;</span>
+    }
+
+    /**
+     * Sets robust estimator method to be used for radial distortion
+     * estimation.
+     *
+     * @param distortionMethod robust estimator method to be used for
+     *                         radial distortion estimation.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setDistortionMethod(
+            final RobustEstimatorMethod distortionMethod)
+            throws LockedException {
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L258">            throw new LockedException();</span>
+        }
+<span class="fc" id="L260">        internalSetDistortionMethod(distortionMethod);</span>
+<span class="fc" id="L261">    }</span>
+
+    /**
+     * Returns radial distortion estimator, which can be retrieved in case
+     * that some additional parameter needed to be adjusted.
+     * It is discouraged to directly access the distortion estimator during
+     * camera calibration, as it might interfere with the results.
+     *
+     * @return radial distortion estimator.
+     */
+    public RadialDistortionRobustEstimator getDistortionEstimator() {
+<span class="fc" id="L272">        return mDistortionEstimator;</span>
+    }
+
+    /**
+     * Returns threshold to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @return threshold to robustly estimate radial distortion.
+     */
+    public double getDistortionEstimatorThreshold() {
+<span class="fc bfc" id="L283" title="All 5 branches covered.">        switch (mDistortionEstimator.getMethod()) {</span>
+            case LMEDS:
+<span class="fc" id="L285">                return ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L286">                        getStopThreshold();</span>
+            case MSAC:
+<span class="fc" id="L288">                return ((MSACRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L289">                        getThreshold();</span>
+            case PROSAC:
+<span class="fc" id="L291">                return ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L292">                        getThreshold();</span>
+            case PROMEDS:
+<span class="fc" id="L294">                return ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L295">                        getStopThreshold();</span>
+            case RANSAC:
+            default:
+<span class="fc" id="L298">                return ((RANSACRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L299">                        getThreshold();</span>
+        }
+    }
+
+    /**
+     * Sets threshold to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finder adjustments.
+     *
+     * @param distortionEstimatorThreshold threshold to robustly estimate
+     *                                     radial distortion .
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setDistortionEstimatorThreshold(
+            final double distortionEstimatorThreshold) throws LockedException {
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L316">            throw new LockedException();</span>
+        }
+
+<span class="fc bfc" id="L319" title="All 5 branches covered.">        switch (mDistortionEstimator.getMethod()) {</span>
+            case LMEDS:
+<span class="fc" id="L321">                ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L322">                        setStopThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L323">                break;</span>
+            case MSAC:
+<span class="fc" id="L325">                ((MSACRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L326">                        setThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L327">                break;</span>
+            case PROSAC:
+<span class="fc" id="L329">                ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L330">                        setThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L331">                break;</span>
+            case PROMEDS:
+<span class="fc" id="L333">                ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L334">                        setStopThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L335">                break;</span>
+            case RANSAC:
+            default:
+<span class="fc" id="L338">                ((RANSACRadialDistortionRobustEstimator) mDistortionEstimator).</span>
+<span class="fc" id="L339">                        setThreshold(distortionEstimatorThreshold);</span>
+                break;
+        }
+<span class="fc" id="L342">    }</span>
+
+    /**
+     * Returns confidence to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     * Confidence is expressed as a value between 0.0 (0%) and 1.0 (100%). The
+     * amount of confidence indicates the probability that the estimated
+     * homography is correct (i.e. no outliers were used for the estimation,
+     * because they were successfully discarded).
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
+     * a 100% confidence would require an infinite number of iterations.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @return confidence to robustly estimate homographies.
+     */
+    public double getDistortionEstimatorConfidence() {
+<span class="fc" id="L360">        return mDistortionEstimator.getConfidence();</span>
+    }
+
+    /**
+     * Sets confidence to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     * Confidence is expressed as a value between 0.0 (0%) and 1.0 (100%). The
+     * amount of confidence indicates the probability that the estimated
+     * homography is correct (i.e. no outliers were used for the estimation,
+     * because they were successfully discarded).
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
+     * a 100% confidence would require an infinite number of iterations.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @param distortionEstimatorConfidence confidence to robustly estimate
+     *                                      radial distortion.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and
+     *                                  1.0.
+     */
+    public void setDistortionEstimatorConfidence(
+            final double distortionEstimatorConfidence) throws LockedException {
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L385">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L388">        mDistortionEstimator.setConfidence(distortionEstimatorConfidence);</span>
+<span class="fc" id="L389">    }</span>
+
+    /**
+     * Returns the maximum number of iterations to be done when estimating
+     * the radial distortion.
+     * If the maximum allowed number of iterations is reached, resulting
+     * estimation might not have desired confidence.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @return maximum number of iterations to be done when estimating the
+     * homographies.
+     */
+    public int getDistortionEstimatorMaxIterations() {
+<span class="fc" id="L403">        return mDistortionEstimator.getMaxIterations();</span>
+    }
+
+    /**
+     * Sets the maximum number of iterations to be done when estimating the
+     * radial distortion.
+     * If the maximum allowed number of iterations is reached, resulting
+     * estimation might not have desired confidence.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @param distortionEstimatorMaxIterations maximum number of iterations to
+     *                                         be done when estimating radial distortion.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is negative or zero.
+     */
+    public void setDistortionEstimatorMaxIterations(
+            final int distortionEstimatorMaxIterations) throws LockedException {
+<span class="fc bfc" id="L421" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L422">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L425">        mDistortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);</span>
+<span class="fc" id="L426">    }</span>
+
+    /**
+     * Starts the calibration process.
+     * Depending on the settings the following will be estimated:
+     * intrinsic pinhole camera parameters, radial distortion of lens,
+     * camera pose (rotation and translation) for each sample, and the
+     * associated homobraphy of sampled points respect to the ideal pattern
+     * samples.
+     *
+     * @throws CalibrationException if calibration fails for some reason.
+     * @throws LockedException      if this instance is locked because calibration is
+     *                              already in progress.
+     * @throws NotReadyException    if this instance does not have enough data to
+     *                              start camera calibration.
+     */
+    @Override
+    public void calibrate() throws CalibrationException, LockedException,
+            NotReadyException {
+
+<span class="fc bfc" id="L446" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L447">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L450">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L453">        mLocked = true;</span>
+
+<span class="fc" id="L455">        mHomographyQualityScoresRequired =</span>
+<span class="pc bpc" id="L456" title="1 of 2 branches missed.">                (mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||</span>
+<span class="pc bnc" id="L457" title="All 2 branches missed.">                        mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);</span>
+
+<span class="pc bpc" id="L459" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L460">            mListener.onCalibrateStart(this);</span>
+        }
+
+<span class="fc" id="L463">        reset();</span>
+<span class="fc" id="L464">        mRadialDistortionProgress = mIterProgress = mPreviousNotifiedProgress =</span>
+                0.0f;
+
+<span class="fc" id="L467">        final List&lt;Point2D&gt; idealFallbackPatternMarkers = mPattern.getIdealPoints();</span>
+
+        try {
+            double errorDiff;
+            double previousError;
+<span class="fc" id="L472">            double currentError = Double.MAX_VALUE;</span>
+<span class="fc" id="L473">            double bestError = Double.MAX_VALUE;</span>
+<span class="fc" id="L474">            PinholeCameraIntrinsicParameters bestIntrinsic = null;</span>
+<span class="fc" id="L475">            RadialDistortion bestDistortion = null;</span>
+
+            // iterate until error converges
+<span class="fc" id="L478">            int iter = 0;</span>
+            do {
+<span class="fc" id="L480">                previousError = currentError;</span>
+
+                // estimate intrinsic parameters
+<span class="fc" id="L483">                estimateIntrinsicParameters(idealFallbackPatternMarkers);</span>
+
+<span class="fc bfc" id="L485" title="All 2 branches covered.">                if (!mEstimateRadialDistortion) {</span>
+<span class="fc" id="L486">                    break;</span>
+                }
+
+                // estimate radial distortion using estimated intrinsic
+                // parameters and camera poses and obtain average re-projection
+                // error
+<span class="fc" id="L492">                currentError = estimateRadialDistortion(</span>
+                        idealFallbackPatternMarkers);
+
+<span class="fc bfc" id="L495" title="All 2 branches covered.">                if (currentError &lt; bestError) {</span>
+<span class="fc" id="L496">                    bestError = currentError;</span>
+<span class="fc" id="L497">                    bestIntrinsic = mIntrinsic;</span>
+<span class="fc" id="L498">                    bestDistortion = mDistortion;</span>
+                }
+
+<span class="fc" id="L501">                errorDiff = Math.abs(previousError - currentError);</span>
+<span class="fc" id="L502">                iter++;</span>
+<span class="fc" id="L503">                mIterProgress = (float) iter / (float) mMaxIterations;</span>
+<span class="fc" id="L504">                notifyProgress();</span>
+
+<span class="fc bfc" id="L506" title="All 4 branches covered.">            } while (errorDiff &gt; mConvergenceThreshold &amp;&amp; iter &lt; mMaxIterations);</span>
+
+<span class="fc bfc" id="L508" title="All 2 branches covered.">            if (bestIntrinsic != null) {</span>
+<span class="fc" id="L509">                mIntrinsic = bestIntrinsic;</span>
+            }
+<span class="fc bfc" id="L511" title="All 2 branches covered.">            if (bestDistortion != null) {</span>
+<span class="fc" id="L512">                mDistortion = bestDistortion;</span>
+            }
+
+<span class="pc bpc" id="L515" title="1 of 2 branches missed.">            if (mListener != null) {</span>
+<span class="fc" id="L516">                mListener.onCalibrateEnd(this);</span>
+            }
+        } finally {
+<span class="fc" id="L519">            mLocked = false;</span>
+        }
+<span class="fc" id="L521">    }</span>
+
+    /**
+     * Estimates radial distortion using estimated intrinsic parameters among
+     * all samples to estimate their camera poses to find non-distorted points
+     * and compare them with the sampled ones.
+     *
+     * @param idealFallbackPatternMarkers ideal pattern markers coordinates
+     *                                    These coordinates are used as fallback when a given sample does
+     *                                    not have an associated pattern.
+     * @return average re-projection error, obtained after projecting ideal
+     * pattern markers using estimated camera poses and then doing a comparison
+     * with sampled points taking into account estimated distortion to undo
+     * their corresponding distortion.
+     * @throws CalibrationException if anything fails.
+     */
+    protected double estimateRadialDistortion(
+            final List&lt;Point2D&gt; idealFallbackPatternMarkers)
+            throws CalibrationException {
+
+<span class="fc" id="L541">        mRadialDistortionProgress = 0.0f;</span>
+
+<span class="pc bpc" id="L543" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L544">            mListener.onRadialDistortionEstimationStarts(this);</span>
+        }
+
+<span class="fc" id="L547">        final List&lt;Point2D&gt; distortedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L548">        final List&lt;Point2D&gt; undistortedPoints = new ArrayList&lt;&gt;();</span>
+        // compute total points for samples where homography could be estimated
+<span class="fc" id="L550">        int totalPoints = 0;</span>
+<span class="fc bfc" id="L551" title="All 2 branches covered.">        for (final CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L552" title="All 2 branches covered.">            if (sample.getHomography() != null) {</span>
+<span class="fc" id="L553">                totalPoints += sample.getSampledMarkers().size();</span>
+            }
+<span class="fc" id="L555">        }</span>
+
+<span class="fc" id="L557">        double[] qualityScores = null;</span>
+<span class="pc bpc" id="L558" title="3 of 4 branches missed.">        if (mDistortionMethod == RobustEstimatorMethod.PROSAC ||</span>
+                mDistortionMethod == RobustEstimatorMethod.PROMEDS) {
+<span class="fc" id="L560">            qualityScores = new double[totalPoints];</span>
+        }
+
+        // estimate camera pose for each sample
+<span class="fc" id="L564">        int pointCounter = 0;</span>
+<span class="fc" id="L565">        int sampleCounter = 0;</span>
+<span class="fc bfc" id="L566" title="All 2 branches covered.">        for (final CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L567" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+                // homography computation failed, so we cannot compute camera
+                // pose for this sample, or use this sample for radial distortion
+                // estimation
+<span class="fc" id="L571">                continue;</span>
+            }
+<span class="fc" id="L573">            sample.computeCameraPose(mIntrinsic);</span>
+
+            // transform ideal pattern markers using estimated homography
+            final List&lt;Point2D&gt; idealPatternMarkers;
+<span class="fc bfc" id="L577" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+                // use points generated by pattern in sample
+<span class="fc" id="L579">                idealPatternMarkers = sample.getPattern().</span>
+<span class="fc" id="L580">                        getIdealPoints();</span>
+            } else {
+                // use fallback pattern points
+<span class="fc" id="L583">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+            }
+
+<span class="fc" id="L586">            final List&lt;Point2D&gt; transformedIdealPatternMarkers =</span>
+<span class="fc" id="L587">                    sample.getHomography().transformPointsAndReturnNew(idealPatternMarkers);</span>
+
+            // transformedIdealPatternMarkers are considered the undistorted
+            // points, because camera follows a pure pinhole model without
+            // distortion, and we have transformed the ideal points using a
+            // pure projective homography without distortion.
+            // sample.getSampledMarkers() contains the sampled coordinates using
+            // the actual camera, which will be distorted
+
+            // the sampled markers are the ones considered to be distorted for
+            // radial distortion estimation purposes, because they are obtained
+            // directly from the camera
+
+            // stack together all distorted and undistorted points from all
+            // samples
+
+<span class="fc" id="L603">            distortedPoints.addAll(sample.getSampledMarkers());</span>
+<span class="fc" id="L604">            undistortedPoints.addAll(transformedIdealPatternMarkers);</span>
+
+<span class="fc" id="L606">            final int markersSize = transformedIdealPatternMarkers.size();</span>
+
+            // if distortion estimator requires quality scores, set them
+<span class="pc bpc" id="L609" title="4 of 6 branches missed.">            if (qualityScores != null &amp;&amp;</span>
+                    (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
+                            mDistortionMethod == RobustEstimatorMethod.PROMEDS)) {
+
+<span class="fc" id="L613">                final double sampleQuality = mHomographyQualityScores[sampleCounter];</span>
+
+                // assign to all points (markers) in the sample the same sample
+                // quality
+<span class="fc bfc" id="L617" title="All 2 branches covered.">                for (int i = pointCounter; i &lt; pointCounter + markersSize; i++) {</span>
+<span class="fc" id="L618">                    qualityScores[i] = sampleQuality;</span>
+                }
+
+<span class="fc" id="L621">                pointCounter += markersSize;</span>
+<span class="fc" id="L622">                sampleCounter++;</span>
+            }
+<span class="fc" id="L624">        }</span>
+
+        // estimate radial distortion
+<span class="fc" id="L627">        double avgError = 0.0;</span>
+        try {
+<span class="fc" id="L629">            mDistortionEstimator.setIntrinsic(mIntrinsic);</span>
+<span class="fc" id="L630">            mDistortionEstimator.setPoints(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L631">            mDistortionEstimator.setQualityScores(qualityScores);</span>
+
+<span class="fc" id="L633">            final RadialDistortion distortion = mDistortionEstimator.estimate();</span>
+
+            // add distortion to undistorted points (which are ideal pattern
+            // markers with homography applied)
+<span class="fc" id="L637">            final List&lt;Point2D&gt; distortedPoints2 = distortion.distort(</span>
+                    undistortedPoints);
+
+            // set undistorted points obtained after un-distorting sampled points
+            // to refine homography on next iteration
+<span class="fc bfc" id="L642" title="All 2 branches covered.">            for (final CameraCalibratorSample sample : mSamples) {</span>
+<span class="fc bfc" id="L643" title="All 2 branches covered.">                if (sample.getHomography() == null) {</span>
+<span class="fc" id="L644">                    continue;</span>
+                }
+
+                // undo distortion of distorted (sampled) points using estimated
+                // distortion
+
+<span class="fc" id="L650">                final List&lt;Point2D&gt; undistortedPoints2 = distortion.undistort(</span>
+<span class="fc" id="L651">                        sample.getSampledMarkers());</span>
+
+<span class="fc" id="L653">                sample.setUndistortedMarkers(undistortedPoints2);</span>
+<span class="fc" id="L654">            }</span>
+
+            // compare distortedPoints (obtained by using sampled data)
+            // with distortedPoints2 (obtained after applying homography to
+            // ideal marker points and applying distortion with estimated
+            // distortion)
+            Point2D distortedPoint1;
+            Point2D distortedPoint2;
+<span class="fc" id="L662">            totalPoints = distortedPoints.size();</span>
+<span class="fc" id="L663">            int inlierCount = 0;</span>
+<span class="fc bfc" id="L664" title="All 2 branches covered.">            for (int i = 0; i &lt; totalPoints; i++) {</span>
+<span class="fc" id="L665">                distortedPoint1 = distortedPoints.get(i);</span>
+<span class="fc" id="L666">                distortedPoint2 = distortedPoints2.get(i);</span>
+
+<span class="fc" id="L668">                final double distance = distortedPoint1.distanceTo(</span>
+                        distortedPoint2);
+<span class="fc bfc" id="L670" title="All 2 branches covered.">                if (distance &lt; getDistortionEstimatorThreshold()) {</span>
+<span class="fc" id="L671">                    avgError += distance;</span>
+<span class="fc" id="L672">                    inlierCount++;</span>
+                }
+            }
+
+<span class="pc bpc" id="L676" title="1 of 2 branches missed.">            if (inlierCount == 0) {</span>
+<span class="nc" id="L677">                throw new CalibrationException();</span>
+            }
+
+<span class="fc" id="L680">            avgError /= inlierCount;</span>
+
+<span class="fc" id="L682">            mDistortion = distortion;</span>
+
+<span class="nc" id="L684">        } catch (final GeometryException | NumericalException | DistortionException e) {</span>
+<span class="nc" id="L685">            throw new CalibrationException(e);</span>
+<span class="fc" id="L686">        }</span>
+
+<span class="pc bpc" id="L688" title="1 of 2 branches missed.">        if (mListener != null) {</span>
+<span class="fc" id="L689">            mListener.onRadialDistortionEstimationEnds(this, mDistortion);</span>
+        }
+
+<span class="fc" id="L692">        return avgError;</span>
+    }
+
+    /**
+     * Returns the camera calibrator method used by this instance.
+     *
+     * @return the camera calibrator method.
+     */
+    @Override
+    public CameraCalibratorMethod getMethod() {
+<span class="fc" id="L702">        return CameraCalibratorMethod.ALTERNATING_CALIBRATOR;</span>
+    }
+
+    /**
+     * Notifies progress to current listener, if needed.
+     */
+    @Override
+    protected void notifyProgress() {
+<span class="fc" id="L710">        final float lambda = 1.0f / mMaxIterations;</span>
+<span class="fc" id="L711">        final float partial = 0.5f * mIntrinsicProgress +</span>
+                0.5f * mRadialDistortionProgress;
+
+        final float progress;
+<span class="fc bfc" id="L715" title="All 2 branches covered.">        if (!mEstimateRadialDistortion) {</span>
+            // we do not iterate if there is no need to
+            // estimate radial distortion
+<span class="fc" id="L718">            progress = partial;</span>
+        } else {
+<span class="fc" id="L720">            progress = mIterProgress + lambda * partial;</span>
+        }
+
+<span class="pc bpc" id="L723" title="1 of 4 branches missed.">        if (mListener != null &amp;&amp;</span>
+                (progress - mPreviousNotifiedProgress) &gt; mProgressDelta) {
+<span class="fc" id="L725">            mListener.onCalibrateProgressChange(this, progress);</span>
+<span class="fc" id="L726">            mPreviousNotifiedProgress = progress;</span>
+        }
+<span class="fc" id="L728">    }</span>
+
+    /**
+     * Refreshes listener of distortion estimator
+     */
+    protected void refreshDistortionEstimatorListener() {
+<span class="fc bfc" id="L734" title="All 2 branches covered.">        if (mDistortionEstimatorListener == null) {</span>
+<span class="fc" id="L735">            mDistortionEstimatorListener = new RadialDistortionRobustEstimatorListener() {</span>
+
+                @Override
+                public void onEstimateStart(
+                        final RadialDistortionRobustEstimator estimator) {
+<span class="fc" id="L740">                    mRadialDistortionProgress = 0.0f;</span>
+<span class="fc" id="L741">                    notifyProgress();</span>
+<span class="fc" id="L742">                }</span>
+
+                @Override
+                public void onEstimateEnd(
+                        final RadialDistortionRobustEstimator estimator) {
+<span class="fc" id="L747">                    mRadialDistortionProgress = 1.0f;</span>
+<span class="fc" id="L748">                    notifyProgress();</span>
+<span class="fc" id="L749">                }</span>
+
+                @Override
+                public void onEstimateNextIteration(
+                        final RadialDistortionRobustEstimator estimator,
+                        final int iteration) {
+                    // not needed
+<span class="fc" id="L756">                }</span>
+
+                @Override
+                public void onEstimateProgressChange(
+                        final RadialDistortionRobustEstimator estimator,
+                        final float progress) {
+<span class="fc" id="L762">                    mRadialDistortionProgress = progress;</span>
+<span class="fc" id="L763">                    notifyProgress();</span>
+<span class="fc" id="L764">                }</span>
+            };
+        }
+
+        try {
+<span class="fc" id="L769">            mDistortionEstimator.setListener(mDistortionEstimatorListener);</span>
+<span class="nc" id="L770">        } catch (final LockedException e) {</span>
+<span class="nc" id="L771">            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(</span>
+                    Level.WARNING, &quot;Could not set radial distortion estimator listener&quot;,
+                    e);
+<span class="fc" id="L774">        }</span>
+<span class="fc" id="L775">    }</span>
+
+    /**
+     * Sets robust estimator method to be used for radial distortion estimation.
+     * If method changes, then a new radial distortion estimator is created and
+     * configured.
+     *
+     * @param distortionMethod robust estimator method to be used for
+     *                         radial distortion estimation.
+     */
+    private void internalSetDistortionMethod(
+            final RobustEstimatorMethod distortionMethod) {
+        // if method changes, recreate estimator
+<span class="fc bfc" id="L788" title="All 2 branches covered.">        if (distortionMethod != mDistortionMethod) {</span>
+<span class="fc bfc" id="L789" title="All 2 branches covered.">            boolean previousAvailable = mDistortionMethod != null;</span>
+<span class="fc" id="L790">            double threshold = 0.0;</span>
+<span class="fc" id="L791">            double confidence = 0.0;</span>
+<span class="fc" id="L792">            int maxIterations = 0;</span>
+<span class="fc bfc" id="L793" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L794">                threshold = getDistortionEstimatorThreshold();</span>
+<span class="fc" id="L795">                confidence = getDistortionEstimatorConfidence();</span>
+<span class="fc" id="L796">                maxIterations = getDistortionEstimatorMaxIterations();</span>
+            }
+
+<span class="fc" id="L799">            mDistortionEstimator = RadialDistortionRobustEstimator.create(</span>
+                    distortionMethod);
+
+            // configure new estimator
+<span class="fc" id="L803">            refreshDistortionEstimatorListener();</span>
+<span class="fc bfc" id="L804" title="All 2 branches covered.">            if (previousAvailable) {</span>
+                try {
+<span class="fc" id="L806">                    setDistortionEstimatorThreshold(threshold);</span>
+<span class="fc" id="L807">                    setDistortionEstimatorConfidence(confidence);</span>
+<span class="fc" id="L808">                    setDistortionEstimatorMaxIterations(maxIterations);</span>
+<span class="nc" id="L809">                } catch (final LockedException e) {</span>
+<span class="nc" id="L810">                    Logger.getLogger(</span>
+<span class="nc" id="L811">                            AlternatingCameraCalibrator.class.getName()).log(</span>
+                            Level.WARNING, &quot;Could not reconfigure distortion estimator&quot;,
+                            e);
+<span class="fc" id="L814">                }</span>
+            }
+        }
+
+<span class="fc" id="L818">        mDistortionMethod = distortionMethod;</span>
+<span class="fc" id="L819">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
